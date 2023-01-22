@@ -42,6 +42,7 @@ public class RecordGeneratorProvider : IGenerationConstructor
         gen.GenerationModules.Add(new PluginModule());
         gen.Add(new PluginTranslationModule(gen));
         gen.AddTypeAssociation<FormLinkType>("FormLink");
+        gen.AddTypeAssociation<FormLinkOrAliasType>("FormLinkOrAlias");
         gen.AddTypeAssociation<FormIDType>("FormID");
         gen.AddTypeAssociation<FormKeyType>("FormKey");
         gen.AddTypeAssociation<ModKeyType>("ModKey");

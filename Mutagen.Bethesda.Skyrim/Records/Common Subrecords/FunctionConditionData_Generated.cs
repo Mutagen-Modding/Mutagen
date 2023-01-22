@@ -61,16 +61,6 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown2
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
-        #region ParameterOneString
-        public String? ParameterOneString { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
-        #endregion
-        #region ParameterTwoString
-        public String? ParameterTwoString { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFunctionConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
-        #endregion
 
         #region To String
 
@@ -114,27 +104,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Function = initialValue;
                 this.Unknown2 = initialValue;
-                this.ParameterOneString = initialValue;
-                this.ParameterTwoString = initialValue;
             }
 
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
                 TItem Unknown3,
+                TItem UseAliases,
                 TItem Function,
-                TItem Unknown2,
-                TItem ParameterOneString,
-                TItem ParameterTwoString)
+                TItem Unknown2)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3)
+                Unknown3: Unknown3,
+                UseAliases: UseAliases)
             {
                 this.Function = Function;
                 this.Unknown2 = Unknown2;
-                this.ParameterOneString = ParameterOneString;
-                this.ParameterTwoString = ParameterTwoString;
             }
 
             #pragma warning disable CS8618
@@ -148,8 +134,6 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem Function;
             public TItem Unknown2;
-            public TItem ParameterOneString;
-            public TItem ParameterTwoString;
             #endregion
 
             #region Equals
@@ -165,8 +149,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Function, rhs.Function)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.ParameterOneString, rhs.ParameterOneString)) return false;
-                if (!object.Equals(this.ParameterTwoString, rhs.ParameterTwoString)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -174,8 +156,6 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.Function);
                 hash.Add(this.Unknown2);
-                hash.Add(this.ParameterOneString);
-                hash.Add(this.ParameterTwoString);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -188,8 +168,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.All(eval)) return false;
                 if (!eval(this.Function)) return false;
                 if (!eval(this.Unknown2)) return false;
-                if (!eval(this.ParameterOneString)) return false;
-                if (!eval(this.ParameterTwoString)) return false;
                 return true;
             }
             #endregion
@@ -200,8 +178,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (base.Any(eval)) return true;
                 if (eval(this.Function)) return true;
                 if (eval(this.Unknown2)) return true;
-                if (eval(this.ParameterOneString)) return true;
-                if (eval(this.ParameterTwoString)) return true;
                 return false;
             }
             #endregion
@@ -219,8 +195,6 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.Function = eval(this.Function);
                 obj.Unknown2 = eval(this.Unknown2);
-                obj.ParameterOneString = eval(this.ParameterOneString);
-                obj.ParameterTwoString = eval(this.ParameterTwoString);
             }
             #endregion
 
@@ -247,14 +221,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
-                    if (printMask?.ParameterOneString ?? true)
-                    {
-                        sb.AppendItem(ParameterOneString, "ParameterOneString");
-                    }
-                    if (printMask?.ParameterTwoString ?? true)
-                    {
-                        sb.AppendItem(ParameterTwoString, "ParameterTwoString");
-                    }
                 }
             }
             #endregion
@@ -268,8 +234,6 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public Exception? Function;
             public Exception? Unknown2;
-            public Exception? ParameterOneString;
-            public Exception? ParameterTwoString;
             #endregion
 
             #region IErrorMask
@@ -282,10 +246,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Function;
                     case FunctionConditionData_FieldIndex.Unknown2:
                         return Unknown2;
-                    case FunctionConditionData_FieldIndex.ParameterOneString:
-                        return ParameterOneString;
-                    case FunctionConditionData_FieldIndex.ParameterTwoString:
-                        return ParameterTwoString;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -301,12 +261,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case FunctionConditionData_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterOneString:
-                        this.ParameterOneString = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterTwoString:
-                        this.ParameterTwoString = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -325,12 +279,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case FunctionConditionData_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
-                    case FunctionConditionData_FieldIndex.ParameterOneString:
-                        this.ParameterOneString = (Exception?)obj;
-                        break;
-                    case FunctionConditionData_FieldIndex.ParameterTwoString:
-                        this.ParameterTwoString = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -342,8 +290,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (Function != null) return true;
                 if (Unknown2 != null) return true;
-                if (ParameterOneString != null) return true;
-                if (ParameterTwoString != null) return true;
                 return false;
             }
             #endregion
@@ -376,12 +322,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
-                {
-                    sb.AppendItem(ParameterOneString, "ParameterOneString");
-                }
-                {
-                    sb.AppendItem(ParameterTwoString, "ParameterTwoString");
-                }
             }
             #endregion
 
@@ -392,8 +332,6 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.Function = this.Function.Combine(rhs.Function);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.ParameterOneString = this.ParameterOneString.Combine(rhs.ParameterOneString);
-                ret.ParameterTwoString = this.ParameterTwoString.Combine(rhs.ParameterTwoString);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -418,8 +356,6 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool Function;
             public bool Unknown2;
-            public bool ParameterOneString;
-            public bool ParameterTwoString;
             #endregion
 
             #region Ctors
@@ -430,8 +366,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.Function = defaultOn;
                 this.Unknown2 = defaultOn;
-                this.ParameterOneString = defaultOn;
-                this.ParameterTwoString = defaultOn;
             }
 
             #endregion
@@ -441,8 +375,6 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((Function, null));
                 ret.Add((Unknown2, null));
-                ret.Add((ParameterOneString, null));
-                ret.Add((ParameterTwoString, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -499,8 +431,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Condition.Function Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new String? ParameterOneString { get; set; }
-        new String? ParameterTwoString { get; set; }
     }
 
     /// <summary>
@@ -515,8 +445,6 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => FunctionConditionData_Registration.Instance;
         Condition.Function Function { get; }
         UInt16 Unknown2 { get; }
-        String? ParameterOneString { get; }
-        String? ParameterTwoString { get; }
 
     }
 
@@ -664,10 +592,9 @@ namespace Mutagen.Bethesda.Skyrim
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
-        Function = 3,
-        Unknown2 = 4,
-        ParameterOneString = 5,
-        ParameterTwoString = 6,
+        UseAliases = 3,
+        Function = 4,
+        Unknown2 = 5,
     }
     #endregion
 
@@ -685,9 +612,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "c7686727-e470-4c34-80ce-423cf65c7b92";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(FunctionConditionData.Mask<>);
 
@@ -757,8 +684,6 @@ namespace Mutagen.Bethesda.Skyrim
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneString = default;
-            item.ParameterTwoString = default;
             base.Clear(item);
         }
         
@@ -828,8 +753,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ret.Function = item.Function == rhs.Function;
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.ParameterOneString = string.Equals(item.ParameterOneString, rhs.ParameterOneString);
-            ret.ParameterTwoString = string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -887,16 +810,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Unknown2, "Unknown2");
             }
-            if ((printMask?.ParameterOneString ?? true)
-                && item.ParameterOneString is {} ParameterOneStringItem)
-            {
-                sb.AppendItem(ParameterOneStringItem, "ParameterOneString");
-            }
-            if ((printMask?.ParameterTwoString ?? true)
-                && item.ParameterTwoString is {} ParameterTwoStringItem)
-            {
-                sb.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
-            }
         }
         
         public static FunctionConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
@@ -908,6 +821,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Reference:
                     return (FunctionConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Unknown3:
+                    return (FunctionConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UseAliases:
                     return (FunctionConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -930,14 +845,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
-            {
-                if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
-            {
-                if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
-            }
             return true;
         }
         
@@ -957,14 +864,6 @@ namespace Mutagen.Bethesda.Skyrim
             var hash = new HashCode();
             hash.Add(item.Function);
             hash.Add(item.Unknown2);
-            if (item.ParameterOneString is {} ParameterOneStringitem)
-            {
-                hash.Add(ParameterOneStringitem);
-            }
-            if (item.ParameterTwoString is {} ParameterTwoStringitem)
-            {
-                hash.Add(ParameterTwoStringitem);
-            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1020,14 +919,6 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
-            {
-                item.ParameterOneString = rhs.ParameterOneString;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
-            {
-                item.ParameterTwoString = rhs.ParameterTwoString;
             }
         }
         

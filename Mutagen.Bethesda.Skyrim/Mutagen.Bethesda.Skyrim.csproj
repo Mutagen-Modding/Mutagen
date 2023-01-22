@@ -152,7 +152,22 @@
     <Compile Include="Records\Common Subrecords\BodyTemplate.cs">
       <DependentUpon>BodyTemplate.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\CanFlyHereConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\CanHaveFlamesConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\CanPayCrimeGoldConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ClearInvalidRegistrationsConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Condition.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionData.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ConditionFloat.cs">
@@ -167,17 +182,1199 @@
     <Compile Include="Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\DoesNotExistConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EffectWasDualCastConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\EnableParent.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPAlchemyEffectHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPAlchemyGetMakingPoisonConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPMagic_IsAdvanceSkillConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPMagic_SpellHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPMagic_SpellHasSkillConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPModSkillUsage_AdvanceObjectHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPModSkillUsage_IsAdvanceActionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPTemperingItemHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EPTemperingItemIsEnchantedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ExistsConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ExtraData.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\GetActivatorHeightConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetActorAggroRadiusViolatedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetActorCrimePlayerEnemyConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetActorsInHighConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetActorValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetActorValuePercentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetActorWarmthConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetAlarmedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetAllowWorldInteractionsConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetAmountSoldStolenConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetAngleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetAnimActionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetArrestedStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetArrestingActorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetAttackedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetAttackStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetBaseActorValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetBribeSuccessConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCannibalConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCauseofDeathConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetClassDefaultMatchConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetClothingValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCombatGroupMemberCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCombatStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCombatTargetHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetConcussedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCrimeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCrimeGoldConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCrimeGoldNonviolentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCrimeGoldViolentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCurrentAIPackageConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCurrentAIProcedureConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCurrentCastingTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCurrentDeliveryTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCurrentShoutVariationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCurrentTimeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetCurrentWeatherPercentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDayOfWeekConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDaysInJailConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDeadConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDeadCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDefaultOpenConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDestroyedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDestructionStageConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDetectedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDialogueEmotionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDialogueEmotionValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDisabledConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDiseaseConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetDistanceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetEquippedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetEquippedItemTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetEquippedShoutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetEventDataConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetFactionCombatReactionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetFactionRankConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetFactionRankDifferenceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetFactionRelationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetFlyingStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetFriendHitConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetGlobalValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetGoldConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetGraphVariableFloatConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetGraphVariableIntConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetGroupMemberCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetGroupTargetCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetHasNoteConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetHeadingAngleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetHealthPercentageConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetHighestRelationshipRankConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetHitLocationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIdleDoneOnceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIgnoreCrimeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIgnoreFriendlyHitsConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInCellConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInCellParamConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInContainerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInCurrentLocAliasConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInCurrentLocConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInCurrentLocFormListConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInFactionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInfamyConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInfamyNonViolentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInfamyViolentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInSameCellConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInSharedCrimeFactionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIntimidateSuccessConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInWorldspaceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetInZoneConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsAlertedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsAliasRefConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsAlignmentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsClassConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsClassDefaultConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsCrashLandRequestConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsCreatureConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsCreatureTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsCrimeFactionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsCurrentPackageConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsCurrentWeatherConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsEditorLocAliasConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsEditorLocationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsFlyingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsGhostConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsHastyLandRequestConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsIDConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsInjuredConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsObjectTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsPlayableRaceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsRaceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsReferenceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsSexConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsUsedItemConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsUsedItemEquipTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsUsedItemTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetIsVoiceTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetItemCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetItemHealthPercentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetKeywordDataForAliasConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetKeywordDataForCurrentLocationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetKeywordDataForLocationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetKeywordItemCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetKillingBlowLimbConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetKnockedStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetKnockedStateEnumConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLastBumpDirectionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLastHitCriticalConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLastPlayerActionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLevelConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLightLevelConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLineOfSightConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLocAliasRefTypeAliveCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLocAliasRefTypeDeadCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLocationAliasClearedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLocationClearedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLockedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLockIsBrokenConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLockLevelConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetLowestRelationshipRankConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetMapMarkerVisibleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetMovementDirectionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetMovementSpeedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetNoBleedoutRecoveryConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetNoRumorsConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetNumericPackageDataConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetOffersServicesNowConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetOpenStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPairedAnimationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPathingCurrentSpeedAngleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPathingCurrentSpeedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPathingTargetAngleOffsetConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPathingTargetOffsetConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPathingTargetSpeedAngleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPathingTargetSpeedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCEnemyofFactionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCExpelledConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCFactionAttackConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCFactionMurderConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCInFactionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCIsClassConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCIsRaceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCIsSexConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPCMiscStatConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPermanentActorValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPersuasionNumberConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPlantedExplosiveConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPlayerActionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPlayerControlsDisabledConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPlayerTeammateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPlayerTeammateCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetPosConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetQuestCompletedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetQuestRunningConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetQuestVariableConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetRandomPercentConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetRealHoursPassedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetRefTypeAliveCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetRefTypeDeadCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetRelationshipRankConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetRelativeAngleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetReplacedItemTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetRestrainedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetScaleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetScriptVariableConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSecondsPassedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetShouldAttackConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetShouldHelpConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSittingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSKSEReleaseConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSKSEVersionBetaConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSKSEVersionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSKSEVersionMinorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSleepingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetSpellUsageNumConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetStageConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetStageDoneConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetStaminaPercentageConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetStartingAngleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetStartingPosConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetStolenItemValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetStolenItemValueNoCrimeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetTalkedToPCConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetTalkedToPCParamConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetTargetHeightConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetThreatRatioConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetTimeDeadConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetTotalPersuasionNumberConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetTrespassWarningLevelConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetUnconsciousConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVampireFeedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSBackAreaFreeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSBackTargetVisibleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSFrontAreaFreeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSFrontTargetVisibleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSLeftAreaFreeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSLeftTargetVisibleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSModeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSRightAreaFreeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSRightTargetVisibleConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVatsTargetHeightConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVATSValueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVelocityConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVMQuestVariableConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetVMScriptVariableConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetWalkSpeedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetWantBlockingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetWeaponAnimTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetWindSpeedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetWithinDistanceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetWithinPackageLocationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetXPForNextLevelConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasAssociationTypeAnyConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasAssociationTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasBeenEatenConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasBoundWeaponEquippedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasEquippedSpellConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasFamilyRelationshipAnyConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasFamilyRelationshipConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasFlamesConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasLinkedRefConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasLoaded3DConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasMagicEffectConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasMagicEffectKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasParentRelationshipConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasPerkConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasRefTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasSameEditorLocAsRefAliasConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasSameEditorLocAsRefConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasShoutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasSpellConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HasTwoHandedWeaponEquippedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IConditionStringParameter.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsActorAVictimConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsActorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsActorUsingATorchConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsAllowedToFlyConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsAttackingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsAttackTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsBeingRiddenConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsBleedingOutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsBlockingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsBribedbyPlayerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCarryableConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCastingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCellOwnerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsChildConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCloserToAThanBConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCloudyConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCombatTargetConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCommandedActorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsContinuingPackagePCNearConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCurrentFurnitureObjConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCurrentFurnitureRefConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsCurrentSpellConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsDualCastingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsEnteringInteractionQuickConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsEssentialConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsExitingInstantConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsExitingInteractionQuickConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsFacingUpConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsFleeingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsFlyingMountFastTravellingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsFlyingMountPatrolQueudConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsFurnitureAnimTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsFurnitureEntryTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsGoreDisabledConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsGreetingPlayerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsGuardConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsHorseStolenConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsHostileToActorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsIdlePlayingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsIgnoringCombatConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInCombatConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInCriticalStageConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInDangerousWaterConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInDialogueWithPlayerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInFavorStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInFriendStateWithPlayerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInFurnitureStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInInteriorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInListConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInMyOwnedCellConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInSameCurrentLocAsRefAliasConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInSameCurrentLocAsRefConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsInSceneConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsIntimidatedbyPlayerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsKillerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsKillerObjectConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsLastHostileActorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsLastIdlePlayedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsLeftUpConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsLimbGoneConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsLinkedToConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsLocAliasLoadedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsLocationLoadedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsMovingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsNullPackageDataConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsOnFlyingMountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsOverEncumberedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsOwnerConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPathingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPC1stPersonConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPCAMurdererConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPCSleepingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPlayerActionActiveConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPlayerGrabbedRefConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPlayerInRegionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPlayerMovingIntoNewSpaceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPlayersLastRiddenMountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPleasantConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPoisonConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPowerAttackingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsProtectedConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsPS3ConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsRainingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsRecoilingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsRidingMountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsRotatingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsRunningConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsSceneActionCompleteConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsScenePackageRunningConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsScenePlayingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsShieldOutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsSmallBumpConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsSneakingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsSnowingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsSpellTargetConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsSprintingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsStaggeredConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsSwimmingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsTalkingActivatorActorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsTalkingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsTimePassingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsTorchOutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsTrespassingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsTurningConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsUndeadConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsUniqueConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsUnlockedDoorConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWaitingConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWardStateConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWarningAboutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWaterObjectConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWeaponInListConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWeaponMagicOutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWeaponOutConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWeaponSkillTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsWin32ConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\IsXBoxConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocAliasHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocAliasIsLocationConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationHasRefTypeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\MenuModeConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Patrol.cs">
       <DependentUpon>Patrol.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\PlayerKnowsConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SameFactionAsPCConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SameFactionConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SameRaceAsPCConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SameRaceConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SameSexAsPCConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SameSexConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEntry.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
@@ -188,8 +1385,23 @@
     <Compile Include="Records\Common Subrecords\ScriptProperty.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ShouldAttackKillConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SpellHasCastingPerkConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SpellHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WornApparelHasKeywordCountConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WornHasKeywordConditionData.cs">
+      <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>

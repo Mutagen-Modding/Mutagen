@@ -113,7 +113,8 @@ partial class LocationTargetRadiusBinaryWriteTranslation
 
 partial class LocationTargetRadiusBinaryOverlay
 {
-    public partial IALocationTargetGetter GetTargetCustom(int location)
+    public IALocationTargetGetter Target => GetTargetCustom(location: 0x0);
+    public IALocationTargetGetter GetTargetCustom(int location)
     {
         return LocationTargetRadiusBinaryCreateTranslation.GetLocationTarget(
             new MutagenFrame(

@@ -121,7 +121,7 @@ partial class QuestBinaryOverlay
 
     partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        DialogConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+        DialogConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }
 
     public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
@@ -132,7 +132,7 @@ partial class QuestBinaryOverlay
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
-        UnusedConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+        UnusedConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
 
         return null;
     }

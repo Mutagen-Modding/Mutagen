@@ -47,30 +47,42 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetKeywordDataForLocationConditionData()
         {
+            _FirstParameter = new FormLinkOrAlias<ILocationGetter>(this);
+            _SecondParameter = new FormLinkOrAlias<IKeywordGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region FirstParameter
-        private readonly IFormLink<ILocationGetter> _FirstParameter = new FormLink<ILocationGetter>();
-        public IFormLink<ILocationGetter> FirstParameter
+        private readonly IFormLinkOrAlias<ILocationGetter> _FirstParameter = default!;
+        public IFormLinkOrAlias<ILocationGetter> FirstParameter
         {
             get => _FirstParameter;
             set => _FirstParameter.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILocationGetter> IGetKeywordDataForLocationConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkOrAliasGetter<ILocationGetter> IGetKeywordDataForLocationConditionDataGetter.FirstParameter => this.FirstParameter;
+        #endregion
+        #region FirstUnusedStringParameter
+        public String? FirstUnusedStringParameter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IGetKeywordDataForLocationConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondParameter
-        private readonly IFormLink<IKeywordGetter> _SecondParameter = new FormLink<IKeywordGetter>();
-        public IFormLink<IKeywordGetter> SecondParameter
+        private readonly IFormLinkOrAlias<IKeywordGetter> _SecondParameter = default!;
+        public IFormLinkOrAlias<IKeywordGetter> SecondParameter
         {
             get => _SecondParameter;
             set => _SecondParameter.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IKeywordGetter> IGetKeywordDataForLocationConditionDataGetter.SecondParameter => this.SecondParameter;
+        IFormLinkOrAliasGetter<IKeywordGetter> IGetKeywordDataForLocationConditionDataGetter.SecondParameter => this.SecondParameter;
+        #endregion
+        #region SecondUnusedStringParameter
+        public String? SecondUnusedStringParameter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IGetKeywordDataForLocationConditionDataGetter.SecondUnusedStringParameter => this.SecondUnusedStringParameter;
         #endregion
 
         #region To String
@@ -114,30 +126,34 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.FirstParameter = initialValue;
+                this.FirstUnusedStringParameter = initialValue;
                 this.SecondParameter = initialValue;
+                this.SecondUnusedStringParameter = initialValue;
             }
 
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
                 TItem Unknown3,
+                TItem UseAliases,
                 TItem Function,
                 TItem Unknown2,
-                TItem ParameterOneString,
-                TItem ParameterTwoString,
                 TItem FirstParameter,
-                TItem SecondParameter)
+                TItem FirstUnusedStringParameter,
+                TItem SecondParameter,
+                TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
+                UseAliases: UseAliases,
                 Function: Function,
-                Unknown2: Unknown2,
-                ParameterOneString: ParameterOneString,
-                ParameterTwoString: ParameterTwoString)
+                Unknown2: Unknown2)
             {
                 this.FirstParameter = FirstParameter;
+                this.FirstUnusedStringParameter = FirstUnusedStringParameter;
                 this.SecondParameter = SecondParameter;
+                this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
             #pragma warning disable CS8618
@@ -150,7 +166,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem FirstParameter;
+            public TItem FirstUnusedStringParameter;
             public TItem SecondParameter;
+            public TItem SecondUnusedStringParameter;
             #endregion
 
             #region Equals
@@ -165,14 +183,18 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
+                if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
                 if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.FirstParameter);
+                hash.Add(this.FirstUnusedStringParameter);
                 hash.Add(this.SecondParameter);
+                hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -184,7 +206,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.FirstParameter)) return false;
+                if (!eval(this.FirstUnusedStringParameter)) return false;
                 if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
             #endregion
@@ -194,7 +218,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.FirstParameter)) return true;
+                if (eval(this.FirstUnusedStringParameter)) return true;
                 if (eval(this.SecondParameter)) return true;
+                if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
             #endregion
@@ -211,7 +237,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.FirstParameter = eval(this.FirstParameter);
+                obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
                 obj.SecondParameter = eval(this.SecondParameter);
+                obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
 
@@ -234,9 +262,17 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(FirstParameter, "FirstParameter");
                     }
+                    if (printMask?.FirstUnusedStringParameter ?? true)
+                    {
+                        sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
+                    }
                     if (printMask?.SecondParameter ?? true)
                     {
                         sb.AppendItem(SecondParameter, "SecondParameter");
+                    }
+                    if (printMask?.SecondUnusedStringParameter ?? true)
+                    {
+                        sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
                     }
                 }
             }
@@ -250,7 +286,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? FirstParameter;
+            public Exception? FirstUnusedStringParameter;
             public Exception? SecondParameter;
+            public Exception? SecondUnusedStringParameter;
             #endregion
 
             #region IErrorMask
@@ -261,8 +299,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case GetKeywordDataForLocationConditionData_FieldIndex.FirstParameter:
                         return FirstParameter;
+                    case GetKeywordDataForLocationConditionData_FieldIndex.FirstUnusedStringParameter:
+                        return FirstUnusedStringParameter;
                     case GetKeywordDataForLocationConditionData_FieldIndex.SecondParameter:
                         return SecondParameter;
+                    case GetKeywordDataForLocationConditionData_FieldIndex.SecondUnusedStringParameter:
+                        return SecondUnusedStringParameter;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -276,8 +318,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case GetKeywordDataForLocationConditionData_FieldIndex.FirstParameter:
                         this.FirstParameter = ex;
                         break;
+                    case GetKeywordDataForLocationConditionData_FieldIndex.FirstUnusedStringParameter:
+                        this.FirstUnusedStringParameter = ex;
+                        break;
                     case GetKeywordDataForLocationConditionData_FieldIndex.SecondParameter:
                         this.SecondParameter = ex;
+                        break;
+                    case GetKeywordDataForLocationConditionData_FieldIndex.SecondUnusedStringParameter:
+                        this.SecondUnusedStringParameter = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -293,8 +341,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case GetKeywordDataForLocationConditionData_FieldIndex.FirstParameter:
                         this.FirstParameter = (Exception?)obj;
                         break;
+                    case GetKeywordDataForLocationConditionData_FieldIndex.FirstUnusedStringParameter:
+                        this.FirstUnusedStringParameter = (Exception?)obj;
+                        break;
                     case GetKeywordDataForLocationConditionData_FieldIndex.SecondParameter:
                         this.SecondParameter = (Exception?)obj;
+                        break;
+                    case GetKeywordDataForLocationConditionData_FieldIndex.SecondUnusedStringParameter:
+                        this.SecondUnusedStringParameter = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -306,7 +360,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (FirstParameter != null) return true;
+                if (FirstUnusedStringParameter != null) return true;
                 if (SecondParameter != null) return true;
+                if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
             #endregion
@@ -337,7 +393,13 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(FirstParameter, "FirstParameter");
                 }
                 {
+                    sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
+                }
+                {
                     sb.AppendItem(SecondParameter, "SecondParameter");
+                }
+                {
+                    sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
                 }
             }
             #endregion
@@ -348,7 +410,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
+                ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
                 ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -372,7 +436,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool FirstParameter;
+            public bool FirstUnusedStringParameter;
             public bool SecondParameter;
+            public bool SecondUnusedStringParameter;
             #endregion
 
             #region Ctors
@@ -382,7 +448,9 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.FirstParameter = defaultOn;
+                this.FirstUnusedStringParameter = defaultOn;
                 this.SecondParameter = defaultOn;
+                this.SecondUnusedStringParameter = defaultOn;
             }
 
             #endregion
@@ -391,7 +459,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((FirstParameter, null));
+                ret.Add((FirstUnusedStringParameter, null));
                 ret.Add((SecondParameter, null));
+                ret.Add((SecondUnusedStringParameter, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -469,8 +539,10 @@ namespace Mutagen.Bethesda.Skyrim
         IGetKeywordDataForLocationConditionDataGetter,
         ILoquiObjectSetter<IGetKeywordDataForLocationConditionData>
     {
-        new IFormLink<ILocationGetter> FirstParameter { get; set; }
-        new IFormLink<IKeywordGetter> SecondParameter { get; set; }
+        new IFormLinkOrAlias<ILocationGetter> FirstParameter { get; set; }
+        new String? FirstUnusedStringParameter { get; set; }
+        new IFormLinkOrAlias<IKeywordGetter> SecondParameter { get; set; }
+        new String? SecondUnusedStringParameter { get; set; }
     }
 
     public partial interface IGetKeywordDataForLocationConditionDataGetter :
@@ -480,8 +552,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetKeywordDataForLocationConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetKeywordDataForLocationConditionData_Registration.Instance;
-        IFormLinkGetter<ILocationGetter> FirstParameter { get; }
-        IFormLinkGetter<IKeywordGetter> SecondParameter { get; }
+        IFormLinkOrAliasGetter<ILocationGetter> FirstParameter { get; }
+        String? FirstUnusedStringParameter { get; }
+        IFormLinkOrAliasGetter<IKeywordGetter> SecondParameter { get; }
+        String? SecondUnusedStringParameter { get; }
 
     }
 
@@ -629,12 +703,13 @@ namespace Mutagen.Bethesda.Skyrim
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
-        Function = 3,
-        Unknown2 = 4,
-        ParameterOneString = 5,
-        ParameterTwoString = 6,
-        FirstParameter = 7,
+        UseAliases = 3,
+        Function = 4,
+        Unknown2 = 5,
+        FirstParameter = 6,
+        FirstUnusedStringParameter = 7,
         SecondParameter = 8,
+        SecondUnusedStringParameter = 9,
     }
     #endregion
 
@@ -652,9 +727,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "bb89301c-e427-4eb4-bf0c-fa1e6866319c";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(GetKeywordDataForLocationConditionData.Mask<>);
 
@@ -723,7 +798,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.FirstParameter.Clear();
+            item.FirstUnusedStringParameter = default;
             item.SecondParameter.Clear();
+            item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
         
@@ -810,7 +887,9 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.FirstParameter = item.FirstParameter.Equals(rhs.FirstParameter);
+            ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
             ret.SecondParameter = item.SecondParameter.Equals(rhs.SecondParameter);
+            ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -862,11 +941,21 @@ namespace Mutagen.Bethesda.Skyrim
                 printMask: printMask);
             if (printMask?.FirstParameter ?? true)
             {
-                sb.AppendItem(item.FirstParameter.FormKey, "FirstParameter");
+                sb.AppendItem(item.FirstParameter, "FirstParameter");
+            }
+            if ((printMask?.FirstUnusedStringParameter ?? true)
+                && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
+            {
+                sb.AppendItem(FirstUnusedStringParameterItem, "FirstUnusedStringParameter");
             }
             if (printMask?.SecondParameter ?? true)
             {
-                sb.AppendItem(item.SecondParameter.FormKey, "SecondParameter");
+                sb.AppendItem(item.SecondParameter, "SecondParameter");
+            }
+            if ((printMask?.SecondUnusedStringParameter ?? true)
+                && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
+            {
+                sb.AppendItem(SecondUnusedStringParameterItem, "SecondUnusedStringParameter");
             }
         }
         
@@ -880,13 +969,11 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Unknown3:
                     return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
+                case FunctionConditionData_FieldIndex.UseAliases:
+                    return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Function:
                     return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Unknown2:
-                    return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
                     return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -902,6 +989,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Reference:
                     return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Unknown3:
+                    return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UseAliases:
                     return (GetKeywordDataForLocationConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -920,9 +1009,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
+            {
+                if (!string.Equals(lhs.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.SecondParameter) ?? true))
             {
                 if (!lhs.SecondParameter.Equals(rhs.SecondParameter)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            {
+                if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
             return true;
         }
@@ -953,7 +1050,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.FirstParameter);
+            if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
+            {
+                hash.Add(FirstUnusedStringParameteritem);
+            }
             hash.Add(item.SecondParameter);
+            if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
+            {
+                hash.Add(SecondUnusedStringParameteritem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1013,9 +1118,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.FirstParameter.SetTo(rhs.FirstParameter.FormKey);
             }
+            if ((copyMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
+            {
+                item.FirstUnusedStringParameter = rhs.FirstUnusedStringParameter;
+            }
             if ((copyMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.SecondParameter) ?? true))
             {
                 item.SecondParameter.SetTo(rhs.SecondParameter.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            {
+                item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
         }
         
@@ -1257,8 +1370,8 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILocationGetter> FirstParameter => new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IKeywordGetter> SecondParameter => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkOrAliasGetter<ILocationGetter> FirstParameter => new FormLinkOrAlias<ILocationGetter>(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkOrAliasGetter<IKeywordGetter> SecondParameter => new FormLinkOrAlias<IKeywordGetter>(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

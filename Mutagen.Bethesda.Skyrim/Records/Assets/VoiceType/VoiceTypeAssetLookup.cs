@@ -367,54 +367,51 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         switch (functionConditionData)
         {
             case IGetIsIDConditionDataGetter getIsId:
-                if (!getIsId.FirstParameter.FormKey.IsNull)
+                if (!getIsId.FirstParameter.Link.IsNull)
                 {
-                    voices = new VoiceContainer(getIsId.FirstParameter.FormKey, _speakerVoices[getIsId.FirstParameter.FormKey]);
+                    voices = new VoiceContainer(getIsId.FirstParameter.Link.FormKey, _speakerVoices[getIsId.FirstParameter.Link.FormKey]);
                 }
 
                 break;
             case IGetIsVoiceTypeConditionDataGetter isVoiceType:
-                zzzzz 
-                //Needs to maybe be a Link interface?
-                if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(isVoiceType.FirstParameter.FormKey, out var voiceTypeEditorId))
+                if (isVoiceType.FirstParameter.Link.TryResolve(_formLinkCache, out var voiceTypeRecord))
                 {
-                    //One voice type
-                    voices = new VoiceContainer(voiceTypeEditorId!);
-                } else
-                {
-                    //Multiple voice types
-                    var formList = isVoiceType.FirstParameter.TryResolve<IFormListGetter>(_formLinkCache);
-                    if (formList != null)
+                    switch (voiceTypeRecord)
                     {
-                        voices = new VoiceContainer(formList.Items.SelectWhere(link =>
-                        {
-                            _formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(link.FormKey, out var linkVoiceTypeEditorId);
-                            return linkVoiceTypeEditorId == null ? TryGet<string>.Failure : TryGet<string>.Succeed(linkVoiceTypeEditorId);
-                        }).ToHashSet());
+                        case IVoiceTypeGetter voiceType when voiceType.EditorID != null:
+                            voices = new VoiceContainer(voiceType.EditorID);
+                            break;
+                        case IFormListGetter formList:
+                            voices = new VoiceContainer(formList.Items.SelectWhere(link =>
+                            {
+                                _formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(link.FormKey, out var linkVoiceTypeEditorId);
+                                return linkVoiceTypeEditorId == null ? TryGet<string>.Failure : TryGet<string>.Succeed(linkVoiceTypeEditorId);
+                            }).ToHashSet());
+                            break;
                     }
                 }
-
+                
                 break;
             case IGetIsAliasRefConditionDataGetter aliasRef:
                 voices = GetVoices(quest, aliasRef.FirstParameter, currentMod);
 
                 break;
             case IGetInFactionConditionDataGetter getInFaction:
-                if (_factionNPCs.TryGetValue(getInFaction.FirstParameter.FormKey, out var factionNpcFormKeys))
+                if (_factionNPCs.TryGetValue(getInFaction.FirstParameter.Link.FormKey, out var factionNpcFormKeys))
                 {
                     voices = new VoiceContainer(factionNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IGetIsClassConditionDataGetter getIsClass:
-                if (_classNPCs.TryGetValue(getIsClass.FirstParameter.FormKey, out var classNpcFormKeys))
+                if (_classNPCs.TryGetValue(getIsClass.FirstParameter.Link.FormKey, out var classNpcFormKeys))
                 {
                     voices = new VoiceContainer(classNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IGetIsRaceConditionDataGetter getIsRace:
-                if (_raceNPCs.TryGetValue(getIsRace.FirstParameter.FormKey, out var raceNpcFormKeys))
+                if (_raceNPCs.TryGetValue(getIsRace.FirstParameter.Link.FormKey, out var raceNpcFormKeys))
                 {
                     voices = new VoiceContainer(raceNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
@@ -429,9 +426,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IIsInListConditionDataGetter isInList:
-                if (!isInList.FirstParameter.IsNull)
+                if (!isInList.FirstParameter.Link.IsNull)
                 {
-                    var formList = isInList.FirstParameter.TryResolve(_formLinkCache);
+                    var formList = isInList.FirstParameter.Link.TryResolve(_formLinkCache);
                     //Only look at speakers in the form list
                     if (formList != null) voices = formList.Items.Select(link => GetVoices(link.FormKey)).MergeInsert();
                 }

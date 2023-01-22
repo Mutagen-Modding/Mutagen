@@ -18,12 +18,17 @@ public partial class Condition
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IConditionDataGetter IConditionGetter.Data => this.Data;
+    
+    internal const int ParametersUseAliases = 0x02;
 
+    /// <summary>
+    /// ParametersUseAliases exists on ConditionData object instead
+    /// </summary>
     [Flags]
     public enum Flag
     {
         OR = 0x01,
-        ParametersUseAliases = 0x02,
+        // ParametersUseAliases = 0x02,
         UseGlobal = 0x04,
         UsePackData = 0x08,
         SwapSubjectAndTarget = 0x10
@@ -507,7 +512,7 @@ public partial class Condition
         ClearInvalidRegistrations = 1028,
     }
 
-public enum ParameterCategory
+    public enum ParameterCategory
     {
         None,
         Number,
@@ -729,14 +734,19 @@ public enum ParameterCategory
         }
         var flagByte = frame.GetUInt8(subRecMeta.HeaderLength);
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(flagByte);
+        Condition ret;
         if (flag.HasFlag(Condition.Flag.UseGlobal))
         {
-            return ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+            ret = ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
         }
         else
         {
-            return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+            ret = ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
         }
+
+        ret.Data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
+        ret.Flags = ret.Flags.SetFlag((Condition.Flag)ParametersUseAliases, false);
+        return ret;
     }
 
     public static bool TryCreateFromBinary(
@@ -872,23 +882,26 @@ partial class ConditionBinaryCreateTranslation
         item.CompareOperator = GetCompareOperator(b);
     }
 
-    public static void CustomStringImports(MutagenFrame frame, IConditionData item)
+    public static void CustomStringImports<TStream>(TStream frame, IConditionData item)
+        where TStream : IMutagenReadStream
     {
         if (item is not IFunctionConditionData funcData) return;
         ParseString(frame, funcData);
         ParseString(frame, funcData);
     }
 
-    private static void ParseString(MutagenFrame frame, IFunctionConditionData funcData)
+    private static void ParseString<TStream>(TStream frame, IFunctionConditionData funcData)
+        where TStream : IMutagenReadStream
     {
-        if (!frame.Reader.TryGetSubrecord(out var subMeta)) return;
+        if (funcData is not IConditionStringParameter stringParameter) return;
+        if (!frame.TryGetSubrecord(out var subMeta)) return;
         switch (subMeta.RecordType.TypeInt)
         {
             case RecordTypeInts.CIS1:
-                funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
+                stringParameter.FirstStringParameter = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
             case RecordTypeInts.CIS2:
-                funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
+                stringParameter.SecondStringParameter = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
             default:
                 return;
@@ -916,20 +929,25 @@ partial class ConditionBinaryWriteTranslation
 
     public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item)
     {
-        writer.Write(GetFlagWriteByte(item.Flags, item.CompareOperator));
+        var flags = item.Flags;
+        if (item.Data.UseAliases)
+        {
+            flags = flags.SetFlag((Condition.Flag)ParametersUseAliases, true);
+        }
+        writer.Write(GetFlagWriteByte(flags, item.CompareOperator));
     }
 
     public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
     {
-        if (!(obj is IFunctionConditionDataGetter funcData)) return;
-        if (funcData.ParameterOneString is { } param1)
+        if (obj is not IConditionStringParameter stringParameter) return;
+        if (stringParameter.FirstStringParameter is { } param1)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.CIS1))
             {
                 StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
             }
         }
-        if (funcData.ParameterTwoString is { } param2)
+        if (stringParameter.SecondStringParameter is { } param2)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.CIS2))
             {
@@ -950,7 +968,8 @@ abstract partial class ConditionBinaryOverlay
             RecordTypes.CIS1,
             RecordTypes.CIS2));
 
-    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location]);
+    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location])
+        .SetFlag((Condition.Flag)Condition.ParametersUseAliases, false);
     public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_structData.Span[0]);
 
     public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
@@ -960,36 +979,34 @@ abstract partial class ConditionBinaryOverlay
         {
             throw new ArgumentException();
         }
+
+        var finalPos = stream.Position + subRecMeta.TotalLength;
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
+        ConditionBinaryOverlay ret;
         if (flag.HasFlag(Condition.Flag.UseGlobal))
         {
-            return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
+            ret = (ConditionBinaryOverlay)ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
         }
         else
         {
-            return ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
+            ret = (ConditionBinaryOverlay)ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
         }
+
+        var data = (ConditionData)ret.Data;
+        
+        stream.Position = finalPos;
+        ConditionBinaryCreateTranslation.CustomStringImports(stream, data);
+        data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
+
+        return ret;
     }
 
     public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams _)
     {
-        var subRecMeta = stream.GetSubrecord();
-        if (subRecMeta.RecordType != RecordTypes.CTDA)
-        {
-            throw new ArgumentException();
-        }
-        Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
-        {
-            return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
-        }
-        else
-        {
-            return ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
-        }
+        return ConditionFactory(stream, package);
     }
 
-    public static IReadOnlyList<IConditionGetter> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
         var counterMeta = stream.ReadSubrecord();
         if (counterMeta.RecordType != RecordTypes.CITC
@@ -998,7 +1015,7 @@ abstract partial class ConditionBinaryOverlay
             throw new ArgumentException();
         }
         var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.Content);
-        var ret = ConstructBinayOverlayList(stream, package);
+        var ret = ConstructBinaryOverlayList(stream, package);
         if (count != ret.Count)
         {
             throw new ArgumentException("Number of parsed conditions did not matched labeled count.");
@@ -1006,7 +1023,7 @@ abstract partial class ConditionBinaryOverlay
         return ret;
     }
 
-    public static IReadOnlyList<IConditionGetter> ConstructBinayOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
         var span = stream.RemainingMemory;
         var pos = stream.Position;
@@ -1043,7 +1060,7 @@ partial class ConditionGlobalBinaryCreateTranslation
 
     public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj)
     {
-        ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
+        ConditionBinaryCreateTranslation.CustomStringImports(frame.Reader, obj.Data);
     }
 
     public static ConditionData CreateFromBinary(MutagenFrame frame, ushort functionIndex)
@@ -1898,7 +1915,7 @@ partial class ConditionFloatBinaryCreateTranslation
 
     public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj)
     {
-        ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
+        ConditionBinaryCreateTranslation.CustomStringImports(frame.Reader, obj.Data);
     }
 }
 
@@ -1956,17 +1973,27 @@ partial class GetEventDataBinaryWriteTranslation
 
 partial class ConditionFloatBinaryOverlay
 {
-    public partial IConditionDataGetter GetDataCustom(int location)
+    public static IConditionDataGetter GetDataCustomCommon(ConditionBinaryOverlay condition, int location)
     {
-        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(location));
+        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(condition._structData.Slice(location));
         if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
         {
-            return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_structData.Slice(location), _package), _package);
+            return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(condition._structData.Slice(location), condition._package), condition._package);
         }
         else
         {
-            return ConditionGlobalBinaryCreateTranslation.CreateFromBinary(new MutagenFrame(new OverlayStream(_structData.Slice(location), _package)), functionIndex);
+            var ret = ConditionGlobalBinaryCreateTranslation.CreateFromBinary(new MutagenFrame(new OverlayStream(condition._structData.Slice(location), condition._package)), functionIndex);
+            ret.UseAliases = condition.Flags.HasFlag((Condition.Flag)ParametersUseAliases);
+            return ret;
         }
+    }
+
+    private IConditionDataGetter _data = null!;
+    public override IConditionDataGetter Data => _data;
+
+    partial void CustomCtor()
+    {
+        _data = GetDataCustomCommon(this, location: 0x8);
     }
 
     partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
@@ -1978,17 +2005,12 @@ partial class ConditionFloatBinaryOverlay
 
 partial class ConditionGlobalBinaryOverlay
 {
-    public partial IConditionDataGetter GetDataCustom(int location)
+    private IConditionDataGetter _data = null!;
+    public override IConditionDataGetter Data => _data;
+
+    partial void CustomCtor()
     {
-        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(location));
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
-        {
-            return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_structData.Slice(location), _package), _package);
-        }
-        else
-        {
-            return ConditionGlobalBinaryCreateTranslation.CreateFromBinary(new MutagenFrame(new OverlayStream(_structData.Slice(location), _package)), functionIndex);
-        }
+        _data = ConditionFloatBinaryOverlay.GetDataCustomCommon(this, location: 0x8);
     }
 
     partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
@@ -2005,7 +2027,7 @@ partial class ConditionDataBinaryOverlay
     public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
 }
 
-partial class FunctionConditionDataBinaryOverlay
+partial class FunctionConditionDataBinaryOverlay : IConditionStringParameterGetter
 {
     private ReadOnlyMemorySlice<byte> _data2;
 
@@ -2018,39 +2040,14 @@ partial class FunctionConditionDataBinaryOverlay
     public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
 
     private ReadOnlyMemorySlice<byte> _stringParamData1;
-    public bool ParameterOneStringIsSet { get; private set; }
-    public string? ParameterOneString => ParameterOneStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
+    protected bool ParameterOneStringIsSet { get; private set; }
+    protected string? ParameterOneString => ParameterOneStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
 
     private ReadOnlyMemorySlice<byte> _stringParamData2;
-    public bool ParameterTwoStringIsSet { get; private set; }
-    public string? ParameterTwoString => ParameterTwoStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
+    protected bool ParameterTwoStringIsSet { get; private set; }
+    protected string? ParameterTwoString => ParameterTwoStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
 
-    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-    {
-        stream.Position -= 0x4;
-        _data2 = stream.RemainingMemory.Slice(4, 0x14);
-        stream.Position += 0x18;
-        ParseStringParameter(stream);
-        ParseStringParameter(stream);
-    }
+    string? IConditionStringParameterGetter.FirstStringParameter => ParameterOneString;
 
-    private void ParseStringParameter(OverlayStream stream)
-    {
-        if (stream.Complete || !stream.TryGetSubrecordHeader(out var subFrame)) return;
-        switch (subFrame.RecordTypeInt)
-        {
-            case RecordTypeInts.CIS1:
-                _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                ParameterOneStringIsSet = true;
-                stream.Position += subFrame.TotalLength;
-                break;
-            case RecordTypeInts.CIS2:
-                _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                ParameterTwoStringIsSet = true;
-                stream.Position += subFrame.TotalLength;
-                break;
-            default:
-                break;
-        }
-    }
+    string? IConditionStringParameterGetter.SecondStringParameter => ParameterTwoString;
 }

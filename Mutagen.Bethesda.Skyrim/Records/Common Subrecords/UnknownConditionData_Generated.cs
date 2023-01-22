@@ -106,20 +106,18 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem RunOnType,
                 TItem Reference,
                 TItem Unknown3,
+                TItem UseAliases,
                 TItem Function,
                 TItem Unknown2,
-                TItem ParameterOneString,
-                TItem ParameterTwoString,
                 TItem ParameterOne,
                 TItem ParameterTwo)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
+                UseAliases: UseAliases,
                 Function: Function,
-                Unknown2: Unknown2,
-                ParameterOneString: ParameterOneString,
-                ParameterTwoString: ParameterTwoString)
+                Unknown2: Unknown2)
             {
                 this.ParameterOne = ParameterOne;
                 this.ParameterTwo = ParameterTwo;
@@ -607,12 +605,11 @@ namespace Mutagen.Bethesda.Skyrim
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
-        Function = 3,
-        Unknown2 = 4,
-        ParameterOneString = 5,
-        ParameterTwoString = 6,
-        ParameterOne = 7,
-        ParameterTwo = 8,
+        UseAliases = 3,
+        Function = 4,
+        Unknown2 = 5,
+        ParameterOne = 6,
+        ParameterTwo = 7,
     }
     #endregion
 
@@ -632,7 +629,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(UnknownConditionData.Mask<>);
 
@@ -856,13 +853,11 @@ namespace Mutagen.Bethesda.Skyrim
                     return (UnknownConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Unknown3:
                     return (UnknownConditionData_FieldIndex)((int)index);
+                case FunctionConditionData_FieldIndex.UseAliases:
+                    return (UnknownConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Function:
                     return (UnknownConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Unknown2:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
                     return (UnknownConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -878,6 +873,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Reference:
                     return (UnknownConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Unknown3:
+                    return (UnknownConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UseAliases:
                     return (UnknownConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

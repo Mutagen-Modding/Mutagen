@@ -118,13 +118,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem RunOnType,
                 TItem Reference,
                 TItem Unknown3,
+                TItem UseAliases,
                 TItem EventFunction,
                 TItem EventMember,
                 TItem Parameter3)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3)
+                Unknown3: Unknown3,
+                UseAliases: UseAliases)
             {
                 this.EventFunction = EventFunction;
                 this.EventMember = EventMember;
@@ -649,9 +651,10 @@ namespace Mutagen.Bethesda.Skyrim
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
-        EventFunction = 3,
-        EventMember = 4,
-        Parameter3 = 5,
+        UseAliases = 3,
+        EventFunction = 4,
+        EventMember = 5,
+        Parameter3 = 6,
     }
     #endregion
 
@@ -671,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(GetEventData.Mask<>);
 
@@ -885,6 +888,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Reference:
                     return (GetEventData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Unknown3:
+                    return (GetEventData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UseAliases:
                     return (GetEventData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

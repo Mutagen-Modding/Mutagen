@@ -95,6 +95,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         this._typeGenerations[typeof(ModKeyType)] = new ModKeyBinaryTranslationGeneration();
         this._typeGenerations[typeof(RecordTypeType)] = new RecordTypeBinaryTranslationGeneration();
         this._typeGenerations[typeof(FormLinkType)] = new FormLinkBinaryTranslationGeneration();
+        this._typeGenerations[typeof(FormLinkOrAliasType)] = new FormLinkOrAliasTranslationGeneration();
         this._typeGenerations[typeof(ListType)] = new PluginListBinaryTranslationGeneration();
         this._typeGenerations[typeof(Array2dType)] = new Array2dBinaryTranslationGeneration();
         this._typeGenerations[typeof(ArrayType)] = new PluginArrayBinaryTranslationGeneration();

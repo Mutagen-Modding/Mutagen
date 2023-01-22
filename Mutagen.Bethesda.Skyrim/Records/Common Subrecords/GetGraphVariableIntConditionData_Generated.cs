@@ -51,11 +51,21 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region FirstUnusedIntParameter
+        public Int32 FirstUnusedIntParameter { get; set; } = default;
+        #endregion
         #region FirstParameter
-        public String FirstParameter { get; set; } = string.Empty;
+        public String? FirstParameter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IGetGraphVariableIntConditionDataGetter.FirstParameter => this.FirstParameter;
         #endregion
         #region SecondParameter
         public Int32 SecondParameter { get; set; } = default;
+        #endregion
+        #region SecondUnusedStringParameter
+        public String? SecondUnusedStringParameter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IGetGraphVariableIntConditionDataGetter.SecondUnusedStringParameter => this.SecondUnusedStringParameter;
         #endregion
 
         #region To String
@@ -98,31 +108,35 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.FirstUnusedIntParameter = initialValue;
                 this.FirstParameter = initialValue;
                 this.SecondParameter = initialValue;
+                this.SecondUnusedStringParameter = initialValue;
             }
 
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
                 TItem Unknown3,
+                TItem UseAliases,
                 TItem Function,
                 TItem Unknown2,
-                TItem ParameterOneString,
-                TItem ParameterTwoString,
+                TItem FirstUnusedIntParameter,
                 TItem FirstParameter,
-                TItem SecondParameter)
+                TItem SecondParameter,
+                TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
+                UseAliases: UseAliases,
                 Function: Function,
-                Unknown2: Unknown2,
-                ParameterOneString: ParameterOneString,
-                ParameterTwoString: ParameterTwoString)
+                Unknown2: Unknown2)
             {
+                this.FirstUnusedIntParameter = FirstUnusedIntParameter;
                 this.FirstParameter = FirstParameter;
                 this.SecondParameter = SecondParameter;
+                this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
             #pragma warning disable CS8618
@@ -134,8 +148,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem FirstUnusedIntParameter;
             public TItem FirstParameter;
             public TItem SecondParameter;
+            public TItem SecondUnusedStringParameter;
             #endregion
 
             #region Equals
@@ -149,15 +165,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.FirstUnusedIntParameter, rhs.FirstUnusedIntParameter)) return false;
                 if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
                 if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.FirstUnusedIntParameter);
                 hash.Add(this.FirstParameter);
                 hash.Add(this.SecondParameter);
+                hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -168,8 +188,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.FirstUnusedIntParameter)) return false;
                 if (!eval(this.FirstParameter)) return false;
                 if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
             #endregion
@@ -178,8 +200,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.FirstUnusedIntParameter)) return true;
                 if (eval(this.FirstParameter)) return true;
                 if (eval(this.SecondParameter)) return true;
+                if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
             #endregion
@@ -195,8 +219,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.FirstUnusedIntParameter = eval(this.FirstUnusedIntParameter);
                 obj.FirstParameter = eval(this.FirstParameter);
                 obj.SecondParameter = eval(this.SecondParameter);
+                obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
 
@@ -215,6 +241,10 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(GetGraphVariableIntConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.FirstUnusedIntParameter ?? true)
+                    {
+                        sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                    }
                     if (printMask?.FirstParameter ?? true)
                     {
                         sb.AppendItem(FirstParameter, "FirstParameter");
@@ -222,6 +252,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.SecondParameter ?? true)
                     {
                         sb.AppendItem(SecondParameter, "SecondParameter");
+                    }
+                    if (printMask?.SecondUnusedStringParameter ?? true)
+                    {
+                        sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
                     }
                 }
             }
@@ -234,8 +268,10 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? FirstUnusedIntParameter;
             public Exception? FirstParameter;
             public Exception? SecondParameter;
+            public Exception? SecondUnusedStringParameter;
             #endregion
 
             #region IErrorMask
@@ -244,10 +280,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetGraphVariableIntConditionData_FieldIndex enu = (GetGraphVariableIntConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter:
+                        return FirstUnusedIntParameter;
                     case GetGraphVariableIntConditionData_FieldIndex.FirstParameter:
                         return FirstParameter;
                     case GetGraphVariableIntConditionData_FieldIndex.SecondParameter:
                         return SecondParameter;
+                    case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter:
+                        return SecondUnusedStringParameter;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -258,11 +298,17 @@ namespace Mutagen.Bethesda.Skyrim
                 GetGraphVariableIntConditionData_FieldIndex enu = (GetGraphVariableIntConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter:
+                        this.FirstUnusedIntParameter = ex;
+                        break;
                     case GetGraphVariableIntConditionData_FieldIndex.FirstParameter:
                         this.FirstParameter = ex;
                         break;
                     case GetGraphVariableIntConditionData_FieldIndex.SecondParameter:
                         this.SecondParameter = ex;
+                        break;
+                    case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter:
+                        this.SecondUnusedStringParameter = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -275,11 +321,17 @@ namespace Mutagen.Bethesda.Skyrim
                 GetGraphVariableIntConditionData_FieldIndex enu = (GetGraphVariableIntConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter:
+                        this.FirstUnusedIntParameter = (Exception?)obj;
+                        break;
                     case GetGraphVariableIntConditionData_FieldIndex.FirstParameter:
                         this.FirstParameter = (Exception?)obj;
                         break;
                     case GetGraphVariableIntConditionData_FieldIndex.SecondParameter:
                         this.SecondParameter = (Exception?)obj;
+                        break;
+                    case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter:
+                        this.SecondUnusedStringParameter = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -290,8 +342,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (FirstUnusedIntParameter != null) return true;
                 if (FirstParameter != null) return true;
                 if (SecondParameter != null) return true;
+                if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
             #endregion
@@ -319,10 +373,16 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
+                    sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                }
+                {
                     sb.AppendItem(FirstParameter, "FirstParameter");
                 }
                 {
                     sb.AppendItem(SecondParameter, "SecondParameter");
+                }
+                {
+                    sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
                 }
             }
             #endregion
@@ -332,8 +392,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.FirstUnusedIntParameter = this.FirstUnusedIntParameter.Combine(rhs.FirstUnusedIntParameter);
                 ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
                 ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -356,8 +418,10 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
+            public bool FirstUnusedIntParameter;
             public bool FirstParameter;
             public bool SecondParameter;
+            public bool SecondUnusedStringParameter;
             #endregion
 
             #region Ctors
@@ -366,8 +430,10 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.FirstUnusedIntParameter = defaultOn;
                 this.FirstParameter = defaultOn;
                 this.SecondParameter = defaultOn;
+                this.SecondUnusedStringParameter = defaultOn;
             }
 
             #endregion
@@ -375,8 +441,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((FirstUnusedIntParameter, null));
                 ret.Add((FirstParameter, null));
                 ret.Add((SecondParameter, null));
+                ret.Add((SecondUnusedStringParameter, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -448,8 +516,10 @@ namespace Mutagen.Bethesda.Skyrim
         IGetGraphVariableIntConditionDataGetter,
         ILoquiObjectSetter<IGetGraphVariableIntConditionData>
     {
-        new String FirstParameter { get; set; }
+        new Int32 FirstUnusedIntParameter { get; set; }
+        new String? FirstParameter { get; set; }
         new Int32 SecondParameter { get; set; }
+        new String? SecondUnusedStringParameter { get; set; }
     }
 
     public partial interface IGetGraphVariableIntConditionDataGetter :
@@ -458,8 +528,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetGraphVariableIntConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetGraphVariableIntConditionData_Registration.Instance;
-        String FirstParameter { get; }
+        Int32 FirstUnusedIntParameter { get; }
+        String? FirstParameter { get; }
         Int32 SecondParameter { get; }
+        String? SecondUnusedStringParameter { get; }
 
     }
 
@@ -607,12 +679,13 @@ namespace Mutagen.Bethesda.Skyrim
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
-        Function = 3,
-        Unknown2 = 4,
-        ParameterOneString = 5,
-        ParameterTwoString = 6,
+        UseAliases = 3,
+        Function = 4,
+        Unknown2 = 5,
+        FirstUnusedIntParameter = 6,
         FirstParameter = 7,
         SecondParameter = 8,
+        SecondUnusedStringParameter = 9,
     }
     #endregion
 
@@ -630,9 +703,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "2a2c697b-b35c-4c70-b49d-cb0c20d00ba2";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(GetGraphVariableIntConditionData.Mask<>);
 
@@ -700,8 +773,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetGraphVariableIntConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = string.Empty;
+            item.FirstUnusedIntParameter = default;
+            item.FirstParameter = default;
             item.SecondParameter = default;
+            item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
         
@@ -785,8 +860,10 @@ namespace Mutagen.Bethesda.Skyrim
             GetGraphVariableIntConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.FirstUnusedIntParameter = item.FirstUnusedIntParameter == rhs.FirstUnusedIntParameter;
             ret.FirstParameter = string.Equals(item.FirstParameter, rhs.FirstParameter);
             ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
+            ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -836,13 +913,23 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstParameter ?? true)
+            if (printMask?.FirstUnusedIntParameter ?? true)
             {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.FirstUnusedIntParameter, "FirstUnusedIntParameter");
+            }
+            if ((printMask?.FirstParameter ?? true)
+                && item.FirstParameter is {} FirstParameterItem)
+            {
+                sb.AppendItem(FirstParameterItem, "FirstParameter");
             }
             if (printMask?.SecondParameter ?? true)
             {
                 sb.AppendItem(item.SecondParameter, "SecondParameter");
+            }
+            if ((printMask?.SecondUnusedStringParameter ?? true)
+                && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
+            {
+                sb.AppendItem(SecondUnusedStringParameterItem, "SecondUnusedStringParameter");
             }
         }
         
@@ -856,13 +943,11 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Unknown3:
                     return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
+                case FunctionConditionData_FieldIndex.UseAliases:
+                    return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Function:
                     return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
                 case FunctionConditionData_FieldIndex.Unknown2:
-                    return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.ParameterOneString:
-                    return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.ParameterTwoString:
                     return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -879,6 +964,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UseAliases:
+                    return (GetGraphVariableIntConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -892,6 +979,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter) ?? true))
+            {
+                if (lhs.FirstUnusedIntParameter != rhs.FirstUnusedIntParameter) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 if (!string.Equals(lhs.FirstParameter, rhs.FirstParameter)) return false;
@@ -899,6 +990,10 @@ namespace Mutagen.Bethesda.Skyrim
             if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondParameter) ?? true))
             {
                 if (lhs.SecondParameter != rhs.SecondParameter) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            {
+                if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
             return true;
         }
@@ -928,8 +1023,16 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IGetGraphVariableIntConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstParameter);
+            hash.Add(item.FirstUnusedIntParameter);
+            if (item.FirstParameter is {} FirstParameteritem)
+            {
+                hash.Add(FirstParameteritem);
+            }
             hash.Add(item.SecondParameter);
+            if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
+            {
+                hash.Add(SecondUnusedStringParameteritem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -983,6 +1086,10 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter) ?? true))
+            {
+                item.FirstUnusedIntParameter = rhs.FirstUnusedIntParameter;
+            }
             if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 item.FirstParameter = rhs.FirstParameter;
@@ -990,6 +1097,10 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondParameter) ?? true))
             {
                 item.SecondParameter = rhs.SecondParameter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            {
+                item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
         }
         
@@ -1118,10 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
             FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.FirstParameter,
-                binaryType: StringBinaryType.NullTerminate);
+            writer.Write(item.FirstUnusedIntParameter);
             writer.Write(item.SecondParameter);
         }
 
@@ -1181,10 +1289,7 @@ namespace Mutagen.Bethesda.Skyrim
             FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter = StringBinaryTranslation.Instance.Parse(
-                reader: frame,
-                stringBinaryType: StringBinaryType.NullTerminate,
-                parseWhole: false);
+            item.FirstUnusedIntParameter = frame.ReadInt32();
             item.SecondParameter = frame.ReadInt32();
         }
 
@@ -1232,11 +1337,8 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        #region FirstParameter
-        public String FirstParameter { get; private set; } = string.Empty;
-        protected int FirstParameterEndingPos;
-        #endregion
-        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(FirstParameterEndingPos, 0x4));
+        public Int32 FirstUnusedIntParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1262,15 +1364,13 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0xC,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new GetGraphVariableIntConditionDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.FirstParameter = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(0x4), package.MetaData.Encodings.NonTranslated);
-            ret.FirstParameterEndingPos = 0x4 + ret.FirstParameter.Length + 1;
-            stream.Position += ret.FirstParameterEndingPos + 0x4;
+            stream.Position += 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

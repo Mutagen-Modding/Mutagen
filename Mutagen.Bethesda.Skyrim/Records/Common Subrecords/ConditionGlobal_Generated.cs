@@ -1250,8 +1250,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
         #region Data
-        public partial IConditionDataGetter GetDataCustom(int location);
-        public override IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;
         partial void CustomDataEndPos();
         #endregion

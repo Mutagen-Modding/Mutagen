@@ -26,14 +26,13 @@
       <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" binary="NoGeneration" />
       <FormLink name="Reference" refName="SkyrimMajorRecord" binary="NoGeneration" />
       <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
+      <Bool name="UseAliases" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="FunctionConditionData" abstract="true" objType="Subrecord" baseClass="ConditionData" GUID="c7686727-e470-4c34-80ce-423cf65c7b92" ID="39">
     <Fields>
       <Enum name="Function" enumName="Condition.Function" byteLength="2" />
       <UInt16 name="Unknown2" />
-      <String name="ParameterOneString" binary="NoGeneration" nullable="True" />
-      <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
   <Object name="UnknownConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c692e121-726f-4cb0-9692-ee15ac80fe77" ID="10402">

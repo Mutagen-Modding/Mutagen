@@ -1,0 +1,30 @@
+namespace Mutagen.Bethesda.Skyrim;
+
+public partial class GetClothingValueConditionData : IConditionStringParameter
+{
+    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+
+    string? IConditionStringParameterGetter.SecondStringParameter => SecondUnusedStringParameter;
+
+    string? IConditionStringParameter.FirstStringParameter
+    {
+        get => FirstUnusedStringParameter;
+        set => FirstUnusedStringParameter = value;
+    }
+
+    string? IConditionStringParameter.SecondStringParameter
+    {
+        get => SecondUnusedStringParameter;
+        set => SecondUnusedStringParameter = value;
+    }
+
+}
+
+internal partial class GetClothingValueConditionDataBinaryOverlay
+{
+    public string? FirstUnusedStringParameter => ParameterOneString;
+
+    public string? SecondUnusedStringParameter => ParameterTwoString;
+
+}
+

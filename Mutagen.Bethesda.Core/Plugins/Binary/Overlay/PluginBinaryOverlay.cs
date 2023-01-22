@@ -51,9 +51,9 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
 
     ILoquiRegistration ILoquiObject.Registration => throw new NotImplementedException();
 
-    protected ReadOnlyMemorySlice<byte> _structData;
-    protected ReadOnlyMemorySlice<byte> _recordData;
-    protected BinaryOverlayFactoryPackage _package;
+    internal ReadOnlyMemorySlice<byte> _structData;
+    internal ReadOnlyMemorySlice<byte> _recordData;
+    internal BinaryOverlayFactoryPackage _package;
 
     protected PluginBinaryOverlay(
         MemoryPair memoryPair,

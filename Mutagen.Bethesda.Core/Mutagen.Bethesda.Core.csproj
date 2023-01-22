@@ -235,6 +235,7 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Plugins\Binary\Translations\AssetLinkBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\FormLinkOrAliasBinaryTranslation.cs" />
     <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Binary\Translations\RecordSpanExtensions.cs" />
     <Compile Include="Plugins\Binary\Translations\SubgroupsBinaryTranslation.cs" />
@@ -280,6 +281,8 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\FormLinkOrAlias.cs" />
+    <Compile Include="Plugins\IFormLinkOrAlias.cs" />
     <Compile Include="Plugins\Implicit\DI\ImplicitBaseMasterProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

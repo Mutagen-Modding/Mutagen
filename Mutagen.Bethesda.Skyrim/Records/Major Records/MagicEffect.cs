@@ -214,7 +214,7 @@ partial class MagicEffectBinaryOverlay
 
     partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+        Conditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }
 
     partial void CounterEffectLogicCustomParse(OverlayStream stream, int offset)
