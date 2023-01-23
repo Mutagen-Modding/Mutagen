@@ -2040,7 +2040,7 @@
   </Object>
   <Object name="GetIsUsedItemEquipTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="f2b103bc-c96f-4156-bafc-c1e084d7de17" ID="10232">
     <Fields>
-      <Enum enumName="EquipTypeFlag" name="FirstParameter" />
+      <FormLinkOrAlias refName="EquipType" name="FirstParameter" />
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
       <Int32 name="SecondParameter" />
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
