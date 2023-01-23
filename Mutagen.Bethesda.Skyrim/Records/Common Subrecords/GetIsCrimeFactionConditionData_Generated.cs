@@ -1079,7 +1079,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.FirstParameter);
+            foreach (var l in obj.FirstParameter.EnumerateFormLinks())
+            {
+                yield return l;
+            }
             yield break;
         }
         

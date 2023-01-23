@@ -45,7 +45,15 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                 var startCount = sb.Count;
                 foreach (var field in obj.IterateFields(nonIntegrated: true))
                 {
-                    if (field is FormLinkType formLink)
+                    if (field is FormLinkOrAliasType aliasType)
+                    {
+                        sb.AppendLine($"foreach (var l in obj.{field.Name}.EnumerateFormLinks())");
+                        using (sb.CurlyBrace())
+                        {
+                            sb.AppendLine($"yield return l;");
+                        }
+                    }
+                    else if (field is FormLinkType formLink)
                     {
                         if (field.Nullable)
                         {
