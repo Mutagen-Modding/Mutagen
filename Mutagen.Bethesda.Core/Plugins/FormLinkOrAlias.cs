@@ -120,7 +120,17 @@ public class FormLinkOrAlias<TMajorGetter> : IFormLinkOrAlias<TMajorGetter>
         Alias = default;
         Link = new FormLinkNullable<TMajorGetter>(key);
     }
-    
+
+    public static FormLinkOrAlias<TMajorGetter> Factory(IFormLinkOrAliasFlagGetter parent, FormKey key, uint alias)
+    {
+        if (parent.UseAliases)
+        {
+            return new FormLinkOrAlias<TMajorGetter>(parent, alias);
+        }
+
+        return new FormLinkOrAlias<TMajorGetter>(parent, key);
+    }
+
     [MemberNotNullWhen(false, nameof(Alias))]
     public bool UsesLink()
     {

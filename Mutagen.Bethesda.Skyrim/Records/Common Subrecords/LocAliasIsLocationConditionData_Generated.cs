@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer);
             writer.Write(item.FirstParameter);
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkOrAliasBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SecondParameter);
         }
@@ -1313,7 +1313,9 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 frame: frame);
             item.FirstParameter = frame.ReadInt32();
-            item.SecondParameter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+                reader: frame,
+                item: item.SecondParameter);
         }
 
     }
@@ -1362,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public IFormLinkOrAliasGetter<ILocationGetter> SecondParameter => new FormLinkOrAlias<ILocationGetter>(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkOrAliasGetter<ILocationGetter> SecondParameter => FormLinkOrAlias<ILocationGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4)));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

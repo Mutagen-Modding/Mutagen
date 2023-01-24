@@ -1263,10 +1263,10 @@ namespace Mutagen.Bethesda.Skyrim
             FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkOrAliasBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FirstParameter);
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkOrAliasBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SecondParameter);
         }
@@ -1327,8 +1327,12 @@ namespace Mutagen.Bethesda.Skyrim
             FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.SecondParameter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+                reader: frame,
+                item: item.FirstParameter);
+            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+                reader: frame,
+                item: item.SecondParameter);
         }
 
     }
@@ -1376,8 +1380,8 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkOrAliasGetter<IPlacedNpcGetter> FirstParameter => new FormLinkOrAlias<IPlacedNpcGetter>(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkOrAliasGetter<IAssociationTypeGetter> SecondParameter => new FormLinkOrAlias<IAssociationTypeGetter>(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkOrAliasGetter<IPlacedNpcGetter> FirstParameter => FormLinkOrAlias<IPlacedNpcGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4)));
+        public IFormLinkOrAliasGetter<IAssociationTypeGetter> SecondParameter => FormLinkOrAlias<IAssociationTypeGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4)));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

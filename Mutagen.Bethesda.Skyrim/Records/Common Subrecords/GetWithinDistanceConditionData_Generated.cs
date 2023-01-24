@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim
             FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkOrAliasBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FirstParameter);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1314,7 +1314,9 @@ namespace Mutagen.Bethesda.Skyrim
             FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+                reader: frame,
+                item: item.FirstParameter);
             item.SecondParameter = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
@@ -1363,7 +1365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkOrAliasGetter<IPlacedSimpleGetter> FirstParameter => new FormLinkOrAlias<IPlacedSimpleGetter>(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkOrAliasGetter<IPlacedSimpleGetter> FirstParameter => FormLinkOrAlias<IPlacedSimpleGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4)));
         public Single SecondParameter => _structData.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
