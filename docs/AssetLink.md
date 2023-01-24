@@ -8,6 +8,10 @@
   - [DataRelativePath](#datarelativepath)
 - [AssetTypes - AssetLink's Generic Type](#assettypes---assetlinks-generic-type)
 - [Asset Enumeration](#asset-enumeration)
+  - [Typical Usage](#typical-usage)
+  - [AssetLinkQuery](#assetlinkquery)
+  - [IAssetLinkCache](#iassetlinkcache)
+    - [Creating an Asset Link Cache](#creating-an-asset-link-cache)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
