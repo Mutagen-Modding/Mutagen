@@ -20,16 +20,18 @@ public partial class Condition
     IConditionDataGetter IConditionGetter.Data => this.Data;
     
     internal const int ParametersUseAliases = 0x02;
+    internal const int UseGlobal = 0x04;
 
     /// <summary>
-    /// ParametersUseAliases exists on ConditionData object instead
+    /// ParametersUseAliases exists on ConditionData object instead </ br>
+    /// UseGlobal is implicit depending on the class type used for the Condition
     /// </summary>
     [Flags]
     public enum Flag
     {
         OR = 0x01,
         // ParametersUseAliases = 0x02,
-        UseGlobal = 0x04,
+        // UseGlobal = 0x04,
         UsePackData = 0x08,
         SwapSubjectAndTarget = 0x10
     }
@@ -735,9 +737,10 @@ public partial class Condition
         var flagByte = frame.GetUInt8(subRecMeta.HeaderLength);
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(flagByte);
         Condition ret;
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
         {
             ret = ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+            ret.Flags = ret.Flags.SetFlag((Condition.Flag)UseGlobal, false);
         }
         else
         {
@@ -934,6 +937,11 @@ partial class ConditionBinaryWriteTranslation
         {
             flags = flags.SetFlag((Condition.Flag)ParametersUseAliases, true);
         }
+
+        if (item is IConditionGlobalGetter)
+        {
+            flags = flags.SetFlag((Condition.Flag)UseGlobal, true);
+        }
         writer.Write(GetFlagWriteByte(flags, item.CompareOperator));
     }
 
@@ -969,7 +977,8 @@ abstract partial class ConditionBinaryOverlay
             RecordTypes.CIS2));
 
     public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location])
-        .SetFlag((Condition.Flag)Condition.ParametersUseAliases, false);
+        .SetFlag((Condition.Flag)Condition.ParametersUseAliases, false)
+        .SetFlag((Condition.Flag)Condition.UseGlobal, false);
     public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_structData.Span[0]);
 
     public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
@@ -983,7 +992,7 @@ abstract partial class ConditionBinaryOverlay
         var finalPos = stream.Position + subRecMeta.TotalLength;
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
         ConditionBinaryOverlay ret;
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
         {
             ret = (ConditionBinaryOverlay)ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
         }
