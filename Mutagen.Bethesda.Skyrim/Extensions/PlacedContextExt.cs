@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Cache;
-using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Skyrim.Records.Tooling;
 using PlacedContext =
     Mutagen.Bethesda.Plugins.Cache.IModContext<Mutagen.Bethesda.Skyrim.ISkyrimMod,
         Mutagen.Bethesda.Skyrim.ISkyrimModGetter, Mutagen.Bethesda.Skyrim.IPlaced,
