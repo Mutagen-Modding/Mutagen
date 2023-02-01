@@ -18,13 +18,6 @@ public partial class GetKeywordDataForAliasConditionData : IConditionStringParam
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetKeywordDataForAliasConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetKeywordDataForAlias;
 }
 

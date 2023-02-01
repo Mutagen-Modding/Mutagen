@@ -18,13 +18,6 @@ public partial class IsLocationLoadedConditionData : IConditionStringParameter
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsLocationLoadedConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsLocationLoaded;
 }
 

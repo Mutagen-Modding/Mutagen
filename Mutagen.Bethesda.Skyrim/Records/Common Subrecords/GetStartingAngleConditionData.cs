@@ -18,13 +18,6 @@ public partial class GetStartingAngleConditionData : IConditionStringParameter
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetStartingAngleConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetStartingAngle;
 }
 

@@ -18,13 +18,6 @@ public partial class GetWalkSpeedConditionData : IConditionStringParameter
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetWalkSpeedConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetWalkSpeed;
 }
 

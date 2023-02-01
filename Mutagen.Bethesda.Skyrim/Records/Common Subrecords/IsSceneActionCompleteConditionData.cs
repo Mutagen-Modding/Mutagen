@@ -18,13 +18,6 @@ public partial class IsSceneActionCompleteConditionData : IConditionStringParame
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsSceneActionCompleteConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsSceneActionComplete;
 }
 

@@ -36,7 +36,6 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             Condition_Registration.Instance,
             ConditionGlobal_Registration.Instance,
             ConditionFloat_Registration.Instance,
-            FunctionConditionData_Registration.Instance,
             GetEventData_Registration.Instance,
             ConditionData_Registration.Instance,
             Model_Registration.Instance,

@@ -18,13 +18,6 @@ public partial class GetPCEnemyofFactionConditionData : IConditionStringParamete
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetPCEnemyofFactionConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetPCEnemyofFaction;
 }
 

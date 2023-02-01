@@ -18,13 +18,6 @@ public partial class GetIsEditorLocAliasConditionData : IConditionStringParamete
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetIsEditorLocAliasConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetIsEditorLocAlias;
 }
 

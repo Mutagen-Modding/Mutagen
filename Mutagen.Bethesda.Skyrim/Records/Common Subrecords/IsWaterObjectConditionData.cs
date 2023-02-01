@@ -18,13 +18,6 @@ public partial class IsWaterObjectConditionData : IConditionStringParameter
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsWaterObjectConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsWaterObject;
 }
 

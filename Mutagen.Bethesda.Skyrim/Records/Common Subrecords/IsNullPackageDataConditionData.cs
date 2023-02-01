@@ -18,13 +18,6 @@ public partial class IsNullPackageDataConditionData : IConditionStringParameter
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsNullPackageDataConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsNullPackageData;
 }
 

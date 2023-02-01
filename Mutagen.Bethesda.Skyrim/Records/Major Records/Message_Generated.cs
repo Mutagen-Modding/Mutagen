@@ -1486,8 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return QuestInfo;
             }
-            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            foreach (var item in obj.MenuButtons.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }

@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class UnknownConditionData :
-        FunctionConditionData,
+        ConditionData,
         IEquatable<IUnknownConditionDataGetter>,
         ILoquiObjectSetter<UnknownConditionData>,
         IUnknownConditionData
@@ -51,11 +51,24 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Function
+        public Condition.Function Function { get; set; } = default;
+        #endregion
         #region ParameterOne
         public Int32 ParameterOne { get; set; } = default;
         #endregion
         #region ParameterTwo
         public Int32 ParameterTwo { get; set; } = default;
+        #endregion
+        #region FirstUnusedStringParameter
+        public String? FirstUnusedStringParameter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IUnknownConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
+        #endregion
+        #region SecondUnusedStringParameter
+        public String? SecondUnusedStringParameter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IUnknownConditionDataGetter.SecondUnusedStringParameter => this.SecondUnusedStringParameter;
         #endregion
 
         #region To String
@@ -90,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            FunctionConditionData.Mask<TItem>,
+            ConditionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -98,8 +111,11 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Function = initialValue;
                 this.ParameterOne = initialValue;
                 this.ParameterTwo = initialValue;
+                this.FirstUnusedStringParameter = initialValue;
+                this.SecondUnusedStringParameter = initialValue;
             }
 
             public Mask(
@@ -108,19 +124,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Unknown3,
                 TItem UseAliases,
                 TItem Function,
-                TItem Unknown2,
                 TItem ParameterOne,
-                TItem ParameterTwo)
+                TItem ParameterTwo,
+                TItem FirstUnusedStringParameter,
+                TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases,
-                Function: Function,
-                Unknown2: Unknown2)
+                UseAliases: UseAliases)
             {
+                this.Function = Function;
                 this.ParameterOne = ParameterOne;
                 this.ParameterTwo = ParameterTwo;
+                this.FirstUnusedStringParameter = FirstUnusedStringParameter;
+                this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
             #pragma warning disable CS8618
@@ -132,8 +150,11 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem Function;
             public TItem ParameterOne;
             public TItem ParameterTwo;
+            public TItem FirstUnusedStringParameter;
+            public TItem SecondUnusedStringParameter;
             #endregion
 
             #region Equals
@@ -147,15 +168,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Function, rhs.Function)) return false;
                 if (!object.Equals(this.ParameterOne, rhs.ParameterOne)) return false;
                 if (!object.Equals(this.ParameterTwo, rhs.ParameterTwo)) return false;
+                if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
+                if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Function);
                 hash.Add(this.ParameterOne);
                 hash.Add(this.ParameterTwo);
+                hash.Add(this.FirstUnusedStringParameter);
+                hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -166,8 +193,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Function)) return false;
                 if (!eval(this.ParameterOne)) return false;
                 if (!eval(this.ParameterTwo)) return false;
+                if (!eval(this.FirstUnusedStringParameter)) return false;
+                if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
             #endregion
@@ -176,8 +206,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Function)) return true;
                 if (eval(this.ParameterOne)) return true;
                 if (eval(this.ParameterTwo)) return true;
+                if (eval(this.FirstUnusedStringParameter)) return true;
+                if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
             #endregion
@@ -193,8 +226,11 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Function = eval(this.Function);
                 obj.ParameterOne = eval(this.ParameterOne);
                 obj.ParameterTwo = eval(this.ParameterTwo);
+                obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
+                obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
 
@@ -213,6 +249,10 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(UnknownConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Function ?? true)
+                    {
+                        sb.AppendItem(Function, "Function");
+                    }
                     if (printMask?.ParameterOne ?? true)
                     {
                         sb.AppendItem(ParameterOne, "ParameterOne");
@@ -221,6 +261,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(ParameterTwo, "ParameterTwo");
                     }
+                    if (printMask?.FirstUnusedStringParameter ?? true)
+                    {
+                        sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
+                    }
+                    if (printMask?.SecondUnusedStringParameter ?? true)
+                    {
+                        sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
+                    }
                 }
             }
             #endregion
@@ -228,12 +276,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            FunctionConditionData.ErrorMask,
+            ConditionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Function;
             public Exception? ParameterOne;
             public Exception? ParameterTwo;
+            public Exception? FirstUnusedStringParameter;
+            public Exception? SecondUnusedStringParameter;
             #endregion
 
             #region IErrorMask
@@ -242,10 +293,16 @@ namespace Mutagen.Bethesda.Skyrim
                 UnknownConditionData_FieldIndex enu = (UnknownConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case UnknownConditionData_FieldIndex.Function:
+                        return Function;
                     case UnknownConditionData_FieldIndex.ParameterOne:
                         return ParameterOne;
                     case UnknownConditionData_FieldIndex.ParameterTwo:
                         return ParameterTwo;
+                    case UnknownConditionData_FieldIndex.FirstUnusedStringParameter:
+                        return FirstUnusedStringParameter;
+                    case UnknownConditionData_FieldIndex.SecondUnusedStringParameter:
+                        return SecondUnusedStringParameter;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -256,11 +313,20 @@ namespace Mutagen.Bethesda.Skyrim
                 UnknownConditionData_FieldIndex enu = (UnknownConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case UnknownConditionData_FieldIndex.Function:
+                        this.Function = ex;
+                        break;
                     case UnknownConditionData_FieldIndex.ParameterOne:
                         this.ParameterOne = ex;
                         break;
                     case UnknownConditionData_FieldIndex.ParameterTwo:
                         this.ParameterTwo = ex;
+                        break;
+                    case UnknownConditionData_FieldIndex.FirstUnusedStringParameter:
+                        this.FirstUnusedStringParameter = ex;
+                        break;
+                    case UnknownConditionData_FieldIndex.SecondUnusedStringParameter:
+                        this.SecondUnusedStringParameter = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -273,11 +339,20 @@ namespace Mutagen.Bethesda.Skyrim
                 UnknownConditionData_FieldIndex enu = (UnknownConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case UnknownConditionData_FieldIndex.Function:
+                        this.Function = (Exception?)obj;
+                        break;
                     case UnknownConditionData_FieldIndex.ParameterOne:
                         this.ParameterOne = (Exception?)obj;
                         break;
                     case UnknownConditionData_FieldIndex.ParameterTwo:
                         this.ParameterTwo = (Exception?)obj;
+                        break;
+                    case UnknownConditionData_FieldIndex.FirstUnusedStringParameter:
+                        this.FirstUnusedStringParameter = (Exception?)obj;
+                        break;
+                    case UnknownConditionData_FieldIndex.SecondUnusedStringParameter:
+                        this.SecondUnusedStringParameter = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -288,8 +363,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Function != null) return true;
                 if (ParameterOne != null) return true;
                 if (ParameterTwo != null) return true;
+                if (FirstUnusedStringParameter != null) return true;
+                if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
             #endregion
@@ -317,10 +395,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
+                    sb.AppendItem(Function, "Function");
+                }
+                {
                     sb.AppendItem(ParameterOne, "ParameterOne");
                 }
                 {
                     sb.AppendItem(ParameterTwo, "ParameterTwo");
+                }
+                {
+                    sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
+                }
+                {
+                    sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
                 }
             }
             #endregion
@@ -330,8 +417,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Function = this.Function.Combine(rhs.Function);
                 ret.ParameterOne = this.ParameterOne.Combine(rhs.ParameterOne);
                 ret.ParameterTwo = this.ParameterTwo.Combine(rhs.ParameterTwo);
+                ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
+                ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -350,12 +440,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            FunctionConditionData.TranslationMask,
+            ConditionData.TranslationMask,
             ITranslationMask
         {
             #region Members
+            public bool Function;
             public bool ParameterOne;
             public bool ParameterTwo;
+            public bool FirstUnusedStringParameter;
+            public bool SecondUnusedStringParameter;
             #endregion
 
             #region Ctors
@@ -364,8 +457,11 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Function = defaultOn;
                 this.ParameterOne = defaultOn;
                 this.ParameterTwo = defaultOn;
+                this.FirstUnusedStringParameter = defaultOn;
+                this.SecondUnusedStringParameter = defaultOn;
             }
 
             #endregion
@@ -373,8 +469,11 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((Function, null));
                 ret.Add((ParameterOne, null));
                 ret.Add((ParameterTwo, null));
+                ret.Add((FirstUnusedStringParameter, null));
+                ret.Add((SecondUnusedStringParameter, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -442,22 +541,28 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IUnknownConditionData :
-        IFunctionConditionData,
+        IConditionData,
         ILoquiObjectSetter<IUnknownConditionData>,
         IUnknownConditionDataGetter
     {
+        new Condition.Function Function { get; set; }
         new Int32 ParameterOne { get; set; }
         new Int32 ParameterTwo { get; set; }
+        new String? FirstUnusedStringParameter { get; set; }
+        new String? SecondUnusedStringParameter { get; set; }
     }
 
     public partial interface IUnknownConditionDataGetter :
-        IFunctionConditionDataGetter,
+        IConditionDataGetter,
         IBinaryItem,
         ILoquiObject<IUnknownConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => UnknownConditionData_Registration.Instance;
+        Condition.Function Function { get; }
         Int32 ParameterOne { get; }
         Int32 ParameterTwo { get; }
+        String? FirstUnusedStringParameter { get; }
+        String? SecondUnusedStringParameter { get; }
 
     }
 
@@ -607,9 +712,10 @@ namespace Mutagen.Bethesda.Skyrim
         Unknown3 = 2,
         UseAliases = 3,
         Function = 4,
-        Unknown2 = 5,
-        ParameterOne = 6,
-        ParameterTwo = 7,
+        ParameterOne = 5,
+        ParameterTwo = 6,
+        FirstUnusedStringParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -627,9 +733,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "c692e121-726f-4cb0-9692-ee15ac80fe77";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(UnknownConditionData.Mask<>);
 
@@ -688,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class UnknownConditionDataSetterCommon : FunctionConditionDataSetterCommon
+    internal partial class UnknownConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly UnknownConditionDataSetterCommon Instance = new UnknownConditionDataSetterCommon();
 
@@ -697,14 +803,12 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IUnknownConditionData item)
         {
             ClearPartial();
+            item.Function = default;
             item.ParameterOne = default;
             item.ParameterTwo = default;
+            item.FirstUnusedStringParameter = default;
+            item.SecondUnusedStringParameter = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IFunctionConditionData item)
-        {
-            Clear(item: (IUnknownConditionData)item);
         }
         
         public override void Clear(IConditionData item)
@@ -734,17 +838,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IFunctionConditionData item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (UnknownConditionData)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -758,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class UnknownConditionDataCommon : FunctionConditionDataCommon
+    internal partial class UnknownConditionDataCommon : ConditionDataCommon
     {
         public new static readonly UnknownConditionDataCommon Instance = new UnknownConditionDataCommon();
 
@@ -782,8 +875,11 @@ namespace Mutagen.Bethesda.Skyrim
             UnknownConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Function = item.Function == rhs.Function;
             ret.ParameterOne = item.ParameterOne == rhs.ParameterOne;
             ret.ParameterTwo = item.ParameterTwo == rhs.ParameterTwo;
+            ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
+            ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -829,10 +925,14 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             UnknownConditionData.Mask<bool>? printMask = null)
         {
-            FunctionConditionDataCommon.ToStringFields(
+            ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Function ?? true)
+            {
+                sb.AppendItem(item.Function, "Function");
+            }
             if (printMask?.ParameterOne ?? true)
             {
                 sb.AppendItem(item.ParameterOne, "ParameterOne");
@@ -841,30 +941,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.ParameterTwo, "ParameterTwo");
             }
-        }
-        
-        public static UnknownConditionData_FieldIndex ConvertFieldIndex(FunctionConditionData_FieldIndex index)
-        {
-            switch (index)
+            if ((printMask?.FirstUnusedStringParameter ?? true)
+                && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
             {
-                case FunctionConditionData_FieldIndex.RunOnType:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Reference:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.UseAliases:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Function:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return (UnknownConditionData_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
+                sb.AppendItem(FirstUnusedStringParameterItem, "FirstUnusedStringParameter");
+            }
+            if ((printMask?.SecondUnusedStringParameter ?? true)
+                && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
+            {
+                sb.AppendItem(SecondUnusedStringParameterItem, "SecondUnusedStringParameter");
             }
         }
         
-        public static new UnknownConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static UnknownConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
@@ -888,7 +977,11 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.Function) ?? true))
+            {
+                if (lhs.Function != rhs.Function) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.ParameterOne) ?? true))
             {
                 if (lhs.ParameterOne != rhs.ParameterOne) return false;
@@ -897,18 +990,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.ParameterTwo != rhs.ParameterTwo) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
+            {
+                if (!string.Equals(lhs.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            {
+                if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
+            }
             return true;
-        }
-        
-        public override bool Equals(
-            IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IUnknownConditionDataGetter?)lhs,
-                rhs: rhs as IUnknownConditionDataGetter,
-                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -925,15 +1015,19 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IUnknownConditionDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Function);
             hash.Add(item.ParameterOne);
             hash.Add(item.ParameterTwo);
+            if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
+            {
+                hash.Add(FirstUnusedStringParameteritem);
+            }
+            if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
+            {
+                hash.Add(SecondUnusedStringParameteritem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IFunctionConditionDataGetter item)
-        {
-            return GetHashCode(item: (IUnknownConditionDataGetter)item);
         }
         
         public override int GetHashCode(IConditionDataGetter item)
@@ -962,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class UnknownConditionDataSetterTranslationCommon : FunctionConditionDataSetterTranslationCommon
+    internal partial class UnknownConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly UnknownConditionDataSetterTranslationCommon Instance = new UnknownConditionDataSetterTranslationCommon();
 
@@ -975,11 +1069,15 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
+                (IConditionData)item,
+                (IConditionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.Function) ?? true))
+            {
+                item.Function = rhs.Function;
+            }
             if ((copyMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.ParameterOne) ?? true))
             {
                 item.ParameterOne = rhs.ParameterOne;
@@ -988,22 +1086,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ParameterTwo = rhs.ParameterTwo;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IUnknownConditionData)item,
-                rhs: (IUnknownConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
+            {
+                item.FirstUnusedStringParameter = rhs.FirstUnusedStringParameter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)UnknownConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            {
+                item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
+            }
         }
         
         
@@ -1103,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class UnknownConditionDataBinaryWriteTranslation :
-        FunctionConditionDataBinaryWriteTranslation,
+        ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly UnknownConditionDataBinaryWriteTranslation Instance = new();
@@ -1112,9 +1202,13 @@ namespace Mutagen.Bethesda.Skyrim
             IUnknownConditionDataGetter item,
             MutagenWriter writer)
         {
-            FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
+            EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Function,
+                length: 2);
             writer.Write(item.ParameterOne);
             writer.Write(item.ParameterTwo);
         }
@@ -1142,17 +1236,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IFunctionConditionDataGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IUnknownConditionDataGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IConditionDataGetter item,
             TypedWriteParams translationParams)
         {
@@ -1164,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class UnknownConditionDataBinaryCreateTranslation : FunctionConditionDataBinaryCreateTranslation
+    internal partial class UnknownConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new static readonly UnknownConditionDataBinaryCreateTranslation Instance = new UnknownConditionDataBinaryCreateTranslation();
 
@@ -1172,9 +1255,12 @@ namespace Mutagen.Bethesda.Skyrim
             IUnknownConditionData item,
             MutagenFrame frame)
         {
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+            item.Function = EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.ParameterOne = frame.ReadInt32();
             item.ParameterTwo = frame.ReadInt32();
         }
@@ -1194,119 +1280,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class UnknownConditionDataBinaryOverlay :
-        FunctionConditionDataBinaryOverlay,
-        IUnknownConditionDataGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => UnknownConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => UnknownConditionData_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => UnknownConditionDataCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => UnknownConditionDataSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => UnknownConditionDataBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((UnknownConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public Int32 ParameterOne => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public Int32 ParameterTwo => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected UnknownConditionDataBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IUnknownConditionDataGetter UnknownConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                length: 0xC,
-                memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new UnknownConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0xC;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IUnknownConditionDataGetter UnknownConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return UnknownConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            UnknownConditionDataMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IUnknownConditionDataGetter rhs) return false;
-            return ((UnknownConditionDataCommon)((IUnknownConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IUnknownConditionDataGetter? obj)
-        {
-            return ((UnknownConditionDataCommon)((IUnknownConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((UnknownConditionDataCommon)((IUnknownConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

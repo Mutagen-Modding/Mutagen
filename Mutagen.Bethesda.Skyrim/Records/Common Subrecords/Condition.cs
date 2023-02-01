@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class Condition
 {
-    public abstract ConditionData Data { get; set; }
+    public ConditionData Data { get; set; } = null!;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IConditionDataGetter IConditionGetter.Data => this.Data;
@@ -762,11 +762,6 @@ public partial class Condition
     }
 }
 
-public partial interface ICondition
-{
-    new ConditionData Data { get; set; }
-}
-
 public static class ParameterTypeMixIn
 {
     public static Condition.ParameterCategory GetCategory(this Condition.ParameterType type)
@@ -839,11 +834,6 @@ public static class ParameterTypeMixIn
 
 }
 
-public partial interface IConditionGetter
-{
-    IConditionDataGetter Data { get; }
-}
-
 partial class ConditionBinaryCreateTranslation
 {
     public const byte CompareMask = 0xE0;
@@ -885,15 +875,7 @@ partial class ConditionBinaryCreateTranslation
         item.CompareOperator = GetCompareOperator(b);
     }
 
-    public static void CustomStringImports<TStream>(TStream frame, IConditionData item)
-        where TStream : IMutagenReadStream
-    {
-        if (item is not IFunctionConditionData funcData) return;
-        ParseString(frame, funcData);
-        ParseString(frame, funcData);
-    }
-
-    private static void ParseString<TStream>(TStream frame, IFunctionConditionData funcData)
+    private static void ParseString<TStream>(TStream frame, IConditionData funcData)
         where TStream : IMutagenReadStream
     {
         if (funcData is not IConditionStringParameter stringParameter) return;
@@ -911,175 +893,23 @@ partial class ConditionBinaryCreateTranslation
         }
         frame.Position += subMeta.TotalLength;
     }
-}
 
-partial class ConditionBinaryWriteTranslation
-{
-    public static byte GetFlagWriteByte(Condition.Flag flag, CompareOperator compare)
+    public static void CustomStringImports<TStream>(TStream frame, IConditionData item)
+        where TStream : IMutagenReadStream
     {
-        int b = ((int)flag) & 0x1F;
-        int b2 = ((int)compare) << 5;
-        return (byte)(b | b2);
+        if (item is not IConditionData funcData) return;
+        ParseString(frame, funcData);
+        ParseString(frame, funcData);
     }
 
-    public static void WriteConditionsList(IReadOnlyList<IConditionGetter> condList, MutagenWriter writer)
+    public static ConditionData CreateDataFromBinary(MutagenFrame frame, ushort functionIndex)
     {
-        foreach (var cond in condList)
-        {
-            cond.WriteToBinary(writer);
-        }
-    }
-
-    public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item)
-    {
-        var flags = item.Flags;
-        if (item.Data.UseAliases)
-        {
-            flags = flags.SetFlag((Condition.Flag)ParametersUseAliases, true);
-        }
-
-        if (item is IConditionGlobalGetter)
-        {
-            flags = flags.SetFlag((Condition.Flag)UseGlobal, true);
-        }
-        writer.Write(GetFlagWriteByte(flags, item.CompareOperator));
-    }
-
-    public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
-    {
-        if (obj is not IConditionStringParameter stringParameter) return;
-        if (stringParameter.FirstStringParameter is { } param1)
-        {
-            using (HeaderExport.Subrecord(writer, RecordTypes.CIS1))
-            {
-                StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
-            }
-        }
-        if (stringParameter.SecondStringParameter is { } param2)
-        {
-            using (HeaderExport.Subrecord(writer, RecordTypes.CIS2))
-            {
-                StringBinaryTranslation.Instance.Write(writer, param2, StringBinaryType.NullTerminate);
-            }
-        }
-    }
-}
-
-abstract partial class ConditionBinaryOverlay
-{
-    public abstract IConditionDataGetter Data { get; }
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IConditionDataGetter IConditionGetter.Data => this.Data;
-
-    private static RecordTriggerSpecs IncludeTriggers = new(
-        RecordCollection.Factory(
-            RecordTypes.CIS1,
-            RecordTypes.CIS2));
-
-    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location])
-        .SetFlag((Condition.Flag)Condition.ParametersUseAliases, false)
-        .SetFlag((Condition.Flag)Condition.UseGlobal, false);
-    public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_structData.Span[0]);
-
-    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
-    {
-        var subRecMeta = stream.GetSubrecord();
-        if (subRecMeta.RecordType != RecordTypes.CTDA)
-        {
-            throw new ArgumentException();
-        }
-
-        var finalPos = stream.Position + subRecMeta.TotalLength;
-        Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
-        ConditionBinaryOverlay ret;
-        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
-        {
-            ret = (ConditionBinaryOverlay)ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
-        }
-        else
-        {
-            ret = (ConditionBinaryOverlay)ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
-        }
-
-        var data = (ConditionData)ret.Data;
-        
-        stream.Position = finalPos;
-        ConditionBinaryCreateTranslation.CustomStringImports(stream, data);
-        data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
-
-        return ret;
-    }
-
-    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams _)
-    {
-        return ConditionFactory(stream, package);
-    }
-
-    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
-    {
-        var counterMeta = stream.ReadSubrecord();
-        if (counterMeta.RecordType != RecordTypes.CITC
-            || counterMeta.Content.Length != 4)
-        {
-            throw new ArgumentException();
-        }
-        var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.Content);
-        var ret = ConstructBinaryOverlayList(stream, package);
-        if (count != ret.Count)
-        {
-            throw new ArgumentException("Number of parsed conditions did not matched labeled count.");
-        }
-        return ret;
-    }
-
-    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
-    {
-        var span = stream.RemainingMemory;
-        var pos = stream.Position;
-        var recordLocs = ParseRecordLocations(
-            stream: stream,
-            finalPos: long.MaxValue,
-            constants: package.MetaData.Constants.SubConstants,
-            trigger: RecordTypes.CTDA,
-            includeTriggers: IncludeTriggers,
-            skipHeader: false);
-        span = span.Slice(0, stream.Position - pos);
-        return BinaryOverlayList.FactoryByArray<IConditionGetter>(
-            mem: span,
-            package: package,
-            getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),
-            locs: recordLocs);
-    }
-}
-
-partial class ConditionGlobalBinaryCreateTranslation
-{
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionGlobal item)
-    {
-        var functionIndex = frame.GetUInt16();
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
-        {
-            item.Data = GetEventData.CreateFromBinary(frame);
-        }
-        else
-        {
-            item.Data = CreateFromBinary(frame, functionIndex);
-        }
-    }
-
-    public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj)
-    {
-        ConditionBinaryCreateTranslation.CustomStringImports(frame.Reader, obj.Data);
-    }
-
-    public static ConditionData CreateFromBinary(MutagenFrame frame, ushort functionIndex)
-    {
-        var ret = CreateFromBinaryInternal(frame, functionIndex);
+        var ret = CreateDataFromBinaryInternal(frame, functionIndex);
         GetEventDataBinaryCreateTranslation.FillEndingParams(frame, ret);
         return ret;
     }
     
-    public static ConditionData CreateFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
+    public static ConditionData CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
     {
         switch (functionIndex)
         {
@@ -1891,172 +1721,1020 @@ partial class ConditionGlobalBinaryCreateTranslation
                 return UnknownConditionData.CreateFromBinary(frame);
         }
     }
-}
 
-partial class ConditionGlobalBinaryWriteTranslation
-{
-    public static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionGlobalGetter item)
+    public ushort GetFunctionIndex(IConditionDataGetter data)
     {
-        item.Data.WriteToBinary(writer);
-        GetEventDataBinaryWriteTranslation.WriteCommonParams(writer, item.Data);
+        switch (data)
+        {
+            case IGetWantBlockingConditionDataGetter:
+                return 0;
+            case IGetDistanceConditionDataGetter:
+                return 1;
+            case IGetLockedConditionDataGetter:
+                return 5;
+            case IGetPosConditionDataGetter:
+                return 6;
+            case IGetAngleConditionDataGetter:
+                return 8;
+            case IGetStartingPosConditionDataGetter:
+                return 10;
+            case IGetStartingAngleConditionDataGetter:
+                return 11;
+            case IGetSecondsPassedConditionDataGetter:
+                return 12;
+            case IGetActorValueConditionDataGetter:
+                return 14;
+            case IGetCurrentTimeConditionDataGetter:
+                return 18;
+            case IGetScaleConditionDataGetter:
+                return 24;
+            case IIsMovingConditionDataGetter:
+                return 25;
+            case IIsTurningConditionDataGetter:
+                return 26;
+            case IGetLineOfSightConditionDataGetter:
+                return 27;
+            case IGetInSameCellConditionDataGetter:
+                return 32;
+            case IGetDisabledConditionDataGetter:
+                return 35;
+            case IMenuModeConditionDataGetter:
+                return 36;
+            case IGetDiseaseConditionDataGetter:
+                return 39;
+            case IGetClothingValueConditionDataGetter:
+                return 41;
+            case ISameFactionConditionDataGetter:
+                return 42;
+            case ISameRaceConditionDataGetter:
+                return 43;
+            case ISameSexConditionDataGetter:
+                return 44;
+            case IGetDetectedConditionDataGetter:
+                return 45;
+            case IGetDeadConditionDataGetter:
+                return 46;
+            case IGetItemCountConditionDataGetter:
+                return 47;
+            case IGetGoldConditionDataGetter:
+                return 48;
+            case IGetSleepingConditionDataGetter:
+                return 49;
+            case IGetTalkedToPCConditionDataGetter:
+                return 50;
+            case IGetScriptVariableConditionDataGetter:
+                return 53;
+            case IGetQuestRunningConditionDataGetter:
+                return 56;
+            case IGetStageConditionDataGetter:
+                return 58;
+            case IGetStageDoneConditionDataGetter:
+                return 59;
+            case IGetFactionRankDifferenceConditionDataGetter:
+                return 60;
+            case IGetAlarmedConditionDataGetter:
+                return 61;
+            case IIsRainingConditionDataGetter:
+                return 62;
+            case IGetAttackedConditionDataGetter:
+                return 63;
+            case IGetIsCreatureConditionDataGetter:
+                return 64;
+            case IGetLockLevelConditionDataGetter:
+                return 65;
+            case IGetShouldAttackConditionDataGetter:
+                return 66;
+            case IGetInCellConditionDataGetter:
+                return 67;
+            case IGetIsClassConditionDataGetter:
+                return 68;
+            case IGetIsRaceConditionDataGetter:
+                return 69;
+            case IGetIsSexConditionDataGetter:
+                return 70;
+            case IGetInFactionConditionDataGetter:
+                return 71;
+            case IGetIsIDConditionDataGetter:
+                return 72;
+            case IGetFactionRankConditionDataGetter:
+                return 73;
+            case IGetGlobalValueConditionDataGetter:
+                return 74;
+            case IIsSnowingConditionDataGetter:
+                return 75;
+            case IGetRandomPercentConditionDataGetter:
+                return 77;
+            case IGetQuestVariableConditionDataGetter:
+                return 79;
+            case IGetLevelConditionDataGetter:
+                return 80;
+            case IIsRotatingConditionDataGetter:
+                return 81;
+            case IGetDeadCountConditionDataGetter:
+                return 84;
+            case IGetIsAlertedConditionDataGetter:
+                return 91;
+            case IGetPlayerControlsDisabledConditionDataGetter:
+                return 98;
+            case IGetHeadingAngleConditionDataGetter:
+                return 99;
+            case IIsWeaponMagicOutConditionDataGetter:
+                return 101;
+            case IIsTorchOutConditionDataGetter:
+                return 102;
+            case IIsShieldOutConditionDataGetter:
+                return 103;
+            case IIsFacingUpConditionDataGetter:
+                return 106;
+            case IGetKnockedStateConditionDataGetter:
+                return 107;
+            case IGetWeaponAnimTypeConditionDataGetter:
+                return 108;
+            case IIsWeaponSkillTypeConditionDataGetter:
+                return 109;
+            case IGetCurrentAIPackageConditionDataGetter:
+                return 110;
+            case IIsWaitingConditionDataGetter:
+                return 111;
+            case IIsIdlePlayingConditionDataGetter:
+                return 112;
+            case IIsIntimidatedbyPlayerConditionDataGetter:
+                return 116;
+            case IIsPlayerInRegionConditionDataGetter:
+                return 117;
+            case IGetActorAggroRadiusViolatedConditionDataGetter:
+                return 118;
+            case IGetCrimeConditionDataGetter:
+                return 122;
+            case IIsGreetingPlayerConditionDataGetter:
+                return 123;
+            case IIsGuardConditionDataGetter:
+                return 125;
+            case IHasBeenEatenConditionDataGetter:
+                return 127;
+            case IGetStaminaPercentageConditionDataGetter:
+                return 128;
+            case IGetPCIsClassConditionDataGetter:
+                return 129;
+            case IGetPCIsRaceConditionDataGetter:
+                return 130;
+            case IGetPCIsSexConditionDataGetter:
+                return 131;
+            case IGetPCInFactionConditionDataGetter:
+                return 132;
+            case ISameFactionAsPCConditionDataGetter:
+                return 133;
+            case ISameRaceAsPCConditionDataGetter:
+                return 134;
+            case ISameSexAsPCConditionDataGetter:
+                return 135;
+            case IGetIsReferenceConditionDataGetter:
+                return 136;
+            case IIsTalkingConditionDataGetter:
+                return 141;
+            case IGetWalkSpeedConditionDataGetter:
+                return 142;
+            case IGetCurrentAIProcedureConditionDataGetter:
+                return 143;
+            case IGetTrespassWarningLevelConditionDataGetter:
+                return 144;
+            case IIsTrespassingConditionDataGetter:
+                return 145;
+            case IIsInMyOwnedCellConditionDataGetter:
+                return 146;
+            case IGetWindSpeedConditionDataGetter:
+                return 147;
+            case IGetCurrentWeatherPercentConditionDataGetter:
+                return 148;
+            case IGetIsCurrentWeatherConditionDataGetter:
+                return 149;
+            case IIsContinuingPackagePCNearConditionDataGetter:
+                return 150;
+            case IGetIsCrimeFactionConditionDataGetter:
+                return 152;
+            case ICanHaveFlamesConditionDataGetter:
+                return 153;
+            case IHasFlamesConditionDataGetter:
+                return 154;
+            case IGetOpenStateConditionDataGetter:
+                return 157;
+            case IGetSittingConditionDataGetter:
+                return 159;
+            case IGetIsCurrentPackageConditionDataGetter:
+                return 161;
+            case IIsCurrentFurnitureRefConditionDataGetter:
+                return 162;
+            case IIsCurrentFurnitureObjConditionDataGetter:
+                return 163;
+            case IGetDayOfWeekConditionDataGetter:
+                return 170;
+            case IGetTalkedToPCParamConditionDataGetter:
+                return 172;
+            case IIsPCSleepingConditionDataGetter:
+                return 175;
+            case IIsPCAMurdererConditionDataGetter:
+                return 176;
+            case IHasSameEditorLocAsRefConditionDataGetter:
+                return 180;
+            case IHasSameEditorLocAsRefAliasConditionDataGetter:
+                return 181;
+            case IGetEquippedConditionDataGetter:
+                return 182;
+            case IIsSwimmingConditionDataGetter:
+                return 185;
+            case IGetAmountSoldStolenConditionDataGetter:
+                return 190;
+            case IGetIgnoreCrimeConditionDataGetter:
+                return 192;
+            case IGetPCExpelledConditionDataGetter:
+                return 193;
+            case IGetPCFactionMurderConditionDataGetter:
+                return 195;
+            case IGetPCEnemyofFactionConditionDataGetter:
+                return 197;
+            case IGetPCFactionAttackConditionDataGetter:
+                return 199;
+            case IGetDestroyedConditionDataGetter:
+                return 203;
+            case IHasMagicEffectConditionDataGetter:
+                return 214;
+            case IGetDefaultOpenConditionDataGetter:
+                return 215;
+            case IGetAnimActionConditionDataGetter:
+                return 219;
+            case IIsSpellTargetConditionDataGetter:
+                return 223;
+            case IGetVATSModeConditionDataGetter:
+                return 224;
+            case IGetPersuasionNumberConditionDataGetter:
+                return 225;
+            case IGetVampireFeedConditionDataGetter:
+                return 226;
+            case IGetCannibalConditionDataGetter:
+                return 227;
+            case IGetIsClassDefaultConditionDataGetter:
+                return 228;
+            case IGetClassDefaultMatchConditionDataGetter:
+                return 229;
+            case IGetInCellParamConditionDataGetter:
+                return 230;
+            case IGetVatsTargetHeightConditionDataGetter:
+                return 235;
+            case IGetIsGhostConditionDataGetter:
+                return 237;
+            case IGetUnconsciousConditionDataGetter:
+                return 242;
+            case IGetRestrainedConditionDataGetter:
+                return 244;
+            case IGetIsUsedItemConditionDataGetter:
+                return 246;
+            case IGetIsUsedItemTypeConditionDataGetter:
+                return 247;
+            case IIsScenePlayingConditionDataGetter:
+                return 248;
+            case IIsInDialogueWithPlayerConditionDataGetter:
+                return 249;
+            case IGetLocationClearedConditionDataGetter:
+                return 250;
+            case IGetIsPlayableRaceConditionDataGetter:
+                return 254;
+            case IGetOffersServicesNowConditionDataGetter:
+                return 255;
+            case IHasAssociationTypeConditionDataGetter:
+                return 258;
+            case IHasFamilyRelationshipConditionDataGetter:
+                return 259;
+            case IHasParentRelationshipConditionDataGetter:
+                return 261;
+            case IIsWarningAboutConditionDataGetter:
+                return 262;
+            case IIsWeaponOutConditionDataGetter:
+                return 263;
+            case IHasSpellConditionDataGetter:
+                return 264;
+            case IIsTimePassingConditionDataGetter:
+                return 265;
+            case IIsPleasantConditionDataGetter:
+                return 266;
+            case IIsCloudyConditionDataGetter:
+                return 267;
+            case IIsSmallBumpConditionDataGetter:
+                return 274;
+            case IGetBaseActorValueConditionDataGetter:
+                return 277;
+            case IIsOwnerConditionDataGetter:
+                return 278;
+            case IIsCellOwnerConditionDataGetter:
+                return 280;
+            case IIsHorseStolenConditionDataGetter:
+                return 282;
+            case IIsLeftUpConditionDataGetter:
+                return 285;
+            case IIsSneakingConditionDataGetter:
+                return 286;
+            case IIsRunningConditionDataGetter:
+                return 287;
+            case IGetFriendHitConditionDataGetter:
+                return 288;
+            case IIsInCombatConditionDataGetter:
+                return 289;
+            case IIsInInteriorConditionDataGetter:
+                return 300;
+            case IIsWaterObjectConditionDataGetter:
+                return 304;
+            case IGetPlayerActionConditionDataGetter:
+                return 305;
+            case IIsActorUsingATorchConditionDataGetter:
+                return 306;
+            case IIsXBoxConditionDataGetter:
+                return 309;
+            case IGetInWorldspaceConditionDataGetter:
+                return 310;
+            case IGetPCMiscStatConditionDataGetter:
+                return 312;
+            case IGetPairedAnimationConditionDataGetter:
+                return 313;
+            case IIsActorAVictimConditionDataGetter:
+                return 314;
+            case IGetTotalPersuasionNumberConditionDataGetter:
+                return 315;
+            case IGetIdleDoneOnceConditionDataGetter:
+                return 318;
+            case IGetNoRumorsConditionDataGetter:
+                return 320;
+            case IGetCombatStateConditionDataGetter:
+                return 323;
+            case IGetWithinPackageLocationConditionDataGetter:
+                return 325;
+            case IIsRidingMountConditionDataGetter:
+                return 327;
+            case IIsFleeingConditionDataGetter:
+                return 329;
+            case IIsInDangerousWaterConditionDataGetter:
+                return 332;
+            case IGetIgnoreFriendlyHitsConditionDataGetter:
+                return 338;
+            case IIsPlayersLastRiddenMountConditionDataGetter:
+                return 339;
+            case IIsActorConditionDataGetter:
+                return 353;
+            case IIsEssentialConditionDataGetter:
+                return 354;
+            case IIsPlayerMovingIntoNewSpaceConditionDataGetter:
+                return 358;
+            case IGetInCurrentLocConditionDataGetter:
+                return 359;
+            case IGetInCurrentLocAliasConditionDataGetter:
+                return 360;
+            case IGetTimeDeadConditionDataGetter:
+                return 361;
+            case IHasLinkedRefConditionDataGetter:
+                return 362;
+            case IIsChildConditionDataGetter:
+                return 365;
+            case IGetStolenItemValueNoCrimeConditionDataGetter:
+                return 366;
+            case IGetLastPlayerActionConditionDataGetter:
+                return 367;
+            case IIsPlayerActionActiveConditionDataGetter:
+                return 368;
+            case IIsTalkingActivatorActorConditionDataGetter:
+                return 370;
+            case IIsInListConditionDataGetter:
+                return 372;
+            case IGetStolenItemValueConditionDataGetter:
+                return 373;
+            case IGetCrimeGoldViolentConditionDataGetter:
+                return 375;
+            case IGetCrimeGoldNonviolentConditionDataGetter:
+                return 376;
+            case IHasShoutConditionDataGetter:
+                return 378;
+            case IGetHasNoteConditionDataGetter:
+                return 381;
+            case IGetHitLocationConditionDataGetter:
+                return 390;
+            case IIsPC1stPersonConditionDataGetter:
+                return 391;
+            case IGetCauseofDeathConditionDataGetter:
+                return 396;
+            case IIsLimbGoneConditionDataGetter:
+                return 397;
+            case IIsWeaponInListConditionDataGetter:
+                return 398;
+            case IIsBribedbyPlayerConditionDataGetter:
+                return 402;
+            case IGetRelationshipRankConditionDataGetter:
+                return 403;
+            case IGetVATSValueConditionDataGetter:
+                return 407;
+            case IIsKillerConditionDataGetter:
+                return 408;
+            case IIsKillerObjectConditionDataGetter:
+                return 409;
+            case IGetFactionCombatReactionConditionDataGetter:
+                return 410;
+            case IExistsConditionDataGetter:
+                return 414;
+            case IGetGroupMemberCountConditionDataGetter:
+                return 415;
+            case IGetGroupTargetCountConditionDataGetter:
+                return 416;
+            case IGetIsVoiceTypeConditionDataGetter:
+                return 426;
+            case IGetPlantedExplosiveConditionDataGetter:
+                return 427;
+            case IIsScenePackageRunningConditionDataGetter:
+                return 429;
+            case IGetHealthPercentageConditionDataGetter:
+                return 430;
+            case IGetIsObjectTypeConditionDataGetter:
+                return 432;
+            case IGetDialogueEmotionConditionDataGetter:
+                return 434;
+            case IGetDialogueEmotionValueConditionDataGetter:
+                return 435;
+            case IGetIsCreatureTypeConditionDataGetter:
+                return 437;
+            case IGetInCurrentLocFormListConditionDataGetter:
+                return 444;
+            case IGetInZoneConditionDataGetter:
+                return 445;
+            case IGetVelocityConditionDataGetter:
+                return 446;
+            case IGetGraphVariableFloatConditionDataGetter:
+                return 447;
+            case IHasPerkConditionDataGetter:
+                return 448;
+            case IGetFactionRelationConditionDataGetter:
+                return 449;
+            case IIsLastIdlePlayedConditionDataGetter:
+                return 450;
+            case IGetPlayerTeammateConditionDataGetter:
+                return 453;
+            case IGetPlayerTeammateCountConditionDataGetter:
+                return 454;
+            case IGetActorCrimePlayerEnemyConditionDataGetter:
+                return 458;
+            case IGetCrimeGoldConditionDataGetter:
+                return 459;
+            case IIsPlayerGrabbedRefConditionDataGetter:
+                return 463;
+            case IGetKeywordItemCountConditionDataGetter:
+                return 465;
+            case IGetDestructionStageConditionDataGetter:
+                return 470;
+            case IGetIsAlignmentConditionDataGetter:
+                return 473;
+            case IIsProtectedConditionDataGetter:
+                return 476;
+            case IGetThreatRatioConditionDataGetter:
+                return 477;
+            case IGetIsUsedItemEquipTypeConditionDataGetter:
+                return 479;
+            case IIsCarryableConditionDataGetter:
+                return 487;
+            case IGetConcussedConditionDataGetter:
+                return 488;
+            case IGetMapMarkerVisibleConditionDataGetter:
+                return 491;
+            case IPlayerKnowsConditionDataGetter:
+                return 493;
+            case IGetPermanentActorValueConditionDataGetter:
+                return 494;
+            case IGetKillingBlowLimbConditionDataGetter:
+                return 495;
+            case ICanPayCrimeGoldConditionDataGetter:
+                return 497;
+            case IGetDaysInJailConditionDataGetter:
+                return 499;
+            case IEPAlchemyGetMakingPoisonConditionDataGetter:
+                return 500;
+            case IEPAlchemyEffectHasKeywordConditionDataGetter:
+                return 501;
+            case IGetAllowWorldInteractionsConditionDataGetter:
+                return 503;
+            case IGetLastHitCriticalConditionDataGetter:
+                return 508;
+            case IIsCombatTargetConditionDataGetter:
+                return 513;
+            case IGetVATSRightAreaFreeConditionDataGetter:
+                return 515;
+            case IGetVATSLeftAreaFreeConditionDataGetter:
+                return 516;
+            case IGetVATSBackAreaFreeConditionDataGetter:
+                return 517;
+            case IGetVATSFrontAreaFreeConditionDataGetter:
+                return 518;
+            case IGetLockIsBrokenConditionDataGetter:
+                return 519;
+            case IIsPS3ConditionDataGetter:
+                return 520;
+            case IIsWin32ConditionDataGetter:
+                return 521;
+            case IGetVATSRightTargetVisibleConditionDataGetter:
+                return 522;
+            case IGetVATSLeftTargetVisibleConditionDataGetter:
+                return 523;
+            case IGetVATSBackTargetVisibleConditionDataGetter:
+                return 524;
+            case IGetVATSFrontTargetVisibleConditionDataGetter:
+                return 525;
+            case IIsInCriticalStageConditionDataGetter:
+                return 528;
+            case IGetXPForNextLevelConditionDataGetter:
+                return 530;
+            case IGetInfamyConditionDataGetter:
+                return 533;
+            case IGetInfamyViolentConditionDataGetter:
+                return 534;
+            case IGetInfamyNonViolentConditionDataGetter:
+                return 535;
+            case IGetQuestCompletedConditionDataGetter:
+                return 543;
+            case IIsGoreDisabledConditionDataGetter:
+                return 547;
+            case IIsSceneActionCompleteConditionDataGetter:
+                return 550;
+            case IGetSpellUsageNumConditionDataGetter:
+                return 552;
+            case IGetActorsInHighConditionDataGetter:
+                return 554;
+            case IHasLoaded3DConditionDataGetter:
+                return 555;
+            case IHasKeywordConditionDataGetter:
+                return 560;
+            case IHasRefTypeConditionDataGetter:
+                return 561;
+            case ILocationHasKeywordConditionDataGetter:
+                return 562;
+            case ILocationHasRefTypeConditionDataGetter:
+                return 563;
+            case IGetIsEditorLocationConditionDataGetter:
+                return 565;
+            case IGetIsAliasRefConditionDataGetter:
+                return 566;
+            case IGetIsEditorLocAliasConditionDataGetter:
+                return 567;
+            case IIsSprintingConditionDataGetter:
+                return 568;
+            case IIsBlockingConditionDataGetter:
+                return 569;
+            case IHasEquippedSpellConditionDataGetter:
+                return 570;
+            case IGetCurrentCastingTypeConditionDataGetter:
+                return 571;
+            case IGetCurrentDeliveryTypeConditionDataGetter:
+                return 572;
+            case IGetAttackStateConditionDataGetter:
+                return 574;
+            case IGetEventDataConditionDataGetter:
+                return 576;
+            case IIsCloserToAThanBConditionDataGetter:
+                return 577;
+            case IGetEquippedShoutConditionDataGetter:
+                return 579;
+            case IIsBleedingOutConditionDataGetter:
+                return 580;
+            case IGetRelativeAngleConditionDataGetter:
+                return 584;
+            case IGetMovementDirectionConditionDataGetter:
+                return 589;
+            case IIsInSceneConditionDataGetter:
+                return 590;
+            case IGetRefTypeDeadCountConditionDataGetter:
+                return 591;
+            case IGetRefTypeAliveCountConditionDataGetter:
+                return 592;
+            case IGetIsFlyingConditionDataGetter:
+                return 594;
+            case IIsCurrentSpellConditionDataGetter:
+                return 595;
+            case ISpellHasKeywordConditionDataGetter:
+                return 596;
+            case IGetEquippedItemTypeConditionDataGetter:
+                return 597;
+            case IGetLocationAliasClearedConditionDataGetter:
+                return 598;
+            case IGetLocAliasRefTypeDeadCountConditionDataGetter:
+                return 600;
+            case IGetLocAliasRefTypeAliveCountConditionDataGetter:
+                return 601;
+            case IIsWardStateConditionDataGetter:
+                return 602;
+            case IIsInSameCurrentLocAsRefConditionDataGetter:
+                return 603;
+            case IIsInSameCurrentLocAsRefAliasConditionDataGetter:
+                return 604;
+            case ILocAliasIsLocationConditionDataGetter:
+                return 605;
+            case IGetKeywordDataForLocationConditionDataGetter:
+                return 606;
+            case IGetKeywordDataForAliasConditionDataGetter:
+                return 608;
+            case ILocAliasHasKeywordConditionDataGetter:
+                return 610;
+            case IIsNullPackageDataConditionDataGetter:
+                return 611;
+            case IGetNumericPackageDataConditionDataGetter:
+                return 612;
+            case IIsFurnitureAnimTypeConditionDataGetter:
+                return 613;
+            case IIsFurnitureEntryTypeConditionDataGetter:
+                return 614;
+            case IGetHighestRelationshipRankConditionDataGetter:
+                return 615;
+            case IGetLowestRelationshipRankConditionDataGetter:
+                return 616;
+            case IHasAssociationTypeAnyConditionDataGetter:
+                return 617;
+            case IHasFamilyRelationshipAnyConditionDataGetter:
+                return 618;
+            case IGetPathingTargetOffsetConditionDataGetter:
+                return 619;
+            case IGetPathingTargetAngleOffsetConditionDataGetter:
+                return 620;
+            case IGetPathingTargetSpeedConditionDataGetter:
+                return 621;
+            case IGetPathingTargetSpeedAngleConditionDataGetter:
+                return 622;
+            case IGetMovementSpeedConditionDataGetter:
+                return 623;
+            case IGetInContainerConditionDataGetter:
+                return 624;
+            case IIsLocationLoadedConditionDataGetter:
+                return 625;
+            case IIsLocAliasLoadedConditionDataGetter:
+                return 626;
+            case IIsDualCastingConditionDataGetter:
+                return 627;
+            case IGetVMQuestVariableConditionDataGetter:
+                return 629;
+            case IGetVMScriptVariableConditionDataGetter:
+                return 630;
+            case IIsEnteringInteractionQuickConditionDataGetter:
+                return 631;
+            case IIsCastingConditionDataGetter:
+                return 632;
+            case IGetFlyingStateConditionDataGetter:
+                return 633;
+            case IIsInFavorStateConditionDataGetter:
+                return 635;
+            case IHasTwoHandedWeaponEquippedConditionDataGetter:
+                return 636;
+            case IIsExitingInstantConditionDataGetter:
+                return 637;
+            case IIsInFriendStateWithPlayerConditionDataGetter:
+                return 638;
+            case IGetWithinDistanceConditionDataGetter:
+                return 639;
+            case IGetActorValuePercentConditionDataGetter:
+                return 640;
+            case IIsUniqueConditionDataGetter:
+                return 641;
+            case IGetLastBumpDirectionConditionDataGetter:
+                return 642;
+            case IIsInFurnitureStateConditionDataGetter:
+                return 644;
+            case IGetIsInjuredConditionDataGetter:
+                return 645;
+            case IGetIsCrashLandRequestConditionDataGetter:
+                return 646;
+            case IGetIsHastyLandRequestConditionDataGetter:
+                return 647;
+            case IIsLinkedToConditionDataGetter:
+                return 650;
+            case IGetKeywordDataForCurrentLocationConditionDataGetter:
+                return 651;
+            case IGetInSharedCrimeFactionConditionDataGetter:
+                return 652;
+            case IGetBribeSuccessConditionDataGetter:
+                return 654;
+            case IGetIntimidateSuccessConditionDataGetter:
+                return 655;
+            case IGetArrestedStateConditionDataGetter:
+                return 656;
+            case IGetArrestingActorConditionDataGetter:
+                return 657;
+            case IEPTemperingItemIsEnchantedConditionDataGetter:
+                return 659;
+            case IEPTemperingItemHasKeywordConditionDataGetter:
+                return 660;
+            case IGetReplacedItemTypeConditionDataGetter:
+                return 664;
+            case IIsAttackingConditionDataGetter:
+                return 672;
+            case IIsPowerAttackingConditionDataGetter:
+                return 673;
+            case IIsLastHostileActorConditionDataGetter:
+                return 674;
+            case IGetGraphVariableIntConditionDataGetter:
+                return 675;
+            case IGetCurrentShoutVariationConditionDataGetter:
+                return 676;
+            case IShouldAttackKillConditionDataGetter:
+                return 678;
+            case IGetActivatorHeightConditionDataGetter:
+                return 680;
+            case IEPMagic_IsAdvanceSkillConditionDataGetter:
+                return 681;
+            case IWornHasKeywordConditionDataGetter:
+                return 682;
+            case IGetPathingCurrentSpeedConditionDataGetter:
+                return 683;
+            case IGetPathingCurrentSpeedAngleConditionDataGetter:
+                return 684;
+            case IEPModSkillUsage_AdvanceObjectHasKeywordConditionDataGetter:
+                return 691;
+            case IEPModSkillUsage_IsAdvanceActionConditionDataGetter:
+                return 692;
+            case IEPMagic_SpellHasKeywordConditionDataGetter:
+                return 693;
+            case IGetNoBleedoutRecoveryConditionDataGetter:
+                return 694;
+            case IEPMagic_SpellHasSkillConditionDataGetter:
+                return 696;
+            case IIsAttackTypeConditionDataGetter:
+                return 697;
+            case IIsAllowedToFlyConditionDataGetter:
+                return 698;
+            case IHasMagicEffectKeywordConditionDataGetter:
+                return 699;
+            case IIsCommandedActorConditionDataGetter:
+                return 700;
+            case IIsStaggeredConditionDataGetter:
+                return 701;
+            case IIsRecoilingConditionDataGetter:
+                return 702;
+            case IIsExitingInteractionQuickConditionDataGetter:
+                return 703;
+            case IIsPathingConditionDataGetter:
+                return 704;
+            case IGetShouldHelpConditionDataGetter:
+                return 705;
+            case IHasBoundWeaponEquippedConditionDataGetter:
+                return 706;
+            case IGetCombatTargetHasKeywordConditionDataGetter:
+                return 707;
+            case IGetCombatGroupMemberCountConditionDataGetter:
+                return 709;
+            case IIsIgnoringCombatConditionDataGetter:
+                return 710;
+            case IGetLightLevelConditionDataGetter:
+                return 711;
+            case ISpellHasCastingPerkConditionDataGetter:
+                return 713;
+            case IIsBeingRiddenConditionDataGetter:
+                return 714;
+            case IIsUndeadConditionDataGetter:
+                return 715;
+            case IGetRealHoursPassedConditionDataGetter:
+                return 716;
+            case IIsUnlockedDoorConditionDataGetter:
+                return 718;
+            case IIsHostileToActorConditionDataGetter:
+                return 719;
+            case IGetTargetHeightConditionDataGetter:
+                return 720;
+            case IIsPoisonConditionDataGetter:
+                return 721;
+            case IWornApparelHasKeywordCountConditionDataGetter:
+                return 722;
+            case IGetItemHealthPercentConditionDataGetter:
+                return 723;
+            case IEffectWasDualCastConditionDataGetter:
+                return 724;
+            case IGetKnockedStateEnumConditionDataGetter:
+                return 725;
+            case IDoesNotExistConditionDataGetter:
+                return 726;
+            case IIsOnFlyingMountConditionDataGetter:
+                return 730;
+            case ICanFlyHereConditionDataGetter:
+                return 731;
+            case IIsFlyingMountPatrolQueudConditionDataGetter:
+                return 732;
+            case IIsFlyingMountFastTravellingConditionDataGetter:
+                return 733;
+            case IIsOverEncumberedConditionDataGetter:
+                return 734;
+            case IGetActorWarmthConditionDataGetter:
+                return 735;
+            case IGetSKSEVersionConditionDataGetter:
+                return 1024;
+            case IGetSKSEVersionMinorConditionDataGetter:
+                return 1025;
+            case IGetSKSEVersionBetaConditionDataGetter:
+                return 1026;
+            case IGetSKSEReleaseConditionDataGetter:
+                return 1027;
+            case IClearInvalidRegistrationsConditionDataGetter:
+                return 1028;
+            default:
+                throw new NotImplementedException();
+        }
     }
-
-    public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionGlobalGetter obj)
+    
+    public static partial void FillBinaryFunctionParseCustom(MutagenFrame frame, ICondition obj)
     {
-        ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
-    }
-}
-
-partial class ConditionFloatBinaryCreateTranslation
-{
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionFloat item)
-    {
-        var functionIndex = frame.GetUInt16();
+        switch (obj)
+        {
+            case IConditionGlobal global:
+                global.ComparisonValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(frame));
+                break;
+            case IConditionFloat f:
+                f.ComparisonValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        
+        var functionIndex = frame.ReadUInt16();
+        obj.Unknown2 = frame.ReadUInt16();
         if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
         {
-            item.Data = GetEventData.CreateFromBinary(frame);
+            obj.Data = GetEventData.CreateFromBinary(frame);
         }
         else
         {
-            item.Data = ConditionGlobalBinaryCreateTranslation.CreateFromBinary(frame, functionIndex);
+            obj.Data = CreateDataFromBinary(frame, functionIndex);
+        }
+    }
+}
+
+partial class ConditionBinaryWriteTranslation
+{
+    public static byte GetFlagWriteByte(Condition.Flag flag, CompareOperator compare)
+    {
+        int b = ((int)flag) & 0x1F;
+        int b2 = ((int)compare) << 5;
+        return (byte)(b | b2);
+    }
+
+    public static void WriteConditionsList(IReadOnlyList<IConditionGetter> condList, MutagenWriter writer)
+    {
+        foreach (var cond in condList)
+        {
+            cond.WriteToBinary(writer);
         }
     }
 
-    public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj)
+    public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item)
     {
-        ConditionBinaryCreateTranslation.CustomStringImports(frame.Reader, obj.Data);
-    }
-}
-
-partial class ConditionFloatBinaryWriteTranslation
-{
-    public static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionFloatGetter item)
-    {
-        item.Data.WriteToBinary(writer);
-        GetEventDataBinaryWriteTranslation.WriteCommonParams(writer, item.Data);
-    }
-
-    public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionFloatGetter obj)
-    {
-        ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
-    }
-}
-
-partial class GetEventDataBinaryCreateTranslation
-{
-    public static void FillEndingParams(MutagenFrame frame, IConditionData item)
-    {
-        item.RunOnType = EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
-        item.Reference.SetTo(
-            FormLinkBinaryTranslation.Instance.Parse(
-                reader: frame,
-                defaultVal: FormKey.Null));
-        item.Unknown3 = frame.ReadInt32();
-    }
-
-    public static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IGetEventData item)
-    {
-        FillEndingParams(frame, item);
-    }
-}
-
-partial class GetEventDataBinaryWriteTranslation
-{
-    public static void WriteCommonParams(MutagenWriter writer, IConditionDataGetter item)
-    {
-        EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Write(
-            writer,
-            item.RunOnType,
-            length: 4);
-        FormLinkBinaryTranslation.Instance.Write(
-            writer: writer,
-            item: item.Reference);
-        writer.Write(item.Unknown3);
-    }
-
-    public static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IGetEventDataGetter item)
-    {
-        WriteCommonParams(writer, item);
-    }
-}
-
-partial class ConditionFloatBinaryOverlay
-{
-    public static IConditionDataGetter GetDataCustomCommon(ConditionBinaryOverlay condition, int location)
-    {
-        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(condition._structData.Slice(location));
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+        var flags = item.Flags;
+        if (item.Data.UseAliases)
         {
-            return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(condition._structData.Slice(location), condition._package), condition._package);
+            flags = flags.SetFlag((Condition.Flag)ParametersUseAliases, true);
+        }
+
+        if (item is IConditionGlobalGetter)
+        {
+            flags = flags.SetFlag((Condition.Flag)UseGlobal, true);
+        }
+        writer.Write(GetFlagWriteByte(flags, item.CompareOperator));
+    }
+
+    public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
+    {
+        if (obj is not IConditionStringParameter stringParameter) return;
+        if (stringParameter.FirstStringParameter is { } param1)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.CIS1))
+            {
+                StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
+            }
+        }
+        if (stringParameter.SecondStringParameter is { } param2)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.CIS2))
+            {
+                StringBinaryTranslation.Instance.Write(writer, param2, StringBinaryType.NullTerminate);
+            }
+        }
+    }
+
+    public static partial void WriteBinaryFunctionParseCustom(MutagenWriter writer, IConditionGetter item)
+    {
+        switch (item)
+        {
+            case IConditionGlobalGetter global:
+                FormLinkBinaryTranslation.Instance.Write(writer, global.ComparisonValue);
+                break;
+            case IConditionFloatGetter f:
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, f.ComparisonValue);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        
+        var data = item.Data;
+        writer.Write((ushort)data.Function);
+        writer.Write(item.Unknown2);
+        data.WriteToBinary(writer);
+        
+        EnumBinaryTranslation<RunOnType, MutagenFrame, MutagenWriter>.Instance.Write(writer, data.RunOnType, 4);
+        FormLinkBinaryTranslation.Instance.Write(writer, data.Reference);
+        writer.Write(item.Data.Unknown3);
+    }
+}
+
+abstract partial class ConditionBinaryOverlay
+{
+    public IConditionDataGetter Data { get; private set; } = null!;
+
+    private static RecordTriggerSpecs IncludeTriggers = new(
+        RecordCollection.Factory(
+            RecordTypes.CIS1,
+            RecordTypes.CIS2));
+
+    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location])
+        .SetFlag((Condition.Flag)Condition.ParametersUseAliases, false)
+        .SetFlag((Condition.Flag)Condition.UseGlobal, false);
+    public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_structData.Span[0]);
+    public ushort Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(10));
+
+    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    {
+        var subRecMeta = stream.GetSubrecord();
+        if (subRecMeta.RecordType != RecordTypes.CTDA)
+        {
+            throw new ArgumentException();
+        }
+
+        var finalPos = stream.Position + subRecMeta.TotalLength;
+        Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
+        ConditionBinaryOverlay ret;
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
+        {
+            ret = (ConditionBinaryOverlay)ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
         }
         else
         {
-            var ret = ConditionGlobalBinaryCreateTranslation.CreateFromBinary(new MutagenFrame(new OverlayStream(condition._structData.Slice(location), condition._package)), functionIndex);
-            ret.UseAliases = condition.Flags.HasFlag((Condition.Flag)ParametersUseAliases);
-            return ret;
+            ret = (ConditionBinaryOverlay)ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
         }
+
+        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(8));
+        ConditionData data;
+        stream.Position += 12;
+        var mutagenFrame = new MutagenFrame(stream);
+        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+        {
+            data = GetEventData.CreateFromBinary(mutagenFrame);
+        }
+        else
+        {
+            data = ConditionBinaryCreateTranslation.CreateDataFromBinaryInternal(mutagenFrame, functionIndex);
+        }
+
+        GetEventDataBinaryCreateTranslation.FillEndingParams(mutagenFrame, data);
+        
+        ret.Data = data;
+        
+        stream.Position = finalPos;
+        ConditionBinaryCreateTranslation.CustomStringImports(stream, data);
+        data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
+
+        return ret;
     }
 
-    private IConditionDataGetter _data = null!;
-    public override IConditionDataGetter Data => _data;
-
-    partial void CustomCtor()
+    public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams _)
     {
-        _data = GetDataCustomCommon(this, location: 0x8);
+        return ConditionFactory(stream, package);
     }
 
-    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
+    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
-        stream.Position = offset;
-        _structData = stream.RemainingMemory;
+        var counterMeta = stream.ReadSubrecord();
+        if (counterMeta.RecordType != RecordTypes.CITC
+            || counterMeta.Content.Length != 4)
+        {
+            throw new ArgumentException();
+        }
+        var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.Content);
+        var ret = ConstructBinaryOverlayList(stream, package);
+        if (count != ret.Count)
+        {
+            throw new ArgumentException("Number of parsed conditions did not matched labeled count.");
+        }
+        return ret;
     }
-}
 
-partial class ConditionGlobalBinaryOverlay
-{
-    private IConditionDataGetter _data = null!;
-    public override IConditionDataGetter Data => _data;
-
-    partial void CustomCtor()
+    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
-        _data = ConditionFloatBinaryOverlay.GetDataCustomCommon(this, location: 0x8);
+        var span = stream.RemainingMemory;
+        var pos = stream.Position;
+        var recordLocs = ParseRecordLocations(
+            stream: stream,
+            finalPos: long.MaxValue,
+            constants: package.MetaData.Constants.SubConstants,
+            trigger: RecordTypes.CTDA,
+            includeTriggers: IncludeTriggers,
+            skipHeader: false);
+        span = span.Slice(0, stream.Position - pos);
+        return BinaryOverlayList.FactoryByArray<IConditionGetter>(
+            mem: span,
+            package: package,
+            getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),
+            locs: recordLocs);
     }
-
-    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-    {
-        stream.Position = offset;
-        _structData = stream.RemainingMemory;
-    }
-}
-
-partial class ConditionDataBinaryOverlay
-{
-    public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
-    public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
-    public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
-}
-
-partial class FunctionConditionDataBinaryOverlay : IConditionStringParameterGetter
-{
-    private ReadOnlyMemorySlice<byte> _data2;
-
-    public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
-
-    public int ParameterOneNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2);
-
-    public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
-
-    public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
-
-    private ReadOnlyMemorySlice<byte> _stringParamData1;
-    protected bool ParameterOneStringIsSet { get; private set; }
-    protected string? ParameterOneString => ParameterOneStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
-
-    private ReadOnlyMemorySlice<byte> _stringParamData2;
-    protected bool ParameterTwoStringIsSet { get; private set; }
-    protected string? ParameterTwoString => ParameterTwoStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
-
-    string? IConditionStringParameterGetter.FirstStringParameter => ParameterOneString;
-
-    string? IConditionStringParameterGetter.SecondStringParameter => ParameterTwoString;
 }

@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class GetRealHoursPassedConditionData :
-        FunctionConditionData,
+        ConditionData,
         IEquatable<IGetRealHoursPassedConditionDataGetter>,
         IGetRealHoursPassedConditionData,
         ILoquiObjectSetter<GetRealHoursPassedConditionData>
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            FunctionConditionData.Mask<TItem>,
+            ConditionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -119,8 +119,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem Function,
-                TItem Unknown2,
                 TItem FirstParameter,
                 TItem FirstUnusedStringParameter,
                 TItem SecondParameter,
@@ -129,9 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases,
-                Function: Function,
-                Unknown2: Unknown2)
+                UseAliases: UseAliases)
             {
                 this.FirstParameter = FirstParameter;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -264,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            FunctionConditionData.ErrorMask,
+            ConditionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -414,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            FunctionConditionData.TranslationMask,
+            ConditionData.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -512,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGetRealHoursPassedConditionData :
-        IFunctionConditionData,
+        IConditionData,
         IGetRealHoursPassedConditionDataGetter,
         ILoquiObjectSetter<IGetRealHoursPassedConditionData>
     {
@@ -523,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IGetRealHoursPassedConditionDataGetter :
-        IFunctionConditionDataGetter,
+        IConditionDataGetter,
         IBinaryItem,
         ILoquiObject<IGetRealHoursPassedConditionDataGetter>
     {
@@ -680,12 +676,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Function = 4,
-        Unknown2 = 5,
-        FirstParameter = 6,
-        FirstUnusedStringParameter = 7,
-        SecondParameter = 8,
-        SecondUnusedStringParameter = 9,
+        FirstParameter = 4,
+        FirstUnusedStringParameter = 5,
+        SecondParameter = 6,
+        SecondUnusedStringParameter = 7,
     }
     #endregion
 
@@ -705,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GetRealHoursPassedConditionData.Mask<>);
 
@@ -764,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class GetRealHoursPassedConditionDataSetterCommon : FunctionConditionDataSetterCommon
+    internal partial class GetRealHoursPassedConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly GetRealHoursPassedConditionDataSetterCommon Instance = new GetRealHoursPassedConditionDataSetterCommon();
 
@@ -778,11 +772,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SecondParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IFunctionConditionData item)
-        {
-            Clear(item: (IGetRealHoursPassedConditionData)item);
         }
         
         public override void Clear(IConditionData item)
@@ -812,17 +801,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IFunctionConditionData item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (GetRealHoursPassedConditionData)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -836,7 +814,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetRealHoursPassedConditionDataCommon : FunctionConditionDataCommon
+    internal partial class GetRealHoursPassedConditionDataCommon : ConditionDataCommon
     {
         public new static readonly GetRealHoursPassedConditionDataCommon Instance = new GetRealHoursPassedConditionDataCommon();
 
@@ -909,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             GetRealHoursPassedConditionData.Mask<bool>? printMask = null)
         {
-            FunctionConditionDataCommon.ToStringFields(
+            ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -933,28 +911,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static GetRealHoursPassedConditionData_FieldIndex ConvertFieldIndex(FunctionConditionData_FieldIndex index)
-        {
-            switch (index)
-            {
-                case FunctionConditionData_FieldIndex.RunOnType:
-                    return (GetRealHoursPassedConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Reference:
-                    return (GetRealHoursPassedConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return (GetRealHoursPassedConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.UseAliases:
-                    return (GetRealHoursPassedConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Function:
-                    return (GetRealHoursPassedConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return (GetRealHoursPassedConditionData_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
-        public static new GetRealHoursPassedConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static GetRealHoursPassedConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
@@ -978,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)GetRealHoursPassedConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 if (lhs.FirstParameter != rhs.FirstParameter) return false;
@@ -996,17 +953,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
             return true;
-        }
-        
-        public override bool Equals(
-            IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IGetRealHoursPassedConditionDataGetter?)lhs,
-                rhs: rhs as IGetRealHoursPassedConditionDataGetter,
-                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -1037,11 +983,6 @@ namespace Mutagen.Bethesda.Skyrim
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IFunctionConditionDataGetter item)
-        {
-            return GetHashCode(item: (IGetRealHoursPassedConditionDataGetter)item);
-        }
-        
         public override int GetHashCode(IConditionDataGetter item)
         {
             return GetHashCode(item: (IGetRealHoursPassedConditionDataGetter)item);
@@ -1068,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetRealHoursPassedConditionDataSetterTranslationCommon : FunctionConditionDataSetterTranslationCommon
+    internal partial class GetRealHoursPassedConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly GetRealHoursPassedConditionDataSetterTranslationCommon Instance = new GetRealHoursPassedConditionDataSetterTranslationCommon();
 
@@ -1081,8 +1022,8 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
+                (IConditionData)item,
+                (IConditionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1102,22 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IGetRealHoursPassedConditionData)item,
-                rhs: (IGetRealHoursPassedConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         
@@ -1217,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GetRealHoursPassedConditionDataBinaryWriteTranslation :
-        FunctionConditionDataBinaryWriteTranslation,
+        ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly GetRealHoursPassedConditionDataBinaryWriteTranslation Instance = new();
@@ -1226,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGetRealHoursPassedConditionDataGetter item,
             MutagenWriter writer)
         {
-            FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
             writer.Write(item.FirstParameter);
@@ -1256,17 +1181,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IFunctionConditionDataGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IGetRealHoursPassedConditionDataGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IConditionDataGetter item,
             TypedWriteParams translationParams)
         {
@@ -1278,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class GetRealHoursPassedConditionDataBinaryCreateTranslation : FunctionConditionDataBinaryCreateTranslation
+    internal partial class GetRealHoursPassedConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new static readonly GetRealHoursPassedConditionDataBinaryCreateTranslation Instance = new GetRealHoursPassedConditionDataBinaryCreateTranslation();
 
@@ -1286,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGetRealHoursPassedConditionData item,
             MutagenFrame frame)
         {
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
             item.FirstParameter = frame.ReadInt32();
@@ -1308,119 +1222,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class GetRealHoursPassedConditionDataBinaryOverlay :
-        FunctionConditionDataBinaryOverlay,
-        IGetRealHoursPassedConditionDataGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GetRealHoursPassedConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => GetRealHoursPassedConditionData_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => GetRealHoursPassedConditionDataCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GetRealHoursPassedConditionDataSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GetRealHoursPassedConditionDataBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((GetRealHoursPassedConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected GetRealHoursPassedConditionDataBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IGetRealHoursPassedConditionDataGetter GetRealHoursPassedConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                length: 0xC,
-                memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new GetRealHoursPassedConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0xC;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IGetRealHoursPassedConditionDataGetter GetRealHoursPassedConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return GetRealHoursPassedConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            GetRealHoursPassedConditionDataMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IGetRealHoursPassedConditionDataGetter rhs) return false;
-            return ((GetRealHoursPassedConditionDataCommon)((IGetRealHoursPassedConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IGetRealHoursPassedConditionDataGetter? obj)
-        {
-            return ((GetRealHoursPassedConditionDataCommon)((IGetRealHoursPassedConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((GetRealHoursPassedConditionDataCommon)((IGetRealHoursPassedConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

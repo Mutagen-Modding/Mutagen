@@ -18,13 +18,6 @@ public partial class HasAssociationTypeAnyConditionData : IConditionStringParame
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class HasAssociationTypeAnyConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.HasAssociationTypeAny;
 }
 

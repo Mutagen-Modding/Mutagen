@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class GetDialogueEmotionConditionData :
-        FunctionConditionData,
+        ConditionData,
         IEquatable<IGetDialogueEmotionConditionDataGetter>,
         IGetDialogueEmotionConditionData,
         ILoquiObjectSetter<GetDialogueEmotionConditionData>
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            FunctionConditionData.Mask<TItem>,
+            ConditionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -119,8 +119,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem Function,
-                TItem Unknown2,
                 TItem FirstParameter,
                 TItem FirstUnusedStringParameter,
                 TItem SecondParameter,
@@ -129,9 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases,
-                Function: Function,
-                Unknown2: Unknown2)
+                UseAliases: UseAliases)
             {
                 this.FirstParameter = FirstParameter;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -264,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            FunctionConditionData.ErrorMask,
+            ConditionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -414,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            FunctionConditionData.TranslationMask,
+            ConditionData.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -512,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGetDialogueEmotionConditionData :
-        IFunctionConditionData,
+        IConditionData,
         IGetDialogueEmotionConditionDataGetter,
         ILoquiObjectSetter<IGetDialogueEmotionConditionData>
     {
@@ -523,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IGetDialogueEmotionConditionDataGetter :
-        IFunctionConditionDataGetter,
+        IConditionDataGetter,
         IBinaryItem,
         ILoquiObject<IGetDialogueEmotionConditionDataGetter>
     {
@@ -680,12 +676,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Function = 4,
-        Unknown2 = 5,
-        FirstParameter = 6,
-        FirstUnusedStringParameter = 7,
-        SecondParameter = 8,
-        SecondUnusedStringParameter = 9,
+        FirstParameter = 4,
+        FirstUnusedStringParameter = 5,
+        SecondParameter = 6,
+        SecondUnusedStringParameter = 7,
     }
     #endregion
 
@@ -705,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GetDialogueEmotionConditionData.Mask<>);
 
@@ -764,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class GetDialogueEmotionConditionDataSetterCommon : FunctionConditionDataSetterCommon
+    internal partial class GetDialogueEmotionConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly GetDialogueEmotionConditionDataSetterCommon Instance = new GetDialogueEmotionConditionDataSetterCommon();
 
@@ -778,11 +772,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SecondParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IFunctionConditionData item)
-        {
-            Clear(item: (IGetDialogueEmotionConditionData)item);
         }
         
         public override void Clear(IConditionData item)
@@ -812,17 +801,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IFunctionConditionData item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (GetDialogueEmotionConditionData)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -836,7 +814,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetDialogueEmotionConditionDataCommon : FunctionConditionDataCommon
+    internal partial class GetDialogueEmotionConditionDataCommon : ConditionDataCommon
     {
         public new static readonly GetDialogueEmotionConditionDataCommon Instance = new GetDialogueEmotionConditionDataCommon();
 
@@ -909,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             GetDialogueEmotionConditionData.Mask<bool>? printMask = null)
         {
-            FunctionConditionDataCommon.ToStringFields(
+            ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -933,28 +911,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static GetDialogueEmotionConditionData_FieldIndex ConvertFieldIndex(FunctionConditionData_FieldIndex index)
-        {
-            switch (index)
-            {
-                case FunctionConditionData_FieldIndex.RunOnType:
-                    return (GetDialogueEmotionConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Reference:
-                    return (GetDialogueEmotionConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return (GetDialogueEmotionConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.UseAliases:
-                    return (GetDialogueEmotionConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Function:
-                    return (GetDialogueEmotionConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return (GetDialogueEmotionConditionData_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
-        public static new GetDialogueEmotionConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static GetDialogueEmotionConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
@@ -978,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)GetDialogueEmotionConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 if (lhs.FirstParameter != rhs.FirstParameter) return false;
@@ -996,17 +953,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
             return true;
-        }
-        
-        public override bool Equals(
-            IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IGetDialogueEmotionConditionDataGetter?)lhs,
-                rhs: rhs as IGetDialogueEmotionConditionDataGetter,
-                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -1037,11 +983,6 @@ namespace Mutagen.Bethesda.Skyrim
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IFunctionConditionDataGetter item)
-        {
-            return GetHashCode(item: (IGetDialogueEmotionConditionDataGetter)item);
-        }
-        
         public override int GetHashCode(IConditionDataGetter item)
         {
             return GetHashCode(item: (IGetDialogueEmotionConditionDataGetter)item);
@@ -1068,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetDialogueEmotionConditionDataSetterTranslationCommon : FunctionConditionDataSetterTranslationCommon
+    internal partial class GetDialogueEmotionConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly GetDialogueEmotionConditionDataSetterTranslationCommon Instance = new GetDialogueEmotionConditionDataSetterTranslationCommon();
 
@@ -1081,8 +1022,8 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
+                (IConditionData)item,
+                (IConditionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1102,22 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IGetDialogueEmotionConditionData)item,
-                rhs: (IGetDialogueEmotionConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         
@@ -1217,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GetDialogueEmotionConditionDataBinaryWriteTranslation :
-        FunctionConditionDataBinaryWriteTranslation,
+        ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly GetDialogueEmotionConditionDataBinaryWriteTranslation Instance = new();
@@ -1226,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGetDialogueEmotionConditionDataGetter item,
             MutagenWriter writer)
         {
-            FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
             writer.Write(item.FirstParameter);
@@ -1256,17 +1181,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IFunctionConditionDataGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IGetDialogueEmotionConditionDataGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IConditionDataGetter item,
             TypedWriteParams translationParams)
         {
@@ -1278,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class GetDialogueEmotionConditionDataBinaryCreateTranslation : FunctionConditionDataBinaryCreateTranslation
+    internal partial class GetDialogueEmotionConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new static readonly GetDialogueEmotionConditionDataBinaryCreateTranslation Instance = new GetDialogueEmotionConditionDataBinaryCreateTranslation();
 
@@ -1286,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGetDialogueEmotionConditionData item,
             MutagenFrame frame)
         {
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
             item.FirstParameter = frame.ReadInt32();
@@ -1308,119 +1222,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class GetDialogueEmotionConditionDataBinaryOverlay :
-        FunctionConditionDataBinaryOverlay,
-        IGetDialogueEmotionConditionDataGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GetDialogueEmotionConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => GetDialogueEmotionConditionData_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => GetDialogueEmotionConditionDataCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GetDialogueEmotionConditionDataSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GetDialogueEmotionConditionDataBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((GetDialogueEmotionConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected GetDialogueEmotionConditionDataBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IGetDialogueEmotionConditionDataGetter GetDialogueEmotionConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                length: 0xC,
-                memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new GetDialogueEmotionConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0xC;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IGetDialogueEmotionConditionDataGetter GetDialogueEmotionConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return GetDialogueEmotionConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            GetDialogueEmotionConditionDataMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IGetDialogueEmotionConditionDataGetter rhs) return false;
-            return ((GetDialogueEmotionConditionDataCommon)((IGetDialogueEmotionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IGetDialogueEmotionConditionDataGetter? obj)
-        {
-            return ((GetDialogueEmotionConditionDataCommon)((IGetDialogueEmotionConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((GetDialogueEmotionConditionDataCommon)((IGetDialogueEmotionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

@@ -18,13 +18,6 @@ public partial class GetStolenItemValueNoCrimeConditionData : IConditionStringPa
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetStolenItemValueNoCrimeConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetStolenItemValueNoCrime;
 }
 

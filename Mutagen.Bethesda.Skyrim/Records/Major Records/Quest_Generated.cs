@@ -2471,13 +2471,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.DialogConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            foreach (var item in obj.DialogConditions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.UnusedConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            foreach (var item in obj.UnusedConditions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2485,8 +2483,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Objectives.WhereCastable<IQuestObjectiveGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            foreach (var item in obj.Objectives.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }

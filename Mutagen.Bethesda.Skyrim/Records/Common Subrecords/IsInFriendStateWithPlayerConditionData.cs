@@ -18,13 +18,6 @@ public partial class IsInFriendStateWithPlayerConditionData : IConditionStringPa
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsInFriendStateWithPlayerConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsInFriendStateWithPlayer;
 }
 

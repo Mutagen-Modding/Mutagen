@@ -18,13 +18,6 @@ public partial class GetCurrentWeatherPercentConditionData : IConditionStringPar
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetCurrentWeatherPercentConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetCurrentWeatherPercent;
 }
 

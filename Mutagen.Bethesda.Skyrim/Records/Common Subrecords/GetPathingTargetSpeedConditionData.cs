@@ -18,13 +18,6 @@ public partial class GetPathingTargetSpeedConditionData : IConditionStringParame
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetPathingTargetSpeedConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetPathingTargetSpeed;
 }
 

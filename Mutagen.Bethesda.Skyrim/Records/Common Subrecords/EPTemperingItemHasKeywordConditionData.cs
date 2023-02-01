@@ -18,13 +18,6 @@ public partial class EPTemperingItemHasKeywordConditionData : IConditionStringPa
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class EPTemperingItemHasKeywordConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.EPTemperingItemHasKeyword;
 }
 

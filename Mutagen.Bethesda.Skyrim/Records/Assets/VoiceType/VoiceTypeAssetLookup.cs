@@ -362,9 +362,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     {
         var voices = new VoiceContainer();
 
-        if (condition.Data.RunOnType != Condition.RunOnType.Subject || condition.Data is not IFunctionConditionDataGetter functionConditionData) return new VoiceContainer(true);
+        var data = condition.Data;
 
-        switch (functionConditionData)
+        if (data.RunOnType != Condition.RunOnType.Subject) return new VoiceContainer(true);
+
+        switch (data)
         {
             case IGetIsIDConditionDataGetter getIsId:
                 if (!getIsId.FirstParameter.Link.IsNull)
@@ -446,12 +448,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (!voices.IsDefault && !IsConditionValid(condition))
         {
             //Can't invert alias according to CK calculation
-            if (functionConditionData.Function == Condition.Function.GetIsAliasRef)
+            if (data.Function == Condition.Function.GetIsAliasRef)
             {
                 return new VoiceContainer(true);
             }
 
-            voices = Invert(voices, functionConditionData.Function == Condition.Function.GetIsVoiceType, currentMod);
+            voices = Invert(voices, data.Function == Condition.Function.GetIsVoiceType, currentMod);
         }
 
         return voices;

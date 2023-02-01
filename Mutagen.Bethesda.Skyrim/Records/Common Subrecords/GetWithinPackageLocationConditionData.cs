@@ -18,13 +18,6 @@ public partial class GetWithinPackageLocationConditionData : IConditionStringPar
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetWithinPackageLocationConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetWithinPackageLocation;
 }
 

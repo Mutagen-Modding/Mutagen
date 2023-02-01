@@ -18,13 +18,6 @@ public partial class EPAlchemyEffectHasKeywordConditionData : IConditionStringPa
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class EPAlchemyEffectHasKeywordConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.EPAlchemyEffectHasKeyword;
 }
 

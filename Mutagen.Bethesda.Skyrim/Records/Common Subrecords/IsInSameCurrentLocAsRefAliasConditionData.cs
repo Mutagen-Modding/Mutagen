@@ -18,13 +18,6 @@ public partial class IsInSameCurrentLocAsRefAliasConditionData : IConditionStrin
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsInSameCurrentLocAsRefAliasConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsInSameCurrentLocAsRefAlias;
 }
 

@@ -383,6 +383,9 @@
     <Compile Include="Records\Common Subrecords\GetEquippedShoutConditionData.cs">
       <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\GetEventData.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\GetEventDataConditionData.cs">
       <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
     </Compile>
@@ -1394,6 +1397,9 @@
     <Compile Include="Records\Common Subrecords\SpellHasKeywordConditionData.cs">
       <DependentUpon>ConditionFunctionDatas.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\UnknownConditionData.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\WaterReflection.cs">
       <DependentUpon>WaterReflection.xml</DependentUpon>
     </Compile>
@@ -2056,9 +2062,6 @@
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ConditionData_Generated.cs">
-      <DependentUpon>Condition.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\FunctionConditionData_Generated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\GetEventData_Generated.cs">

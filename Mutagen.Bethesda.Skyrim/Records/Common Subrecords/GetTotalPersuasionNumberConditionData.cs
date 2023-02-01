@@ -18,13 +18,6 @@ public partial class GetTotalPersuasionNumberConditionData : IConditionStringPar
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetTotalPersuasionNumberConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetTotalPersuasionNumber;
 }
 

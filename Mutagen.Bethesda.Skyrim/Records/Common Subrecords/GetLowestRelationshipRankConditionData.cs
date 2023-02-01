@@ -18,13 +18,6 @@ public partial class GetLowestRelationshipRankConditionData : IConditionStringPa
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetLowestRelationshipRankConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetLowestRelationshipRank;
 }
 

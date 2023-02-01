@@ -18,13 +18,6 @@ public partial class IsFlyingMountPatrolQueudConditionData : IConditionStringPar
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsFlyingMountPatrolQueudConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsFlyingMountPatrolQueud;
 }
 

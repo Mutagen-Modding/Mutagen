@@ -18,13 +18,6 @@ public partial class GetGraphVariableFloatConditionData : IConditionStringParame
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetGraphVariableFloatConditionDataBinaryOverlay
-{
-    public string? FirstParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetGraphVariableFloat;
 }
 

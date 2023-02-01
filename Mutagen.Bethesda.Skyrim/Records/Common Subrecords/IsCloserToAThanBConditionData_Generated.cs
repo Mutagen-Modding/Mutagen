@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class IsCloserToAThanBConditionData :
-        FunctionConditionData,
+        ConditionData,
         IEquatable<IIsCloserToAThanBConditionDataGetter>,
         IIsCloserToAThanBConditionData,
         ILoquiObjectSetter<IsCloserToAThanBConditionData>
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            FunctionConditionData.Mask<TItem>,
+            ConditionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -136,8 +136,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem Function,
-                TItem Unknown2,
                 TItem FirstParameter,
                 TItem FirstUnusedStringParameter,
                 TItem SecondParameter,
@@ -146,9 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases,
-                Function: Function,
-                Unknown2: Unknown2)
+                UseAliases: UseAliases)
             {
                 this.FirstParameter = FirstParameter;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -281,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            FunctionConditionData.ErrorMask,
+            ConditionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -431,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            FunctionConditionData.TranslationMask,
+            ConditionData.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -534,8 +530,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIsCloserToAThanBConditionData :
+        IConditionData,
         IFormLinkContainer,
-        IFunctionConditionData,
         IIsCloserToAThanBConditionDataGetter,
         ILoquiObjectSetter<IIsCloserToAThanBConditionData>
     {
@@ -546,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IIsCloserToAThanBConditionDataGetter :
-        IFunctionConditionDataGetter,
+        IConditionDataGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IIsCloserToAThanBConditionDataGetter>
@@ -704,12 +700,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Function = 4,
-        Unknown2 = 5,
-        FirstParameter = 6,
-        FirstUnusedStringParameter = 7,
-        SecondParameter = 8,
-        SecondUnusedStringParameter = 9,
+        FirstParameter = 4,
+        FirstUnusedStringParameter = 5,
+        SecondParameter = 6,
+        SecondUnusedStringParameter = 7,
     }
     #endregion
 
@@ -729,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(IsCloserToAThanBConditionData.Mask<>);
 
@@ -788,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class IsCloserToAThanBConditionDataSetterCommon : FunctionConditionDataSetterCommon
+    internal partial class IsCloserToAThanBConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly IsCloserToAThanBConditionDataSetterCommon Instance = new IsCloserToAThanBConditionDataSetterCommon();
 
@@ -802,11 +796,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SecondParameter.Clear();
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IFunctionConditionData item)
-        {
-            Clear(item: (IIsCloserToAThanBConditionData)item);
         }
         
         public override void Clear(IConditionData item)
@@ -838,17 +827,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IFunctionConditionData item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (IsCloserToAThanBConditionData)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -862,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class IsCloserToAThanBConditionDataCommon : FunctionConditionDataCommon
+    internal partial class IsCloserToAThanBConditionDataCommon : ConditionDataCommon
     {
         public new static readonly IsCloserToAThanBConditionDataCommon Instance = new IsCloserToAThanBConditionDataCommon();
 
@@ -935,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             IsCloserToAThanBConditionData.Mask<bool>? printMask = null)
         {
-            FunctionConditionDataCommon.ToStringFields(
+            ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -959,28 +937,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static IsCloserToAThanBConditionData_FieldIndex ConvertFieldIndex(FunctionConditionData_FieldIndex index)
-        {
-            switch (index)
-            {
-                case FunctionConditionData_FieldIndex.RunOnType:
-                    return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Reference:
-                    return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.UseAliases:
-                    return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Function:
-                    return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
-        public static new IsCloserToAThanBConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static IsCloserToAThanBConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
@@ -1004,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)IsCloserToAThanBConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
@@ -1022,17 +979,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
             return true;
-        }
-        
-        public override bool Equals(
-            IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IIsCloserToAThanBConditionDataGetter?)lhs,
-                rhs: rhs as IIsCloserToAThanBConditionDataGetter,
-                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -1061,11 +1007,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IFunctionConditionDataGetter item)
-        {
-            return GetHashCode(item: (IIsCloserToAThanBConditionDataGetter)item);
         }
         
         public override int GetHashCode(IConditionDataGetter item)
@@ -1102,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class IsCloserToAThanBConditionDataSetterTranslationCommon : FunctionConditionDataSetterTranslationCommon
+    internal partial class IsCloserToAThanBConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly IsCloserToAThanBConditionDataSetterTranslationCommon Instance = new IsCloserToAThanBConditionDataSetterTranslationCommon();
 
@@ -1115,8 +1056,8 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
+                (IConditionData)item,
+                (IConditionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1136,22 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IIsCloserToAThanBConditionData)item,
-                rhs: (IIsCloserToAThanBConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         
@@ -1251,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IsCloserToAThanBConditionDataBinaryWriteTranslation :
-        FunctionConditionDataBinaryWriteTranslation,
+        ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly IsCloserToAThanBConditionDataBinaryWriteTranslation Instance = new();
@@ -1260,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             IIsCloserToAThanBConditionDataGetter item,
             MutagenWriter writer)
         {
-            FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
             FormLinkOrAliasBinaryTranslation.Instance.Write(
@@ -1294,17 +1219,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IFunctionConditionDataGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IIsCloserToAThanBConditionDataGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IConditionDataGetter item,
             TypedWriteParams translationParams)
         {
@@ -1316,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class IsCloserToAThanBConditionDataBinaryCreateTranslation : FunctionConditionDataBinaryCreateTranslation
+    internal partial class IsCloserToAThanBConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new static readonly IsCloserToAThanBConditionDataBinaryCreateTranslation Instance = new IsCloserToAThanBConditionDataBinaryCreateTranslation();
 
@@ -1324,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim
             IIsCloserToAThanBConditionData item,
             MutagenFrame frame)
         {
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
             FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
@@ -1350,120 +1264,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class IsCloserToAThanBConditionDataBinaryOverlay :
-        FunctionConditionDataBinaryOverlay,
-        IIsCloserToAThanBConditionDataGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => IsCloserToAThanBConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => IsCloserToAThanBConditionData_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => IsCloserToAThanBConditionDataCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => IsCloserToAThanBConditionDataSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IsCloserToAThanBConditionDataCommon.Instance.EnumerateFormLinks(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => IsCloserToAThanBConditionDataBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((IsCloserToAThanBConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public IFormLinkOrAliasGetter<IPlacedSimpleGetter> FirstParameter => FormLinkOrAlias<IPlacedSimpleGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4)));
-        public IFormLinkOrAliasGetter<IPlacedSimpleGetter> SecondParameter => FormLinkOrAlias<IPlacedSimpleGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4)));
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected IsCloserToAThanBConditionDataBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IIsCloserToAThanBConditionDataGetter IsCloserToAThanBConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                length: 0xC,
-                memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new IsCloserToAThanBConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0xC;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IIsCloserToAThanBConditionDataGetter IsCloserToAThanBConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return IsCloserToAThanBConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            IsCloserToAThanBConditionDataMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IIsCloserToAThanBConditionDataGetter rhs) return false;
-            return ((IsCloserToAThanBConditionDataCommon)((IIsCloserToAThanBConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IIsCloserToAThanBConditionDataGetter? obj)
-        {
-            return ((IsCloserToAThanBConditionDataCommon)((IIsCloserToAThanBConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((IsCloserToAThanBConditionDataCommon)((IIsCloserToAThanBConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

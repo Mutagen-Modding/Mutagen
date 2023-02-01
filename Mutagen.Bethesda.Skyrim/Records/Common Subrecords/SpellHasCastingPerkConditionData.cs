@@ -18,13 +18,6 @@ public partial class SpellHasCastingPerkConditionData : IConditionStringParamete
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class SpellHasCastingPerkConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.SpellHasCastingPerk;
 }
 

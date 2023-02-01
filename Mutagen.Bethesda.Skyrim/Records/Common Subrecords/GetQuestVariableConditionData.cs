@@ -18,13 +18,6 @@ public partial class GetQuestVariableConditionData : IConditionStringParameter
         set => SecondParameter = value;
     }
 
-}
-
-internal partial class GetQuestVariableConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetQuestVariable;
 }
 

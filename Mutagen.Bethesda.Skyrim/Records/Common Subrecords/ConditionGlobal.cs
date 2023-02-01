@@ -1,18 +1,31 @@
-using System.Diagnostics;
+﻿using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Skyrim;
 
-public partial class ConditionGlobal
+internal partial class ConditionGlobalBinaryOverlay
 {
-    #region Data
-    public override ConditionData Data { get; set; } = new GetWantBlockingConditionData();
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IConditionDataGetter IConditionGlobalGetter.Data => Data;
-    #endregion
+    public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(4))));
 }
 
-partial class ConditionGlobalBinaryOverlay
+partial class ConditionGlobalBinaryCreateTranslation
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IConditionDataGetter IConditionGlobalGetter.Data => Data;
+    public static partial void CustomBinaryEndImport(
+        MutagenFrame frame,
+        IConditionGlobal obj)
+    {
+        ConditionBinaryCreateTranslation.CustomStringImports(frame.Reader, obj.Data);
+    }
+}
+
+partial class ConditionGlobalBinaryWriteTranslation
+{
+    public static partial void CustomBinaryEndExport(
+        MutagenWriter writer,
+        IConditionGlobalGetter obj)
+    {
+        CustomStringExports(writer, obj.Data);
+    }
 }

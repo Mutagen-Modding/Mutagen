@@ -18,13 +18,6 @@ public partial class GetNumericPackageDataConditionData : IConditionStringParame
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetNumericPackageDataConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetNumericPackageData;
 }
 

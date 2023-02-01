@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class IsCellOwnerConditionData :
-        FunctionConditionData,
+        ConditionData,
         IEquatable<IIsCellOwnerConditionDataGetter>,
         IIsCellOwnerConditionData,
         ILoquiObjectSetter<IsCellOwnerConditionData>
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            FunctionConditionData.Mask<TItem>,
+            ConditionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -136,8 +136,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem Function,
-                TItem Unknown2,
                 TItem FirstParameter,
                 TItem FirstUnusedStringParameter,
                 TItem SecondParameter,
@@ -146,9 +144,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases,
-                Function: Function,
-                Unknown2: Unknown2)
+                UseAliases: UseAliases)
             {
                 this.FirstParameter = FirstParameter;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -281,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            FunctionConditionData.ErrorMask,
+            ConditionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -431,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            FunctionConditionData.TranslationMask,
+            ConditionData.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -534,8 +530,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIsCellOwnerConditionData :
+        IConditionData,
         IFormLinkContainer,
-        IFunctionConditionData,
         IIsCellOwnerConditionDataGetter,
         ILoquiObjectSetter<IIsCellOwnerConditionData>
     {
@@ -546,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IIsCellOwnerConditionDataGetter :
-        IFunctionConditionDataGetter,
+        IConditionDataGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IIsCellOwnerConditionDataGetter>
@@ -704,12 +700,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Function = 4,
-        Unknown2 = 5,
-        FirstParameter = 6,
-        FirstUnusedStringParameter = 7,
-        SecondParameter = 8,
-        SecondUnusedStringParameter = 9,
+        FirstParameter = 4,
+        FirstUnusedStringParameter = 5,
+        SecondParameter = 6,
+        SecondUnusedStringParameter = 7,
     }
     #endregion
 
@@ -729,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(IsCellOwnerConditionData.Mask<>);
 
@@ -788,7 +782,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class IsCellOwnerConditionDataSetterCommon : FunctionConditionDataSetterCommon
+    internal partial class IsCellOwnerConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly IsCellOwnerConditionDataSetterCommon Instance = new IsCellOwnerConditionDataSetterCommon();
 
@@ -802,11 +796,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SecondParameter.Clear();
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IFunctionConditionData item)
-        {
-            Clear(item: (IIsCellOwnerConditionData)item);
         }
         
         public override void Clear(IConditionData item)
@@ -838,17 +827,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IFunctionConditionData item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (IsCellOwnerConditionData)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -862,7 +840,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class IsCellOwnerConditionDataCommon : FunctionConditionDataCommon
+    internal partial class IsCellOwnerConditionDataCommon : ConditionDataCommon
     {
         public new static readonly IsCellOwnerConditionDataCommon Instance = new IsCellOwnerConditionDataCommon();
 
@@ -935,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             IsCellOwnerConditionData.Mask<bool>? printMask = null)
         {
-            FunctionConditionDataCommon.ToStringFields(
+            ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -959,28 +937,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static IsCellOwnerConditionData_FieldIndex ConvertFieldIndex(FunctionConditionData_FieldIndex index)
-        {
-            switch (index)
-            {
-                case FunctionConditionData_FieldIndex.RunOnType:
-                    return (IsCellOwnerConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Reference:
-                    return (IsCellOwnerConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return (IsCellOwnerConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.UseAliases:
-                    return (IsCellOwnerConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Function:
-                    return (IsCellOwnerConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return (IsCellOwnerConditionData_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
-        public static new IsCellOwnerConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static IsCellOwnerConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
@@ -1004,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)IsCellOwnerConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
@@ -1022,17 +979,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
             return true;
-        }
-        
-        public override bool Equals(
-            IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IIsCellOwnerConditionDataGetter?)lhs,
-                rhs: rhs as IIsCellOwnerConditionDataGetter,
-                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -1061,11 +1007,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IFunctionConditionDataGetter item)
-        {
-            return GetHashCode(item: (IIsCellOwnerConditionDataGetter)item);
         }
         
         public override int GetHashCode(IConditionDataGetter item)
@@ -1102,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class IsCellOwnerConditionDataSetterTranslationCommon : FunctionConditionDataSetterTranslationCommon
+    internal partial class IsCellOwnerConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly IsCellOwnerConditionDataSetterTranslationCommon Instance = new IsCellOwnerConditionDataSetterTranslationCommon();
 
@@ -1115,8 +1056,8 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
+                (IConditionData)item,
+                (IConditionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1136,22 +1077,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IIsCellOwnerConditionData)item,
-                rhs: (IIsCellOwnerConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         
@@ -1251,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IsCellOwnerConditionDataBinaryWriteTranslation :
-        FunctionConditionDataBinaryWriteTranslation,
+        ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly IsCellOwnerConditionDataBinaryWriteTranslation Instance = new();
@@ -1260,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim
             IIsCellOwnerConditionDataGetter item,
             MutagenWriter writer)
         {
-            FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
             FormLinkOrAliasBinaryTranslation.Instance.Write(
@@ -1294,17 +1219,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IFunctionConditionDataGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IIsCellOwnerConditionDataGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IConditionDataGetter item,
             TypedWriteParams translationParams)
         {
@@ -1316,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class IsCellOwnerConditionDataBinaryCreateTranslation : FunctionConditionDataBinaryCreateTranslation
+    internal partial class IsCellOwnerConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new static readonly IsCellOwnerConditionDataBinaryCreateTranslation Instance = new IsCellOwnerConditionDataBinaryCreateTranslation();
 
@@ -1324,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim
             IIsCellOwnerConditionData item,
             MutagenFrame frame)
         {
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
             FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
@@ -1350,120 +1264,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class IsCellOwnerConditionDataBinaryOverlay :
-        FunctionConditionDataBinaryOverlay,
-        IIsCellOwnerConditionDataGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => IsCellOwnerConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => IsCellOwnerConditionData_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => IsCellOwnerConditionDataCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => IsCellOwnerConditionDataSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IsCellOwnerConditionDataCommon.Instance.EnumerateFormLinks(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => IsCellOwnerConditionDataBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((IsCellOwnerConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public IFormLinkOrAliasGetter<ICellGetter> FirstParameter => FormLinkOrAlias<ICellGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4)));
-        public IFormLinkOrAliasGetter<IOwnerGetter> SecondParameter => FormLinkOrAlias<IOwnerGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4)));
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected IsCellOwnerConditionDataBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IIsCellOwnerConditionDataGetter IsCellOwnerConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                length: 0xC,
-                memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new IsCellOwnerConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0xC;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IIsCellOwnerConditionDataGetter IsCellOwnerConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return IsCellOwnerConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            IsCellOwnerConditionDataMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IIsCellOwnerConditionDataGetter rhs) return false;
-            return ((IsCellOwnerConditionDataCommon)((IIsCellOwnerConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IIsCellOwnerConditionDataGetter? obj)
-        {
-            return ((IsCellOwnerConditionDataCommon)((IIsCellOwnerConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((IsCellOwnerConditionDataCommon)((IIsCellOwnerConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

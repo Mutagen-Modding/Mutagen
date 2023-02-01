@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA" GUID="9c510483-e3ef-4271-b240-0bd227beab19" ID="36">
+  <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA" GUID="9c510483-e3ef-4271-b240-0bd227beab19" ID="36" >
     <Fields>
       <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
       <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
       <ByteArray name="Unknown1" byteLength="3" nullable="False" />
+      <CustomLogic name="FunctionParse" />
+      <UInt16 name="Unknown2" binary="NoGeneration" />
+      <RefDirect name="Data" binary="NoGeneration" refName="ConditionData" generateClassMembers="false" />
     </Fields>
     <AdditionalContainedRecordType>CIS1</AdditionalContainedRecordType>
     <AdditionalContainedRecordType>CIS2</AdditionalContainedRecordType>
   </Object>
-  <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37" customBinaryEnd="Normal">
+  <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37" >
     <Fields>
-      <FormLink name="ComparisonValue" refName="Global" />
-      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" override="true" />
+      <FormLink name="ComparisonValue" refName="Global" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="7add21ad-ed61-4e3d-8cf5-c80dbaa322db" ID="38" customBinaryEnd="Normal">
+  <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="7add21ad-ed61-4e3d-8cf5-c80dbaa322db" ID="38" >
     <Fields>
-      <Float name="ComparisonValue" />
-      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" override="true" />
+      <Float name="ComparisonValue" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="ConditionData" objType="Subrecord" abstract="true" GUID="01abc3c5-fb9d-4e48-a375-fe2f3a4fa044" ID="41">
@@ -29,16 +30,13 @@
       <Bool name="UseAliases" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="FunctionConditionData" abstract="true" objType="Subrecord" baseClass="ConditionData" GUID="c7686727-e470-4c34-80ce-423cf65c7b92" ID="39">
+  <Object name="UnknownConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c692e121-726f-4cb0-9692-ee15ac80fe77" ID="10402">
     <Fields>
       <Enum name="Function" enumName="Condition.Function" byteLength="2" />
-      <UInt16 name="Unknown2" />
-    </Fields>
-  </Object>
-  <Object name="UnknownConditionData" objType="Subrecord" baseClass="FunctionConditionData" GUID="c692e121-726f-4cb0-9692-ee15ac80fe77" ID="10402">
-    <Fields>
       <Int32 name="ParameterOne" />
       <Int32 name="ParameterTwo" />
+      <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
+      <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" GUID="a7f88d12-4a14-4be4-ad02-ffa74d2fa3db" ID="40">

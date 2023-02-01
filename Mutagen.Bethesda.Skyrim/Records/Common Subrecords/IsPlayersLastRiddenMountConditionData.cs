@@ -18,13 +18,6 @@ public partial class IsPlayersLastRiddenMountConditionData : IConditionStringPar
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsPlayersLastRiddenMountConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsPlayersLastRiddenMount;
 }
 

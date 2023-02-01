@@ -18,13 +18,6 @@ public partial class GetCrimeGoldNonviolentConditionData : IConditionStringParam
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetCrimeGoldNonviolentConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetCrimeGoldNonviolent;
 }
 

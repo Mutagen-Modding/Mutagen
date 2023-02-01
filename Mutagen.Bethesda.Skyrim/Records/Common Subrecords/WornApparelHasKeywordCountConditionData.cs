@@ -18,13 +18,6 @@ public partial class WornApparelHasKeywordCountConditionData : IConditionStringP
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class WornApparelHasKeywordCountConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.WornApparelHasKeywordCount;
 }
 

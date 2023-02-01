@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class GetVMScriptVariableConditionData :
-        FunctionConditionData,
+        ConditionData,
         IEquatable<IGetVMScriptVariableConditionDataGetter>,
         IGetVMScriptVariableConditionData,
         ILoquiObjectSetter<GetVMScriptVariableConditionData>
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            FunctionConditionData.Mask<TItem>,
+            ConditionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -128,8 +128,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem Function,
-                TItem Unknown2,
                 TItem FirstParameter,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -138,9 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases,
-                Function: Function,
-                Unknown2: Unknown2)
+                UseAliases: UseAliases)
             {
                 this.FirstParameter = FirstParameter;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -273,7 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            FunctionConditionData.ErrorMask,
+            ConditionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -423,7 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            FunctionConditionData.TranslationMask,
+            ConditionData.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -526,8 +522,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IGetVMScriptVariableConditionData :
+        IConditionData,
         IFormLinkContainer,
-        IFunctionConditionData,
         IGetVMScriptVariableConditionDataGetter,
         ILoquiObjectSetter<IGetVMScriptVariableConditionData>
     {
@@ -538,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IGetVMScriptVariableConditionDataGetter :
-        IFunctionConditionDataGetter,
+        IConditionDataGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IGetVMScriptVariableConditionDataGetter>
@@ -696,12 +692,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Function = 4,
-        Unknown2 = 5,
-        FirstParameter = 6,
-        FirstUnusedStringParameter = 7,
-        SecondUnusedIntParameter = 8,
-        SecondParameter = 9,
+        FirstParameter = 4,
+        FirstUnusedStringParameter = 5,
+        SecondUnusedIntParameter = 6,
+        SecondParameter = 7,
     }
     #endregion
 
@@ -721,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GetVMScriptVariableConditionData.Mask<>);
 
@@ -780,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class GetVMScriptVariableConditionDataSetterCommon : FunctionConditionDataSetterCommon
+    internal partial class GetVMScriptVariableConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly GetVMScriptVariableConditionDataSetterCommon Instance = new GetVMScriptVariableConditionDataSetterCommon();
 
@@ -794,11 +788,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SecondUnusedIntParameter = default;
             item.SecondParameter = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IFunctionConditionData item)
-        {
-            Clear(item: (IGetVMScriptVariableConditionData)item);
         }
         
         public override void Clear(IConditionData item)
@@ -829,17 +818,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IFunctionConditionData item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (GetVMScriptVariableConditionData)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -853,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetVMScriptVariableConditionDataCommon : FunctionConditionDataCommon
+    internal partial class GetVMScriptVariableConditionDataCommon : ConditionDataCommon
     {
         public new static readonly GetVMScriptVariableConditionDataCommon Instance = new GetVMScriptVariableConditionDataCommon();
 
@@ -926,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             GetVMScriptVariableConditionData.Mask<bool>? printMask = null)
         {
-            FunctionConditionDataCommon.ToStringFields(
+            ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -950,28 +928,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static GetVMScriptVariableConditionData_FieldIndex ConvertFieldIndex(FunctionConditionData_FieldIndex index)
-        {
-            switch (index)
-            {
-                case FunctionConditionData_FieldIndex.RunOnType:
-                    return (GetVMScriptVariableConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Reference:
-                    return (GetVMScriptVariableConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return (GetVMScriptVariableConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.UseAliases:
-                    return (GetVMScriptVariableConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Function:
-                    return (GetVMScriptVariableConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return (GetVMScriptVariableConditionData_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
-        public static new GetVMScriptVariableConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static GetVMScriptVariableConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
@@ -995,7 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)GetVMScriptVariableConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
@@ -1013,17 +970,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!string.Equals(lhs.SecondParameter, rhs.SecondParameter)) return false;
             }
             return true;
-        }
-        
-        public override bool Equals(
-            IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IGetVMScriptVariableConditionDataGetter?)lhs,
-                rhs: rhs as IGetVMScriptVariableConditionDataGetter,
-                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -1052,11 +998,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IFunctionConditionDataGetter item)
-        {
-            return GetHashCode(item: (IGetVMScriptVariableConditionDataGetter)item);
         }
         
         public override int GetHashCode(IConditionDataGetter item)
@@ -1089,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetVMScriptVariableConditionDataSetterTranslationCommon : FunctionConditionDataSetterTranslationCommon
+    internal partial class GetVMScriptVariableConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly GetVMScriptVariableConditionDataSetterTranslationCommon Instance = new GetVMScriptVariableConditionDataSetterTranslationCommon();
 
@@ -1102,8 +1043,8 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
+                (IConditionData)item,
+                (IConditionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1123,22 +1064,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondParameter = rhs.SecondParameter;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IGetVMScriptVariableConditionData)item,
-                rhs: (IGetVMScriptVariableConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         
@@ -1238,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class GetVMScriptVariableConditionDataBinaryWriteTranslation :
-        FunctionConditionDataBinaryWriteTranslation,
+        ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly GetVMScriptVariableConditionDataBinaryWriteTranslation Instance = new();
@@ -1247,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGetVMScriptVariableConditionDataGetter item,
             MutagenWriter writer)
         {
-            FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
             FormLinkOrAliasBinaryTranslation.Instance.Write(
@@ -1279,17 +1204,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IFunctionConditionDataGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IGetVMScriptVariableConditionDataGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IConditionDataGetter item,
             TypedWriteParams translationParams)
         {
@@ -1301,7 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class GetVMScriptVariableConditionDataBinaryCreateTranslation : FunctionConditionDataBinaryCreateTranslation
+    internal partial class GetVMScriptVariableConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new static readonly GetVMScriptVariableConditionDataBinaryCreateTranslation Instance = new GetVMScriptVariableConditionDataBinaryCreateTranslation();
 
@@ -1309,7 +1223,7 @@ namespace Mutagen.Bethesda.Skyrim
             IGetVMScriptVariableConditionData item,
             MutagenFrame frame)
         {
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
             FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
@@ -1333,120 +1247,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class GetVMScriptVariableConditionDataBinaryOverlay :
-        FunctionConditionDataBinaryOverlay,
-        IGetVMScriptVariableConditionDataGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GetVMScriptVariableConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => GetVMScriptVariableConditionData_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => GetVMScriptVariableConditionDataCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GetVMScriptVariableConditionDataSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetVMScriptVariableConditionDataCommon.Instance.EnumerateFormLinks(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GetVMScriptVariableConditionDataBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((GetVMScriptVariableConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public IFormLinkOrAliasGetter<IPlacedSimpleGetter> FirstParameter => FormLinkOrAlias<IPlacedSimpleGetter>.Factory(this, FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))), BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4)));
-        public Int32 SecondUnusedIntParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected GetVMScriptVariableConditionDataBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IGetVMScriptVariableConditionDataGetter GetVMScriptVariableConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                length: 0xC,
-                memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new GetVMScriptVariableConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0xC;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IGetVMScriptVariableConditionDataGetter GetVMScriptVariableConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return GetVMScriptVariableConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            GetVMScriptVariableConditionDataMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IGetVMScriptVariableConditionDataGetter rhs) return false;
-            return ((GetVMScriptVariableConditionDataCommon)((IGetVMScriptVariableConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IGetVMScriptVariableConditionDataGetter? obj)
-        {
-            return ((GetVMScriptVariableConditionDataCommon)((IGetVMScriptVariableConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((GetVMScriptVariableConditionDataCommon)((IGetVMScriptVariableConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

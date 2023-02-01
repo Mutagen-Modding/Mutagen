@@ -18,13 +18,6 @@ public partial class GetItemHealthPercentConditionData : IConditionStringParamet
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetItemHealthPercentConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetItemHealthPercent;
 }
 

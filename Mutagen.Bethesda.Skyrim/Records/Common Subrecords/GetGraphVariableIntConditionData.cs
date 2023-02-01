@@ -18,13 +18,6 @@ public partial class GetGraphVariableIntConditionData : IConditionStringParamete
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetGraphVariableIntConditionDataBinaryOverlay
-{
-    public string? FirstParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetGraphVariableInt;
 }
 

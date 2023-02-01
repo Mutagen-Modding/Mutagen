@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class IsWaterObjectConditionData :
-        FunctionConditionData,
+        ConditionData,
         IEquatable<IIsWaterObjectConditionDataGetter>,
         IIsWaterObjectConditionData,
         ILoquiObjectSetter<IsWaterObjectConditionData>
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            FunctionConditionData.Mask<TItem>,
+            ConditionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -119,8 +119,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem Function,
-                TItem Unknown2,
                 TItem FirstParameter,
                 TItem FirstUnusedStringParameter,
                 TItem SecondParameter,
@@ -129,9 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases,
-                Function: Function,
-                Unknown2: Unknown2)
+                UseAliases: UseAliases)
             {
                 this.FirstParameter = FirstParameter;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -264,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            FunctionConditionData.ErrorMask,
+            ConditionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -414,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            FunctionConditionData.TranslationMask,
+            ConditionData.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -512,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IIsWaterObjectConditionData :
-        IFunctionConditionData,
+        IConditionData,
         IIsWaterObjectConditionDataGetter,
         ILoquiObjectSetter<IIsWaterObjectConditionData>
     {
@@ -523,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface IIsWaterObjectConditionDataGetter :
-        IFunctionConditionDataGetter,
+        IConditionDataGetter,
         IBinaryItem,
         ILoquiObject<IIsWaterObjectConditionDataGetter>
     {
@@ -680,12 +676,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Function = 4,
-        Unknown2 = 5,
-        FirstParameter = 6,
-        FirstUnusedStringParameter = 7,
-        SecondParameter = 8,
-        SecondUnusedStringParameter = 9,
+        FirstParameter = 4,
+        FirstUnusedStringParameter = 5,
+        SecondParameter = 6,
+        SecondUnusedStringParameter = 7,
     }
     #endregion
 
@@ -705,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(IsWaterObjectConditionData.Mask<>);
 
@@ -764,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class IsWaterObjectConditionDataSetterCommon : FunctionConditionDataSetterCommon
+    internal partial class IsWaterObjectConditionDataSetterCommon : ConditionDataSetterCommon
     {
         public new static readonly IsWaterObjectConditionDataSetterCommon Instance = new IsWaterObjectConditionDataSetterCommon();
 
@@ -778,11 +772,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.SecondParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
-        }
-        
-        public override void Clear(IFunctionConditionData item)
-        {
-            Clear(item: (IIsWaterObjectConditionData)item);
         }
         
         public override void Clear(IConditionData item)
@@ -812,17 +801,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IFunctionConditionData item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (IsWaterObjectConditionData)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
-        public override void CopyInFromBinary(
             IConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
@@ -836,7 +814,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class IsWaterObjectConditionDataCommon : FunctionConditionDataCommon
+    internal partial class IsWaterObjectConditionDataCommon : ConditionDataCommon
     {
         public new static readonly IsWaterObjectConditionDataCommon Instance = new IsWaterObjectConditionDataCommon();
 
@@ -909,7 +887,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             IsWaterObjectConditionData.Mask<bool>? printMask = null)
         {
-            FunctionConditionDataCommon.ToStringFields(
+            ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -933,28 +911,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static IsWaterObjectConditionData_FieldIndex ConvertFieldIndex(FunctionConditionData_FieldIndex index)
-        {
-            switch (index)
-            {
-                case FunctionConditionData_FieldIndex.RunOnType:
-                    return (IsWaterObjectConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Reference:
-                    return (IsWaterObjectConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown3:
-                    return (IsWaterObjectConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.UseAliases:
-                    return (IsWaterObjectConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Function:
-                    return (IsWaterObjectConditionData_FieldIndex)((int)index);
-                case FunctionConditionData_FieldIndex.Unknown2:
-                    return (IsWaterObjectConditionData_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
-        public static new IsWaterObjectConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static IsWaterObjectConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
@@ -978,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFunctionConditionDataGetter)lhs, (IFunctionConditionDataGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)IsWaterObjectConditionData_FieldIndex.FirstParameter) ?? true))
             {
                 if (lhs.FirstParameter != rhs.FirstParameter) return false;
@@ -996,17 +953,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
             return true;
-        }
-        
-        public override bool Equals(
-            IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IIsWaterObjectConditionDataGetter?)lhs,
-                rhs: rhs as IIsWaterObjectConditionDataGetter,
-                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -1037,11 +983,6 @@ namespace Mutagen.Bethesda.Skyrim
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IFunctionConditionDataGetter item)
-        {
-            return GetHashCode(item: (IIsWaterObjectConditionDataGetter)item);
-        }
-        
         public override int GetHashCode(IConditionDataGetter item)
         {
             return GetHashCode(item: (IIsWaterObjectConditionDataGetter)item);
@@ -1068,7 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class IsWaterObjectConditionDataSetterTranslationCommon : FunctionConditionDataSetterTranslationCommon
+    internal partial class IsWaterObjectConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
         public new static readonly IsWaterObjectConditionDataSetterTranslationCommon Instance = new IsWaterObjectConditionDataSetterTranslationCommon();
 
@@ -1081,8 +1022,8 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFunctionConditionData)item,
-                (IFunctionConditionDataGetter)rhs,
+                (IConditionData)item,
+                (IConditionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1102,22 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IFunctionConditionData item,
-            IFunctionConditionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IIsWaterObjectConditionData)item,
-                rhs: (IIsWaterObjectConditionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         
@@ -1217,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class IsWaterObjectConditionDataBinaryWriteTranslation :
-        FunctionConditionDataBinaryWriteTranslation,
+        ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly IsWaterObjectConditionDataBinaryWriteTranslation Instance = new();
@@ -1226,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
             IIsWaterObjectConditionDataGetter item,
             MutagenWriter writer)
         {
-            FunctionConditionDataBinaryWriteTranslation.WriteEmbedded(
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
             writer.Write(item.FirstParameter);
@@ -1256,17 +1181,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IFunctionConditionDataGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IIsWaterObjectConditionDataGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IConditionDataGetter item,
             TypedWriteParams translationParams)
         {
@@ -1278,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class IsWaterObjectConditionDataBinaryCreateTranslation : FunctionConditionDataBinaryCreateTranslation
+    internal partial class IsWaterObjectConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
         public new static readonly IsWaterObjectConditionDataBinaryCreateTranslation Instance = new IsWaterObjectConditionDataBinaryCreateTranslation();
 
@@ -1286,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
             IIsWaterObjectConditionData item,
             MutagenFrame frame)
         {
-            FunctionConditionDataBinaryCreateTranslation.FillBinaryStructs(
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
             item.FirstParameter = frame.ReadInt32();
@@ -1308,119 +1222,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class IsWaterObjectConditionDataBinaryOverlay :
-        FunctionConditionDataBinaryOverlay,
-        IIsWaterObjectConditionDataGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => IsWaterObjectConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => IsWaterObjectConditionData_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => IsWaterObjectConditionDataCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => IsWaterObjectConditionDataSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => IsWaterObjectConditionDataBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((IsWaterObjectConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected IsWaterObjectConditionDataBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IIsWaterObjectConditionDataGetter IsWaterObjectConditionDataFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                length: 0xC,
-                memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new IsWaterObjectConditionDataBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            stream.Position += 0xC;
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IIsWaterObjectConditionDataGetter IsWaterObjectConditionDataFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return IsWaterObjectConditionDataFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            IsWaterObjectConditionDataMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IIsWaterObjectConditionDataGetter rhs) return false;
-            return ((IsWaterObjectConditionDataCommon)((IIsWaterObjectConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IIsWaterObjectConditionDataGetter? obj)
-        {
-            return ((IsWaterObjectConditionDataCommon)((IIsWaterObjectConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((IsWaterObjectConditionDataCommon)((IIsWaterObjectConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

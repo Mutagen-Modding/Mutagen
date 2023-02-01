@@ -18,13 +18,6 @@ public partial class GetPlayerTeammateCountConditionData : IConditionStringParam
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetPlayerTeammateCountConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetPlayerTeammateCount;
 }
 

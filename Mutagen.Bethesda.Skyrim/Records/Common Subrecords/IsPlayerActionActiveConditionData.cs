@@ -18,13 +18,6 @@ public partial class IsPlayerActionActiveConditionData : IConditionStringParamet
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsPlayerActionActiveConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsPlayerActionActive;
 }
 

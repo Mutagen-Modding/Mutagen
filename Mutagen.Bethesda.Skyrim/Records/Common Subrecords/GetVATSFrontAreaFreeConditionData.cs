@@ -18,13 +18,6 @@ public partial class GetVATSFrontAreaFreeConditionData : IConditionStringParamet
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetVATSFrontAreaFreeConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetVATSFrontAreaFree;
 }
 

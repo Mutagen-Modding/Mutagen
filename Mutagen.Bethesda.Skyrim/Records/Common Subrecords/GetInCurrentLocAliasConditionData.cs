@@ -18,13 +18,6 @@ public partial class GetInCurrentLocAliasConditionData : IConditionStringParamet
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetInCurrentLocAliasConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetInCurrentLocAlias;
 }
 

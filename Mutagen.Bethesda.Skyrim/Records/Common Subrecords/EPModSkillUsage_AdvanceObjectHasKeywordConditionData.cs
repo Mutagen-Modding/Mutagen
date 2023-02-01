@@ -18,13 +18,6 @@ public partial class EPModSkillUsage_AdvanceObjectHasKeywordConditionData : ICon
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class EPModSkillUsage_AdvanceObjectHasKeywordConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.EPModSkillUsage_AdvanceObjectHasKeyword;
 }
 

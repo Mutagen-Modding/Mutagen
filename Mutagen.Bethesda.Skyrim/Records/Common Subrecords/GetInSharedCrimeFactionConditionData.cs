@@ -18,13 +18,6 @@ public partial class GetInSharedCrimeFactionConditionData : IConditionStringPara
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetInSharedCrimeFactionConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetInSharedCrimeFaction;
 }
 

@@ -18,13 +18,6 @@ public partial class GetIntimidateSuccessConditionData : IConditionStringParamet
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetIntimidateSuccessConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetIntimidateSuccess;
 }
 

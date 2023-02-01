@@ -1,18 +1,29 @@
-using System.Diagnostics;
+﻿using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim;
 
-public partial class ConditionFloat
-{
-    #region Data
-    public override ConditionData Data { get; set; } = new GetWantBlockingConditionData();
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IConditionDataGetter IConditionFloatGetter.Data => Data;
-    #endregion
-}
-
 partial class ConditionFloatBinaryOverlay
 {
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IConditionDataGetter IConditionFloatGetter.Data => Data;
+    public float ComparisonValue => _structData.Slice(4).Float();
+}
+
+partial class ConditionFloatBinaryCreateTranslation
+{
+    public static partial void CustomBinaryEndImport(
+        MutagenFrame frame,
+        IConditionFloat obj)
+    {
+        ConditionBinaryCreateTranslation.CustomStringImports(frame.Reader, obj.Data);
+    }
+}
+
+partial class ConditionFloatBinaryWriteTranslation
+{
+    public static partial void CustomBinaryEndExport(
+        MutagenWriter writer,
+        IConditionFloatGetter obj)
+    {
+        CustomStringExports(writer, obj.Data);
+    }
 }

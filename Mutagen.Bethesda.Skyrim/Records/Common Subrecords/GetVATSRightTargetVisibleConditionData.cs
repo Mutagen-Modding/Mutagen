@@ -18,13 +18,6 @@ public partial class GetVATSRightTargetVisibleConditionData : IConditionStringPa
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class GetVATSRightTargetVisibleConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetVATSRightTargetVisible;
 }
 

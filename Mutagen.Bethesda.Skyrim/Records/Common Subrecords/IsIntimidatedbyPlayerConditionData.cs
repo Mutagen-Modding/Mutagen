@@ -18,13 +18,6 @@ public partial class IsIntimidatedbyPlayerConditionData : IConditionStringParame
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class IsIntimidatedbyPlayerConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.IsIntimidatedbyPlayer;
 }
 

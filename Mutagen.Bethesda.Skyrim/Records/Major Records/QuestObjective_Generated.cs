@@ -1086,8 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IQuestObjectiveGetter obj)
         {
-            foreach (var item in obj.Targets.WhereCastable<IQuestObjectiveTargetGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            foreach (var item in obj.Targets.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }

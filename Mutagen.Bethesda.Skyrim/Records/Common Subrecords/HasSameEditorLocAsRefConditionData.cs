@@ -18,13 +18,6 @@ public partial class HasSameEditorLocAsRefConditionData : IConditionStringParame
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class HasSameEditorLocAsRefConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.HasSameEditorLocAsRef;
 }
 

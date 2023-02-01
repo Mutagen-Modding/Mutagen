@@ -2033,8 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return item;
                 }
             }
-            foreach (var item in obj.Phases.WhereCastable<IScenePhaseGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            foreach (var item in obj.Phases.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2046,8 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return QuestInfo;
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks()))
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }

@@ -18,13 +18,6 @@ public partial class HasBoundWeaponEquippedConditionData : IConditionStringParam
         set => SecondUnusedStringParameter = value;
     }
 
-}
-
-internal partial class HasBoundWeaponEquippedConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondUnusedStringParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.HasBoundWeaponEquipped;
 }
 

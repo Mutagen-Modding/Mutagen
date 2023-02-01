@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -70,6 +71,9 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IConditionGetter.Unknown1 => this.Unknown1;
         #endregion
+        #region Unknown2
+        public UInt16 Unknown2 { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -112,16 +116,22 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CompareOperator = initialValue;
                 this.Flags = initialValue;
                 this.Unknown1 = initialValue;
+                this.Unknown2 = initialValue;
+                this.Data = new MaskItem<TItem, ConditionData.Mask<TItem>?>(initialValue, new ConditionData.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem CompareOperator,
                 TItem Flags,
-                TItem Unknown1)
+                TItem Unknown1,
+                TItem Unknown2,
+                TItem Data)
             {
                 this.CompareOperator = CompareOperator;
                 this.Flags = Flags;
                 this.Unknown1 = Unknown1;
+                this.Unknown2 = Unknown2;
+                this.Data = new MaskItem<TItem, ConditionData.Mask<TItem>?>(Data, new ConditionData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -136,6 +146,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem CompareOperator;
             public TItem Flags;
             public TItem Unknown1;
+            public TItem Unknown2;
+            public MaskItem<TItem, ConditionData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -151,6 +163,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.CompareOperator, rhs.CompareOperator)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -159,6 +173,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.CompareOperator);
                 hash.Add(this.Flags);
                 hash.Add(this.Unknown1);
+                hash.Add(this.Unknown2);
+                hash.Add(this.Data);
                 return hash.ToHashCode();
             }
 
@@ -170,6 +186,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.CompareOperator)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Unknown1)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -180,6 +202,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.CompareOperator)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Unknown1)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -197,6 +225,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.CompareOperator = eval(this.CompareOperator);
                 obj.Flags = eval(this.Flags);
                 obj.Unknown1 = eval(this.Unknown1);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ConditionData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -227,6 +257,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown1, "Unknown1");
                     }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        sb.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -254,6 +292,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? CompareOperator;
             public Exception? Flags;
             public Exception? Unknown1;
+            public Exception? Unknown2;
+            public MaskItem<Exception?, ConditionData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
@@ -268,6 +308,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Flags;
                     case Condition_FieldIndex.Unknown1:
                         return Unknown1;
+                    case Condition_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case Condition_FieldIndex.Data:
+                        return Data;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -286,6 +330,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Condition_FieldIndex.Unknown1:
                         this.Unknown1 = ex;
+                        break;
+                    case Condition_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case Condition_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ConditionData.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -306,6 +356,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case Condition_FieldIndex.Unknown1:
                         this.Unknown1 = (Exception?)obj;
                         break;
+                    case Condition_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case Condition_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ConditionData.ErrorMask?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -317,6 +373,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (CompareOperator != null) return true;
                 if (Flags != null) return true;
                 if (Unknown1 != null) return true;
+                if (Unknown2 != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -351,6 +409,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Unknown1, "Unknown1");
                 }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                Data?.Print(sb);
             }
             #endregion
 
@@ -362,6 +424,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.CompareOperator = this.CompareOperator.Combine(rhs.CompareOperator);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -388,6 +452,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool CompareOperator;
             public bool Flags;
             public bool Unknown1;
+            public bool Unknown2;
+            public ConditionData.TranslationMask? Data;
             #endregion
 
             #region Ctors
@@ -400,6 +466,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CompareOperator = defaultOn;
                 this.Flags = defaultOn;
                 this.Unknown1 = defaultOn;
+                this.Unknown2 = defaultOn;
             }
 
             #endregion
@@ -418,6 +485,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CompareOperator, null));
                 ret.Add((Flags, null));
                 ret.Add((Unknown1, null));
+                ret.Add((Unknown2, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -476,6 +545,8 @@ namespace Mutagen.Bethesda.Skyrim
         new CompareOperator CompareOperator { get; set; }
         new Condition.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown1 { get; set; }
+        new UInt16 Unknown2 { get; set; }
+        new ConditionData Data { get; set; }
     }
 
     /// <summary>
@@ -497,6 +568,8 @@ namespace Mutagen.Bethesda.Skyrim
         CompareOperator CompareOperator { get; }
         Condition.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown1 { get; }
+        UInt16 Unknown2 { get; }
+        IConditionDataGetter Data { get; }
 
     }
 
@@ -669,6 +742,8 @@ namespace Mutagen.Bethesda.Skyrim
         CompareOperator = 0,
         Flags = 1,
         Unknown1 = 2,
+        Unknown2 = 3,
+        Data = 4,
     }
     #endregion
 
@@ -686,9 +761,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "9c510483-e3ef-4271-b240-0bd227beab19";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(Condition.Mask<>);
 
@@ -770,11 +845,14 @@ namespace Mutagen.Bethesda.Skyrim
             item.CompareOperator = default;
             item.Flags = default;
             item.Unknown1 = new byte[3];
+            item.Unknown2 = default;
+            item.Data.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ICondition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Data.RemapLinks(mapping);
         }
         
         #endregion
@@ -826,6 +904,8 @@ namespace Mutagen.Bethesda.Skyrim
             ret.CompareOperator = item.CompareOperator == rhs.CompareOperator;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1.Span, rhs.Unknown1.Span);
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
         }
         
         public string Print(
@@ -882,6 +962,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendLine($"Unknown1 => {SpanExt.ToHexString(item.Unknown1)}");
             }
+            if (printMask?.Unknown2 ?? true)
+            {
+                sb.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.Data?.Overall ?? true)
+            {
+                item.Data?.Print(sb, "Data");
+            }
         }
         
         #region Equals and Hash
@@ -903,6 +991,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown1.Span, rhs.Unknown1.Span)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Condition_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Condition_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((ConditionDataCommon)((IConditionDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Condition_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
             return true;
         }
         
@@ -912,6 +1012,8 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.CompareOperator);
             hash.Add(item.Flags);
             hash.Add(item.Unknown1);
+            hash.Add(item.Unknown2);
+            hash.Add(item.Data);
             return hash.ToHashCode();
         }
         
@@ -926,6 +1028,10 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionGetter obj)
         {
+            foreach (var item in obj.Data.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -955,6 +1061,32 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.Unknown1) ?? true))
             {
                 item.Unknown1 = rhs.Unknown1.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)Condition_FieldIndex.Data);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Condition_FieldIndex.Data) ?? true))
+                    {
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Condition_FieldIndex.Data),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -1058,6 +1190,9 @@ namespace Mutagen.Bethesda.Skyrim
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown1);
+            ConditionBinaryWriteTranslation.WriteBinaryFunctionParse(
+                writer: writer,
+                item: item);
         }
 
         public static partial void WriteBinaryFlagsCustom(
@@ -1069,6 +1204,19 @@ namespace Mutagen.Bethesda.Skyrim
             IConditionGetter item)
         {
             WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFunctionParseCustom(
+            MutagenWriter writer,
+            IConditionGetter item);
+
+        public static void WriteBinaryFunctionParse(
+            MutagenWriter writer,
+            IConditionGetter item)
+        {
+            WriteBinaryFunctionParseCustom(
                 writer: writer,
                 item: item);
         }
@@ -1115,9 +1263,16 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame,
                 item: item);
             item.Unknown1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            ConditionBinaryCreateTranslation.FillBinaryFunctionParseCustom(
+                frame: frame,
+                item: item);
         }
 
         public static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            ICondition item);
+
+        public static partial void FillBinaryFunctionParseCustom(
             MutagenFrame frame,
             ICondition item);
 
@@ -1190,6 +1345,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Condition.Flag Flags => GetFlagsCustom(location: 0x0);
         #endregion
         public ReadOnlyMemorySlice<Byte> Unknown1 => _structData.Span.Slice(0x1, 0x3).ToArray();
+        #region FunctionParse
+        partial void FunctionParseCustomParse(
+            OverlayStream stream,
+            int offset);
+        protected int FunctionParseEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

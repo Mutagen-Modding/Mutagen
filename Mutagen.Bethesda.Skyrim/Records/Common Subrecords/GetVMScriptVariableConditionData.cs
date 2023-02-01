@@ -18,13 +18,6 @@ public partial class GetVMScriptVariableConditionData : IConditionStringParamete
         set => SecondParameter = value;
     }
 
-}
-
-internal partial class GetVMScriptVariableConditionDataBinaryOverlay
-{
-    public string? FirstUnusedStringParameter => ParameterOneString;
-
-    public string? SecondParameter => ParameterTwoString;
-
+    Condition.Function IConditionDataGetter.Function => Condition.Function.GetVMScriptVariable;
 }
 
