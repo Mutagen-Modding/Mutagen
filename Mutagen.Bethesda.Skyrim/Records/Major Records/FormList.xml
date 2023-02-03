@@ -13,5 +13,8 @@
     <LinkInterface>IWorldspaceOrList</LinkInterface>
     <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>
+    <LinkInterface>INpcOrList</LinkInterface>
+    <LinkInterface>IWeaponOrList</LinkInterface>
+    <LinkInterface>ISpellOrList</LinkInterface>
   </Object>
 </Loqui>

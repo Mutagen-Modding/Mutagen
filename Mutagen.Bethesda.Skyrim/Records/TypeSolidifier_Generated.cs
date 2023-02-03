@@ -3371,6 +3371,78 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         /// <summary>
+        /// Scope a load order query to INpcOrList
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on INpcOrList</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpcOrList, INpcOrListGetter> INpcOrList(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpcOrList, INpcOrListGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<INpcOrListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, INpcOrList, INpcOrListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to INpcOrList
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on INpcOrList</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpcOrList, INpcOrListGetter> INpcOrList(this IEnumerable<ISkyrimModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpcOrList, INpcOrListGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<INpcOrListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, INpcOrList, INpcOrListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IWeaponOrList
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IWeaponOrList</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeaponOrList, IWeaponOrListGetter> IWeaponOrList(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeaponOrList, IWeaponOrListGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IWeaponOrListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IWeaponOrList, IWeaponOrListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IWeaponOrList
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IWeaponOrList</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeaponOrList, IWeaponOrListGetter> IWeaponOrList(this IEnumerable<ISkyrimModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeaponOrList, IWeaponOrListGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IWeaponOrListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IWeaponOrList, IWeaponOrListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to ISpellOrList
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on ISpellOrList</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellOrList, ISpellOrListGetter> ISpellOrList(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellOrList, ISpellOrListGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<ISpellOrListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ISpellOrList, ISpellOrListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to ISpellOrList
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on ISpellOrList</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellOrList, ISpellOrListGetter> ISpellOrList(this IEnumerable<ISkyrimModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellOrList, ISpellOrListGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<ISpellOrListGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ISpellOrList, ISpellOrListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to IPlacedTrapTarget
         /// </summary>
         /// <param name="listings">ModListings to query</param>

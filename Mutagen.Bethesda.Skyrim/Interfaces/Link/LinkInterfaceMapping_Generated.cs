@@ -290,6 +290,24 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             VoiceType_Registration.Instance,
         });
         dict[typeof(IVoiceTypeOrListGetter)] = dict[typeof(IVoiceTypeOrList)] with { Setter = false };
+        dict[typeof(INpcOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Npc_Registration.Instance,
+        });
+        dict[typeof(INpcOrListGetter)] = dict[typeof(INpcOrList)] with { Setter = false };
+        dict[typeof(IWeaponOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IWeaponOrListGetter)] = dict[typeof(IWeaponOrList)] with { Setter = false };
+        dict[typeof(ISpellOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Spell_Registration.Instance,
+        });
+        dict[typeof(ISpellOrListGetter)] = dict[typeof(ISpellOrList)] with { Setter = false };
         dict[typeof(IPlacedTrapTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Hazard_Registration.Instance,

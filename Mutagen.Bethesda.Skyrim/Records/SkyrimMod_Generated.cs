@@ -8936,6 +8936,21 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IVoiceTypeGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "INpcOrList":
+                case "INpcOrListGetter":
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IWeaponOrList":
+                case "IWeaponOrListGetter":
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ISpellOrList":
+                case "ISpellOrListGetter":
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IPlacedTrapTarget":
                 case "IPlacedTrapTargetGetter":
                     Remove(obj, keys, typeof(IHazardGetter), throwIfUnknown: throwIfUnknown);

@@ -65,6 +65,7 @@
     <LinkInterface>ILockList</LinkInterface>
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>INpcOrList</LinkInterface>
   </Object>
   <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="32c58c3d-5a6e-4382-8bf1-7e6633863702" ID="201">
     <Fields>

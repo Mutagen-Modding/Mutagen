@@ -139,6 +139,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ILockList
 - FormList
 - Npc
+### INpcOrList
+- FormList
+- Npc
 ### INpcSpawn
 - LeveledNpc
 - Npc
@@ -253,6 +256,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ISound
 - SoundDescriptor
 - SoundMarker
+### ISpellOrList
+- FormList
+- Spell
 ### ISpellRecord
 - LeveledSpell
 - Shout
@@ -260,6 +266,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IVoiceTypeOrList
 - FormList
 - VoiceType
+### IWeaponOrList
+- FormList
+- Weapon
 ### IWorldspaceOrList
 - FormList
 - Worldspace
@@ -355,8 +364,11 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEventDataTarget
 - IItemOrList
 - ILockList
+- INpcOrList
 - IObjectId
+- ISpellOrList
 - IVoiceTypeOrList
+- IWeaponOrList
 - IWorldspaceOrList
 ### Furniture
 - IExplodeSpawn
@@ -451,6 +463,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Npc
 - IAliasVoiceType
 - ILockList
+- INpcOrList
 - INpcSpawn
 - IObjectId
 ### ObjectEffect
@@ -511,6 +524,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
+- ISpellOrList
 - ISpellRecord
 ### Static
 - IExplodeSpawn
@@ -543,6 +557,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
+- IWeaponOrList
 ### WordOfPower
 - IKnowable
 ### Worldspace

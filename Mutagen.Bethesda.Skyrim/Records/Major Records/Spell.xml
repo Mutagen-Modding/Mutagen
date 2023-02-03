@@ -31,5 +31,6 @@
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>ISpellOrList</LinkInterface>
   </Object>
 </Loqui>

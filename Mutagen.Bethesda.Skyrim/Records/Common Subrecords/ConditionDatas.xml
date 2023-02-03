@@ -1,5 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ConditionData" objType="Subrecord" abstract="true" GUID="01abc3c5-fb9d-4e48-a375-fe2f3a4fa044" ID="41">
+    <Fields>
+      <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" binary="NoGeneration" />
+      <FormLink name="Reference" refName="SkyrimMajorRecord" binary="NoGeneration" />
+      <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
+      <Bool name="UseAliases" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="UnknownConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c692e121-726f-4cb0-9692-ee15ac80fe77" ID="10402">
+    <Fields>
+      <Enum name="Function" enumName="Condition.Function" byteLength="2" />
+      <Int32 name="ParameterOne" />
+      <Int32 name="ParameterTwo" />
+      <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
+      <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" GUID="a7f88d12-4a14-4be4-ad02-ffa74d2fa3db" ID="40">
+    <Fields>
+      <!-- ToDo change to enum -->
+      <UInt16 name="EventFunction" />
+      <!-- ToDo change to enum -->
+      <UInt16 name="EventMember" />
+      <FormLink name="Parameter3" refName="SkyrimMajorRecord" />
+      <CustomLogic name="ParameterParsing" />
+    </Fields>
+  </Object>
+  <Object name="AGetVATSValueConditionData" abstract="true" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="1d531bca-4385-4ebc-9776-51e9dc6c592a" ID="10403">
+    <Fields>
+      <CustomLogic name="ValueFunctionParse" />
+      <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
+      <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueWeaponConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="d17cac41-306d-468c-89f3-4d3fc5d72b32" ID="10404">
+    <Fields>
+      <FormLink name="Value" refName="Weapon" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueWeaponOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="96565fdb-539b-43b1-984a-350f29222abc" ID="10405">
+    <Fields>
+      <FormLink name="Value">
+        <Interface>IWeaponOrList</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueTargetConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="ae1e909c-c1e4-40d4-9e13-6e026e491c21" ID="10406">
+    <Fields>
+      <FormLink name="Value" refName="Npc" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueTargetOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="08cd2b60-27ec-4435-81d3-280290f5cf73" ID="10407">
+    <Fields>
+      <FormLink name="Value">
+        <Interface>INpcOrList</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueTargetDistanceConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="17a99fe6-54f9-40ec-952a-2d633eb5431c" ID="10408">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueTargetPartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="5aa5a190-d8d3-4351-b763-15d65f4dce05" ID="10417">
+    <Fields>
+      <Enum name="Value" enumName="ActorValue" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueActionConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="76752a61-5e27-4c8d-ad32-56ba8d3346c6" ID="10409">
+    <Fields>
+      <Enum name="Value" enumName="GetVATSValueActionConditionData.Action" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueIsSuccessConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="270e1672-132a-4a8d-9e88-03464e3a2575" ID="10418">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueIsCriticalConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="b4ccf7f9-14f5-4089-960e-d42e328ef487" ID="10419">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueCriticalEffectConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="d264e98f-d49b-4464-a1e6-f5cb00fb0923" ID="10410">
+    <Fields>
+      <FormLink name="Value" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueCriticalEffectOrListConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="9823f3fb-569b-4989-b8de-41b79a8671ce" ID="10411">
+    <Fields>
+      <FormLink name="Value">
+        <Interface>ISpellOrList</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueIsFatalConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="9675cf23-96da-4957-8c2a-d947f9369536" ID="10420">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueExplodePartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="df9f59fa-4085-4ff4-8897-dfc9760ba975" ID="10421">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueDismemberPartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="16fbc4e0-d939-4bfc-bd71-23e6aab8d719" ID="10422">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueCripplePartConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="81381295-8bf3-4cf4-9471-e64f8272a6b9" ID="10423">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueWeaponTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="ba7dbc9b-6d07-4981-a83c-a295b6b77627" ID="10412">
+    <Fields>
+      <Enum name="Value" enumName="WeaponAnimationType" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueIsStrangerConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="c9f33eb0-400e-42d6-853b-8b03f48f208e" ID="10424">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueIsParalyzingPalmConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="5e419df3-54a7-4e00-a1a2-51c98958ad4f" ID="10425">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueProjectileTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="a8e7a530-b617-4079-85d6-a4d20e5b1516" ID="10413">
+    <Fields>
+      <Enum name="Value" enumName="Projectile.TypeEnum" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueDeliveryTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="e60605e1-f766-4ef4-abf9-b37e1d22af07" ID="10414">
+    <Fields>
+      <Enum name="Value" enumName="TargetType" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueCastingTypeConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="9d2d8143-754a-4e23-a8d5-e72678752386" ID="10415">
+    <Fields>
+      <Enum name="Value" enumName="CastType" />
+    </Fields>
+  </Object>
+  <Object name="GetVATSValueUnknownConditionData" objType="Subrecord" baseClass="AGetVATSValueConditionData" binaryOverlay="NoGeneration" GUID="82576597-a23a-48b8-aa44-6b149850b9ba" ID="10416">
+    <Fields>
+      <Int32 name="ValueType" />
+      <Int32 name="Value" />
+    </Fields>
+  </Object>
   <Object name="GetWantBlockingConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e1b1f323-c8bb-4da4-b809-1d7cc2d168bc" ID="10000">
     <Fields>
       <Int32 name="FirstParameter" />
@@ -1629,14 +1780,6 @@
       <FormLinkOrAlias name="FirstParameter">
         <Interface>IPlacedSimple</Interface>
       </FormLinkOrAlias>
-      <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
-      <Int32 name="SecondParameter" />
-      <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
-    </Fields>
-  </Object>
-  <Object name="GetVATSValueConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="412b1835-dc3f-421d-bea7-816cab681c6f" ID="10200">
-    <Fields>
-      <Int32 name="FirstParameter" />
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
       <Int32 name="SecondParameter" />
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />

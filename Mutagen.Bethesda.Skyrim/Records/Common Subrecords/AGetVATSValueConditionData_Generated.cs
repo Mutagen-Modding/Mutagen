@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -37,35 +38,32 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class GetVATSValueConditionData :
+    /// <summary>
+    /// Implemented by: [GetVATSValueWeaponConditionData, GetVATSValueWeaponOrListConditionData, GetVATSValueTargetConditionData, GetVATSValueTargetOrListConditionData, GetVATSValueTargetDistanceConditionData, GetVATSValueTargetPartConditionData, GetVATSValueActionConditionData, GetVATSValueIsSuccessConditionData, GetVATSValueIsCriticalConditionData, GetVATSValueCriticalEffectConditionData, GetVATSValueCriticalEffectOrListConditionData, GetVATSValueIsFatalConditionData, GetVATSValueExplodePartConditionData, GetVATSValueDismemberPartConditionData, GetVATSValueCripplePartConditionData, GetVATSValueWeaponTypeConditionData, GetVATSValueIsStrangerConditionData, GetVATSValueIsParalyzingPalmConditionData, GetVATSValueProjectileTypeConditionData, GetVATSValueDeliveryTypeConditionData, GetVATSValueCastingTypeConditionData, GetVATSValueUnknownConditionData]
+    /// </summary>
+    public abstract partial class AGetVATSValueConditionData :
         ConditionData,
-        IEquatable<IGetVATSValueConditionDataGetter>,
-        IGetVATSValueConditionData,
-        ILoquiObjectSetter<GetVATSValueConditionData>
+        IAGetVATSValueConditionData,
+        IEquatable<IAGetVATSValueConditionDataGetter>,
+        ILoquiObjectSetter<AGetVATSValueConditionData>
     {
         #region Ctor
-        public GetVATSValueConditionData()
+        public AGetVATSValueConditionData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstParameter
-        public Int32 FirstParameter { get; set; } = default;
-        #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IGetVATSValueConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
-        #endregion
-        #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        String? IAGetVATSValueConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IGetVATSValueConditionDataGetter.SecondUnusedStringParameter => this.SecondUnusedStringParameter;
+        String? IAGetVATSValueConditionDataGetter.SecondUnusedStringParameter => this.SecondUnusedStringParameter;
         #endregion
 
         #region To String
@@ -74,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GetVATSValueConditionDataMixIn.Print(
+            AGetVATSValueConditionDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -85,16 +83,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IGetVATSValueConditionDataGetter rhs) return false;
-            return ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IAGetVATSValueConditionDataGetter rhs) return false;
+            return ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGetVATSValueConditionDataGetter? obj)
+        public bool Equals(IAGetVATSValueConditionDataGetter? obj)
         {
-            return ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -108,9 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstParameter = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
-                this.SecondParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
             }
 
@@ -119,9 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem FirstParameter,
                 TItem FirstUnusedStringParameter,
-                TItem SecondParameter,
                 TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
@@ -129,9 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Unknown3: Unknown3,
                 UseAliases: UseAliases)
             {
-                this.FirstParameter = FirstParameter;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
-                this.SecondParameter = SecondParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
@@ -144,9 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstParameter;
             public TItem FirstUnusedStringParameter;
-            public TItem SecondParameter;
             public TItem SecondUnusedStringParameter;
             #endregion
 
@@ -161,18 +151,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
-                if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstParameter);
                 hash.Add(this.FirstUnusedStringParameter);
-                hash.Add(this.SecondParameter);
                 hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -184,9 +170,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstParameter)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
-                if (!eval(this.SecondParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
@@ -196,9 +180,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstParameter)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
-                if (eval(this.SecondParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
@@ -207,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new GetVATSValueConditionData.Mask<R>();
+                var ret = new AGetVATSValueConditionData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -215,9 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstParameter = eval(this.FirstParameter);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
-                obj.SecondParameter = eval(this.SecondParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
@@ -225,29 +205,21 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(GetVATSValueConditionData.Mask<bool>? printMask = null)
+            public string Print(AGetVATSValueConditionData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, GetVATSValueConditionData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AGetVATSValueConditionData.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(GetVATSValueConditionData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(AGetVATSValueConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstParameter ?? true)
-                    {
-                        sb.AppendItem(FirstParameter, "FirstParameter");
-                    }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
                         sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
-                    }
-                    if (printMask?.SecondParameter ?? true)
-                    {
-                        sb.AppendItem(SecondParameter, "SecondParameter");
                     }
                     if (printMask?.SecondUnusedStringParameter ?? true)
                     {
@@ -264,25 +236,19 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstParameter;
             public Exception? FirstUnusedStringParameter;
-            public Exception? SecondParameter;
             public Exception? SecondUnusedStringParameter;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                GetVATSValueConditionData_FieldIndex enu = (GetVATSValueConditionData_FieldIndex)index;
+                AGetVATSValueConditionData_FieldIndex enu = (AGetVATSValueConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVATSValueConditionData_FieldIndex.FirstParameter:
-                        return FirstParameter;
-                    case GetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter:
+                    case AGetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
-                    case GetVATSValueConditionData_FieldIndex.SecondParameter:
-                        return SecondParameter;
-                    case GetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter:
+                    case AGetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter:
                         return SecondUnusedStringParameter;
                     default:
                         return base.GetNthMask(index);
@@ -291,19 +257,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                GetVATSValueConditionData_FieldIndex enu = (GetVATSValueConditionData_FieldIndex)index;
+                AGetVATSValueConditionData_FieldIndex enu = (AGetVATSValueConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVATSValueConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = ex;
-                        break;
-                    case GetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter:
+                    case AGetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
                         break;
-                    case GetVATSValueConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = ex;
-                        break;
-                    case GetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter:
+                    case AGetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = ex;
                         break;
                     default:
@@ -314,19 +274,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                GetVATSValueConditionData_FieldIndex enu = (GetVATSValueConditionData_FieldIndex)index;
+                AGetVATSValueConditionData_FieldIndex enu = (AGetVATSValueConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVATSValueConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception?)obj;
-                        break;
-                    case GetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter:
+                    case AGetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
                         break;
-                    case GetVATSValueConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = (Exception?)obj;
-                        break;
-                    case GetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter:
+                    case AGetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = (Exception?)obj;
                         break;
                     default:
@@ -338,9 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstParameter != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
-                if (SecondParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
@@ -369,13 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstParameter, "FirstParameter");
-                }
-                {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
-                }
-                {
-                    sb.AppendItem(SecondParameter, "SecondParameter");
                 }
                 {
                     sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
@@ -388,9 +334,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
-                ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
@@ -414,9 +358,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool FirstParameter;
             public bool FirstUnusedStringParameter;
-            public bool SecondParameter;
             public bool SecondUnusedStringParameter;
             #endregion
 
@@ -426,9 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstParameter = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
-                this.SecondParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
             }
 
@@ -437,9 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstParameter, null));
                 ret.Add((FirstUnusedStringParameter, null));
-                ret.Add((SecondParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
             }
 
@@ -451,43 +389,22 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AGetVATSValueConditionDataCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AGetVATSValueConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GetVATSValueConditionDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AGetVATSValueConditionDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GetVATSValueConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AGetVATSValueConditionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
-        }
-        #region Binary Create
-        public new static GetVATSValueConditionData CreateFromBinary(
-            MutagenFrame frame,
-            TypedParseParams translationParams = default)
-        {
-            var ret = new GetVATSValueConditionData();
-            ((GetVATSValueConditionDataSetterCommon)((IGetVATSValueConditionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                item: ret,
-                frame: frame,
-                translationParams: translationParams);
-            return ret;
-        }
-
-        #endregion
-
-        public static bool TryCreateFromBinary(
-            MutagenFrame frame,
-            out GetVATSValueConditionData item,
-            TypedParseParams translationParams = default)
-        {
-            var startPos = frame.Position;
-            item = CreateFromBinary(
-                frame: frame,
-                translationParams: translationParams);
-            return startPos != frame.Position;
         }
         #endregion
 
@@ -495,38 +412,42 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((GetVATSValueConditionDataSetterCommon)((IGetVATSValueConditionDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AGetVATSValueConditionDataSetterCommon)((IAGetVATSValueConditionDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new GetVATSValueConditionData GetNew()
+        internal static new AGetVATSValueConditionData GetNew()
         {
-            return new GetVATSValueConditionData();
+            throw new ArgumentException("New called on an abstract class.");
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IGetVATSValueConditionData :
+    /// <summary>
+    /// Implemented by: [GetVATSValueWeaponConditionData, GetVATSValueWeaponOrListConditionData, GetVATSValueTargetConditionData, GetVATSValueTargetOrListConditionData, GetVATSValueTargetDistanceConditionData, GetVATSValueTargetPartConditionData, GetVATSValueActionConditionData, GetVATSValueIsSuccessConditionData, GetVATSValueIsCriticalConditionData, GetVATSValueCriticalEffectConditionData, GetVATSValueCriticalEffectOrListConditionData, GetVATSValueIsFatalConditionData, GetVATSValueExplodePartConditionData, GetVATSValueDismemberPartConditionData, GetVATSValueCripplePartConditionData, GetVATSValueWeaponTypeConditionData, GetVATSValueIsStrangerConditionData, GetVATSValueIsParalyzingPalmConditionData, GetVATSValueProjectileTypeConditionData, GetVATSValueDeliveryTypeConditionData, GetVATSValueCastingTypeConditionData, GetVATSValueUnknownConditionData]
+    /// </summary>
+    public partial interface IAGetVATSValueConditionData :
+        IAGetVATSValueConditionDataGetter,
         IConditionData,
-        IGetVATSValueConditionDataGetter,
-        ILoquiObjectSetter<IGetVATSValueConditionData>
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAGetVATSValueConditionData>
     {
-        new Int32 FirstParameter { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new Int32 SecondParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
-    public partial interface IGetVATSValueConditionDataGetter :
+    /// <summary>
+    /// Implemented by: [GetVATSValueWeaponConditionData, GetVATSValueWeaponOrListConditionData, GetVATSValueTargetConditionData, GetVATSValueTargetOrListConditionData, GetVATSValueTargetDistanceConditionData, GetVATSValueTargetPartConditionData, GetVATSValueActionConditionData, GetVATSValueIsSuccessConditionData, GetVATSValueIsCriticalConditionData, GetVATSValueCriticalEffectConditionData, GetVATSValueCriticalEffectOrListConditionData, GetVATSValueIsFatalConditionData, GetVATSValueExplodePartConditionData, GetVATSValueDismemberPartConditionData, GetVATSValueCripplePartConditionData, GetVATSValueWeaponTypeConditionData, GetVATSValueIsStrangerConditionData, GetVATSValueIsParalyzingPalmConditionData, GetVATSValueProjectileTypeConditionData, GetVATSValueDeliveryTypeConditionData, GetVATSValueCastingTypeConditionData, GetVATSValueUnknownConditionData]
+    /// </summary>
+    public partial interface IAGetVATSValueConditionDataGetter :
         IConditionDataGetter,
         IBinaryItem,
-        ILoquiObject<IGetVATSValueConditionDataGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IAGetVATSValueConditionDataGetter>
     {
-        static new ILoquiRegistration StaticRegistration => GetVATSValueConditionData_Registration.Instance;
-        Int32 FirstParameter { get; }
+        static new ILoquiRegistration StaticRegistration => AGetVATSValueConditionData_Registration.Instance;
         String? FirstUnusedStringParameter { get; }
-        Int32 SecondParameter { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -534,42 +455,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class GetVATSValueConditionDataMixIn
+    public static partial class AGetVATSValueConditionDataMixIn
     {
-        public static void Clear(this IGetVATSValueConditionData item)
+        public static void Clear(this IAGetVATSValueConditionData item)
         {
-            ((GetVATSValueConditionDataSetterCommon)((IGetVATSValueConditionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AGetVATSValueConditionDataSetterCommon)((IAGetVATSValueConditionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static GetVATSValueConditionData.Mask<bool> GetEqualsMask(
-            this IGetVATSValueConditionDataGetter item,
-            IGetVATSValueConditionDataGetter rhs,
+        public static AGetVATSValueConditionData.Mask<bool> GetEqualsMask(
+            this IAGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IGetVATSValueConditionDataGetter item,
+            this IAGetVATSValueConditionDataGetter item,
             string? name = null,
-            GetVATSValueConditionData.Mask<bool>? printMask = null)
+            AGetVATSValueConditionData.Mask<bool>? printMask = null)
         {
-            return ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).Print(
+            return ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IGetVATSValueConditionDataGetter item,
+            this IAGetVATSValueConditionDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            GetVATSValueConditionData.Mask<bool>? printMask = null)
+            AGetVATSValueConditionData.Mask<bool>? printMask = null)
         {
-            ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).Print(
+            ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -577,39 +498,39 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this IGetVATSValueConditionDataGetter item,
-            IGetVATSValueConditionDataGetter rhs,
-            GetVATSValueConditionData.TranslationMask? equalsMask = null)
+            this IAGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter rhs,
+            AGetVATSValueConditionData.TranslationMask? equalsMask = null)
         {
-            return ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).Equals(
+            return ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IGetVATSValueConditionData lhs,
-            IGetVATSValueConditionDataGetter rhs,
-            out GetVATSValueConditionData.ErrorMask errorMask,
-            GetVATSValueConditionData.TranslationMask? copyMask = null)
+            this IAGetVATSValueConditionData lhs,
+            IAGetVATSValueConditionDataGetter rhs,
+            out AGetVATSValueConditionData.ErrorMask errorMask,
+            AGetVATSValueConditionData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = GetVATSValueConditionData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AGetVATSValueConditionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IGetVATSValueConditionData lhs,
-            IGetVATSValueConditionDataGetter rhs,
+            this IAGetVATSValueConditionData lhs,
+            IAGetVATSValueConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -617,32 +538,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static GetVATSValueConditionData DeepCopy(
-            this IGetVATSValueConditionDataGetter item,
-            GetVATSValueConditionData.TranslationMask? copyMask = null)
+        public static AGetVATSValueConditionData DeepCopy(
+            this IAGetVATSValueConditionDataGetter item,
+            AGetVATSValueConditionData.TranslationMask? copyMask = null)
         {
-            return ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static GetVATSValueConditionData DeepCopy(
-            this IGetVATSValueConditionDataGetter item,
-            out GetVATSValueConditionData.ErrorMask errorMask,
-            GetVATSValueConditionData.TranslationMask? copyMask = null)
+        public static AGetVATSValueConditionData DeepCopy(
+            this IAGetVATSValueConditionDataGetter item,
+            out AGetVATSValueConditionData.ErrorMask errorMask,
+            AGetVATSValueConditionData.TranslationMask? copyMask = null)
         {
-            return ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static GetVATSValueConditionData DeepCopy(
-            this IGetVATSValueConditionDataGetter item,
+        public static AGetVATSValueConditionData DeepCopy(
+            this IAGetVATSValueConditionDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -650,11 +571,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IGetVATSValueConditionData item,
+            this IAGetVATSValueConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((GetVATSValueConditionDataSetterCommon)((IGetVATSValueConditionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AGetVATSValueConditionDataSetterCommon)((IAGetVATSValueConditionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -670,54 +591,52 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum GetVATSValueConditionData_FieldIndex
+    internal enum AGetVATSValueConditionData_FieldIndex
     {
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FirstParameter = 4,
-        FirstUnusedStringParameter = 5,
-        SecondParameter = 6,
-        SecondUnusedStringParameter = 7,
+        FirstUnusedStringParameter = 4,
+        SecondUnusedStringParameter = 5,
     }
     #endregion
 
     #region Registration
-    internal partial class GetVATSValueConditionData_Registration : ILoquiRegistration
+    internal partial class AGetVATSValueConditionData_Registration : ILoquiRegistration
     {
-        public static readonly GetVATSValueConditionData_Registration Instance = new GetVATSValueConditionData_Registration();
+        public static readonly AGetVATSValueConditionData_Registration Instance = new AGetVATSValueConditionData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 10200,
+            msgID: 10403,
             version: 0);
 
-        public const string GUID = "412b1835-dc3f-421d-bea7-816cab681c6f";
+        public const string GUID = "1d531bca-4385-4ebc-9776-51e9dc6c592a";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(GetVATSValueConditionData.Mask<>);
+        public static readonly Type MaskType = typeof(AGetVATSValueConditionData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GetVATSValueConditionData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AGetVATSValueConditionData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(GetVATSValueConditionData);
+        public static readonly Type ClassType = typeof(AGetVATSValueConditionData);
 
-        public static readonly Type GetterType = typeof(IGetVATSValueConditionDataGetter);
+        public static readonly Type GetterType = typeof(IAGetVATSValueConditionDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGetVATSValueConditionData);
+        public static readonly Type SetterType = typeof(IAGetVATSValueConditionData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.GetVATSValueConditionData";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.AGetVATSValueConditionData";
 
-        public const string Name = "GetVATSValueConditionData";
+        public const string Name = "AGetVATSValueConditionData";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -725,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(GetVATSValueConditionDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AGetVATSValueConditionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -758,29 +677,27 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class GetVATSValueConditionDataSetterCommon : ConditionDataSetterCommon
+    internal partial class AGetVATSValueConditionDataSetterCommon : ConditionDataSetterCommon
     {
-        public new static readonly GetVATSValueConditionDataSetterCommon Instance = new GetVATSValueConditionDataSetterCommon();
+        public new static readonly AGetVATSValueConditionDataSetterCommon Instance = new AGetVATSValueConditionDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IGetVATSValueConditionData item)
+        public virtual void Clear(IAGetVATSValueConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default;
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
         
         public override void Clear(IConditionData item)
         {
-            Clear(item: (IGetVATSValueConditionData)item);
+            Clear(item: (IAGetVATSValueConditionData)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IGetVATSValueConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IAGetVATSValueConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -789,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGetVATSValueConditionData item,
+            IAGetVATSValueConditionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -797,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GetVATSValueConditionDataBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: AGetVATSValueConditionDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -806,7 +723,7 @@ namespace Mutagen.Bethesda.Skyrim
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (GetVATSValueConditionData)item,
+                item: (AGetVATSValueConditionData)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -814,17 +731,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetVATSValueConditionDataCommon : ConditionDataCommon
+    internal partial class AGetVATSValueConditionDataCommon : ConditionDataCommon
     {
-        public new static readonly GetVATSValueConditionDataCommon Instance = new GetVATSValueConditionDataCommon();
+        public new static readonly AGetVATSValueConditionDataCommon Instance = new AGetVATSValueConditionDataCommon();
 
-        public GetVATSValueConditionData.Mask<bool> GetEqualsMask(
-            IGetVATSValueConditionDataGetter item,
-            IGetVATSValueConditionDataGetter rhs,
+        public AGetVATSValueConditionData.Mask<bool> GetEqualsMask(
+            IAGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new GetVATSValueConditionData.Mask<bool>(false);
-            ((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AGetVATSValueConditionData.Mask<bool>(false);
+            ((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -833,22 +750,20 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void FillEqualsMask(
-            IGetVATSValueConditionDataGetter item,
-            IGetVATSValueConditionDataGetter rhs,
-            GetVATSValueConditionData.Mask<bool> ret,
+            IAGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter rhs,
+            AGetVATSValueConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
-            ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter item,
             string? name = null,
-            GetVATSValueConditionData.Mask<bool>? printMask = null)
+            AGetVATSValueConditionData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -860,18 +775,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void Print(
-            IGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            GetVATSValueConditionData.Mask<bool>? printMask = null)
+            AGetVATSValueConditionData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"GetVATSValueConditionData =>");
+                sb.AppendLine($"AGetVATSValueConditionData =>");
             }
             else
             {
-                sb.AppendLine($"{name} (GetVATSValueConditionData) =>");
+                sb.AppendLine($"{name} (AGetVATSValueConditionData) =>");
             }
             using (sb.Brace())
             {
@@ -883,26 +798,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         protected static void ToStringFields(
-            IGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter item,
             StructuredStringBuilder sb,
-            GetVATSValueConditionData.Mask<bool>? printMask = null)
+            AGetVATSValueConditionData.Mask<bool>? printMask = null)
         {
             ConditionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstParameter ?? true)
-            {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
-            }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
             {
                 sb.AppendItem(FirstUnusedStringParameterItem, "FirstUnusedStringParameter");
-            }
-            if (printMask?.SecondParameter ?? true)
-            {
-                sb.AppendItem(item.SecondParameter, "SecondParameter");
             }
             if ((printMask?.SecondUnusedStringParameter ?? true)
                 && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
@@ -911,18 +818,18 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static GetVATSValueConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
+        public static AGetVATSValueConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
                 case ConditionData_FieldIndex.RunOnType:
-                    return (GetVATSValueConditionData_FieldIndex)((int)index);
+                    return (AGetVATSValueConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Reference:
-                    return (GetVATSValueConditionData_FieldIndex)((int)index);
+                    return (AGetVATSValueConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Unknown3:
-                    return (GetVATSValueConditionData_FieldIndex)((int)index);
+                    return (AGetVATSValueConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
-                    return (GetVATSValueConditionData_FieldIndex)((int)index);
+                    return (AGetVATSValueConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -930,25 +837,17 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGetVATSValueConditionDataGetter? lhs,
-            IGetVATSValueConditionDataGetter? rhs,
+            IAGetVATSValueConditionDataGetter? lhs,
+            IAGetVATSValueConditionDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.FirstParameter) ?? true))
-            {
-                if (lhs.FirstParameter != rhs.FirstParameter) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AGetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 if (!string.Equals(lhs.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.SecondParameter) ?? true))
-            {
-                if (lhs.SecondParameter != rhs.SecondParameter) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AGetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
                 if (!string.Equals(lhs.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
             }
@@ -961,20 +860,18 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGetVATSValueConditionDataGetter?)lhs,
-                rhs: rhs as IGetVATSValueConditionDataGetter,
+                lhs: (IAGetVATSValueConditionDataGetter?)lhs,
+                rhs: rhs as IAGetVATSValueConditionDataGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IGetVATSValueConditionDataGetter item)
+        public virtual int GetHashCode(IAGetVATSValueConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstParameter);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
             }
-            hash.Add(item.SecondParameter);
             if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
             {
                 hash.Add(SecondUnusedStringParameteritem);
@@ -985,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         public override int GetHashCode(IConditionDataGetter item)
         {
-            return GetHashCode(item: (IGetVATSValueConditionDataGetter)item);
+            return GetHashCode(item: (IAGetVATSValueConditionDataGetter)item);
         }
         
         #endregion
@@ -993,11 +890,11 @@ namespace Mutagen.Bethesda.Skyrim
         
         public override object GetNew()
         {
-            return GetVATSValueConditionData.GetNew();
+            return AGetVATSValueConditionData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGetVATSValueConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAGetVATSValueConditionDataGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -1009,14 +906,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class GetVATSValueConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
+    internal partial class AGetVATSValueConditionDataSetterTranslationCommon : ConditionDataSetterTranslationCommon
     {
-        public new static readonly GetVATSValueConditionDataSetterTranslationCommon Instance = new GetVATSValueConditionDataSetterTranslationCommon();
+        public new static readonly AGetVATSValueConditionDataSetterTranslationCommon Instance = new AGetVATSValueConditionDataSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
-            IGetVATSValueConditionData item,
-            IGetVATSValueConditionDataGetter rhs,
+        public virtual void DeepCopyIn(
+            IAGetVATSValueConditionData item,
+            IAGetVATSValueConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1027,19 +924,11 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.FirstParameter) ?? true))
-            {
-                item.FirstParameter = rhs.FirstParameter;
-            }
-            if ((copyMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AGetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 item.FirstUnusedStringParameter = rhs.FirstUnusedStringParameter;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.SecondParameter) ?? true))
-            {
-                item.SecondParameter = rhs.SecondParameter;
-            }
-            if ((copyMask?.GetShouldTranslate((int)GetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AGetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
@@ -1054,8 +943,8 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGetVATSValueConditionData)item,
-                rhs: (IGetVATSValueConditionDataGetter)rhs,
+                item: (IAGetVATSValueConditionData)item,
+                rhs: (IAGetVATSValueConditionDataGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1063,12 +952,12 @@ namespace Mutagen.Bethesda.Skyrim
         
         #endregion
         
-        public GetVATSValueConditionData DeepCopy(
-            IGetVATSValueConditionDataGetter item,
-            GetVATSValueConditionData.TranslationMask? copyMask = null)
+        public AGetVATSValueConditionData DeepCopy(
+            IAGetVATSValueConditionDataGetter item,
+            AGetVATSValueConditionData.TranslationMask? copyMask = null)
         {
-            GetVATSValueConditionData ret = (GetVATSValueConditionData)((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).GetNew();
-            ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AGetVATSValueConditionData ret = (AGetVATSValueConditionData)((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).GetNew();
+            ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1077,30 +966,30 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
         
-        public GetVATSValueConditionData DeepCopy(
-            IGetVATSValueConditionDataGetter item,
-            out GetVATSValueConditionData.ErrorMask errorMask,
-            GetVATSValueConditionData.TranslationMask? copyMask = null)
+        public AGetVATSValueConditionData DeepCopy(
+            IAGetVATSValueConditionDataGetter item,
+            out AGetVATSValueConditionData.ErrorMask errorMask,
+            AGetVATSValueConditionData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            GetVATSValueConditionData ret = (GetVATSValueConditionData)((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).GetNew();
-            ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AGetVATSValueConditionData ret = (AGetVATSValueConditionData)((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).GetNew();
+            ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = GetVATSValueConditionData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AGetVATSValueConditionData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public GetVATSValueConditionData DeepCopy(
-            IGetVATSValueConditionDataGetter item,
+        public AGetVATSValueConditionData DeepCopy(
+            IAGetVATSValueConditionDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            GetVATSValueConditionData ret = (GetVATSValueConditionData)((GetVATSValueConditionDataCommon)((IGetVATSValueConditionDataGetter)item).CommonInstance()!).GetNew();
-            ((GetVATSValueConditionDataSetterTranslationCommon)((IGetVATSValueConditionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AGetVATSValueConditionData ret = (AGetVATSValueConditionData)((AGetVATSValueConditionDataCommon)((IAGetVATSValueConditionDataGetter)item).CommonInstance()!).GetNew();
+            ((AGetVATSValueConditionDataSetterTranslationCommon)((IAGetVATSValueConditionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1116,21 +1005,21 @@ namespace Mutagen.Bethesda.Skyrim
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class GetVATSValueConditionData
+    public partial class AGetVATSValueConditionData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => GetVATSValueConditionData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => GetVATSValueConditionData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AGetVATSValueConditionData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AGetVATSValueConditionData_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GetVATSValueConditionDataCommon.Instance;
+        protected override object CommonInstance() => AGetVATSValueConditionDataCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return GetVATSValueConditionDataSetterCommon.Instance;
+            return AGetVATSValueConditionDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GetVATSValueConditionDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AGetVATSValueConditionDataSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1141,26 +1030,40 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class GetVATSValueConditionDataBinaryWriteTranslation :
+    public partial class AGetVATSValueConditionDataBinaryWriteTranslation :
         ConditionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GetVATSValueConditionDataBinaryWriteTranslation Instance = new();
+        public new static readonly AGetVATSValueConditionDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter item,
             MutagenWriter writer)
         {
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.FirstParameter);
-            writer.Write(item.SecondParameter);
+            AGetVATSValueConditionDataBinaryWriteTranslation.WriteBinaryValueFunctionParse(
+                writer: writer,
+                item: item);
         }
 
-        public void Write(
+        public static partial void WriteBinaryValueFunctionParseCustom(
             MutagenWriter writer,
-            IGetVATSValueConditionDataGetter item,
+            IAGetVATSValueConditionDataGetter item);
+
+        public static void WriteBinaryValueFunctionParse(
+            MutagenWriter writer,
+            IAGetVATSValueConditionDataGetter item)
+        {
+            WriteBinaryValueFunctionParseCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public virtual void Write(
+            MutagenWriter writer,
+            IAGetVATSValueConditionDataGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1174,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IGetVATSValueConditionDataGetter)item,
+                item: (IAGetVATSValueConditionDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1185,27 +1088,32 @@ namespace Mutagen.Bethesda.Skyrim
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGetVATSValueConditionDataGetter)item,
+                item: (IAGetVATSValueConditionDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class GetVATSValueConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
+    internal partial class AGetVATSValueConditionDataBinaryCreateTranslation : ConditionDataBinaryCreateTranslation
     {
-        public new static readonly GetVATSValueConditionDataBinaryCreateTranslation Instance = new GetVATSValueConditionDataBinaryCreateTranslation();
+        public new static readonly AGetVATSValueConditionDataBinaryCreateTranslation Instance = new AGetVATSValueConditionDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IGetVATSValueConditionData item,
+            IAGetVATSValueConditionData item,
             MutagenFrame frame)
         {
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter = frame.ReadInt32();
-            item.SecondParameter = frame.ReadInt32();
+            AGetVATSValueConditionDataBinaryCreateTranslation.FillBinaryValueFunctionParseCustom(
+                frame: frame,
+                item: item);
         }
+
+        public static partial void FillBinaryValueFunctionParseCustom(
+            MutagenFrame frame,
+            IAGetVATSValueConditionData item);
 
     }
 
@@ -1213,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class GetVATSValueConditionDataBinaryTranslationMixIn
+    public static class AGetVATSValueConditionDataBinaryTranslationMixIn
     {
     }
     #endregion

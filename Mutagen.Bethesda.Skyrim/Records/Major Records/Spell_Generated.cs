@@ -1221,6 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReferenceableObject,
         ISkyrimMajorRecordInternal,
         ISpellGetter,
+        ISpellOrList,
         ISpellRecord,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -1275,6 +1276,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         IPlaceableObjectGetter,
         IReferenceableObjectGetter,
+        ISpellOrListGetter,
         ISpellRecordGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

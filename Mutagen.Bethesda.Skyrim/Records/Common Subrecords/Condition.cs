@@ -1314,7 +1314,7 @@ partial class ConditionBinaryCreateTranslation
             case 403:
                 return GetRelationshipRankConditionData.CreateFromBinary(frame);
             case 407:
-                return GetVATSValueConditionData.CreateFromBinary(frame);
+                return AGetVATSValueConditionData.CreateFromBinary(frame);
             case 408:
                 return IsKillerConditionData.CreateFromBinary(frame);
             case 409:
@@ -2126,7 +2126,7 @@ partial class ConditionBinaryCreateTranslation
                 return 402;
             case IGetRelationshipRankConditionDataGetter:
                 return 403;
-            case IGetVATSValueConditionDataGetter:
+            case IAGetVATSValueConditionDataGetter:
                 return 407;
             case IIsKillerConditionDataGetter:
                 return 408;
@@ -2674,7 +2674,7 @@ abstract partial class ConditionBinaryOverlay
         }
 
         var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(8));
-        ConditionData data;
+        IConditionData data;
         stream.Position += 12;
         var mutagenFrame = new MutagenFrame(stream);
         if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)

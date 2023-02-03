@@ -558,9 +558,12 @@ namespace Mutagen.Bethesda.Skyrim
         IItemOrList,
         ILockList,
         ILoquiObjectSetter<IFormListInternal>,
+        INpcOrList,
         IObjectId,
         ISkyrimMajorRecordInternal,
+        ISpellOrList,
         IVoiceTypeOrList,
+        IWeaponOrList,
         IWorldspaceOrList
     {
         new ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>> Items { get; }
@@ -584,8 +587,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILockListGetter,
         ILoquiObject<IFormListGetter>,
         IMapsToGetter<IFormListGetter>,
+        INpcOrListGetter,
         IObjectIdGetter,
+        ISpellOrListGetter,
         IVoiceTypeOrListGetter,
+        IWeaponOrListGetter,
         IWorldspaceOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;

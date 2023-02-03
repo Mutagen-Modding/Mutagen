@@ -1889,7 +1889,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
-        IWeaponGetter
+        IWeaponGetter,
+        IWeaponOrList
     {
         /// <summary>
         /// Aspects: IScripted
@@ -1979,7 +1980,8 @@ namespace Mutagen.Bethesda.Skyrim
         IReferenceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
-        ITranslatedNamedRequiredGetter
+        ITranslatedNamedRequiredGetter,
+        IWeaponOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region VirtualMachineAdapter
