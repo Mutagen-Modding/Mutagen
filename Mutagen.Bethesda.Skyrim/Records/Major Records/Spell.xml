@@ -32,5 +32,6 @@
     <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>ISpellOrList</LinkInterface>
+    <LinkInterface>IMagicItem</LinkInterface>
   </Object>
 </Loqui>

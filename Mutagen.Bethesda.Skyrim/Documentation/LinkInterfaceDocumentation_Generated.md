@@ -139,6 +139,12 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ILockList
 - FormList
 - Npc
+### IMagicItem
+- Ingestible
+- Ingredient
+- ObjectEffect
+- Scroll
+- Spell
 ### INpcOrList
 - FormList
 - Npc
@@ -394,6 +400,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IHarvestTarget
 - IItem
 - IItemOrList
+- IMagicItem
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
@@ -403,6 +410,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IHarvestTarget
 - IItem
 - IItemOrList
+- IMagicItem
 - IPlaceableObject
 - IReferenceableObject
 ### Key
@@ -470,6 +478,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEffectRecord
 - IExplodeSpawn
 - IKnowable
+- IMagicItem
 ### PlacedNpc
 - IKeywordLinkedReference
 - ILinkedReference
@@ -497,6 +506,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IExplodeSpawn
 - IItem
 - IItemOrList
+- IMagicItem
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
@@ -521,6 +531,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Spell
 - IEffectRecord
 - IExplodeSpawn
+- IMagicItem
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject

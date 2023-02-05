@@ -322,6 +322,15 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             MiscItem_Registration.Instance,
         });
         dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
+        dict[typeof(IMagicItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            ObjectEffect_Registration.Instance,
+            Scroll_Registration.Instance,
+            Spell_Registration.Instance,
+        });
+        dict[typeof(IMagicItemGetter)] = dict[typeof(IMagicItem)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,

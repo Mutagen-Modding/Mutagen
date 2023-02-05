@@ -4568,6 +4568,7 @@
     <Compile Include="Interfaces\Link\IWorldspaceOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\IItemOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
+    <Compile Include="Interfaces\Link\IMagicItem_Generated.cs" />
     <Compile Include="Interfaces\Link\INpcOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\IWeaponOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\ISpellOrList_Generated.cs" />

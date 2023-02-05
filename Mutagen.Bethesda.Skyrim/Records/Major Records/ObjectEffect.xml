@@ -23,5 +23,6 @@
     <LinkInterface>IEffectRecord</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IKnowable</LinkInterface>
+    <LinkInterface>IMagicItem</LinkInterface>
   </Object>
 </Loqui>
