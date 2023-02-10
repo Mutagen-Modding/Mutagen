@@ -369,14 +369,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         switch (data)
         {
             case IGetIsIDConditionDataGetter getIsId:
-                if (!getIsId.FirstParameter.Link.IsNull)
+                if (getIsId.Object.UsesLink())
                 {
-                    voices = new VoiceContainer(getIsId.FirstParameter.Link.FormKey, _speakerVoices[getIsId.FirstParameter.Link.FormKey]);
+                    voices = new VoiceContainer(getIsId.Object.Link.FormKey, _speakerVoices[getIsId.Object.Link.FormKey]);
                 }
 
                 break;
             case IGetIsVoiceTypeConditionDataGetter isVoiceType:
-                if (isVoiceType.FirstParameter.Link.TryResolve(_formLinkCache, out var voiceTypeRecord))
+                if (isVoiceType.VoiceTypeOrList.UsesLink() && isVoiceType.VoiceTypeOrList.Link.TryResolve(_formLinkCache, out var voiceTypeRecord))
                 {
                     switch (voiceTypeRecord)
                     {
@@ -395,32 +395,32 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 
                 break;
             case IGetIsAliasRefConditionDataGetter aliasRef:
-                voices = GetVoices(quest, aliasRef.FirstParameter, currentMod);
+                voices = GetVoices(quest, aliasRef.ReferenceAliasIndex, currentMod);
 
                 break;
             case IGetInFactionConditionDataGetter getInFaction:
-                if (_factionNPCs.TryGetValue(getInFaction.FirstParameter.Link.FormKey, out var factionNpcFormKeys))
+                if (getInFaction.Faction.UsesLink() && _factionNPCs.TryGetValue(getInFaction.Faction.Link.FormKey, out var factionNpcFormKeys))
                 {
                     voices = new VoiceContainer(factionNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IGetIsClassConditionDataGetter getIsClass:
-                if (_classNPCs.TryGetValue(getIsClass.FirstParameter.Link.FormKey, out var classNpcFormKeys))
+                if (getIsClass.Class.UsesLink() && _classNPCs.TryGetValue(getIsClass.Class.Link.FormKey, out var classNpcFormKeys))
                 {
                     voices = new VoiceContainer(classNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IGetIsRaceConditionDataGetter getIsRace:
-                if (_raceNPCs.TryGetValue(getIsRace.FirstParameter.Link.FormKey, out var raceNpcFormKeys))
+                if (getIsRace.Race.UsesLink() && _raceNPCs.TryGetValue(getIsRace.Race.Link.FormKey, out var raceNpcFormKeys))
                 {
                     voices = new VoiceContainer(raceNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IGetIsSexConditionDataGetter sexConditionDataGetter:
-                var isFemale = sexConditionDataGetter.FirstParameter == MaleFemaleGender.Female;
+                var isFemale = sexConditionDataGetter.MaleFemaleGender == MaleFemaleGender.Female;
                 if (_genderNPCs.TryGetValue(isFemale, out var genderNpcFormKeys))
                 {
                     voices = new VoiceContainer(genderNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
@@ -428,9 +428,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IIsInListConditionDataGetter isInList:
-                if (!isInList.FirstParameter.Link.IsNull)
+                if (isInList.FormList.UsesLink())
                 {
-                    var formList = isInList.FirstParameter.Link.TryResolve(_formLinkCache);
+                    var formList = isInList.FormList.Link.TryResolve(_formLinkCache);
                     //Only look at speakers in the form list
                     if (formList != null) voices = formList.Items.Select(link => GetVoices(link.FormKey)).MergeInsert();
                 }

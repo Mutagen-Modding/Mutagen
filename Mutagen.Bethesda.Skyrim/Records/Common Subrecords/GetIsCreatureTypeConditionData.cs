@@ -1,5 +1,6 @@
 namespace Mutagen.Bethesda.Skyrim;
 
+[Obsolete("The game engine no longer distinguishes between Creatures and Characters")]
 public partial class GetIsCreatureTypeConditionData : IConditionStringParameter
 {
     string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;

@@ -47,29 +47,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetInCellConditionData()
         {
-            _FirstParameter = new FormLinkOrAlias<ICellGetter>(this);
+            _Cell = new FormLinkOrAlias<ICellGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstParameter
-        private readonly IFormLinkOrAlias<ICellGetter> _FirstParameter = default!;
-        public IFormLinkOrAlias<ICellGetter> FirstParameter
+        #region Cell
+        private readonly IFormLinkOrAlias<ICellGetter> _Cell = default!;
+        public IFormLinkOrAlias<ICellGetter> Cell
         {
-            get => _FirstParameter;
-            set => _FirstParameter.SetTo(value);
+            get => _Cell;
+            set => _Cell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<ICellGetter> IGetInCellConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkOrAliasGetter<ICellGetter> IGetInCellConditionDataGetter.Cell => this.Cell;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IGetInCellConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
-        #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        #region SecondUnusedIntParameter
+        public Int32 SecondUnusedIntParameter { get; set; } = default;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -117,9 +117,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstParameter = initialValue;
+                this.Cell = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
-                this.SecondParameter = initialValue;
+                this.SecondUnusedIntParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
             }
 
@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem FirstParameter,
+                TItem Cell,
                 TItem FirstUnusedStringParameter,
-                TItem SecondParameter,
+                TItem SecondUnusedIntParameter,
                 TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
@@ -138,9 +138,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Unknown3: Unknown3,
                 UseAliases: UseAliases)
             {
-                this.FirstParameter = FirstParameter;
+                this.Cell = Cell;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
-                this.SecondParameter = SecondParameter;
+                this.SecondUnusedIntParameter = SecondUnusedIntParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
@@ -153,9 +153,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstParameter;
+            public TItem Cell;
             public TItem FirstUnusedStringParameter;
-            public TItem SecondParameter;
+            public TItem SecondUnusedIntParameter;
             public TItem SecondUnusedStringParameter;
             #endregion
 
@@ -170,18 +170,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
+                if (!object.Equals(this.Cell, rhs.Cell)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
-                if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstParameter);
+                hash.Add(this.Cell);
                 hash.Add(this.FirstUnusedStringParameter);
-                hash.Add(this.SecondParameter);
+                hash.Add(this.SecondUnusedIntParameter);
                 hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -193,9 +193,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstParameter)) return false;
+                if (!eval(this.Cell)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
-                if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.SecondUnusedIntParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
@@ -205,9 +205,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstParameter)) return true;
+                if (eval(this.Cell)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
-                if (eval(this.SecondParameter)) return true;
+                if (eval(this.SecondUnusedIntParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
@@ -224,9 +224,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstParameter = eval(this.FirstParameter);
+                obj.Cell = eval(this.Cell);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
-                obj.SecondParameter = eval(this.SecondParameter);
+                obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
@@ -246,17 +246,17 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(GetInCellConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstParameter ?? true)
+                    if (printMask?.Cell ?? true)
                     {
-                        sb.AppendItem(FirstParameter, "FirstParameter");
+                        sb.AppendItem(Cell, "Cell");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
                         sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                     }
-                    if (printMask?.SecondParameter ?? true)
+                    if (printMask?.SecondUnusedIntParameter ?? true)
                     {
-                        sb.AppendItem(SecondParameter, "SecondParameter");
+                        sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                     }
                     if (printMask?.SecondUnusedStringParameter ?? true)
                     {
@@ -273,9 +273,9 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstParameter;
+            public Exception? Cell;
             public Exception? FirstUnusedStringParameter;
-            public Exception? SecondParameter;
+            public Exception? SecondUnusedIntParameter;
             public Exception? SecondUnusedStringParameter;
             #endregion
 
@@ -285,12 +285,12 @@ namespace Mutagen.Bethesda.Skyrim
                 GetInCellConditionData_FieldIndex enu = (GetInCellConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetInCellConditionData_FieldIndex.FirstParameter:
-                        return FirstParameter;
+                    case GetInCellConditionData_FieldIndex.Cell:
+                        return Cell;
                     case GetInCellConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
-                    case GetInCellConditionData_FieldIndex.SecondParameter:
-                        return SecondParameter;
+                    case GetInCellConditionData_FieldIndex.SecondUnusedIntParameter:
+                        return SecondUnusedIntParameter;
                     case GetInCellConditionData_FieldIndex.SecondUnusedStringParameter:
                         return SecondUnusedStringParameter;
                     default:
@@ -303,14 +303,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetInCellConditionData_FieldIndex enu = (GetInCellConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetInCellConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = ex;
+                    case GetInCellConditionData_FieldIndex.Cell:
+                        this.Cell = ex;
                         break;
                     case GetInCellConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
                         break;
-                    case GetInCellConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = ex;
+                    case GetInCellConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = ex;
                         break;
                     case GetInCellConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = ex;
@@ -326,14 +326,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetInCellConditionData_FieldIndex enu = (GetInCellConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetInCellConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception?)obj;
+                    case GetInCellConditionData_FieldIndex.Cell:
+                        this.Cell = (Exception?)obj;
                         break;
                     case GetInCellConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
                         break;
-                    case GetInCellConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = (Exception?)obj;
+                    case GetInCellConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = (Exception?)obj;
                         break;
                     case GetInCellConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = (Exception?)obj;
@@ -347,9 +347,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstParameter != null) return true;
+                if (Cell != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
-                if (SecondParameter != null) return true;
+                if (SecondUnusedIntParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
@@ -378,13 +378,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstParameter, "FirstParameter");
+                    sb.AppendItem(Cell, "Cell");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                 }
                 {
-                    sb.AppendItem(SecondParameter, "SecondParameter");
+                    sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                 }
                 {
                     sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
@@ -397,9 +397,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
+                ret.Cell = this.Cell.Combine(rhs.Cell);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
-                ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
@@ -423,9 +423,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool FirstParameter;
+            public bool Cell;
             public bool FirstUnusedStringParameter;
-            public bool SecondParameter;
+            public bool SecondUnusedIntParameter;
             public bool SecondUnusedStringParameter;
             #endregion
 
@@ -435,9 +435,9 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstParameter = defaultOn;
+                this.Cell = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
-                this.SecondParameter = defaultOn;
+                this.SecondUnusedIntParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
             }
 
@@ -446,9 +446,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstParameter, null));
+                ret.Add((Cell, null));
                 ret.Add((FirstUnusedStringParameter, null));
-                ret.Add((SecondParameter, null));
+                ret.Add((SecondUnusedIntParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
             }
 
@@ -527,9 +527,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGetInCellConditionDataGetter,
         ILoquiObjectSetter<IGetInCellConditionData>
     {
-        new IFormLinkOrAlias<ICellGetter> FirstParameter { get; set; }
+        new IFormLinkOrAlias<ICellGetter> Cell { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new Int32 SecondParameter { get; set; }
+        new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -540,9 +540,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetInCellConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetInCellConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<ICellGetter> FirstParameter { get; }
+        IFormLinkOrAliasGetter<ICellGetter> Cell { get; }
         String? FirstUnusedStringParameter { get; }
-        Int32 SecondParameter { get; }
+        Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -692,9 +692,9 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FirstParameter = 4,
+        Cell = 4,
         FirstUnusedStringParameter = 5,
-        SecondParameter = 6,
+        SecondUnusedIntParameter = 6,
         SecondUnusedStringParameter = 7,
     }
     #endregion
@@ -783,9 +783,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetInCellConditionData item)
         {
             ClearPartial();
-            item.FirstParameter.Clear();
+            item.Cell.Clear();
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondUnusedIntParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IGetInCellConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.FirstParameter.Relink(mapping);
+            obj.Cell.Relink(mapping);
         }
         
         #endregion
@@ -855,9 +855,9 @@ namespace Mutagen.Bethesda.Skyrim
             GetInCellConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstParameter = item.FirstParameter.Equals(rhs.FirstParameter);
+            ret.Cell = item.Cell.Equals(rhs.Cell);
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
-            ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
+            ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -908,18 +908,18 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstParameter ?? true)
+            if (printMask?.Cell ?? true)
             {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.Cell, "Cell");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
             {
                 sb.AppendItem(FirstUnusedStringParameterItem, "FirstUnusedStringParameter");
             }
-            if (printMask?.SecondParameter ?? true)
+            if (printMask?.SecondUnusedIntParameter ?? true)
             {
-                sb.AppendItem(item.SecondParameter, "SecondParameter");
+                sb.AppendItem(item.SecondUnusedIntParameter, "SecondUnusedIntParameter");
             }
             if ((printMask?.SecondUnusedStringParameter ?? true)
                 && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
@@ -953,17 +953,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.Cell) ?? true))
             {
-                if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
+                if (!lhs.Cell.Equals(rhs.Cell)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 if (!string.Equals(lhs.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                if (lhs.SecondParameter != rhs.SecondParameter) return false;
+                if (lhs.SecondUnusedIntParameter != rhs.SecondUnusedIntParameter) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -986,12 +986,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IGetInCellConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstParameter);
+            hash.Add(item.Cell);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
             }
-            hash.Add(item.SecondParameter);
+            hash.Add(item.SecondUnusedIntParameter);
             if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
             {
                 hash.Add(SecondUnusedStringParameteritem);
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            foreach (var l in obj.FirstParameter.EnumerateFormLinks())
+            foreach (var l in obj.Cell.EnumerateFormLinks())
             {
                 yield return l;
             }
@@ -1048,17 +1048,17 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.Cell) ?? true))
             {
-                item.FirstParameter.SetTo(rhs.FirstParameter.FormKey);
+                item.Cell.SetTo(rhs.Cell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 item.FirstUnusedStringParameter = rhs.FirstUnusedStringParameter;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                item.SecondParameter = rhs.SecondParameter;
+                item.SecondUnusedIntParameter = rhs.SecondUnusedIntParameter;
             }
             if ((copyMask?.GetShouldTranslate((int)GetInCellConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -1177,8 +1177,8 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer);
             FormLinkOrAliasBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FirstParameter);
-            writer.Write(item.SecondParameter);
+                item: item.Cell);
+            writer.Write(item.SecondUnusedIntParameter);
         }
 
         public void Write(
@@ -1228,8 +1228,8 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame);
             FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
                 reader: frame,
-                item: item.FirstParameter);
-            item.SecondParameter = frame.ReadInt32();
+                item: item.Cell);
+            item.SecondUnusedIntParameter = frame.ReadInt32();
         }
 
     }

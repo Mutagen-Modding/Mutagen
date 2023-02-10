@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetVMQuestVariableConditionData()
         {
-            _FirstParameter = new FormLinkOrAlias<IQuestGetter>(this);
+            _Quest = new FormLinkOrAlias<IQuestGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstParameter
-        private readonly IFormLinkOrAlias<IQuestGetter> _FirstParameter = default!;
-        public IFormLinkOrAlias<IQuestGetter> FirstParameter
+        #region Quest
+        private readonly IFormLinkOrAlias<IQuestGetter> _Quest = default!;
+        public IFormLinkOrAlias<IQuestGetter> Quest
         {
-            get => _FirstParameter;
-            set => _FirstParameter.SetTo(value);
+            get => _Quest;
+            set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IQuestGetter> IGetVMQuestVariableConditionDataGetter.FirstParameter => this.FirstParameter;
+        IFormLinkOrAliasGetter<IQuestGetter> IGetVMQuestVariableConditionDataGetter.Quest => this.Quest;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -71,10 +71,10 @@ namespace Mutagen.Bethesda.Skyrim
         #region SecondUnusedIntParameter
         public Int32 SecondUnusedIntParameter { get; set; } = default;
         #endregion
-        #region SecondParameter
-        public String? SecondParameter { get; set; }
+        #region VariableName
+        public String? VariableName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IGetVMQuestVariableConditionDataGetter.SecondParameter => this.SecondParameter;
+        String? IGetVMQuestVariableConditionDataGetter.VariableName => this.VariableName;
         #endregion
 
         #region To String
@@ -117,10 +117,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstParameter = initialValue;
+                this.Quest = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
                 this.SecondUnusedIntParameter = initialValue;
-                this.SecondParameter = initialValue;
+                this.VariableName = initialValue;
             }
 
             public Mask(
@@ -128,20 +128,20 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem FirstParameter,
+                TItem Quest,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
-                TItem SecondParameter)
+                TItem VariableName)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
                 UseAliases: UseAliases)
             {
-                this.FirstParameter = FirstParameter;
+                this.Quest = Quest;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
                 this.SecondUnusedIntParameter = SecondUnusedIntParameter;
-                this.SecondParameter = SecondParameter;
+                this.VariableName = VariableName;
             }
 
             #pragma warning disable CS8618
@@ -153,10 +153,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstParameter;
+            public TItem Quest;
             public TItem FirstUnusedStringParameter;
             public TItem SecondUnusedIntParameter;
-            public TItem SecondParameter;
+            public TItem VariableName;
             #endregion
 
             #region Equals
@@ -170,19 +170,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
+                if (!object.Equals(this.Quest, rhs.Quest)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
                 if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
-                if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.VariableName, rhs.VariableName)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstParameter);
+                hash.Add(this.Quest);
                 hash.Add(this.FirstUnusedStringParameter);
                 hash.Add(this.SecondUnusedIntParameter);
-                hash.Add(this.SecondParameter);
+                hash.Add(this.VariableName);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -193,10 +193,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstParameter)) return false;
+                if (!eval(this.Quest)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
                 if (!eval(this.SecondUnusedIntParameter)) return false;
-                if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.VariableName)) return false;
                 return true;
             }
             #endregion
@@ -205,10 +205,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstParameter)) return true;
+                if (eval(this.Quest)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
                 if (eval(this.SecondUnusedIntParameter)) return true;
-                if (eval(this.SecondParameter)) return true;
+                if (eval(this.VariableName)) return true;
                 return false;
             }
             #endregion
@@ -224,10 +224,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstParameter = eval(this.FirstParameter);
+                obj.Quest = eval(this.Quest);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
                 obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
-                obj.SecondParameter = eval(this.SecondParameter);
+                obj.VariableName = eval(this.VariableName);
             }
             #endregion
 
@@ -246,9 +246,9 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(GetVMQuestVariableConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstParameter ?? true)
+                    if (printMask?.Quest ?? true)
                     {
-                        sb.AppendItem(FirstParameter, "FirstParameter");
+                        sb.AppendItem(Quest, "Quest");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
@@ -258,9 +258,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                     }
-                    if (printMask?.SecondParameter ?? true)
+                    if (printMask?.VariableName ?? true)
                     {
-                        sb.AppendItem(SecondParameter, "SecondParameter");
+                        sb.AppendItem(VariableName, "VariableName");
                     }
                 }
             }
@@ -273,10 +273,10 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstParameter;
+            public Exception? Quest;
             public Exception? FirstUnusedStringParameter;
             public Exception? SecondUnusedIntParameter;
-            public Exception? SecondParameter;
+            public Exception? VariableName;
             #endregion
 
             #region IErrorMask
@@ -285,14 +285,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetVMQuestVariableConditionData_FieldIndex enu = (GetVMQuestVariableConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVMQuestVariableConditionData_FieldIndex.FirstParameter:
-                        return FirstParameter;
+                    case GetVMQuestVariableConditionData_FieldIndex.Quest:
+                        return Quest;
                     case GetVMQuestVariableConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
                     case GetVMQuestVariableConditionData_FieldIndex.SecondUnusedIntParameter:
                         return SecondUnusedIntParameter;
-                    case GetVMQuestVariableConditionData_FieldIndex.SecondParameter:
-                        return SecondParameter;
+                    case GetVMQuestVariableConditionData_FieldIndex.VariableName:
+                        return VariableName;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -303,8 +303,8 @@ namespace Mutagen.Bethesda.Skyrim
                 GetVMQuestVariableConditionData_FieldIndex enu = (GetVMQuestVariableConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVMQuestVariableConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = ex;
+                    case GetVMQuestVariableConditionData_FieldIndex.Quest:
+                        this.Quest = ex;
                         break;
                     case GetVMQuestVariableConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
@@ -312,8 +312,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case GetVMQuestVariableConditionData_FieldIndex.SecondUnusedIntParameter:
                         this.SecondUnusedIntParameter = ex;
                         break;
-                    case GetVMQuestVariableConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = ex;
+                    case GetVMQuestVariableConditionData_FieldIndex.VariableName:
+                        this.VariableName = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -326,8 +326,8 @@ namespace Mutagen.Bethesda.Skyrim
                 GetVMQuestVariableConditionData_FieldIndex enu = (GetVMQuestVariableConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetVMQuestVariableConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception?)obj;
+                    case GetVMQuestVariableConditionData_FieldIndex.Quest:
+                        this.Quest = (Exception?)obj;
                         break;
                     case GetVMQuestVariableConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
@@ -335,8 +335,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case GetVMQuestVariableConditionData_FieldIndex.SecondUnusedIntParameter:
                         this.SecondUnusedIntParameter = (Exception?)obj;
                         break;
-                    case GetVMQuestVariableConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = (Exception?)obj;
+                    case GetVMQuestVariableConditionData_FieldIndex.VariableName:
+                        this.VariableName = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -347,10 +347,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstParameter != null) return true;
+                if (Quest != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
                 if (SecondUnusedIntParameter != null) return true;
-                if (SecondParameter != null) return true;
+                if (VariableName != null) return true;
                 return false;
             }
             #endregion
@@ -378,7 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstParameter, "FirstParameter");
+                    sb.AppendItem(Quest, "Quest");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                 }
                 {
-                    sb.AppendItem(SecondParameter, "SecondParameter");
+                    sb.AppendItem(VariableName, "VariableName");
                 }
             }
             #endregion
@@ -397,10 +397,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
+                ret.Quest = this.Quest.Combine(rhs.Quest);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
                 ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
-                ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.VariableName = this.VariableName.Combine(rhs.VariableName);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -423,10 +423,10 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool FirstParameter;
+            public bool Quest;
             public bool FirstUnusedStringParameter;
             public bool SecondUnusedIntParameter;
-            public bool SecondParameter;
+            public bool VariableName;
             #endregion
 
             #region Ctors
@@ -435,10 +435,10 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstParameter = defaultOn;
+                this.Quest = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
                 this.SecondUnusedIntParameter = defaultOn;
-                this.SecondParameter = defaultOn;
+                this.VariableName = defaultOn;
             }
 
             #endregion
@@ -446,10 +446,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstParameter, null));
+                ret.Add((Quest, null));
                 ret.Add((FirstUnusedStringParameter, null));
                 ret.Add((SecondUnusedIntParameter, null));
-                ret.Add((SecondParameter, null));
+                ret.Add((VariableName, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -527,10 +527,10 @@ namespace Mutagen.Bethesda.Skyrim
         IGetVMQuestVariableConditionDataGetter,
         ILoquiObjectSetter<IGetVMQuestVariableConditionData>
     {
-        new IFormLinkOrAlias<IQuestGetter> FirstParameter { get; set; }
+        new IFormLinkOrAlias<IQuestGetter> Quest { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
-        new String? SecondParameter { get; set; }
+        new String? VariableName { get; set; }
     }
 
     public partial interface IGetVMQuestVariableConditionDataGetter :
@@ -540,10 +540,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetVMQuestVariableConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetVMQuestVariableConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IQuestGetter> FirstParameter { get; }
+        IFormLinkOrAliasGetter<IQuestGetter> Quest { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
-        String? SecondParameter { get; }
+        String? VariableName { get; }
 
     }
 
@@ -692,10 +692,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FirstParameter = 4,
+        Quest = 4,
         FirstUnusedStringParameter = 5,
         SecondUnusedIntParameter = 6,
-        SecondParameter = 7,
+        VariableName = 7,
     }
     #endregion
 
@@ -783,10 +783,10 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetVMQuestVariableConditionData item)
         {
             ClearPartial();
-            item.FirstParameter.Clear();
+            item.Quest.Clear();
             item.FirstUnusedStringParameter = default;
             item.SecondUnusedIntParameter = default;
-            item.SecondParameter = default;
+            item.VariableName = default;
             base.Clear(item);
         }
         
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IGetVMQuestVariableConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.FirstParameter.Relink(mapping);
+            obj.Quest.Relink(mapping);
         }
         
         #endregion
@@ -855,10 +855,10 @@ namespace Mutagen.Bethesda.Skyrim
             GetVMQuestVariableConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstParameter = item.FirstParameter.Equals(rhs.FirstParameter);
+            ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
             ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
-            ret.SecondParameter = string.Equals(item.SecondParameter, rhs.SecondParameter);
+            ret.VariableName = string.Equals(item.VariableName, rhs.VariableName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -908,9 +908,9 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstParameter ?? true)
+            if (printMask?.Quest ?? true)
             {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.Quest, "Quest");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
@@ -921,10 +921,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.SecondUnusedIntParameter, "SecondUnusedIntParameter");
             }
-            if ((printMask?.SecondParameter ?? true)
-                && item.SecondParameter is {} SecondParameterItem)
+            if ((printMask?.VariableName ?? true)
+                && item.VariableName is {} VariableNameItem)
             {
-                sb.AppendItem(SecondParameterItem, "SecondParameter");
+                sb.AppendItem(VariableNameItem, "VariableName");
             }
         }
         
@@ -953,9 +953,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.Quest) ?? true))
             {
-                if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -965,9 +965,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.SecondUnusedIntParameter != rhs.SecondUnusedIntParameter) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.VariableName) ?? true))
             {
-                if (!string.Equals(lhs.SecondParameter, rhs.SecondParameter)) return false;
+                if (!string.Equals(lhs.VariableName, rhs.VariableName)) return false;
             }
             return true;
         }
@@ -986,15 +986,15 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IGetVMQuestVariableConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstParameter);
+            hash.Add(item.Quest);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
             }
             hash.Add(item.SecondUnusedIntParameter);
-            if (item.SecondParameter is {} SecondParameteritem)
+            if (item.VariableName is {} VariableNameitem)
             {
-                hash.Add(SecondParameteritem);
+                hash.Add(VariableNameitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            foreach (var l in obj.FirstParameter.EnumerateFormLinks())
+            foreach (var l in obj.Quest.EnumerateFormLinks())
             {
                 yield return l;
             }
@@ -1048,9 +1048,9 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.Quest) ?? true))
             {
-                item.FirstParameter.SetTo(rhs.FirstParameter.FormKey);
+                item.Quest.SetTo(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1060,9 +1060,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedIntParameter = rhs.SecondUnusedIntParameter;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetVMQuestVariableConditionData_FieldIndex.VariableName) ?? true))
             {
-                item.SecondParameter = rhs.SecondParameter;
+                item.VariableName = rhs.VariableName;
             }
         }
         
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer);
             FormLinkOrAliasBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FirstParameter);
+                item: item.Quest);
             writer.Write(item.SecondUnusedIntParameter);
         }
 
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
                 frame: frame);
             FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
                 reader: frame,
-                item: item.FirstParameter);
+                item: item.Quest);
             item.SecondUnusedIntParameter = frame.ReadInt32();
         }
 
