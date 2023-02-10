@@ -17,14 +17,13 @@
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" GUID="a7f88d12-4a14-4be4-ad02-ffa74d2fa3db" ID="40">
+  <Object name="GetEventDataConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a7f88d12-4a14-4be4-ad02-ffa74d2fa3db" ID="40">
     <Fields>
-      <!-- ToDo change to enum -->
-      <UInt16 name="EventFunction" />
-      <!-- ToDo change to enum -->
-      <UInt16 name="EventMember" />
-      <FormLink name="Parameter3" refName="SkyrimMajorRecord" />
-      <CustomLogic name="ParameterParsing" />
+      <Enum enumName="GetEventDataConditionData.EventFunction" name="Function" byteLength="2" />
+      <Enum enumName="GetEventDataConditionData.EventMember" name="Member" byteLength="2" />
+      <FormLink name="Record" refName="SkyrimMajorRecord" />
+      <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
+      <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="AGetVATSValueConditionData" abstract="true" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="1d531bca-4385-4ebc-9776-51e9dc6c592a" ID="10403">
@@ -2446,16 +2445,6 @@
       <Int32 name="FirstParameter" />
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
       <Int32 name="SecondParameter" />
-      <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
-    </Fields>
-  </Object>
-  <Object name="GetEventDataConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="67e2edf7-92fb-4dfe-835d-243a94223d7f" ID="10281">
-    <Fields>
-      <Int32 name="FirstParameter" />
-      <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration" />
-      <FormLinkOrAlias name="SecondParameter">
-        <Interface>IEventDataTarget</Interface>
-      </FormLinkOrAlias>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration" />
     </Fields>
   </Object>

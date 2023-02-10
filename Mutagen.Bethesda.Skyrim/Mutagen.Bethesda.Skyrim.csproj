@@ -386,9 +386,6 @@
     <Compile Include="Records\Common Subrecords\GetEquippedShoutConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\GetEventData.cs">
-      <DependentUpon>ConditionDatas.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\GetEventDataConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
@@ -4205,9 +4202,6 @@
     <Compile Include="Records\Common Subrecords\GetAttackStateConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\GetEventDataConditionData_Generated.cs">
-      <DependentUpon>ConditionDatas.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\IsCloserToAThanBConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
@@ -4583,9 +4577,6 @@
     <Compile Include="Records\Common Subrecords\UnknownConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\GetEventData_Generated.cs">
-      <DependentUpon>ConditionDatas.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\GetVATSValueWeaponConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
@@ -4653,6 +4644,9 @@
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\AGetVATSValueConditionData_Generated.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\GetEventDataConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
   </ItemGroup>

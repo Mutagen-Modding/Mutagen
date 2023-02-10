@@ -905,8 +905,18 @@ partial class ConditionBinaryCreateTranslation
     public static ConditionData CreateDataFromBinary(MutagenFrame frame, ushort functionIndex)
     {
         var ret = CreateDataFromBinaryInternal(frame, functionIndex);
-        GetEventDataBinaryCreateTranslation.FillEndingParams(frame, ret);
+        FillEndingParams(frame, ret);
         return ret;
+    }
+    
+    public static void FillEndingParams(MutagenFrame frame, IConditionData item)
+    {
+        item.RunOnType = EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+        item.Reference.SetTo(
+            FormLinkBinaryTranslation.Instance.Parse(
+                reader: frame,
+                defaultVal: FormKey.Null));
+        item.Unknown3 = frame.ReadInt32();
     }
     
     public static ConditionData CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
@@ -2551,14 +2561,7 @@ partial class ConditionBinaryCreateTranslation
         
         var functionIndex = frame.ReadUInt16();
         obj.Unknown2 = frame.ReadUInt16();
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
-        {
-            obj.Data = GetEventData.CreateFromBinary(frame);
-        }
-        else
-        {
-            obj.Data = CreateDataFromBinary(frame, functionIndex);
-        }
+        obj.Data = CreateDataFromBinary(frame, functionIndex);
     }
 }
 
@@ -2679,14 +2682,14 @@ abstract partial class ConditionBinaryOverlay
         var mutagenFrame = new MutagenFrame(stream);
         if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
         {
-            data = GetEventData.CreateFromBinary(mutagenFrame);
+            data = GetEventDataConditionData.CreateFromBinary(mutagenFrame);
         }
         else
         {
             data = ConditionBinaryCreateTranslation.CreateDataFromBinaryInternal(mutagenFrame, functionIndex);
         }
 
-        GetEventDataBinaryCreateTranslation.FillEndingParams(mutagenFrame, data);
+        ConditionBinaryCreateTranslation.FillEndingParams(mutagenFrame, data);
         
         ret.Data = data;
         
