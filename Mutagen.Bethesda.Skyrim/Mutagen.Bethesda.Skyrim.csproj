@@ -4562,7 +4562,6 @@
     <Compile Include="Records\Common Subrecords\ClearInvalidRegistrationsConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\Link\IEventDataTarget_Generated.cs" />
     <Compile Include="Interfaces\Link\IKnowable_Generated.cs" />
     <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IWorldspaceOrList_Generated.cs" />

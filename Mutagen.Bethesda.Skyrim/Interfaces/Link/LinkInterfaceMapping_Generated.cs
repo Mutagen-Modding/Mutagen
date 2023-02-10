@@ -271,13 +271,6 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Npc_Registration.Instance,
         });
         dict[typeof(ILockListGetter)] = dict[typeof(ILockList)] with { Setter = false };
-        dict[typeof(IEventDataTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            FormList_Registration.Instance,
-            Keyword_Registration.Instance,
-            Location_Registration.Instance,
-        });
-        dict[typeof(IEventDataTargetGetter)] = dict[typeof(IEventDataTarget)] with { Setter = false };
         dict[typeof(IWorldspaceOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             FormList_Registration.Instance,

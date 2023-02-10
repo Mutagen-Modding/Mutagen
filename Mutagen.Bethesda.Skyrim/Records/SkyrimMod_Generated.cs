@@ -8920,12 +8920,6 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "IEventDataTarget":
-                case "IEventDataTargetGetter":
-                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IWorldspaceOrList":
                 case "IWorldspaceOrListGetter":
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
