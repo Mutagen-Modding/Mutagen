@@ -54,13 +54,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region FirstUnusedIntParameter
         public Int32 FirstUnusedIntParameter { get; set; } = default;
         #endregion
-        #region FirstParameter
-        public String? FirstParameter { get; set; }
+        #region GraphVariable
+        public String? GraphVariable { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IGetGraphVariableIntConditionDataGetter.FirstParameter => this.FirstParameter;
+        String? IGetGraphVariableIntConditionDataGetter.GraphVariable => this.GraphVariable;
         #endregion
-        #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        #region SecondUnusedIntParameter
+        public Int32 SecondUnusedIntParameter { get; set; } = default;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.FirstUnusedIntParameter = initialValue;
-                this.FirstParameter = initialValue;
-                this.SecondParameter = initialValue;
+                this.GraphVariable = initialValue;
+                this.SecondUnusedIntParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
             }
 
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Unknown3,
                 TItem UseAliases,
                 TItem FirstUnusedIntParameter,
-                TItem FirstParameter,
-                TItem SecondParameter,
+                TItem GraphVariable,
+                TItem SecondUnusedIntParameter,
                 TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
                 UseAliases: UseAliases)
             {
                 this.FirstUnusedIntParameter = FirstUnusedIntParameter;
-                this.FirstParameter = FirstParameter;
-                this.SecondParameter = SecondParameter;
+                this.GraphVariable = GraphVariable;
+                this.SecondUnusedIntParameter = SecondUnusedIntParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
@@ -145,8 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem FirstUnusedIntParameter;
-            public TItem FirstParameter;
-            public TItem SecondParameter;
+            public TItem GraphVariable;
+            public TItem SecondUnusedIntParameter;
             public TItem SecondUnusedStringParameter;
             #endregion
 
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.FirstUnusedIntParameter, rhs.FirstUnusedIntParameter)) return false;
-                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
-                if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.GraphVariable, rhs.GraphVariable)) return false;
+                if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var hash = new HashCode();
                 hash.Add(this.FirstUnusedIntParameter);
-                hash.Add(this.FirstParameter);
-                hash.Add(this.SecondParameter);
+                hash.Add(this.GraphVariable);
+                hash.Add(this.SecondUnusedIntParameter);
                 hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -185,8 +185,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.FirstUnusedIntParameter)) return false;
-                if (!eval(this.FirstParameter)) return false;
-                if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.GraphVariable)) return false;
+                if (!eval(this.SecondUnusedIntParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
@@ -197,8 +197,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.FirstUnusedIntParameter)) return true;
-                if (eval(this.FirstParameter)) return true;
-                if (eval(this.SecondParameter)) return true;
+                if (eval(this.GraphVariable)) return true;
+                if (eval(this.SecondUnusedIntParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
@@ -216,8 +216,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.FirstUnusedIntParameter = eval(this.FirstUnusedIntParameter);
-                obj.FirstParameter = eval(this.FirstParameter);
-                obj.SecondParameter = eval(this.SecondParameter);
+                obj.GraphVariable = eval(this.GraphVariable);
+                obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
@@ -241,13 +241,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
                     }
-                    if (printMask?.FirstParameter ?? true)
+                    if (printMask?.GraphVariable ?? true)
                     {
-                        sb.AppendItem(FirstParameter, "FirstParameter");
+                        sb.AppendItem(GraphVariable, "GraphVariable");
                     }
-                    if (printMask?.SecondParameter ?? true)
+                    if (printMask?.SecondUnusedIntParameter ?? true)
                     {
-                        sb.AppendItem(SecondParameter, "SecondParameter");
+                        sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                     }
                     if (printMask?.SecondUnusedStringParameter ?? true)
                     {
@@ -265,8 +265,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? FirstUnusedIntParameter;
-            public Exception? FirstParameter;
-            public Exception? SecondParameter;
+            public Exception? GraphVariable;
+            public Exception? SecondUnusedIntParameter;
             public Exception? SecondUnusedStringParameter;
             #endregion
 
@@ -278,10 +278,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter:
                         return FirstUnusedIntParameter;
-                    case GetGraphVariableIntConditionData_FieldIndex.FirstParameter:
-                        return FirstParameter;
-                    case GetGraphVariableIntConditionData_FieldIndex.SecondParameter:
-                        return SecondParameter;
+                    case GetGraphVariableIntConditionData_FieldIndex.GraphVariable:
+                        return GraphVariable;
+                    case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedIntParameter:
+                        return SecondUnusedIntParameter;
                     case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter:
                         return SecondUnusedStringParameter;
                     default:
@@ -297,11 +297,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter:
                         this.FirstUnusedIntParameter = ex;
                         break;
-                    case GetGraphVariableIntConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = ex;
+                    case GetGraphVariableIntConditionData_FieldIndex.GraphVariable:
+                        this.GraphVariable = ex;
                         break;
-                    case GetGraphVariableIntConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = ex;
+                    case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = ex;
                         break;
                     case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = ex;
@@ -320,11 +320,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case GetGraphVariableIntConditionData_FieldIndex.FirstUnusedIntParameter:
                         this.FirstUnusedIntParameter = (Exception?)obj;
                         break;
-                    case GetGraphVariableIntConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception?)obj;
+                    case GetGraphVariableIntConditionData_FieldIndex.GraphVariable:
+                        this.GraphVariable = (Exception?)obj;
                         break;
-                    case GetGraphVariableIntConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = (Exception?)obj;
+                    case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = (Exception?)obj;
                         break;
                     case GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = (Exception?)obj;
@@ -339,8 +339,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (FirstUnusedIntParameter != null) return true;
-                if (FirstParameter != null) return true;
-                if (SecondParameter != null) return true;
+                if (GraphVariable != null) return true;
+                if (SecondUnusedIntParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
@@ -372,10 +372,10 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
                 }
                 {
-                    sb.AppendItem(FirstParameter, "FirstParameter");
+                    sb.AppendItem(GraphVariable, "GraphVariable");
                 }
                 {
-                    sb.AppendItem(SecondParameter, "SecondParameter");
+                    sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                 }
                 {
                     sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
@@ -389,8 +389,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.FirstUnusedIntParameter = this.FirstUnusedIntParameter.Combine(rhs.FirstUnusedIntParameter);
-                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
-                ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.GraphVariable = this.GraphVariable.Combine(rhs.GraphVariable);
+                ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
@@ -415,8 +415,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool FirstUnusedIntParameter;
-            public bool FirstParameter;
-            public bool SecondParameter;
+            public bool GraphVariable;
+            public bool SecondUnusedIntParameter;
             public bool SecondUnusedStringParameter;
             #endregion
 
@@ -427,8 +427,8 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.FirstUnusedIntParameter = defaultOn;
-                this.FirstParameter = defaultOn;
-                this.SecondParameter = defaultOn;
+                this.GraphVariable = defaultOn;
+                this.SecondUnusedIntParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
             }
 
@@ -438,8 +438,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((FirstUnusedIntParameter, null));
-                ret.Add((FirstParameter, null));
-                ret.Add((SecondParameter, null));
+                ret.Add((GraphVariable, null));
+                ret.Add((SecondUnusedIntParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
             }
 
@@ -513,8 +513,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IGetGraphVariableIntConditionData>
     {
         new Int32 FirstUnusedIntParameter { get; set; }
-        new String? FirstParameter { get; set; }
-        new Int32 SecondParameter { get; set; }
+        new String? GraphVariable { get; set; }
+        new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -525,8 +525,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => GetGraphVariableIntConditionData_Registration.Instance;
         Int32 FirstUnusedIntParameter { get; }
-        String? FirstParameter { get; }
-        Int32 SecondParameter { get; }
+        String? GraphVariable { get; }
+        Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -677,8 +677,8 @@ namespace Mutagen.Bethesda.Skyrim
         Unknown3 = 2,
         UseAliases = 3,
         FirstUnusedIntParameter = 4,
-        FirstParameter = 5,
-        SecondParameter = 6,
+        GraphVariable = 5,
+        SecondUnusedIntParameter = 6,
         SecondUnusedStringParameter = 7,
     }
     #endregion
@@ -768,8 +768,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.FirstUnusedIntParameter = default;
-            item.FirstParameter = default;
-            item.SecondParameter = default;
+            item.GraphVariable = default;
+            item.SecondUnusedIntParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
@@ -839,8 +839,8 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.FirstUnusedIntParameter = item.FirstUnusedIntParameter == rhs.FirstUnusedIntParameter;
-            ret.FirstParameter = string.Equals(item.FirstParameter, rhs.FirstParameter);
-            ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
+            ret.GraphVariable = string.Equals(item.GraphVariable, rhs.GraphVariable);
+            ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -895,14 +895,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.FirstUnusedIntParameter, "FirstUnusedIntParameter");
             }
-            if ((printMask?.FirstParameter ?? true)
-                && item.FirstParameter is {} FirstParameterItem)
+            if ((printMask?.GraphVariable ?? true)
+                && item.GraphVariable is {} GraphVariableItem)
             {
-                sb.AppendItem(FirstParameterItem, "FirstParameter");
+                sb.AppendItem(GraphVariableItem, "GraphVariable");
             }
-            if (printMask?.SecondParameter ?? true)
+            if (printMask?.SecondUnusedIntParameter ?? true)
             {
-                sb.AppendItem(item.SecondParameter, "SecondParameter");
+                sb.AppendItem(item.SecondUnusedIntParameter, "SecondUnusedIntParameter");
             }
             if ((printMask?.SecondUnusedStringParameter ?? true)
                 && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
@@ -940,13 +940,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.FirstUnusedIntParameter != rhs.FirstUnusedIntParameter) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.GraphVariable) ?? true))
             {
-                if (!string.Equals(lhs.FirstParameter, rhs.FirstParameter)) return false;
+                if (!string.Equals(lhs.GraphVariable, rhs.GraphVariable)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                if (lhs.SecondParameter != rhs.SecondParameter) return false;
+                if (lhs.SecondUnusedIntParameter != rhs.SecondUnusedIntParameter) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -970,11 +970,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.FirstUnusedIntParameter);
-            if (item.FirstParameter is {} FirstParameteritem)
+            if (item.GraphVariable is {} GraphVariableitem)
             {
-                hash.Add(FirstParameteritem);
+                hash.Add(GraphVariableitem);
             }
-            hash.Add(item.SecondParameter);
+            hash.Add(item.SecondUnusedIntParameter);
             if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
             {
                 hash.Add(SecondUnusedStringParameteritem);
@@ -1031,13 +1031,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.FirstUnusedIntParameter = rhs.FirstUnusedIntParameter;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.GraphVariable) ?? true))
             {
-                item.FirstParameter = rhs.FirstParameter;
+                item.GraphVariable = rhs.GraphVariable;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                item.SecondParameter = rhs.SecondParameter;
+                item.SecondUnusedIntParameter = rhs.SecondUnusedIntParameter;
             }
             if ((copyMask?.GetShouldTranslate((int)GetGraphVariableIntConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer);
             writer.Write(item.FirstUnusedIntParameter);
-            writer.Write(item.SecondParameter);
+            writer.Write(item.SecondUnusedIntParameter);
         }
 
         public void Write(
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 frame: frame);
             item.FirstUnusedIntParameter = frame.ReadInt32();
-            item.SecondParameter = frame.ReadInt32();
+            item.SecondUnusedIntParameter = frame.ReadInt32();
         }
 
     }

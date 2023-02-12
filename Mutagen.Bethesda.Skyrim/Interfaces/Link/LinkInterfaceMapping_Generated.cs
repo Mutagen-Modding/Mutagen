@@ -271,13 +271,6 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Npc_Registration.Instance,
         });
         dict[typeof(ILockListGetter)] = dict[typeof(ILockList)] with { Setter = false };
-        dict[typeof(IEventDataTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            FormList_Registration.Instance,
-            Keyword_Registration.Instance,
-            Location_Registration.Instance,
-        });
-        dict[typeof(IEventDataTargetGetter)] = dict[typeof(IEventDataTarget)] with { Setter = false };
         dict[typeof(IWorldspaceOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             FormList_Registration.Instance,
@@ -322,6 +315,15 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             MiscItem_Registration.Instance,
         });
         dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
+        dict[typeof(IMagicItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            ObjectEffect_Registration.Instance,
+            Scroll_Registration.Instance,
+            Spell_Registration.Instance,
+        });
+        dict[typeof(IMagicItemGetter)] = dict[typeof(IMagicItem)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,

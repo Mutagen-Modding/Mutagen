@@ -2651,7 +2651,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocation :
-        IEventDataTarget,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILocationGetter,
@@ -2707,7 +2706,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        IEventDataTargetGetter,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILocationRecordGetter,

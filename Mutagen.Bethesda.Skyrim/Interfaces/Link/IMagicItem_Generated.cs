@@ -8,18 +8,18 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Skyrim
 {
     /// <summary>
-    /// Implemented by: [FormList, Keyword, Location]
+    /// Implemented by: [Ingestible, Ingredient, ObjectEffect, Scroll, Spell]
     /// </summary>
-    public partial interface IEventDataTarget :
-        IEventDataTargetGetter,
+    public partial interface IMagicItem :
+        IMagicItemGetter,
         ISkyrimMajorRecordInternal
     {
     }
 
     /// <summary>
-    /// Implemented by: [FormList, Keyword, Location]
+    /// Implemented by: [Ingestible, Ingredient, ObjectEffect, Scroll, Spell]
     /// </summary>
-    public partial interface IEventDataTargetGetter : ISkyrimMajorRecordGetter
+    public partial interface IMagicItemGetter : ISkyrimMajorRecordGetter
     {
     }
 }

@@ -4,7 +4,7 @@ public partial class GetVMQuestVariableConditionData : IConditionStringParameter
 {
     string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondParameter;
+    string? IConditionStringParameterGetter.SecondStringParameter => VariableName;
 
     string? IConditionStringParameter.FirstStringParameter
     {
@@ -14,8 +14,8 @@ public partial class GetVMQuestVariableConditionData : IConditionStringParameter
 
     string? IConditionStringParameter.SecondStringParameter
     {
-        get => SecondParameter;
-        set => SecondParameter = value;
+        get => VariableName;
+        set => VariableName = value;
     }
 
     Condition.Function IConditionDataGetter.Function => Condition.Function.GetVMQuestVariable;

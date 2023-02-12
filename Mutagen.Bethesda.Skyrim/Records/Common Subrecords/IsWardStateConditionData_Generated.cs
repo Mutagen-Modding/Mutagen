@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region FirstParameter
-        public Int32 FirstParameter { get; set; } = default;
+        #region WardState
+        public WardState WardState { get; set; } = default;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IIsWardStateConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
-        #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        #region SecondUnusedIntParameter
+        public Int32 SecondUnusedIntParameter { get; set; } = default;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -108,9 +108,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstParameter = initialValue;
+                this.WardState = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
-                this.SecondParameter = initialValue;
+                this.SecondUnusedIntParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
             }
 
@@ -119,9 +119,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem FirstParameter,
+                TItem WardState,
                 TItem FirstUnusedStringParameter,
-                TItem SecondParameter,
+                TItem SecondUnusedIntParameter,
                 TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
@@ -129,9 +129,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Unknown3: Unknown3,
                 UseAliases: UseAliases)
             {
-                this.FirstParameter = FirstParameter;
+                this.WardState = WardState;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
-                this.SecondParameter = SecondParameter;
+                this.SecondUnusedIntParameter = SecondUnusedIntParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
@@ -144,9 +144,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstParameter;
+            public TItem WardState;
             public TItem FirstUnusedStringParameter;
-            public TItem SecondParameter;
+            public TItem SecondUnusedIntParameter;
             public TItem SecondUnusedStringParameter;
             #endregion
 
@@ -161,18 +161,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
+                if (!object.Equals(this.WardState, rhs.WardState)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
-                if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstParameter);
+                hash.Add(this.WardState);
                 hash.Add(this.FirstUnusedStringParameter);
-                hash.Add(this.SecondParameter);
+                hash.Add(this.SecondUnusedIntParameter);
                 hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -184,9 +184,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstParameter)) return false;
+                if (!eval(this.WardState)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
-                if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.SecondUnusedIntParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
@@ -196,9 +196,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstParameter)) return true;
+                if (eval(this.WardState)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
-                if (eval(this.SecondParameter)) return true;
+                if (eval(this.SecondUnusedIntParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
@@ -215,9 +215,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstParameter = eval(this.FirstParameter);
+                obj.WardState = eval(this.WardState);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
-                obj.SecondParameter = eval(this.SecondParameter);
+                obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
@@ -237,17 +237,17 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(IsWardStateConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstParameter ?? true)
+                    if (printMask?.WardState ?? true)
                     {
-                        sb.AppendItem(FirstParameter, "FirstParameter");
+                        sb.AppendItem(WardState, "WardState");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
                         sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                     }
-                    if (printMask?.SecondParameter ?? true)
+                    if (printMask?.SecondUnusedIntParameter ?? true)
                     {
-                        sb.AppendItem(SecondParameter, "SecondParameter");
+                        sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                     }
                     if (printMask?.SecondUnusedStringParameter ?? true)
                     {
@@ -264,9 +264,9 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstParameter;
+            public Exception? WardState;
             public Exception? FirstUnusedStringParameter;
-            public Exception? SecondParameter;
+            public Exception? SecondUnusedIntParameter;
             public Exception? SecondUnusedStringParameter;
             #endregion
 
@@ -276,12 +276,12 @@ namespace Mutagen.Bethesda.Skyrim
                 IsWardStateConditionData_FieldIndex enu = (IsWardStateConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case IsWardStateConditionData_FieldIndex.FirstParameter:
-                        return FirstParameter;
+                    case IsWardStateConditionData_FieldIndex.WardState:
+                        return WardState;
                     case IsWardStateConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
-                    case IsWardStateConditionData_FieldIndex.SecondParameter:
-                        return SecondParameter;
+                    case IsWardStateConditionData_FieldIndex.SecondUnusedIntParameter:
+                        return SecondUnusedIntParameter;
                     case IsWardStateConditionData_FieldIndex.SecondUnusedStringParameter:
                         return SecondUnusedStringParameter;
                     default:
@@ -294,14 +294,14 @@ namespace Mutagen.Bethesda.Skyrim
                 IsWardStateConditionData_FieldIndex enu = (IsWardStateConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case IsWardStateConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = ex;
+                    case IsWardStateConditionData_FieldIndex.WardState:
+                        this.WardState = ex;
                         break;
                     case IsWardStateConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
                         break;
-                    case IsWardStateConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = ex;
+                    case IsWardStateConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = ex;
                         break;
                     case IsWardStateConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = ex;
@@ -317,14 +317,14 @@ namespace Mutagen.Bethesda.Skyrim
                 IsWardStateConditionData_FieldIndex enu = (IsWardStateConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case IsWardStateConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception?)obj;
+                    case IsWardStateConditionData_FieldIndex.WardState:
+                        this.WardState = (Exception?)obj;
                         break;
                     case IsWardStateConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
                         break;
-                    case IsWardStateConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = (Exception?)obj;
+                    case IsWardStateConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = (Exception?)obj;
                         break;
                     case IsWardStateConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = (Exception?)obj;
@@ -338,9 +338,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstParameter != null) return true;
+                if (WardState != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
-                if (SecondParameter != null) return true;
+                if (SecondUnusedIntParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
@@ -369,13 +369,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstParameter, "FirstParameter");
+                    sb.AppendItem(WardState, "WardState");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                 }
                 {
-                    sb.AppendItem(SecondParameter, "SecondParameter");
+                    sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                 }
                 {
                     sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
@@ -388,9 +388,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
+                ret.WardState = this.WardState.Combine(rhs.WardState);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
-                ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
@@ -414,9 +414,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool FirstParameter;
+            public bool WardState;
             public bool FirstUnusedStringParameter;
-            public bool SecondParameter;
+            public bool SecondUnusedIntParameter;
             public bool SecondUnusedStringParameter;
             #endregion
 
@@ -426,9 +426,9 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstParameter = defaultOn;
+                this.WardState = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
-                this.SecondParameter = defaultOn;
+                this.SecondUnusedIntParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
             }
 
@@ -437,9 +437,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstParameter, null));
+                ret.Add((WardState, null));
                 ret.Add((FirstUnusedStringParameter, null));
-                ret.Add((SecondParameter, null));
+                ret.Add((SecondUnusedIntParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
             }
 
@@ -512,9 +512,9 @@ namespace Mutagen.Bethesda.Skyrim
         IIsWardStateConditionDataGetter,
         ILoquiObjectSetter<IIsWardStateConditionData>
     {
-        new Int32 FirstParameter { get; set; }
+        new WardState WardState { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new Int32 SecondParameter { get; set; }
+        new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -524,9 +524,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsWardStateConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsWardStateConditionData_Registration.Instance;
-        Int32 FirstParameter { get; }
+        WardState WardState { get; }
         String? FirstUnusedStringParameter { get; }
-        Int32 SecondParameter { get; }
+        Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -676,9 +676,9 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FirstParameter = 4,
+        WardState = 4,
         FirstUnusedStringParameter = 5,
-        SecondParameter = 6,
+        SecondUnusedIntParameter = 6,
         SecondUnusedStringParameter = 7,
     }
     #endregion
@@ -767,9 +767,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIsWardStateConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default;
+            item.WardState = default;
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondUnusedIntParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
@@ -838,9 +838,9 @@ namespace Mutagen.Bethesda.Skyrim
             IsWardStateConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
+            ret.WardState = item.WardState == rhs.WardState;
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
-            ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
+            ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -891,18 +891,18 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstParameter ?? true)
+            if (printMask?.WardState ?? true)
             {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.WardState, "WardState");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
             {
                 sb.AppendItem(FirstUnusedStringParameterItem, "FirstUnusedStringParameter");
             }
-            if (printMask?.SecondParameter ?? true)
+            if (printMask?.SecondUnusedIntParameter ?? true)
             {
-                sb.AppendItem(item.SecondParameter, "SecondParameter");
+                sb.AppendItem(item.SecondUnusedIntParameter, "SecondUnusedIntParameter");
             }
             if ((printMask?.SecondUnusedStringParameter ?? true)
                 && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
@@ -936,17 +936,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.WardState) ?? true))
             {
-                if (lhs.FirstParameter != rhs.FirstParameter) return false;
+                if (lhs.WardState != rhs.WardState) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 if (!string.Equals(lhs.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                if (lhs.SecondParameter != rhs.SecondParameter) return false;
+                if (lhs.SecondUnusedIntParameter != rhs.SecondUnusedIntParameter) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -969,12 +969,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IIsWardStateConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstParameter);
+            hash.Add(item.WardState);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
             }
-            hash.Add(item.SecondParameter);
+            hash.Add(item.SecondUnusedIntParameter);
             if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
             {
                 hash.Add(SecondUnusedStringParameteritem);
@@ -1027,17 +1027,17 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.WardState) ?? true))
             {
-                item.FirstParameter = rhs.FirstParameter;
+                item.WardState = rhs.WardState;
             }
             if ((copyMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 item.FirstUnusedStringParameter = rhs.FirstUnusedStringParameter;
             }
-            if ((copyMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                item.SecondParameter = rhs.SecondParameter;
+                item.SecondUnusedIntParameter = rhs.SecondUnusedIntParameter;
             }
             if ((copyMask?.GetShouldTranslate((int)IsWardStateConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -1154,8 +1154,11 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.FirstParameter);
-            writer.Write(item.SecondParameter);
+            EnumBinaryTranslation<WardState, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.WardState,
+                length: 4);
+            writer.Write(item.SecondUnusedIntParameter);
         }
 
         public void Write(
@@ -1203,8 +1206,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter = frame.ReadInt32();
-            item.SecondParameter = frame.ReadInt32();
+            item.WardState = EnumBinaryTranslation<WardState, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.SecondUnusedIntParameter = frame.ReadInt32();
         }
 
     }

@@ -57,22 +57,32 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
+    <Compile Include="Enums\AdvanceAction.cs" />
     <Compile Include="Enums\Agression.cs" />
+    <Compile Include="Enums\Alignment.cs" />
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Assistance.cs" />
     <Compile Include="Enums\BasicStat.cs" />
     <Compile Include="Enums\Axis.cs" />
     <Compile Include="Enums\BipedObject.cs" />
+    <Compile Include="Enums\CastSource.cs" />
     <Compile Include="Enums\CastType.cs" />
     <Compile Include="Enums\CombatReaction.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\Confidence.cs" />
+    <Compile Include="Enums\CrimeType.cs" />
+    <Compile Include="Enums\CriticalStage.cs" />
     <Compile Include="Enums\EquipType.cs" />
     <Compile Include="Enums\FavorLevel.cs" />
+    <Compile Include="Enums\FormType.cs" />
+    <Compile Include="Enums\FurnitureAnimType.cs" />
+    <Compile Include="Enums\FurnitureEntryType.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\Level.cs" />
     <Compile Include="Enums\LockLevel.cs" />
+    <Compile Include="Enums\MiscStatEnum.cs" />
     <Compile Include="Enums\Mood.cs" />
+    <Compile Include="Enums\PlayerAction.cs" />
     <Compile Include="Enums\QualityLevel.cs" />
     <Compile Include="Enums\Responsibility.cs" />
     <Compile Include="Enums\Size.cs" />
@@ -80,9 +90,11 @@
     <Compile Include="Enums\SoundLevel.cs" />
     <Compile Include="Enums\SpellDataFlag.cs" />
     <Compile Include="Enums\SpellType.cs" />
+    <Compile Include="Enums\TargetedPart.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TargetType.cs" />
     <Compile Include="Enums\TimeOfDay.cs" />
+    <Compile Include="Enums\WardState.cs" />
     <Compile Include="Enums\WeaponAnimationType.cs" />
     <Compile Include="Enums\Emotion.cs" />
     <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
@@ -4562,12 +4574,12 @@
     <Compile Include="Records\Common Subrecords\ClearInvalidRegistrationsConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\Link\IEventDataTarget_Generated.cs" />
     <Compile Include="Interfaces\Link\IKnowable_Generated.cs" />
     <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IWorldspaceOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\IItemOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
+    <Compile Include="Interfaces\Link\IMagicItem_Generated.cs" />
     <Compile Include="Interfaces\Link\INpcOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\IWeaponOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\ISpellOrList_Generated.cs" />

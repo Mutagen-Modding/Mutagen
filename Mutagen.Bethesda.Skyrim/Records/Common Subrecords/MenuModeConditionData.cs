@@ -1,5 +1,6 @@
 namespace Mutagen.Bethesda.Skyrim;
 
+[Obsolete("This function is a no-op, does nothing, and cannot be expected to return a meaningful or consistent result")]
 public partial class MenuModeConditionData : IConditionStringParameter
 {
     string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;

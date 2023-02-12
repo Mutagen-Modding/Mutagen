@@ -1,5 +1,6 @@
 namespace Mutagen.Bethesda.Skyrim;
 
+[Obsolete("This function always returns -1")]
 public partial class GetHitLocationConditionData : IConditionStringParameter
 {
     string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -46,21 +47,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetIsUsedItemEquipTypeConditionData()
         {
+            _EquipType = new FormLinkOrAlias<IEquipTypeGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstParameter
-        public EquipTypeFlag FirstParameter { get; set; } = default;
+        #region EquipType
+        private readonly IFormLinkOrAlias<IEquipTypeGetter> _EquipType = default!;
+        public IFormLinkOrAlias<IEquipTypeGetter> EquipType
+        {
+            get => _EquipType;
+            set => _EquipType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkOrAliasGetter<IEquipTypeGetter> IGetIsUsedItemEquipTypeConditionDataGetter.EquipType => this.EquipType;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IGetIsUsedItemEquipTypeConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
-        #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        #region SecondUnusedIntParameter
+        public Int32 SecondUnusedIntParameter { get; set; } = default;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -108,9 +117,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstParameter = initialValue;
+                this.EquipType = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
-                this.SecondParameter = initialValue;
+                this.SecondUnusedIntParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
             }
 
@@ -119,9 +128,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem FirstParameter,
+                TItem EquipType,
                 TItem FirstUnusedStringParameter,
-                TItem SecondParameter,
+                TItem SecondUnusedIntParameter,
                 TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
@@ -129,9 +138,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Unknown3: Unknown3,
                 UseAliases: UseAliases)
             {
-                this.FirstParameter = FirstParameter;
+                this.EquipType = EquipType;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
-                this.SecondParameter = SecondParameter;
+                this.SecondUnusedIntParameter = SecondUnusedIntParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
@@ -144,9 +153,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstParameter;
+            public TItem EquipType;
             public TItem FirstUnusedStringParameter;
-            public TItem SecondParameter;
+            public TItem SecondUnusedIntParameter;
             public TItem SecondUnusedStringParameter;
             #endregion
 
@@ -161,18 +170,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstParameter, rhs.FirstParameter)) return false;
+                if (!object.Equals(this.EquipType, rhs.EquipType)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
-                if (!object.Equals(this.SecondParameter, rhs.SecondParameter)) return false;
+                if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstParameter);
+                hash.Add(this.EquipType);
                 hash.Add(this.FirstUnusedStringParameter);
-                hash.Add(this.SecondParameter);
+                hash.Add(this.SecondUnusedIntParameter);
                 hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -184,9 +193,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstParameter)) return false;
+                if (!eval(this.EquipType)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
-                if (!eval(this.SecondParameter)) return false;
+                if (!eval(this.SecondUnusedIntParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
@@ -196,9 +205,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstParameter)) return true;
+                if (eval(this.EquipType)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
-                if (eval(this.SecondParameter)) return true;
+                if (eval(this.SecondUnusedIntParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
@@ -215,9 +224,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstParameter = eval(this.FirstParameter);
+                obj.EquipType = eval(this.EquipType);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
-                obj.SecondParameter = eval(this.SecondParameter);
+                obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
@@ -237,17 +246,17 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(GetIsUsedItemEquipTypeConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstParameter ?? true)
+                    if (printMask?.EquipType ?? true)
                     {
-                        sb.AppendItem(FirstParameter, "FirstParameter");
+                        sb.AppendItem(EquipType, "EquipType");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
                         sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                     }
-                    if (printMask?.SecondParameter ?? true)
+                    if (printMask?.SecondUnusedIntParameter ?? true)
                     {
-                        sb.AppendItem(SecondParameter, "SecondParameter");
+                        sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                     }
                     if (printMask?.SecondUnusedStringParameter ?? true)
                     {
@@ -264,9 +273,9 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstParameter;
+            public Exception? EquipType;
             public Exception? FirstUnusedStringParameter;
-            public Exception? SecondParameter;
+            public Exception? SecondUnusedIntParameter;
             public Exception? SecondUnusedStringParameter;
             #endregion
 
@@ -276,12 +285,12 @@ namespace Mutagen.Bethesda.Skyrim
                 GetIsUsedItemEquipTypeConditionData_FieldIndex enu = (GetIsUsedItemEquipTypeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstParameter:
-                        return FirstParameter;
+                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.EquipType:
+                        return EquipType;
                     case GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
-                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondParameter:
-                        return SecondParameter;
+                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedIntParameter:
+                        return SecondUnusedIntParameter;
                     case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedStringParameter:
                         return SecondUnusedStringParameter;
                     default:
@@ -294,14 +303,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetIsUsedItemEquipTypeConditionData_FieldIndex enu = (GetIsUsedItemEquipTypeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = ex;
+                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.EquipType:
+                        this.EquipType = ex;
                         break;
                     case GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
                         break;
-                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = ex;
+                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = ex;
                         break;
                     case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = ex;
@@ -317,14 +326,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetIsUsedItemEquipTypeConditionData_FieldIndex enu = (GetIsUsedItemEquipTypeConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstParameter:
-                        this.FirstParameter = (Exception?)obj;
+                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.EquipType:
+                        this.EquipType = (Exception?)obj;
                         break;
                     case GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
                         break;
-                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondParameter:
-                        this.SecondParameter = (Exception?)obj;
+                    case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedIntParameter:
+                        this.SecondUnusedIntParameter = (Exception?)obj;
                         break;
                     case GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = (Exception?)obj;
@@ -338,9 +347,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstParameter != null) return true;
+                if (EquipType != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
-                if (SecondParameter != null) return true;
+                if (SecondUnusedIntParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
@@ -369,13 +378,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstParameter, "FirstParameter");
+                    sb.AppendItem(EquipType, "EquipType");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                 }
                 {
-                    sb.AppendItem(SecondParameter, "SecondParameter");
+                    sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
                 }
                 {
                     sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
@@ -388,9 +397,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstParameter = this.FirstParameter.Combine(rhs.FirstParameter);
+                ret.EquipType = this.EquipType.Combine(rhs.EquipType);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
-                ret.SecondParameter = this.SecondParameter.Combine(rhs.SecondParameter);
+                ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
@@ -414,9 +423,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool FirstParameter;
+            public bool EquipType;
             public bool FirstUnusedStringParameter;
-            public bool SecondParameter;
+            public bool SecondUnusedIntParameter;
             public bool SecondUnusedStringParameter;
             #endregion
 
@@ -426,9 +435,9 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstParameter = defaultOn;
+                this.EquipType = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
-                this.SecondParameter = defaultOn;
+                this.SecondUnusedIntParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
             }
 
@@ -437,9 +446,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstParameter, null));
+                ret.Add((EquipType, null));
                 ret.Add((FirstUnusedStringParameter, null));
-                ret.Add((SecondParameter, null));
+                ret.Add((SecondUnusedIntParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
             }
 
@@ -449,6 +458,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetIsUsedItemEquipTypeConditionDataCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetIsUsedItemEquipTypeConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -509,24 +523,26 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IGetIsUsedItemEquipTypeConditionData :
         IConditionData,
+        IFormLinkContainer,
         IGetIsUsedItemEquipTypeConditionDataGetter,
         ILoquiObjectSetter<IGetIsUsedItemEquipTypeConditionData>
     {
-        new EquipTypeFlag FirstParameter { get; set; }
+        new IFormLinkOrAlias<IEquipTypeGetter> EquipType { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new Int32 SecondParameter { get; set; }
+        new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
     public partial interface IGetIsUsedItemEquipTypeConditionDataGetter :
         IConditionDataGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IGetIsUsedItemEquipTypeConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetIsUsedItemEquipTypeConditionData_Registration.Instance;
-        EquipTypeFlag FirstParameter { get; }
+        IFormLinkOrAliasGetter<IEquipTypeGetter> EquipType { get; }
         String? FirstUnusedStringParameter { get; }
-        Int32 SecondParameter { get; }
+        Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -676,9 +692,9 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FirstParameter = 4,
+        EquipType = 4,
         FirstUnusedStringParameter = 5,
-        SecondParameter = 6,
+        SecondUnusedIntParameter = 6,
         SecondUnusedStringParameter = 7,
     }
     #endregion
@@ -767,9 +783,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetIsUsedItemEquipTypeConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default;
+            item.EquipType.Clear();
             item.FirstUnusedStringParameter = default;
-            item.SecondParameter = default;
+            item.SecondUnusedIntParameter = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
@@ -783,6 +799,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IGetIsUsedItemEquipTypeConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.EquipType.Relink(mapping);
         }
         
         #endregion
@@ -838,9 +855,9 @@ namespace Mutagen.Bethesda.Skyrim
             GetIsUsedItemEquipTypeConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
+            ret.EquipType = item.EquipType.Equals(rhs.EquipType);
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
-            ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
+            ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -891,18 +908,18 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstParameter ?? true)
+            if (printMask?.EquipType ?? true)
             {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.EquipType, "EquipType");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
             {
                 sb.AppendItem(FirstUnusedStringParameterItem, "FirstUnusedStringParameter");
             }
-            if (printMask?.SecondParameter ?? true)
+            if (printMask?.SecondUnusedIntParameter ?? true)
             {
-                sb.AppendItem(item.SecondParameter, "SecondParameter");
+                sb.AppendItem(item.SecondUnusedIntParameter, "SecondUnusedIntParameter");
             }
             if ((printMask?.SecondUnusedStringParameter ?? true)
                 && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
@@ -936,17 +953,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.EquipType) ?? true))
             {
-                if (lhs.FirstParameter != rhs.FirstParameter) return false;
+                if (!lhs.EquipType.Equals(rhs.EquipType)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 if (!string.Equals(lhs.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                if (lhs.SecondParameter != rhs.SecondParameter) return false;
+                if (lhs.SecondUnusedIntParameter != rhs.SecondUnusedIntParameter) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -969,12 +986,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IGetIsUsedItemEquipTypeConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstParameter);
+            hash.Add(item.EquipType);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
             }
-            hash.Add(item.SecondParameter);
+            hash.Add(item.SecondUnusedIntParameter);
             if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
             {
                 hash.Add(SecondUnusedStringParameteritem);
@@ -1003,6 +1020,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
+            foreach (var l in obj.EquipType.EnumerateFormLinks())
+            {
+                yield return l;
+            }
             yield break;
         }
         
@@ -1027,17 +1048,17 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.EquipType) ?? true))
             {
-                item.FirstParameter = rhs.FirstParameter;
+                item.EquipType.SetTo(rhs.EquipType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 item.FirstUnusedStringParameter = rhs.FirstUnusedStringParameter;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
             {
-                item.SecondParameter = rhs.SecondParameter;
+                item.SecondUnusedIntParameter = rhs.SecondUnusedIntParameter;
             }
             if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -1154,11 +1175,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            EnumBinaryTranslation<EquipTypeFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.FirstParameter,
-                length: 4);
-            writer.Write(item.SecondParameter);
+            FormLinkOrAliasBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.EquipType);
+            writer.Write(item.SecondUnusedIntParameter);
         }
 
         public void Write(
@@ -1206,10 +1226,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter = EnumBinaryTranslation<EquipTypeFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
                 reader: frame,
-                length: 4);
-            item.SecondParameter = frame.ReadInt32();
+                item: item.EquipType);
+            item.SecondUnusedIntParameter = frame.ReadInt32();
         }
 
     }

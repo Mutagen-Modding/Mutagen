@@ -4,7 +4,7 @@ public partial class GetVMScriptVariableConditionData : IConditionStringParamete
 {
     string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondParameter;
+    string? IConditionStringParameterGetter.SecondStringParameter => VariableName;
 
     string? IConditionStringParameter.FirstStringParameter
     {
@@ -14,8 +14,8 @@ public partial class GetVMScriptVariableConditionData : IConditionStringParamete
 
     string? IConditionStringParameter.SecondStringParameter
     {
-        get => SecondParameter;
-        set => SecondParameter = value;
+        get => VariableName;
+        set => VariableName = value;
     }
 
     Condition.Function IConditionDataGetter.Function => Condition.Function.GetVMScriptVariable;

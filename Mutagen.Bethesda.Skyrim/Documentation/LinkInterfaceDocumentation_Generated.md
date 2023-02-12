@@ -36,10 +36,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IEmittance
 - Light
 - Region
-### IEventDataTarget
-- FormList
-- Keyword
-- Location
 ### IExplodeSpawn
 - AcousticSpace
 - Activator
@@ -139,6 +135,12 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ILockList
 - FormList
 - Npc
+### IMagicItem
+- Ingestible
+- Ingredient
+- ObjectEffect
+- Scroll
+- Spell
 ### INpcOrList
 - FormList
 - Npc
@@ -361,7 +363,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRegionTarget
 ### FormList
 - IAliasVoiceType
-- IEventDataTarget
 - IItemOrList
 - ILockList
 - INpcOrList
@@ -394,6 +395,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IHarvestTarget
 - IItem
 - IItemOrList
+- IMagicItem
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
@@ -403,6 +405,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IHarvestTarget
 - IItem
 - IItemOrList
+- IMagicItem
 - IPlaceableObject
 - IReferenceableObject
 ### Key
@@ -414,7 +417,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaceableObject
 - IReferenceableObject
 ### Keyword
-- IEventDataTarget
 - IKeywordLinkedReference
 ### LandscapeTexture
 - IRegionTarget
@@ -440,7 +442,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaceableObject
 - IReferenceableObject
 ### Location
-- IEventDataTarget
 - ILocationRecord
 ### LocationReferenceType
 - ILocationRecord
@@ -470,6 +471,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEffectRecord
 - IExplodeSpawn
 - IKnowable
+- IMagicItem
 ### PlacedNpc
 - IKeywordLinkedReference
 - ILinkedReference
@@ -497,6 +499,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IExplodeSpawn
 - IItem
 - IItemOrList
+- IMagicItem
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
@@ -521,6 +524,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Spell
 - IEffectRecord
 - IExplodeSpawn
+- IMagicItem
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject

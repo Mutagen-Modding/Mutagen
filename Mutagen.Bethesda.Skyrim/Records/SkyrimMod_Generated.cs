@@ -8920,12 +8920,6 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "IEventDataTarget":
-                case "IEventDataTargetGetter":
-                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IKeywordGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IWorldspaceOrList":
                 case "IWorldspaceOrListGetter":
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
@@ -8962,6 +8956,14 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IMagicItem":
+                case "IMagicItemGetter":
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngredientGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":

@@ -1,5 +1,6 @@
 namespace Mutagen.Bethesda.Skyrim;
 
+[Obsolete("This function always returns 0")]
 public partial class IsIdlePlayingConditionData : IConditionStringParameter
 {
     string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;

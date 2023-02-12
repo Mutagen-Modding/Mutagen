@@ -1,5 +1,6 @@
 namespace Mutagen.Bethesda.Skyrim;
 
+[Obsolete("This function is a no-op and always returns 0")]
 public partial class GetIsAlignmentConditionData : IConditionStringParameter
 {
     string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;

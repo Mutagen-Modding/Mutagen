@@ -552,7 +552,6 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IFormList :
         IAliasVoiceType,
-        IEventDataTarget,
         IFormLinkContainer,
         IFormListGetter,
         IItemOrList,
@@ -581,7 +580,6 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IAliasVoiceTypeGetter,
         IBinaryItem,
-        IEventDataTargetGetter,
         IFormLinkContainerGetter,
         IItemOrListGetter,
         ILockListGetter,
