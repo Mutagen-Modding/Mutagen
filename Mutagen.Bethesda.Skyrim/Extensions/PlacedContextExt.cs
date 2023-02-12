@@ -6,7 +6,7 @@ using PlacedContext =
         Mutagen.Bethesda.Skyrim.ISkyrimModGetter, Mutagen.Bethesda.Skyrim.IPlaced,
         Mutagen.Bethesda.Skyrim.IPlacedGetter>;
 
-namespace Mutagen.Bethesda.Skyrim.Extensions;
+namespace Mutagen.Bethesda.Skyrim;
 
 public static class PlacedContextExt
 {

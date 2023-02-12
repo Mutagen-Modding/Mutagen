@@ -2,7 +2,6 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Extensions;
 using Mutagen.Bethesda.Skyrim.Records.Tooling;
 using Noggog;
 using Xunit;
