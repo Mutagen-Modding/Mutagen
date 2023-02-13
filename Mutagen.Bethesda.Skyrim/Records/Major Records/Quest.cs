@@ -72,7 +72,7 @@ partial class QuestBinaryCreateTranslation
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
-        ConditionBinaryCreateTranslation.FillConditionsList(item.UnusedConditions, frame);
+        ConditionBinaryCreateTranslation.FillConditionsList(item.EventConditions, frame);
         return null;
     }
 
@@ -94,7 +94,7 @@ partial class QuestBinaryWriteTranslation
     public static partial void WriteBinaryUnusedConditionsLogicCustom(MutagenWriter writer, IQuestGetter item)
     {
         using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
-        ConditionBinaryWriteTranslation.WriteConditionsList(item.UnusedConditions, writer);
+        ConditionBinaryWriteTranslation.WriteConditionsList(item.EventConditions, writer);
     }
 
     public static partial void WriteBinaryNextAliasIDCustom(MutagenWriter writer, IQuestGetter item)
@@ -117,7 +117,7 @@ partial class QuestBinaryWriteTranslation
 partial class QuestBinaryOverlay
 {
     public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
-    public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = Array.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> EventConditions { get; private set; } = Array.Empty<IConditionGetter>();
 
     partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
@@ -132,7 +132,7 @@ partial class QuestBinaryOverlay
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
-        UnusedConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
+        EventConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
 
         return null;
     }
