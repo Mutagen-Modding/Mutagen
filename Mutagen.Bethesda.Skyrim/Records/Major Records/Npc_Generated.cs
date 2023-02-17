@@ -2951,6 +2951,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectId,
         IOwner,
+        IReferenceableObject,
         IScripted,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
@@ -3045,6 +3046,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectIdGetter,
         IOwnerGetter,
+        IReferenceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

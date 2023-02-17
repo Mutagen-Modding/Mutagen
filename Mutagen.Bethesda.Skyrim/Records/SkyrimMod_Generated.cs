@@ -8726,6 +8726,7 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IScrollGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISoulGemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISoundMarkerGetter), throwIfUnknown: throwIfUnknown);

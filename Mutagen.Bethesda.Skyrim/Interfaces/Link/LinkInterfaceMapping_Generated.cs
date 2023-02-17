@@ -69,6 +69,7 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Light_Registration.Instance,
             MiscItem_Registration.Instance,
             MoveableStatic_Registration.Instance,
+            Npc_Registration.Instance,
             Scroll_Registration.Instance,
             SoulGem_Registration.Instance,
             SoundMarker_Registration.Instance,

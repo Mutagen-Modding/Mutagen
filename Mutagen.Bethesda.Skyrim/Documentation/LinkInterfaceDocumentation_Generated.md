@@ -237,6 +237,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Light
 - MiscItem
 - MoveableStatic
+- Npc
 - Scroll
 - SoulGem
 - SoundMarker
@@ -468,6 +469,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - INpcSpawn
 - IObjectId
 - IOwner
+- IReferenceableObject
 ### ObjectEffect
 - IEffectRecord
 - IExplodeSpawn
