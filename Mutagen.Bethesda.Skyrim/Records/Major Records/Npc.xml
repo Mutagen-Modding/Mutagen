@@ -61,6 +61,7 @@
       <RefDirect name="FaceParts" refName="NpcFaceParts" />
       <RefList name="TintLayers" refName="TintLayer" />
     </Fields>
+    <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
     <LinkInterface>ILockList</LinkInterface>
     <LinkInterface>INpcSpawn</LinkInterface>

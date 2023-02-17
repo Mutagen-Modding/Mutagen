@@ -177,7 +177,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - LeveledItem
 ### IOwner
 - Faction
-- PlacedNpc
+- Npc
 ### IPlaceableObject
 - AcousticSpace
 - Activator
@@ -467,6 +467,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - INpcOrList
 - INpcSpawn
 - IObjectId
+- IOwner
 ### ObjectEffect
 - IEffectRecord
 - IExplodeSpawn
@@ -476,7 +477,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IKeywordLinkedReference
 - ILinkedReference
 - ILocationTargetable
-- IOwner
 - IPlaced
 - IPlacedSimple
 ### PlacedObject

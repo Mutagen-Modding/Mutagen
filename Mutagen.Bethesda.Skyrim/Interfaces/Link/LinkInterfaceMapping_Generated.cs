@@ -241,7 +241,7 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Faction_Registration.Instance,
-            PlacedNpc_Registration.Instance,
+            Npc_Registration.Instance,
         });
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
