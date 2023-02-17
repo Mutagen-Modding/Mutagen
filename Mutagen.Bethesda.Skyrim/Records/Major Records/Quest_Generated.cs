@@ -160,17 +160,17 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region UnusedConditions
+        #region EventConditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _UnusedConditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> UnusedConditions
+        private ExtendedList<Condition> _EventConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> EventConditions
         {
-            get => this._UnusedConditions;
-            init => this._UnusedConditions = value;
+            get => this._EventConditions;
+            init => this._EventConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter> IQuestGetter.UnusedConditions => _UnusedConditions;
+        IReadOnlyList<IConditionGetter> IQuestGetter.EventConditions => _EventConditions;
         #endregion
 
         #endregion
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Filter = initialValue;
                 this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem TextDisplayGlobals,
                 TItem Filter,
                 TItem DialogConditions,
-                TItem UnusedConditions,
+                TItem EventConditions,
                 TItem Stages,
                 TItem Objectives,
                 TItem Aliases,
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Filter = Filter;
                 this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(EventConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? TextDisplayGlobals;
             public TItem Filter;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? DialogConditions;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? UnusedConditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? EventConditions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>? Stages;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>? Objectives;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>? Aliases;
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.TextDisplayGlobals, rhs.TextDisplayGlobals)) return false;
                 if (!object.Equals(this.Filter, rhs.Filter)) return false;
                 if (!object.Equals(this.DialogConditions, rhs.DialogConditions)) return false;
-                if (!object.Equals(this.UnusedConditions, rhs.UnusedConditions)) return false;
+                if (!object.Equals(this.EventConditions, rhs.EventConditions)) return false;
                 if (!object.Equals(this.Stages, rhs.Stages)) return false;
                 if (!object.Equals(this.Objectives, rhs.Objectives)) return false;
                 if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.TextDisplayGlobals);
                 hash.Add(this.Filter);
                 hash.Add(this.DialogConditions);
-                hash.Add(this.UnusedConditions);
+                hash.Add(this.EventConditions);
                 hash.Add(this.Stages);
                 hash.Add(this.Objectives);
                 hash.Add(this.Aliases);
@@ -436,12 +436,12 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (this.UnusedConditions != null)
+                if (this.EventConditions != null)
                 {
-                    if (!eval(this.UnusedConditions.Overall)) return false;
-                    if (this.UnusedConditions.Specific != null)
+                    if (!eval(this.EventConditions.Overall)) return false;
+                    if (this.EventConditions.Specific != null)
                     {
-                        foreach (var item in this.UnusedConditions.Specific)
+                        foreach (var item in this.EventConditions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -529,12 +529,12 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (this.UnusedConditions != null)
+                if (this.EventConditions != null)
                 {
-                    if (eval(this.UnusedConditions.Overall)) return true;
-                    if (this.UnusedConditions.Specific != null)
+                    if (eval(this.EventConditions.Overall)) return true;
+                    if (this.EventConditions.Specific != null)
                     {
-                        foreach (var item in this.UnusedConditions.Specific)
+                        foreach (var item in this.EventConditions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -631,14 +631,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (UnusedConditions != null)
+                if (EventConditions != null)
                 {
-                    obj.UnusedConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.UnusedConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
-                    if (UnusedConditions.Specific != null)
+                    obj.EventConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.EventConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (EventConditions.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
-                        obj.UnusedConditions.Specific = l;
-                        foreach (var item in UnusedConditions.Specific)
+                        obj.EventConditions.Specific = l;
+                        foreach (var item in EventConditions.Specific)
                         {
                             MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -786,16 +786,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.UnusedConditions?.Overall ?? true)
-                        && UnusedConditions is {} UnusedConditionsItem)
+                    if ((printMask?.EventConditions?.Overall ?? true)
+                        && EventConditions is {} EventConditionsItem)
                     {
-                        sb.AppendLine("UnusedConditions =>");
+                        sb.AppendLine("EventConditions =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(UnusedConditionsItem.Overall);
-                            if (UnusedConditionsItem.Specific != null)
+                            sb.AppendItem(EventConditionsItem.Overall);
+                            if (EventConditionsItem.Specific != null)
                             {
-                                foreach (var subItem in UnusedConditionsItem.Specific)
+                                foreach (var subItem in EventConditionsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? TextDisplayGlobals;
             public Exception? Filter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? DialogConditions;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? UnusedConditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? EventConditions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>? Stages;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>? Objectives;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>? Aliases;
@@ -923,8 +923,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Filter;
                     case Quest_FieldIndex.DialogConditions:
                         return DialogConditions;
-                    case Quest_FieldIndex.UnusedConditions:
-                        return UnusedConditions;
+                    case Quest_FieldIndex.EventConditions:
+                        return EventConditions;
                     case Quest_FieldIndex.Stages:
                         return Stages;
                     case Quest_FieldIndex.Objectives:
@@ -976,8 +976,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Quest_FieldIndex.DialogConditions:
                         this.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
-                    case Quest_FieldIndex.UnusedConditions:
-                        this.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                    case Quest_FieldIndex.EventConditions:
+                        this.EventConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
                     case Quest_FieldIndex.Stages:
                         this.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ex, null);
@@ -1035,8 +1035,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Quest_FieldIndex.DialogConditions:
                         this.DialogConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case Quest_FieldIndex.UnusedConditions:
-                        this.UnusedConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                    case Quest_FieldIndex.EventConditions:
+                        this.EventConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     case Quest_FieldIndex.Stages:
                         this.Stages = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>)obj;
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (TextDisplayGlobals != null) return true;
                 if (Filter != null) return true;
                 if (DialogConditions != null) return true;
-                if (UnusedConditions != null) return true;
+                if (EventConditions != null) return true;
                 if (Stages != null) return true;
                 if (Objectives != null) return true;
                 if (Aliases != null) return true;
@@ -1164,15 +1164,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (UnusedConditions is {} UnusedConditionsItem)
+                if (EventConditions is {} EventConditionsItem)
                 {
-                    sb.AppendLine("UnusedConditions =>");
+                    sb.AppendLine("EventConditions =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(UnusedConditionsItem.Overall);
-                        if (UnusedConditionsItem.Specific != null)
+                        sb.AppendItem(EventConditionsItem.Overall);
+                        if (EventConditionsItem.Specific != null)
                         {
-                            foreach (var subItem in UnusedConditionsItem.Specific)
+                            foreach (var subItem in EventConditionsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1258,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
                 ret.Filter = this.Filter.Combine(rhs.Filter);
                 ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), Noggog.ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
-                ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), Noggog.ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
+                ret.EventConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EventConditions?.Overall, rhs.EventConditions?.Overall), Noggog.ExceptionExt.Combine(this.EventConditions?.Specific, rhs.EventConditions?.Specific));
                 ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
                 ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
                 ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool TextDisplayGlobals;
             public bool Filter;
             public Condition.TranslationMask? DialogConditions;
-            public Condition.TranslationMask? UnusedConditions;
+            public Condition.TranslationMask? EventConditions;
             public QuestStage.TranslationMask? Stages;
             public QuestObjective.TranslationMask? Objectives;
             public QuestAlias.TranslationMask? Aliases;
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((TextDisplayGlobals, null));
                 ret.Add((Filter, null));
                 ret.Add((DialogConditions == null ? DefaultOn : !DialogConditions.GetCrystal().CopyNothing, DialogConditions?.GetCrystal()));
-                ret.Add((UnusedConditions == null ? DefaultOn : !UnusedConditions.GetCrystal().CopyNothing, UnusedConditions?.GetCrystal()));
+                ret.Add((EventConditions == null ? DefaultOn : !EventConditions.GetCrystal().CopyNothing, EventConditions?.GetCrystal()));
                 ret.Add((Stages == null ? DefaultOn : !Stages.GetCrystal().CopyNothing, Stages?.GetCrystal()));
                 ret.Add((Objectives == null ? DefaultOn : !Objectives.GetCrystal().CopyNothing, Objectives?.GetCrystal()));
                 ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
         new String? Filter { get; set; }
         new ExtendedList<Condition> DialogConditions { get; }
-        new ExtendedList<Condition> UnusedConditions { get; }
+        new ExtendedList<Condition> EventConditions { get; }
         new ExtendedList<QuestStage> Stages { get; }
         new ExtendedList<QuestObjective> Objectives { get; }
         new ExtendedList<QuestAlias> Aliases { get; }
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
         String? Filter { get; }
         IReadOnlyList<IConditionGetter> DialogConditions { get; }
-        IReadOnlyList<IConditionGetter> UnusedConditions { get; }
+        IReadOnlyList<IConditionGetter> EventConditions { get; }
         IReadOnlyList<IQuestStageGetter> Stages { get; }
         IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
         IReadOnlyList<IQuestAliasGetter> Aliases { get; }
@@ -1753,7 +1753,7 @@ namespace Mutagen.Bethesda.Skyrim
         TextDisplayGlobals = 15,
         Filter = 16,
         DialogConditions = 17,
-        UnusedConditions = 18,
+        EventConditions = 18,
         Stages = 19,
         Objectives = 20,
         Aliases = 21,
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.TextDisplayGlobals.Clear();
             item.Filter = default;
             item.DialogConditions.Clear();
-            item.UnusedConditions.Clear();
+            item.EventConditions.Clear();
             item.Stages.Clear();
             item.Objectives.Clear();
             item.Aliases.Clear();
@@ -1945,7 +1945,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.TextDisplayGlobals.RemapLinks(mapping);
             obj.DialogConditions.RemapLinks(mapping);
-            obj.UnusedConditions.RemapLinks(mapping);
+            obj.EventConditions.RemapLinks(mapping);
             obj.Stages.RemapLinks(mapping);
             obj.Objectives.RemapLinks(mapping);
             obj.Aliases.RemapLinks(mapping);
@@ -2059,8 +2059,8 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.DialogConditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.UnusedConditions = item.UnusedConditions.CollectionEqualsHelper(
-                rhs.UnusedConditions,
+            ret.EventConditions = item.EventConditions.CollectionEqualsHelper(
+                rhs.EventConditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Stages = item.Stages.CollectionEqualsHelper(
@@ -2193,12 +2193,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.UnusedConditions?.Overall ?? true)
+            if (printMask?.EventConditions?.Overall ?? true)
             {
-                sb.AppendLine("UnusedConditions =>");
+                sb.AppendLine("EventConditions =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.UnusedConditions)
+                    foreach (var subItem in item.EventConditions)
                     {
                         using (sb.Brace())
                         {
@@ -2352,9 +2352,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.DialogConditions.SequenceEqual(rhs.DialogConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.DialogConditions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.EventConditions) ?? true))
             {
-                if (!lhs.UnusedConditions.SequenceEqual(rhs.UnusedConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions)))) return false;
+                if (!lhs.EventConditions.SequenceEqual(rhs.EventConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.EventConditions)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
             {
@@ -2423,7 +2423,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(Filteritem);
             }
             hash.Add(item.DialogConditions);
-            hash.Add(item.UnusedConditions);
+            hash.Add(item.EventConditions);
             hash.Add(item.Stages);
             hash.Add(item.Objectives);
             hash.Add(item.Aliases);
@@ -2475,7 +2475,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.UnusedConditions.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.EventConditions.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -2693,13 +2693,13 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.EventConditions) ?? true))
             {
-                errorMask?.PushIndex((int)Quest_FieldIndex.UnusedConditions);
+                errorMask?.PushIndex((int)Quest_FieldIndex.EventConditions);
                 try
                 {
-                    item.UnusedConditions.SetTo(
-                        rhs.UnusedConditions
+                    item.EventConditions.SetTo(
+                        rhs.EventConditions
                         .Select(r =>
                         {
                             return r.DeepCopy(
