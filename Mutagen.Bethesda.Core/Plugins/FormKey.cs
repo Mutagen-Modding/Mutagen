@@ -102,6 +102,8 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
         return Factory(masterReferences, idWithModID);
     }
 
+    private static bool IsDelim(char c) => c is ':' or '_';
+
     /// <summary>
     /// Attempts to construct a FormKey from a string:
     ///   012ABC:ModName.esp
@@ -131,7 +133,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
 
         uint id;
         int delim;
-        if (str[4] == ':' && str.Slice(0, 4).Equals(NullStr, StringComparison.OrdinalIgnoreCase))
+        if (IsDelim(str[4]) && str.Slice(0, 4).Equals(NullStr, StringComparison.OrdinalIgnoreCase))
         {
             delim = 4;
             id = 0;
@@ -139,7 +141,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
         else
         {
             // If delimeter not in place, invalid
-            if (str[6] != ':')
+            if (!IsDelim(str[6]))
             {
                 formKey = default!;
                 return false;
@@ -228,6 +230,19 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     public string IDString()
     {
         return ID.ToString("X6");
+    }
+
+    /// <summary>
+    /// Converts to a string that is safe for use in file paths
+    /// </summary>
+    /// <returns>a string that is safe for use in file paths</returns>
+    public string ToFilesafeString()
+    {
+        if (ID == 0 && ModKey.IsNull)
+        {
+            return "Null";
+        }
+        return $"{(ID == 0 ? "Null" : IDString())}_{ModKey}";
     }
 
     /// <summary>
