@@ -41,7 +41,6 @@
       <Float name="Scale" recordType="XSCL" />
       <RefDirect name="Placement" refName="Placement" />
     </Fields>
-    <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>

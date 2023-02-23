@@ -2950,6 +2950,8 @@ namespace Mutagen.Bethesda.Skyrim
         INpcSpawn,
         IObjectBounded,
         IObjectId,
+        IOwner,
+        IReferenceableObject,
         IScripted,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
@@ -3043,6 +3045,8 @@ namespace Mutagen.Bethesda.Skyrim
         INpcSpawnGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IOwnerGetter,
+        IReferenceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

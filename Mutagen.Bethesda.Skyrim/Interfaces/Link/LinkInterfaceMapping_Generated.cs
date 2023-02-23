@@ -69,6 +69,7 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Light_Registration.Instance,
             MiscItem_Registration.Instance,
             MoveableStatic_Registration.Instance,
+            Npc_Registration.Instance,
             Scroll_Registration.Instance,
             SoulGem_Registration.Instance,
             SoundMarker_Registration.Instance,
@@ -241,7 +242,7 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Faction_Registration.Instance,
-            PlacedNpc_Registration.Instance,
+            Npc_Registration.Instance,
         });
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

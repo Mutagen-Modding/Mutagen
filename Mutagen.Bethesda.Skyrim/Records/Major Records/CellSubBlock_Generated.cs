@@ -1334,13 +1334,6 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "IOwner":
-                case "IOwnerGetter":
-                    foreach (var subItem in obj.Cells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     foreach (var subItem in obj.Cells)
