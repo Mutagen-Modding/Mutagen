@@ -596,9 +596,9 @@
   </Object>
   <Object name="GetPlayerControlsDisabledConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="91a75ac0-2924-44a1-b62e-48f434ac0517" ID="10054">
     <Fields>
-      <Int32 name="p"/>
+      <Int32 name="PlayerControlsParameterOne"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <Int32 name="SecondUnusedIntParameter"/>
+      <Int32 name="PlayerControlsParameterTwo"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
