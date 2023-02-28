@@ -109,6 +109,7 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             LeveledSpell_Registration.Instance,
             Light_Registration.Instance,
             MoveableStatic_Registration.Instance,
+            Npc_Registration.Instance,
             ObjectEffect_Registration.Instance,
             Projectile_Registration.Instance,
             Scroll_Registration.Instance,

@@ -63,6 +63,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - LeveledSpell
 - Light
 - MoveableStatic
+- Npc
 - ObjectEffect
 - Projectile
 - Scroll
@@ -464,6 +465,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRegionTarget
 ### Npc
 - IAliasVoiceType
+- IExplodeSpawn
 - ILockList
 - INpcOrList
 - INpcSpawn
