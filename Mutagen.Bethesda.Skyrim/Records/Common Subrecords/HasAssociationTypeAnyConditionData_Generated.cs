@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public HasAssociationTypeAnyConditionData()
         {
-            _AssociationType = new FormLinkOrAlias<IAssociationTypeGetter>(this);
+            _AssociationType = new FormLinkOrIndex<IAssociationTypeGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region AssociationType
-        private readonly IFormLinkOrAlias<IAssociationTypeGetter> _AssociationType = default!;
-        public IFormLinkOrAlias<IAssociationTypeGetter> AssociationType
+        private readonly IFormLinkOrIndex<IAssociationTypeGetter> _AssociationType = default!;
+        public IFormLinkOrIndex<IAssociationTypeGetter> AssociationType
         {
             get => _AssociationType;
             set => _AssociationType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IAssociationTypeGetter> IHasAssociationTypeAnyConditionDataGetter.AssociationType => this.AssociationType;
+        IFormLinkOrIndexGetter<IAssociationTypeGetter> IHasAssociationTypeAnyConditionDataGetter.AssociationType => this.AssociationType;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem AssociationType,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.AssociationType = AssociationType;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasAssociationTypeAnyConditionDataGetter,
         ILoquiObjectSetter<IHasAssociationTypeAnyConditionData>
     {
-        new IFormLinkOrAlias<IAssociationTypeGetter> AssociationType { get; set; }
+        new IFormLinkOrIndex<IAssociationTypeGetter> AssociationType { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IHasAssociationTypeAnyConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => HasAssociationTypeAnyConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IAssociationTypeGetter> AssociationType { get; }
+        IFormLinkOrIndexGetter<IAssociationTypeGetter> AssociationType { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        AssociationType = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        AssociationType = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(HasAssociationTypeAnyConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (HasAssociationTypeAnyConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (HasAssociationTypeAnyConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (HasAssociationTypeAnyConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AssociationType);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.AssociationType);
             item.SecondUnusedIntParameter = frame.ReadInt32();

@@ -6,6 +6,7 @@
       <FormLink name="Reference" refName="SkyrimMajorRecord" binary="NoGeneration" />
       <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
       <Bool name="UseAliases" binary="NoGeneration" />
+      <Bool name="UsePackageData" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="UnknownConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c692e121-726f-4cb0-9692-ee15ac80fe77" ID="10402">
@@ -160,9 +161,9 @@
   </Object>
   <Object name="GetDistanceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e6f06dc8-6964-45b1-a52c-7f339e7dfbb1" ID="10001">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -258,9 +259,9 @@
   </Object>
   <Object name="GetLineOfSightConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="6421f4ce-e74e-4ec1-966a-fd38990e58e4" ID="10013">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -268,9 +269,9 @@
   </Object>
   <Object name="GetInSameCellConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="1202083a-2e9b-4e12-888d-ad637f58d1a8" ID="10014">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -310,7 +311,7 @@
   </Object>
   <Object name="SameFactionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="383ad20c-46cf-493c-88c1-2a4836409cdc" ID="10019">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -318,7 +319,7 @@
   </Object>
   <Object name="SameRaceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="30a51ec6-cb26-49e6-af04-66a5f3a34176" ID="10020">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -326,7 +327,7 @@
   </Object>
   <Object name="SameSexConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="0b0ccb6c-9cfd-42e2-93fb-87988741a307" ID="10021">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -334,7 +335,7 @@
   </Object>
   <Object name="GetDetectedConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="5bd56716-72ef-451f-bffe-99a6a6c35a37" ID="10022">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -350,9 +351,9 @@
   </Object>
   <Object name="GetItemCountConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c5d4164a-8c82-415a-81a7-f3532a578bb5" ID="10024">
     <Fields>
-      <FormLinkOrAlias name="ItemOrList">
+      <FormLinkOrIndex name="ItemOrList">
         <Interface>IItemOrList</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -384,9 +385,9 @@
   </Object>
   <Object name="GetScriptVariableConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d2b9327d-8a21-410d-a7e2-1eb4e62faafd" ID="10028">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="VariableName" binary="NoGeneration"/>
@@ -394,7 +395,7 @@
   </Object>
   <Object name="GetQuestRunningConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d17cddea-e559-45ba-ac01-bfb565d50181" ID="10029">
     <Fields>
-      <FormLinkOrAlias refName="Quest" name="Quest"/>
+      <FormLinkOrIndex refName="Quest" name="Quest"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -402,7 +403,7 @@
   </Object>
   <Object name="GetStageConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="697751d3-eca5-41f8-99a4-a9cb7c8c1d88" ID="10030">
     <Fields>
-      <FormLinkOrAlias refName="Quest" name="Quest"/>
+      <FormLinkOrIndex refName="Quest" name="Quest"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -410,7 +411,7 @@
   </Object>
   <Object name="GetStageDoneConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="69fae57f-516b-4b94-a2d7-58090e1caed6" ID="10031">
     <Fields>
-      <FormLinkOrAlias refName="Quest" name="Quest"/>
+      <FormLinkOrIndex refName="Quest" name="Quest"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="Stage"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -418,9 +419,9 @@
   </Object>
   <Object name="GetFactionRankDifferenceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a937d4fc-707b-45e0-88c8-77dde79bac21" ID="10032">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -466,7 +467,7 @@
   </Object>
   <Object name="GetShouldAttackConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d969fbd8-a242-42cb-b24d-dbb08c68f297" ID="10038">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -474,7 +475,7 @@
   </Object>
   <Object name="GetInCellConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="7365732f-e831-4a0d-8edc-7d4679206573" ID="10039">
     <Fields>
-      <FormLinkOrAlias refName="Cell" name="Cell"/>
+      <FormLinkOrIndex refName="Cell" name="Cell"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -482,7 +483,7 @@
   </Object>
   <Object name="GetIsClassConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="f907c02e-27d8-4a20-83f5-9903e43b20c1" ID="10040">
     <Fields>
-      <FormLinkOrAlias refName="Class" name="Class"/>
+      <FormLinkOrIndex refName="Class" name="Class"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -490,7 +491,7 @@
   </Object>
   <Object name="GetIsRaceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="f1d37aff-e2c6-4748-857e-69cba51eba30" ID="10041">
     <Fields>
-      <FormLinkOrAlias refName="Race" name="Race"/>
+      <FormLinkOrIndex refName="Race" name="Race"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -506,7 +507,7 @@
   </Object>
   <Object name="GetInFactionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ad6003a3-daac-4fb1-ac0b-4fc14ebb1aa8" ID="10043">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -514,9 +515,9 @@
   </Object>
   <Object name="GetIsIDConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="bf910999-34c1-4bfd-85fa-d75f50b9e85a" ID="10044">
     <Fields>
-      <FormLinkOrAlias name="Object">
+      <FormLinkOrIndex name="Object">
         <Interface>IReferenceableObject</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -524,7 +525,7 @@
   </Object>
   <Object name="GetFactionRankConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="b4923ced-d676-4d32-b787-e82973fee565" ID="10045">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -532,7 +533,7 @@
   </Object>
   <Object name="GetGlobalValueConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="88a8274e-47b7-401b-9518-ad68bca3b32b" ID="10046">
     <Fields>
-      <FormLinkOrAlias refName="Global" name="Global"/>
+      <FormLinkOrIndex refName="Global" name="Global"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -556,7 +557,7 @@
   </Object>
   <Object name="GetQuestVariableConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="5ef1a86e-c000-4f21-9413-f6faaf6f930d" ID="10049">
     <Fields>
-      <FormLinkOrAlias refName="Quest" name="Quest"/>
+      <FormLinkOrIndex refName="Quest" name="Quest"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="VariableName" binary="NoGeneration"/>
@@ -580,7 +581,7 @@
   </Object>
   <Object name="GetDeadCountConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="6ed53c39-9fb5-4017-b374-8afbbfe3dfd4" ID="10052">
     <Fields>
-      <FormLinkOrAlias refName="Npc" name="Npc"/>
+      <FormLinkOrIndex refName="Npc" name="Npc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -604,9 +605,9 @@
   </Object>
   <Object name="GetHeadingAngleConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ffa6dfa8-8a99-4ca6-b1cc-5a2c894ea0e2" ID="10055">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -702,7 +703,7 @@
   </Object>
   <Object name="IsPlayerInRegionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="391bdd31-e2a5-47cf-a2bd-ec741d4aed8d" ID="10067">
     <Fields>
-      <FormLinkOrAlias refName="Region" name="Region"/>
+      <FormLinkOrIndex refName="Region" name="Region"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -718,7 +719,7 @@
   </Object>
   <Object name="GetCrimeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="2db33da4-4973-4e53-a115-c63b9e48932f" ID="10069">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="Criminal"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="Criminal"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Enum enumName="CrimeType" name="CrimeType"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -758,7 +759,7 @@
   </Object>
   <Object name="GetPCIsClassConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="40f9bb56-b02c-478d-8f0b-50b28e5e39d0" ID="10074">
     <Fields>
-      <FormLinkOrAlias refName="Class" name="Class"/>
+      <FormLinkOrIndex refName="Class" name="Class"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -766,7 +767,7 @@
   </Object>
   <Object name="GetPCIsRaceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="11b5febb-6672-4f65-a0dc-3f8c7f1c8c79" ID="10075">
     <Fields>
-      <FormLinkOrAlias refName="Race" name="Race"/>
+      <FormLinkOrIndex refName="Race" name="Race"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -782,7 +783,7 @@
   </Object>
   <Object name="GetPCInFactionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="6bbfeb0f-1139-4ff5-81fa-19e935891450" ID="10077">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -814,9 +815,9 @@
   </Object>
   <Object name="GetIsReferenceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="7689a5b9-b89c-4d61-9f26-ab0fb8b84cd9" ID="10081">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -888,7 +889,7 @@
   </Object>
   <Object name="GetIsCurrentWeatherConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="0f7da43b-19ba-4969-a2a6-98c1c1a4f726" ID="10090">
     <Fields>
-      <FormLinkOrAlias refName="Weather" name="Weather"/>
+      <FormLinkOrIndex refName="Weather" name="Weather"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -904,7 +905,7 @@
   </Object>
   <Object name="GetIsCrimeFactionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="216401a8-3f14-4910-b351-1e0633baa4bf" ID="10092">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -944,7 +945,7 @@
   </Object>
   <Object name="GetIsCurrentPackageConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c0c1764f-a85d-4473-a7d2-c4f9634a9789" ID="10097">
     <Fields>
-      <FormLinkOrAlias refName="Package" name="Package"/>
+      <FormLinkOrIndex refName="Package" name="Package"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -952,9 +953,9 @@
   </Object>
   <Object name="IsCurrentFurnitureRefConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="085c1179-5b91-4d14-8d43-20a7792ecbff" ID="10098">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -962,7 +963,7 @@
   </Object>
   <Object name="IsCurrentFurnitureObjConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="98c5e287-dd31-49be-9ee1-ba9daf1d545b" ID="10099">
     <Fields>
-      <FormLinkOrAlias refName="Furniture" name="Furniture"/>
+      <FormLinkOrIndex refName="Furniture" name="Furniture"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -978,7 +979,7 @@
   </Object>
   <Object name="GetTalkedToPCParamConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a3323b80-d795-4697-8e2f-98a0817bc1c4" ID="10101">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1002,11 +1003,11 @@
   </Object>
   <Object name="HasSameEditorLocAsRefConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="3cf2ccc7-ec2d-42c5-aa8d-f334f87e7a8f" ID="10104">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -1014,15 +1015,15 @@
     <Fields>
       <Int32 name="ReferenceAliasIndex"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
   <Object name="GetEquippedConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c9047e57-c255-47b5-bc66-9e06f28b86a7" ID="10106">
     <Fields>
-      <FormLinkOrAlias name="ItemOrList">
+      <FormLinkOrIndex name="ItemOrList">
         <Interface>IItemOrList</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1054,7 +1055,7 @@
   </Object>
   <Object name="GetPCExpelledConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="fc3499dd-c724-4e51-b242-c5c7cf6f3441" ID="10110">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1062,7 +1063,7 @@
   </Object>
   <Object name="GetPCFactionMurderConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a5257dae-3507-4567-8c1b-88fcb3e1d62f" ID="10111">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1070,7 +1071,7 @@
   </Object>
   <Object name="GetPCEnemyofFactionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="afaa330f-5e99-4504-8e19-124feb85edec" ID="10112">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1078,7 +1079,7 @@
   </Object>
   <Object name="GetPCFactionAttackConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="dc86ed3c-dffd-47c6-8304-9d4375060602" ID="10113">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1094,7 +1095,7 @@
   </Object>
   <Object name="HasMagicEffectConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="536fbe60-1e68-4cfc-9230-bc039b9f1510" ID="10115">
     <Fields>
-      <FormLinkOrAlias refName="MagicEffect" name="MagicEffect"/>
+      <FormLinkOrIndex refName="MagicEffect" name="MagicEffect"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1118,9 +1119,9 @@
   </Object>
   <Object name="IsSpellTargetConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="99796e7e-7ed8-41a3-8c60-7a21b003cc75" ID="10118">
     <Fields>
-      <FormLinkOrAlias name="MagicItem">
+      <FormLinkOrIndex name="MagicItem">
         <Interface>IMagicItem</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1160,7 +1161,7 @@
   </Object>
   <Object name="GetIsClassDefaultConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d21a8a3d-06ee-4383-ab7c-e9fa9bb0c3a2" ID="10123">
     <Fields>
-      <FormLinkOrAlias refName="Class" name="Class"/>
+      <FormLinkOrIndex refName="Class" name="Class"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1176,11 +1177,11 @@
   </Object>
   <Object name="GetInCellParamConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="3ffeddd4-3221-4559-abcb-4f63d2359615" ID="10125">
     <Fields>
-      <FormLinkOrAlias refName="Cell" name="Cell"/>
+      <FormLinkOrIndex refName="Cell" name="Cell"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -1218,9 +1219,9 @@
   </Object>
   <Object name="GetIsUsedItemConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="230b9a76-061b-42da-a7c5-bd8010868d54" ID="10130">
     <Fields>
-      <FormLinkOrAlias name="Object">
+      <FormLinkOrIndex name="Object">
         <Interface>IReferenceableObject</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1236,7 +1237,7 @@
   </Object>
   <Object name="IsScenePlayingConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="65696b09-8021-43bb-8cfb-a5eeee3594b7" ID="10132">
     <Fields>
-      <FormLinkOrAlias refName="Scene" name="Scene"/>
+      <FormLinkOrIndex refName="Scene" name="Scene"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1252,7 +1253,7 @@
   </Object>
   <Object name="GetLocationClearedConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="192eddd3-69a6-4aa3-94bc-763e1c651dde" ID="10134">
     <Fields>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1276,15 +1277,15 @@
   </Object>
   <Object name="HasAssociationTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e0761b71-97bc-4366-a57a-aab640936436" ID="10137">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="AssociationType" name="AssociationType"/>
+      <FormLinkOrIndex refName="AssociationType" name="AssociationType"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
   <Object name="HasFamilyRelationshipConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="811041ff-e8f7-4d2d-b24c-d0b63bdf7b7a" ID="10138">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1292,7 +1293,7 @@
   </Object>
   <Object name="HasParentRelationshipConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="315d20df-45d7-4a96-883c-3598cb3f7c3d" ID="10139">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1300,7 +1301,7 @@
   </Object>
   <Object name="IsWarningAboutConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="bd7be4c1-33a6-4f63-bfaf-0781dc4bd7c7" ID="10140">
     <Fields>
-      <FormLinkOrAlias refName="FormList" name="FormList"/>
+      <FormLinkOrIndex refName="FormList" name="FormList"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1316,7 +1317,7 @@
   </Object>
   <Object name="HasSpellConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="924745aa-5922-408a-a791-8939430ef5cc" ID="10142">
     <Fields>
-      <FormLinkOrAlias refName="Spell" name="Spell"/>
+      <FormLinkOrIndex refName="Spell" name="Spell"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1364,9 +1365,9 @@
   </Object>
   <Object name="IsOwnerConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="5a009d85-c0be-4a2c-9055-ada177b262b1" ID="10148">
     <Fields>
-      <FormLinkOrAlias name="Owner">
+      <FormLinkOrIndex name="Owner">
         <Interface>IOwner</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1374,11 +1375,11 @@
   </Object>
   <Object name="IsCellOwnerConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ac72c068-0b92-4918-a876-1a48917b9967" ID="10149">
     <Fields>
-      <FormLinkOrAlias refName="Cell" name="Cell"/>
+      <FormLinkOrIndex refName="Cell" name="Cell"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias name="Owner">
+      <FormLinkOrIndex name="Owner">
         <Interface>IOwner</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -1472,9 +1473,9 @@
   </Object>
   <Object name="GetInWorldspaceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e4216b81-8e1c-4ba6-bed9-3e2258b6b80e" ID="10161">
     <Fields>
-      <FormLinkOrAlias name="WorldspaceOrList">
+      <FormLinkOrIndex name="WorldspaceOrList">
         <Interface>IWorldspaceOrList</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1610,7 +1611,7 @@
   </Object>
   <Object name="GetInCurrentLocConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a6ee83ee-d156-4d1d-a747-d329f8b61356" ID="10178">
     <Fields>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1634,7 +1635,7 @@
   </Object>
   <Object name="HasLinkedRefConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="160fc97a-bf53-400f-8753-84f1654bb2fd" ID="10181">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1650,7 +1651,7 @@
   </Object>
   <Object name="GetStolenItemValueNoCrimeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="f42903a5-7deb-4a28-9e5a-356421718983" ID="10183">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1674,7 +1675,7 @@
   </Object>
   <Object name="IsTalkingActivatorActorConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="3bca4377-80d3-4106-8377-b73e929053b5" ID="10186">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1682,7 +1683,7 @@
   </Object>
   <Object name="IsInListConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d46b7e73-85dc-4eff-a13e-638cc939fa8f" ID="10187">
     <Fields>
-      <FormLinkOrAlias refName="FormList" name="FormList"/>
+      <FormLinkOrIndex refName="FormList" name="FormList"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1690,7 +1691,7 @@
   </Object>
   <Object name="GetStolenItemValueConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="8fc5a958-89bf-4bab-9f79-38c1d0f20707" ID="10188">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1698,7 +1699,7 @@
   </Object>
   <Object name="GetCrimeGoldViolentConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="f8beff23-6943-4a34-a4d9-3e6d18992278" ID="10189">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1706,7 +1707,7 @@
   </Object>
   <Object name="GetCrimeGoldNonviolentConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="1c943ba5-6084-4f11-bb3d-395e7d9f470f" ID="10190">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1714,7 +1715,7 @@
   </Object>
   <Object name="HasShoutConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="05c0d4b3-10b4-4b3a-9265-18fa9eb7521e" ID="10191">
     <Fields>
-      <FormLinkOrAlias refName="Shout" name="Shout"/>
+      <FormLinkOrIndex refName="Shout" name="Shout"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1762,7 +1763,7 @@
   </Object>
   <Object name="IsWeaponInListConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d0930af4-883a-486c-bba1-dfdf253ed5f4" ID="10197">
     <Fields>
-      <FormLinkOrAlias refName="FormList" name="FormList"/>
+      <FormLinkOrIndex refName="FormList" name="FormList"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1778,7 +1779,7 @@
   </Object>
   <Object name="GetRelationshipRankConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d4e4ea07-f0a3-4fe1-8532-58da13b4a5fb" ID="10199">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1786,7 +1787,7 @@
   </Object>
   <Object name="IsKillerConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="262ec8b7-9eec-4ee9-a2a0-8b40140a8487" ID="10201">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1794,7 +1795,7 @@
   </Object>
   <Object name="IsKillerObjectConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="9247bc76-24bc-461c-8387-e61aec755cb3" ID="10202">
     <Fields>
-      <FormLinkOrAlias refName="FormList" name="FormList"/>
+      <FormLinkOrIndex refName="FormList" name="FormList"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1802,17 +1803,17 @@
   </Object>
   <Object name="GetFactionCombatReactionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="9997cf13-8cce-41a1-a246-e95ba571a2e3" ID="10203">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="FactionA"/>
+      <FormLinkOrIndex refName="Faction" name="FactionA"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Faction" name="FactionB"/>
+      <FormLinkOrIndex refName="Faction" name="FactionB"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
   <Object name="ExistsConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="113bfb5b-f952-45c5-85b2-fb967e219b43" ID="10204">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1836,9 +1837,9 @@
   </Object>
   <Object name="GetIsVoiceTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="81938d6e-b298-42b2-bb4f-33125d598e91" ID="10207">
     <Fields>
-      <FormLinkOrAlias name="VoiceTypeOrList">
+      <FormLinkOrIndex name="VoiceTypeOrList">
         <Interface>IVoiceTypeOrList</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1902,7 +1903,7 @@
   </Object>
   <Object name="GetInCurrentLocFormListConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="7f59baae-a63d-43e5-b307-cbfa5e23789a" ID="10215">
     <Fields>
-      <FormLinkOrAlias refName="FormList" name="FormList"/>
+      <FormLinkOrIndex refName="FormList" name="FormList"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1910,7 +1911,7 @@
   </Object>
   <Object name="GetInZoneConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="3da9e90c-33e5-4c57-aefc-88cee8e42d30" ID="10216">
     <Fields>
-      <FormLinkOrAlias refName="EncounterZone" name="EncounterZone"/>
+      <FormLinkOrIndex refName="EncounterZone" name="EncounterZone"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1934,7 +1935,7 @@
   </Object>
   <Object name="HasPerkConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="695dbf7c-a361-4c7e-8e5c-218f3b968db4" ID="10219">
     <Fields>
-      <FormLinkOrAlias refName="Perk" name="Perk"/>
+      <FormLinkOrIndex refName="Perk" name="Perk"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1942,7 +1943,7 @@
   </Object>
   <Object name="GetFactionRelationConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c418d213-9437-4253-b013-3e690e08aa47" ID="10220">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1950,7 +1951,7 @@
   </Object>
   <Object name="IsLastIdlePlayedConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="1a6a3546-88fc-4b92-9705-a759e92f257d" ID="10221">
     <Fields>
-      <FormLinkOrAlias refName="IdleAnimation" name="IdleAnimation"/>
+      <FormLinkOrIndex refName="IdleAnimation" name="IdleAnimation"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1982,7 +1983,7 @@
   </Object>
   <Object name="GetCrimeGoldConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="9120bdc3-3cf5-4ac1-9b40-9562e05332d0" ID="10225">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -1990,9 +1991,9 @@
   </Object>
   <Object name="IsPlayerGrabbedRefConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e791ef2f-5bbc-489a-ae41-6e2130cc6224" ID="10226">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2000,7 +2001,7 @@
   </Object>
   <Object name="GetKeywordItemCountConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="49a7ca6f-843f-4428-81ec-899db02c0e70" ID="10227">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2032,7 +2033,7 @@
   </Object>
   <Object name="GetThreatRatioConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="564fca6f-58c7-473f-a851-5b3c3843ac57" ID="10231">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2040,7 +2041,7 @@
   </Object>
   <Object name="GetIsUsedItemEquipTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="f2b103bc-c96f-4156-bafc-c1e084d7de17" ID="10232">
     <Fields>
-      <FormLinkOrAlias refName="EquipType" name="EquipType"/>
+      <FormLinkOrIndex refName="EquipType" name="EquipType"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2072,9 +2073,9 @@
   </Object>
   <Object name="PlayerKnowsConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="3cd3197f-7fce-4437-9b9f-356f87e5afb3" ID="10236">
     <Fields>
-      <FormLinkOrAlias name="Knowable">
+      <FormLinkOrIndex name="Knowable">
         <Interface>IKnowable</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2098,7 +2099,7 @@
   </Object>
   <Object name="CanPayCrimeGoldConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="9516111c-5bbd-44ff-876c-2829d1a96a10" ID="10239">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2122,7 +2123,7 @@
   </Object>
   <Object name="EPAlchemyEffectHasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="089e315a-9061-4c57-850a-2a0dfca95d36" ID="10242">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2146,7 +2147,7 @@
   </Object>
   <Object name="IsCombatTargetConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="168f6d6e-090b-4c9b-8ca5-f5cce16c18d6" ID="10245">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2154,9 +2155,9 @@
   </Object>
   <Object name="GetVATSRightAreaFreeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e1dc11b5-1117-458f-b27b-ee7727d45374" ID="10246">
     <Fields>
-      <FormLinkOrAlias name="FirstUnusedIntParameter">
+      <FormLinkOrIndex name="FirstUnusedIntParameter">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2164,9 +2165,9 @@
   </Object>
   <Object name="GetVATSLeftAreaFreeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="971367c3-9415-45e0-abae-53cfefc43f97" ID="10247">
     <Fields>
-      <FormLinkOrAlias name="FirstUnusedIntParameter">
+      <FormLinkOrIndex name="FirstUnusedIntParameter">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2174,9 +2175,9 @@
   </Object>
   <Object name="GetVATSBackAreaFreeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="29e73dea-1abf-4ee7-ac09-91745072dc20" ID="10248">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2184,9 +2185,9 @@
   </Object>
   <Object name="GetVATSFrontAreaFreeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="686ea714-abbb-43a8-a674-02f593b98b8e" ID="10249">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2218,9 +2219,9 @@
   </Object>
   <Object name="GetVATSRightTargetVisibleConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="9f039afa-a514-4279-9f76-1545f9125a0d" ID="10253">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2228,9 +2229,9 @@
   </Object>
   <Object name="GetVATSLeftTargetVisibleConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a96633e8-1ded-4b87-a3fd-9b09938c8c7d" ID="10254">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2238,9 +2239,9 @@
   </Object>
   <Object name="GetVATSBackTargetVisibleConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ac176bf0-dd13-4956-b4fa-7fc4cc7a438d" ID="10255">
     <Fields>
-      <FormLinkOrAlias name="FirstUnusedIntParameter">
+      <FormLinkOrIndex name="FirstUnusedIntParameter">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2248,9 +2249,9 @@
   </Object>
   <Object name="GetVATSFrontTargetVisibleConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="28df3009-bc94-4577-9ff0-eb17e01680a2" ID="10256">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2274,7 +2275,7 @@
   </Object>
   <Object name="GetInfamyConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="c50330e7-580d-4cbb-bc25-b8772956699c" ID="10259">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2282,7 +2283,7 @@
   </Object>
   <Object name="GetInfamyViolentConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="178d2526-e5a6-4caa-871b-b8e80ca93971" ID="10260">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2290,7 +2291,7 @@
   </Object>
   <Object name="GetInfamyNonViolentConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="84f0f47f-471c-4150-98dd-1d91b0dd0e56" ID="10261">
     <Fields>
-      <FormLinkOrAlias refName="Faction" name="Faction"/>
+      <FormLinkOrIndex refName="Faction" name="Faction"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2298,7 +2299,7 @@
   </Object>
   <Object name="GetQuestCompletedConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="8e643ffe-9e1b-4359-99f1-6e64fba6846c" ID="10262">
     <Fields>
-      <FormLinkOrAlias refName="Quest" name="Quest"/>
+      <FormLinkOrIndex refName="Quest" name="Quest"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2314,7 +2315,7 @@
   </Object>
   <Object name="IsSceneActionCompleteConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="4fa5e963-81b3-472d-b5f2-ae1169187657" ID="10264">
     <Fields>
-      <FormLinkOrAlias refName="Scene" name="Scene"/>
+      <FormLinkOrIndex refName="Scene" name="Scene"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SceneActionIndex"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2322,9 +2323,9 @@
   </Object>
   <Object name="GetSpellUsageNumConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="02419323-d60f-440d-b7cd-fb7ee3844508" ID="10265">
     <Fields>
-      <FormLinkOrAlias name="MagicItem">
+      <FormLinkOrIndex name="MagicItem">
         <Interface>IMagicItem</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2348,7 +2349,7 @@
   </Object>
   <Object name="HasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a1780d0f-7cc5-4241-829f-8b3411752be8" ID="10268">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2356,7 +2357,7 @@
   </Object>
   <Object name="HasRefTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="b4500236-ca6f-4e06-9977-8896b6f7e713" ID="10269">
     <Fields>
-      <FormLinkOrAlias refName="LocationReferenceType" name="LocationReferenceType"/>
+      <FormLinkOrIndex refName="LocationReferenceType" name="LocationReferenceType"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2364,7 +2365,7 @@
   </Object>
   <Object name="LocationHasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="8f799f22-15f3-4104-aa2e-3fc1d9f814be" ID="10270">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2372,7 +2373,7 @@
   </Object>
   <Object name="LocationHasRefTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a29cf9d3-fecd-4e47-a9d2-c38b1c0e6065" ID="10271">
     <Fields>
-      <FormLinkOrAlias refName="LocationReferenceType" name="LocationReferenceType"/>
+      <FormLinkOrIndex refName="LocationReferenceType" name="LocationReferenceType"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2380,7 +2381,7 @@
   </Object>
   <Object name="GetIsEditorLocationConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="96ba37f7-41df-46c0-8740-cd4fc351161f" ID="10272">
     <Fields>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2452,19 +2453,19 @@
   </Object>
   <Object name="IsCloserToAThanBConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="b889a8ef-38e2-47cf-9afe-f1ad39001c62" ID="10282">
     <Fields>
-      <FormLinkOrAlias name="TargetA">
+      <FormLinkOrIndex name="TargetA">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias name="TargetB">
+      <FormLinkOrIndex name="TargetB">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
   <Object name="GetEquippedShoutConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="9a0f32d4-083d-444b-b380-392bb9b4faba" ID="10283">
     <Fields>
-      <FormLinkOrAlias refName="Shout" name="Shout"/>
+      <FormLinkOrIndex refName="Shout" name="Shout"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2480,9 +2481,9 @@
   </Object>
   <Object name="GetRelativeAngleConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="10b94f3a-03b4-4750-b217-cc0bda36e12c" ID="10285">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Enum enumName="Axis" name="Axis"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2506,17 +2507,17 @@
   </Object>
   <Object name="GetRefTypeDeadCountConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="dbf5cdf5-b2a7-42d6-bc04-0c75829a1d34" ID="10288">
     <Fields>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="LocationReferenceType" name="LocationReferenceType"/>
+      <FormLinkOrIndex refName="LocationReferenceType" name="LocationReferenceType"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
   <Object name="GetRefTypeAliveCountConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="485e4e7f-cdf7-4a8e-b52e-4213d480587b" ID="10289">
     <Fields>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="LocationReferenceType" name="LocationReferenceType"/>
+      <FormLinkOrIndex refName="LocationReferenceType" name="LocationReferenceType"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2530,7 +2531,7 @@
   </Object>
   <Object name="IsCurrentSpellConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="3aba78a0-b15d-4841-803c-d3b19aeefcd8" ID="10291">
     <Fields>
-      <FormLinkOrAlias refName="Spell" name="Spell"/>
+      <FormLinkOrIndex refName="Spell" name="Spell"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Enum enumName="CastSource" name="SpellSource"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2540,7 +2541,7 @@
     <Fields>
       <Enum enumName="CastSource" name="SpellSource"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2564,7 +2565,7 @@
     <Fields>
       <Int32 name="LocationAliasIndex"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="LocationReferenceType" name="LocationReferenceType"/>
+      <FormLinkOrIndex refName="LocationReferenceType" name="LocationReferenceType"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2572,7 +2573,7 @@
     <Fields>
       <Int32 name="LocationAliasIndex"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="LocationReferenceType" name="LocationReferenceType"/>
+      <FormLinkOrIndex refName="LocationReferenceType" name="LocationReferenceType"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2586,11 +2587,11 @@
   </Object>
   <Object name="IsInSameCurrentLocAsRefConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="28efb0ee-6171-455c-a69b-aac101e37cc0" ID="10298">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2598,7 +2599,7 @@
     <Fields>
       <Int32 name="ReferenceAliasIndex"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2606,15 +2607,15 @@
     <Fields>
       <Int32 name="LocationAliasIndex"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
   <Object name="GetKeywordDataForLocationConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="bb89301c-e427-4eb4-bf0c-fa1e6866319c" ID="10301">
     <Fields>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2622,7 +2623,7 @@
     <Fields>
       <Int32 name="LocationAliasIndex"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2630,7 +2631,7 @@
     <Fields>
       <Int32 name="LocationAliasIndex"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
@@ -2684,7 +2685,7 @@
   </Object>
   <Object name="HasAssociationTypeAnyConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="04d4ad74-6d07-4459-94d9-8bd53115ea15" ID="10310">
     <Fields>
-      <FormLinkOrAlias refName="AssociationType" name="AssociationType"/>
+      <FormLinkOrIndex refName="AssociationType" name="AssociationType"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2740,9 +2741,9 @@
   </Object>
   <Object name="GetInContainerConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="8a60dc39-7bab-4301-9079-86602aae614f" ID="10317">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2750,7 +2751,7 @@
   </Object>
   <Object name="IsLocationLoadedConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="9f837915-302f-4bb2-a23c-2642c21df625" ID="10318">
     <Fields>
-      <FormLinkOrAlias refName="Location" name="Location"/>
+      <FormLinkOrIndex refName="Location" name="Location"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2774,7 +2775,7 @@
   </Object>
   <Object name="GetVMQuestVariableConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="43092b60-d1e2-400c-8a99-4ce7a282b92e" ID="10321">
     <Fields>
-      <FormLinkOrAlias refName="Quest" name="Quest"/>
+      <FormLinkOrIndex refName="Quest" name="Quest"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="VariableName" binary="NoGeneration"/>
@@ -2782,9 +2783,9 @@
   </Object>
   <Object name="GetVMScriptVariableConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="6b85f148-fe5e-4f98-9a7f-ce6b4f452655" ID="10322">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="VariableName" binary="NoGeneration"/>
@@ -2848,9 +2849,9 @@
   </Object>
   <Object name="GetWithinDistanceConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ba5f69d0-337d-423d-9119-6268e3ceb39d" ID="10330">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Float name="Distance"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2914,17 +2915,17 @@
   </Object>
   <Object name="IsLinkedToConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="773e1088-e975-4509-89af-3b4187265dfa" ID="10338">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
     </Fields>
   </Object>
   <Object name="GetKeywordDataForCurrentLocationConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ed66177a-8a13-48c4-b343-6e4e7c8c99f6" ID="10339">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2932,9 +2933,9 @@
   </Object>
   <Object name="GetInSharedCrimeFactionConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ea3bfedc-6a91-4866-b761-500fe49e19be" ID="10340">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -2982,7 +2983,7 @@
   </Object>
   <Object name="EPTemperingItemHasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="1ba8fdea-63a5-4207-a440-811216861b1d" ID="10346">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3038,7 +3039,7 @@
   </Object>
   <Object name="ShouldAttackKillConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="2c0b0b53-5760-4e54-b801-fed5e9b35d6e" ID="10353">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3062,7 +3063,7 @@
   </Object>
   <Object name="WornHasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="499dbc57-c071-4081-84a6-bcee5bd47bd3" ID="10356">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3086,7 +3087,7 @@
   </Object>
   <Object name="EPModSkillUsage_AdvanceObjectHasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="b3f90954-64ef-4fb7-ad3b-1f4393851ac1" ID="10359">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3102,7 +3103,7 @@
   </Object>
   <Object name="EPMagic_SpellHasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="841a7c04-d844-4b28-9b83-fa4b7de9c0a2" ID="10361">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3126,7 +3127,7 @@
   </Object>
   <Object name="IsAttackTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="bba9292d-856b-4135-8ce2-f6f9c1508814" ID="10364">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3142,7 +3143,7 @@
   </Object>
   <Object name="HasMagicEffectKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="d3b2edc4-12dc-4f93-b4fa-6aa0f9f15d08" ID="10366">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3190,7 +3191,7 @@
   </Object>
   <Object name="GetShouldHelpConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="ed9f3f76-311d-4fb9-955c-e90dacc1dd21" ID="10372">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3206,7 +3207,7 @@
   </Object>
   <Object name="GetCombatTargetHasKeywordConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e6c0de61-fd43-437d-aa1d-1cc73a0598b7" ID="10374">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3238,7 +3239,7 @@
   </Object>
   <Object name="SpellHasCastingPerkConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="a5ccb0d9-6f89-4809-afb0-097c5a68ef5f" ID="10378">
     <Fields>
-      <FormLinkOrAlias refName="Perk" name="Perk"/>
+      <FormLinkOrIndex refName="Perk" name="Perk"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3278,7 +3279,7 @@
   </Object>
   <Object name="IsHostileToActorConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="e3e6586c-5aec-41ba-a438-43074da8c643" ID="10383">
     <Fields>
-      <FormLinkOrAlias refName="PlacedNpc" name="TargetNpc"/>
+      <FormLinkOrIndex refName="PlacedNpc" name="TargetNpc"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3286,9 +3287,9 @@
   </Object>
   <Object name="GetTargetHeightConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="14c0b673-3a3d-443c-8912-6660cceb3255" ID="10384">
     <Fields>
-      <FormLinkOrAlias name="Target">
+      <FormLinkOrIndex name="Target">
         <Interface>IPlacedSimple</Interface>
-      </FormLinkOrAlias>
+      </FormLinkOrIndex>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>
@@ -3304,7 +3305,7 @@
   </Object>
   <Object name="WornApparelHasKeywordCountConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration" GUID="63b557a3-eda5-4b5f-a803-3b0631bd84f5" ID="10386">
     <Fields>
-      <FormLinkOrAlias refName="Keyword" name="Keyword"/>
+      <FormLinkOrIndex refName="Keyword" name="Keyword"/>
       <String nullable="true" name="FirstUnusedStringParameter" binary="NoGeneration"/>
       <Int32 name="SecondUnusedIntParameter"/>
       <String nullable="true" name="SecondUnusedStringParameter" binary="NoGeneration"/>

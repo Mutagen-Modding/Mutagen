@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public EPModSkillUsage_AdvanceObjectHasKeywordConditionData()
         {
-            _Keyword = new FormLinkOrAlias<IKeywordGetter>(this);
+            _Keyword = new FormLinkOrIndex<IKeywordGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Keyword
-        private readonly IFormLinkOrAlias<IKeywordGetter> _Keyword = default!;
-        public IFormLinkOrAlias<IKeywordGetter> Keyword
+        private readonly IFormLinkOrIndex<IKeywordGetter> _Keyword = default!;
+        public IFormLinkOrIndex<IKeywordGetter> Keyword
         {
             get => _Keyword;
             set => _Keyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IKeywordGetter> IEPModSkillUsage_AdvanceObjectHasKeywordConditionDataGetter.Keyword => this.Keyword;
+        IFormLinkOrIndexGetter<IKeywordGetter> IEPModSkillUsage_AdvanceObjectHasKeywordConditionDataGetter.Keyword => this.Keyword;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Keyword,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Keyword = Keyword;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IEPModSkillUsage_AdvanceObjectHasKeywordConditionData>
     {
-        new IFormLinkOrAlias<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkOrIndex<IKeywordGetter> Keyword { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IEPModSkillUsage_AdvanceObjectHasKeywordConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => EPModSkillUsage_AdvanceObjectHasKeywordConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IKeywordGetter> Keyword { get; }
+        IFormLinkOrIndexGetter<IKeywordGetter> Keyword { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Keyword = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Keyword = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(EPModSkillUsage_AdvanceObjectHasKeywordConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (EPModSkillUsage_AdvanceObjectHasKeywordConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (EPModSkillUsage_AdvanceObjectHasKeywordConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (EPModSkillUsage_AdvanceObjectHasKeywordConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Keyword);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Keyword);
             item.SecondUnusedIntParameter = frame.ReadInt32();

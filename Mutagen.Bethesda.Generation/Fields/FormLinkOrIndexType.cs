@@ -3,9 +3,9 @@ using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 
-public class FormLinkOrAliasType : FormLinkType
+public class FormLinkOrIndexType : FormLinkType
 {
-    public override string ClassTypeString => "FormLinkOrAlias";
+    public override string ClassTypeString => "FormLinkOrIndex";
 
     public override async Task GenerateForCtor(StructuredStringBuilder sb)
     {

@@ -47,22 +47,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetRefTypeAliveCountConditionData()
         {
-            _Location = new FormLinkOrAlias<ILocationGetter>(this);
-            _LocationReferenceType = new FormLinkOrAlias<ILocationReferenceTypeGetter>(this);
+            _Location = new FormLinkOrIndex<ILocationGetter>(this);
+            _LocationReferenceType = new FormLinkOrIndex<ILocationReferenceTypeGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Location
-        private readonly IFormLinkOrAlias<ILocationGetter> _Location = default!;
-        public IFormLinkOrAlias<ILocationGetter> Location
+        private readonly IFormLinkOrIndex<ILocationGetter> _Location = default!;
+        public IFormLinkOrIndex<ILocationGetter> Location
         {
             get => _Location;
             set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<ILocationGetter> IGetRefTypeAliveCountConditionDataGetter.Location => this.Location;
+        IFormLinkOrIndexGetter<ILocationGetter> IGetRefTypeAliveCountConditionDataGetter.Location => this.Location;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetRefTypeAliveCountConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region LocationReferenceType
-        private readonly IFormLinkOrAlias<ILocationReferenceTypeGetter> _LocationReferenceType = default!;
-        public IFormLinkOrAlias<ILocationReferenceTypeGetter> LocationReferenceType
+        private readonly IFormLinkOrIndex<ILocationReferenceTypeGetter> _LocationReferenceType = default!;
+        public IFormLinkOrIndex<ILocationReferenceTypeGetter> LocationReferenceType
         {
             get => _LocationReferenceType;
             set => _LocationReferenceType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<ILocationReferenceTypeGetter> IGetRefTypeAliveCountConditionDataGetter.LocationReferenceType => this.LocationReferenceType;
+        IFormLinkOrIndexGetter<ILocationReferenceTypeGetter> IGetRefTypeAliveCountConditionDataGetter.LocationReferenceType => this.LocationReferenceType;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -136,6 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Location,
                 TItem FirstUnusedStringParameter,
                 TItem LocationReferenceType,
@@ -144,7 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Location = Location;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -535,9 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGetRefTypeAliveCountConditionDataGetter,
         ILoquiObjectSetter<IGetRefTypeAliveCountConditionData>
     {
-        new IFormLinkOrAlias<ILocationGetter> Location { get; set; }
+        new IFormLinkOrIndex<ILocationGetter> Location { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new IFormLinkOrAlias<ILocationReferenceTypeGetter> LocationReferenceType { get; set; }
+        new IFormLinkOrIndex<ILocationReferenceTypeGetter> LocationReferenceType { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -548,9 +550,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetRefTypeAliveCountConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetRefTypeAliveCountConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<ILocationGetter> Location { get; }
+        IFormLinkOrIndexGetter<ILocationGetter> Location { get; }
         String? FirstUnusedStringParameter { get; }
-        IFormLinkOrAliasGetter<ILocationReferenceTypeGetter> LocationReferenceType { get; }
+        IFormLinkOrIndexGetter<ILocationReferenceTypeGetter> LocationReferenceType { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -700,10 +702,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Location = 4,
-        FirstUnusedStringParameter = 5,
-        LocationReferenceType = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Location = 5,
+        FirstUnusedStringParameter = 6,
+        LocationReferenceType = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -723,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetRefTypeAliveCountConditionData.Mask<>);
 
@@ -948,6 +951,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetRefTypeAliveCountConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetRefTypeAliveCountConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetRefTypeAliveCountConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1188,10 +1193,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LocationReferenceType);
         }
@@ -1241,10 +1246,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Location);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.LocationReferenceType);
         }

@@ -3,18 +3,18 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public class FormLinkOrAliasBinaryTranslation
+public class FormLinkOrIndexBinaryTranslation
 {
-    public static FormLinkOrAliasBinaryTranslation Instance = new();
+    public static FormLinkOrIndexBinaryTranslation Instance = new();
     
     public void Write<T>(
         MutagenWriter writer,
-        IFormLinkOrAliasGetter<T> item)
+        IFormLinkOrIndexGetter<T> item)
         where T : class, IMajorRecordGetter
     {
-        if (item.UsesAlias())
+        if (item.UsesAlias() || item.UsesPackageData())
         {
-            writer.Write(item.Alias ?? 0);
+            writer.Write(item.Index ?? 0);
         }
         else
         {
@@ -26,10 +26,10 @@ public class FormLinkOrAliasBinaryTranslation
 
     public void ParseInto<T>(
         MutagenFrame reader,
-        IFormLinkOrAlias<T> item)
+        IFormLinkOrIndex<T> item)
         where T : class, IMajorRecordGetter
     {
-        item.Alias = reader.GetUInt32();
+        item.Index = reader.GetUInt32();
         item.Link.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader));
     }
 }

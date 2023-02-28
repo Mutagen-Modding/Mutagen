@@ -47,22 +47,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public IsCloserToAThanBConditionData()
         {
-            _TargetA = new FormLinkOrAlias<IPlacedSimpleGetter>(this);
-            _TargetB = new FormLinkOrAlias<IPlacedSimpleGetter>(this);
+            _TargetA = new FormLinkOrIndex<IPlacedSimpleGetter>(this);
+            _TargetB = new FormLinkOrIndex<IPlacedSimpleGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region TargetA
-        private readonly IFormLinkOrAlias<IPlacedSimpleGetter> _TargetA = default!;
-        public IFormLinkOrAlias<IPlacedSimpleGetter> TargetA
+        private readonly IFormLinkOrIndex<IPlacedSimpleGetter> _TargetA = default!;
+        public IFormLinkOrIndex<IPlacedSimpleGetter> TargetA
         {
             get => _TargetA;
             set => _TargetA.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> IIsCloserToAThanBConditionDataGetter.TargetA => this.TargetA;
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> IIsCloserToAThanBConditionDataGetter.TargetA => this.TargetA;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? IIsCloserToAThanBConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region TargetB
-        private readonly IFormLinkOrAlias<IPlacedSimpleGetter> _TargetB = default!;
-        public IFormLinkOrAlias<IPlacedSimpleGetter> TargetB
+        private readonly IFormLinkOrIndex<IPlacedSimpleGetter> _TargetB = default!;
+        public IFormLinkOrIndex<IPlacedSimpleGetter> TargetB
         {
             get => _TargetB;
             set => _TargetB.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> IIsCloserToAThanBConditionDataGetter.TargetB => this.TargetB;
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> IIsCloserToAThanBConditionDataGetter.TargetB => this.TargetB;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -136,6 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem TargetA,
                 TItem FirstUnusedStringParameter,
                 TItem TargetB,
@@ -144,7 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.TargetA = TargetA;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -535,9 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
         IIsCloserToAThanBConditionDataGetter,
         ILoquiObjectSetter<IIsCloserToAThanBConditionData>
     {
-        new IFormLinkOrAlias<IPlacedSimpleGetter> TargetA { get; set; }
+        new IFormLinkOrIndex<IPlacedSimpleGetter> TargetA { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new IFormLinkOrAlias<IPlacedSimpleGetter> TargetB { get; set; }
+        new IFormLinkOrIndex<IPlacedSimpleGetter> TargetB { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -548,9 +550,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsCloserToAThanBConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsCloserToAThanBConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> TargetA { get; }
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> TargetA { get; }
         String? FirstUnusedStringParameter { get; }
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> TargetB { get; }
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> TargetB { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -700,10 +702,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        TargetA = 4,
-        FirstUnusedStringParameter = 5,
-        TargetB = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        TargetA = 5,
+        FirstUnusedStringParameter = 6,
+        TargetB = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -723,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(IsCloserToAThanBConditionData.Mask<>);
 
@@ -948,6 +951,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (IsCloserToAThanBConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1188,10 +1193,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TargetA);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TargetB);
         }
@@ -1241,10 +1246,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.TargetA);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.TargetB);
         }

@@ -115,13 +115,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
@@ -597,8 +599,9 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FirstUnusedStringParameter = 4,
-        SecondUnusedStringParameter = 5,
+        UsePackageData = 4,
+        FirstUnusedStringParameter = 5,
+        SecondUnusedStringParameter = 6,
     }
     #endregion
 
@@ -618,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(AGetVATSValueConditionData.Mask<>);
 
@@ -829,6 +832,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (AGetVATSValueConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (AGetVATSValueConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (AGetVATSValueConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

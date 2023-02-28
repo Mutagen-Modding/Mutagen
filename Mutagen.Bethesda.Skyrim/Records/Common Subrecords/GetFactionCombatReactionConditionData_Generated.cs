@@ -47,22 +47,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetFactionCombatReactionConditionData()
         {
-            _FactionA = new FormLinkOrAlias<IFactionGetter>(this);
-            _FactionB = new FormLinkOrAlias<IFactionGetter>(this);
+            _FactionA = new FormLinkOrIndex<IFactionGetter>(this);
+            _FactionB = new FormLinkOrIndex<IFactionGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region FactionA
-        private readonly IFormLinkOrAlias<IFactionGetter> _FactionA = default!;
-        public IFormLinkOrAlias<IFactionGetter> FactionA
+        private readonly IFormLinkOrIndex<IFactionGetter> _FactionA = default!;
+        public IFormLinkOrIndex<IFactionGetter> FactionA
         {
             get => _FactionA;
             set => _FactionA.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IFactionGetter> IGetFactionCombatReactionConditionDataGetter.FactionA => this.FactionA;
+        IFormLinkOrIndexGetter<IFactionGetter> IGetFactionCombatReactionConditionDataGetter.FactionA => this.FactionA;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetFactionCombatReactionConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region FactionB
-        private readonly IFormLinkOrAlias<IFactionGetter> _FactionB = default!;
-        public IFormLinkOrAlias<IFactionGetter> FactionB
+        private readonly IFormLinkOrIndex<IFactionGetter> _FactionB = default!;
+        public IFormLinkOrIndex<IFactionGetter> FactionB
         {
             get => _FactionB;
             set => _FactionB.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IFactionGetter> IGetFactionCombatReactionConditionDataGetter.FactionB => this.FactionB;
+        IFormLinkOrIndexGetter<IFactionGetter> IGetFactionCombatReactionConditionDataGetter.FactionB => this.FactionB;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -136,6 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem FactionA,
                 TItem FirstUnusedStringParameter,
                 TItem FactionB,
@@ -144,7 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.FactionA = FactionA;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -535,9 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGetFactionCombatReactionConditionDataGetter,
         ILoquiObjectSetter<IGetFactionCombatReactionConditionData>
     {
-        new IFormLinkOrAlias<IFactionGetter> FactionA { get; set; }
+        new IFormLinkOrIndex<IFactionGetter> FactionA { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new IFormLinkOrAlias<IFactionGetter> FactionB { get; set; }
+        new IFormLinkOrIndex<IFactionGetter> FactionB { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -548,9 +550,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetFactionCombatReactionConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetFactionCombatReactionConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IFactionGetter> FactionA { get; }
+        IFormLinkOrIndexGetter<IFactionGetter> FactionA { get; }
         String? FirstUnusedStringParameter { get; }
-        IFormLinkOrAliasGetter<IFactionGetter> FactionB { get; }
+        IFormLinkOrIndexGetter<IFactionGetter> FactionB { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -700,10 +702,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FactionA = 4,
-        FirstUnusedStringParameter = 5,
-        FactionB = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        FactionA = 5,
+        FirstUnusedStringParameter = 6,
+        FactionB = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -723,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetFactionCombatReactionConditionData.Mask<>);
 
@@ -948,6 +951,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetFactionCombatReactionConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetFactionCombatReactionConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetFactionCombatReactionConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1188,10 +1193,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FactionA);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FactionB);
         }
@@ -1241,10 +1246,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.FactionA);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.FactionB);
         }

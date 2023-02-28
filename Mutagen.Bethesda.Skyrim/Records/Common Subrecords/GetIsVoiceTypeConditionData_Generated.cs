@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetIsVoiceTypeConditionData()
         {
-            _VoiceTypeOrList = new FormLinkOrAlias<IVoiceTypeOrListGetter>(this);
+            _VoiceTypeOrList = new FormLinkOrIndex<IVoiceTypeOrListGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region VoiceTypeOrList
-        private readonly IFormLinkOrAlias<IVoiceTypeOrListGetter> _VoiceTypeOrList = default!;
-        public IFormLinkOrAlias<IVoiceTypeOrListGetter> VoiceTypeOrList
+        private readonly IFormLinkOrIndex<IVoiceTypeOrListGetter> _VoiceTypeOrList = default!;
+        public IFormLinkOrIndex<IVoiceTypeOrListGetter> VoiceTypeOrList
         {
             get => _VoiceTypeOrList;
             set => _VoiceTypeOrList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IVoiceTypeOrListGetter> IGetIsVoiceTypeConditionDataGetter.VoiceTypeOrList => this.VoiceTypeOrList;
+        IFormLinkOrIndexGetter<IVoiceTypeOrListGetter> IGetIsVoiceTypeConditionDataGetter.VoiceTypeOrList => this.VoiceTypeOrList;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem VoiceTypeOrList,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.VoiceTypeOrList = VoiceTypeOrList;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetIsVoiceTypeConditionDataGetter,
         ILoquiObjectSetter<IGetIsVoiceTypeConditionData>
     {
-        new IFormLinkOrAlias<IVoiceTypeOrListGetter> VoiceTypeOrList { get; set; }
+        new IFormLinkOrIndex<IVoiceTypeOrListGetter> VoiceTypeOrList { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetIsVoiceTypeConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetIsVoiceTypeConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IVoiceTypeOrListGetter> VoiceTypeOrList { get; }
+        IFormLinkOrIndexGetter<IVoiceTypeOrListGetter> VoiceTypeOrList { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        VoiceTypeOrList = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        VoiceTypeOrList = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetIsVoiceTypeConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetIsVoiceTypeConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetIsVoiceTypeConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetIsVoiceTypeConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VoiceTypeOrList);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.VoiceTypeOrList);
             item.SecondUnusedIntParameter = frame.ReadInt32();

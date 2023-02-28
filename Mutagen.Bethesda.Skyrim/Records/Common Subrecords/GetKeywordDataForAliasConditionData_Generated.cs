@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetKeywordDataForAliasConditionData()
         {
-            _Keyword = new FormLinkOrAlias<IKeywordGetter>(this);
+            _Keyword = new FormLinkOrIndex<IKeywordGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -62,14 +62,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? IGetKeywordDataForAliasConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region Keyword
-        private readonly IFormLinkOrAlias<IKeywordGetter> _Keyword = default!;
-        public IFormLinkOrAlias<IKeywordGetter> Keyword
+        private readonly IFormLinkOrIndex<IKeywordGetter> _Keyword = default!;
+        public IFormLinkOrIndex<IKeywordGetter> Keyword
         {
             get => _Keyword;
             set => _Keyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IKeywordGetter> IGetKeywordDataForAliasConditionDataGetter.Keyword => this.Keyword;
+        IFormLinkOrIndexGetter<IKeywordGetter> IGetKeywordDataForAliasConditionDataGetter.Keyword => this.Keyword;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem LocationAliasIndex,
                 TItem FirstUnusedStringParameter,
                 TItem Keyword,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.LocationAliasIndex = LocationAliasIndex;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -529,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int32 LocationAliasIndex { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new IFormLinkOrAlias<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkOrIndex<IKeywordGetter> Keyword { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -542,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => GetKeywordDataForAliasConditionData_Registration.Instance;
         Int32 LocationAliasIndex { get; }
         String? FirstUnusedStringParameter { get; }
-        IFormLinkOrAliasGetter<IKeywordGetter> Keyword { get; }
+        IFormLinkOrIndexGetter<IKeywordGetter> Keyword { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        LocationAliasIndex = 4,
-        FirstUnusedStringParameter = 5,
-        Keyword = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        LocationAliasIndex = 5,
+        FirstUnusedStringParameter = 6,
+        Keyword = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetKeywordDataForAliasConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetKeywordDataForAliasConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetKeywordDataForAliasConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetKeywordDataForAliasConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1176,7 +1181,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer);
             writer.Write(item.LocationAliasIndex);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Keyword);
         }
@@ -1227,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 frame: frame);
             item.LocationAliasIndex = frame.ReadInt32();
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Keyword);
         }

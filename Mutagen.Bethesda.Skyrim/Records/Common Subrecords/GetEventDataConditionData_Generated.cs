@@ -131,6 +131,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Function,
                 TItem Member,
                 TItem Record,
@@ -140,7 +141,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Function = Function;
                 this.Member = Member;
@@ -726,11 +728,12 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Function = 4,
-        Member = 5,
-        Record = 6,
-        FirstUnusedStringParameter = 7,
-        SecondUnusedStringParameter = 8,
+        UsePackageData = 4,
+        Function = 5,
+        Member = 6,
+        Record = 7,
+        FirstUnusedStringParameter = 8,
+        SecondUnusedStringParameter = 9,
     }
     #endregion
 
@@ -750,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(GetEventDataConditionData.Mask<>);
 
@@ -980,6 +983,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetEventDataConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetEventDataConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetEventDataConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

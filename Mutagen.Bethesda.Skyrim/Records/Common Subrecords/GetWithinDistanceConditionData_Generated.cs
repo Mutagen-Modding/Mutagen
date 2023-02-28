@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetWithinDistanceConditionData()
         {
-            _Target = new FormLinkOrAlias<IPlacedSimpleGetter>(this);
+            _Target = new FormLinkOrIndex<IPlacedSimpleGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Target
-        private readonly IFormLinkOrAlias<IPlacedSimpleGetter> _Target = default!;
-        public IFormLinkOrAlias<IPlacedSimpleGetter> Target
+        private readonly IFormLinkOrIndex<IPlacedSimpleGetter> _Target = default!;
+        public IFormLinkOrIndex<IPlacedSimpleGetter> Target
         {
             get => _Target;
             set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> IGetWithinDistanceConditionDataGetter.Target => this.Target;
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> IGetWithinDistanceConditionDataGetter.Target => this.Target;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Target,
                 TItem FirstUnusedStringParameter,
                 TItem Distance,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Target = Target;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetWithinDistanceConditionDataGetter,
         ILoquiObjectSetter<IGetWithinDistanceConditionData>
     {
-        new IFormLinkOrAlias<IPlacedSimpleGetter> Target { get; set; }
+        new IFormLinkOrIndex<IPlacedSimpleGetter> Target { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Single Distance { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetWithinDistanceConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetWithinDistanceConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> Target { get; }
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> Target { get; }
         String? FirstUnusedStringParameter { get; }
         Single Distance { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Target = 4,
-        FirstUnusedStringParameter = 5,
-        Distance = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Target = 5,
+        FirstUnusedStringParameter = 6,
+        Distance = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetWithinDistanceConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetWithinDistanceConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetWithinDistanceConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetWithinDistanceConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Target);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1228,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Target);
             item.Distance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

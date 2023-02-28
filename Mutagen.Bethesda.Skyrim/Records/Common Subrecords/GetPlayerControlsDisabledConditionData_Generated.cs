@@ -119,6 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem PlayerControlsParameterOne,
                 TItem FirstUnusedStringParameter,
                 TItem PlayerControlsParameterTwo,
@@ -127,7 +128,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.PlayerControlsParameterOne = PlayerControlsParameterOne;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -676,10 +678,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        PlayerControlsParameterOne = 4,
-        FirstUnusedStringParameter = 5,
-        PlayerControlsParameterTwo = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        PlayerControlsParameterOne = 5,
+        FirstUnusedStringParameter = 6,
+        PlayerControlsParameterTwo = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -699,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetPlayerControlsDisabledConditionData.Mask<>);
 
@@ -922,6 +925,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetPlayerControlsDisabledConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetPlayerControlsDisabledConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetPlayerControlsDisabledConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public SpellHasKeywordConditionData()
         {
-            _Keyword = new FormLinkOrAlias<IKeywordGetter>(this);
+            _Keyword = new FormLinkOrIndex<IKeywordGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -62,14 +62,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? ISpellHasKeywordConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region Keyword
-        private readonly IFormLinkOrAlias<IKeywordGetter> _Keyword = default!;
-        public IFormLinkOrAlias<IKeywordGetter> Keyword
+        private readonly IFormLinkOrIndex<IKeywordGetter> _Keyword = default!;
+        public IFormLinkOrIndex<IKeywordGetter> Keyword
         {
             get => _Keyword;
             set => _Keyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IKeywordGetter> ISpellHasKeywordConditionDataGetter.Keyword => this.Keyword;
+        IFormLinkOrIndexGetter<IKeywordGetter> ISpellHasKeywordConditionDataGetter.Keyword => this.Keyword;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem SpellSource,
                 TItem FirstUnusedStringParameter,
                 TItem Keyword,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.SpellSource = SpellSource;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -529,7 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new CastSource SpellSource { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new IFormLinkOrAlias<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkOrIndex<IKeywordGetter> Keyword { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -542,7 +544,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration StaticRegistration => SpellHasKeywordConditionData_Registration.Instance;
         CastSource SpellSource { get; }
         String? FirstUnusedStringParameter { get; }
-        IFormLinkOrAliasGetter<IKeywordGetter> Keyword { get; }
+        IFormLinkOrIndexGetter<IKeywordGetter> Keyword { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        SpellSource = 4,
-        FirstUnusedStringParameter = 5,
-        Keyword = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        SpellSource = 5,
+        FirstUnusedStringParameter = 6,
+        Keyword = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(SpellHasKeywordConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (SpellHasKeywordConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (SpellHasKeywordConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (SpellHasKeywordConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1179,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer,
                 item.SpellSource,
                 length: 4);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Keyword);
         }
@@ -1232,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.SpellSource = EnumBinaryTranslation<CastSource, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Keyword);
         }

@@ -47,22 +47,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public IsCellOwnerConditionData()
         {
-            _Cell = new FormLinkOrAlias<ICellGetter>(this);
-            _Owner = new FormLinkOrAlias<IOwnerGetter>(this);
+            _Cell = new FormLinkOrIndex<ICellGetter>(this);
+            _Owner = new FormLinkOrIndex<IOwnerGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Cell
-        private readonly IFormLinkOrAlias<ICellGetter> _Cell = default!;
-        public IFormLinkOrAlias<ICellGetter> Cell
+        private readonly IFormLinkOrIndex<ICellGetter> _Cell = default!;
+        public IFormLinkOrIndex<ICellGetter> Cell
         {
             get => _Cell;
             set => _Cell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<ICellGetter> IIsCellOwnerConditionDataGetter.Cell => this.Cell;
+        IFormLinkOrIndexGetter<ICellGetter> IIsCellOwnerConditionDataGetter.Cell => this.Cell;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? IIsCellOwnerConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region Owner
-        private readonly IFormLinkOrAlias<IOwnerGetter> _Owner = default!;
-        public IFormLinkOrAlias<IOwnerGetter> Owner
+        private readonly IFormLinkOrIndex<IOwnerGetter> _Owner = default!;
+        public IFormLinkOrIndex<IOwnerGetter> Owner
         {
             get => _Owner;
             set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IOwnerGetter> IIsCellOwnerConditionDataGetter.Owner => this.Owner;
+        IFormLinkOrIndexGetter<IOwnerGetter> IIsCellOwnerConditionDataGetter.Owner => this.Owner;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -136,6 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Cell,
                 TItem FirstUnusedStringParameter,
                 TItem Owner,
@@ -144,7 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Cell = Cell;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -535,9 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
         IIsCellOwnerConditionDataGetter,
         ILoquiObjectSetter<IIsCellOwnerConditionData>
     {
-        new IFormLinkOrAlias<ICellGetter> Cell { get; set; }
+        new IFormLinkOrIndex<ICellGetter> Cell { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new IFormLinkOrAlias<IOwnerGetter> Owner { get; set; }
+        new IFormLinkOrIndex<IOwnerGetter> Owner { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -548,9 +550,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsCellOwnerConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsCellOwnerConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<ICellGetter> Cell { get; }
+        IFormLinkOrIndexGetter<ICellGetter> Cell { get; }
         String? FirstUnusedStringParameter { get; }
-        IFormLinkOrAliasGetter<IOwnerGetter> Owner { get; }
+        IFormLinkOrIndexGetter<IOwnerGetter> Owner { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -700,10 +702,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Cell = 4,
-        FirstUnusedStringParameter = 5,
-        Owner = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Cell = 5,
+        FirstUnusedStringParameter = 6,
+        Owner = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -723,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(IsCellOwnerConditionData.Mask<>);
 
@@ -948,6 +951,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (IsCellOwnerConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (IsCellOwnerConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (IsCellOwnerConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1188,10 +1193,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Cell);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Owner);
         }
@@ -1241,10 +1246,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Cell);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Owner);
         }
