@@ -182,9 +182,11 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IPlaceableObject
 - AcousticSpace
 - Activator
+- AddonNode
 - AlchemicalApparatus
 - Ammunition
 - Armor
+- ArtObject
 - Book
 - Container
 - Door
@@ -290,6 +292,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IReferenceableObject
 ### AddonNode
 - IExplodeSpawn
+- IPlaceableObject
 ### AlchemicalApparatus
 - IConstructible
 - IExplodeSpawn
@@ -325,6 +328,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IExplodeSpawn
 ### ArtObject
 - IExplodeSpawn
+- IPlaceableObject
 ### Book
 - IConstructible
 - IExplodeSpawn

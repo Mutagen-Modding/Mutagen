@@ -700,6 +700,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAddonNodeInternal>,
         IModeled,
         IObjectBounded,
+        IPlaceableObject,
         ISkyrimMajorRecordInternal
     {
         /// <summary>
@@ -733,7 +734,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IAddonNodeGetter>,
         IMapsToGetter<IAddonNodeGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => AddonNode_Registration.Instance;
         #region ObjectBounds

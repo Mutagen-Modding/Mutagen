@@ -23,9 +23,11 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
         {
             AcousticSpace_Registration.Instance,
             Activator_Registration.Instance,
+            AddonNode_Registration.Instance,
             AlchemicalApparatus_Registration.Instance,
             Ammunition_Registration.Instance,
             Armor_Registration.Instance,
+            ArtObject_Registration.Instance,
             Book_Registration.Instance,
             Container_Registration.Instance,
             Door_Registration.Instance,
