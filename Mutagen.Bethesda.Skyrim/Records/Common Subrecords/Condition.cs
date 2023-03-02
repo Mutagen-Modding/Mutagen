@@ -749,6 +749,8 @@ public partial class Condition
         }
 
         ret.Data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
+        ret.Data.UsePackageData = flag.HasFlag((Condition.Flag)ParametersUsePackData);
+        ret.Flags = ret.Flags.SetFlag((Condition.Flag)ParametersUseAliases, false);
         ret.Flags = ret.Flags.SetFlag((Condition.Flag)ParametersUsePackData, false);
         return ret;
     }
@@ -2589,6 +2591,10 @@ partial class ConditionBinaryWriteTranslation
         if (item.Data.UseAliases)
         {
             flags = flags.SetFlag((Condition.Flag)ParametersUseAliases, true);
+        }
+        if (item.Data.UsePackageData)
+        {
+            flags = flags.SetFlag((Condition.Flag)ParametersUsePackData, true);
         }
 
         if (item is IConditionGlobalGetter)
