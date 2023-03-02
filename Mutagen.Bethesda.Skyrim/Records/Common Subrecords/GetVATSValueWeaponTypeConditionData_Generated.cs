@@ -103,6 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedStringParameter,
                 TItem Value)
@@ -111,6 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Reference: Reference,
                 Unknown3: Unknown3,
                 UseAliases: UseAliases,
+                UsePackageData: UsePackageData,
                 FirstUnusedStringParameter: FirstUnusedStringParameter,
                 SecondUnusedStringParameter: SecondUnusedStringParameter)
             {
@@ -571,9 +573,10 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        FirstUnusedStringParameter = 4,
-        SecondUnusedStringParameter = 5,
-        Value = 6,
+        UsePackageData = 4,
+        FirstUnusedStringParameter = 5,
+        SecondUnusedStringParameter = 6,
+        Value = 7,
     }
     #endregion
 
@@ -593,7 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GetVATSValueWeaponTypeConditionData.Mask<>);
 
@@ -813,6 +816,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetVATSValueWeaponTypeConditionData_FieldIndex)((int)index);
                 case AGetVATSValueConditionData_FieldIndex.UseAliases:
                     return (GetVATSValueWeaponTypeConditionData_FieldIndex)((int)index);
+                case AGetVATSValueConditionData_FieldIndex.UsePackageData:
+                    return (GetVATSValueWeaponTypeConditionData_FieldIndex)((int)index);
                 case AGetVATSValueConditionData_FieldIndex.FirstUnusedStringParameter:
                     return (GetVATSValueWeaponTypeConditionData_FieldIndex)((int)index);
                 case AGetVATSValueConditionData_FieldIndex.SecondUnusedStringParameter:
@@ -833,6 +838,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetVATSValueWeaponTypeConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetVATSValueWeaponTypeConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetVATSValueWeaponTypeConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

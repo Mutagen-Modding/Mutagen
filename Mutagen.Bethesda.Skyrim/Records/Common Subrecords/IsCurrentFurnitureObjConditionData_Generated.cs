@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public IsCurrentFurnitureObjConditionData()
         {
-            _Furniture = new FormLinkOrAlias<IFurnitureGetter>(this);
+            _Furniture = new FormLinkOrIndex<IFurnitureGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Furniture
-        private readonly IFormLinkOrAlias<IFurnitureGetter> _Furniture = default!;
-        public IFormLinkOrAlias<IFurnitureGetter> Furniture
+        private readonly IFormLinkOrIndex<IFurnitureGetter> _Furniture = default!;
+        public IFormLinkOrIndex<IFurnitureGetter> Furniture
         {
             get => _Furniture;
             set => _Furniture.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IFurnitureGetter> IIsCurrentFurnitureObjConditionDataGetter.Furniture => this.Furniture;
+        IFormLinkOrIndexGetter<IFurnitureGetter> IIsCurrentFurnitureObjConditionDataGetter.Furniture => this.Furniture;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Furniture,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Furniture = Furniture;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIsCurrentFurnitureObjConditionDataGetter,
         ILoquiObjectSetter<IIsCurrentFurnitureObjConditionData>
     {
-        new IFormLinkOrAlias<IFurnitureGetter> Furniture { get; set; }
+        new IFormLinkOrIndex<IFurnitureGetter> Furniture { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsCurrentFurnitureObjConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsCurrentFurnitureObjConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IFurnitureGetter> Furniture { get; }
+        IFormLinkOrIndexGetter<IFurnitureGetter> Furniture { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Furniture = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Furniture = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(IsCurrentFurnitureObjConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (IsCurrentFurnitureObjConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (IsCurrentFurnitureObjConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (IsCurrentFurnitureObjConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Furniture);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Furniture);
             item.SecondUnusedIntParameter = frame.ReadInt32();

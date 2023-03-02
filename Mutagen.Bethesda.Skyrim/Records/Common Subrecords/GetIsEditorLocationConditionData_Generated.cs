@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetIsEditorLocationConditionData()
         {
-            _Location = new FormLinkOrAlias<ILocationGetter>(this);
+            _Location = new FormLinkOrIndex<ILocationGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Location
-        private readonly IFormLinkOrAlias<ILocationGetter> _Location = default!;
-        public IFormLinkOrAlias<ILocationGetter> Location
+        private readonly IFormLinkOrIndex<ILocationGetter> _Location = default!;
+        public IFormLinkOrIndex<ILocationGetter> Location
         {
             get => _Location;
             set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<ILocationGetter> IGetIsEditorLocationConditionDataGetter.Location => this.Location;
+        IFormLinkOrIndexGetter<ILocationGetter> IGetIsEditorLocationConditionDataGetter.Location => this.Location;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Location,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Location = Location;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetIsEditorLocationConditionDataGetter,
         ILoquiObjectSetter<IGetIsEditorLocationConditionData>
     {
-        new IFormLinkOrAlias<ILocationGetter> Location { get; set; }
+        new IFormLinkOrIndex<ILocationGetter> Location { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetIsEditorLocationConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetIsEditorLocationConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<ILocationGetter> Location { get; }
+        IFormLinkOrIndexGetter<ILocationGetter> Location { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Location = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Location = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetIsEditorLocationConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetIsEditorLocationConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetIsEditorLocationConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetIsEditorLocationConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Location);
             item.SecondUnusedIntParameter = frame.ReadInt32();

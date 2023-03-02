@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public HasSpellConditionData()
         {
-            _Spell = new FormLinkOrAlias<ISpellGetter>(this);
+            _Spell = new FormLinkOrIndex<ISpellGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Spell
-        private readonly IFormLinkOrAlias<ISpellGetter> _Spell = default!;
-        public IFormLinkOrAlias<ISpellGetter> Spell
+        private readonly IFormLinkOrIndex<ISpellGetter> _Spell = default!;
+        public IFormLinkOrIndex<ISpellGetter> Spell
         {
             get => _Spell;
             set => _Spell.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<ISpellGetter> IHasSpellConditionDataGetter.Spell => this.Spell;
+        IFormLinkOrIndexGetter<ISpellGetter> IHasSpellConditionDataGetter.Spell => this.Spell;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Spell,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Spell = Spell;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasSpellConditionDataGetter,
         ILoquiObjectSetter<IHasSpellConditionData>
     {
-        new IFormLinkOrAlias<ISpellGetter> Spell { get; set; }
+        new IFormLinkOrIndex<ISpellGetter> Spell { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IHasSpellConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => HasSpellConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<ISpellGetter> Spell { get; }
+        IFormLinkOrIndexGetter<ISpellGetter> Spell { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Spell = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Spell = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(HasSpellConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (HasSpellConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (HasSpellConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (HasSpellConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Spell);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Spell);
             item.SecondUnusedIntParameter = frame.ReadInt32();

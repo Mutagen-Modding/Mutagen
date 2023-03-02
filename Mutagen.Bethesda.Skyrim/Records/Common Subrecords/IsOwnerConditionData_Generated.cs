@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public IsOwnerConditionData()
         {
-            _Owner = new FormLinkOrAlias<IOwnerGetter>(this);
+            _Owner = new FormLinkOrIndex<IOwnerGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Owner
-        private readonly IFormLinkOrAlias<IOwnerGetter> _Owner = default!;
-        public IFormLinkOrAlias<IOwnerGetter> Owner
+        private readonly IFormLinkOrIndex<IOwnerGetter> _Owner = default!;
+        public IFormLinkOrIndex<IOwnerGetter> Owner
         {
             get => _Owner;
             set => _Owner.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IOwnerGetter> IIsOwnerConditionDataGetter.Owner => this.Owner;
+        IFormLinkOrIndexGetter<IOwnerGetter> IIsOwnerConditionDataGetter.Owner => this.Owner;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Owner,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Owner = Owner;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIsOwnerConditionDataGetter,
         ILoquiObjectSetter<IIsOwnerConditionData>
     {
-        new IFormLinkOrAlias<IOwnerGetter> Owner { get; set; }
+        new IFormLinkOrIndex<IOwnerGetter> Owner { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsOwnerConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsOwnerConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IOwnerGetter> Owner { get; }
+        IFormLinkOrIndexGetter<IOwnerGetter> Owner { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Owner = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Owner = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(IsOwnerConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (IsOwnerConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (IsOwnerConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (IsOwnerConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Owner);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Owner);
             item.SecondUnusedIntParameter = frame.ReadInt32();

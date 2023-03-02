@@ -119,6 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem SpellSource,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -127,7 +128,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.SpellSource = SpellSource;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -676,10 +678,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        SpellSource = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        SpellSource = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -699,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(HasEquippedSpellConditionData.Mask<>);
 
@@ -922,6 +925,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (HasEquippedSpellConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (HasEquippedSpellConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (HasEquippedSpellConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

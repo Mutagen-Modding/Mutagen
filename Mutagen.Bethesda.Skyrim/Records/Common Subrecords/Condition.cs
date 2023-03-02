@@ -21,9 +21,10 @@ public partial class Condition
     
     internal const int ParametersUseAliases = 0x02;
     internal const int UseGlobal = 0x04;
+    internal const int ParametersUsePackData = 0x08;
 
     /// <summary>
-    /// ParametersUseAliases exists on ConditionData object instead </ br>
+    /// ParametersUseAliases and ParametersUsePackData exist on ConditionData object instead </ br>
     /// UseGlobal is implicit depending on the class type used for the Condition
     /// </summary>
     [Flags]
@@ -32,7 +33,7 @@ public partial class Condition
         OR = 0x01,
         // ParametersUseAliases = 0x02,
         // UseGlobal = 0x04,
-        UsePackData = 0x08,
+        // UsePackData = 0x08,
         SwapSubjectAndTarget = 0x10
     }
 
@@ -748,7 +749,7 @@ public partial class Condition
         }
 
         ret.Data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
-        ret.Flags = ret.Flags.SetFlag((Condition.Flag)ParametersUseAliases, false);
+        ret.Flags = ret.Flags.SetFlag((Condition.Flag)ParametersUsePackData, false);
         return ret;
     }
 
@@ -2696,6 +2697,7 @@ abstract partial class ConditionBinaryOverlay
         stream.Position = finalPos;
         ConditionBinaryCreateTranslation.CustomStringImports(stream, data);
         data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
+        data.UsePackageData = flag.HasFlag((Condition.Flag)ParametersUsePackData);
 
         return ret;
     }

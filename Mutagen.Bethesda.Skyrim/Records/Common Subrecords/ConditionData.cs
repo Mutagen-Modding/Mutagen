@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Skyrim;
 
-partial class ConditionData : IFormLinkOrAliasFlagGetter, IConditionStringParameter
+partial class ConditionData : IFormLinkOrIndexFlagGetter, IConditionStringParameter
 {
     string? IConditionStringParameter.FirstStringParameter
     {
@@ -25,9 +25,10 @@ public partial interface IConditionDataGetter
     Condition.Function Function { get; }
 }
 
-partial class ConditionDataBinaryOverlay : IFormLinkOrAliasFlagGetter, IConditionStringParameterGetter
+partial class ConditionDataBinaryOverlay : IFormLinkOrIndexFlagGetter, IConditionStringParameterGetter
 {
     public bool UseAliases { get; internal set; }
+    public bool UsePackageData { get; internal set; }
     string? IConditionStringParameterGetter.FirstStringParameter => throw new NotImplementedException();
     string? IConditionStringParameterGetter.SecondStringParameter => throw new NotImplementedException();
     Condition.Function IConditionDataGetter.Function => throw new NotImplementedException();

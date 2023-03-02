@@ -5,37 +5,43 @@ using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Plugins;
 
-public class FormLinkOrAliasGetter<TMajorGetter> : IFormLinkOrAliasGetter<TMajorGetter>
+public class FormLinkOrIndexGetter<TMajorGetter> : IFormLinkOrIndexGetter<TMajorGetter>
     where TMajorGetter : class, IMajorRecordGetter
 {
-    private readonly IFormLinkOrAliasFlagGetter _parent;
+    private readonly IFormLinkOrIndexFlagGetter _parent;
     public IFormLinkNullableGetter<TMajorGetter> Link { get; }
-    public uint? Alias { get; }
+    public uint? Index { get; }
 
-    public FormLinkOrAliasGetter(IFormLinkOrAliasFlagGetter parent, uint alias)
+    public FormLinkOrIndexGetter(IFormLinkOrIndexFlagGetter parent, uint index)
     {
         _parent = parent;
-        Alias = alias;
+        Index = index;
         Link = FormLinkNullableGetter<TMajorGetter>.Null;
     }
 
-    public FormLinkOrAliasGetter(IFormLinkOrAliasFlagGetter parent, FormKey key)
+    public FormLinkOrIndexGetter(IFormLinkOrIndexFlagGetter parent, FormKey key)
     {
         _parent = parent;
-        Alias = default;
+        Index = default;
         Link = new FormLinkNullable<TMajorGetter>(key);
     }
     
-    [MemberNotNullWhen(false, nameof(Alias))]
+    [MemberNotNullWhen(false, nameof(Index))]
     public bool UsesLink()
     {
-        return !_parent.UseAliases;
+        return !_parent.UseAliases && ! _parent.UsePackageData;
     }
 
-    [MemberNotNullWhen(true, nameof(Alias))]
+    [MemberNotNullWhen(true, nameof(Index))]
     public bool UsesAlias()
     {
         return _parent.UseAliases;
+    }
+
+    [MemberNotNullWhen(true, nameof(Index))]
+    public bool UsesPackageData()
+    {
+        return _parent.UsePackageData;
     }
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
@@ -90,62 +96,68 @@ public class FormLinkOrAliasGetter<TMajorGetter> : IFormLinkOrAliasGetter<TMajor
     public bool IsNull => Link.IsNull;
 }
 
-public class FormLinkOrAlias<TMajorGetter> : IFormLinkOrAlias<TMajorGetter>
+public class FormLinkOrIndex<TMajorGetter> : IFormLinkOrIndex<TMajorGetter>
     where TMajorGetter : class, IMajorRecordGetter
 {
-    private readonly IFormLinkOrAliasFlagGetter _parent;
+    private readonly IFormLinkOrIndexFlagGetter _parent;
     
-    IFormLinkNullableGetter<TMajorGetter> IFormLinkOrAliasGetter<TMajorGetter>.Link => Link;
+    IFormLinkNullableGetter<TMajorGetter> IFormLinkOrIndexGetter<TMajorGetter>.Link => Link;
 
     public IFormLinkNullable<TMajorGetter> Link { get; }
-    public uint? Alias { get; set; }
+    public uint? Index { get; set; }
 
-    public FormLinkOrAlias(IFormLinkOrAliasFlagGetter parent)
+    public FormLinkOrIndex(IFormLinkOrIndexFlagGetter parent)
     {
         _parent = parent;
-        Alias = default;
+        Index = default;
         Link = new FormLinkNullable<TMajorGetter>();
     }
 
-    public FormLinkOrAlias(IFormLinkOrAliasFlagGetter parent, uint alias)
+    public FormLinkOrIndex(IFormLinkOrIndexFlagGetter parent, uint index)
     {
         _parent = parent;
-        Alias = alias;
+        Index = index;
         Link = new FormLinkNullable<TMajorGetter>();
     }
 
-    public FormLinkOrAlias(IFormLinkOrAliasFlagGetter parent, FormKey key)
+    public FormLinkOrIndex(IFormLinkOrIndexFlagGetter parent, FormKey key)
     {
         _parent = parent;
-        Alias = default;
+        Index = default;
         Link = new FormLinkNullable<TMajorGetter>(key);
     }
 
-    public static FormLinkOrAlias<TMajorGetter> Factory(IFormLinkOrAliasFlagGetter parent, FormKey key, uint alias)
+    public static FormLinkOrIndex<TMajorGetter> Factory(IFormLinkOrIndexFlagGetter parent, FormKey key, uint index)
     {
-        if (parent.UseAliases)
+        if (parent.UseAliases || parent.UsePackageData)
         {
-            return new FormLinkOrAlias<TMajorGetter>(parent, alias);
+            return new FormLinkOrIndex<TMajorGetter>(parent, index);
         }
 
-        return new FormLinkOrAlias<TMajorGetter>(parent, key);
+        return new FormLinkOrIndex<TMajorGetter>(parent, key);
     }
 
-    [MemberNotNullWhen(false, nameof(Alias))]
+    [MemberNotNullWhen(false, nameof(Index))]
     public bool UsesLink()
     {
-        return !_parent.UseAliases;
+        return !_parent.UseAliases && ! _parent.UsePackageData;
     }
 
-    [MemberNotNullWhen(true, nameof(Alias))]
+    [MemberNotNullWhen(true, nameof(Index))]
     public bool UsesAlias()
     {
         return _parent.UseAliases;
     }
 
+    [MemberNotNullWhen(true, nameof(Index))]
+    public bool UsesPackageData()
+    {
+        return _parent.UsePackageData;
+    }
+
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks()
     {
-        if (!_parent.UseAliases)
+        if (UsesLink())
         {
             yield return Link;
         }
@@ -153,13 +165,16 @@ public class FormLinkOrAlias<TMajorGetter> : IFormLinkOrAlias<TMajorGetter>
 
     public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping)
     {
-        Link.Relink(mapping);
+        if (UsesLink())
+        {
+            Link.Relink(mapping);
+        }
     }
     
     public void Clear()
     {
         Link.Clear();
-        Alias = 0;
+        Index = 0;
     }
 
     public void Print(StructuredStringBuilder sb, string? name = null)

@@ -8,11 +8,11 @@ using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
-public class FormLinkOrAliasTranslationGeneration : FormLinkBinaryTranslationGeneration
+public class FormLinkOrIndexTranslationGeneration : FormLinkBinaryTranslationGeneration
 {
     public override string Typename(TypeGeneration typeGen)
     {
-        return "FormLinkOrAlias";
+        return "FormLinkOrIndex";
     }
 
     public override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor,

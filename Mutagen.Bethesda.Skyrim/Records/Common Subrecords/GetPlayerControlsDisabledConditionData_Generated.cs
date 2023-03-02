@@ -51,16 +51,16 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region p
-        public Int32 p { get; set; } = default;
+        #region PlayerControlsParameterOne
+        public Int32 PlayerControlsParameterOne { get; set; } = default;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IGetPlayerControlsDisabledConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
-        #region SecondUnusedIntParameter
-        public Int32 SecondUnusedIntParameter { get; set; } = default;
+        #region PlayerControlsParameterTwo
+        public Int32 PlayerControlsParameterTwo { get; set; } = default;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -108,9 +108,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.p = initialValue;
+                this.PlayerControlsParameterOne = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
-                this.SecondUnusedIntParameter = initialValue;
+                this.PlayerControlsParameterTwo = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
             }
 
@@ -119,19 +119,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
-                TItem p,
+                TItem UsePackageData,
+                TItem PlayerControlsParameterOne,
                 TItem FirstUnusedStringParameter,
-                TItem SecondUnusedIntParameter,
+                TItem PlayerControlsParameterTwo,
                 TItem SecondUnusedStringParameter)
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
-                this.p = p;
+                this.PlayerControlsParameterOne = PlayerControlsParameterOne;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
-                this.SecondUnusedIntParameter = SecondUnusedIntParameter;
+                this.PlayerControlsParameterTwo = PlayerControlsParameterTwo;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
             }
 
@@ -144,9 +146,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem p;
+            public TItem PlayerControlsParameterOne;
             public TItem FirstUnusedStringParameter;
-            public TItem SecondUnusedIntParameter;
+            public TItem PlayerControlsParameterTwo;
             public TItem SecondUnusedStringParameter;
             #endregion
 
@@ -161,18 +163,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.p, rhs.p)) return false;
+                if (!object.Equals(this.PlayerControlsParameterOne, rhs.PlayerControlsParameterOne)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
-                if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
+                if (!object.Equals(this.PlayerControlsParameterTwo, rhs.PlayerControlsParameterTwo)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.p);
+                hash.Add(this.PlayerControlsParameterOne);
                 hash.Add(this.FirstUnusedStringParameter);
-                hash.Add(this.SecondUnusedIntParameter);
+                hash.Add(this.PlayerControlsParameterTwo);
                 hash.Add(this.SecondUnusedStringParameter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -184,9 +186,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.p)) return false;
+                if (!eval(this.PlayerControlsParameterOne)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
-                if (!eval(this.SecondUnusedIntParameter)) return false;
+                if (!eval(this.PlayerControlsParameterTwo)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
                 return true;
             }
@@ -196,9 +198,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.p)) return true;
+                if (eval(this.PlayerControlsParameterOne)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
-                if (eval(this.SecondUnusedIntParameter)) return true;
+                if (eval(this.PlayerControlsParameterTwo)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
                 return false;
             }
@@ -215,9 +217,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.p = eval(this.p);
+                obj.PlayerControlsParameterOne = eval(this.PlayerControlsParameterOne);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
-                obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
+                obj.PlayerControlsParameterTwo = eval(this.PlayerControlsParameterTwo);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
             }
             #endregion
@@ -237,17 +239,17 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(GetPlayerControlsDisabledConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.p ?? true)
+                    if (printMask?.PlayerControlsParameterOne ?? true)
                     {
-                        sb.AppendItem(p, "p");
+                        sb.AppendItem(PlayerControlsParameterOne, "PlayerControlsParameterOne");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
                         sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                     }
-                    if (printMask?.SecondUnusedIntParameter ?? true)
+                    if (printMask?.PlayerControlsParameterTwo ?? true)
                     {
-                        sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
+                        sb.AppendItem(PlayerControlsParameterTwo, "PlayerControlsParameterTwo");
                     }
                     if (printMask?.SecondUnusedStringParameter ?? true)
                     {
@@ -264,9 +266,9 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? p;
+            public Exception? PlayerControlsParameterOne;
             public Exception? FirstUnusedStringParameter;
-            public Exception? SecondUnusedIntParameter;
+            public Exception? PlayerControlsParameterTwo;
             public Exception? SecondUnusedStringParameter;
             #endregion
 
@@ -276,12 +278,12 @@ namespace Mutagen.Bethesda.Skyrim
                 GetPlayerControlsDisabledConditionData_FieldIndex enu = (GetPlayerControlsDisabledConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetPlayerControlsDisabledConditionData_FieldIndex.p:
-                        return p;
+                    case GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterOne:
+                        return PlayerControlsParameterOne;
                     case GetPlayerControlsDisabledConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
-                    case GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedIntParameter:
-                        return SecondUnusedIntParameter;
+                    case GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterTwo:
+                        return PlayerControlsParameterTwo;
                     case GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedStringParameter:
                         return SecondUnusedStringParameter;
                     default:
@@ -294,14 +296,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetPlayerControlsDisabledConditionData_FieldIndex enu = (GetPlayerControlsDisabledConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetPlayerControlsDisabledConditionData_FieldIndex.p:
-                        this.p = ex;
+                    case GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterOne:
+                        this.PlayerControlsParameterOne = ex;
                         break;
                     case GetPlayerControlsDisabledConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
                         break;
-                    case GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedIntParameter:
-                        this.SecondUnusedIntParameter = ex;
+                    case GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterTwo:
+                        this.PlayerControlsParameterTwo = ex;
                         break;
                     case GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = ex;
@@ -317,14 +319,14 @@ namespace Mutagen.Bethesda.Skyrim
                 GetPlayerControlsDisabledConditionData_FieldIndex enu = (GetPlayerControlsDisabledConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case GetPlayerControlsDisabledConditionData_FieldIndex.p:
-                        this.p = (Exception?)obj;
+                    case GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterOne:
+                        this.PlayerControlsParameterOne = (Exception?)obj;
                         break;
                     case GetPlayerControlsDisabledConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
                         break;
-                    case GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedIntParameter:
-                        this.SecondUnusedIntParameter = (Exception?)obj;
+                    case GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterTwo:
+                        this.PlayerControlsParameterTwo = (Exception?)obj;
                         break;
                     case GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedStringParameter:
                         this.SecondUnusedStringParameter = (Exception?)obj;
@@ -338,9 +340,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (p != null) return true;
+                if (PlayerControlsParameterOne != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
-                if (SecondUnusedIntParameter != null) return true;
+                if (PlayerControlsParameterTwo != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
                 return false;
             }
@@ -369,13 +371,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(p, "p");
+                    sb.AppendItem(PlayerControlsParameterOne, "PlayerControlsParameterOne");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
                 }
                 {
-                    sb.AppendItem(SecondUnusedIntParameter, "SecondUnusedIntParameter");
+                    sb.AppendItem(PlayerControlsParameterTwo, "PlayerControlsParameterTwo");
                 }
                 {
                     sb.AppendItem(SecondUnusedStringParameter, "SecondUnusedStringParameter");
@@ -388,9 +390,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.p = this.p.Combine(rhs.p);
+                ret.PlayerControlsParameterOne = this.PlayerControlsParameterOne.Combine(rhs.PlayerControlsParameterOne);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
-                ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
+                ret.PlayerControlsParameterTwo = this.PlayerControlsParameterTwo.Combine(rhs.PlayerControlsParameterTwo);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
                 return ret;
             }
@@ -414,9 +416,9 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool p;
+            public bool PlayerControlsParameterOne;
             public bool FirstUnusedStringParameter;
-            public bool SecondUnusedIntParameter;
+            public bool PlayerControlsParameterTwo;
             public bool SecondUnusedStringParameter;
             #endregion
 
@@ -426,9 +428,9 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.p = defaultOn;
+                this.PlayerControlsParameterOne = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
-                this.SecondUnusedIntParameter = defaultOn;
+                this.PlayerControlsParameterTwo = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
             }
 
@@ -437,9 +439,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((p, null));
+                ret.Add((PlayerControlsParameterOne, null));
                 ret.Add((FirstUnusedStringParameter, null));
-                ret.Add((SecondUnusedIntParameter, null));
+                ret.Add((PlayerControlsParameterTwo, null));
                 ret.Add((SecondUnusedStringParameter, null));
             }
 
@@ -512,9 +514,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGetPlayerControlsDisabledConditionDataGetter,
         ILoquiObjectSetter<IGetPlayerControlsDisabledConditionData>
     {
-        new Int32 p { get; set; }
+        new Int32 PlayerControlsParameterOne { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new Int32 SecondUnusedIntParameter { get; set; }
+        new Int32 PlayerControlsParameterTwo { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -524,9 +526,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetPlayerControlsDisabledConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetPlayerControlsDisabledConditionData_Registration.Instance;
-        Int32 p { get; }
+        Int32 PlayerControlsParameterOne { get; }
         String? FirstUnusedStringParameter { get; }
-        Int32 SecondUnusedIntParameter { get; }
+        Int32 PlayerControlsParameterTwo { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -676,10 +678,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        p = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        PlayerControlsParameterOne = 5,
+        FirstUnusedStringParameter = 6,
+        PlayerControlsParameterTwo = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -699,7 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetPlayerControlsDisabledConditionData.Mask<>);
 
@@ -767,9 +770,9 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IGetPlayerControlsDisabledConditionData item)
         {
             ClearPartial();
-            item.p = default;
+            item.PlayerControlsParameterOne = default;
             item.FirstUnusedStringParameter = default;
-            item.SecondUnusedIntParameter = default;
+            item.PlayerControlsParameterTwo = default;
             item.SecondUnusedStringParameter = default;
             base.Clear(item);
         }
@@ -838,9 +841,9 @@ namespace Mutagen.Bethesda.Skyrim
             GetPlayerControlsDisabledConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.p = item.p == rhs.p;
+            ret.PlayerControlsParameterOne = item.PlayerControlsParameterOne == rhs.PlayerControlsParameterOne;
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
-            ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
+            ret.PlayerControlsParameterTwo = item.PlayerControlsParameterTwo == rhs.PlayerControlsParameterTwo;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -891,18 +894,18 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.p ?? true)
+            if (printMask?.PlayerControlsParameterOne ?? true)
             {
-                sb.AppendItem(item.p, "p");
+                sb.AppendItem(item.PlayerControlsParameterOne, "PlayerControlsParameterOne");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
             {
                 sb.AppendItem(FirstUnusedStringParameterItem, "FirstUnusedStringParameter");
             }
-            if (printMask?.SecondUnusedIntParameter ?? true)
+            if (printMask?.PlayerControlsParameterTwo ?? true)
             {
-                sb.AppendItem(item.SecondUnusedIntParameter, "SecondUnusedIntParameter");
+                sb.AppendItem(item.PlayerControlsParameterTwo, "PlayerControlsParameterTwo");
             }
             if ((printMask?.SecondUnusedStringParameter ?? true)
                 && item.SecondUnusedStringParameter is {} SecondUnusedStringParameterItem)
@@ -923,6 +926,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetPlayerControlsDisabledConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
                     return (GetPlayerControlsDisabledConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
+                    return (GetPlayerControlsDisabledConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -936,17 +941,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.p) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterOne) ?? true))
             {
-                if (lhs.p != rhs.p) return false;
+                if (lhs.PlayerControlsParameterOne != rhs.PlayerControlsParameterOne) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 if (!string.Equals(lhs.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterTwo) ?? true))
             {
-                if (lhs.SecondUnusedIntParameter != rhs.SecondUnusedIntParameter) return false;
+                if (lhs.PlayerControlsParameterTwo != rhs.PlayerControlsParameterTwo) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -969,12 +974,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IGetPlayerControlsDisabledConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.p);
+            hash.Add(item.PlayerControlsParameterOne);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
             }
-            hash.Add(item.SecondUnusedIntParameter);
+            hash.Add(item.PlayerControlsParameterTwo);
             if (item.SecondUnusedStringParameter is {} SecondUnusedStringParameteritem)
             {
                 hash.Add(SecondUnusedStringParameteritem);
@@ -1027,17 +1032,17 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.p) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterOne) ?? true))
             {
-                item.p = rhs.p;
+                item.PlayerControlsParameterOne = rhs.PlayerControlsParameterOne;
             }
             if ((copyMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
                 item.FirstUnusedStringParameter = rhs.FirstUnusedStringParameter;
             }
-            if ((copyMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedIntParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.PlayerControlsParameterTwo) ?? true))
             {
-                item.SecondUnusedIntParameter = rhs.SecondUnusedIntParameter;
+                item.PlayerControlsParameterTwo = rhs.PlayerControlsParameterTwo;
             }
             if ((copyMask?.GetShouldTranslate((int)GetPlayerControlsDisabledConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
@@ -1154,8 +1159,8 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.p);
-            writer.Write(item.SecondUnusedIntParameter);
+            writer.Write(item.PlayerControlsParameterOne);
+            writer.Write(item.PlayerControlsParameterTwo);
         }
 
         public void Write(
@@ -1203,8 +1208,8 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.p = frame.ReadInt32();
-            item.SecondUnusedIntParameter = frame.ReadInt32();
+            item.PlayerControlsParameterOne = frame.ReadInt32();
+            item.PlayerControlsParameterTwo = frame.ReadInt32();
         }
 
     }

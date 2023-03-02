@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public SameRaceConditionData()
         {
-            _TargetNpc = new FormLinkOrAlias<IPlacedNpcGetter>(this);
+            _TargetNpc = new FormLinkOrIndex<IPlacedNpcGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region TargetNpc
-        private readonly IFormLinkOrAlias<IPlacedNpcGetter> _TargetNpc = default!;
-        public IFormLinkOrAlias<IPlacedNpcGetter> TargetNpc
+        private readonly IFormLinkOrIndex<IPlacedNpcGetter> _TargetNpc = default!;
+        public IFormLinkOrIndex<IPlacedNpcGetter> TargetNpc
         {
             get => _TargetNpc;
             set => _TargetNpc.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IPlacedNpcGetter> ISameRaceConditionDataGetter.TargetNpc => this.TargetNpc;
+        IFormLinkOrIndexGetter<IPlacedNpcGetter> ISameRaceConditionDataGetter.TargetNpc => this.TargetNpc;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem TargetNpc,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.TargetNpc = TargetNpc;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISameRaceConditionData>,
         ISameRaceConditionDataGetter
     {
-        new IFormLinkOrAlias<IPlacedNpcGetter> TargetNpc { get; set; }
+        new IFormLinkOrIndex<IPlacedNpcGetter> TargetNpc { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ISameRaceConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => SameRaceConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IPlacedNpcGetter> TargetNpc { get; }
+        IFormLinkOrIndexGetter<IPlacedNpcGetter> TargetNpc { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        TargetNpc = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        TargetNpc = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(SameRaceConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (SameRaceConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (SameRaceConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (SameRaceConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TargetNpc);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.TargetNpc);
             item.SecondUnusedIntParameter = frame.ReadInt32();

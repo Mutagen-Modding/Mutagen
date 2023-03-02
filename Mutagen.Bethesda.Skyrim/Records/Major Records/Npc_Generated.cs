@@ -2939,6 +2939,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpc :
         IAliasVoiceType,
         IAssetLinkContainer,
+        IExplodeSpawn,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
         ILockList,
@@ -3033,6 +3034,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAliasVoiceTypeGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,

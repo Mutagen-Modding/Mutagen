@@ -47,22 +47,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public HasSameEditorLocAsRefConditionData()
         {
-            _Target = new FormLinkOrAlias<IPlacedSimpleGetter>(this);
-            _Keyword = new FormLinkOrAlias<IKeywordGetter>(this);
+            _Target = new FormLinkOrIndex<IPlacedSimpleGetter>(this);
+            _Keyword = new FormLinkOrIndex<IKeywordGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Target
-        private readonly IFormLinkOrAlias<IPlacedSimpleGetter> _Target = default!;
-        public IFormLinkOrAlias<IPlacedSimpleGetter> Target
+        private readonly IFormLinkOrIndex<IPlacedSimpleGetter> _Target = default!;
+        public IFormLinkOrIndex<IPlacedSimpleGetter> Target
         {
             get => _Target;
             set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> IHasSameEditorLocAsRefConditionDataGetter.Target => this.Target;
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> IHasSameEditorLocAsRefConditionDataGetter.Target => this.Target;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? IHasSameEditorLocAsRefConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region Keyword
-        private readonly IFormLinkOrAlias<IKeywordGetter> _Keyword = default!;
-        public IFormLinkOrAlias<IKeywordGetter> Keyword
+        private readonly IFormLinkOrIndex<IKeywordGetter> _Keyword = default!;
+        public IFormLinkOrIndex<IKeywordGetter> Keyword
         {
             get => _Keyword;
             set => _Keyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IKeywordGetter> IHasSameEditorLocAsRefConditionDataGetter.Keyword => this.Keyword;
+        IFormLinkOrIndexGetter<IKeywordGetter> IHasSameEditorLocAsRefConditionDataGetter.Keyword => this.Keyword;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -136,6 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Target,
                 TItem FirstUnusedStringParameter,
                 TItem Keyword,
@@ -144,7 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Target = Target;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -535,9 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
         IHasSameEditorLocAsRefConditionDataGetter,
         ILoquiObjectSetter<IHasSameEditorLocAsRefConditionData>
     {
-        new IFormLinkOrAlias<IPlacedSimpleGetter> Target { get; set; }
+        new IFormLinkOrIndex<IPlacedSimpleGetter> Target { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new IFormLinkOrAlias<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkOrIndex<IKeywordGetter> Keyword { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -548,9 +550,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IHasSameEditorLocAsRefConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => HasSameEditorLocAsRefConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IPlacedSimpleGetter> Target { get; }
+        IFormLinkOrIndexGetter<IPlacedSimpleGetter> Target { get; }
         String? FirstUnusedStringParameter { get; }
-        IFormLinkOrAliasGetter<IKeywordGetter> Keyword { get; }
+        IFormLinkOrIndexGetter<IKeywordGetter> Keyword { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -700,10 +702,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Target = 4,
-        FirstUnusedStringParameter = 5,
-        Keyword = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Target = 5,
+        FirstUnusedStringParameter = 6,
+        Keyword = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -723,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(HasSameEditorLocAsRefConditionData.Mask<>);
 
@@ -948,6 +951,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (HasSameEditorLocAsRefConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (HasSameEditorLocAsRefConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (HasSameEditorLocAsRefConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1188,10 +1193,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Target);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Keyword);
         }
@@ -1241,10 +1246,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Target);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Keyword);
         }

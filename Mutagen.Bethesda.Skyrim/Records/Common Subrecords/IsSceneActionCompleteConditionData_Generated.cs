@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public IsSceneActionCompleteConditionData()
         {
-            _Scene = new FormLinkOrAlias<ISceneGetter>(this);
+            _Scene = new FormLinkOrIndex<ISceneGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Scene
-        private readonly IFormLinkOrAlias<ISceneGetter> _Scene = default!;
-        public IFormLinkOrAlias<ISceneGetter> Scene
+        private readonly IFormLinkOrIndex<ISceneGetter> _Scene = default!;
+        public IFormLinkOrIndex<ISceneGetter> Scene
         {
             get => _Scene;
             set => _Scene.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<ISceneGetter> IIsSceneActionCompleteConditionDataGetter.Scene => this.Scene;
+        IFormLinkOrIndexGetter<ISceneGetter> IIsSceneActionCompleteConditionDataGetter.Scene => this.Scene;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Scene,
                 TItem FirstUnusedStringParameter,
                 TItem SceneActionIndex,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Scene = Scene;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIsSceneActionCompleteConditionDataGetter,
         ILoquiObjectSetter<IIsSceneActionCompleteConditionData>
     {
-        new IFormLinkOrAlias<ISceneGetter> Scene { get; set; }
+        new IFormLinkOrIndex<ISceneGetter> Scene { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SceneActionIndex { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsSceneActionCompleteConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsSceneActionCompleteConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<ISceneGetter> Scene { get; }
+        IFormLinkOrIndexGetter<ISceneGetter> Scene { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SceneActionIndex { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Scene = 4,
-        FirstUnusedStringParameter = 5,
-        SceneActionIndex = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Scene = 5,
+        FirstUnusedStringParameter = 6,
+        SceneActionIndex = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(IsSceneActionCompleteConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (IsSceneActionCompleteConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (IsSceneActionCompleteConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (IsSceneActionCompleteConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Scene);
             writer.Write(item.SceneActionIndex);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Scene);
             item.SceneActionIndex = frame.ReadInt32();

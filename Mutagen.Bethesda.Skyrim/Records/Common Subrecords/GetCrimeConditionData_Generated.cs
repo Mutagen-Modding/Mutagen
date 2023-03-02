@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetCrimeConditionData()
         {
-            _Criminal = new FormLinkOrAlias<IPlacedNpcGetter>(this);
+            _Criminal = new FormLinkOrIndex<IPlacedNpcGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Criminal
-        private readonly IFormLinkOrAlias<IPlacedNpcGetter> _Criminal = default!;
-        public IFormLinkOrAlias<IPlacedNpcGetter> Criminal
+        private readonly IFormLinkOrIndex<IPlacedNpcGetter> _Criminal = default!;
+        public IFormLinkOrIndex<IPlacedNpcGetter> Criminal
         {
             get => _Criminal;
             set => _Criminal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IPlacedNpcGetter> IGetCrimeConditionDataGetter.Criminal => this.Criminal;
+        IFormLinkOrIndexGetter<IPlacedNpcGetter> IGetCrimeConditionDataGetter.Criminal => this.Criminal;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Criminal,
                 TItem FirstUnusedStringParameter,
                 TItem CrimeType,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Criminal = Criminal;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetCrimeConditionDataGetter,
         ILoquiObjectSetter<IGetCrimeConditionData>
     {
-        new IFormLinkOrAlias<IPlacedNpcGetter> Criminal { get; set; }
+        new IFormLinkOrIndex<IPlacedNpcGetter> Criminal { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new CrimeType CrimeType { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetCrimeConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetCrimeConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IPlacedNpcGetter> Criminal { get; }
+        IFormLinkOrIndexGetter<IPlacedNpcGetter> Criminal { get; }
         String? FirstUnusedStringParameter { get; }
         CrimeType CrimeType { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Criminal = 4,
-        FirstUnusedStringParameter = 5,
-        CrimeType = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        Criminal = 5,
+        FirstUnusedStringParameter = 6,
+        CrimeType = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetCrimeConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetCrimeConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetCrimeConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetCrimeConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Criminal);
             EnumBinaryTranslation<CrimeType, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1229,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Criminal);
             item.CrimeType = EnumBinaryTranslation<CrimeType, MutagenFrame, MutagenWriter>.Instance.Parse(

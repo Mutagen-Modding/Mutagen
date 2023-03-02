@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetInWorldspaceConditionData()
         {
-            _WorldspaceOrList = new FormLinkOrAlias<IWorldspaceOrListGetter>(this);
+            _WorldspaceOrList = new FormLinkOrIndex<IWorldspaceOrListGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region WorldspaceOrList
-        private readonly IFormLinkOrAlias<IWorldspaceOrListGetter> _WorldspaceOrList = default!;
-        public IFormLinkOrAlias<IWorldspaceOrListGetter> WorldspaceOrList
+        private readonly IFormLinkOrIndex<IWorldspaceOrListGetter> _WorldspaceOrList = default!;
+        public IFormLinkOrIndex<IWorldspaceOrListGetter> WorldspaceOrList
         {
             get => _WorldspaceOrList;
             set => _WorldspaceOrList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IWorldspaceOrListGetter> IGetInWorldspaceConditionDataGetter.WorldspaceOrList => this.WorldspaceOrList;
+        IFormLinkOrIndexGetter<IWorldspaceOrListGetter> IGetInWorldspaceConditionDataGetter.WorldspaceOrList => this.WorldspaceOrList;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem WorldspaceOrList,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.WorldspaceOrList = WorldspaceOrList;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetInWorldspaceConditionDataGetter,
         ILoquiObjectSetter<IGetInWorldspaceConditionData>
     {
-        new IFormLinkOrAlias<IWorldspaceOrListGetter> WorldspaceOrList { get; set; }
+        new IFormLinkOrIndex<IWorldspaceOrListGetter> WorldspaceOrList { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetInWorldspaceConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetInWorldspaceConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IWorldspaceOrListGetter> WorldspaceOrList { get; }
+        IFormLinkOrIndexGetter<IWorldspaceOrListGetter> WorldspaceOrList { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        WorldspaceOrList = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        SecondUnusedStringParameter = 7,
+        UsePackageData = 4,
+        WorldspaceOrList = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        SecondUnusedStringParameter = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetInWorldspaceConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetInWorldspaceConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetInWorldspaceConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetInWorldspaceConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.WorldspaceOrList);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.WorldspaceOrList);
             item.SecondUnusedIntParameter = frame.ReadInt32();

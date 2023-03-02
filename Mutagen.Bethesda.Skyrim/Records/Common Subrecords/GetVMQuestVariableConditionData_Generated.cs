@@ -47,21 +47,21 @@ namespace Mutagen.Bethesda.Skyrim
         #region Ctor
         public GetVMQuestVariableConditionData()
         {
-            _Quest = new FormLinkOrAlias<IQuestGetter>(this);
+            _Quest = new FormLinkOrIndex<IQuestGetter>(this);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Quest
-        private readonly IFormLinkOrAlias<IQuestGetter> _Quest = default!;
-        public IFormLinkOrAlias<IQuestGetter> Quest
+        private readonly IFormLinkOrIndex<IQuestGetter> _Quest = default!;
+        public IFormLinkOrIndex<IQuestGetter> Quest
         {
             get => _Quest;
             set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkOrAliasGetter<IQuestGetter> IGetVMQuestVariableConditionDataGetter.Quest => this.Quest;
+        IFormLinkOrIndexGetter<IQuestGetter> IGetVMQuestVariableConditionDataGetter.Quest => this.Quest;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -128,6 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Reference,
                 TItem Unknown3,
                 TItem UseAliases,
+                TItem UsePackageData,
                 TItem Quest,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
@@ -136,7 +137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RunOnType: RunOnType,
                 Reference: Reference,
                 Unknown3: Unknown3,
-                UseAliases: UseAliases)
+                UseAliases: UseAliases,
+                UsePackageData: UsePackageData)
             {
                 this.Quest = Quest;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
@@ -527,7 +529,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGetVMQuestVariableConditionDataGetter,
         ILoquiObjectSetter<IGetVMQuestVariableConditionData>
     {
-        new IFormLinkOrAlias<IQuestGetter> Quest { get; set; }
+        new IFormLinkOrIndex<IQuestGetter> Quest { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? VariableName { get; set; }
@@ -540,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IGetVMQuestVariableConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetVMQuestVariableConditionData_Registration.Instance;
-        IFormLinkOrAliasGetter<IQuestGetter> Quest { get; }
+        IFormLinkOrIndexGetter<IQuestGetter> Quest { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? VariableName { get; }
@@ -692,10 +694,11 @@ namespace Mutagen.Bethesda.Skyrim
         Reference = 1,
         Unknown3 = 2,
         UseAliases = 3,
-        Quest = 4,
-        FirstUnusedStringParameter = 5,
-        SecondUnusedIntParameter = 6,
-        VariableName = 7,
+        UsePackageData = 4,
+        Quest = 5,
+        FirstUnusedStringParameter = 6,
+        SecondUnusedIntParameter = 7,
+        VariableName = 8,
     }
     #endregion
 
@@ -715,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GetVMQuestVariableConditionData.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Skyrim
                 case ConditionData_FieldIndex.Unknown3:
                     return (GetVMQuestVariableConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
+                    return (GetVMQuestVariableConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.UsePackageData:
                     return (GetVMQuestVariableConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1175,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FormLinkOrAliasBinaryTranslation.Instance.Write(
+            FormLinkOrIndexBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Quest);
             writer.Write(item.SecondUnusedIntParameter);
@@ -1226,7 +1231,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            FormLinkOrAliasBinaryTranslation.Instance.ParseInto(
+            FormLinkOrIndexBinaryTranslation.Instance.ParseInto(
                 reader: frame,
                 item: item.Quest);
             item.SecondUnusedIntParameter = frame.ReadInt32();
