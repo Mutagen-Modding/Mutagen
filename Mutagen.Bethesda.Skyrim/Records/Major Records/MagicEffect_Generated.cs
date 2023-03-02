@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single SecondActorValueWeight { get; set; } = default;
         #endregion
         #region Archetype
-        public AMagicEffectArchetype Archetype { get; set; } = default!;
+        public AMagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IAMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion

@@ -27,7 +27,7 @@
           <Float name="TaperCurve" />
           <Float name="TaperDuration" />
           <Float name="SecondActorValueWeight" />
-          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="8" />
+          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="8" defaultType="MagicEffectArchetype" />
           <!-- Actor Value parsed by above custom logic -->
           <FormLink name="Projectile" refName="Projectile" />
           <FormLink name="Explosion" refName="Explosion" />
