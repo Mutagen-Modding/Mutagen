@@ -503,7 +503,7 @@
       <xs:choice>
         <xs:group ref="NamedFieldOptions"/>
         <xs:element name="FormLink" type="NFormLink"/>
-        <xs:element name="FormLinkOrAlias" type="NFormLinkOrAlias"/>
+        <xs:element name="FormLinkOrIndex" type="NFormLinkOrIndex"/>
         <xs:element name="FormID" type="NFormID"/>
         <xs:element name="FormKey" type="NFormKey"/>
         <xs:element name="ModKey" type="NModKey"/>
