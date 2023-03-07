@@ -14,6 +14,8 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     protected const string DataDirectory = "Data";
     protected static readonly string DataPrefix = DataDirectory + Path.DirectorySeparatorChar;
     protected static readonly string DataPrefixAlt = DataDirectory + Path.AltDirectorySeparatorChar;
+    protected static readonly string DataInfix = Path.DirectorySeparatorChar + DataDirectory + Path.DirectorySeparatorChar;
+    protected static readonly string DataInfixAlt = Path.AltDirectorySeparatorChar + DataDirectory + Path.AltDirectorySeparatorChar;
     protected static readonly int DataPrefixLength = DataDirectory.Length + 1;
 
     protected string _rawPath;
@@ -37,25 +39,41 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public string RawPath => _rawPath;
 
-    public string DataRelativePath
-    {
-        get
-        {
-            var trimmedPath = RawPath
-                .TrimStart(Path.DirectorySeparatorChar)
-                .TrimStart(Path.AltDirectorySeparatorChar);
-            
-            //Can be replaced with a version of TrimStart that takes the string comparison into account
-            if (trimmedPath.StartsWith(DataPrefix, IAssetLinkGetter.PathComparison)) trimmedPath = trimmedPath[DataPrefixLength..];
-            else if (trimmedPath.StartsWith(DataPrefixAlt, IAssetLinkGetter.PathComparison)) trimmedPath = trimmedPath[DataPrefixLength..];
-
-            return trimmedPath.StartsWith(AssetInstance.BaseFolder, IAssetLinkGetter.PathComparison) ? trimmedPath : Path.Combine(AssetInstance.BaseFolder, trimmedPath);
-        }
-    }
+    public string DataRelativePath => ConvertToDataRelativePath(RawPath);
 
     public string Extension => Path.GetExtension(RawPath).TrimStart('.');
 
     public IAssetType Type => AssetInstance;
+
+    private string ConvertToDataRelativePath(string path)
+    {
+        // Reduce all absolute paths to the path under data directory
+        if (path.Contains(Path.VolumeSeparatorChar))
+        {
+            var dataDirectoryIndex = path.IndexOf(DataInfix, IAssetLinkGetter.PathComparison);
+            if (dataDirectoryIndex != -1)
+            {
+                path = path[(dataDirectoryIndex + DataInfix.Length)..];
+            } else
+            {
+                dataDirectoryIndex = path.IndexOf(DataInfixAlt, IAssetLinkGetter.PathComparison);
+                if (dataDirectoryIndex != -1)
+                {
+                    path = path[(dataDirectoryIndex + DataInfixAlt.Length)..];
+                }
+            }
+        }
+
+        path = path
+            .TrimStart(Path.DirectorySeparatorChar)
+            .TrimStart(Path.AltDirectorySeparatorChar);
+
+        // Can be replaced with a version of TrimStart that takes the string comparison into account
+        if (path.StartsWith(DataPrefix, IAssetLinkGetter.PathComparison)) path = path[DataPrefixLength..];
+        else if (path.StartsWith(DataPrefixAlt, IAssetLinkGetter.PathComparison)) path = path[DataPrefixLength..];
+
+        return path.StartsWith(AssetInstance.BaseFolder, IAssetLinkGetter.PathComparison) ? path : Path.Combine(AssetInstance.BaseFolder, path);
+    }
 
     public override string ToString()
     {
