@@ -31,7 +31,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.102
+        dotnet-version: 7.0.*
     - name: Install dependencies
       run: |
         dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear

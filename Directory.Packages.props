@@ -44,7 +44,7 @@
     <PackageVersion Include="Noggog.WPF">
       <Version>2.55</Version>
     </PackageVersion>
-    <PackageVersion Include="NuGetizer" Version="0.9.1" />
+    <PackageVersion Include="NuGetizer" Version="0.9.5" />
     <PackageVersion Include="ReactiveUI" Version="18.4.1" />
     <PackageVersion Include="ReactiveUI.Fody">
       <Version>18.4.1</Version>
