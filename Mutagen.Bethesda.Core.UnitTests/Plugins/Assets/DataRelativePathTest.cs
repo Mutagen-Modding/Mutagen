@@ -16,6 +16,14 @@ public class DataRelativePathTest {
     [Fact]
     public void DataRelativePath()
     {
+        var link = new AssetLink<TestAssetType>("Data\\Meshes\\Clutter\\MyMesh.nif");
+        link.DataRelativePath.Should().Be(DataPath);
+    }
+
+
+    [Fact]
+    public void PrefixedDataRelativePath()
+    {
         var link = new AssetLink<TestAssetType>("\\Data\\Meshes\\Clutter\\MyMesh.nif");
         link.DataRelativePath.Should().Be(DataPath);
     }
