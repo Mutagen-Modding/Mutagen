@@ -1,6 +1,6 @@
-﻿namespace Mutagen.Bethesda.Skyrim.Records.Major_Records;
+﻿namespace Mutagen.Bethesda.Skyrim;
 
-public class LensFlareSpriteData
+public partial class LensFlareSpriteData
 {
     [Flags]
     public enum Flag
