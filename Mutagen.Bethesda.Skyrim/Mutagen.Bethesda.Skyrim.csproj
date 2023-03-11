@@ -1430,6 +1430,9 @@
     <Compile Include="Records\Major Records\Landscape.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LensFlareSpriteData.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\NavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
@@ -4660,6 +4663,12 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\GetEventDataConditionData_Generated.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LensFlareSprite_Generated.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LensFlareSpriteData_Generated.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -279,6 +279,8 @@ public partial class RecordTypeInts
     public const int LCUN = 0x4E55434C;
     public const int LENS = 0x534E454C;
     public const int LEVL = 0x4C56454C;
+    public const int LFSD = 0x4453464C;
+    public const int LFSP = 0x5053464C;
     public const int LGTM = 0x4D54474C;
     public const int LIAD = 0x4441494C;
     public const int LIGH = 0x4847494C;

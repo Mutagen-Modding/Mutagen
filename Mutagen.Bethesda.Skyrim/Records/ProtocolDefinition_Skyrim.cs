@@ -866,7 +866,9 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             GetVATSValueDismemberPartConditionData_Registration.Instance,
             GetVATSValueCripplePartConditionData_Registration.Instance,
             GetVATSValueIsStrangerConditionData_Registration.Instance,
-            GetVATSValueIsParalyzingPalmConditionData_Registration.Instance
+            GetVATSValueIsParalyzingPalmConditionData_Registration.Instance,
+            LensFlareSprite_Registration.Instance,
+            LensFlareSpriteData_Registration.Instance
         );
     }
 }
