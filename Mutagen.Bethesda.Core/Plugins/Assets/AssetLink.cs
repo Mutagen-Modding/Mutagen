@@ -49,7 +49,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public IAssetType Type => AssetInstance;
 
-    private string ConvertToDataRelativePath(ReadOnlySpan<char> inputPath)
+    public static string ConvertToDataRelativePath(ReadOnlySpan<char> inputPath)
     {
         Span<char> mySpan = stackalloc char[inputPath.Length];
         inputPath.CopyTo(mySpan);
