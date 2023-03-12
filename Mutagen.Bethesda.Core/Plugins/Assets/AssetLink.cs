@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Assets;
 
@@ -48,8 +49,14 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public IAssetType Type => AssetInstance;
 
-    private string ConvertToDataRelativePath(ReadOnlySpan<char> path)
+    private string ConvertToDataRelativePath(ReadOnlySpan<char> inputPath)
     {
+        Span<char> mySpan = stackalloc char[inputPath.Length];
+        inputPath.CopyTo(mySpan);
+        CleanDirectorySeparators(mySpan);
+        
+        ReadOnlySpan<char> path = mySpan;
+        
         // Reduce all absolute paths to the path under data directory
         if (path.Contains(Path.VolumeSeparatorChar))
         {
@@ -82,7 +89,38 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
             path = path[DataPrefixLength..];
         }
 
-        return path.StartsWith(AssetInstance.BaseFolder, PathComparison) ? path.ToString() : Path.Combine(AssetInstance.BaseFolder, path.ToString());
+        return path.StartsWith(AssetInstance.BaseFolder, PathComparison) 
+            ? path.ToString() 
+            : Path.Combine(AssetInstance.BaseFolder, path.ToString());
+    }
+    
+    // ToDo
+    // Replace with CSharpExt official calls
+    private static void CleanDirectorySeparators(Span<char> str)
+    {
+        CleanDirectorySeparators(str, '\\');
+        CleanDirectorySeparators(str, '/');
+    }
+
+    // ToDo
+    // Replace with CSharpExt official calls
+    private static void CleanDirectorySeparators(Span<char> str, char separator)
+    {
+        if (separator == Path.DirectorySeparatorChar) return;
+        Replace(str, separator, Path.DirectorySeparatorChar);
+    }
+    
+    // ToDo
+    // Replace with CSharpExt official calls
+    private static void Replace(Span<char> span, char oldChar, char newChar)
+    {
+        for (int i = 0; i < span.Length; i++)
+        {
+            if (span[i] == oldChar)
+            {
+                span[i] = newChar;
+            }
+        }
     }
 
     public override string ToString()
