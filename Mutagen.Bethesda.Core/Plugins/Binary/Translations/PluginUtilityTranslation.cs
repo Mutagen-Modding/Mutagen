@@ -541,7 +541,7 @@ internal static class PluginUtilityTranslation
     }
 
     internal static AssetLink<TAssetType>? AssetNullableDeepCopyIn<TAssetType>(AssetLink<TAssetType>? lhs, IAssetLinkGetter<TAssetType>? rhs)
-        where TAssetType : IAssetType
+        where TAssetType : class, IAssetType
     {
         if (rhs == null) return null;
         if (lhs == null)

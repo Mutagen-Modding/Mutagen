@@ -14,7 +14,7 @@ public static class IAssetLinkExt
     /// Creates a new AssetLink with the same type
     /// </summary>
     public static IAssetLink<TAssetType> AsSetter<TAssetType>(this IAssetLinkGetter<TAssetType> link)
-        where TAssetType : IAssetType
+        where TAssetType : class, IAssetType
     {
         return new AssetLink<TAssetType>(link.RawPath);
     }

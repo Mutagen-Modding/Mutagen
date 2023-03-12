@@ -4,10 +4,6 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 
 public interface IAssetLinkGetter
 {
-    protected static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
-    protected static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
-    protected static readonly string NullPath = string.Empty;
-
     /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
