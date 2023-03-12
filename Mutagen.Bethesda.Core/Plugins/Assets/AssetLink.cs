@@ -45,7 +45,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public IAssetType Type => AssetInstance;
 
-    private string ConvertToDataRelativePath(string path)
+    private string ConvertToDataRelativePath(ReadOnlySpan<char> path)
     {
         // Reduce all absolute paths to the path under data directory
         if (path.Contains(Path.VolumeSeparatorChar))
@@ -54,7 +54,8 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
             if (dataDirectoryIndex != -1)
             {
                 path = path[(dataDirectoryIndex + DataInfix.Length)..];
-            } else
+            }
+            else
             {
                 dataDirectoryIndex = path.IndexOf(DataInfixAlt, IAssetLinkGetter.PathComparison);
                 if (dataDirectoryIndex != -1)
@@ -69,10 +70,16 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
             .TrimStart(Path.AltDirectorySeparatorChar);
 
         // Can be replaced with a version of TrimStart that takes the string comparison into account
-        if (path.StartsWith(DataPrefix, IAssetLinkGetter.PathComparison)) path = path[DataPrefixLength..];
-        else if (path.StartsWith(DataPrefixAlt, IAssetLinkGetter.PathComparison)) path = path[DataPrefixLength..];
+        if (path.StartsWith(DataPrefix, IAssetLinkGetter.PathComparison))
+        {
+            path = path[DataPrefixLength..];
+        }
+        else if (path.StartsWith(DataPrefixAlt, IAssetLinkGetter.PathComparison))
+        {
+            path = path[DataPrefixLength..];
+        }
 
-        return path.StartsWith(AssetInstance.BaseFolder, IAssetLinkGetter.PathComparison) ? path : Path.Combine(AssetInstance.BaseFolder, path);
+        return path.StartsWith(AssetInstance.BaseFolder, IAssetLinkGetter.PathComparison) ? path.ToString() : Path.Combine(AssetInstance.BaseFolder, path.ToString());
     }
 
     public override string ToString()
