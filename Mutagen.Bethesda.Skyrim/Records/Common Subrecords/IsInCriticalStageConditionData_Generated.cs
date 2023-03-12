@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region FirstUnusedIntParameter
-        public Int32 FirstUnusedIntParameter { get; set; } = default;
+        #region CriticalStage
+        public CriticalStage CriticalStage { get; set; } = default;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FirstUnusedIntParameter = initialValue;
+                this.CriticalStage = initialValue;
                 this.FirstUnusedStringParameter = initialValue;
                 this.SecondUnusedIntParameter = initialValue;
                 this.SecondUnusedStringParameter = initialValue;
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Unknown3,
                 TItem UseAliases,
                 TItem UsePackageData,
-                TItem FirstUnusedIntParameter,
+                TItem CriticalStage,
                 TItem FirstUnusedStringParameter,
                 TItem SecondUnusedIntParameter,
                 TItem SecondUnusedStringParameter)
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Skyrim
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
-                this.FirstUnusedIntParameter = FirstUnusedIntParameter;
+                this.CriticalStage = CriticalStage;
                 this.FirstUnusedStringParameter = FirstUnusedStringParameter;
                 this.SecondUnusedIntParameter = SecondUnusedIntParameter;
                 this.SecondUnusedStringParameter = SecondUnusedStringParameter;
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstUnusedIntParameter;
+            public TItem CriticalStage;
             public TItem FirstUnusedStringParameter;
             public TItem SecondUnusedIntParameter;
             public TItem SecondUnusedStringParameter;
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FirstUnusedIntParameter, rhs.FirstUnusedIntParameter)) return false;
+                if (!object.Equals(this.CriticalStage, rhs.CriticalStage)) return false;
                 if (!object.Equals(this.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter)) return false;
                 if (!object.Equals(this.SecondUnusedIntParameter, rhs.SecondUnusedIntParameter)) return false;
                 if (!object.Equals(this.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter)) return false;
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstUnusedIntParameter);
+                hash.Add(this.CriticalStage);
                 hash.Add(this.FirstUnusedStringParameter);
                 hash.Add(this.SecondUnusedIntParameter);
                 hash.Add(this.SecondUnusedStringParameter);
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FirstUnusedIntParameter)) return false;
+                if (!eval(this.CriticalStage)) return false;
                 if (!eval(this.FirstUnusedStringParameter)) return false;
                 if (!eval(this.SecondUnusedIntParameter)) return false;
                 if (!eval(this.SecondUnusedStringParameter)) return false;
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FirstUnusedIntParameter)) return true;
+                if (eval(this.CriticalStage)) return true;
                 if (eval(this.FirstUnusedStringParameter)) return true;
                 if (eval(this.SecondUnusedIntParameter)) return true;
                 if (eval(this.SecondUnusedStringParameter)) return true;
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FirstUnusedIntParameter = eval(this.FirstUnusedIntParameter);
+                obj.CriticalStage = eval(this.CriticalStage);
                 obj.FirstUnusedStringParameter = eval(this.FirstUnusedStringParameter);
                 obj.SecondUnusedIntParameter = eval(this.SecondUnusedIntParameter);
                 obj.SecondUnusedStringParameter = eval(this.SecondUnusedStringParameter);
@@ -239,9 +239,9 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(IsInCriticalStageConditionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FirstUnusedIntParameter ?? true)
+                    if (printMask?.CriticalStage ?? true)
                     {
-                        sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                        sb.AppendItem(CriticalStage, "CriticalStage");
                     }
                     if (printMask?.FirstUnusedStringParameter ?? true)
                     {
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FirstUnusedIntParameter;
+            public Exception? CriticalStage;
             public Exception? FirstUnusedStringParameter;
             public Exception? SecondUnusedIntParameter;
             public Exception? SecondUnusedStringParameter;
@@ -278,8 +278,8 @@ namespace Mutagen.Bethesda.Skyrim
                 IsInCriticalStageConditionData_FieldIndex enu = (IsInCriticalStageConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case IsInCriticalStageConditionData_FieldIndex.FirstUnusedIntParameter:
-                        return FirstUnusedIntParameter;
+                    case IsInCriticalStageConditionData_FieldIndex.CriticalStage:
+                        return CriticalStage;
                     case IsInCriticalStageConditionData_FieldIndex.FirstUnusedStringParameter:
                         return FirstUnusedStringParameter;
                     case IsInCriticalStageConditionData_FieldIndex.SecondUnusedIntParameter:
@@ -296,8 +296,8 @@ namespace Mutagen.Bethesda.Skyrim
                 IsInCriticalStageConditionData_FieldIndex enu = (IsInCriticalStageConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case IsInCriticalStageConditionData_FieldIndex.FirstUnusedIntParameter:
-                        this.FirstUnusedIntParameter = ex;
+                    case IsInCriticalStageConditionData_FieldIndex.CriticalStage:
+                        this.CriticalStage = ex;
                         break;
                     case IsInCriticalStageConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = ex;
@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Skyrim
                 IsInCriticalStageConditionData_FieldIndex enu = (IsInCriticalStageConditionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case IsInCriticalStageConditionData_FieldIndex.FirstUnusedIntParameter:
-                        this.FirstUnusedIntParameter = (Exception?)obj;
+                    case IsInCriticalStageConditionData_FieldIndex.CriticalStage:
+                        this.CriticalStage = (Exception?)obj;
                         break;
                     case IsInCriticalStageConditionData_FieldIndex.FirstUnusedStringParameter:
                         this.FirstUnusedStringParameter = (Exception?)obj;
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstUnusedIntParameter != null) return true;
+                if (CriticalStage != null) return true;
                 if (FirstUnusedStringParameter != null) return true;
                 if (SecondUnusedIntParameter != null) return true;
                 if (SecondUnusedStringParameter != null) return true;
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                    sb.AppendItem(CriticalStage, "CriticalStage");
                 }
                 {
                     sb.AppendItem(FirstUnusedStringParameter, "FirstUnusedStringParameter");
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstUnusedIntParameter = this.FirstUnusedIntParameter.Combine(rhs.FirstUnusedIntParameter);
+                ret.CriticalStage = this.CriticalStage.Combine(rhs.CriticalStage);
                 ret.FirstUnusedStringParameter = this.FirstUnusedStringParameter.Combine(rhs.FirstUnusedStringParameter);
                 ret.SecondUnusedIntParameter = this.SecondUnusedIntParameter.Combine(rhs.SecondUnusedIntParameter);
                 ret.SecondUnusedStringParameter = this.SecondUnusedStringParameter.Combine(rhs.SecondUnusedStringParameter);
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool FirstUnusedIntParameter;
+            public bool CriticalStage;
             public bool FirstUnusedStringParameter;
             public bool SecondUnusedIntParameter;
             public bool SecondUnusedStringParameter;
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FirstUnusedIntParameter = defaultOn;
+                this.CriticalStage = defaultOn;
                 this.FirstUnusedStringParameter = defaultOn;
                 this.SecondUnusedIntParameter = defaultOn;
                 this.SecondUnusedStringParameter = defaultOn;
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FirstUnusedIntParameter, null));
+                ret.Add((CriticalStage, null));
                 ret.Add((FirstUnusedStringParameter, null));
                 ret.Add((SecondUnusedIntParameter, null));
                 ret.Add((SecondUnusedStringParameter, null));
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIsInCriticalStageConditionDataGetter,
         ILoquiObjectSetter<IIsInCriticalStageConditionData>
     {
-        new Int32 FirstUnusedIntParameter { get; set; }
+        new CriticalStage CriticalStage { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondUnusedIntParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IIsInCriticalStageConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => IsInCriticalStageConditionData_Registration.Instance;
-        Int32 FirstUnusedIntParameter { get; }
+        CriticalStage CriticalStage { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondUnusedIntParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
         Unknown3 = 2,
         UseAliases = 3,
         UsePackageData = 4,
-        FirstUnusedIntParameter = 5,
+        CriticalStage = 5,
         FirstUnusedStringParameter = 6,
         SecondUnusedIntParameter = 7,
         SecondUnusedStringParameter = 8,
@@ -770,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IIsInCriticalStageConditionData item)
         {
             ClearPartial();
-            item.FirstUnusedIntParameter = default;
+            item.CriticalStage = default;
             item.FirstUnusedStringParameter = default;
             item.SecondUnusedIntParameter = default;
             item.SecondUnusedStringParameter = default;
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
             IsInCriticalStageConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstUnusedIntParameter = item.FirstUnusedIntParameter == rhs.FirstUnusedIntParameter;
+            ret.CriticalStage = item.CriticalStage == rhs.CriticalStage;
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
             ret.SecondUnusedIntParameter = item.SecondUnusedIntParameter == rhs.SecondUnusedIntParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
@@ -894,9 +894,9 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FirstUnusedIntParameter ?? true)
+            if (printMask?.CriticalStage ?? true)
             {
-                sb.AppendItem(item.FirstUnusedIntParameter, "FirstUnusedIntParameter");
+                sb.AppendItem(item.CriticalStage, "CriticalStage");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
@@ -941,9 +941,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)IsInCriticalStageConditionData_FieldIndex.FirstUnusedIntParameter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IsInCriticalStageConditionData_FieldIndex.CriticalStage) ?? true))
             {
-                if (lhs.FirstUnusedIntParameter != rhs.FirstUnusedIntParameter) return false;
+                if (lhs.CriticalStage != rhs.CriticalStage) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)IsInCriticalStageConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -974,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IIsInCriticalStageConditionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstUnusedIntParameter);
+            hash.Add(item.CriticalStage);
             if (item.FirstUnusedStringParameter is {} FirstUnusedStringParameteritem)
             {
                 hash.Add(FirstUnusedStringParameteritem);
@@ -1032,9 +1032,9 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)IsInCriticalStageConditionData_FieldIndex.FirstUnusedIntParameter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)IsInCriticalStageConditionData_FieldIndex.CriticalStage) ?? true))
             {
-                item.FirstUnusedIntParameter = rhs.FirstUnusedIntParameter;
+                item.CriticalStage = rhs.CriticalStage;
             }
             if ((copyMask?.GetShouldTranslate((int)IsInCriticalStageConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1159,7 +1159,10 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.FirstUnusedIntParameter);
+            EnumBinaryTranslation<CriticalStage, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.CriticalStage,
+                length: 4);
             writer.Write(item.SecondUnusedIntParameter);
         }
 
@@ -1208,7 +1211,9 @@ namespace Mutagen.Bethesda.Skyrim
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstUnusedIntParameter = frame.ReadInt32();
+            item.CriticalStage = EnumBinaryTranslation<CriticalStage, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.SecondUnusedIntParameter = frame.ReadInt32();
         }
 
