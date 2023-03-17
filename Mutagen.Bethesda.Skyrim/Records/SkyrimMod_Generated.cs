@@ -8881,16 +8881,6 @@ namespace Mutagen.Bethesda.Skyrim
                 case "IDialogGetter":
                     Remove(obj, keys, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                    Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "IOwner":
                 case "IOwnerGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
@@ -9026,6 +9016,15 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
+                    obj.Cells.Remove(
+                        type: type,
+                        keys: keys);
+                    obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
                     obj.Cells.Remove(
                         type: type,
                         keys: keys);

@@ -13,7 +13,6 @@
       <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" nullable="False" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
-    <LinkInterface>ILocationTargetable</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>

@@ -1342,13 +1342,6 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     foreach (var subItem in obj.SubBlocks)
@@ -1372,6 +1365,13 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
