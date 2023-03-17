@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)IsOwnerConditionData_FieldIndex.Owner) ?? true))
             {
-                item.Owner.SetTo(rhs.Owner.FormKey);
+                item.Owner.SetTo(rhs.Owner);
             }
             if ((copyMask?.GetShouldTranslate((int)IsOwnerConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

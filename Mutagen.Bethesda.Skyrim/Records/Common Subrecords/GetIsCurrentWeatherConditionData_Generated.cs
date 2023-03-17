@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetIsCurrentWeatherConditionData_FieldIndex.Weather) ?? true))
             {
-                item.Weather.SetTo(rhs.Weather.FormKey);
+                item.Weather.SetTo(rhs.Weather);
             }
             if ((copyMask?.GetShouldTranslate((int)GetIsCurrentWeatherConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

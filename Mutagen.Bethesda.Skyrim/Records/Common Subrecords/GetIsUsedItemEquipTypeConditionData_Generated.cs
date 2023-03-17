@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.EquipType) ?? true))
             {
-                item.EquipType.SetTo(rhs.EquipType.FormKey);
+                item.EquipType.SetTo(rhs.EquipType);
             }
             if ((copyMask?.GetShouldTranslate((int)GetIsUsedItemEquipTypeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

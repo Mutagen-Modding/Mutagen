@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetRefTypeAliveCountConditionData_FieldIndex.Location) ?? true))
             {
-                item.Location.SetTo(rhs.Location.FormKey);
+                item.Location.SetTo(rhs.Location);
             }
             if ((copyMask?.GetShouldTranslate((int)GetRefTypeAliveCountConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)GetRefTypeAliveCountConditionData_FieldIndex.LocationReferenceType) ?? true))
             {
-                item.LocationReferenceType.SetTo(rhs.LocationReferenceType.FormKey);
+                item.LocationReferenceType.SetTo(rhs.LocationReferenceType);
             }
             if ((copyMask?.GetShouldTranslate((int)GetRefTypeAliveCountConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {

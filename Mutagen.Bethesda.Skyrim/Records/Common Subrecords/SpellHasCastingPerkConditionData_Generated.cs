@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)SpellHasCastingPerkConditionData_FieldIndex.Perk) ?? true))
             {
-                item.Perk.SetTo(rhs.Perk.FormKey);
+                item.Perk.SetTo(rhs.Perk);
             }
             if ((copyMask?.GetShouldTranslate((int)SpellHasCastingPerkConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)SpellHasKeywordConditionData_FieldIndex.Keyword) ?? true))
             {
-                item.Keyword.SetTo(rhs.Keyword.FormKey);
+                item.Keyword.SetTo(rhs.Keyword);
             }
             if ((copyMask?.GetShouldTranslate((int)SpellHasKeywordConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {

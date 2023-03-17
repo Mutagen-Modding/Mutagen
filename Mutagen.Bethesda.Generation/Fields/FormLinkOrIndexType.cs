@@ -1,5 +1,6 @@
 ﻿using Loqui.Generation;
 using Noggog.StructuredStrings;
+using Noggog.StructuredStrings.CSharp;
 
 namespace Mutagen.Bethesda.Generation.Fields;
 
@@ -21,5 +22,22 @@ public class FormLinkOrIndexType : FormLinkType
     {
         if (!this.IntegrateField) return;
         sb.AppendLine($"sb.{nameof(StructuredStringBuilder.AppendItem)}({accessor}{(string.IsNullOrWhiteSpace(this.Name) ? null : $", \"{this.Name}\"")});");
+    }
+
+    public override void GenerateForCopy(StructuredStringBuilder sb, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
+    {
+        sb.AppendLine($"if ({(deepCopy ? this.GetTranslationIfAccessor(copyMaskAccessor) : this.SkipCheck(copyMaskAccessor, deepCopy))})");
+        using (sb.CurlyBrace())
+        {
+            if (this.Nullable
+                || deepCopy)
+            {
+                sb.AppendLine($"{accessor}.SetTo({rhs});");
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

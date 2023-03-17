@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetDeadCountConditionData_FieldIndex.Npc) ?? true))
             {
-                item.Npc.SetTo(rhs.Npc.FormKey);
+                item.Npc.SetTo(rhs.Npc);
             }
             if ((copyMask?.GetShouldTranslate((int)GetDeadCountConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

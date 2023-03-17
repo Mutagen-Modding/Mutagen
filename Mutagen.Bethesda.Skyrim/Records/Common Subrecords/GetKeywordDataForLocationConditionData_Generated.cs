@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.Location) ?? true))
             {
-                item.Location.SetTo(rhs.Location.FormKey);
+                item.Location.SetTo(rhs.Location);
             }
             if ((copyMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.Keyword) ?? true))
             {
-                item.Keyword.SetTo(rhs.Keyword.FormKey);
+                item.Keyword.SetTo(rhs.Keyword);
             }
             if ((copyMask?.GetShouldTranslate((int)GetKeywordDataForLocationConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {

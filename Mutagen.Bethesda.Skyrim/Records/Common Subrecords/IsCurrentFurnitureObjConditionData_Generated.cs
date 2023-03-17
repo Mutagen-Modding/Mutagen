@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)IsCurrentFurnitureObjConditionData_FieldIndex.Furniture) ?? true))
             {
-                item.Furniture.SetTo(rhs.Furniture.FormKey);
+                item.Furniture.SetTo(rhs.Furniture);
             }
             if ((copyMask?.GetShouldTranslate((int)IsCurrentFurnitureObjConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

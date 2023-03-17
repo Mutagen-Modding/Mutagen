@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetCrimeConditionData_FieldIndex.Criminal) ?? true))
             {
-                item.Criminal.SetTo(rhs.Criminal.FormKey);
+                item.Criminal.SetTo(rhs.Criminal);
             }
             if ((copyMask?.GetShouldTranslate((int)GetCrimeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

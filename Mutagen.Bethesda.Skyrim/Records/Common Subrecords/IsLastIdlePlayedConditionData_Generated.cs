@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)IsLastIdlePlayedConditionData_FieldIndex.IdleAnimation) ?? true))
             {
-                item.IdleAnimation.SetTo(rhs.IdleAnimation.FormKey);
+                item.IdleAnimation.SetTo(rhs.IdleAnimation);
             }
             if ((copyMask?.GetShouldTranslate((int)IsLastIdlePlayedConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

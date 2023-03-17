@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)HasMagicEffectConditionData_FieldIndex.MagicEffect) ?? true))
             {
-                item.MagicEffect.SetTo(rhs.MagicEffect.FormKey);
+                item.MagicEffect.SetTo(rhs.MagicEffect);
             }
             if ((copyMask?.GetShouldTranslate((int)HasMagicEffectConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

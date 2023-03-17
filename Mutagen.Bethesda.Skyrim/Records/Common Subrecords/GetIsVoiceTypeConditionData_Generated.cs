@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.VoiceTypeOrList) ?? true))
             {
-                item.VoiceTypeOrList.SetTo(rhs.VoiceTypeOrList.FormKey);
+                item.VoiceTypeOrList.SetTo(rhs.VoiceTypeOrList);
             }
             if ((copyMask?.GetShouldTranslate((int)GetIsVoiceTypeConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {

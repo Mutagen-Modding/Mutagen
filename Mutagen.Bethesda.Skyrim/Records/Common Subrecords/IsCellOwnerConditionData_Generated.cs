@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)IsCellOwnerConditionData_FieldIndex.Cell) ?? true))
             {
-                item.Cell.SetTo(rhs.Cell.FormKey);
+                item.Cell.SetTo(rhs.Cell);
             }
             if ((copyMask?.GetShouldTranslate((int)IsCellOwnerConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)IsCellOwnerConditionData_FieldIndex.Owner) ?? true))
             {
-                item.Owner.SetTo(rhs.Owner.FormKey);
+                item.Owner.SetTo(rhs.Owner);
             }
             if ((copyMask?.GetShouldTranslate((int)IsCellOwnerConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {

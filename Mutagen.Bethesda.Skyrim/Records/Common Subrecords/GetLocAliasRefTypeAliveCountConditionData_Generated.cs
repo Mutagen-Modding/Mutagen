@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)GetLocAliasRefTypeAliveCountConditionData_FieldIndex.LocationReferenceType) ?? true))
             {
-                item.LocationReferenceType.SetTo(rhs.LocationReferenceType.FormKey);
+                item.LocationReferenceType.SetTo(rhs.LocationReferenceType);
             }
             if ((copyMask?.GetShouldTranslate((int)GetLocAliasRefTypeAliveCountConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {

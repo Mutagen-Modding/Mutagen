@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetFactionCombatReactionConditionData_FieldIndex.FactionA) ?? true))
             {
-                item.FactionA.SetTo(rhs.FactionA.FormKey);
+                item.FactionA.SetTo(rhs.FactionA);
             }
             if ((copyMask?.GetShouldTranslate((int)GetFactionCombatReactionConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)GetFactionCombatReactionConditionData_FieldIndex.FactionB) ?? true))
             {
-                item.FactionB.SetTo(rhs.FactionB.FormKey);
+                item.FactionB.SetTo(rhs.FactionB);
             }
             if ((copyMask?.GetShouldTranslate((int)GetFactionCombatReactionConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {

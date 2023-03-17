@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog.StructuredStrings;
 
@@ -57,44 +56,6 @@ public class FormLinkOrIndexGetter<TMajorGetter> : IFormLinkOrIndexGetter<TMajor
         throw new NotImplementedException();
     }
 
-    public TMajorGetter? TryResolve(ILinkCache cache)
-    {
-        return Link.TryResolve(cache);
-    }
-
-    IFormLink<TMajorRet> IFormLinkGetter<TMajorGetter>.Cast<TMajorRet>()
-    {
-        return Link.Cast<TMajorRet>();
-    }
-
-    IFormLinkNullable<TMajorRet> IFormLinkNullableGetter<TMajorGetter>.Cast<TMajorRet>()
-    {
-        return Link.Cast<TMajorRet>();
-    }
-
-    public Type Type => Link.Type;
-
-    public bool TryGetModKey(out ModKey modKey)
-    {
-        return Link.TryGetModKey(out modKey);
-    }
-
-    public bool TryResolveFormKey(ILinkCache cache, out FormKey formKey)
-    {
-        return Link.TryResolveFormKey(cache, out formKey);
-    }
-
-    public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord)
-    {
-        return Link.TryResolveCommon(cache, out majorRecord);
-    }
-
-    public FormKey FormKey => Link.FormKey;
-
-    public FormKey? FormKeyNullable => Link.FormKeyNullable;
-
-    public bool IsNull => Link.IsNull;
-    
     public bool Equals(IFormLinkOrIndexGetter<TMajorGetter>? other) => FormLinkOrIndex<TMajorGetter>.EqualityComparer.Equals(this, other);
 
     public override bool Equals(object? obj)
@@ -194,62 +155,6 @@ public class FormLinkOrIndex<TMajorGetter> : IFormLinkOrIndex<TMajorGetter>
         throw new NotImplementedException();
     }
 
-    public TMajorGetter? TryResolve(ILinkCache cache)
-    {
-        return Link.TryResolve(cache);
-    }
-
-    IFormLink<TMajorRet> IFormLinkGetter<TMajorGetter>.Cast<TMajorRet>()
-    {
-        return Link.Cast<TMajorRet>();
-    }
-
-    IFormLinkNullable<TMajorRet> IFormLinkNullableGetter<TMajorGetter>.Cast<TMajorRet>()
-    {
-        return Link.Cast<TMajorRet>();
-    }
-
-    public Type Type => Link.Type;
-
-    public bool TryGetModKey(out ModKey modKey)
-    {
-        return Link.TryGetModKey(out modKey);
-    }
-
-    public bool TryResolveFormKey(ILinkCache cache, out FormKey formKey)
-    {
-        return Link.TryResolveFormKey(cache, out formKey);
-    }
-
-    public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordGetter majorRecord)
-    {
-        return Link.TryResolveCommon(cache, out majorRecord);
-    }
-
-    public FormKey FormKey
-    {
-        get => Link.FormKey;
-        set => Link.FormKey = value;
-    }
-
-    public void SetTo(FormKey? formKey)
-    {
-        Link.SetTo(formKey);
-    }
-
-    public void SetToNull()
-    {
-        Link.SetToNull();
-    }
-
-    public FormKey? FormKeyNullable
-    {
-        get => Link.FormKeyNullable;
-        set => Link.FormKeyNullable = value;
-    }
-
-    public bool IsNull => Link.IsNull;
-    
     public bool Equals(IFormLinkOrIndexGetter<TMajorGetter>? other) => FormLinkOrIndex<TMajorGetter>.EqualityComparer.Equals(this, other);
 
     public override bool Equals(object? obj)
@@ -290,5 +195,17 @@ public class FormLinkOrIndex<TMajorGetter> : IFormLinkOrIndex<TMajorGetter>
             }
             return obj.Index.GetHashCode();
         }
+    }
+
+    public void SetTo<TMajorRhs>(IFormLinkOrIndexGetter<TMajorRhs> rhs)
+        where TMajorRhs : class, TMajorGetter
+    {
+        Index = rhs.Index;
+        Link.SetTo(rhs.Link);
+    }
+
+    public void Relink(IReadOnlyDictionary<FormKey, FormKey> mapping)
+    {
+        Link.Relink(mapping);
     }
 }

@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)IsCloserToAThanBConditionData_FieldIndex.TargetA) ?? true))
             {
-                item.TargetA.SetTo(rhs.TargetA.FormKey);
+                item.TargetA.SetTo(rhs.TargetA);
             }
             if ((copyMask?.GetShouldTranslate((int)IsCloserToAThanBConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)IsCloserToAThanBConditionData_FieldIndex.TargetB) ?? true))
             {
-                item.TargetB.SetTo(rhs.TargetB.FormKey);
+                item.TargetB.SetTo(rhs.TargetB);
             }
             if ((copyMask?.GetShouldTranslate((int)IsCloserToAThanBConditionData_FieldIndex.SecondUnusedStringParameter) ?? true))
             {
