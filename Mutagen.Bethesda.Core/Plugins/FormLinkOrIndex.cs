@@ -5,7 +5,7 @@ using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Plugins;
 
-public class FormLinkOrIndexGetter<TMajorGetter> : IFormLinkOrIndexGetter<TMajorGetter>
+public class FormLinkOrIndexGetter<TMajorGetter> : IFormLinkOrIndexGetter<TMajorGetter>, IEquatable<IFormLinkOrIndexGetter<TMajorGetter>>
     where TMajorGetter : class, IMajorRecordGetter
 {
     private readonly IFormLinkOrIndexFlagGetter _parent;
@@ -94,6 +94,18 @@ public class FormLinkOrIndexGetter<TMajorGetter> : IFormLinkOrIndexGetter<TMajor
     public FormKey? FormKeyNullable => Link.FormKeyNullable;
 
     public bool IsNull => Link.IsNull;
+    
+    public bool Equals(IFormLinkOrIndexGetter<TMajorGetter>? other) => FormLinkOrIndex<TMajorGetter>.EqualityComparer.Equals(this, other);
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not IFormLinkOrIndexGetter<TMajorGetter> rhs) return false;
+        return Equals(rhs);
+    }
+
+    public override int GetHashCode() => FormLinkOrIndex<TMajorGetter>.EqualityComparer.GetHashCode(this);
 }
 
 public class FormLinkOrIndex<TMajorGetter> : IFormLinkOrIndex<TMajorGetter>
@@ -237,4 +249,46 @@ public class FormLinkOrIndex<TMajorGetter> : IFormLinkOrIndex<TMajorGetter>
     }
 
     public bool IsNull => Link.IsNull;
+    
+    public bool Equals(IFormLinkOrIndexGetter<TMajorGetter>? other) => FormLinkOrIndex<TMajorGetter>.EqualityComparer.Equals(this, other);
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj is not IFormLinkOrIndexGetter<TMajorGetter> rhs) return false;
+        return Equals(rhs);
+    }
+
+    public override int GetHashCode() => FormLinkOrIndex<TMajorGetter>.EqualityComparer.GetHashCode(this);
+
+    public static IEqualityComparer<IFormLinkOrIndexGetter<TMajorGetter>> EqualityComparer { get; } = new FormLinkOrIndexEqualityComparer();
+
+    private sealed class FormLinkOrIndexEqualityComparer : IEqualityComparer<IFormLinkOrIndexGetter<TMajorGetter>>
+    {
+        public bool Equals(IFormLinkOrIndexGetter<TMajorGetter>? x, IFormLinkOrIndexGetter<TMajorGetter>? y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            var usesLink = x.UsesLink();
+            if (usesLink != y.UsesLink()) return false;
+            if (usesLink)
+            {
+                return x.Link.Equals(y.Link);
+            }
+
+            return x.Index == y.Index;
+        }
+
+        public int GetHashCode(IFormLinkOrIndexGetter<TMajorGetter> obj)
+        {
+            if (obj.UsesLink())
+            {
+                return obj.Link.GetHashCode();
+            }
+            return obj.Index.GetHashCode();
+        }
+    }
 }
