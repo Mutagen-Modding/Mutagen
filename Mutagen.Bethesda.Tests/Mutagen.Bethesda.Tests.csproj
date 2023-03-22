@@ -44,14 +44,7 @@
     <Compile Include="Exceptions\DidNotMatchException.cs" />
     <Compile Include="Exceptions\MoreDataException.cs" />
     <Compile Include="Exceptions\UnexpectedlyMoreData.cs" />
-    <Compile Include="Json\JsonConverterTests.cs" />
     <Compile Include="Passthrough Tests\Fallout4PassthroughTest.cs" />
-    <Compile Include="Plugins\Exceptions\RecordExceptionTests.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
-    <Compile Include="Plugins\RecordTypeMapping\RecordTypeLookupTests.cs" />
     <Compile Include="Processing\BinaryFileProcessor.cs" />
     <Compile Include="ComparisonStream.cs" />
     <Compile Include="FlattenedMod_Tests.cs" />
