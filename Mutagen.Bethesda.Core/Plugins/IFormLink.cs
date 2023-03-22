@@ -27,6 +27,11 @@ public interface IFormLinkIdentifier : IFormKeyGetter, ILinkIdentifier
             {
                 name = regis.ClassType.Name;
             }
+
+            if (regis.ClassType.Name == "MajorRecord")
+            {
+                return "MajorRecord";
+            }
             return $"{regis.ProtocolKey.Namespace}.{name}";
         }
         else

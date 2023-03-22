@@ -551,13 +551,68 @@ public class JsonConverterTests
         settings.Converters.Add(new FormKeyJsonConverter());
         var target = new FormLinkInformationClass()
         {
-            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
             Interface = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
         };
-        var toDeserialize = $"{{\"Direct\":\"Null\",\"Setter\":\"Null\",\"Getter\":\"Null\"}}";
+        var toDeserialize = $"{{\"Direct\":\"Null\",\"Interface\":\"Null\"}}";
         JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
             .Direct
             .Should().Be(target.Direct);
+        JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
+            .Interface
+            .Should().Be(target.Interface);
+    }
+    
+    [Fact]
+    public void FormLinkInformationConverter_FormLink_Deserialize()
+    {
+        Warmup.Init();
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var target = new FormLinkInformationClass()
+        {
+            Interface = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+        };
+        var toDeserialize = $"{{\"Interface\":\"Null<Bethesda.MajorRecord>\",\"Direct\":\"Null<Bethesda.MajorRecord>\"}}";
+        JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
+            .Direct
+            .Should().Be(target.Direct);
+        JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
+            .Interface
+            .Should().Be(target.Interface);
+    }
+    
+    [Fact]
+    public void FormLinkInformationConverter_FormLink_Serialize_Null()
+    {
+        Warmup.Init();
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var target = new FormLinkInformationClass()
+        {
+            Interface = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+        };
+        var toDeserialize = $"{{\"Interface\":\"Null<MajorRecord>\",\"Direct\":\"Null<MajorRecord>\"}}";
+        JsonConvert.SerializeObject(target, settings)
+            .Should().Be(toDeserialize);
+    }
+    
+    [Fact]
+    public void FormLinkInformationConverter_FormLink_Serialize()
+    {
+        Warmup.Init();
+        var settings = new JsonSerializerSettings();
+        settings.Converters.Add(new FormKeyJsonConverter());
+        var target = new FormLinkInformationClass()
+        {
+            Interface = new FormLinkInformation(FormKey.Factory("123456:Skyrim.esm"), typeof(IMajorRecordGetter)),
+            Direct = new FormLinkInformation(FormKey.Factory("123456:Skyrim.esm"), typeof(IMajorRecordGetter)),
+        };
+        var toDeserialize = $"{{\"Interface\":\"123456:Skyrim.esm<MajorRecord>\",\"Direct\":\"123456:Skyrim.esm<MajorRecord>\"}}";
+        JsonConvert.SerializeObject(target, settings)
+            .Should().Be(toDeserialize);
     }
     
     [Fact]
@@ -568,13 +623,16 @@ public class JsonConverterTests
         settings.Converters.Add(new FormKeyJsonConverter());
         var target = new FormLinkInformationClass()
         {
-            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
             Interface = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
+            Direct = new FormLinkInformation(FormKey.Null, typeof(IMajorRecordGetter)),
         };
-        var toDeserialize = $"{{\"Direct\":\"\",\"Setter\":\"\",\"Getter\":\"\"}}";
+        var toDeserialize = $"{{\"Interface\":\"\",\"Direct\":\"\"}}";
         JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
             .Direct
             .Should().Be(target.Direct);
+        JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
+            .Interface
+            .Should().Be(target.Interface);
     }
     #endregion
 
