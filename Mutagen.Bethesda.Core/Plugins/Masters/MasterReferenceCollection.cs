@@ -128,7 +128,12 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
         {
             return FormID.Null;
         }
-        throw new ArgumentException($"Could not map FormKey to a master index: {key}");
+        throw new UnmappableFormIDException(
+            key, 
+            _masterIndices
+                .OrderBy(kv => kv.Value.ID)
+                .Select(x => x.Key)
+                .ToArray());
     }
 
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)

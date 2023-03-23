@@ -119,7 +119,7 @@ public class WriteTests
                 }
                 catch (RecordException ex)
                 {
-                    Assert.IsType<ArgumentException>(ex.InnerException);
+                    Assert.IsType<UnmappableFormIDException>(ex.InnerException);
                     throw;
                 }
             });
