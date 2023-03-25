@@ -47,6 +47,20 @@ switch (creature.CreatureType)
         break;
 }
 ```
+#### Unknown Flags
+Enums only list the values that are known and have "nicknames".  Sometimes mods have values for things that are "unknown" and don't have a name.   Rather than listing these, Mutagen opts to only list known values to keep things clean.
+
+You can still get at and set these values, though.  Enums in C# are backed by `int` (or other numeric primitives), and so you can write code like this:
+```cs
+CreatureType e = (CreatureType)13; 
+
+if (e == (CreatureType)13)
+{
+
+}
+```
+
+With this style API, you can still access all unknown values as needed.
 
 ### Flags Enum
 Certain fields are allowed to have several values, and so make use of C#'s [Flags] enum systems.
@@ -73,4 +87,14 @@ npc.Flags = NPCFlag.Female | NPCFlag.Essential;
 npc.Flags |= NPCFlag.AutoCalcStats;
 ```
 
-You can read up on C# flag enums for more API tricks.
+You can read up on C# flag enums on stack overflow for more API tricks.
+
+In addition to the built in C# features, Mutagen has some helper methods such as
+```
+npc.Flags = npc.Flags.SetFlag(NPCFlag.AutoCalcStats, true);
+
+if (npc.Flags.HasFlag(NPCFlag.AutoCalcStats))
+{
+}
+```
+These aren't included in C# by default, but are part of the Mutagen ecosystem.
