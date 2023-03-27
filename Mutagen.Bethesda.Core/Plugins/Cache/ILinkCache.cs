@@ -194,6 +194,29 @@ public interface ILinkCache : IIdentifierLinkCache
     bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
 
     /// <summary>
+    /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false. <br />
+    /// <br />
+    /// NOTE: <br />
+    /// In the case of two records existing with the same target FormKey of different types exist, the first found to match will be returned.
+    /// </summary>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="types">The types of Major Record to look up</param>
+    /// <param name="majorRec">Out parameter containing the record, if successful</param>
+    /// <param name="matchedType">Out parameter containing the type matched to, if successful</param>
+    /// <param name="target">Resolution target to look up</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner);
+    
+    /// <summary>
     /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
     /// <br/>
     /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
@@ -213,6 +236,28 @@ public interface ILinkCache : IIdentifierLinkCache
     /// </exception>
     /// <returns>True if a matching record was found</returns>
     bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec);
+
+    /// <summary>
+    /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
+    /// <br/>
+    /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
+    /// the function will return false. <br />
+    /// <br />
+    /// NOTE: <br />
+    /// In the case of two records existing with the same target EditorID of different types exist, the first found to match will be returned.
+    /// </summary>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="types">The types of Major Record to look up</param>
+    /// <param name="majorRec">Out parameter containing the record if successful</param>
+    /// <param name="matchedType">Out parameter containing the type matched to, if successful</param>
+    /// <exception cref="ArgumentException">
+    /// An unexpected type will throw an exception.<br/>
+    /// Unexpected types include:<br/>
+    ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
+    ///   - A setter type is requested from a getter only object.
+    /// </exception>
+    /// <returns>True if a matching record was found</returns>
+    bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType);
 
     /// <summary>
     /// Retrieves the winning record that matches the FormKey relative to the source the cache was attached to.<br/>

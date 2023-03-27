@@ -212,22 +212,23 @@ internal sealed class InternalImmutableModLinkCache
         }
     }
 
-    public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
+    public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
+        return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec, out matchedType);
     }
 
-    public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
+    public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return TryResolve(editorId, (IEnumerable<Type>)types, out majorRec);
+        return TryResolve(editorId, (IEnumerable<Type>)types, out majorRec, out matchedType);
     }
 
-    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
         if (target == ResolveTarget.Origin
             && formKey.ModKey != _sourceMod.ModKey)
         {
             majorRec = default;
+            matchedType = default;
             return false;
         }
             
@@ -235,45 +236,51 @@ internal sealed class InternalImmutableModLinkCache
         {
             if (TryResolve(formKey, type, out majorRec, target))
             {
+                matchedType = type;
                 return true;
             }
         }
+
+        matchedType = default;
         majorRec = default;
         return false;
     }
 
-    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
+    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType)
     {
         foreach (var type in types)
         {
             if (TryResolve(editorId, type, out majorRec))
             {
+                matchedType = type;
                 return true;
             }
         }
+
+        matchedType = default;
         majorRec = default;
         return false;
     }
 
-    public IMajorRecordGetter Resolve(FormKey formKey, params Type[] types)
+    public IMajorRecordGetter Resolve(FormKey formKey, [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return Resolve(formKey, (IEnumerable<Type>)types);
+        return Resolve(formKey, (IEnumerable<Type>)types, out matchedType);
     }
 
-    public IMajorRecordGetter Resolve(string editorId, params Type[] types)
+    public IMajorRecordGetter Resolve(string editorId, [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return Resolve(editorId, (IEnumerable<Type>)types);
+        return Resolve(editorId, (IEnumerable<Type>)types, out matchedType);
     }
 
-    public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
+    public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
-        if (TryResolve(formKey, types, out var commonRec, target)) return commonRec;
+        if (TryResolve(formKey, types, out var commonRec, out matchedType, target)) return commonRec;
         throw new MissingRecordException(formKey, types.ToArray());
     }
 
-    public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types)
+    public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType)
     {
-        if (TryResolve(editorId, types, out var commonRec)) return commonRec;
+        if (TryResolve(editorId, types, out var commonRec, out matchedType)) return commonRec;
         throw new MissingRecordException(editorId, types.ToArray());
     }
 
@@ -377,22 +384,23 @@ internal sealed class InternalImmutableModLinkCache
         return false;
     }
 
-    public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
+    public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return TryResolveIdentifier(formKey, (IEnumerable<Type>)types, out editorId);
+        return TryResolveIdentifier(formKey, (IEnumerable<Type>)types, out editorId, out matchedType);
     }
 
-    public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
+    public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return TryResolveIdentifier(editorId, (IEnumerable<Type>)types, out formKey);
+        return TryResolveIdentifier(editorId, (IEnumerable<Type>)types, out formKey, out matchedType);
     }
 
-    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
         if (target == ResolveTarget.Origin
             && formKey.ModKey != _sourceMod.ModKey)
         {
             editorId = default;
+            matchedType = default;
             return false;
         }
 
@@ -400,22 +408,28 @@ internal sealed class InternalImmutableModLinkCache
         {
             if (TryResolveIdentifier(formKey, type, out editorId))
             {
+                matchedType = type;
                 return true;
             }
         }
+
+        matchedType = default;
         editorId = default;
         return false;
     }
 
-    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType)
     {
         foreach (var type in types)
         {
             if (TryResolveIdentifier(editorId, type, out formKey))
             {
+                matchedType = type;
                 return true;
             }
         }
+
+        matchedType = default;
         formKey = default;
         return false;
     }

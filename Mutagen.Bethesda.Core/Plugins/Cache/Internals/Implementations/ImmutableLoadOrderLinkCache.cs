@@ -169,14 +169,31 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
         ResolveTarget target = ResolveTarget.Winner)
     {
         CheckDisposal();
-        return _cache.TryResolveIdentifier(formKey, types, out editorId, target);
+        return _cache.TryResolveIdentifier(formKey, types, out editorId, out var matchedType, target);
+    }
+
+    /// <inheritdoc />
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, out string? editorId, 
+        [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        CheckDisposal();
+        return _cache.TryResolveIdentifier(formKey, types, out editorId, out matchedType, target);
     }
 
     /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey)
     {
         CheckDisposal();
-        return _cache.TryResolveIdentifier(editorId, types, out formKey);
+        return _cache.TryResolveIdentifier(editorId, types, out formKey, out var matchedType);
+    }
+
+    /// <inheritdoc />
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey, 
+        [MaybeNullWhen(false)] out Type matchedType)
+    {
+        CheckDisposal();
+        return _cache.TryResolveIdentifier(editorId, types, out formKey, out matchedType);
     }
 
     /// <inheritdoc />
@@ -333,14 +350,14 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
     public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
     {
         CheckDisposal();
-        return _cache.TryResolve(formKey, out majorRec, types);
+        return _cache.TryResolve(formKey, out majorRec, out var matchedType, types);
     }
 
     /// <inheritdoc />
     public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
     {
         CheckDisposal();
-        return _cache.TryResolve(editorId, out majorRec, types);
+        return _cache.TryResolve(editorId, out majorRec, out var matchedType, types);
     }
 
     /// <inheritdoc />
@@ -348,14 +365,29 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
         ResolveTarget target = ResolveTarget.Winner)
     {
         CheckDisposal();
-        return _cache.TryResolve(formKey, types, out majorRec, target);
+        return _cache.TryResolve(formKey, types, out majorRec, out var matchedType, target);
+    }
+
+    /// <inheritdoc />
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        CheckDisposal();
+        return _cache.TryResolve(formKey, types, out majorRec, out matchedType, target);
+    }
+
+    /// <inheritdoc />
+    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        CheckDisposal();
+        return _cache.TryResolve(editorId, types, out majorRec, out matchedType);
     }
 
     /// <inheritdoc />
     public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
     {
         CheckDisposal();
-        return _cache.TryResolve(editorId, types, out majorRec);
+        return _cache.TryResolve(editorId, types, out majorRec, out var matchedType);
     }
 
     /// <inheritdoc />
@@ -898,14 +930,28 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
         ResolveTarget target = ResolveTarget.Winner)
     {
         CheckDisposal();
-        return _cache.TryResolveIdentifier(formKey, types, out editorId, target);
+        return _cache.TryResolveIdentifier(formKey, types, out editorId, out var matchedType, target);
+    }
+
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, out string? editorId, 
+        [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        CheckDisposal();
+        return _cache.TryResolveIdentifier(formKey, types, out editorId, out matchedType, target);
     }
 
     /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey)
     {
         CheckDisposal();
-        return _cache.TryResolveIdentifier(editorId, types, out formKey);
+        return _cache.TryResolveIdentifier(editorId, types, out formKey, out var matchedType);
+    }
+
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        CheckDisposal();
+        return _cache.TryResolveIdentifier(editorId, types, out formKey, out matchedType);
     }
 
     /// <inheritdoc />
@@ -1062,14 +1108,14 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
     public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
     {
         CheckDisposal();
-        return _cache.TryResolve(formKey, out majorRec, types);
+        return _cache.TryResolve(formKey, out majorRec, out var matchedType, types);
     }
 
     /// <inheritdoc />
     public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
     {
         CheckDisposal();
-        return _cache.TryResolve(editorId, out majorRec, types);
+        return _cache.TryResolve(editorId, out majorRec, out var matchedType, types);
     }
 
     /// <inheritdoc />
@@ -1077,14 +1123,27 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
         ResolveTarget target = ResolveTarget.Winner)
     {
         CheckDisposal();
-        return _cache.TryResolve(formKey, types, out majorRec, target);
+        return _cache.TryResolve(formKey, types, out majorRec, out var matchedType, target);
+    }
+
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        CheckDisposal();
+        return _cache.TryResolve(formKey, types, out majorRec, out matchedType, target);
     }
 
     /// <inheritdoc />
     public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
     {
         CheckDisposal();
-        return _cache.TryResolve(editorId, types, out majorRec);
+        return _cache.TryResolve(editorId, types, out majorRec, out var matchedType);
+    }
+
+    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        CheckDisposal();
+        return _cache.TryResolve(editorId, types, out majorRec, out matchedType);
     }
 
     /// <inheritdoc />

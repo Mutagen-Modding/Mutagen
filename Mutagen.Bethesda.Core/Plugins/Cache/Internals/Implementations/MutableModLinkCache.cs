@@ -253,6 +253,23 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolve(editorId, type, out majorRec))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+
+        matchedType = default;
+        majorRec = default;
+        return false;
+    }
+
+    /// <inheritdoc />
     public IMajorRecordGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
     {
         if (TryResolve<IMajorRecordGetter>(formKey, out var majorRec, target)) return majorRec;
@@ -652,6 +669,23 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolve(formKey, type, out majorRec, target))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        matchedType = default;
+        majorRec = default;
+        return false;
+    }
+
+    /// <inheritdoc />
     public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
     {
         foreach (var type in types)
@@ -810,9 +844,34 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolve(formKey, types, out var rec, out matchedType, target))
+        {
+            editorId = rec.EditorID;
+            return true;
+        }
+        editorId = default;
+        return false;
+    }
+
+    /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
     {
         if (TryResolve(editorId, types, out var rec))
+        {
+            formKey = rec.FormKey;
+            return true;
+        }
+        formKey = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        if (TryResolve(editorId, types, out var rec, out matchedType))
         {
             formKey = rec.FormKey;
             return true;
@@ -1196,6 +1255,11 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
 
         majorRec = default;
         return false;
+    }
+
+    public bool TryResolve(string editorId, IEnumerable<Type> types, out IMajorRecordGetter majorRec, out Type matchedType)
+    {
+        throw new NotImplementedException();
     }
 
     /// <inheritdoc />
@@ -1816,6 +1880,23 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     }
 
     /// <inheritdoc />
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolve(formKey, type, out majorRec, target))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        matchedType = default;
+        majorRec = default;
+        return false;
+    }
+
+    /// <inheritdoc />
     public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
     {
         foreach (var type in types)
@@ -1973,10 +2054,33 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
         return false;
     }
 
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, out string? editorId, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolve(formKey, types, out var rec, out matchedType, target))
+        {
+            editorId = rec.EditorID;
+            return true;
+        }
+        editorId = default;
+        return false;
+    }
+
     /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
     {
         if (TryResolve(editorId, types, out var rec))
+        {
+            formKey = rec.FormKey;
+            return true;
+        }
+        formKey = default;
+        return false;
+    }
+
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey, out Type matchedType)
+    {
+        if (TryResolve(editorId, types, out var rec, out matchedType))
         {
             formKey = rec.FormKey;
             return true;

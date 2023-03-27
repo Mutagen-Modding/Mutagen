@@ -245,38 +245,48 @@ internal sealed class InternalImmutableLoadOrderLinkCache
         return ResolveAll(formKey, typeof(IMajorRecordGetter), target);
     }
 
-    public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
+    public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec,
+        [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec);
+        return TryResolve(formKey, (IEnumerable<Type>)types, out majorRec, out matchedType);
     }
 
-    public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, params Type[] types)
+    public bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec,
+        [MaybeNullWhen(false)] out Type matchedType, params Type[] types)
     {
-        return TryResolve(editorId, (IEnumerable<Type>)types, out majorRec);
+        return TryResolve(editorId, (IEnumerable<Type>)types, out majorRec, out matchedType);
     }
 
-    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, 
+        [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
         foreach (var type in types)
         {
             if (TryResolve(formKey, type, out majorRec, target))
             {
+                matchedType = type;
                 return true;
             }
         }
+
+        matchedType = default;
         majorRec = default;
         return false;
     }
 
-    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
+    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, 
+        [MaybeNullWhen(false)] out Type matchedType)
     {
         foreach (var type in types)
         {
             if (TryResolve(editorId, type, out majorRec))
             {
+                matchedType = type;
                 return true;
             }
         }
+        
+        matchedType = default;
         majorRec = default;
         return false;
     }
@@ -293,13 +303,13 @@ internal sealed class InternalImmutableLoadOrderLinkCache
 
     public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
     {
-        if (TryResolve(formKey, types, out var commonRec, target)) return commonRec;
+        if (TryResolve(formKey, types, out var commonRec, out var matchedType, target)) return commonRec;
         throw new MissingRecordException(formKey, types.ToArray());
     }
 
     public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types)
     {
-        if (TryResolve(editorId, types, out var commonRec)) return commonRec;
+        if (TryResolve(editorId, types, out var commonRec, out var matchedType)) return commonRec;
         throw new MissingRecordException(editorId, types.ToArray());
     }
 
@@ -412,20 +422,21 @@ internal sealed class InternalImmutableLoadOrderLinkCache
 
     public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types)
     {
-        return TryResolveIdentifier(formKey, (IEnumerable<Type>)types, out editorId);
+        return TryResolveIdentifier(formKey, (IEnumerable<Type>)types, out editorId, out var matchedType);
     }
 
     public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types)
     {
-        return TryResolveIdentifier(editorId, (IEnumerable<Type>)types, out formKey);
+        return TryResolveIdentifier(editorId, (IEnumerable<Type>)types, out formKey, out var matchedType);
     }
 
-    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
         if (target == ResolveTarget.Origin)
         {
             if (!_modsByKey.TryGetValue(formKey.ModKey, out var origMod))
             {
+                matchedType = default;
                 editorId = default;
                 return false;
             }
@@ -434,6 +445,7 @@ internal sealed class InternalImmutableLoadOrderLinkCache
             {
                 if (origMod.TryResolveIdentifier(formKey, out editorId, type))
                 {
+                    matchedType = type;
                     return true;
                 }
             }
@@ -444,27 +456,31 @@ internal sealed class InternalImmutableLoadOrderLinkCache
             {
                 if (_formKeyCache.TryResolve(formKey, formKey.ModKey, type, out var rec))
                 {
+                    matchedType = type;
                     editorId = rec.EditorID;
                     return true;
                 }
             }
         }
 
+        matchedType = default;
         editorId = default;
         return false;
     }
 
-    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType)
     {
         foreach (var type in types)
         {
             if (_editorIdCache.TryResolve(editorId, default, type, out var rec))
             {
                 formKey = rec.FormKey;
+                matchedType = type;
                 return true;
             }
         }
 
+        matchedType = default;
         formKey = default;
         return false;
     }
