@@ -29,6 +29,7 @@
                 Style="{StaticResource ReflectionSettingName}" />
             <plugins:FormKeyPicker Grid.Column="1"
                 x:Name="FormPicker"
+                SelectedType="{Binding ValueType, Mode=OneWayToSource}"
                 VerticalAlignment="Center" />
         </Grid>
     </Border>

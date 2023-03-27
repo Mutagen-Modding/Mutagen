@@ -30,6 +30,9 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
     [Reactive]
     public bool IsSelected { get; set; }
 
+    [Reactive]
+    public Type? ValueType { get; set; }
+
     private readonly ObservableAsPropertyHelper<string> _displayName;
     public string DisplayName => _displayName.Value;
 
@@ -65,12 +68,28 @@ public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
 
     public override void Import(JsonElement property, Action<string> logger)
     {
-        Value = FormKeySettingsVM.Import(property);
+        if (_targetTypes.Length > 1
+            && FormLinkInformation.TryFactory(property.GetString(), out var info))
+        {
+            Value = info.FormKey;
+            ValueType = info.Type;
+        }
+        else
+        {
+            Value = FormKeySettingsVM.Import(property);
+        }
     }
 
     public override void Persist(JObject obj, Action<string> logger)
     {
-        obj[Meta.DiskName] = JToken.FromObject(FormKeySettingsVM.Persist(Value));
+        if (_targetTypes.Length > 1 && ValueType != null)
+        {
+            obj[Meta.DiskName] = JToken.FromObject(IFormLinkIdentifier.GetString(Value, ValueType));
+        }
+        else
+        {
+            obj[Meta.DiskName] = JToken.FromObject(FormKeySettingsVM.Persist(Value));
+        }
     }
 
     public override void WrapUp()
