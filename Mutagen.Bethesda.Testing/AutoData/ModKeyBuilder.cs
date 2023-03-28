@@ -1,4 +1,4 @@
-﻿using AutoFixture.Kernel;
+using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 
@@ -6,6 +6,8 @@ namespace Mutagen.Bethesda.Testing.AutoData;
 
 public class ModKeyBuilder : ISpecimenBuilder
 {
+    private static int _nextNum = 0;
+    
     public object Create(object request, ISpecimenContext context)
     {
         if (request is MultipleRequest mult)
@@ -39,9 +41,8 @@ public class ModKeyBuilder : ISpecimenBuilder
         return new NoSpecimen();
     }
 
-    public static ModKey GetRandomModKey(ModType type)
+    public ModKey GetRandomModKey(ModType type)
     {
-        var fileName = new FileName(Path.GetRandomFileName());
-        return new ModKey(fileName.NameWithoutExtension, ModType.Plugin);
+        return new ModKey($"Mod{_nextNum++}", ModType.Plugin);
     }
 }

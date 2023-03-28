@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
@@ -7,6 +7,8 @@ namespace Mutagen.Bethesda.Testing.AutoData;
 
 public class ModPathMultipleBuilder : ISpecimenBuilder
 {
+    private ModKeyBuilder _modKeyBuilder = new();
+
     public object Create(object request, ISpecimenContext context)
     {
         if (request is MultipleRequest mult)
@@ -23,9 +25,9 @@ public class ModPathMultipleBuilder : ISpecimenBuilder
                     var dataDir = context.Create<IDataDirectoryProvider>();
                     return new ModKey[]
                     {
-                        ModKeyBuilder.GetRandomModKey(ModType.Plugin),
-                        ModKeyBuilder.GetRandomModKey(ModType.Plugin),
-                        ModKeyBuilder.GetRandomModKey(ModType.Plugin),
+                        _modKeyBuilder.GetRandomModKey(ModType.Plugin),
+                        _modKeyBuilder.GetRandomModKey(ModType.Plugin),
+                        _modKeyBuilder.GetRandomModKey(ModType.Plugin),
                     }.Select(mk =>
                     {
                         return new ModPath(mk, Path.Combine(dataDir.Path, mk.FileName));

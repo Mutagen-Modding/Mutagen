@@ -1,10 +1,12 @@
-﻿using AutoFixture.Kernel;
+using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
 public class ModKeyMultipleBuilder : ISpecimenBuilder
 {
+    private ModKeyBuilder _modKeyBuilder = new();
+
     public object Create(object request, ISpecimenContext context)
     {
         if (request is MultipleRequest mult)
@@ -20,9 +22,9 @@ public class ModKeyMultipleBuilder : ISpecimenBuilder
                 {
                     return new ModKey[]
                     {
-                        ModKeyBuilder.GetRandomModKey(ModType.Plugin),
-                        ModKeyBuilder.GetRandomModKey(ModType.Plugin),
-                        ModKeyBuilder.GetRandomModKey(ModType.Plugin),
+                        _modKeyBuilder.GetRandomModKey(ModType.Plugin),
+                        _modKeyBuilder.GetRandomModKey(ModType.Plugin),
+                        _modKeyBuilder.GetRandomModKey(ModType.Plugin),
                     };
                 }
             }
