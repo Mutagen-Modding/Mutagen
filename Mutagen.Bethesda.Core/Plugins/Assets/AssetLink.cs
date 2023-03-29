@@ -53,7 +53,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     {
         Span<char> mySpan = stackalloc char[inputPath.Length];
         inputPath.CopyTo(mySpan);
-        CleanDirectorySeparators(mySpan);
+        IFileSystemExt.CleanDirectorySeparators(mySpan);
         
         ReadOnlySpan<char> path = mySpan;
         
@@ -93,35 +93,6 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
             ? path.ToString() 
             : Path.Combine(AssetInstance.BaseFolder, path.ToString());
     }
-    
-    // ToDo
-    // Replace with CSharpExt official calls
-    private static void CleanDirectorySeparators(Span<char> str)
-    {
-        CleanDirectorySeparators(str, '\\');
-        CleanDirectorySeparators(str, '/');
-    }
-
-    // ToDo
-    // Replace with CSharpExt official calls
-    private static void CleanDirectorySeparators(Span<char> str, char separator)
-    {
-        if (separator == Path.DirectorySeparatorChar) return;
-        Replace(str, separator, Path.DirectorySeparatorChar);
-    }
-    
-    // ToDo
-    // Replace with CSharpExt official calls
-    private static void Replace(Span<char> span, char oldChar, char newChar)
-    {
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (span[i] == oldChar)
-            {
-                span[i] = newChar;
-            }
-        }
-    }
 
     public override string ToString()
     {
@@ -156,6 +127,9 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLinkGetter<TAssetType>?(string? path) => path == null ? null : new(path);
+
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator AssetLinkGetter<TAssetType>?(FilePath? path) => path == null ? null : new(path.Value.Path);
 }
 
 /// <summary>
