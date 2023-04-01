@@ -30,7 +30,7 @@
     <Fields>
       <FormLink name="Quest" recordType="NNAM" refName="Quest" />
       <UInt32 name="FNAM" recordType="FNAM" />
-      <Float name="HoursUntilReset" recordType="RNAM" multiplier="24" />
+      <Float name="HoursUntilReset" recordType="RNAM" divisor="24" />
     </Fields>
   </Object>
   <Object name="StoryManagerEventNode" recordType="SMEN" baseClass="AStoryManagerNode" objType="Record" GUID="dd24d26a-8a21-4c53-9dbd-842a4d2fbe2f" ID="456">
