@@ -43,7 +43,12 @@ partial class AObjectModification
                     ret.CopyInFromBinary(frame);
                     return ret;
                 }
-                throw new MalformedDataException($"Could not find DATA subrecord");
+                else
+                {
+                    var ret = UnknownObjectModification.CreateFromBinary(frame);
+                    ret.ModificationType = RecordType.Null;
+                    return ret;
+                }
             }
             var type = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10)));
             return type.TypeInt switch
@@ -338,7 +343,9 @@ partial class AObjectModificationBinaryOverlay
         var majorRec = stream.GetMajorRecord();
         if (!majorRec.TryFindSubrecord(RecordTypes.DATA, out var data))
         {
-            throw new MalformedDataException($"Could not find DATA subrecord");
+            var unknown = (UnknownObjectModificationBinaryOverlay)UnknownObjectModificationBinaryOverlay.UnknownObjectModificationFactory(stream, package);
+            unknown.ModificationType = RecordType.Null;
+            return unknown;
         }
         var type = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10)));
         switch (type.TypeInt)

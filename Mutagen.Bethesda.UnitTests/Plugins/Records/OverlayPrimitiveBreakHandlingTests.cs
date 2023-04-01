@@ -14,7 +14,7 @@ public class OverlayPrimitiveBreakHandlingTests
         var overlayStream = TestDataPathing.GetOverlayStream(
             TestDataPathing.SkyrimPlacedObjectReflectedWaterMissingData, 
             GameRelease.SkyrimSE);
-        var obj =  PlacedObjectBinaryOverlay.PlacedObjectFactory(
+        var obj = PlacedObjectBinaryOverlay.PlacedObjectFactory(
             overlayStream,
             new BinaryOverlayFactoryPackage(overlayStream.MetaData));
         obj.Reflections.Count.Should().Be(1);
