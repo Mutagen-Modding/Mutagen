@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
-        public Byte Rank { get; set; } = default;
+        public SByte Rank { get; set; } = default;
         #endregion
         #region Fluff
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRankPlacementGetter
     {
         new IFormLink<IFactionGetter> Faction { get; set; }
-        new Byte Rank { get; set; }
+        new SByte Rank { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
     }
 
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RankPlacement_Registration.Instance;
         IFormLinkGetter<IFactionGetter> Faction { get; }
-        Byte Rank { get; }
+        SByte Rank { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
 
     }
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame)
         {
             item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Rank = frame.ReadUInt8();
+            item.Rank = frame.ReadInt8();
             item.Fluff = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public Byte Rank => _structData.Span[0x4];
+        public SByte Rank => (sbyte)_structData.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Fluff => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,

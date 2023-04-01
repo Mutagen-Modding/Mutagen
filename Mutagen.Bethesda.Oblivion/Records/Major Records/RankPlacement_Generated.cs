@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
-        public Byte Rank { get; set; } = default;
+        public SByte Rank { get; set; } = default;
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRankPlacementGetter
     {
         new IFormLink<IFactionGetter> Faction { get; set; }
-        new Byte Rank { get; set; }
+        new SByte Rank { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
     }
 
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RankPlacement_Registration.Instance;
         IFormLinkGetter<IFactionGetter> Faction { get; }
-        Byte Rank { get; }
+        SByte Rank { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
 
     }
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame)
         {
             item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Rank = frame.ReadUInt8();
+            item.Rank = frame.ReadInt8();
             item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public Byte Rank => _structData.Span[0x4];
+        public SByte Rank => (sbyte)_structData.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
