@@ -1570,13 +1570,13 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.StaticVolumeMultiplier,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1.5259021896696422E-05,
+                divisor: 1.5259021896696422E-05,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DefaultMenuVolume,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1.5259021896696422E-05,
+                divisor: 1.5259021896696422E-05,
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM));
         }
 

@@ -2055,17 +2055,17 @@ namespace Mutagen.Bethesda.Skyrim
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceWalk,
-                    multiplier: 57.2958f);
+                    divisor: 57.2958f);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceRun,
-                    multiplier: 57.2958f);
+                    divisor: 57.2958f);
                 if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
                 {
                     FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.RotateWhileMovingRun,
-                        multiplier: 57.2958f);
+                        divisor: 57.2958f);
                 }
             }
             if (item.AnimationChangeThresholds is {} AnimationChangeThresholdsItem)

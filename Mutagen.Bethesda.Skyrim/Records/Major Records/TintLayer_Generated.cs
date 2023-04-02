@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.InterpolationValue,
                 integerType: FloatIntegerType.UInt,
-                multiplier: 0.01,
+                divisor: 0.01,
                 header: translationParams.ConvertToCustom(RecordTypes.TINV));
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,

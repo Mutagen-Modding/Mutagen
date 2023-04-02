@@ -2307,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     item: item.StaticAttenuation,
                     integerType: FloatIntegerType.UShort,
-                    multiplier: 0.01);
+                    divisor: 0.01);
             }
         }
 

@@ -1826,7 +1826,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     item: item.DecayHfRatio,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.01);
+                    divisor: 0.01);
                 writer.Write(item.ReflectDelayMS);
                 writer.Write(item.ReverbDelayMS);
                 PercentBinaryTranslation.Write(

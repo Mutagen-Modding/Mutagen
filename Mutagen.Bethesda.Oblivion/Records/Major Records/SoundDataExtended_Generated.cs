@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 item: item.StaticAttenuation,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01);
+                divisor: 0.01);
             SoundDataExtendedBinaryWriteTranslation.WriteBinaryStopTime(
                 writer: writer,
                 item: item);

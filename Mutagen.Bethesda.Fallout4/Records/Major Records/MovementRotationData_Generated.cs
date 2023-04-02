@@ -1093,11 +1093,11 @@ namespace Mutagen.Bethesda.Fallout4
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Walk,
-                multiplier: 57.2958f);
+                divisor: 57.2958f);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Run,
-                multiplier: 57.2958f);
+                divisor: 57.2958f);
             writer.Write(item.Unused2);
         }
 

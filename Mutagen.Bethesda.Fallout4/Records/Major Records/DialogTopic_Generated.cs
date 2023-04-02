@@ -2619,7 +2619,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Priority,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM),
-                multiplier: 50f);
+                divisor: 50f);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Branch,

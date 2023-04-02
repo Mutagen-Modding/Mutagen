@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.HoursUntilReset,
                 header: translationParams.ConvertToCustom(RecordTypes.RNAM),
-                multiplier: 0.041666668f);
+                divisor: 0.041666668f);
         }
 
         public void Write(

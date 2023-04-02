@@ -3306,7 +3306,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.ArmorRating,
                 integerType: FloatIntegerType.UInt,
-                multiplier: 0.01,
+                divisor: 0.01,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,

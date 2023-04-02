@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.StaticAttenuation,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01,
+                divisor: 0.01,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM));
             if (item.OutputChannels is {} OutputChannelsItem)
             {

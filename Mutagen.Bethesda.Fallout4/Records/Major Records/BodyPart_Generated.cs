@@ -3719,11 +3719,11 @@ namespace Mutagen.Bethesda.Fallout4
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GoreEffectsLocalRotateX,
-                    multiplier: 57.2958f);
+                    divisor: 57.2958f);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GoreEffectsLocalRotateY,
-                    multiplier: 57.2958f);
+                    divisor: 57.2958f);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CutTesselation);

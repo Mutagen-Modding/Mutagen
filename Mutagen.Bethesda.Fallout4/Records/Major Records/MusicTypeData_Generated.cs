@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.DuckingDecibel,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01);
+                divisor: 0.01);
         }
 
         public void Write(

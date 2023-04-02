@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Fallout4
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RotationZ,
-                multiplier: 57.2958f);
+                divisor: 57.2958f);
             if (!item.Versioning.HasFlag(FurnitureMarkerParameters.VersioningBreaks.Break0))
             {
                 FormLinkBinaryTranslation.Instance.Write(

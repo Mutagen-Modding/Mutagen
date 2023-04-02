@@ -5902,7 +5902,7 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     item: item.TransDelta,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 4);
+                    divisor: 4);
                 PercentBinaryTranslation.Write(
                     writer: writer,
                     item: item.SunGlare,
@@ -5951,12 +5951,12 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     item: item.WindDirection,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.002777777777777778);
+                    divisor: 0.002777777777777778);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.WindDirectionRange,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.005555555555555556);
+                    divisor: 0.005555555555555556);
             }
             WeatherBinaryWriteTranslation.WriteBinaryDisabledCloudLayers(
                 writer: writer,

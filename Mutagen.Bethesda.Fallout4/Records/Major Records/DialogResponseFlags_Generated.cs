@@ -1006,7 +1006,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.ResetHours,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.0003663003663003663);
+                divisor: 0.0003663003663003663);
         }
 
         public void Write(

@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     item: item.Value,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.01);
+                    divisor: 0.01);
                 if (!item.TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0))
                 {
                     ColorBinaryTranslation.Instance.Write(

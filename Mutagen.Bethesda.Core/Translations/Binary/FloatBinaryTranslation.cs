@@ -101,30 +101,40 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         }
     }
 
-    public void Write(TWriter writer, float item, float multiplier)
+    public void Write(
+        TWriter writer,
+        float item,
+        float divisor)
     {
-        Write(writer, item / multiplier);
+        Write(writer, item / divisor);
     }
 
-    public void WriteNullable(TWriter writer, float? item, float multiplier)
+    public void WriteNullable(
+        TWriter writer, 
+        float? item,
+        float divisor)
     {
         if (!item.HasValue) return;
-        Write(writer, item.Value / multiplier);
+        Write(writer, item.Value / divisor);
     }
 
-    public void Write(TWriter writer, float? item, FloatIntegerType integerType, double multiplier)
+    public void Write(
+        TWriter writer,
+        float? item,
+        FloatIntegerType integerType, 
+        double divisor)
     {
         if (item == null) return;
         switch (integerType)
         {
             case FloatIntegerType.UInt:
-                writer.Write((uint)Math.Round(item.Value / multiplier));
+                writer.Write((uint)Math.Round(item.Value / divisor));
                 break;
             case FloatIntegerType.UShort:
-                writer.Write((ushort)Math.Round(item.Value / multiplier));
+                writer.Write((ushort)Math.Round(item.Value / divisor));
                 break;
             case FloatIntegerType.Byte:
-                writer.Write((byte)Math.Round(item.Value / multiplier));
+                writer.Write((byte)Math.Round(item.Value / divisor));
                 break;
             default:
                 throw new NotImplementedException();

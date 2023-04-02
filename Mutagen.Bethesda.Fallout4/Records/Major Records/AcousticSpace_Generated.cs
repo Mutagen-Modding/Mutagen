@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.WeatherAttenuationDb,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01,
+                divisor: 0.01,
                 header: translationParams.ConvertToCustom(RecordTypes.WNAM));
         }
 

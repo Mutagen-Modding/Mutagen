@@ -3259,53 +3259,53 @@ namespace Mutagen.Bethesda.Fallout4
                         FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.PitchStanding,
-                            multiplier: 57.2958f);
+                            divisor: 57.2958f);
                         if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break2))
                         {
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.PitchWalk,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.PitchRun,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.PitchSprint,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollStanding,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollWalk,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollRun,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollSprint,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawStanding,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawWalk,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawRun,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawSprint,
-                                multiplier: 57.2958f);
+                                divisor: 57.2958f);
                         }
                     }
                 }

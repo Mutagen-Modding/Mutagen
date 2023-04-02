@@ -13,14 +13,14 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         : base(expectedLen: 4, typeName: "Float")
     {
         PreferDirectTranslation = false;
-        this.CustomRead = ReadFloat;
-        this.CustomWrite = WriteFloat;
-        this.AdditionalWriteParams.Add(AdditionalParam);
-        this.AdditionalCopyInParams.Add(AdditionalParam);
-        this.AdditionalCopyInRetParams.Add(AdditionalParam);
+        CustomRead = ReadFloat;
+        CustomWrite = WriteFloat;
+        AdditionalWriteParams.Add(AdditionalWriteParam);
+        AdditionalCopyInParams.Add(AdditionalReadParam);
+        AdditionalCopyInRetParams.Add(AdditionalReadParam);
     }
 
-    private static TryGet<string> AdditionalParam(
+    private static TryGet<string> AdditionalReadParam(
         ObjectGeneration objGen,
         TypeGeneration typeGen)
     {
@@ -29,6 +29,19 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
             && !floatType.Multiplier.EqualsWithin(1))
         {
             return TryGet<string>.Succeed($"multiplier: {(float)floatType.Multiplier}f");
+        }
+        return TryGet<string>.Failure;
+    }
+
+    private static TryGet<string> AdditionalWriteParam(
+        ObjectGeneration objGen,
+        TypeGeneration typeGen)
+    {
+        var floatType = typeGen as FloatType;
+        if (floatType.IntegerType == null
+            && !floatType.Multiplier.EqualsWithin(1))
+        {
+            return TryGet<string>.Succeed($"divisor: {(float)floatType.Multiplier}f");
         }
         return TryGet<string>.Failure;
     }
@@ -106,7 +119,7 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
                 args.Add($"writer: {writer}");
                 args.Add($"item: {item}");
                 args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
-                args.Add($"multiplier: {floatType.Multiplier}");
+                args.Add($"divisor: {floatType.Multiplier}");
                 if (data.RecordType.HasValue
                     && data.HandleTrigger)
                 {
