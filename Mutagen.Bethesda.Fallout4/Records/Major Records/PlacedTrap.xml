@@ -47,7 +47,6 @@
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
-    <LinkInterface>ILocationTargetable</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
   </Object>

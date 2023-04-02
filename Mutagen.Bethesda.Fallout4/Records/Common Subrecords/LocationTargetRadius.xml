@@ -12,7 +12,7 @@
   <Object name="LocationTarget" baseClass="ALocationTarget" objType="Subrecord" GUID="498d0751-d029-4bf4-b7ab-310a41ae4176" ID="62">
     <Fields>
       <FormLink name="Link">
-        <Interface>ILocationTargetable</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
     </Fields>
   </Object>

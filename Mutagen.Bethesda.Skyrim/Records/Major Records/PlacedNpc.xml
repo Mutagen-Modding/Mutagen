@@ -45,7 +45,6 @@
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
-    <LinkInterface>ILocationTargetable</LinkInterface>
   </Object>
   <Object name="LinkedReferenceColor" objType="Subrecord" recordType="XCLP" GUID="abfaf9c3-cb9d-4a16-acd7-d31482f5934d" ID="317">
     <Fields>

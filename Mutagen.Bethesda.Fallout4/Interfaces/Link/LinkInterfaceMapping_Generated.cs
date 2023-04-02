@@ -386,13 +386,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Spell_Registration.Instance,
         });
         dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
-        dict[typeof(ILocationTargetable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            PlacedNpc_Registration.Instance,
-            PlacedObject_Registration.Instance,
-            APlacedTrap_Registration.Instance,
-        });
-        dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             PlacedNpc_Registration.Instance,

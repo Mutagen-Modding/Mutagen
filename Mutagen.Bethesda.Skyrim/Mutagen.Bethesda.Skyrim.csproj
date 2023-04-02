@@ -3308,7 +3308,6 @@
     <Compile Include="Interfaces\Link\IBindableEquipment_Generated.cs" />
     <Compile Include="Interfaces\Link\IComplexLocation_Generated.cs" />
     <Compile Include="Interfaces\Link\IDialog_Generated.cs" />
-    <Compile Include="Interfaces\Link\ILocationTargetable_Generated.cs" />
     <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
     <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
     <Compile Include="Interfaces\Link\IRegionTarget_Generated.cs" />

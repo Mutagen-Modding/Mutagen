@@ -9023,15 +9023,6 @@ namespace Mutagen.Bethesda.Skyrim
                         type: type,
                         keys: keys);
                     break;
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                     obj.Cells.Remove(

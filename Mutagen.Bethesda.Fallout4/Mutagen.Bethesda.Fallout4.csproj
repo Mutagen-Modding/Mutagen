@@ -1002,7 +1002,6 @@
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
     <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
-    <Compile Include="Interfaces\Link\ILocationTargetable_Generated.cs" />
     <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
     <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
     <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />

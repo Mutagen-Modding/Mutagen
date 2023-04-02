@@ -18,7 +18,7 @@ public class EnumerateFormLinksTests
             {
                 Target = new LocationTarget()
                 {
-                    Link = new FormLink<ILocationTargetableGetter>(key)
+                    Link = new FormLink<IPlacedGetter>(key)
                 }
             }
         };

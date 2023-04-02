@@ -122,13 +122,13 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(mod, cacheType);
         WrapPotentialThrow(cacheType, style, () =>
         {
-            package.TryResolve<ILocationTargetableGetter>(placed.FormKey, out var rec2)
+            package.TryResolve<IPlacedGetter>(placed.FormKey, out var rec2)
                 .Should().BeTrue();
             rec2.Should().Be(placed);
         });
         WrapPotentialThrow(cacheType, style, () =>
         {
-            contextRetriever.TryResolveContext<ILocationTargetable, ILocationTargetableGetter>(placed.AsLink(), package, out var rec)
+            contextRetriever.TryResolveContext<IPlaced, IPlacedGetter>(placed.AsLink(), package, out var rec)
                 .Should().BeTrue();
             rec.Record.Should().Be(placed);
         });
