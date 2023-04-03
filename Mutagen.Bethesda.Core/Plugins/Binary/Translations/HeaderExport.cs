@@ -91,7 +91,7 @@ public readonly struct HeaderExport : IDisposable
     /// <param name="writer">Writer to export header to</param>
     /// <param name="record">RecordType of the header</param>
     /// <returns>Object to dispose when header's content has been written</returns>
-    public static IDisposable Subrecord(
+    public static HeaderExport Subrecord(
         MutagenWriter writer,
         RecordType record)
     {
