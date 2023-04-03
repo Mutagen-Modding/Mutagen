@@ -109,15 +109,6 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         Write(writer, item / divisor);
     }
 
-    public void WriteNullable(
-        TWriter writer, 
-        float? item,
-        float divisor)
-    {
-        if (!item.HasValue) return;
-        Write(writer, item.Value / divisor);
-    }
-
     public void Write(
         TWriter writer,
         float? item,
@@ -125,16 +116,17 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         double divisor)
     {
         if (item == null) return;
+        var unrounded = item.Value / divisor;
         switch (integerType)
         {
             case FloatIntegerType.UInt:
-                writer.Write((uint)Math.Round(item.Value / divisor));
+                writer.Write(checked((uint)Math.Round(unrounded)));
                 break;
             case FloatIntegerType.UShort:
-                writer.Write((ushort)Math.Round(item.Value / divisor));
+                writer.Write(checked((ushort)Math.Round(unrounded)));
                 break;
             case FloatIntegerType.Byte:
-                writer.Write((byte)Math.Round(item.Value / divisor));
+                writer.Write(checked((byte)Math.Round(unrounded)));
                 break;
             default:
                 throw new NotImplementedException();

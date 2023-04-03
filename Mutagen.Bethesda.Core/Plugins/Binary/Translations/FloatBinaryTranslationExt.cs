@@ -14,7 +14,18 @@ public static class FloatBinaryTranslationExt
         float divisor)
         where TReader : IMutagenReadStream
     {
-        transl.Write(writer, item / divisor, header);
+        try
+        {
+            using (HeaderExport.Subrecord(writer, header))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer, item, divisor: divisor);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw SubrecordException.Enrich(ex, header);
+        }
     }
 
     public static void WriteNullable<TReader>(
@@ -25,8 +36,19 @@ public static class FloatBinaryTranslationExt
         float divisor)
         where TReader : IMutagenReadStream
     {
-        if (!item.HasValue) return;
-        transl.Write(writer, item.Value / divisor, header);
+        try
+        {
+            if (item == null) return;
+            using (HeaderExport.Subrecord(writer, header))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer, item.Value, divisor: divisor);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw SubrecordException.Enrich(ex, header);
+        }
     }
 
     public static void Write<TReader>(
