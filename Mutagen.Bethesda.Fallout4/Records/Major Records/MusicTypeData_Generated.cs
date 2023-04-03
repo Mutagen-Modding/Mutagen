@@ -1003,7 +1003,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.DuckingDecibel,
                 integerType: FloatIntegerType.UShort,
-                divisor: 0.01);
+                multiplier: 100f,
+                divisor: null);
         }
 
         public void Write(
@@ -1048,7 +1049,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.DuckingDecibel = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01);
+                multiplier: null,
+                divisor: 100f);
         }
 
     }
@@ -1115,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public UInt16 Priority => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
-        public Single DuckingDecibel => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.01);
+        public Single DuckingDecibel => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x2, 0x2), FloatIntegerType.UShort, multiplier: null, divisor: 100f);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

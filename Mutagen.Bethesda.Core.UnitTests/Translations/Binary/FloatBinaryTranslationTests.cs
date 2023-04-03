@@ -79,17 +79,26 @@ public class FloatBinaryTranslationTests
     {
         RunTypicalWriteTest((transl, writer) =>
         {
-            transl.Write(writer, 100f, 10f);
+            transl.Write(writer, 100f, multiplier: null, divisor: 10);
         }).Should().Be(10f);
     }
 
     [Fact]
-    public void WriteWithDivisorOne()
+    public void WriteWithMultiplier()
     {
         RunTypicalWriteTest((transl, writer) =>
         {
-            transl.Write(writer, 100f, 1f);
-        }).Should().Be(100f);
+            transl.Write(writer, 100f, multiplier: 10, divisor: null);
+        }).Should().Be(1000f);
+    }
+
+    [Fact]
+    public void WriteWithComplex()
+    {
+        RunTypicalWriteTest((transl, writer) =>
+        {
+            transl.Write(writer, 100f, multiplier: 10, divisor: 2);
+        }).Should().Be(500f);
     }
 
     [Fact]
@@ -97,7 +106,7 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.UInt, 1f);
+            transl.Write(writer, 100f, FloatIntegerType.UInt, multiplier: null, divisor: null);
         });
         arr.Should().HaveCount(4);
         BinaryPrimitives.ReadUInt32LittleEndian(arr).Should().Be(100);
@@ -108,7 +117,7 @@ public class FloatBinaryTranslationTests
     {
         RunTypicalWriteTest((transl, writer) =>
         {
-            transl.Write(writer, null, FloatIntegerType.UInt, 1f);
+            transl.Write(writer, null, FloatIntegerType.UInt, multiplier: null, divisor: null);
         }).Should().BeNull();
     }
 
@@ -117,10 +126,32 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.UInt, 10f);
+            transl.Write(writer, 100f, FloatIntegerType.UInt, multiplier: null, divisor: 10);
         });
         arr.Should().HaveCount(4);
         BinaryPrimitives.ReadUInt32LittleEndian(arr).Should().Be(10);
+    }
+
+    [Fact]
+    public void WriteWithIntegerTypeWithMultiplier()
+    {
+        var arr = GetWriteArray((transl, writer) =>
+        {
+            transl.Write(writer, 100f, FloatIntegerType.UInt, multiplier: 10, divisor: null);
+        });
+        arr.Should().HaveCount(4);
+        BinaryPrimitives.ReadUInt32LittleEndian(arr).Should().Be(1000);
+    }
+
+    [Fact]
+    public void WriteWithIntegerTypeWithComplex()
+    {
+        var arr = GetWriteArray((transl, writer) =>
+        {
+            transl.Write(writer, 100f, FloatIntegerType.UInt, multiplier: 10, divisor: 2);
+        });
+        arr.Should().HaveCount(4);
+        BinaryPrimitives.ReadUInt32LittleEndian(arr).Should().Be(500);
     }
 
     [Fact]
@@ -128,7 +159,7 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.UInt, 7f);
+            transl.Write(writer, 100f, FloatIntegerType.UInt, multiplier: null, divisor: 7);
         });
         arr.Should().HaveCount(4);
         BinaryPrimitives.ReadUInt32LittleEndian(arr).Should().Be(14);
@@ -141,7 +172,7 @@ public class FloatBinaryTranslationTests
         {
             var arr = GetWriteArray((transl, writer) =>
             {
-                transl.Write(writer, int.MaxValue, FloatIntegerType.UInt, 0.5f);
+                transl.Write(writer, int.MaxValue, FloatIntegerType.UInt, multiplier: 2, divisor: null);
             });
             arr.Should().HaveCount(4);
             BinaryPrimitives.ReadUInt32LittleEndian(arr).Should().Be(14);
@@ -153,7 +184,7 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.UShort, 1f);
+            transl.Write(writer, 100f, FloatIntegerType.UShort, multiplier: null, divisor: null);
         });
         arr.Should().HaveCount(2);
         BinaryPrimitives.ReadUInt16LittleEndian(arr).Should().Be(100);
@@ -164,7 +195,7 @@ public class FloatBinaryTranslationTests
     {
         RunTypicalWriteTest((transl, writer) =>
         {
-            transl.Write(writer, null, FloatIntegerType.UShort, 1f);
+            transl.Write(writer, null, FloatIntegerType.UShort, multiplier: null, divisor: null);
         }).Should().BeNull();
     }
 
@@ -173,10 +204,32 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.UShort, 10f);
+            transl.Write(writer, 100f, FloatIntegerType.UShort, multiplier: null, divisor: 10);
         });
         arr.Should().HaveCount(2);
         BinaryPrimitives.ReadUInt16LittleEndian(arr).Should().Be(10);
+    }
+
+    [Fact]
+    public void WriteWithUShortTypeWithMultiplier()
+    {
+        var arr = GetWriteArray((transl, writer) =>
+        {
+            transl.Write(writer, 100f, FloatIntegerType.UShort, multiplier: 10, divisor: null);
+        });
+        arr.Should().HaveCount(2);
+        BinaryPrimitives.ReadUInt16LittleEndian(arr).Should().Be(1000);
+    }
+
+    [Fact]
+    public void WriteWithUShortTypeWithComplex()
+    {
+        var arr = GetWriteArray((transl, writer) =>
+        {
+            transl.Write(writer, 100f, FloatIntegerType.UShort, multiplier: 10, divisor: 2);
+        });
+        arr.Should().HaveCount(2);
+        BinaryPrimitives.ReadUInt16LittleEndian(arr).Should().Be(500);
     }
 
     [Fact]
@@ -184,7 +237,7 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.UShort, 7f);
+            transl.Write(writer, 100f, FloatIntegerType.UShort, multiplier: null, divisor: 7);
         });
         arr.Should().HaveCount(2);
         BinaryPrimitives.ReadUInt16LittleEndian(arr).Should().Be(14);
@@ -197,7 +250,7 @@ public class FloatBinaryTranslationTests
         {
             var arr = GetWriteArray((transl, writer) =>
             {
-                transl.Write(writer, ushort.MaxValue, FloatIntegerType.UShort, 0.5f);
+                transl.Write(writer, ushort.MaxValue, FloatIntegerType.UShort, multiplier: 2, divisor: null);
             });
             arr.Should().HaveCount(2);
             BinaryPrimitives.ReadUInt16LittleEndian(arr).Should().Be(14);
@@ -209,7 +262,7 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.Byte, 1f);
+            transl.Write(writer, 100f, FloatIntegerType.Byte, multiplier: null, divisor: null);
         });
         arr.Should().HaveCount(1);
         arr[0].Should().Be(100);
@@ -220,7 +273,7 @@ public class FloatBinaryTranslationTests
     {
         RunTypicalWriteTest((transl, writer) =>
         {
-            transl.Write(writer, null, FloatIntegerType.Byte, 1f);
+            transl.Write(writer, null, FloatIntegerType.Byte, multiplier: null, divisor: null);
         }).Should().BeNull();
     }
 
@@ -229,10 +282,32 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.Byte, 10f);
+            transl.Write(writer, 100f, FloatIntegerType.Byte, multiplier: null, divisor: 10);
         });
         arr.Should().HaveCount(1);
         arr[0].Should().Be(10);
+    }
+
+    [Fact]
+    public void WriteWithByteTypeWithMultiplier()
+    {
+        var arr = GetWriteArray((transl, writer) =>
+        {
+            transl.Write(writer, 10f, FloatIntegerType.Byte, multiplier: 10, divisor: null);
+        });
+        arr.Should().HaveCount(1);
+        arr[0].Should().Be(100);
+    }
+
+    [Fact]
+    public void WriteWithByteTypeWithComplex()
+    {
+        var arr = GetWriteArray((transl, writer) =>
+        {
+            transl.Write(writer, 10f, FloatIntegerType.Byte, multiplier: 10, divisor: 2);
+        });
+        arr.Should().HaveCount(1);
+        arr[0].Should().Be(50);
     }
 
     [Fact]
@@ -240,7 +315,7 @@ public class FloatBinaryTranslationTests
     {
         var arr = GetWriteArray((transl, writer) =>
         {
-            transl.Write(writer, 100f, FloatIntegerType.Byte, 7f);
+            transl.Write(writer, 100f, FloatIntegerType.Byte, multiplier: null, divisor: 7);
         });
         arr.Should().HaveCount(1);
         arr[0].Should().Be(14);
@@ -253,9 +328,9 @@ public class FloatBinaryTranslationTests
         {
             var arr = GetWriteArray((transl, writer) =>
             {
-                transl.Write(writer, byte.MaxValue, FloatIntegerType.Byte, 0.5f);
+                transl.Write(writer, byte.MaxValue, FloatIntegerType.Byte, multiplier: 2, divisor: null);
             });
-            arr.Should().HaveCount(2);
+            arr.Should().HaveCount(1);
             BinaryPrimitives.ReadUInt16LittleEndian(arr).Should().Be(14);
         });
     }
@@ -306,8 +381,22 @@ public class FloatBinaryTranslationTests
     [Fact]
     public void ReadMultiplier()
     {
-        GetReadFloat(1.5f, (t, f) => t.Parse(f, 2f))
+        GetReadFloat(1.5f, (t, f) => t.Parse(f, multiplier: 2f, divisor: null))
             .Should().Be(3f);
+    }
+
+    [Fact]
+    public void ReadDivisor()
+    {
+        GetReadFloat(3f, (t, f) => t.Parse(f, multiplier: null, divisor: 2f))
+            .Should().Be(1.5f);
+    }
+
+    [Fact]
+    public void ReadComplex()
+    {
+        GetReadFloat(3f, (t, f) => t.Parse(f, multiplier: 4f, divisor: 2f))
+            .Should().Be(6f);
     }
 
     [Fact]

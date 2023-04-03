@@ -1281,7 +1281,8 @@ namespace Mutagen.Bethesda.Fallout4
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RotationZ,
-                divisor: 57.2958f);
+                divisor: 57.295799255371094f,
+                multiplier: null);
             if (!item.Versioning.HasFlag(FurnitureMarkerParameters.VersioningBreaks.Break0))
             {
                 FormLinkBinaryTranslation.Instance.Write(
@@ -1334,7 +1335,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.Offset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.RotationZ = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                multiplier: 57.2958f);
+                multiplier: 57.295799255371094f,
+                divisor: null);
             if (frame.Complete)
             {
                 item.Versioning |= FurnitureMarkerParameters.VersioningBreaks.Break0;

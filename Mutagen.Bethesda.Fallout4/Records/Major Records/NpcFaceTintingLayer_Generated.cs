@@ -1252,7 +1252,8 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     item: item.Value,
                     integerType: FloatIntegerType.Byte,
-                    divisor: 0.01);
+                    multiplier: 100f,
+                    divisor: null);
                 if (!item.TENDDataTypeState.HasFlag(NpcFaceTintingLayer.TENDDataType.Break0))
                 {
                     ColorBinaryTranslation.Instance.Write(
@@ -1333,7 +1334,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
-                        multiplier: 0.01);
+                        multiplier: null,
+                        divisor: 100f);
                     if (dataFrame.Complete)
                     {
                         item.TENDDataTypeState |= NpcFaceTintingLayer.TENDDataType.Break0;
@@ -1429,7 +1431,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Value
         private int _ValueLocation => _TENDLocation!.Value.Min;
         private bool _Value_IsSet => _TENDLocation.HasValue;
-        public Single Value => _Value_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_ValueLocation, 1), FloatIntegerType.Byte, 0.01) : default;
+        public Single Value => _Value_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_ValueLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 100f) : default;
         #endregion
         #region Color
         private int _ColorLocation => _TENDLocation!.Value.Min + 0x1;

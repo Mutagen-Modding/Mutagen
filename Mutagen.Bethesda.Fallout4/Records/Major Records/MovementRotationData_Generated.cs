@@ -1093,11 +1093,13 @@ namespace Mutagen.Bethesda.Fallout4
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Walk,
-                divisor: 57.2958f);
+                divisor: 57.295799255371094f,
+                multiplier: null);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Run,
-                divisor: 57.2958f);
+                divisor: 57.295799255371094f,
+                multiplier: null);
             writer.Write(item.Unused2);
         }
 
@@ -1135,10 +1137,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.Unused1 = frame.ReadInt32();
             item.Walk = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                multiplier: 57.2958f);
+                multiplier: 57.295799255371094f,
+                divisor: null);
             item.Run = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                multiplier: 57.2958f);
+                multiplier: 57.295799255371094f,
+                divisor: null);
             item.Unused2 = frame.ReadInt32();
         }
 

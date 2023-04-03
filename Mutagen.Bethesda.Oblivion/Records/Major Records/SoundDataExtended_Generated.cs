@@ -1146,7 +1146,8 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 item: item.StaticAttenuation,
                 integerType: FloatIntegerType.UShort,
-                divisor: 0.01);
+                multiplier: 100f,
+                divisor: null);
             SoundDataExtendedBinaryWriteTranslation.WriteBinaryStopTime(
                 writer: writer,
                 item: item);
@@ -1236,7 +1237,8 @@ namespace Mutagen.Bethesda.Oblivion
             item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01);
+                multiplier: null,
+                divisor: 100f);
             SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustom(
                 frame: frame,
                 item: item);
@@ -1297,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x8, 0x2), FloatIntegerType.UShort, 0.01);
+        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x8, 0x2), FloatIntegerType.UShort, multiplier: null, divisor: 100f);
         #region StopTime
         public partial Single GetStopTimeCustom(int location);
         public Single StopTime => GetStopTimeCustom(location: 0xA);

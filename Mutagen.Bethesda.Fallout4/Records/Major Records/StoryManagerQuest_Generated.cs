@@ -1092,7 +1092,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.HoursUntilReset,
                 header: translationParams.ConvertToCustom(RecordTypes.RNAM),
-                divisor: 0.041666668f);
+                divisor: null,
+                multiplier: 24f);
         }
 
         public void Write(
@@ -1155,7 +1156,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HoursUntilReset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        multiplier: 0.041666668f);
+                        multiplier: null,
+                        divisor: 24f);
                     return (int)StoryManagerQuest_FieldIndex.HoursUntilReset;
                 }
                 default:
@@ -1237,7 +1239,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region HoursUntilReset
         private int? _HoursUntilResetLocation;
-        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() * 0.041666668f : default(Single?);
+        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() / 24f : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

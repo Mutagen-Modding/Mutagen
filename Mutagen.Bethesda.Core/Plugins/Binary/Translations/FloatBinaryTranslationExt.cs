@@ -11,7 +11,8 @@ public static class FloatBinaryTranslationExt
         MutagenWriter writer,
         float item,
         RecordType header,
-        float divisor)
+        float? divisor, 
+        float? multiplier)
         where TReader : IMutagenReadStream
     {
         try
@@ -19,7 +20,8 @@ public static class FloatBinaryTranslationExt
             using (HeaderExport.Subrecord(writer, header))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer, item, divisor: divisor);
+                    writer, item, 
+                    multiplier: multiplier, divisor: divisor);
             }
         }
         catch (Exception ex)
@@ -33,7 +35,8 @@ public static class FloatBinaryTranslationExt
         MutagenWriter writer,
         float? item,
         RecordType header,
-        float divisor)
+        float? divisor, 
+        float? multiplier)
         where TReader : IMutagenReadStream
     {
         try
@@ -42,7 +45,8 @@ public static class FloatBinaryTranslationExt
             using (HeaderExport.Subrecord(writer, header))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer, item.Value, divisor: divisor);
+                    writer, item.Value, 
+                    multiplier: multiplier, divisor: divisor);
             }
         }
         catch (Exception ex)
@@ -57,7 +61,8 @@ public static class FloatBinaryTranslationExt
         float? item,
         RecordType header,
         FloatIntegerType integerType,
-        double divisor)
+        float? divisor = null, 
+        float? multiplier = null)
         where TReader : IMutagenReadStream
     {
         try
@@ -65,8 +70,9 @@ public static class FloatBinaryTranslationExt
             if (item == null) return;
             using (HeaderExport.Subrecord(writer, header))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item, integerType,
-                    divisor: divisor);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer, item, integerType,
+                    multiplier: multiplier, divisor: divisor);
             }
         }
         catch (Exception ex)

@@ -20,65 +20,61 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         return ret;
     }
 
-    public float Parse(TReader reader, FloatIntegerType integerType, double multiplier)
+    public float Parse(TReader reader, FloatIntegerType integerType,
+        float? multiplier = null,
+        float? divisor = null)
     {
         switch (integerType)
         {
             case FloatIntegerType.UInt:
             {
                 var raw = reader.ReadUInt32();
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.UShort:
             {
                 var raw = reader.ReadUInt16();
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.Byte:
             {
                 var raw = reader.ReadUInt8();
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             default:
                 throw new NotImplementedException();
         }
     }
 
-    public float Parse(TReader reader, float multiplier)
+    public float Parse(TReader reader,
+        float? multiplier,
+        float? divisor)
     {
-        return Parse(reader) * multiplier;
+        return ApplyTransformations(Parse(reader), multiplier: multiplier, divisor: divisor);
     }
 
-    public float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, double multiplier)
+    public float GetFloat(
+        ReadOnlySpan<byte> bytes,
+        FloatIntegerType integerType,
+        float? multiplier = null,
+        float? divisor = null)
     {
         switch (integerType)
         {
             case FloatIntegerType.UInt:
             {
                 var raw = BinaryPrimitives.ReadUInt32LittleEndian(bytes);
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.UShort:
             {
                 var raw = BinaryPrimitives.ReadUInt16LittleEndian(bytes);
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.Byte:
             {
                 var raw = bytes[0];
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             default:
                 throw new NotImplementedException();
@@ -104,32 +100,58 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
     public void Write(
         TWriter writer,
         float item,
-        float divisor)
+        float? multiplier,
+        float? divisor)
     {
-        Write(writer, item / divisor);
+        var transformed = ApplyTransformations(item, multiplier: multiplier, divisor: divisor);
+
+        Write(writer, transformed);
     }
 
     public void Write(
         TWriter writer,
         float? item,
         FloatIntegerType integerType, 
-        double divisor)
+        float? multiplier = null,
+        float? divisor = null)
     {
         if (item == null) return;
-        var unrounded = item.Value / divisor;
+
+        var transformed = ApplyTransformations(item.Value, multiplier: multiplier, divisor: divisor);
+        
         switch (integerType)
         {
             case FloatIntegerType.UInt:
-                writer.Write(checked((uint)Math.Round(unrounded)));
+                writer.Write(checked((uint)Math.Round(transformed)));
                 break;
             case FloatIntegerType.UShort:
-                writer.Write(checked((ushort)Math.Round(unrounded)));
+                writer.Write(checked((ushort)Math.Round(transformed)));
                 break;
             case FloatIntegerType.Byte:
-                writer.Write(checked((byte)Math.Round(unrounded)));
+                writer.Write(checked((byte)Math.Round(transformed)));
                 break;
             default:
                 throw new NotImplementedException();
         }
+    }
+
+    public float ApplyTransformations(float input, float? multiplier, float? divisor)
+    {
+        if (multiplier == null && divisor == null)
+        {
+            return input;
+        }
+
+        if (multiplier == null)
+        {
+            return input / divisor!.Value;
+        }
+
+        if (divisor == null)
+        {
+            return input * multiplier.Value;
+        }
+
+        return input * multiplier.Value / divisor.Value;
     }
 }

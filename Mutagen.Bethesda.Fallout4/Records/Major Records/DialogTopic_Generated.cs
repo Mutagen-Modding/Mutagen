@@ -2619,7 +2619,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.Priority,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM),
-                divisor: 50f);
+                divisor: 50f,
+                multiplier: null);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Branch,
@@ -2789,7 +2790,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        multiplier: 50f);
+                        multiplier: 50f,
+                        divisor: null);
                     return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:

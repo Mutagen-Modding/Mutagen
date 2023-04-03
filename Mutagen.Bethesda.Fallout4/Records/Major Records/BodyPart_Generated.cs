@@ -3719,11 +3719,13 @@ namespace Mutagen.Bethesda.Fallout4
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GoreEffectsLocalRotateX,
-                    divisor: 57.2958f);
+                    divisor: 57.295799255371094f,
+                    multiplier: null);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GoreEffectsLocalRotateY,
-                    divisor: 57.2958f);
+                    divisor: 57.295799255371094f,
+                    multiplier: null);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CutTesselation);
@@ -3931,11 +3933,13 @@ namespace Mutagen.Bethesda.Fallout4
                     if (dataFrame.Remaining < 4) return null;
                     item.GoreEffectsLocalRotateX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.GoreEffectsLocalRotateY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.CutTesselation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
