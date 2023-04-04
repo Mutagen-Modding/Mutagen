@@ -53,14 +53,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Link
-        private readonly IFormLink<ILocationTargetableGetter> _Link = new FormLink<ILocationTargetableGetter>();
-        public IFormLink<ILocationTargetableGetter> Link
+        private readonly IFormLink<IPlacedGetter> _Link = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Link
         {
             get => _Link;
             set => _Link.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILocationTargetableGetter> ILocationTargetGetter.Link => this.Link;
+        IFormLinkGetter<IPlacedGetter> ILocationTargetGetter.Link => this.Link;
         #endregion
 
         #region To String
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationTargetGetter,
         ILoquiObjectSetter<ILocationTarget>
     {
-        new IFormLink<ILocationTargetableGetter> Link { get; set; }
+        new IFormLink<IPlacedGetter> Link { get; set; }
     }
 
     public partial interface ILocationTargetGetter :
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILocationTargetGetter>
     {
         static new ILoquiRegistration StaticRegistration => LocationTarget_Registration.Instance;
-        IFormLinkGetter<ILocationTargetableGetter> Link { get; }
+        IFormLinkGetter<IPlacedGetter> Link { get; }
 
     }
 
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILocationTargetableGetter> Link => new FormLink<ILocationTargetableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> Link => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

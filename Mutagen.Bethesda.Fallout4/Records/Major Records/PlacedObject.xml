@@ -101,7 +101,6 @@
       </Data>
       <String name="Comments" recordType="MNAM" />
     </Fields>
-    <LinkInterface>ILocationTargetable</LinkInterface>
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>

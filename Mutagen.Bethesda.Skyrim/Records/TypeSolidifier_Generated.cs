@@ -3707,30 +3707,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         /// <summary>
-        /// Scope a load order query to ILocationTargetable
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ILocationTargetable</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter> ILocationTargetable(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<ILocationTargetableGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ILocationTargetable
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ILocationTargetable</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter> ILocationTargetable(this IEnumerable<ISkyrimModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<ILocationTargetableGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to IPlacedThing
         /// </summary>
         /// <param name="listings">ModListings to query</param>

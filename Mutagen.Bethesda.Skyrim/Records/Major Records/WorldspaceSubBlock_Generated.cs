@@ -1392,13 +1392,6 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                    foreach (var subItem in obj.Items)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                     foreach (var subItem in obj.Items)

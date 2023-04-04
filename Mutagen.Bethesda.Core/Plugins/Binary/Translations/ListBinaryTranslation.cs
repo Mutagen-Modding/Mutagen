@@ -986,6 +986,16 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
     } 
  
+    private OverflowException EnrichOverflowException( 
+        OverflowException overflow, 
+        RecordType recordType, 
+        IReadOnlyList<T>? items) 
+    { 
+        return new OverflowException(  
+            $"{recordType} List<{typeof(T)}> had an overflow.  Too many items to fit in the counter subrecord: {items?.Count}",  
+            overflow);  
+    }
+
     public void WriteWithCounter( 
         MutagenWriter writer, 
         IReadOnlyList<T>? items, 
@@ -995,46 +1005,51 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         byte counterLength, 
         bool writeCounterIfNull = false) 
     { 
-        if (items == null) 
-        { 
-            if (writeCounterIfNull) 
-            { 
-                using (HeaderExport.Subrecord(writer, counterType)) 
-                { 
-                    writer.Write(0, counterLength); 
-                } 
-            } 
-            return; 
-        } 
         try 
         { 
+            if (items == null) 
+            { 
+                if (writeCounterIfNull) 
+                { 
+                    using (HeaderExport.Subrecord(writer, counterType)) 
+                    { 
+                        writer.Write(0, counterLength); 
+                    } 
+                } 
+                return; 
+            } 
+
             using (HeaderExport.Subrecord(writer, counterType)) 
             { 
                 writer.Write(items.Count, counterLength); 
             } 
         } 
+        catch (OverflowException overflow)
+        {
+            throw SubrecordException.Enrich(
+                EnrichOverflowException(overflow, counterType, items),
+                counterType);
+        } 
         catch (Exception ex) 
         { 
             throw SubrecordException.Enrich(ex, counterType); 
         } 
+        
         try 
         { 
-            try 
+            using (HeaderExport.Subrecord(writer, recordType)) 
             { 
-                using (HeaderExport.Subrecord(writer, recordType)) 
+                foreach (var item in items) 
                 { 
-                    foreach (var item in items) 
-                    { 
-                        transl(writer, item); 
-                    } 
+                    transl(writer, item); 
                 } 
             } 
-            catch (OverflowException overflow) 
-            { 
-                throw new OverflowException( 
-                    $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.", 
-                    overflow); 
-            } 
+        } 
+        catch (OverflowException overflow)
+        {
+            throw SubrecordException.Enrich(
+                EnrichOverflowException(overflow, recordType, items),
+                recordType);
         } 
         catch (Exception ex) 
         { 
@@ -1053,28 +1068,36 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         bool writeCounterIfNull = false, 
         TypedWriteParams translationParams = default) 
     { 
-        if (items == null) 
-        { 
-            if (writeCounterIfNull) 
-            { 
-                using (HeaderExport.Subrecord(writer, counterType)) 
-                { 
-                    writer.Write(0, counterLength); 
-                } 
-            } 
-            return; 
-        } 
         try 
         { 
+            if (items == null) 
+            { 
+                if (writeCounterIfNull) 
+                { 
+                    using (HeaderExport.Subrecord(writer, counterType)) 
+                    { 
+                        writer.Write(0, counterLength); 
+                    } 
+                } 
+                return; 
+            } 
+            
             using (HeaderExport.Subrecord(writer, counterType)) 
             { 
                 writer.Write(items.Count, counterLength); 
             } 
         } 
+        catch (OverflowException overflow)
+        {
+            throw SubrecordException.Enrich(
+                EnrichOverflowException(overflow, counterType, items),
+                counterType);
+        } 
         catch (Exception ex) 
         { 
             throw SubrecordException.Enrich(ex, counterType); 
         } 
+        
         try 
         { 
             if (subRecordPerItem) 
@@ -1089,23 +1112,20 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             } 
             else 
             { 
-                try 
+                using (HeaderExport.Subrecord(writer, recordType)) 
                 { 
-                    using (HeaderExport.Subrecord(writer, recordType)) 
+                    foreach (var item in items) 
                     { 
-                        foreach (var item in items) 
-                        { 
-                            transl(writer, item, translationParams); 
-                        } 
+                        transl(writer, item, translationParams); 
                     } 
                 } 
-                catch (OverflowException overflow) 
-                { 
-                    throw new OverflowException( 
-                        $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.", 
-                        overflow); 
-                } 
             } 
+        } 
+        catch (OverflowException overflow)
+        {
+            throw SubrecordException.Enrich(
+                EnrichOverflowException(overflow, recordType, items),
+                recordType);
         } 
         catch (Exception ex) 
         { 
@@ -1123,32 +1143,40 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         RecordType? endMarker = null, 
         RecordTypeConverter? recordTypeConverter = null) 
     { 
-        if (items == null) 
-        { 
-            if (writeCounterIfNull) 
-            { 
-                using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord)) 
-                { 
-                    writer.Write(0, counterLength); 
-                } 
-            } 
-            return; 
-        } 
         try 
         { 
+            if (items == null) 
+            { 
+                if (writeCounterIfNull) 
+                { 
+                    using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord)) 
+                    { 
+                        writer.Write(0, counterLength); 
+                    } 
+                } 
+                return; 
+            } 
             using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord)) 
             { 
                 writer.Write(items.Count, counterLength); 
             } 
         } 
+        catch (OverflowException overflow)
+        {
+            throw SubrecordException.Enrich(
+                EnrichOverflowException(overflow, counterType, items),
+                counterType);
+        } 
         catch (Exception ex) 
         { 
             throw SubrecordException.Enrich(ex, counterType); 
         } 
+        
         foreach (var item in items) 
         { 
             transl(writer, item, recordTypeConverter); 
         } 
+        
         if (endMarker != null && items.Count > 0) 
         { 
             using (HeaderExport.Subrecord(writer, endMarker.Value)) { } 

@@ -2936,19 +2936,6 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IPlacedThing":
                 case "IPlacedThingGetter":
                     {

@@ -9860,15 +9860,6 @@ namespace Mutagen.Bethesda.Fallout4
                     Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "IPlaced":
                 case "IPlacedGetter":
                     obj.Cells.Remove(

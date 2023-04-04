@@ -40,7 +40,7 @@ partial class LocationTargetRadiusBinaryCreateTranslation
             case LocationTargetRadius.LocationType.NearReference:
                 return new LocationTarget()
                 {
-                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).ToLink<ILocationTargetableGetter>()
+                    Link = FormKeyBinaryTranslation.Instance.Parse(frame).ToLink<IPlacedGetter>()
                 };
             case LocationTargetRadius.LocationType.InCell:
                 return new LocationCell()

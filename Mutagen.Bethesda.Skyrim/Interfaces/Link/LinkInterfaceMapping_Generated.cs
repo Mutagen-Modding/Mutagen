@@ -386,13 +386,6 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             PlacedObject_Registration.Instance,
         });
         dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
-        dict[typeof(ILocationTargetable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            PlacedNpc_Registration.Instance,
-            PlacedObject_Registration.Instance,
-            APlacedTrap_Registration.Instance,
-        });
-        dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
         dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             PlacedObject_Registration.Instance,
