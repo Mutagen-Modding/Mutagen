@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
-        public Byte Rank { get; set; } = default;
+        public SByte Rank { get; set; } = default;
         #endregion
 
         #region To String
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Fallout4
         IRankPlacementGetter
     {
         new IFormLink<IFactionGetter> Faction { get; set; }
-        new Byte Rank { get; set; }
+        new SByte Rank { get; set; }
     }
 
     public partial interface IRankPlacementGetter :
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RankPlacement_Registration.Instance;
         IFormLinkGetter<IFactionGetter> Faction { get; }
-        Byte Rank { get; }
+        SByte Rank { get; }
 
     }
 
@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame)
         {
             item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Rank = frame.ReadUInt8();
+            item.Rank = frame.ReadInt8();
         }
 
     }
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public Byte Rank => _structData.Span[0x4];
+        public SByte Rank => (sbyte)_structData.Slice(0x4, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -17,6 +17,7 @@ public class TestDataPathing
     public static ModPath SubObjectSizeOverflow = ModPath.FromPath("Files/Skyrim/subobject_size_overflow_test.esp");
     public static ModPath RaceHeadPartDanglingMaster = ModPath.FromPath("Files/Skyrim/RaceHeadPartDanglingMarker.esp");
     public static ModPath SkyrimPerkFunctionParametersTypeNone = ModPath.FromPath("Files/Skyrim/SkyrimPerkFunctionParametersTypeNone.esp");
+    public static string OblivionRegion = "Files/Oblivion/Region/OblivionRegion.esp";
     public static string SkyrimBodtLength8With42 = "Files/Skyrim/BodyTemplate/BodtLength8With42.esp";
     public static string SkyrimBodtLength12With42 = "Files/Skyrim/BodyTemplate/BodtLength12With42.esp";
     public static string SkyrimBodtLength8With43 = "Files/Skyrim/BodyTemplate/BodtLength8With43.esp";

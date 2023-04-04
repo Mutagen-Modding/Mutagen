@@ -18,9 +18,9 @@ public class EnumerableFormLinkSettingsVM : SettingsNodeVM
 
     private FormKey[] _defaultVal;
     private readonly IObservable<ILinkCache?> _linkCacheObs;
-    private readonly ObservableAsPropertyHelper<ILinkCache?> _LinkCache;
+    private readonly ObservableAsPropertyHelper<ILinkCache?> _linkCache;
     private readonly string _typeName;
-    public ILinkCache? LinkCache => _LinkCache.Value;
+    public ILinkCache? LinkCache => _linkCache.Value;
 
     public IEnumerable<Type> ScopedTypes { get; private set; } = Enumerable.Empty<Type>();
 
@@ -34,7 +34,7 @@ public class EnumerableFormLinkSettingsVM : SettingsNodeVM
         _defaultVal = defaultVal.ToArray();
         _linkCacheObs = linkCache;
         _typeName = typeName;
-        _LinkCache = linkCache
+        _linkCache = linkCache
             .ToGuiProperty(this, nameof(LinkCache), default(ILinkCache?));
     }
 

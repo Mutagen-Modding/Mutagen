@@ -1284,6 +1284,7 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.FULL,
                 RecordTypes.DATA,
                 RecordTypes.INFO,
+                RecordTypes.TPIC,
                 RecordTypes.PNAM,
                 RecordTypes.NAME,
                 RecordTypes.TRDT,

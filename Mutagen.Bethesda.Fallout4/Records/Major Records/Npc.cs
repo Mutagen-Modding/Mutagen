@@ -256,6 +256,12 @@ partial class NpcBinaryOverlay
     private int? _templateLinksLocation;
     private int? _MSDKLocation;
     private int? _MSDVLocation;
+    
+    #region Level
+    private int _LevelLocation => _ACBSLocation!.Value.Min + 0x6;
+    public partial IANpcLevelGetter GetLevelCustom();
+    public IANpcLevelGetter Level => GetLevelCustom();
+    #endregion
 
     public partial Npc.Flag GetFlagsCustom()
     {

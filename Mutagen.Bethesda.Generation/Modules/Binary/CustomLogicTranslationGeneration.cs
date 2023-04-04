@@ -185,6 +185,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         string passedLenAccessor,
         DataType? dataType = null)
     {
+        if (!typeGen.GenerateClassMembers) return;
         var fieldData = typeGen.GetFieldData();
         var gen = this.Module.GetTypeGeneration(typeGen.GetType());
         string loc;

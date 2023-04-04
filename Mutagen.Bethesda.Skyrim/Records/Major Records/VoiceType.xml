@@ -4,5 +4,6 @@
     <Fields>
       <Enum name="Flags" enumName="VoiceType.Flag" recordType="DNAM" nullable="False" byteLength="1" />
     </Fields>
+    <LinkInterface>IVoiceTypeOrList</LinkInterface>
   </Object>
 </Loqui>

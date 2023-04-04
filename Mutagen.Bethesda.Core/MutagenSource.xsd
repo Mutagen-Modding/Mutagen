@@ -503,10 +503,11 @@
       <xs:choice>
         <xs:group ref="NamedFieldOptions"/>
         <xs:element name="FormLink" type="NFormLink"/>
+        <xs:element name="FormLinkOrIndex" type="NFormLinkOrIndex"/>
         <xs:element name="FormID" type="NFormID"/>
         <xs:element name="FormKey" type="NFormKey"/>
-		<xs:element name="ModKey" type="NModKey"/>
-		<xs:element name="AssetLink" type="NAssetLink"/>
+        <xs:element name="ModKey" type="NModKey"/>
+        <xs:element name="AssetLink" type="NAssetLink"/>
         <xs:element name="RecordType" type="NRecordType"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
@@ -696,6 +697,14 @@
   <xs:complexType name="NFormLink" >
     <xs:complexContent>
       <xs:extension base="FormLink">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NFormLinkOrAlias" >
+    <xs:complexContent>
+      <xs:extension base="NFormLink">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>

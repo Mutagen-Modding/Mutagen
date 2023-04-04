@@ -101,9 +101,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Map)
-            : base(Header: Header)
+            : base(
+                Flags: Flags,
+                Priority: Priority)
             {
                 this.Map = Map;
             }
@@ -558,8 +561,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Field Index
     internal enum RegionMap_FieldIndex
     {
-        Header = 0,
-        Map = 1,
+        Flags = 0,
+        Priority = 1,
+        Map = 2,
     }
     #endregion
 
@@ -579,7 +583,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(RegionMap.Mask<>);
 
@@ -684,6 +688,7 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionMapBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionMapBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -786,7 +791,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionMap_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionMap_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1003,6 +1010,9 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionMapGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

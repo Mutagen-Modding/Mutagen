@@ -146,13 +146,15 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Icons,
                 TItem Name,
                 TItem LodDisplayDistanceMultiplier,
                 TItem OcclusionAccuracyDist)
             : base(
-                Header: Header,
+                Flags: Flags,
+                Priority: Priority,
                 Icons: Icons)
             {
                 this.Name = Name;
@@ -686,11 +688,12 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum RegionMap_FieldIndex
     {
-        Header = 0,
-        Icons = 1,
-        Name = 2,
-        LodDisplayDistanceMultiplier = 3,
-        OcclusionAccuracyDist = 4,
+        Flags = 0,
+        Priority = 1,
+        Icons = 2,
+        Name = 3,
+        LodDisplayDistanceMultiplier = 4,
+        OcclusionAccuracyDist = 5,
     }
     #endregion
 
@@ -710,7 +713,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(RegionMap.Mask<>);
 
@@ -736,17 +739,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.RDAT,
-                RecordTypes.ICON,
-                RecordTypes.MICO);
+            var triggers = RecordCollection.Factory(RecordTypes.RDAT);
             var all = RecordCollection.Factory(
                 RecordTypes.RDAT,
-                RecordTypes.ICON,
-                RecordTypes.MICO,
                 RecordTypes.RDMP,
                 RecordTypes.RLDM,
                 RecordTypes.ANAM);
@@ -823,6 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionMapBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionMapBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -937,7 +937,9 @@ namespace Mutagen.Bethesda.Fallout4
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionMap_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionMap_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Icons:
                     return (RegionMap_FieldIndex)((int)index);
@@ -1189,6 +1191,9 @@ namespace Mutagen.Bethesda.Fallout4
             IRegionMapGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

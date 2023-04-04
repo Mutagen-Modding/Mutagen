@@ -11,6 +11,7 @@
       <RefList name="Parts" refName="StaticPart" />
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>

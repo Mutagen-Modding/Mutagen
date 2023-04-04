@@ -107,6 +107,15 @@ partial class SoundDataBinaryCreateTranslation
 partial class SoundDataBinaryOverlay
 {
     public virtual ReadOnlySpan<byte> Marker => SoundData.SoundDataMarker;
+    
+    #region MinimumAttenuationDistance
+    public partial UInt16 GetMinimumAttenuationDistanceCustom(int location);
+    public UInt16 MinimumAttenuationDistance => GetMinimumAttenuationDistanceCustom(location: 0x0);
+    #endregion
+    #region MaximumAttenuationDistance
+    public partial UInt16 GetMaximumAttenuationDistanceCustom(int location);
+    public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(location: 0x1);
+    #endregion
 
     public partial ushort GetMinimumAttenuationDistanceCustom(int location)
     {

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -38,11 +39,21 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class MagicEffectPeakValueModArchetype :
-        MagicEffectArchetype,
+        AMagicEffectArchetype,
         IEquatable<IMagicEffectPeakValueModArchetypeGetter>,
         ILoquiObjectSetter<MagicEffectPeakValueModArchetype>,
-        IMagicEffectPeakValueModArchetypeInternal
+        IMagicEffectPeakValueModArchetype
     {
+        #region Association
+        private readonly IFormLink<IKeywordGetter> _Association = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> Association
+        {
+            get => _Association;
+            set => _Association.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeywordGetter> IMagicEffectPeakValueModArchetypeGetter.Association => this.Association;
+        #endregion
 
         #region To String
 
@@ -76,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            MagicEffectArchetype.Mask<TItem>,
+            AMagicEffectArchetype.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -84,17 +95,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Association = initialValue;
             }
 
             public Mask(
-                TItem Type,
-                TItem AssociationKey,
-                TItem ActorValue)
-            : base(
-                Type: Type,
-                AssociationKey: AssociationKey,
-                ActorValue: ActorValue)
+                TItem ActorValue,
+                TItem Association)
+            : base(ActorValue: ActorValue)
             {
+                this.Association = Association;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +112,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Association;
             #endregion
 
             #region Equals
@@ -116,11 +129,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Association, rhs.Association)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Association);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Association)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +155,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Association)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +171,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Association = eval(this.Association);
             }
             #endregion
 
@@ -172,6 +190,10 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(MagicEffectPeakValueModArchetype.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Association ?? true)
+                    {
+                        sb.AppendItem(Association, "Association");
+                    }
                 }
             }
             #endregion
@@ -179,15 +201,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            MagicEffectArchetype.ErrorMask,
+            AMagicEffectArchetype.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Association;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MagicEffectPeakValueModArchetype_FieldIndex enu = (MagicEffectPeakValueModArchetype_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectPeakValueModArchetype_FieldIndex.Association:
+                        return Association;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +226,9 @@ namespace Mutagen.Bethesda.Skyrim
                 MagicEffectPeakValueModArchetype_FieldIndex enu = (MagicEffectPeakValueModArchetype_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectPeakValueModArchetype_FieldIndex.Association:
+                        this.Association = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +240,9 @@ namespace Mutagen.Bethesda.Skyrim
                 MagicEffectPeakValueModArchetype_FieldIndex enu = (MagicEffectPeakValueModArchetype_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectPeakValueModArchetype_FieldIndex.Association:
+                        this.Association = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +252,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Association != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +279,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Association, "Association");
+                }
             }
             #endregion
 
@@ -252,6 +290,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Association = this.Association.Combine(rhs.Association);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -270,18 +309,29 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            MagicEffectArchetype.TranslationMask,
+            AMagicEffectArchetype.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Association;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Association = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Association, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -289,6 +339,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectPeakValueModArchetypeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectPeakValueModArchetypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -348,25 +403,22 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IMagicEffectPeakValueModArchetype :
-        ILoquiObjectSetter<IMagicEffectPeakValueModArchetypeInternal>,
-        IMagicEffectArchetypeInternal,
+        IAMagicEffectArchetype,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IMagicEffectPeakValueModArchetype>,
         IMagicEffectPeakValueModArchetypeGetter
     {
-    }
-
-    public partial interface IMagicEffectPeakValueModArchetypeInternal :
-        IMagicEffectArchetypeInternal,
-        IMagicEffectPeakValueModArchetype,
-        IMagicEffectPeakValueModArchetypeGetter
-    {
+        new IFormLink<IKeywordGetter> Association { get; set; }
     }
 
     public partial interface IMagicEffectPeakValueModArchetypeGetter :
-        IMagicEffectArchetypeGetter,
+        IAMagicEffectArchetypeGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMagicEffectPeakValueModArchetypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => MagicEffectPeakValueModArchetype_Registration.Instance;
+        IFormLinkGetter<IKeywordGetter> Association { get; }
 
     }
 
@@ -375,7 +427,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Common MixIn
     public static partial class MagicEffectPeakValueModArchetypeMixIn
     {
-        public static void Clear(this IMagicEffectPeakValueModArchetypeInternal item)
+        public static void Clear(this IMagicEffectPeakValueModArchetype item)
         {
             ((MagicEffectPeakValueModArchetypeSetterCommon)((IMagicEffectPeakValueModArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -427,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectPeakValueModArchetypeInternal lhs,
+            this IMagicEffectPeakValueModArchetype lhs,
             IMagicEffectPeakValueModArchetypeGetter rhs,
             out MagicEffectPeakValueModArchetype.ErrorMask errorMask,
             MagicEffectPeakValueModArchetype.TranslationMask? copyMask = null)
@@ -443,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectPeakValueModArchetypeInternal lhs,
+            this IMagicEffectPeakValueModArchetype lhs,
             IMagicEffectPeakValueModArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -489,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMagicEffectPeakValueModArchetypeInternal item,
+            this IMagicEffectPeakValueModArchetype item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -511,9 +563,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Field Index
     internal enum MagicEffectPeakValueModArchetype_FieldIndex
     {
-        Type = 0,
-        AssociationKey = 1,
-        ActorValue = 2,
+        ActorValue = 0,
+        Association = 1,
     }
     #endregion
 
@@ -531,9 +582,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "3675b91e-c3b8-491e-a449-d3891f88c467";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(MagicEffectPeakValueModArchetype.Mask<>);
 
@@ -547,7 +598,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type SetterType = typeof(IMagicEffectPeakValueModArchetype);
 
-        public static readonly Type? InternalSetterType = typeof(IMagicEffectPeakValueModArchetypeInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectPeakValueModArchetype";
 
@@ -592,33 +643,36 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class MagicEffectPeakValueModArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectPeakValueModArchetypeSetterCommon : AMagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectPeakValueModArchetypeSetterCommon Instance = new MagicEffectPeakValueModArchetypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMagicEffectPeakValueModArchetypeInternal item)
+        public void Clear(IMagicEffectPeakValueModArchetype item)
         {
             ClearPartial();
+            item.Association.Clear();
             base.Clear(item);
         }
         
-        public override void Clear(IMagicEffectArchetypeInternal item)
+        public override void Clear(IAMagicEffectArchetype item)
         {
-            Clear(item: (IMagicEffectPeakValueModArchetypeInternal)item);
+            Clear(item: (IMagicEffectPeakValueModArchetype)item);
         }
         
         #region Mutagen
         public void RemapLinks(IMagicEffectPeakValueModArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            base.RemapLinks(obj, mapping);
+            obj.Association.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMagicEffectPeakValueModArchetypeInternal item,
+            IMagicEffectPeakValueModArchetype item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -630,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public override void CopyInFromBinary(
-            IMagicEffectArchetypeInternal item,
+            IAMagicEffectArchetype item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -643,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class MagicEffectPeakValueModArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectPeakValueModArchetypeCommon : AMagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectPeakValueModArchetypeCommon Instance = new MagicEffectPeakValueModArchetypeCommon();
 
@@ -667,6 +721,7 @@ namespace Mutagen.Bethesda.Skyrim
             MagicEffectPeakValueModArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Association = item.Association.Equals(rhs.Association);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -712,21 +767,21 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             MagicEffectPeakValueModArchetype.Mask<bool>? printMask = null)
         {
-            MagicEffectArchetypeCommon.ToStringFields(
+            AMagicEffectArchetypeCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Association ?? true)
+            {
+                sb.AppendItem(item.Association.FormKey, "Association");
+            }
         }
         
-        public static MagicEffectPeakValueModArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
+        public static MagicEffectPeakValueModArchetype_FieldIndex ConvertFieldIndex(AMagicEffectArchetype_FieldIndex index)
         {
             switch (index)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                    return (MagicEffectPeakValueModArchetype_FieldIndex)((int)index);
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                    return (MagicEffectPeakValueModArchetype_FieldIndex)((int)index);
-                case MagicEffectArchetype_FieldIndex.ActorValue:
+                case AMagicEffectArchetype_FieldIndex.ActorValue:
                     return (MagicEffectPeakValueModArchetype_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -740,13 +795,17 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IAMagicEffectArchetypeGetter)lhs, (IAMagicEffectArchetypeGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectPeakValueModArchetype_FieldIndex.Association) ?? true))
+            {
+                if (!lhs.Association.Equals(rhs.Association)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
-            IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs,
+            IAMagicEffectArchetypeGetter? lhs,
+            IAMagicEffectArchetypeGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             return Equals(
@@ -758,11 +817,12 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IMagicEffectPeakValueModArchetypeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Association);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IMagicEffectArchetypeGetter item)
+        public override int GetHashCode(IAMagicEffectArchetypeGetter item)
         {
             return GetHashCode(item: (IMagicEffectPeakValueModArchetypeGetter)item);
         }
@@ -778,32 +838,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMagicEffectPeakValueModArchetypeGetter obj)
         {
+            foreach (var item in base.EnumerateFormLinks(obj))
+            {
+                yield return item;
+            }
+            yield return FormLinkInformation.Factory(obj.Association);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class MagicEffectPeakValueModArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectPeakValueModArchetypeSetterTranslationCommon : AMagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectPeakValueModArchetypeSetterTranslationCommon Instance = new MagicEffectPeakValueModArchetypeSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
-            IMagicEffectPeakValueModArchetypeInternal item,
-            IMagicEffectPeakValueModArchetypeGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
-        }
-        
         public void DeepCopyIn(
             IMagicEffectPeakValueModArchetype item,
             IMagicEffectPeakValueModArchetypeGetter rhs,
@@ -812,31 +862,21 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IMagicEffectArchetype)item,
-                (IMagicEffectArchetypeGetter)rhs,
+                (IAMagicEffectArchetype)item,
+                (IAMagicEffectArchetypeGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MagicEffectPeakValueModArchetype_FieldIndex.Association) ?? true))
+            {
+                item.Association.SetTo(rhs.Association.FormKey);
+            }
         }
         
-        public override void DeepCopyIn(
-            IMagicEffectArchetypeInternal item,
-            IMagicEffectArchetypeGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IMagicEffectPeakValueModArchetypeInternal)item,
-                rhs: (IMagicEffectPeakValueModArchetypeGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
         
         public override void DeepCopyIn(
-            IMagicEffectArchetype item,
-            IMagicEffectArchetypeGetter rhs,
+            IAMagicEffectArchetype item,
+            IAMagicEffectArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -930,17 +970,26 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectPeakValueModArchetypeBinaryWriteTranslation :
-        MagicEffectArchetypeBinaryWriteTranslation,
+        AMagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly MagicEffectPeakValueModArchetypeBinaryWriteTranslation Instance = new();
+
+        public static void WriteEmbedded(
+            IMagicEffectPeakValueModArchetypeGetter item,
+            MutagenWriter writer)
+        {
+            AMagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
 
         public void Write(
             MutagenWriter writer,
             IMagicEffectPeakValueModArchetypeGetter item,
             TypedWriteParams translationParams)
         {
-            MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer);
         }
@@ -958,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void Write(
             MutagenWriter writer,
-            IMagicEffectArchetypeGetter item,
+            IAMagicEffectArchetypeGetter item,
             TypedWriteParams translationParams)
         {
             Write(
@@ -969,9 +1018,18 @@ namespace Mutagen.Bethesda.Skyrim
 
     }
 
-    internal partial class MagicEffectPeakValueModArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectPeakValueModArchetypeBinaryCreateTranslation : AMagicEffectArchetypeBinaryCreateTranslation
     {
         public new static readonly MagicEffectPeakValueModArchetypeBinaryCreateTranslation Instance = new MagicEffectPeakValueModArchetypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMagicEffectPeakValueModArchetype item,
+            MutagenFrame frame)
+        {
+            AMagicEffectArchetypeBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 
@@ -988,116 +1046,6 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class MagicEffectPeakValueModArchetypeBinaryOverlay :
-        MagicEffectArchetypeBinaryOverlay,
-        IMagicEffectPeakValueModArchetypeGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectPeakValueModArchetype_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => MagicEffectPeakValueModArchetype_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectPeakValueModArchetypeCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectPeakValueModArchetypeSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectPeakValueModArchetypeBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((MagicEffectPeakValueModArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected MagicEffectPeakValueModArchetypeBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IMagicEffectPeakValueModArchetypeGetter MagicEffectPeakValueModArchetypeFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new MagicEffectPeakValueModArchetypeBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IMagicEffectPeakValueModArchetypeGetter MagicEffectPeakValueModArchetypeFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return MagicEffectPeakValueModArchetypeFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            MagicEffectPeakValueModArchetypeMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IMagicEffectPeakValueModArchetypeGetter rhs) return false;
-            return ((MagicEffectPeakValueModArchetypeCommon)((IMagicEffectPeakValueModArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IMagicEffectPeakValueModArchetypeGetter? obj)
-        {
-            return ((MagicEffectPeakValueModArchetypeCommon)((IMagicEffectPeakValueModArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((MagicEffectPeakValueModArchetypeCommon)((IMagicEffectPeakValueModArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

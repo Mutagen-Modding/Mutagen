@@ -934,7 +934,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<ILeveledItemInternal>,
         IObjectBounded,
         IOutfitTarget,
-        IPlaceableObject
+        IPlaceableObject,
+        IReferenceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -970,7 +971,8 @@ namespace Mutagen.Bethesda.Fallout4
         IMapsToGetter<ILeveledItemGetter>,
         IObjectBoundedGetter,
         IOutfitTargetGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
         #region ObjectBounds

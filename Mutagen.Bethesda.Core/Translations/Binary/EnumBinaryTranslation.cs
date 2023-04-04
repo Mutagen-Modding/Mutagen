@@ -14,6 +14,7 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
 
     public enum UnderlyingType
     {
+        UShort,
         Int,
         UInt,
         Long,
@@ -43,6 +44,10 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
         else if (underlying == typeof(byte))
         {
             Underlying = UnderlyingType.Byte;
+        }
+        else if (underlying == typeof(ushort))
+        {
+            Underlying = UnderlyingType.UShort;
         }
         else
         {
@@ -158,6 +163,9 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
                 break;
             case UnderlyingType.Byte:
                 i = (byte)item.ToByte(null);
+                break;
+            case UnderlyingType.UShort:
+                i = (ushort)item.ToUInt16(null);
                 break;
             default:
                 throw new NotImplementedException();

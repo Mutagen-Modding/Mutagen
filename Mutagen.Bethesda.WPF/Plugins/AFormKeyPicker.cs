@@ -59,7 +59,7 @@ public class AFormKeyPicker : NoggogControl
     }
     public static readonly DependencyProperty ProcessingProperty = DependencyProperty.Register(nameof(Processing), typeof(bool), typeof(AFormKeyPicker),
         new FrameworkPropertyMetadata(default(bool)));
-
+    
     public FormKey FormKey
     {
         get => (FormKey)GetValue(FormKeyProperty);
@@ -67,6 +67,14 @@ public class AFormKeyPicker : NoggogControl
     }
     public static readonly DependencyProperty FormKeyProperty = DependencyProperty.Register(nameof(FormKey), typeof(FormKey), typeof(AFormKeyPicker),
         new FrameworkPropertyMetadata(default(FormKey), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    
+    public Type? SelectedType
+    {
+        get => (Type?)GetValue(SelectedTypeProperty);
+        set => SetValue(SelectedTypeProperty, value);
+    }
+    public static readonly DependencyProperty SelectedTypeProperty = DependencyProperty.Register(nameof(SelectedType), typeof(Type), typeof(AFormKeyPicker),
+        new FrameworkPropertyMetadata(default(Type?)));
 
     public string FormKeyStr
     {
@@ -231,7 +239,7 @@ public class AFormKeyPicker : NoggogControl
         new FrameworkPropertyMetadata(default(ICommand)));
     #endregion
 
-    record State(StatusIndicatorState Status, string Text, FormKey FormKey, string Edid);
+    record State(StatusIndicatorState Status, string Text, FormKey FormKey, string Edid, Type? Type);
 
     static AFormKeyPicker()
     {
@@ -253,7 +261,7 @@ public class AFormKeyPicker : NoggogControl
                     x => x.LinkCache,
                     x => x.ScopedTypes),
                 (form, sources) => (FormKey: form, LinkCache: sources.Item1, Types: sources.Item2))
-            .Where(x => _updating == UpdatingEnum.None || _updating == UpdatingEnum.FormKey)
+            .Where(x => _updating is UpdatingEnum.None or UpdatingEnum.FormKey)
             .Do(_ =>
             {
                 _updating = UpdatingEnum.FormKey;
@@ -270,28 +278,28 @@ public class AFormKeyPicker : NoggogControl
                 {
                     if (x.LinkCache == null)
                     {
-                        return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty);
+                        return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty, null);
                     }
                     if (x.FormKey.IsNull)
                     {
-                        return new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty);
+                        return new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty, null);
                     }
                     var scopedTypes = ScopedTypesInternal(x.Types);
-                    if (x.LinkCache.TryResolveIdentifier(x.FormKey, scopedTypes, out var edid))
+                    if (x.LinkCache.TryResolveIdentifier(x.FormKey, scopedTypes, out var edid, out var matchedType))
                     {
-                        return new State(StatusIndicatorState.Success, "Located record", x.FormKey, edid ?? string.Empty);
+                        return new State(StatusIndicatorState.Success, "Located record", x.FormKey, edid ?? string.Empty, matchedType);
                     }
                     else
                     {
-                        return new State(StatusIndicatorState.Failure, "Could not resolve record", x.FormKey, string.Empty);
+                        return new State(StatusIndicatorState.Failure, "Could not resolve record", x.FormKey, string.Empty, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty);
+                    return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty, null);
                 }
             })
-            .StartWith(new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty))
+            .StartWith(new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty, null))
             .ObserveOn(RxApp.MainThreadScheduler)
             .Do(rec =>
             {
@@ -308,6 +316,11 @@ public class AFormKeyPicker : NoggogControl
                 if (Status != rec.Status)
                 {
                     Status = rec.Status;
+                }
+
+                if (SelectedType != rec.Type)
+                {
+                    SelectedType = rec.Type;
                 }
 
                 if (rec.Status == StatusIndicatorState.Success)
@@ -359,7 +372,7 @@ public class AFormKeyPicker : NoggogControl
                     x => x.LinkCache,
                     x => x.ScopedTypes),
                 (edid, sources) => (EditorID: edid, LinkCache: sources.Item1, Types: sources.Item2))
-            .Where(x => _updating == UpdatingEnum.None || _updating == UpdatingEnum.EditorID)
+            .Where(x => _updating is UpdatingEnum.None or UpdatingEnum.EditorID)
             .Do(_ =>
             {
                 _updating = UpdatingEnum.EditorID;
@@ -376,25 +389,25 @@ public class AFormKeyPicker : NoggogControl
                 {
                     if (x.LinkCache == null)
                     {
-                        return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty);
+                        return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty, null);
                     }
                     if (string.IsNullOrWhiteSpace(x.EditorID))
                     {
-                        return new State(StatusIndicatorState.Passive, "EditorID is empty.  No lookup required", FormKey.Null, string.Empty);
+                        return new State(StatusIndicatorState.Passive, "EditorID is empty.  No lookup required", FormKey.Null, string.Empty, null);
                     }
                     var scopedTypes = ScopedTypesInternal(x.Types);
-                    if (x.LinkCache.TryResolveIdentifier(x.EditorID, scopedTypes, out var formKey))
+                    if (x.LinkCache.TryResolveIdentifier(x.EditorID, scopedTypes, out var formKey, out var matchedType))
                     {
-                        return new State(StatusIndicatorState.Success, "Located record", formKey, x.EditorID ?? string.Empty);
+                        return new State(StatusIndicatorState.Success, "Located record", formKey, x.EditorID ?? string.Empty, matchedType);
                     }
                     else
                     {
-                        return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                        return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty);
+                    return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty, null);
                 }
             })
             .ObserveOn(RxApp.MainThreadScheduler)
@@ -413,6 +426,11 @@ public class AFormKeyPicker : NoggogControl
                 if (Status != rec.Status)
                 {
                     Status = rec.Status;
+                }
+
+                if (SelectedType != rec.Type)
+                {
+                    SelectedType = rec.Type;
                 }
 
                 if (rec.Status == StatusIndicatorState.Success)
@@ -460,7 +478,7 @@ public class AFormKeyPicker : NoggogControl
                     x => x.MissingMeansError,
                     x => x.MissingMeansNull),
                 (str, sources) => (Raw: str, LinkCache: sources.Item1, Types: sources.Item2, MissingMeansError: sources.Item3, MissingMeansNull: sources.Item4))
-            .Where(x => _updating == UpdatingEnum.None || _updating == UpdatingEnum.FormStr)
+            .Where(x => _updating is UpdatingEnum.None or UpdatingEnum.FormStr)
             .Do(_ =>
             {
                 _updating = UpdatingEnum.FormStr;
@@ -477,7 +495,7 @@ public class AFormKeyPicker : NoggogControl
                 {
                     if (string.IsNullOrWhiteSpace(x.Raw))
                     {
-                        return new State(StatusIndicatorState.Passive, "Input is empty.  No lookup required", FormKey.Null, string.Empty);
+                        return new State(StatusIndicatorState.Passive, "Input is empty.  No lookup required", FormKey.Null, string.Empty, null);
                     }
 
                     var scopedTypes = ScopedTypesInternal(x.Types);
@@ -486,11 +504,11 @@ public class AFormKeyPicker : NoggogControl
                     {
                         if (x.LinkCache == null)
                         {
-                            return new State(StatusIndicatorState.Success, "Valid FormKey", formKey, string.Empty);
+                            return new State(StatusIndicatorState.Success, "Valid FormKey", formKey, string.Empty, null);
                         }
-                        if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid))
+                        if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid, out var matchedType))
                         {
-                            return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty);
+                            return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty, matchedType);
                         }
                         else
                         {
@@ -507,13 +525,14 @@ public class AFormKeyPicker : NoggogControl
                                 x.MissingMeansError ? StatusIndicatorState.Failure : StatusIndicatorState.Success,
                                 "Could not resolve record",
                                 formKeyToUse,
-                                string.Empty);
+                                string.Empty,
+                                null);
                         }
                     }
 
                     if (x.LinkCache == null)
                     {
-                        return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty);
+                        return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty, null);
                     }
 
                     if (FormID.TryFactory(x.Raw, out var formID, strictLength: true))
@@ -522,22 +541,22 @@ public class AFormKeyPicker : NoggogControl
                         {
                             var targetMod = x.LinkCache.ListedOrder[formID.ModIndex.ID];
                             formKey = new FormKey(targetMod.ModKey, formID.ID);
-                            if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid))
+                            if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid, out var matchedType))
                             {
-                                return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty);
+                                return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty, matchedType);
                             }
                             else
                             {
-                                return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                                return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty, null);
                             }
                         }
                     }
 
-                    return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                    return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty, null);
                 }
                 catch (Exception ex)
                 {
-                    return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty);
+                    return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty, null);
                 }
             })
             .ObserveOn(RxApp.MainThreadScheduler)
@@ -556,6 +575,11 @@ public class AFormKeyPicker : NoggogControl
                 if (Status != rec.Status)
                 {
                     Status = rec.Status;
+                }
+
+                if (SelectedType != rec.Type)
+                {
+                    SelectedType = rec.Type;
                 }
 
                 if (rec.Status == StatusIndicatorState.Success)

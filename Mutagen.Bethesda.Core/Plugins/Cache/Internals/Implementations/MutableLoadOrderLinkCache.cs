@@ -154,6 +154,22 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
         return false;
     }
 
+    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolve(editorId, type, out majorRec))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+
+        matchedType = default;
+        majorRec = default;
+        return false;
+    }
+
     /// <inheritdoc />
     public IMajorRecordGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
     {
@@ -611,6 +627,23 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
         return false;
     }
 
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolve(formKey, type, out majorRec, target))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+
+        matchedType = default;
+        majorRec = default;
+        return false;
+    }
+
     /// <inheritdoc />
     public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
     {
@@ -778,6 +811,22 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
         return false;
     }
 
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, out string? editorId, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolveIdentifier(formKey, type, out editorId, target))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        editorId = default;
+        matchedType = default;
+        return false;
+    }
+
     /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
     {
@@ -790,6 +839,88 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
         }
         formKey = default;
         return false;
+    }
+
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolveIdentifier(editorId, type, out formKey))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        matchedType = default;
+        formKey = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public string? ResolveIdentifier(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public FormKey ResolveIdentifier(string editorId)
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, type, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formLink.FormKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formLink);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, Type type)
+    {
+        if (TryResolveIdentifier(editorId, type, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, type);
+    }
+
+    public string? ResolveIdentifier<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(TMajor));
+    }
+
+    public FormKey ResolveIdentifier<TMajor>(string editorId) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(TMajor));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, params Type[] types)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, params Type[] types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types);
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types.ToArray());
+    }
+
+    public FormKey ResolveIdentifier(string editorId, IEnumerable<Type> types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types.ToArray());
     }
 
     private IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)
@@ -1011,6 +1142,21 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
             if (_mutableMods[i].TryResolve(editorId, type, out majorRec)) return true;
         }
         return WrappedImmutableCache.TryResolve(editorId, type, out majorRec);
+    }
+
+    public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolve(editorId, type, out majorRec))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        matchedType = default;
+        majorRec = default;
+        return false;
     }
 
     /// <inheritdoc />
@@ -1606,6 +1752,22 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
         return false;
     }
 
+    public bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolve(formKey, type, out majorRec, target))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        matchedType = default;
+        majorRec = default;
+        return false;
+    }
+
     /// <inheritdoc />
     public bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec)
     {
@@ -1763,6 +1925,22 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
         return false;
     }
 
+    public bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, out string? editorId, [MaybeNullWhen(false)] out Type matchedType,
+        ResolveTarget target = ResolveTarget.Winner)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolveIdentifier(formKey, type, out editorId, target))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        matchedType = default;
+        editorId = default;
+        return false;
+    }
+
     /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey)
     {
@@ -1775,6 +1953,88 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
         }
         formKey = default;
         return false;
+    }
+
+    public bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        foreach (var type in types)
+        {
+            if (TryResolveIdentifier(editorId, type, out formKey))
+            {
+                matchedType = type;
+                return true;
+            }
+        }
+        matchedType = default;
+        formKey = default;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public string? ResolveIdentifier(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public FormKey ResolveIdentifier(string editorId)
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, type, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(IMajorRecordGetter));
+    }
+
+    public string? ResolveIdentifier(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formLink.FormKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formLink);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, Type type)
+    {
+        if (TryResolveIdentifier(editorId, type, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, type);
+    }
+
+    public string? ResolveIdentifier<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(formKey, out var edid, target)) return edid;
+        throw new MissingRecordException(formKey, typeof(TMajor));
+    }
+
+    public FormKey ResolveIdentifier<TMajor>(string editorId) where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifier(editorId, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(TMajor));
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, params Type[] types)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types);
+    }
+
+    public FormKey ResolveIdentifier(string editorId, params Type[] types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types);
+    }
+
+    public string? ResolveIdentifier(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner)
+    {
+        if (TryResolveIdentifier(formKey, types, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types.ToArray());
+    }
+
+    public FormKey ResolveIdentifier(string editorId, IEnumerable<Type> types)
+    {
+        if (TryResolveIdentifier(editorId, types, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types.ToArray());
     }
 
     private IEnumerable<IMajorRecordIdentifier> AllIdentifiersNoUniqueness(Type type, CancellationToken? cancel)

@@ -3,9 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Collections;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Assets;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Noggog.StructuredStrings;
 
@@ -31,6 +29,22 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
     {
         get => ArmorAddonBinaryCreateTranslation.IsEnabled(_female);
         set => _female = (byte)(value ? 2 : 0);
+    }
+
+    public bool this[MaleFemaleGender gender]
+    {
+        get => gender == MaleFemaleGender.Male ? Male : Female;
+        set
+        {
+            if (gender == MaleFemaleGender.Male)
+            {
+                Male = value;
+            }
+            else
+            {
+                Female = value;
+            }
+        }
     }
 
     public ArmorAddonWeightSliderContainer(byte male, byte female)
@@ -150,7 +164,9 @@ partial class ArmorAddonBinaryWriteTranslation
 
 partial class ArmorAddonBinaryOverlay
 {
-    public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new GenderedItem<bool>(
+    public IGenderedItemGetter<Boolean> WeightSliderEnabled => GetWeightSliderEnabledCustom();
+    
+    public IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new GenderedItem<bool>(
         ArmorAddonBinaryCreateTranslation.IsEnabled(_recordData.Slice(_DNAMLocation!.Value.Min + 2)[0]),
         ArmorAddonBinaryCreateTranslation.IsEnabled(_recordData.Slice(_DNAMLocation!.Value.Min + 3)[0]));
 

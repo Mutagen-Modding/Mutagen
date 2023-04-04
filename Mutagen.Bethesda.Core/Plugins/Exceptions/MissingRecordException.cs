@@ -13,6 +13,12 @@ public class MissingRecordException : Exception
         Type = type;
     }
 
+    public MissingRecordException(IFormLinkIdentifier formLinkIdentifier)
+    {
+        FormKey = formLinkIdentifier.FormKey;
+        Type = formLinkIdentifier.Type;
+    }
+
     public MissingRecordException(string editorID, Type type)
     {
         EditorID = editorID;

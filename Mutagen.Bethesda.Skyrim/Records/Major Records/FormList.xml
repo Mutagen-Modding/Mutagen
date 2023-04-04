@@ -9,5 +9,11 @@
     <LinkInterface>IAliasVoiceType</LinkInterface>
     <LinkInterface>ILockList</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IWorldspaceOrList</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
+    <LinkInterface>IVoiceTypeOrList</LinkInterface>
+    <LinkInterface>INpcOrList</LinkInterface>
+    <LinkInterface>IWeaponOrList</LinkInterface>
+    <LinkInterface>ISpellOrList</LinkInterface>
   </Object>
 </Loqui>

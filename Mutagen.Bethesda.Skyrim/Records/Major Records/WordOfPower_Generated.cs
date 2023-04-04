@@ -539,6 +539,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWordOfPower :
+        IKnowable,
         ILoquiObjectSetter<IWordOfPowerInternal>,
         INamed,
         INamedRequired,
@@ -565,6 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWordOfPowerGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IKnowableGetter,
         ILoquiObject<IWordOfPowerGetter>,
         IMapsToGetter<IWordOfPowerGetter>,
         INamedGetter,

@@ -596,6 +596,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IArtObjectInternal>,
         IModeled,
         IObjectBounded,
+        IPlaceableObject,
         ISkyrimMajorRecordInternal
     {
         /// <summary>
@@ -626,7 +627,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IArtObjectGetter>,
         IMapsToGetter<IArtObjectGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => ArtObject_Registration.Instance;
         #region ObjectBounds

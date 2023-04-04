@@ -19,9 +19,11 @@
     <Border Style="{StaticResource ReflectionSettingBorder}">
         <Grid MinHeight="25">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140" />
+                <ColumnDefinition MinWidth="140" Width="Auto" />
                 <ColumnDefinition Width="70" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -35,7 +37,7 @@
                 Style="{StaticResource ReflectionSettingButton}">
                 <TextBlock x:Name="SettingNameBlock" Style="{StaticResource ReflectionSettingName}" />
             </Button>
-            <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+            <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5"
                 x:Name="SettingsListBox"
                 AllowDrop="True"
                 Background="Transparent"
@@ -77,11 +79,10 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
+            <TextBlock Grid.Column="1" Grid.Row="0"
                 x:Name="NumItemsBlock"
-                Width="80"
-                Margin="123,4,0,0"
-                HorizontalAlignment="Left">
+                VerticalAlignment="Center"
+                Width="80">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
@@ -92,9 +93,24 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <Button Grid.Column="2"
+            <Button Grid.Column="3" Grid.Row="0"
+                    x:Name="DeleteButton"
+                    Width="20"
+                    Margin="60,6"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    HorizontalContentAlignment="Left"
+                    VerticalContentAlignment="Top"
+                    Style="{StaticResource CloseButton}"
+                    ToolTip="Delete selected items">
+                <icon:PackIconMaterial
+                    Width="10"
+                    Height="10"
+                    Kind="Close" />
+            </Button>
+            <Button Grid.Column="4" Grid.Row="0"
                 x:Name="AddButton"
-                Width="40"
+                Width="20"
                 Margin="5,6"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -105,21 +121,6 @@
                     Width="10"
                     Height="10"
                     Kind="Plus" />
-            </Button>
-            <Button Grid.Column="2"
-                x:Name="DeleteButton"
-                Width="40"
-                Margin="60,6"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                HorizontalContentAlignment="Left"
-                VerticalContentAlignment="Top"
-                Style="{StaticResource CloseButton}"
-                ToolTip="Delete selected items">
-                <icon:PackIconMaterial
-                    Width="10"
-                    Height="10"
-                    Kind="Close" />
             </Button>
         </Grid>
     </Border>

@@ -183,6 +183,7 @@ public partial class RecordTypes
     public static readonly RecordType TCLT = new(0x544C4354);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
+    public static readonly RecordType TPIC = new(0x43495054);
     public static readonly RecordType TRDT = new(0x54445254);
     public static readonly RecordType TREE = new(0x45455254);
     public static readonly RecordType UNAM = new(0x4D414E55);

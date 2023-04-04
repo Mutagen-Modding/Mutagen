@@ -61,7 +61,7 @@ partial class MagicEffectBinaryCreateTranslation
         frame.Position += 4;
     }
 
-    public static MagicEffectArchetype ReadArchetype(MutagenFrame frame)
+    public static AMagicEffectArchetype ReadArchetype(MutagenFrame frame)
     {
         // Jump back and read in association FormKey
         var curPos = frame.Position;
@@ -71,56 +71,89 @@ partial class MagicEffectBinaryCreateTranslation
 
         // Finish reading archetype
         MagicEffectArchetype.TypeEnum archetypeEnum = (MagicEffectArchetype.TypeEnum)frame.ReadInt32();
-        MagicEffectArchetype archetype;
+        AMagicEffectArchetype archetype;
         switch (archetypeEnum)
         {
             case MagicEffectArchetype.TypeEnum.Light:
-                archetype = new MagicEffectLightArchetype();
+                archetype = new MagicEffectLightArchetype()
+                {
+                    Association = associatedItemKey.ToLink<ILightGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.Bound:
-                archetype = new MagicEffectBoundArchetype();
+                archetype = new MagicEffectBoundArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IBindableEquipmentGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.SummonCreature:
-                archetype = new MagicEffectSummonCreatureArchetype();
+                archetype = new MagicEffectSummonCreatureArchetype()
+                {
+                    Association = associatedItemKey.ToLink<INpcGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.Guide:
-                archetype = new MagicEffectGuideArchetype();
+                archetype = new MagicEffectGuideArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IHazardGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.SpawnHazard:
-                archetype = new MagicEffectSpawnHazardArchetype();
+                archetype = new MagicEffectSpawnHazardArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IHazardGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.PeakValueModifier:
-                archetype = new MagicEffectPeakValueModArchetype();
+                archetype = new MagicEffectPeakValueModArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IKeywordGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.Cloak:
-                archetype = new MagicEffectCloakArchetype();
+                archetype = new MagicEffectCloakArchetype()
+                {
+                    Association = associatedItemKey.ToLink<ISpellGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.Werewolf:
-                archetype = new MagicEffectWerewolfArchetype();
+                archetype = new MagicEffectWerewolfArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IRaceGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.VampireLord:
-                archetype = new MagicEffectVampireArchetype();
+                archetype = new MagicEffectVampireArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IRaceGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.EnhanceWeapon:
-                archetype = new MagicEffectEnhanceWeaponArchetype();
+                archetype = new MagicEffectEnhanceWeaponArchetype()
+                {
+                    Association = associatedItemKey.ToLink<IObjectEffectGetter>()
+                };
                 break;
             case MagicEffectArchetype.TypeEnum.Calm:
             case MagicEffectArchetype.TypeEnum.Frenzy:
                 archetype = new MagicEffectArchetype(archetypeEnum)
                 {
-                    ActorValue = ActorValue.Aggression
+                    ActorValue = ActorValue.Aggression,
+                    Association = associatedItemKey.ToLink<ISkyrimMajorRecordGetter>()
                 };
                 break;
             case MagicEffectArchetype.TypeEnum.Invisibility:
                 archetype = new MagicEffectArchetype(archetypeEnum)
                 {
-                    ActorValue = ActorValue.Invisibility
+                    ActorValue = ActorValue.Invisibility,
+                    Association = associatedItemKey.ToLink<ISkyrimMajorRecordGetter>()
                 };
                 break;
             case MagicEffectArchetype.TypeEnum.Paralysis:
                 archetype = new MagicEffectArchetype(archetypeEnum)
                 {
-                    ActorValue = ActorValue.Paralysis
+                    ActorValue = ActorValue.Paralysis,
+                    Association = associatedItemKey.ToLink<ISkyrimMajorRecordGetter>()
                 };
                 break;
             case MagicEffectArchetype.TypeEnum.Demoralize:
@@ -129,17 +162,18 @@ partial class MagicEffectBinaryCreateTranslation
             case MagicEffectArchetype.TypeEnum.Banish:
                 archetype = new MagicEffectArchetype(archetypeEnum)
                 {
-                    ActorValue = ActorValue.Confidence
+                    ActorValue = ActorValue.Confidence,
+                    Association = associatedItemKey.ToLink<ISkyrimMajorRecordGetter>()
                 };
                 break;
             default:
                 archetype = new MagicEffectArchetype(archetypeEnum)
                 {
-                    ActorValue = ActorValue.None
+                    ActorValue = ActorValue.None,
+                    Association = associatedItemKey.ToLink<ISkyrimMajorRecordGetter>()
                 };
                 break;
         }
-        archetype.AssociationKey = associatedItemKey;
         archetype.ActorValue = (ActorValue)frame.ReadInt32();
         return archetype;
     }
@@ -180,7 +214,7 @@ partial class MagicEffectBinaryOverlay
 
     partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+        Conditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }
 
     partial void CounterEffectLogicCustomParse(OverlayStream stream, int offset)
@@ -189,7 +223,7 @@ partial class MagicEffectBinaryOverlay
         stream.Position += 2;
     }
 
-    public partial IMagicEffectArchetypeGetter GetArchetypeCustom()
+    public partial IAMagicEffectArchetypeGetter GetArchetypeCustom()
     {
         if (!_DATALocation.HasValue) return new MagicEffectArchetype();
         var frame = new MutagenFrame(new MutagenMemoryReadStream(_recordData, _package.MetaData))

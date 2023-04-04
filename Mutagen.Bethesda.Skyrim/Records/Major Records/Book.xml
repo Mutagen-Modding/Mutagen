@@ -29,8 +29,10 @@
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="BookTeachTarget" abstract="true" objType="Subrecord" GUID="a95689cb-bc18-4276-b852-755a8d728d04" ID="156" />

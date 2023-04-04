@@ -23,9 +23,11 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
         {
             AcousticSpace_Registration.Instance,
             Activator_Registration.Instance,
+            AddonNode_Registration.Instance,
             AlchemicalApparatus_Registration.Instance,
             Ammunition_Registration.Instance,
             Armor_Registration.Instance,
+            ArtObject_Registration.Instance,
             Book_Registration.Instance,
             Container_Registration.Instance,
             Door_Registration.Instance,
@@ -49,6 +51,38 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IPlaceableObjectGetter)] = dict[typeof(IPlaceableObject)] with { Setter = false };
+        dict[typeof(IReferenceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AcousticSpace_Registration.Instance,
+            Activator_Registration.Instance,
+            AlchemicalApparatus_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            Container_Registration.Instance,
+            Door_Registration.Instance,
+            Flora_Registration.Instance,
+            Furniture_Registration.Instance,
+            Hazard_Registration.Instance,
+            IdleMarker_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MoveableStatic_Registration.Instance,
+            Npc_Registration.Instance,
+            Scroll_Registration.Instance,
+            SoulGem_Registration.Instance,
+            SoundMarker_Registration.Instance,
+            Spell_Registration.Instance,
+            Static_Registration.Instance,
+            TalkingActivator_Registration.Instance,
+            TextureSet_Registration.Instance,
+            Tree_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IReferenceableObjectGetter)] = dict[typeof(IReferenceableObject)] with { Setter = false };
         dict[typeof(IExplodeSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AcousticSpace_Registration.Instance,
@@ -77,6 +111,7 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             LeveledSpell_Registration.Instance,
             Light_Registration.Instance,
             MoveableStatic_Registration.Instance,
+            Npc_Registration.Instance,
             ObjectEffect_Registration.Instance,
             Projectile_Registration.Instance,
             Scroll_Registration.Instance,
@@ -141,6 +176,24 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
+        dict[typeof(IItemOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AlchemicalApparatus_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            FormList_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            Key_Registration.Instance,
+            LeveledItem_Registration.Instance,
+            Light_Registration.Instance,
+            MiscItem_Registration.Instance,
+            Scroll_Registration.Instance,
+            SoulGem_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IItemOrListGetter)] = dict[typeof(IItemOrList)] with { Setter = false };
         dict[typeof(IConstructible)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AlchemicalApparatus_Registration.Instance,
@@ -181,18 +234,10 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             DialogTopic_Registration.Instance,
         });
         dict[typeof(IDialogGetter)] = dict[typeof(IDialog)] with { Setter = false };
-        dict[typeof(ILocationTargetable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Door_Registration.Instance,
-            PlacedNpc_Registration.Instance,
-            PlacedObject_Registration.Instance,
-            APlacedTrap_Registration.Instance,
-        });
-        dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
         dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Faction_Registration.Instance,
-            PlacedNpc_Registration.Instance,
+            Npc_Registration.Instance,
         });
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -222,6 +267,36 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             Npc_Registration.Instance,
         });
         dict[typeof(ILockListGetter)] = dict[typeof(ILockList)] with { Setter = false };
+        dict[typeof(IWorldspaceOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Worldspace_Registration.Instance,
+        });
+        dict[typeof(IWorldspaceOrListGetter)] = dict[typeof(IWorldspaceOrList)] with { Setter = false };
+        dict[typeof(IVoiceTypeOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            VoiceType_Registration.Instance,
+        });
+        dict[typeof(IVoiceTypeOrListGetter)] = dict[typeof(IVoiceTypeOrList)] with { Setter = false };
+        dict[typeof(INpcOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Npc_Registration.Instance,
+        });
+        dict[typeof(INpcOrListGetter)] = dict[typeof(INpcOrList)] with { Setter = false };
+        dict[typeof(IWeaponOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IWeaponOrListGetter)] = dict[typeof(IWeaponOrList)] with { Setter = false };
+        dict[typeof(ISpellOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            Spell_Registration.Instance,
+        });
+        dict[typeof(ISpellOrListGetter)] = dict[typeof(ISpellOrList)] with { Setter = false };
         dict[typeof(IPlacedTrapTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Hazard_Registration.Instance,
@@ -236,6 +311,15 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             MiscItem_Registration.Instance,
         });
         dict[typeof(IHarvestTargetGetter)] = dict[typeof(IHarvestTarget)] with { Setter = false };
+        dict[typeof(IMagicItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Ingestible_Registration.Instance,
+            Ingredient_Registration.Instance,
+            ObjectEffect_Registration.Instance,
+            Scroll_Registration.Instance,
+            Spell_Registration.Instance,
+        });
+        dict[typeof(IMagicItemGetter)] = dict[typeof(IMagicItem)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,
@@ -269,6 +353,13 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             LocationReferenceType_Registration.Instance,
         });
         dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
+        dict[typeof(IKnowable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            MagicEffect_Registration.Instance,
+            ObjectEffect_Registration.Instance,
+            WordOfPower_Registration.Instance,
+        });
+        dict[typeof(IKnowableGetter)] = dict[typeof(IKnowable)] with { Setter = false };
         dict[typeof(IEffectRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ObjectEffect_Registration.Instance,
@@ -295,6 +386,13 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
             PlacedObject_Registration.Instance,
         });
         dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
+        dict[typeof(ILocationTargetable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedNpc_Registration.Instance,
+            PlacedObject_Registration.Instance,
+            APlacedTrap_Registration.Instance,
+        });
+        dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)] with { Setter = false };
         dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             PlacedObject_Registration.Instance,

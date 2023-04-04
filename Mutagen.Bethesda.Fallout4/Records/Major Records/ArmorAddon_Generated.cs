@@ -2900,11 +2900,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         #endregion
-        #region WeightSliderEnabled
-        private int _WeightSliderEnabledLocation => _DNAMLocation!.Value.Min + 0x2;
-        public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom();
-        public IGenderedItemGetter<Boolean> WeightSliderEnabled => GetWeightSliderEnabledCustom();
-        #endregion
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;

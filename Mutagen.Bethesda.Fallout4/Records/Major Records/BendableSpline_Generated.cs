@@ -780,7 +780,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IBendableSplineInternal>,
         IObjectBoundedOptional,
-        IPlaceableObject
+        IPlaceableObject,
+        IReferenceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -812,7 +813,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IBendableSplineGetter>,
         IMapsToGetter<IBendableSplineGetter>,
         IObjectBoundedOptionalGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => BendableSpline_Registration.Instance;
         #region ObjectBounds

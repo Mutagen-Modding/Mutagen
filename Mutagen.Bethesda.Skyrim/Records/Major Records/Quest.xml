@@ -20,7 +20,7 @@
       <String name="Filter" recordType="FLTR" />
       <RefList name="DialogConditions" refName="Condition" binary="Custom" />
       <CustomLogic name="UnusedConditionsLogic" recordType="NEXT" />
-      <RefList name="UnusedConditions" refName="Condition" binary="NoGeneration" />
+      <RefList name="EventConditions" refName="Condition" binary="NoGeneration" />
       <RefList name="Stages" refName="QuestStage" />
       <RefList name="Objectives" refName="QuestObjective" />
       <CustomLogic name="NextAliasID" recordType="ANAM" />

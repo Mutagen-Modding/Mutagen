@@ -4,21 +4,22 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 
 public interface IAssetLinkGetter
 {
-    protected static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
-    protected static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
-    protected static readonly string NullPath = string.Empty;
-
     /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
     string RawPath { get; }
 
     /// <summary>
-    /// Raw path relative to the game's data directory, as it is commonly known in the Skyrim modding community.
+    /// Raw path relative to the game's data directory, as it is commonly known in the Bethesda modding community.
+    /// <example>
+    /// <code>
     /// Example:
-    ///     \Data\Meshes\Clutter\MyMesh.nif => Meshes\Clutter\MyMesh.nif
-    ///     Data\Meshes\Clutter\MyMesh.nif  => Meshes\Clutter\MyMesh.nif
-    ///     Clutter\MyMesh.nif              => Meshes\Clutter\MyMesh.nif
+    ///     C:\Skyrim\Data\Meshes\Clutter\MyMesh.nif => Meshes\Clutter\MyMesh.nif
+    ///     \Data\Meshes\Clutter\MyMesh.nif          => Meshes\Clutter\MyMesh.nif
+    ///     Data\Meshes\Clutter\MyMesh.nif           => Meshes\Clutter\MyMesh.nif
+    ///     Clutter\MyMesh.nif                       => Meshes\Clutter\MyMesh.nif
+    /// </code>
+    /// </example>
     /// </summary>
     string DataRelativePath { get; }
 

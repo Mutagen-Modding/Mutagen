@@ -49,6 +49,7 @@
       <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
     </Fields>
     <LinkInterface>IComplexLocation</LinkInterface>
+    <LinkInterface>IWorldspaceOrList</LinkInterface>
   </Object>
   <Object name="WorldspaceBlock" objType="Group" GUID="d1ae377b-80e5-406a-b6a7-bd497c26ee73" ID="335">
     <Fields>

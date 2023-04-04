@@ -1924,7 +1924,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
-        IWorldspaceGetter
+        IWorldspaceGetter,
+        IWorldspaceOrList
     {
         new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
@@ -1988,7 +1989,8 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,
-        ITranslatedNamedRequiredGetter
+        ITranslatedNamedRequiredGetter,
+        IWorldspaceOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => Worldspace_Registration.Instance;
         IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }
@@ -2882,32 +2884,6 @@ namespace Mutagen.Bethesda.Skyrim
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
-                case "ILocationTargetable":
-                case "ILocationTargetableGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "IOwner":
-                case "IOwnerGetter":
-                    {
-                        if (obj.TopCell is {} TopCellitem)
-                        {
-                            TopCellitem.Remove(keys, type, throwIfUnknown);
-                        }
-                    }
-                    foreach (var subItem in obj.SubCells)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
                     {
@@ -2949,6 +2925,19 @@ namespace Mutagen.Bethesda.Skyrim
                     break;
                 case "IPlacedSimple":
                 case "IPlacedSimpleGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "ILocationTargetable":
+                case "ILocationTargetableGetter":
                     {
                         if (obj.TopCell is {} TopCellitem)
                         {

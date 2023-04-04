@@ -96,10 +96,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Icons)
             : base(
-                Header: Header,
+                Flags: Flags,
+                Priority: Priority,
                 Icons: Icons)
             {
             }
@@ -513,8 +515,9 @@ namespace Mutagen.Bethesda.Skyrim
     #region Field Index
     internal enum RegionLand_FieldIndex
     {
-        Header = 0,
-        Icons = 1,
+        Flags = 0,
+        Priority = 1,
+        Icons = 2,
     }
     #endregion
 
@@ -534,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(RegionLand.Mask<>);
 
@@ -560,12 +563,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(
-                RecordTypes.RDAT,
-                RecordTypes.ICON);
+            var all = RecordCollection.Factory(RecordTypes.RDAT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionLandBinaryWriteTranslation);
@@ -636,6 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionLandBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionLandBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -732,7 +735,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionLand_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionLand_FieldIndex)((int)index);
                 case RegionData_FieldIndex.Icons:
                     return (RegionLand_FieldIndex)((int)index);
@@ -923,6 +928,9 @@ namespace Mutagen.Bethesda.Skyrim
             IRegionLandGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             RegionDataBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,

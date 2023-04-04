@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations;
  
 internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, MutagenFrame, T> 
 { 
-    public static readonly ListBinaryTranslation<T> Instance = new(); 
+    public new static readonly ListBinaryTranslation<T> Instance = new(); 
  
     #region Out Parameters 
     public ExtendedList<T> Parse( 

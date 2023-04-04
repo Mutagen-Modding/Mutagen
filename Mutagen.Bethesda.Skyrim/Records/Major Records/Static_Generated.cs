@@ -810,6 +810,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectId,
         IPlaceableObject,
+        IReferenceableObject,
         IRegionTarget,
         ISkyrimMajorRecordInternal,
         IStaticGetter
@@ -854,6 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectIdGetter,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         IRegionTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;

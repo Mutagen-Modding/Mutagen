@@ -1875,6 +1875,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         IHasIcons,
         IItem,
+        IItemOrList,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IWeaponInternal>,
         IModeled,
@@ -1883,11 +1884,13 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectId,
         IPlaceableObject,
+        IReferenceableObject,
         IScripted,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired,
-        IWeaponGetter
+        IWeaponGetter,
+        IWeaponOrList
     {
         /// <summary>
         /// Aspects: IScripted
@@ -1964,6 +1967,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHasIconsGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
+        IItemOrListGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>,
@@ -1973,9 +1977,11 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectIdGetter,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
-        ITranslatedNamedRequiredGetter
+        ITranslatedNamedRequiredGetter,
+        IWeaponOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region VirtualMachineAdapter

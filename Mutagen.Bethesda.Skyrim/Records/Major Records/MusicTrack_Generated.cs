@@ -1769,8 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.Conditions is {} ConditionsItem)
             {
-                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateFormLinks()))
+                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }

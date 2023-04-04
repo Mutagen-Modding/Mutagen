@@ -42,7 +42,7 @@ public partial class EnumerableObjectSettingsNodeView : EnumerableObjectSettings
                 .Switch()
                 .CombineLatest(this.WhenAnyValue(x => x.ViewModel!.IsFocused),
                     (canExecute, focused) => canExecute && focused)
-                .Select(x => x ? Visibility.Visible : Visibility.Collapsed)
+                .Select(x => x ? Visibility.Visible : Visibility.Hidden)
                 .BindTo(this, x => x.DeleteButton.Visibility)
                 .DisposeWith(disposable);
             this.WhenAnyValue(x => x.SettingsListBox.SelectedItems)

@@ -125,7 +125,13 @@ public sealed class FormKeyJsonConverter : JsonConverter
                 }
 
                 var typeName = span.Slice(startIndex + 1, endIndex - 1 - startIndex).ToString();
-                if (!typeName.StartsWith("Mutagen.Bethesda."))
+
+                var lastPeriod = typeName.LastIndexOf(".", StringComparison.Ordinal);
+                if (lastPeriod != -1 && typeName[(lastPeriod + 1)..] == "MajorRecord")
+                {
+                    typeName = "Mutagen.Bethesda.Plugins.Records.MajorRecord";
+                }
+                else if (!typeName.StartsWith("Mutagen.Bethesda."))
                 {
                     typeName = "Mutagen.Bethesda." + typeName;
                 }

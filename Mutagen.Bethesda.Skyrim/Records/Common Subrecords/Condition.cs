@@ -14,20 +14,26 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class Condition
 {
-    public abstract ConditionData Data { get; set; }
+    public ConditionData Data { get; set; } = null!;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IConditionDataGetter IConditionGetter.Data => this.Data;
+    
+    internal const int ParametersUseAliases = 0x02;
+    internal const int UseGlobal = 0x04;
+    internal const int ParametersUsePackData = 0x08;
 
-    // ToDo
-    // Confirm correctness and completeness
+    /// <summary>
+    /// ParametersUseAliases and ParametersUsePackData exist on ConditionData object instead </ br>
+    /// UseGlobal is implicit depending on the class type used for the Condition
+    /// </summary>
     [Flags]
     public enum Flag
     {
         OR = 0x01,
-        ParametersUseAliases = 0x02,
-        UseGlobal = 0x04,
-        UsePackData = 0x08,
+        // ParametersUseAliases = 0x02,
+        // UseGlobal = 0x04,
+        // UsePackData = 0x08,
         SwapSubjectAndTarget = 0x10
     }
 
@@ -42,67 +48,67 @@ public partial class Condition
         PackageData = 6,
         EventData = 7,
     }
-
+    
     public enum ParameterType
     {
         None,
-        Integer,
-        Float,
-        VariableName,
-        Sex,
-        ActorValue,
-        CrimeType,
-        Axis,
-        QuestStage,
-        MiscStat,
-        Alignment,
-        EquipType,
-        FormType,
-        CriticalStage,
-        ObjectReference,
-        InventoryObject,
         Actor,
-        VoiceType,
-        IdleForm,
-        FormList,
-        Quest,
-        Faction,
+        ActorBase,
+        ActorValue,
+        AdvanceAction,
+        Alias,
+        Alignment,
+        AssociationType,
+        Axis,
+        CastingSource,
         Cell,
         Class,
-        Race,
-        ActorBase,
-        Global,
-        Weather,
-        Package,
+        CrimeType,
+        CriticalStage,
         EncounterZone,
-        Perk,
-        Owner,
-        Furniture,
-        MagicItem,
-        MagicEffect,
-        Worldspace,
-        VATSValueFunction,
-        VATSValueParam,
-        ReferencableObject,
-        Region,
-        Keyword,
-        AdvanceAction,
-        CastingSource,
-        Shout,
-        Location,
-        RefType,
-        Alias,
-        Packdata,
-        AssociationType,
-        FurnitureAnim,
-        FurnitureEntry,
-        Scene,
-        WardState,
+        EquipType,
         Event,
         EventData,
-        Knowable
+        Faction,
+        Float,
+        FormList,
+        FormType,
+        Furniture,
+        FurnitureAnim,
+        FurnitureEntry,
+        Global,
+        IdleForm,
+        Integer,
+        InventoryObject,
+        Keyword,
+        Knowable,
+        Location,
+        MagicEffect,
+        MagicItem,
+        MiscStat,
+        ObjectReference,
+        Owner,
+        Package,
+        Packdata,
+        Perk,
+        Quest,
+        QuestStage,
+        Race,
+        ReferencableObject,
+        RefType,
+        Region,
+        Scene,
+        Sex,
+        Shout,
+        VariableName,
+        VATSValueFunction,
+        VATSValueParam,
+        VoiceType,
+        WardState,
+        Weather,
+        Worldspace,
     }
-
+    
     public enum Function
     {
         GetWantBlocking = 0,
@@ -171,7 +177,7 @@ public partial class Condition
         GetCurrentAIPackage = 110,
         IsWaiting = 111,
         IsIdlePlaying = 112,
-        IsIntimidatebyPlayer = 116,
+        IsIntimidatedbyPlayer = 116,
         IsPlayerInRegion = 117,
         GetActorAggroRadiusViolated = 118,
         GetCrime = 122,
@@ -502,6 +508,11 @@ public partial class Condition
         IsFlyingMountFastTravelling = 733,
         IsOverEncumbered = 734,
         GetActorWarmth = 735,
+        GetSKSEVersion = 1024,
+        GetSKSEVersionMinor = 1025,
+        GetSKSEVersionBeta = 1026,
+        GetSKSERelease = 1027,
+        ClearInvalidRegistrations = 1028,
     }
 
     public enum ParameterCategory
@@ -586,7 +597,7 @@ public partial class Condition
             278 => (ParameterType.Owner, ParameterType.None),
             280 => (ParameterType.Cell, ParameterType.Owner),
             289 => (ParameterType.Integer, ParameterType.None),
-            310 => (ParameterType.Worldspace, ParameterType.None),
+            310 => (WorldSpace: ParameterType.Worldspace, ParameterType.None),
             312 => (ParameterType.MiscStat, ParameterType.None),
             325 => (ParameterType.Packdata, ParameterType.None),
             359 => (ParameterType.Location, ParameterType.None),
@@ -597,6 +608,8 @@ public partial class Condition
             370 => (ParameterType.Actor, ParameterType.None),
             372 => (ParameterType.FormList, ParameterType.None),
             373 => (ParameterType.Faction, ParameterType.None),
+            375 => (ParameterType.Faction, ParameterType.None),
+            376 => (ParameterType.Faction, ParameterType.None),
             378 => (ParameterType.Shout, ParameterType.None),
             381 => (ParameterType.Integer, ParameterType.None),
             397 => (ParameterType.Integer, ParameterType.None),
@@ -617,6 +630,7 @@ public partial class Condition
             448 => (ParameterType.Perk, ParameterType.Integer),
             449 => (ParameterType.Actor, ParameterType.None),
             450 => (ParameterType.IdleForm, ParameterType.None),
+            459 => (ParameterType.Faction, ParameterType.None),
             463 => (ParameterType.ObjectReference, ParameterType.None),
             465 => (ParameterType.Keyword, ParameterType.None),
             473 => (ParameterType.Alignment, ParameterType.None),
@@ -635,6 +649,9 @@ public partial class Condition
             524 => (ParameterType.ObjectReference, ParameterType.None),
             525 => (ParameterType.ObjectReference, ParameterType.None),
             528 => (ParameterType.CriticalStage, ParameterType.None),
+            533 => (ParameterType.Faction, ParameterType.None),
+            534 => (ParameterType.Faction, ParameterType.None),
+            535 => (ParameterType.Faction, ParameterType.None),
             543 => (ParameterType.Quest, ParameterType.None),
             550 => (ParameterType.Scene, ParameterType.Integer),
             552 => (ParameterType.MagicItem, ParameterType.None),
@@ -720,14 +737,22 @@ public partial class Condition
         }
         var flagByte = frame.GetUInt8(subRecMeta.HeaderLength);
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(flagByte);
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
+        Condition ret;
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
         {
-            return ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+            ret = ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+            ret.Flags = ret.Flags.SetFlag((Condition.Flag)UseGlobal, false);
         }
         else
         {
-            return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
+            ret = ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength, checkFraming: false));
         }
+
+        ret.Data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
+        ret.Data.UsePackageData = flag.HasFlag((Condition.Flag)ParametersUsePackData);
+        ret.Flags = ret.Flags.SetFlag((Condition.Flag)ParametersUseAliases, false);
+        ret.Flags = ret.Flags.SetFlag((Condition.Flag)ParametersUsePackData, false);
+        return ret;
     }
 
     public static bool TryCreateFromBinary(
@@ -738,11 +763,6 @@ public partial class Condition
         condition = CreateFromBinary(frame, translationParams);
         return true;
     }
-}
-
-public partial interface ICondition
-{
-    new ConditionData Data { get; set; }
 }
 
 public static class ParameterTypeMixIn
@@ -817,11 +837,6 @@ public static class ParameterTypeMixIn
 
 }
 
-public partial interface IConditionGetter
-{
-    IConditionDataGetter Data { get; }
-}
-
 partial class ConditionBinaryCreateTranslation
 {
     public const byte CompareMask = 0xE0;
@@ -863,28 +878,1693 @@ partial class ConditionBinaryCreateTranslation
         item.CompareOperator = GetCompareOperator(b);
     }
 
-    public static void CustomStringImports(MutagenFrame frame, IConditionData item)
+    private static void ParseString<TStream>(TStream frame, IConditionData funcData)
+        where TStream : IMutagenReadStream
     {
-        if (item is not IFunctionConditionData funcData) return;
-        ParseString(frame, funcData);
-        ParseString(frame, funcData);
-    }
-
-    private static void ParseString(MutagenFrame frame, IFunctionConditionData funcData)
-    {
-        if (!frame.Reader.TryGetSubrecord(out var subMeta)) return;
+        if (funcData is not IConditionStringParameter stringParameter) return;
+        if (!frame.TryGetSubrecord(out var subMeta)) return;
         switch (subMeta.RecordType.TypeInt)
         {
             case RecordTypeInts.CIS1:
-                funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
+                stringParameter.FirstStringParameter = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
             case RecordTypeInts.CIS2:
-                funcData.ParameterTwoString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
+                stringParameter.SecondStringParameter = BinaryStringUtility.ProcessWholeToZString(subMeta.Content, frame.MetaData.Encodings.NonTranslated);
                 break;
             default:
                 return;
         }
         frame.Position += subMeta.TotalLength;
+    }
+
+    public static void CustomStringImports<TStream>(TStream frame, IConditionData item)
+        where TStream : IMutagenReadStream
+    {
+        if (item is not IConditionData funcData) return;
+        ParseString(frame, funcData);
+        ParseString(frame, funcData);
+    }
+
+    public static ConditionData CreateDataFromBinary(MutagenFrame frame, ushort functionIndex)
+    {
+        var ret = CreateDataFromBinaryInternal(frame, functionIndex);
+        FillEndingParams(frame, ret);
+        return ret;
+    }
+    
+    public static void FillEndingParams(MutagenFrame frame, IConditionData item)
+    {
+        item.RunOnType = EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+        item.Reference.SetTo(
+            FormLinkBinaryTranslation.Instance.Parse(
+                reader: frame,
+                defaultVal: FormKey.Null));
+        item.Unknown3 = frame.ReadInt32();
+    }
+    
+    public static ConditionData CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
+    {
+        switch (functionIndex)
+        {
+            case 0:
+                return GetWantBlockingConditionData.CreateFromBinary(frame);
+            case 1:
+                return GetDistanceConditionData.CreateFromBinary(frame);
+            case 5:
+                return GetLockedConditionData.CreateFromBinary(frame);
+            case 6:
+                return GetPosConditionData.CreateFromBinary(frame);
+            case 8:
+                return GetAngleConditionData.CreateFromBinary(frame);
+            case 10:
+                return GetStartingPosConditionData.CreateFromBinary(frame);
+            case 11:
+                return GetStartingAngleConditionData.CreateFromBinary(frame);
+            case 12:
+                return GetSecondsPassedConditionData.CreateFromBinary(frame);
+            case 14:
+                return GetActorValueConditionData.CreateFromBinary(frame);
+            case 18:
+                return GetCurrentTimeConditionData.CreateFromBinary(frame);
+            case 24:
+                return GetScaleConditionData.CreateFromBinary(frame);
+            case 25:
+                return IsMovingConditionData.CreateFromBinary(frame);
+            case 26:
+                return IsTurningConditionData.CreateFromBinary(frame);
+            case 27:
+                return GetLineOfSightConditionData.CreateFromBinary(frame);
+            case 32:
+                return GetInSameCellConditionData.CreateFromBinary(frame);
+            case 35:
+                return GetDisabledConditionData.CreateFromBinary(frame);
+            case 36:
+                return MenuModeConditionData.CreateFromBinary(frame);
+            case 39:
+                return GetDiseaseConditionData.CreateFromBinary(frame);
+            case 41:
+                return GetClothingValueConditionData.CreateFromBinary(frame);
+            case 42:
+                return SameFactionConditionData.CreateFromBinary(frame);
+            case 43:
+                return SameRaceConditionData.CreateFromBinary(frame);
+            case 44:
+                return SameSexConditionData.CreateFromBinary(frame);
+            case 45:
+                return GetDetectedConditionData.CreateFromBinary(frame);
+            case 46:
+                return GetDeadConditionData.CreateFromBinary(frame);
+            case 47:
+                return GetItemCountConditionData.CreateFromBinary(frame);
+            case 48:
+                return GetGoldConditionData.CreateFromBinary(frame);
+            case 49:
+                return GetSleepingConditionData.CreateFromBinary(frame);
+            case 50:
+                return GetTalkedToPCConditionData.CreateFromBinary(frame);
+            case 53:
+                return GetScriptVariableConditionData.CreateFromBinary(frame);
+            case 56:
+                return GetQuestRunningConditionData.CreateFromBinary(frame);
+            case 58:
+                return GetStageConditionData.CreateFromBinary(frame);
+            case 59:
+                return GetStageDoneConditionData.CreateFromBinary(frame);
+            case 60:
+                return GetFactionRankDifferenceConditionData.CreateFromBinary(frame);
+            case 61:
+                return GetAlarmedConditionData.CreateFromBinary(frame);
+            case 62:
+                return IsRainingConditionData.CreateFromBinary(frame);
+            case 63:
+                return GetAttackedConditionData.CreateFromBinary(frame);
+            case 64:
+                return GetIsCreatureConditionData.CreateFromBinary(frame);
+            case 65:
+                return GetLockLevelConditionData.CreateFromBinary(frame);
+            case 66:
+                return GetShouldAttackConditionData.CreateFromBinary(frame);
+            case 67:
+                return GetInCellConditionData.CreateFromBinary(frame);
+            case 68:
+                return GetIsClassConditionData.CreateFromBinary(frame);
+            case 69:
+                return GetIsRaceConditionData.CreateFromBinary(frame);
+            case 70:
+                return GetIsSexConditionData.CreateFromBinary(frame);
+            case 71:
+                return GetInFactionConditionData.CreateFromBinary(frame);
+            case 72:
+                return GetIsIDConditionData.CreateFromBinary(frame);
+            case 73:
+                return GetFactionRankConditionData.CreateFromBinary(frame);
+            case 74:
+                return GetGlobalValueConditionData.CreateFromBinary(frame);
+            case 75:
+                return IsSnowingConditionData.CreateFromBinary(frame);
+            case 77:
+                return GetRandomPercentConditionData.CreateFromBinary(frame);
+            case 79:
+                return GetQuestVariableConditionData.CreateFromBinary(frame);
+            case 80:
+                return GetLevelConditionData.CreateFromBinary(frame);
+            case 81:
+                return IsRotatingConditionData.CreateFromBinary(frame);
+            case 84:
+                return GetDeadCountConditionData.CreateFromBinary(frame);
+            case 91:
+                return GetIsAlertedConditionData.CreateFromBinary(frame);
+            case 98:
+                return GetPlayerControlsDisabledConditionData.CreateFromBinary(frame);
+            case 99:
+                return GetHeadingAngleConditionData.CreateFromBinary(frame);
+            case 101:
+                return IsWeaponMagicOutConditionData.CreateFromBinary(frame);
+            case 102:
+                return IsTorchOutConditionData.CreateFromBinary(frame);
+            case 103:
+                return IsShieldOutConditionData.CreateFromBinary(frame);
+            case 106:
+                return IsFacingUpConditionData.CreateFromBinary(frame);
+            case 107:
+                return GetKnockedStateConditionData.CreateFromBinary(frame);
+            case 108:
+                return GetWeaponAnimTypeConditionData.CreateFromBinary(frame);
+            case 109:
+                return IsWeaponSkillTypeConditionData.CreateFromBinary(frame);
+            case 110:
+                return GetCurrentAIPackageConditionData.CreateFromBinary(frame);
+            case 111:
+                return IsWaitingConditionData.CreateFromBinary(frame);
+            case 112:
+                return IsIdlePlayingConditionData.CreateFromBinary(frame);
+            case 116:
+                return IsIntimidatedbyPlayerConditionData.CreateFromBinary(frame);
+            case 117:
+                return IsPlayerInRegionConditionData.CreateFromBinary(frame);
+            case 118:
+                return GetActorAggroRadiusViolatedConditionData.CreateFromBinary(frame);
+            case 122:
+                return GetCrimeConditionData.CreateFromBinary(frame);
+            case 123:
+                return IsGreetingPlayerConditionData.CreateFromBinary(frame);
+            case 125:
+                return IsGuardConditionData.CreateFromBinary(frame);
+            case 127:
+                return HasBeenEatenConditionData.CreateFromBinary(frame);
+            case 128:
+                return GetStaminaPercentageConditionData.CreateFromBinary(frame);
+            case 129:
+                return GetPCIsClassConditionData.CreateFromBinary(frame);
+            case 130:
+                return GetPCIsRaceConditionData.CreateFromBinary(frame);
+            case 131:
+                return GetPCIsSexConditionData.CreateFromBinary(frame);
+            case 132:
+                return GetPCInFactionConditionData.CreateFromBinary(frame);
+            case 133:
+                return SameFactionAsPCConditionData.CreateFromBinary(frame);
+            case 134:
+                return SameRaceAsPCConditionData.CreateFromBinary(frame);
+            case 135:
+                return SameSexAsPCConditionData.CreateFromBinary(frame);
+            case 136:
+                return GetIsReferenceConditionData.CreateFromBinary(frame);
+            case 141:
+                return IsTalkingConditionData.CreateFromBinary(frame);
+            case 142:
+                return GetWalkSpeedConditionData.CreateFromBinary(frame);
+            case 143:
+                return GetCurrentAIProcedureConditionData.CreateFromBinary(frame);
+            case 144:
+                return GetTrespassWarningLevelConditionData.CreateFromBinary(frame);
+            case 145:
+                return IsTrespassingConditionData.CreateFromBinary(frame);
+            case 146:
+                return IsInMyOwnedCellConditionData.CreateFromBinary(frame);
+            case 147:
+                return GetWindSpeedConditionData.CreateFromBinary(frame);
+            case 148:
+                return GetCurrentWeatherPercentConditionData.CreateFromBinary(frame);
+            case 149:
+                return GetIsCurrentWeatherConditionData.CreateFromBinary(frame);
+            case 150:
+                return IsContinuingPackagePCNearConditionData.CreateFromBinary(frame);
+            case 152:
+                return GetIsCrimeFactionConditionData.CreateFromBinary(frame);
+            case 153:
+                return CanHaveFlamesConditionData.CreateFromBinary(frame);
+            case 154:
+                return HasFlamesConditionData.CreateFromBinary(frame);
+            case 157:
+                return GetOpenStateConditionData.CreateFromBinary(frame);
+            case 159:
+                return GetSittingConditionData.CreateFromBinary(frame);
+            case 161:
+                return GetIsCurrentPackageConditionData.CreateFromBinary(frame);
+            case 162:
+                return IsCurrentFurnitureRefConditionData.CreateFromBinary(frame);
+            case 163:
+                return IsCurrentFurnitureObjConditionData.CreateFromBinary(frame);
+            case 170:
+                return GetDayOfWeekConditionData.CreateFromBinary(frame);
+            case 172:
+                return GetTalkedToPCParamConditionData.CreateFromBinary(frame);
+            case 175:
+                return IsPCSleepingConditionData.CreateFromBinary(frame);
+            case 176:
+                return IsPCAMurdererConditionData.CreateFromBinary(frame);
+            case 180:
+                return HasSameEditorLocAsRefConditionData.CreateFromBinary(frame);
+            case 181:
+                return HasSameEditorLocAsRefAliasConditionData.CreateFromBinary(frame);
+            case 182:
+                return GetEquippedConditionData.CreateFromBinary(frame);
+            case 185:
+                return IsSwimmingConditionData.CreateFromBinary(frame);
+            case 190:
+                return GetAmountSoldStolenConditionData.CreateFromBinary(frame);
+            case 192:
+                return GetIgnoreCrimeConditionData.CreateFromBinary(frame);
+            case 193:
+                return GetPCExpelledConditionData.CreateFromBinary(frame);
+            case 195:
+                return GetPCFactionMurderConditionData.CreateFromBinary(frame);
+            case 197:
+                return GetPCEnemyofFactionConditionData.CreateFromBinary(frame);
+            case 199:
+                return GetPCFactionAttackConditionData.CreateFromBinary(frame);
+            case 203:
+                return GetDestroyedConditionData.CreateFromBinary(frame);
+            case 214:
+                return HasMagicEffectConditionData.CreateFromBinary(frame);
+            case 215:
+                return GetDefaultOpenConditionData.CreateFromBinary(frame);
+            case 219:
+                return GetAnimActionConditionData.CreateFromBinary(frame);
+            case 223:
+                return IsSpellTargetConditionData.CreateFromBinary(frame);
+            case 224:
+                return GetVATSModeConditionData.CreateFromBinary(frame);
+            case 225:
+                return GetPersuasionNumberConditionData.CreateFromBinary(frame);
+            case 226:
+                return GetVampireFeedConditionData.CreateFromBinary(frame);
+            case 227:
+                return GetCannibalConditionData.CreateFromBinary(frame);
+            case 228:
+                return GetIsClassDefaultConditionData.CreateFromBinary(frame);
+            case 229:
+                return GetClassDefaultMatchConditionData.CreateFromBinary(frame);
+            case 230:
+                return GetInCellParamConditionData.CreateFromBinary(frame);
+            case 235:
+                return GetVatsTargetHeightConditionData.CreateFromBinary(frame);
+            case 237:
+                return GetIsGhostConditionData.CreateFromBinary(frame);
+            case 242:
+                return GetUnconsciousConditionData.CreateFromBinary(frame);
+            case 244:
+                return GetRestrainedConditionData.CreateFromBinary(frame);
+            case 246:
+                return GetIsUsedItemConditionData.CreateFromBinary(frame);
+            case 247:
+                return GetIsUsedItemTypeConditionData.CreateFromBinary(frame);
+            case 248:
+                return IsScenePlayingConditionData.CreateFromBinary(frame);
+            case 249:
+                return IsInDialogueWithPlayerConditionData.CreateFromBinary(frame);
+            case 250:
+                return GetLocationClearedConditionData.CreateFromBinary(frame);
+            case 254:
+                return GetIsPlayableRaceConditionData.CreateFromBinary(frame);
+            case 255:
+                return GetOffersServicesNowConditionData.CreateFromBinary(frame);
+            case 258:
+                return HasAssociationTypeConditionData.CreateFromBinary(frame);
+            case 259:
+                return HasFamilyRelationshipConditionData.CreateFromBinary(frame);
+            case 261:
+                return HasParentRelationshipConditionData.CreateFromBinary(frame);
+            case 262:
+                return IsWarningAboutConditionData.CreateFromBinary(frame);
+            case 263:
+                return IsWeaponOutConditionData.CreateFromBinary(frame);
+            case 264:
+                return HasSpellConditionData.CreateFromBinary(frame);
+            case 265:
+                return IsTimePassingConditionData.CreateFromBinary(frame);
+            case 266:
+                return IsPleasantConditionData.CreateFromBinary(frame);
+            case 267:
+                return IsCloudyConditionData.CreateFromBinary(frame);
+            case 274:
+                return IsSmallBumpConditionData.CreateFromBinary(frame);
+            case 277:
+                return GetBaseActorValueConditionData.CreateFromBinary(frame);
+            case 278:
+                return IsOwnerConditionData.CreateFromBinary(frame);
+            case 280:
+                return IsCellOwnerConditionData.CreateFromBinary(frame);
+            case 282:
+                return IsHorseStolenConditionData.CreateFromBinary(frame);
+            case 285:
+                return IsLeftUpConditionData.CreateFromBinary(frame);
+            case 286:
+                return IsSneakingConditionData.CreateFromBinary(frame);
+            case 287:
+                return IsRunningConditionData.CreateFromBinary(frame);
+            case 288:
+                return GetFriendHitConditionData.CreateFromBinary(frame);
+            case 289:
+                return IsInCombatConditionData.CreateFromBinary(frame);
+            case 300:
+                return IsInInteriorConditionData.CreateFromBinary(frame);
+            case 304:
+                return IsWaterObjectConditionData.CreateFromBinary(frame);
+            case 305:
+                return GetPlayerActionConditionData.CreateFromBinary(frame);
+            case 306:
+                return IsActorUsingATorchConditionData.CreateFromBinary(frame);
+            case 309:
+                return IsXBoxConditionData.CreateFromBinary(frame);
+            case 310:
+                return GetInWorldspaceConditionData.CreateFromBinary(frame);
+            case 312:
+                return GetPCMiscStatConditionData.CreateFromBinary(frame);
+            case 313:
+                return GetPairedAnimationConditionData.CreateFromBinary(frame);
+            case 314:
+                return IsActorAVictimConditionData.CreateFromBinary(frame);
+            case 315:
+                return GetTotalPersuasionNumberConditionData.CreateFromBinary(frame);
+            case 318:
+                return GetIdleDoneOnceConditionData.CreateFromBinary(frame);
+            case 320:
+                return GetNoRumorsConditionData.CreateFromBinary(frame);
+            case 323:
+                return GetCombatStateConditionData.CreateFromBinary(frame);
+            case 325:
+                return GetWithinPackageLocationConditionData.CreateFromBinary(frame);
+            case 327:
+                return IsRidingMountConditionData.CreateFromBinary(frame);
+            case 329:
+                return IsFleeingConditionData.CreateFromBinary(frame);
+            case 332:
+                return IsInDangerousWaterConditionData.CreateFromBinary(frame);
+            case 338:
+                return GetIgnoreFriendlyHitsConditionData.CreateFromBinary(frame);
+            case 339:
+                return IsPlayersLastRiddenMountConditionData.CreateFromBinary(frame);
+            case 353:
+                return IsActorConditionData.CreateFromBinary(frame);
+            case 354:
+                return IsEssentialConditionData.CreateFromBinary(frame);
+            case 358:
+                return IsPlayerMovingIntoNewSpaceConditionData.CreateFromBinary(frame);
+            case 359:
+                return GetInCurrentLocConditionData.CreateFromBinary(frame);
+            case 360:
+                return GetInCurrentLocAliasConditionData.CreateFromBinary(frame);
+            case 361:
+                return GetTimeDeadConditionData.CreateFromBinary(frame);
+            case 362:
+                return HasLinkedRefConditionData.CreateFromBinary(frame);
+            case 365:
+                return IsChildConditionData.CreateFromBinary(frame);
+            case 366:
+                return GetStolenItemValueNoCrimeConditionData.CreateFromBinary(frame);
+            case 367:
+                return GetLastPlayerActionConditionData.CreateFromBinary(frame);
+            case 368:
+                return IsPlayerActionActiveConditionData.CreateFromBinary(frame);
+            case 370:
+                return IsTalkingActivatorActorConditionData.CreateFromBinary(frame);
+            case 372:
+                return IsInListConditionData.CreateFromBinary(frame);
+            case 373:
+                return GetStolenItemValueConditionData.CreateFromBinary(frame);
+            case 375:
+                return GetCrimeGoldViolentConditionData.CreateFromBinary(frame);
+            case 376:
+                return GetCrimeGoldNonviolentConditionData.CreateFromBinary(frame);
+            case 378:
+                return HasShoutConditionData.CreateFromBinary(frame);
+            case 381:
+                return GetHasNoteConditionData.CreateFromBinary(frame);
+            case 390:
+                return GetHitLocationConditionData.CreateFromBinary(frame);
+            case 391:
+                return IsPC1stPersonConditionData.CreateFromBinary(frame);
+            case 396:
+                return GetCauseofDeathConditionData.CreateFromBinary(frame);
+            case 397:
+                return IsLimbGoneConditionData.CreateFromBinary(frame);
+            case 398:
+                return IsWeaponInListConditionData.CreateFromBinary(frame);
+            case 402:
+                return IsBribedbyPlayerConditionData.CreateFromBinary(frame);
+            case 403:
+                return GetRelationshipRankConditionData.CreateFromBinary(frame);
+            case 407:
+                return AGetVATSValueConditionData.CreateFromBinary(frame);
+            case 408:
+                return IsKillerConditionData.CreateFromBinary(frame);
+            case 409:
+                return IsKillerObjectConditionData.CreateFromBinary(frame);
+            case 410:
+                return GetFactionCombatReactionConditionData.CreateFromBinary(frame);
+            case 414:
+                return ExistsConditionData.CreateFromBinary(frame);
+            case 415:
+                return GetGroupMemberCountConditionData.CreateFromBinary(frame);
+            case 416:
+                return GetGroupTargetCountConditionData.CreateFromBinary(frame);
+            case 426:
+                return GetIsVoiceTypeConditionData.CreateFromBinary(frame);
+            case 427:
+                return GetPlantedExplosiveConditionData.CreateFromBinary(frame);
+            case 429:
+                return IsScenePackageRunningConditionData.CreateFromBinary(frame);
+            case 430:
+                return GetHealthPercentageConditionData.CreateFromBinary(frame);
+            case 432:
+                return GetIsObjectTypeConditionData.CreateFromBinary(frame);
+            case 434:
+                return GetDialogueEmotionConditionData.CreateFromBinary(frame);
+            case 435:
+                return GetDialogueEmotionValueConditionData.CreateFromBinary(frame);
+            case 437:
+                return GetIsCreatureTypeConditionData.CreateFromBinary(frame);
+            case 444:
+                return GetInCurrentLocFormListConditionData.CreateFromBinary(frame);
+            case 445:
+                return GetInZoneConditionData.CreateFromBinary(frame);
+            case 446:
+                return GetVelocityConditionData.CreateFromBinary(frame);
+            case 447:
+                return GetGraphVariableFloatConditionData.CreateFromBinary(frame);
+            case 448:
+                return HasPerkConditionData.CreateFromBinary(frame);
+            case 449:
+                return GetFactionRelationConditionData.CreateFromBinary(frame);
+            case 450:
+                return IsLastIdlePlayedConditionData.CreateFromBinary(frame);
+            case 453:
+                return GetPlayerTeammateConditionData.CreateFromBinary(frame);
+            case 454:
+                return GetPlayerTeammateCountConditionData.CreateFromBinary(frame);
+            case 458:
+                return GetActorCrimePlayerEnemyConditionData.CreateFromBinary(frame);
+            case 459:
+                return GetCrimeGoldConditionData.CreateFromBinary(frame);
+            case 463:
+                return IsPlayerGrabbedRefConditionData.CreateFromBinary(frame);
+            case 465:
+                return GetKeywordItemCountConditionData.CreateFromBinary(frame);
+            case 470:
+                return GetDestructionStageConditionData.CreateFromBinary(frame);
+            case 473:
+                return GetIsAlignmentConditionData.CreateFromBinary(frame);
+            case 476:
+                return IsProtectedConditionData.CreateFromBinary(frame);
+            case 477:
+                return GetThreatRatioConditionData.CreateFromBinary(frame);
+            case 479:
+                return GetIsUsedItemEquipTypeConditionData.CreateFromBinary(frame);
+            case 487:
+                return IsCarryableConditionData.CreateFromBinary(frame);
+            case 488:
+                return GetConcussedConditionData.CreateFromBinary(frame);
+            case 491:
+                return GetMapMarkerVisibleConditionData.CreateFromBinary(frame);
+            case 493:
+                return PlayerKnowsConditionData.CreateFromBinary(frame);
+            case 494:
+                return GetPermanentActorValueConditionData.CreateFromBinary(frame);
+            case 495:
+                return GetKillingBlowLimbConditionData.CreateFromBinary(frame);
+            case 497:
+                return CanPayCrimeGoldConditionData.CreateFromBinary(frame);
+            case 499:
+                return GetDaysInJailConditionData.CreateFromBinary(frame);
+            case 500:
+                return EPAlchemyGetMakingPoisonConditionData.CreateFromBinary(frame);
+            case 501:
+                return EPAlchemyEffectHasKeywordConditionData.CreateFromBinary(frame);
+            case 503:
+                return GetAllowWorldInteractionsConditionData.CreateFromBinary(frame);
+            case 508:
+                return GetLastHitCriticalConditionData.CreateFromBinary(frame);
+            case 513:
+                return IsCombatTargetConditionData.CreateFromBinary(frame);
+            case 515:
+                return GetVATSRightAreaFreeConditionData.CreateFromBinary(frame);
+            case 516:
+                return GetVATSLeftAreaFreeConditionData.CreateFromBinary(frame);
+            case 517:
+                return GetVATSBackAreaFreeConditionData.CreateFromBinary(frame);
+            case 518:
+                return GetVATSFrontAreaFreeConditionData.CreateFromBinary(frame);
+            case 519:
+                return GetLockIsBrokenConditionData.CreateFromBinary(frame);
+            case 520:
+                return IsPS3ConditionData.CreateFromBinary(frame);
+            case 521:
+                return IsWin32ConditionData.CreateFromBinary(frame);
+            case 522:
+                return GetVATSRightTargetVisibleConditionData.CreateFromBinary(frame);
+            case 523:
+                return GetVATSLeftTargetVisibleConditionData.CreateFromBinary(frame);
+            case 524:
+                return GetVATSBackTargetVisibleConditionData.CreateFromBinary(frame);
+            case 525:
+                return GetVATSFrontTargetVisibleConditionData.CreateFromBinary(frame);
+            case 528:
+                return IsInCriticalStageConditionData.CreateFromBinary(frame);
+            case 530:
+                return GetXPForNextLevelConditionData.CreateFromBinary(frame);
+            case 533:
+                return GetInfamyConditionData.CreateFromBinary(frame);
+            case 534:
+                return GetInfamyViolentConditionData.CreateFromBinary(frame);
+            case 535:
+                return GetInfamyNonViolentConditionData.CreateFromBinary(frame);
+            case 543:
+                return GetQuestCompletedConditionData.CreateFromBinary(frame);
+            case 547:
+                return IsGoreDisabledConditionData.CreateFromBinary(frame);
+            case 550:
+                return IsSceneActionCompleteConditionData.CreateFromBinary(frame);
+            case 552:
+                return GetSpellUsageNumConditionData.CreateFromBinary(frame);
+            case 554:
+                return GetActorsInHighConditionData.CreateFromBinary(frame);
+            case 555:
+                return HasLoaded3DConditionData.CreateFromBinary(frame);
+            case 560:
+                return HasKeywordConditionData.CreateFromBinary(frame);
+            case 561:
+                return HasRefTypeConditionData.CreateFromBinary(frame);
+            case 562:
+                return LocationHasKeywordConditionData.CreateFromBinary(frame);
+            case 563:
+                return LocationHasRefTypeConditionData.CreateFromBinary(frame);
+            case 565:
+                return GetIsEditorLocationConditionData.CreateFromBinary(frame);
+            case 566:
+                return GetIsAliasRefConditionData.CreateFromBinary(frame);
+            case 567:
+                return GetIsEditorLocAliasConditionData.CreateFromBinary(frame);
+            case 568:
+                return IsSprintingConditionData.CreateFromBinary(frame);
+            case 569:
+                return IsBlockingConditionData.CreateFromBinary(frame);
+            case 570:
+                return HasEquippedSpellConditionData.CreateFromBinary(frame);
+            case 571:
+                return GetCurrentCastingTypeConditionData.CreateFromBinary(frame);
+            case 572:
+                return GetCurrentDeliveryTypeConditionData.CreateFromBinary(frame);
+            case 574:
+                return GetAttackStateConditionData.CreateFromBinary(frame);
+            case 576:
+                return GetEventDataConditionData.CreateFromBinary(frame);
+            case 577:
+                return IsCloserToAThanBConditionData.CreateFromBinary(frame);
+            case 579:
+                return GetEquippedShoutConditionData.CreateFromBinary(frame);
+            case 580:
+                return IsBleedingOutConditionData.CreateFromBinary(frame);
+            case 584:
+                return GetRelativeAngleConditionData.CreateFromBinary(frame);
+            case 589:
+                return GetMovementDirectionConditionData.CreateFromBinary(frame);
+            case 590:
+                return IsInSceneConditionData.CreateFromBinary(frame);
+            case 591:
+                return GetRefTypeDeadCountConditionData.CreateFromBinary(frame);
+            case 592:
+                return GetRefTypeAliveCountConditionData.CreateFromBinary(frame);
+            case 594:
+                return GetIsFlyingConditionData.CreateFromBinary(frame);
+            case 595:
+                return IsCurrentSpellConditionData.CreateFromBinary(frame);
+            case 596:
+                return SpellHasKeywordConditionData.CreateFromBinary(frame);
+            case 597:
+                return GetEquippedItemTypeConditionData.CreateFromBinary(frame);
+            case 598:
+                return GetLocationAliasClearedConditionData.CreateFromBinary(frame);
+            case 600:
+                return GetLocAliasRefTypeDeadCountConditionData.CreateFromBinary(frame);
+            case 601:
+                return GetLocAliasRefTypeAliveCountConditionData.CreateFromBinary(frame);
+            case 602:
+                return IsWardStateConditionData.CreateFromBinary(frame);
+            case 603:
+                return IsInSameCurrentLocAsRefConditionData.CreateFromBinary(frame);
+            case 604:
+                return IsInSameCurrentLocAsRefAliasConditionData.CreateFromBinary(frame);
+            case 605:
+                return LocAliasIsLocationConditionData.CreateFromBinary(frame);
+            case 606:
+                return GetKeywordDataForLocationConditionData.CreateFromBinary(frame);
+            case 608:
+                return GetKeywordDataForAliasConditionData.CreateFromBinary(frame);
+            case 610:
+                return LocAliasHasKeywordConditionData.CreateFromBinary(frame);
+            case 611:
+                return IsNullPackageDataConditionData.CreateFromBinary(frame);
+            case 612:
+                return GetNumericPackageDataConditionData.CreateFromBinary(frame);
+            case 613:
+                return IsFurnitureAnimTypeConditionData.CreateFromBinary(frame);
+            case 614:
+                return IsFurnitureEntryTypeConditionData.CreateFromBinary(frame);
+            case 615:
+                return GetHighestRelationshipRankConditionData.CreateFromBinary(frame);
+            case 616:
+                return GetLowestRelationshipRankConditionData.CreateFromBinary(frame);
+            case 617:
+                return HasAssociationTypeAnyConditionData.CreateFromBinary(frame);
+            case 618:
+                return HasFamilyRelationshipAnyConditionData.CreateFromBinary(frame);
+            case 619:
+                return GetPathingTargetOffsetConditionData.CreateFromBinary(frame);
+            case 620:
+                return GetPathingTargetAngleOffsetConditionData.CreateFromBinary(frame);
+            case 621:
+                return GetPathingTargetSpeedConditionData.CreateFromBinary(frame);
+            case 622:
+                return GetPathingTargetSpeedAngleConditionData.CreateFromBinary(frame);
+            case 623:
+                return GetMovementSpeedConditionData.CreateFromBinary(frame);
+            case 624:
+                return GetInContainerConditionData.CreateFromBinary(frame);
+            case 625:
+                return IsLocationLoadedConditionData.CreateFromBinary(frame);
+            case 626:
+                return IsLocAliasLoadedConditionData.CreateFromBinary(frame);
+            case 627:
+                return IsDualCastingConditionData.CreateFromBinary(frame);
+            case 629:
+                return GetVMQuestVariableConditionData.CreateFromBinary(frame);
+            case 630:
+                return GetVMScriptVariableConditionData.CreateFromBinary(frame);
+            case 631:
+                return IsEnteringInteractionQuickConditionData.CreateFromBinary(frame);
+            case 632:
+                return IsCastingConditionData.CreateFromBinary(frame);
+            case 633:
+                return GetFlyingStateConditionData.CreateFromBinary(frame);
+            case 635:
+                return IsInFavorStateConditionData.CreateFromBinary(frame);
+            case 636:
+                return HasTwoHandedWeaponEquippedConditionData.CreateFromBinary(frame);
+            case 637:
+                return IsExitingInstantConditionData.CreateFromBinary(frame);
+            case 638:
+                return IsInFriendStateWithPlayerConditionData.CreateFromBinary(frame);
+            case 639:
+                return GetWithinDistanceConditionData.CreateFromBinary(frame);
+            case 640:
+                return GetActorValuePercentConditionData.CreateFromBinary(frame);
+            case 641:
+                return IsUniqueConditionData.CreateFromBinary(frame);
+            case 642:
+                return GetLastBumpDirectionConditionData.CreateFromBinary(frame);
+            case 644:
+                return IsInFurnitureStateConditionData.CreateFromBinary(frame);
+            case 645:
+                return GetIsInjuredConditionData.CreateFromBinary(frame);
+            case 646:
+                return GetIsCrashLandRequestConditionData.CreateFromBinary(frame);
+            case 647:
+                return GetIsHastyLandRequestConditionData.CreateFromBinary(frame);
+            case 650:
+                return IsLinkedToConditionData.CreateFromBinary(frame);
+            case 651:
+                return GetKeywordDataForCurrentLocationConditionData.CreateFromBinary(frame);
+            case 652:
+                return GetInSharedCrimeFactionConditionData.CreateFromBinary(frame);
+            case 654:
+                return GetBribeSuccessConditionData.CreateFromBinary(frame);
+            case 655:
+                return GetIntimidateSuccessConditionData.CreateFromBinary(frame);
+            case 656:
+                return GetArrestedStateConditionData.CreateFromBinary(frame);
+            case 657:
+                return GetArrestingActorConditionData.CreateFromBinary(frame);
+            case 659:
+                return EPTemperingItemIsEnchantedConditionData.CreateFromBinary(frame);
+            case 660:
+                return EPTemperingItemHasKeywordConditionData.CreateFromBinary(frame);
+            case 664:
+                return GetReplacedItemTypeConditionData.CreateFromBinary(frame);
+            case 672:
+                return IsAttackingConditionData.CreateFromBinary(frame);
+            case 673:
+                return IsPowerAttackingConditionData.CreateFromBinary(frame);
+            case 674:
+                return IsLastHostileActorConditionData.CreateFromBinary(frame);
+            case 675:
+                return GetGraphVariableIntConditionData.CreateFromBinary(frame);
+            case 676:
+                return GetCurrentShoutVariationConditionData.CreateFromBinary(frame);
+            case 678:
+                return ShouldAttackKillConditionData.CreateFromBinary(frame);
+            case 680:
+                return GetActivatorHeightConditionData.CreateFromBinary(frame);
+            case 681:
+                return EPMagic_IsAdvanceSkillConditionData.CreateFromBinary(frame);
+            case 682:
+                return WornHasKeywordConditionData.CreateFromBinary(frame);
+            case 683:
+                return GetPathingCurrentSpeedConditionData.CreateFromBinary(frame);
+            case 684:
+                return GetPathingCurrentSpeedAngleConditionData.CreateFromBinary(frame);
+            case 691:
+                return EPModSkillUsage_AdvanceObjectHasKeywordConditionData.CreateFromBinary(frame);
+            case 692:
+                return EPModSkillUsage_IsAdvanceActionConditionData.CreateFromBinary(frame);
+            case 693:
+                return EPMagic_SpellHasKeywordConditionData.CreateFromBinary(frame);
+            case 694:
+                return GetNoBleedoutRecoveryConditionData.CreateFromBinary(frame);
+            case 696:
+                return EPMagic_SpellHasSkillConditionData.CreateFromBinary(frame);
+            case 697:
+                return IsAttackTypeConditionData.CreateFromBinary(frame);
+            case 698:
+                return IsAllowedToFlyConditionData.CreateFromBinary(frame);
+            case 699:
+                return HasMagicEffectKeywordConditionData.CreateFromBinary(frame);
+            case 700:
+                return IsCommandedActorConditionData.CreateFromBinary(frame);
+            case 701:
+                return IsStaggeredConditionData.CreateFromBinary(frame);
+            case 702:
+                return IsRecoilingConditionData.CreateFromBinary(frame);
+            case 703:
+                return IsExitingInteractionQuickConditionData.CreateFromBinary(frame);
+            case 704:
+                return IsPathingConditionData.CreateFromBinary(frame);
+            case 705:
+                return GetShouldHelpConditionData.CreateFromBinary(frame);
+            case 706:
+                return HasBoundWeaponEquippedConditionData.CreateFromBinary(frame);
+            case 707:
+                return GetCombatTargetHasKeywordConditionData.CreateFromBinary(frame);
+            case 709:
+                return GetCombatGroupMemberCountConditionData.CreateFromBinary(frame);
+            case 710:
+                return IsIgnoringCombatConditionData.CreateFromBinary(frame);
+            case 711:
+                return GetLightLevelConditionData.CreateFromBinary(frame);
+            case 713:
+                return SpellHasCastingPerkConditionData.CreateFromBinary(frame);
+            case 714:
+                return IsBeingRiddenConditionData.CreateFromBinary(frame);
+            case 715:
+                return IsUndeadConditionData.CreateFromBinary(frame);
+            case 716:
+                return GetRealHoursPassedConditionData.CreateFromBinary(frame);
+            case 718:
+                return IsUnlockedDoorConditionData.CreateFromBinary(frame);
+            case 719:
+                return IsHostileToActorConditionData.CreateFromBinary(frame);
+            case 720:
+                return GetTargetHeightConditionData.CreateFromBinary(frame);
+            case 721:
+                return IsPoisonConditionData.CreateFromBinary(frame);
+            case 722:
+                return WornApparelHasKeywordCountConditionData.CreateFromBinary(frame);
+            case 723:
+                return GetItemHealthPercentConditionData.CreateFromBinary(frame);
+            case 724:
+                return EffectWasDualCastConditionData.CreateFromBinary(frame);
+            case 725:
+                return GetKnockedStateEnumConditionData.CreateFromBinary(frame);
+            case 726:
+                return DoesNotExistConditionData.CreateFromBinary(frame);
+            case 730:
+                return IsOnFlyingMountConditionData.CreateFromBinary(frame);
+            case 731:
+                return CanFlyHereConditionData.CreateFromBinary(frame);
+            case 732:
+                return IsFlyingMountPatrolQueudConditionData.CreateFromBinary(frame);
+            case 733:
+                return IsFlyingMountFastTravellingConditionData.CreateFromBinary(frame);
+            case 734:
+                return IsOverEncumberedConditionData.CreateFromBinary(frame);
+            case 735:
+                return GetActorWarmthConditionData.CreateFromBinary(frame);
+            case 1024:
+                return GetSKSEVersionConditionData.CreateFromBinary(frame);
+            case 1025:
+                return GetSKSEVersionMinorConditionData.CreateFromBinary(frame);
+            case 1026:
+                return GetSKSEVersionBetaConditionData.CreateFromBinary(frame);
+            case 1027:
+                return GetSKSEReleaseConditionData.CreateFromBinary(frame);
+            case 1028:
+                return ClearInvalidRegistrationsConditionData.CreateFromBinary(frame);
+            default:
+                return UnknownConditionData.CreateFromBinary(frame);
+        }
+    }
+
+    public ushort GetFunctionIndex(IConditionDataGetter data)
+    {
+        switch (data)
+        {
+            case IGetWantBlockingConditionDataGetter:
+                return 0;
+            case IGetDistanceConditionDataGetter:
+                return 1;
+            case IGetLockedConditionDataGetter:
+                return 5;
+            case IGetPosConditionDataGetter:
+                return 6;
+            case IGetAngleConditionDataGetter:
+                return 8;
+            case IGetStartingPosConditionDataGetter:
+                return 10;
+            case IGetStartingAngleConditionDataGetter:
+                return 11;
+            case IGetSecondsPassedConditionDataGetter:
+                return 12;
+            case IGetActorValueConditionDataGetter:
+                return 14;
+            case IGetCurrentTimeConditionDataGetter:
+                return 18;
+            case IGetScaleConditionDataGetter:
+                return 24;
+            case IIsMovingConditionDataGetter:
+                return 25;
+            case IIsTurningConditionDataGetter:
+                return 26;
+            case IGetLineOfSightConditionDataGetter:
+                return 27;
+            case IGetInSameCellConditionDataGetter:
+                return 32;
+            case IGetDisabledConditionDataGetter:
+                return 35;
+            case IMenuModeConditionDataGetter:
+                return 36;
+            case IGetDiseaseConditionDataGetter:
+                return 39;
+            case IGetClothingValueConditionDataGetter:
+                return 41;
+            case ISameFactionConditionDataGetter:
+                return 42;
+            case ISameRaceConditionDataGetter:
+                return 43;
+            case ISameSexConditionDataGetter:
+                return 44;
+            case IGetDetectedConditionDataGetter:
+                return 45;
+            case IGetDeadConditionDataGetter:
+                return 46;
+            case IGetItemCountConditionDataGetter:
+                return 47;
+            case IGetGoldConditionDataGetter:
+                return 48;
+            case IGetSleepingConditionDataGetter:
+                return 49;
+            case IGetTalkedToPCConditionDataGetter:
+                return 50;
+            case IGetScriptVariableConditionDataGetter:
+                return 53;
+            case IGetQuestRunningConditionDataGetter:
+                return 56;
+            case IGetStageConditionDataGetter:
+                return 58;
+            case IGetStageDoneConditionDataGetter:
+                return 59;
+            case IGetFactionRankDifferenceConditionDataGetter:
+                return 60;
+            case IGetAlarmedConditionDataGetter:
+                return 61;
+            case IIsRainingConditionDataGetter:
+                return 62;
+            case IGetAttackedConditionDataGetter:
+                return 63;
+            case IGetIsCreatureConditionDataGetter:
+                return 64;
+            case IGetLockLevelConditionDataGetter:
+                return 65;
+            case IGetShouldAttackConditionDataGetter:
+                return 66;
+            case IGetInCellConditionDataGetter:
+                return 67;
+            case IGetIsClassConditionDataGetter:
+                return 68;
+            case IGetIsRaceConditionDataGetter:
+                return 69;
+            case IGetIsSexConditionDataGetter:
+                return 70;
+            case IGetInFactionConditionDataGetter:
+                return 71;
+            case IGetIsIDConditionDataGetter:
+                return 72;
+            case IGetFactionRankConditionDataGetter:
+                return 73;
+            case IGetGlobalValueConditionDataGetter:
+                return 74;
+            case IIsSnowingConditionDataGetter:
+                return 75;
+            case IGetRandomPercentConditionDataGetter:
+                return 77;
+            case IGetQuestVariableConditionDataGetter:
+                return 79;
+            case IGetLevelConditionDataGetter:
+                return 80;
+            case IIsRotatingConditionDataGetter:
+                return 81;
+            case IGetDeadCountConditionDataGetter:
+                return 84;
+            case IGetIsAlertedConditionDataGetter:
+                return 91;
+            case IGetPlayerControlsDisabledConditionDataGetter:
+                return 98;
+            case IGetHeadingAngleConditionDataGetter:
+                return 99;
+            case IIsWeaponMagicOutConditionDataGetter:
+                return 101;
+            case IIsTorchOutConditionDataGetter:
+                return 102;
+            case IIsShieldOutConditionDataGetter:
+                return 103;
+            case IIsFacingUpConditionDataGetter:
+                return 106;
+            case IGetKnockedStateConditionDataGetter:
+                return 107;
+            case IGetWeaponAnimTypeConditionDataGetter:
+                return 108;
+            case IIsWeaponSkillTypeConditionDataGetter:
+                return 109;
+            case IGetCurrentAIPackageConditionDataGetter:
+                return 110;
+            case IIsWaitingConditionDataGetter:
+                return 111;
+            case IIsIdlePlayingConditionDataGetter:
+                return 112;
+            case IIsIntimidatedbyPlayerConditionDataGetter:
+                return 116;
+            case IIsPlayerInRegionConditionDataGetter:
+                return 117;
+            case IGetActorAggroRadiusViolatedConditionDataGetter:
+                return 118;
+            case IGetCrimeConditionDataGetter:
+                return 122;
+            case IIsGreetingPlayerConditionDataGetter:
+                return 123;
+            case IIsGuardConditionDataGetter:
+                return 125;
+            case IHasBeenEatenConditionDataGetter:
+                return 127;
+            case IGetStaminaPercentageConditionDataGetter:
+                return 128;
+            case IGetPCIsClassConditionDataGetter:
+                return 129;
+            case IGetPCIsRaceConditionDataGetter:
+                return 130;
+            case IGetPCIsSexConditionDataGetter:
+                return 131;
+            case IGetPCInFactionConditionDataGetter:
+                return 132;
+            case ISameFactionAsPCConditionDataGetter:
+                return 133;
+            case ISameRaceAsPCConditionDataGetter:
+                return 134;
+            case ISameSexAsPCConditionDataGetter:
+                return 135;
+            case IGetIsReferenceConditionDataGetter:
+                return 136;
+            case IIsTalkingConditionDataGetter:
+                return 141;
+            case IGetWalkSpeedConditionDataGetter:
+                return 142;
+            case IGetCurrentAIProcedureConditionDataGetter:
+                return 143;
+            case IGetTrespassWarningLevelConditionDataGetter:
+                return 144;
+            case IIsTrespassingConditionDataGetter:
+                return 145;
+            case IIsInMyOwnedCellConditionDataGetter:
+                return 146;
+            case IGetWindSpeedConditionDataGetter:
+                return 147;
+            case IGetCurrentWeatherPercentConditionDataGetter:
+                return 148;
+            case IGetIsCurrentWeatherConditionDataGetter:
+                return 149;
+            case IIsContinuingPackagePCNearConditionDataGetter:
+                return 150;
+            case IGetIsCrimeFactionConditionDataGetter:
+                return 152;
+            case ICanHaveFlamesConditionDataGetter:
+                return 153;
+            case IHasFlamesConditionDataGetter:
+                return 154;
+            case IGetOpenStateConditionDataGetter:
+                return 157;
+            case IGetSittingConditionDataGetter:
+                return 159;
+            case IGetIsCurrentPackageConditionDataGetter:
+                return 161;
+            case IIsCurrentFurnitureRefConditionDataGetter:
+                return 162;
+            case IIsCurrentFurnitureObjConditionDataGetter:
+                return 163;
+            case IGetDayOfWeekConditionDataGetter:
+                return 170;
+            case IGetTalkedToPCParamConditionDataGetter:
+                return 172;
+            case IIsPCSleepingConditionDataGetter:
+                return 175;
+            case IIsPCAMurdererConditionDataGetter:
+                return 176;
+            case IHasSameEditorLocAsRefConditionDataGetter:
+                return 180;
+            case IHasSameEditorLocAsRefAliasConditionDataGetter:
+                return 181;
+            case IGetEquippedConditionDataGetter:
+                return 182;
+            case IIsSwimmingConditionDataGetter:
+                return 185;
+            case IGetAmountSoldStolenConditionDataGetter:
+                return 190;
+            case IGetIgnoreCrimeConditionDataGetter:
+                return 192;
+            case IGetPCExpelledConditionDataGetter:
+                return 193;
+            case IGetPCFactionMurderConditionDataGetter:
+                return 195;
+            case IGetPCEnemyofFactionConditionDataGetter:
+                return 197;
+            case IGetPCFactionAttackConditionDataGetter:
+                return 199;
+            case IGetDestroyedConditionDataGetter:
+                return 203;
+            case IHasMagicEffectConditionDataGetter:
+                return 214;
+            case IGetDefaultOpenConditionDataGetter:
+                return 215;
+            case IGetAnimActionConditionDataGetter:
+                return 219;
+            case IIsSpellTargetConditionDataGetter:
+                return 223;
+            case IGetVATSModeConditionDataGetter:
+                return 224;
+            case IGetPersuasionNumberConditionDataGetter:
+                return 225;
+            case IGetVampireFeedConditionDataGetter:
+                return 226;
+            case IGetCannibalConditionDataGetter:
+                return 227;
+            case IGetIsClassDefaultConditionDataGetter:
+                return 228;
+            case IGetClassDefaultMatchConditionDataGetter:
+                return 229;
+            case IGetInCellParamConditionDataGetter:
+                return 230;
+            case IGetVatsTargetHeightConditionDataGetter:
+                return 235;
+            case IGetIsGhostConditionDataGetter:
+                return 237;
+            case IGetUnconsciousConditionDataGetter:
+                return 242;
+            case IGetRestrainedConditionDataGetter:
+                return 244;
+            case IGetIsUsedItemConditionDataGetter:
+                return 246;
+            case IGetIsUsedItemTypeConditionDataGetter:
+                return 247;
+            case IIsScenePlayingConditionDataGetter:
+                return 248;
+            case IIsInDialogueWithPlayerConditionDataGetter:
+                return 249;
+            case IGetLocationClearedConditionDataGetter:
+                return 250;
+            case IGetIsPlayableRaceConditionDataGetter:
+                return 254;
+            case IGetOffersServicesNowConditionDataGetter:
+                return 255;
+            case IHasAssociationTypeConditionDataGetter:
+                return 258;
+            case IHasFamilyRelationshipConditionDataGetter:
+                return 259;
+            case IHasParentRelationshipConditionDataGetter:
+                return 261;
+            case IIsWarningAboutConditionDataGetter:
+                return 262;
+            case IIsWeaponOutConditionDataGetter:
+                return 263;
+            case IHasSpellConditionDataGetter:
+                return 264;
+            case IIsTimePassingConditionDataGetter:
+                return 265;
+            case IIsPleasantConditionDataGetter:
+                return 266;
+            case IIsCloudyConditionDataGetter:
+                return 267;
+            case IIsSmallBumpConditionDataGetter:
+                return 274;
+            case IGetBaseActorValueConditionDataGetter:
+                return 277;
+            case IIsOwnerConditionDataGetter:
+                return 278;
+            case IIsCellOwnerConditionDataGetter:
+                return 280;
+            case IIsHorseStolenConditionDataGetter:
+                return 282;
+            case IIsLeftUpConditionDataGetter:
+                return 285;
+            case IIsSneakingConditionDataGetter:
+                return 286;
+            case IIsRunningConditionDataGetter:
+                return 287;
+            case IGetFriendHitConditionDataGetter:
+                return 288;
+            case IIsInCombatConditionDataGetter:
+                return 289;
+            case IIsInInteriorConditionDataGetter:
+                return 300;
+            case IIsWaterObjectConditionDataGetter:
+                return 304;
+            case IGetPlayerActionConditionDataGetter:
+                return 305;
+            case IIsActorUsingATorchConditionDataGetter:
+                return 306;
+            case IIsXBoxConditionDataGetter:
+                return 309;
+            case IGetInWorldspaceConditionDataGetter:
+                return 310;
+            case IGetPCMiscStatConditionDataGetter:
+                return 312;
+            case IGetPairedAnimationConditionDataGetter:
+                return 313;
+            case IIsActorAVictimConditionDataGetter:
+                return 314;
+            case IGetTotalPersuasionNumberConditionDataGetter:
+                return 315;
+            case IGetIdleDoneOnceConditionDataGetter:
+                return 318;
+            case IGetNoRumorsConditionDataGetter:
+                return 320;
+            case IGetCombatStateConditionDataGetter:
+                return 323;
+            case IGetWithinPackageLocationConditionDataGetter:
+                return 325;
+            case IIsRidingMountConditionDataGetter:
+                return 327;
+            case IIsFleeingConditionDataGetter:
+                return 329;
+            case IIsInDangerousWaterConditionDataGetter:
+                return 332;
+            case IGetIgnoreFriendlyHitsConditionDataGetter:
+                return 338;
+            case IIsPlayersLastRiddenMountConditionDataGetter:
+                return 339;
+            case IIsActorConditionDataGetter:
+                return 353;
+            case IIsEssentialConditionDataGetter:
+                return 354;
+            case IIsPlayerMovingIntoNewSpaceConditionDataGetter:
+                return 358;
+            case IGetInCurrentLocConditionDataGetter:
+                return 359;
+            case IGetInCurrentLocAliasConditionDataGetter:
+                return 360;
+            case IGetTimeDeadConditionDataGetter:
+                return 361;
+            case IHasLinkedRefConditionDataGetter:
+                return 362;
+            case IIsChildConditionDataGetter:
+                return 365;
+            case IGetStolenItemValueNoCrimeConditionDataGetter:
+                return 366;
+            case IGetLastPlayerActionConditionDataGetter:
+                return 367;
+            case IIsPlayerActionActiveConditionDataGetter:
+                return 368;
+            case IIsTalkingActivatorActorConditionDataGetter:
+                return 370;
+            case IIsInListConditionDataGetter:
+                return 372;
+            case IGetStolenItemValueConditionDataGetter:
+                return 373;
+            case IGetCrimeGoldViolentConditionDataGetter:
+                return 375;
+            case IGetCrimeGoldNonviolentConditionDataGetter:
+                return 376;
+            case IHasShoutConditionDataGetter:
+                return 378;
+            case IGetHasNoteConditionDataGetter:
+                return 381;
+            case IGetHitLocationConditionDataGetter:
+                return 390;
+            case IIsPC1stPersonConditionDataGetter:
+                return 391;
+            case IGetCauseofDeathConditionDataGetter:
+                return 396;
+            case IIsLimbGoneConditionDataGetter:
+                return 397;
+            case IIsWeaponInListConditionDataGetter:
+                return 398;
+            case IIsBribedbyPlayerConditionDataGetter:
+                return 402;
+            case IGetRelationshipRankConditionDataGetter:
+                return 403;
+            case IAGetVATSValueConditionDataGetter:
+                return 407;
+            case IIsKillerConditionDataGetter:
+                return 408;
+            case IIsKillerObjectConditionDataGetter:
+                return 409;
+            case IGetFactionCombatReactionConditionDataGetter:
+                return 410;
+            case IExistsConditionDataGetter:
+                return 414;
+            case IGetGroupMemberCountConditionDataGetter:
+                return 415;
+            case IGetGroupTargetCountConditionDataGetter:
+                return 416;
+            case IGetIsVoiceTypeConditionDataGetter:
+                return 426;
+            case IGetPlantedExplosiveConditionDataGetter:
+                return 427;
+            case IIsScenePackageRunningConditionDataGetter:
+                return 429;
+            case IGetHealthPercentageConditionDataGetter:
+                return 430;
+            case IGetIsObjectTypeConditionDataGetter:
+                return 432;
+            case IGetDialogueEmotionConditionDataGetter:
+                return 434;
+            case IGetDialogueEmotionValueConditionDataGetter:
+                return 435;
+            case IGetIsCreatureTypeConditionDataGetter:
+                return 437;
+            case IGetInCurrentLocFormListConditionDataGetter:
+                return 444;
+            case IGetInZoneConditionDataGetter:
+                return 445;
+            case IGetVelocityConditionDataGetter:
+                return 446;
+            case IGetGraphVariableFloatConditionDataGetter:
+                return 447;
+            case IHasPerkConditionDataGetter:
+                return 448;
+            case IGetFactionRelationConditionDataGetter:
+                return 449;
+            case IIsLastIdlePlayedConditionDataGetter:
+                return 450;
+            case IGetPlayerTeammateConditionDataGetter:
+                return 453;
+            case IGetPlayerTeammateCountConditionDataGetter:
+                return 454;
+            case IGetActorCrimePlayerEnemyConditionDataGetter:
+                return 458;
+            case IGetCrimeGoldConditionDataGetter:
+                return 459;
+            case IIsPlayerGrabbedRefConditionDataGetter:
+                return 463;
+            case IGetKeywordItemCountConditionDataGetter:
+                return 465;
+            case IGetDestructionStageConditionDataGetter:
+                return 470;
+            case IGetIsAlignmentConditionDataGetter:
+                return 473;
+            case IIsProtectedConditionDataGetter:
+                return 476;
+            case IGetThreatRatioConditionDataGetter:
+                return 477;
+            case IGetIsUsedItemEquipTypeConditionDataGetter:
+                return 479;
+            case IIsCarryableConditionDataGetter:
+                return 487;
+            case IGetConcussedConditionDataGetter:
+                return 488;
+            case IGetMapMarkerVisibleConditionDataGetter:
+                return 491;
+            case IPlayerKnowsConditionDataGetter:
+                return 493;
+            case IGetPermanentActorValueConditionDataGetter:
+                return 494;
+            case IGetKillingBlowLimbConditionDataGetter:
+                return 495;
+            case ICanPayCrimeGoldConditionDataGetter:
+                return 497;
+            case IGetDaysInJailConditionDataGetter:
+                return 499;
+            case IEPAlchemyGetMakingPoisonConditionDataGetter:
+                return 500;
+            case IEPAlchemyEffectHasKeywordConditionDataGetter:
+                return 501;
+            case IGetAllowWorldInteractionsConditionDataGetter:
+                return 503;
+            case IGetLastHitCriticalConditionDataGetter:
+                return 508;
+            case IIsCombatTargetConditionDataGetter:
+                return 513;
+            case IGetVATSRightAreaFreeConditionDataGetter:
+                return 515;
+            case IGetVATSLeftAreaFreeConditionDataGetter:
+                return 516;
+            case IGetVATSBackAreaFreeConditionDataGetter:
+                return 517;
+            case IGetVATSFrontAreaFreeConditionDataGetter:
+                return 518;
+            case IGetLockIsBrokenConditionDataGetter:
+                return 519;
+            case IIsPS3ConditionDataGetter:
+                return 520;
+            case IIsWin32ConditionDataGetter:
+                return 521;
+            case IGetVATSRightTargetVisibleConditionDataGetter:
+                return 522;
+            case IGetVATSLeftTargetVisibleConditionDataGetter:
+                return 523;
+            case IGetVATSBackTargetVisibleConditionDataGetter:
+                return 524;
+            case IGetVATSFrontTargetVisibleConditionDataGetter:
+                return 525;
+            case IIsInCriticalStageConditionDataGetter:
+                return 528;
+            case IGetXPForNextLevelConditionDataGetter:
+                return 530;
+            case IGetInfamyConditionDataGetter:
+                return 533;
+            case IGetInfamyViolentConditionDataGetter:
+                return 534;
+            case IGetInfamyNonViolentConditionDataGetter:
+                return 535;
+            case IGetQuestCompletedConditionDataGetter:
+                return 543;
+            case IIsGoreDisabledConditionDataGetter:
+                return 547;
+            case IIsSceneActionCompleteConditionDataGetter:
+                return 550;
+            case IGetSpellUsageNumConditionDataGetter:
+                return 552;
+            case IGetActorsInHighConditionDataGetter:
+                return 554;
+            case IHasLoaded3DConditionDataGetter:
+                return 555;
+            case IHasKeywordConditionDataGetter:
+                return 560;
+            case IHasRefTypeConditionDataGetter:
+                return 561;
+            case ILocationHasKeywordConditionDataGetter:
+                return 562;
+            case ILocationHasRefTypeConditionDataGetter:
+                return 563;
+            case IGetIsEditorLocationConditionDataGetter:
+                return 565;
+            case IGetIsAliasRefConditionDataGetter:
+                return 566;
+            case IGetIsEditorLocAliasConditionDataGetter:
+                return 567;
+            case IIsSprintingConditionDataGetter:
+                return 568;
+            case IIsBlockingConditionDataGetter:
+                return 569;
+            case IHasEquippedSpellConditionDataGetter:
+                return 570;
+            case IGetCurrentCastingTypeConditionDataGetter:
+                return 571;
+            case IGetCurrentDeliveryTypeConditionDataGetter:
+                return 572;
+            case IGetAttackStateConditionDataGetter:
+                return 574;
+            case IGetEventDataConditionDataGetter:
+                return 576;
+            case IIsCloserToAThanBConditionDataGetter:
+                return 577;
+            case IGetEquippedShoutConditionDataGetter:
+                return 579;
+            case IIsBleedingOutConditionDataGetter:
+                return 580;
+            case IGetRelativeAngleConditionDataGetter:
+                return 584;
+            case IGetMovementDirectionConditionDataGetter:
+                return 589;
+            case IIsInSceneConditionDataGetter:
+                return 590;
+            case IGetRefTypeDeadCountConditionDataGetter:
+                return 591;
+            case IGetRefTypeAliveCountConditionDataGetter:
+                return 592;
+            case IGetIsFlyingConditionDataGetter:
+                return 594;
+            case IIsCurrentSpellConditionDataGetter:
+                return 595;
+            case ISpellHasKeywordConditionDataGetter:
+                return 596;
+            case IGetEquippedItemTypeConditionDataGetter:
+                return 597;
+            case IGetLocationAliasClearedConditionDataGetter:
+                return 598;
+            case IGetLocAliasRefTypeDeadCountConditionDataGetter:
+                return 600;
+            case IGetLocAliasRefTypeAliveCountConditionDataGetter:
+                return 601;
+            case IIsWardStateConditionDataGetter:
+                return 602;
+            case IIsInSameCurrentLocAsRefConditionDataGetter:
+                return 603;
+            case IIsInSameCurrentLocAsRefAliasConditionDataGetter:
+                return 604;
+            case ILocAliasIsLocationConditionDataGetter:
+                return 605;
+            case IGetKeywordDataForLocationConditionDataGetter:
+                return 606;
+            case IGetKeywordDataForAliasConditionDataGetter:
+                return 608;
+            case ILocAliasHasKeywordConditionDataGetter:
+                return 610;
+            case IIsNullPackageDataConditionDataGetter:
+                return 611;
+            case IGetNumericPackageDataConditionDataGetter:
+                return 612;
+            case IIsFurnitureAnimTypeConditionDataGetter:
+                return 613;
+            case IIsFurnitureEntryTypeConditionDataGetter:
+                return 614;
+            case IGetHighestRelationshipRankConditionDataGetter:
+                return 615;
+            case IGetLowestRelationshipRankConditionDataGetter:
+                return 616;
+            case IHasAssociationTypeAnyConditionDataGetter:
+                return 617;
+            case IHasFamilyRelationshipAnyConditionDataGetter:
+                return 618;
+            case IGetPathingTargetOffsetConditionDataGetter:
+                return 619;
+            case IGetPathingTargetAngleOffsetConditionDataGetter:
+                return 620;
+            case IGetPathingTargetSpeedConditionDataGetter:
+                return 621;
+            case IGetPathingTargetSpeedAngleConditionDataGetter:
+                return 622;
+            case IGetMovementSpeedConditionDataGetter:
+                return 623;
+            case IGetInContainerConditionDataGetter:
+                return 624;
+            case IIsLocationLoadedConditionDataGetter:
+                return 625;
+            case IIsLocAliasLoadedConditionDataGetter:
+                return 626;
+            case IIsDualCastingConditionDataGetter:
+                return 627;
+            case IGetVMQuestVariableConditionDataGetter:
+                return 629;
+            case IGetVMScriptVariableConditionDataGetter:
+                return 630;
+            case IIsEnteringInteractionQuickConditionDataGetter:
+                return 631;
+            case IIsCastingConditionDataGetter:
+                return 632;
+            case IGetFlyingStateConditionDataGetter:
+                return 633;
+            case IIsInFavorStateConditionDataGetter:
+                return 635;
+            case IHasTwoHandedWeaponEquippedConditionDataGetter:
+                return 636;
+            case IIsExitingInstantConditionDataGetter:
+                return 637;
+            case IIsInFriendStateWithPlayerConditionDataGetter:
+                return 638;
+            case IGetWithinDistanceConditionDataGetter:
+                return 639;
+            case IGetActorValuePercentConditionDataGetter:
+                return 640;
+            case IIsUniqueConditionDataGetter:
+                return 641;
+            case IGetLastBumpDirectionConditionDataGetter:
+                return 642;
+            case IIsInFurnitureStateConditionDataGetter:
+                return 644;
+            case IGetIsInjuredConditionDataGetter:
+                return 645;
+            case IGetIsCrashLandRequestConditionDataGetter:
+                return 646;
+            case IGetIsHastyLandRequestConditionDataGetter:
+                return 647;
+            case IIsLinkedToConditionDataGetter:
+                return 650;
+            case IGetKeywordDataForCurrentLocationConditionDataGetter:
+                return 651;
+            case IGetInSharedCrimeFactionConditionDataGetter:
+                return 652;
+            case IGetBribeSuccessConditionDataGetter:
+                return 654;
+            case IGetIntimidateSuccessConditionDataGetter:
+                return 655;
+            case IGetArrestedStateConditionDataGetter:
+                return 656;
+            case IGetArrestingActorConditionDataGetter:
+                return 657;
+            case IEPTemperingItemIsEnchantedConditionDataGetter:
+                return 659;
+            case IEPTemperingItemHasKeywordConditionDataGetter:
+                return 660;
+            case IGetReplacedItemTypeConditionDataGetter:
+                return 664;
+            case IIsAttackingConditionDataGetter:
+                return 672;
+            case IIsPowerAttackingConditionDataGetter:
+                return 673;
+            case IIsLastHostileActorConditionDataGetter:
+                return 674;
+            case IGetGraphVariableIntConditionDataGetter:
+                return 675;
+            case IGetCurrentShoutVariationConditionDataGetter:
+                return 676;
+            case IShouldAttackKillConditionDataGetter:
+                return 678;
+            case IGetActivatorHeightConditionDataGetter:
+                return 680;
+            case IEPMagic_IsAdvanceSkillConditionDataGetter:
+                return 681;
+            case IWornHasKeywordConditionDataGetter:
+                return 682;
+            case IGetPathingCurrentSpeedConditionDataGetter:
+                return 683;
+            case IGetPathingCurrentSpeedAngleConditionDataGetter:
+                return 684;
+            case IEPModSkillUsage_AdvanceObjectHasKeywordConditionDataGetter:
+                return 691;
+            case IEPModSkillUsage_IsAdvanceActionConditionDataGetter:
+                return 692;
+            case IEPMagic_SpellHasKeywordConditionDataGetter:
+                return 693;
+            case IGetNoBleedoutRecoveryConditionDataGetter:
+                return 694;
+            case IEPMagic_SpellHasSkillConditionDataGetter:
+                return 696;
+            case IIsAttackTypeConditionDataGetter:
+                return 697;
+            case IIsAllowedToFlyConditionDataGetter:
+                return 698;
+            case IHasMagicEffectKeywordConditionDataGetter:
+                return 699;
+            case IIsCommandedActorConditionDataGetter:
+                return 700;
+            case IIsStaggeredConditionDataGetter:
+                return 701;
+            case IIsRecoilingConditionDataGetter:
+                return 702;
+            case IIsExitingInteractionQuickConditionDataGetter:
+                return 703;
+            case IIsPathingConditionDataGetter:
+                return 704;
+            case IGetShouldHelpConditionDataGetter:
+                return 705;
+            case IHasBoundWeaponEquippedConditionDataGetter:
+                return 706;
+            case IGetCombatTargetHasKeywordConditionDataGetter:
+                return 707;
+            case IGetCombatGroupMemberCountConditionDataGetter:
+                return 709;
+            case IIsIgnoringCombatConditionDataGetter:
+                return 710;
+            case IGetLightLevelConditionDataGetter:
+                return 711;
+            case ISpellHasCastingPerkConditionDataGetter:
+                return 713;
+            case IIsBeingRiddenConditionDataGetter:
+                return 714;
+            case IIsUndeadConditionDataGetter:
+                return 715;
+            case IGetRealHoursPassedConditionDataGetter:
+                return 716;
+            case IIsUnlockedDoorConditionDataGetter:
+                return 718;
+            case IIsHostileToActorConditionDataGetter:
+                return 719;
+            case IGetTargetHeightConditionDataGetter:
+                return 720;
+            case IIsPoisonConditionDataGetter:
+                return 721;
+            case IWornApparelHasKeywordCountConditionDataGetter:
+                return 722;
+            case IGetItemHealthPercentConditionDataGetter:
+                return 723;
+            case IEffectWasDualCastConditionDataGetter:
+                return 724;
+            case IGetKnockedStateEnumConditionDataGetter:
+                return 725;
+            case IDoesNotExistConditionDataGetter:
+                return 726;
+            case IIsOnFlyingMountConditionDataGetter:
+                return 730;
+            case ICanFlyHereConditionDataGetter:
+                return 731;
+            case IIsFlyingMountPatrolQueudConditionDataGetter:
+                return 732;
+            case IIsFlyingMountFastTravellingConditionDataGetter:
+                return 733;
+            case IIsOverEncumberedConditionDataGetter:
+                return 734;
+            case IGetActorWarmthConditionDataGetter:
+                return 735;
+            case IGetSKSEVersionConditionDataGetter:
+                return 1024;
+            case IGetSKSEVersionMinorConditionDataGetter:
+                return 1025;
+            case IGetSKSEVersionBetaConditionDataGetter:
+                return 1026;
+            case IGetSKSEReleaseConditionDataGetter:
+                return 1027;
+            case IClearInvalidRegistrationsConditionDataGetter:
+                return 1028;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+    
+    public static partial void FillBinaryFunctionParseCustom(MutagenFrame frame, ICondition obj)
+    {
+        switch (obj)
+        {
+            case IConditionGlobal global:
+                global.ComparisonValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(frame));
+                break;
+            case IConditionFloat f:
+                f.ComparisonValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        
+        var functionIndex = frame.ReadUInt16();
+        obj.Unknown2 = frame.ReadUInt16();
+        obj.Data = CreateDataFromBinary(frame, functionIndex);
     }
 }
 
@@ -907,20 +2587,34 @@ partial class ConditionBinaryWriteTranslation
 
     public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item)
     {
-        writer.Write(GetFlagWriteByte(item.Flags, item.CompareOperator));
+        var flags = item.Flags;
+        if (item.Data.UseAliases)
+        {
+            flags = flags.SetFlag((Condition.Flag)ParametersUseAliases, true);
+        }
+        if (item.Data.UsePackageData)
+        {
+            flags = flags.SetFlag((Condition.Flag)ParametersUsePackData, true);
+        }
+
+        if (item is IConditionGlobalGetter)
+        {
+            flags = flags.SetFlag((Condition.Flag)UseGlobal, true);
+        }
+        writer.Write(GetFlagWriteByte(flags, item.CompareOperator));
     }
 
     public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
     {
-        if (!(obj is IFunctionConditionDataGetter funcData)) return;
-        if (funcData.ParameterOneString is { } param1)
+        if (obj is not IConditionStringParameter stringParameter) return;
+        if (stringParameter.FirstStringParameter is { } param1)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.CIS1))
             {
                 StringBinaryTranslation.Instance.Write(writer, param1, StringBinaryType.NullTerminate);
             }
         }
-        if (funcData.ParameterTwoString is { } param2)
+        if (stringParameter.SecondStringParameter is { } param2)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.CIS2))
             {
@@ -928,21 +2622,46 @@ partial class ConditionBinaryWriteTranslation
             }
         }
     }
+
+    public static partial void WriteBinaryFunctionParseCustom(MutagenWriter writer, IConditionGetter item)
+    {
+        switch (item)
+        {
+            case IConditionGlobalGetter global:
+                FormLinkBinaryTranslation.Instance.Write(writer, global.ComparisonValue);
+                break;
+            case IConditionFloatGetter f:
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, f.ComparisonValue);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        
+        var data = item.Data;
+        writer.Write((ushort)data.Function);
+        writer.Write(item.Unknown2);
+        data.WriteToBinary(writer);
+        
+        EnumBinaryTranslation<RunOnType, MutagenFrame, MutagenWriter>.Instance.Write(writer, data.RunOnType, 4);
+        FormLinkBinaryTranslation.Instance.Write(writer, data.Reference);
+        writer.Write(item.Data.Unknown3);
+    }
 }
 
 abstract partial class ConditionBinaryOverlay
 {
-    public abstract IConditionDataGetter Data { get; }
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IConditionDataGetter IConditionGetter.Data => this.Data;
+    public IConditionDataGetter Data { get; private set; } = null!;
 
-    private static RecordTriggerSpecs IncludeTriggers = new RecordTriggerSpecs(
+    private static RecordTriggerSpecs IncludeTriggers = new(
         RecordCollection.Factory(
             RecordTypes.CIS1,
             RecordTypes.CIS2));
 
-    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location]);
+    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location])
+        .SetFlag((Condition.Flag)Condition.ParametersUseAliases, false)
+        .SetFlag((Condition.Flag)Condition.UseGlobal, false);
     public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_structData.Span[0]);
+    public ushort Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(10));
 
     public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
@@ -951,36 +2670,50 @@ abstract partial class ConditionBinaryOverlay
         {
             throw new ArgumentException();
         }
+
+        var finalPos = stream.Position + subRecMeta.TotalLength;
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
+        ConditionBinaryOverlay ret;
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
         {
-            return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
+            ret = (ConditionBinaryOverlay)ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
         }
         else
         {
-            return ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
+            ret = (ConditionBinaryOverlay)ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
         }
+
+        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData.Slice(8));
+        IConditionData data;
+        stream.Position += 12;
+        var mutagenFrame = new MutagenFrame(stream);
+        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
+        {
+            data = GetEventDataConditionData.CreateFromBinary(mutagenFrame);
+        }
+        else
+        {
+            data = ConditionBinaryCreateTranslation.CreateDataFromBinaryInternal(mutagenFrame, functionIndex);
+        }
+
+        ConditionBinaryCreateTranslation.FillEndingParams(mutagenFrame, data);
+        
+        ret.Data = data;
+        
+        stream.Position = finalPos;
+        ConditionBinaryCreateTranslation.CustomStringImports(stream, data);
+        data.UseAliases = flag.HasFlag((Condition.Flag)ParametersUseAliases);
+        data.UsePackageData = flag.HasFlag((Condition.Flag)ParametersUsePackData);
+
+        return ret;
     }
 
     public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package, TypedParseParams _)
     {
-        var subRecMeta = stream.GetSubrecord();
-        if (subRecMeta.RecordType != RecordTypes.CTDA)
-        {
-            throw new ArgumentException();
-        }
-        Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
-        {
-            return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
-        }
-        else
-        {
-            return ConditionFloatBinaryOverlay.ConditionFloatFactory(stream, package);
-        }
+        return ConditionFactory(stream, package);
     }
 
-    public static IReadOnlyList<IConditionGetter> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
         var counterMeta = stream.ReadSubrecord();
         if (counterMeta.RecordType != RecordTypes.CITC
@@ -989,7 +2722,7 @@ abstract partial class ConditionBinaryOverlay
             throw new ArgumentException();
         }
         var count = BinaryPrimitives.ReadUInt32LittleEndian(counterMeta.Content);
-        var ret = ConstructBinayOverlayList(stream, package);
+        var ret = ConstructBinaryOverlayList(stream, package);
         if (count != ret.Count)
         {
             throw new ArgumentException("Number of parsed conditions did not matched labeled count.");
@@ -997,7 +2730,7 @@ abstract partial class ConditionBinaryOverlay
         return ret;
     }
 
-    public static IReadOnlyList<IConditionGetter> ConstructBinayOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    public static IReadOnlyList<IConditionGetter> ConstructBinaryOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
     {
         var span = stream.RemainingMemory;
         var pos = stream.Position;
@@ -1014,259 +2747,5 @@ abstract partial class ConditionBinaryOverlay
             package: package,
             getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),
             locs: recordLocs);
-    }
-}
-
-partial class ConditionGlobalBinaryCreateTranslation
-{
-        public static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionGlobal item)
-    {
-        var functionIndex = frame.GetUInt16();
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
-        {
-            item.Data = GetEventData.CreateFromBinary(frame);
-        }
-        else
-        {
-            item.Data = FunctionConditionData.CreateFromBinary(frame);
-        }
-    }
-
-    public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj)
-    {
-        ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
-    }
-}
-
-partial class ConditionGlobalBinaryWriteTranslation
-{
-    public static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionGlobalGetter item)
-    {
-        item.Data.WriteToBinary(writer);
-    }
-
-    public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionGlobalGetter obj)
-    {
-        ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
-    }
-}
-
-partial class ConditionFloatBinaryCreateTranslation
-{
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, IConditionFloat item)
-    {
-        var functionIndex = frame.GetUInt16();
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
-        {
-            item.Data = GetEventData.CreateFromBinary(frame);
-        }
-        else
-        {
-            item.Data = FunctionConditionData.CreateFromBinary(frame);
-        }
-    }
-
-    public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj)
-    {
-        ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
-    }
-}
-
-partial class ConditionFloatBinaryWriteTranslation
-{
-    public static partial void WriteBinaryDataCustom(MutagenWriter writer, IConditionFloatGetter item)
-    {
-        item.Data.WriteToBinary(writer);
-    }
-
-    public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionFloatGetter obj)
-    {
-        ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
-    }
-}
-
-partial class FunctionConditionDataBinaryCreateTranslation
-{
-    public static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IFunctionConditionData item)
-    {
-        item.ParameterOneNumber = frame.ReadInt32();
-        item.ParameterTwoNumber = frame.ReadInt32();
-        item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterOneNumber);
-        item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MetaData.MasterReferences!, (uint)item.ParameterTwoNumber);
-        GetEventDataBinaryCreateTranslation.FillEndingParams(frame, item);
-    }
-}
-
-partial class GetEventDataBinaryCreateTranslation
-{
-    public static void FillEndingParams(MutagenFrame frame, IConditionData item)
-    {
-        item.RunOnType = EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
-        item.Reference.SetTo(
-            FormLinkBinaryTranslation.Instance.Parse(
-                reader: frame,
-                defaultVal: FormKey.Null));
-        item.Unknown3 = frame.ReadInt32();
-    }
-
-    public static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IGetEventData item)
-    {
-        FillEndingParams(frame, item);
-    }
-}
-
-partial class FunctionConditionDataBinaryWriteTranslation
-{
-    public static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IFunctionConditionDataGetter item)
-    {
-        var paramTypes = Condition.GetParameterTypes(item.Function);
-        switch (paramTypes.First.GetCategory())
-        {
-            case Condition.ParameterCategory.None:
-            case Condition.ParameterCategory.Number:
-            case Condition.ParameterCategory.String:
-                writer.Write(item.ParameterOneNumber);
-                break;
-            case Condition.ParameterCategory.Form:
-                FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterOneRecord.FormKey);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
-        switch (paramTypes.Second.GetCategory())
-        {
-            case Condition.ParameterCategory.None:
-            case Condition.ParameterCategory.Number:
-            case Condition.ParameterCategory.String:
-                writer.Write(item.ParameterTwoNumber);
-                break;
-            case Condition.ParameterCategory.Form:
-                FormKeyBinaryTranslation.Instance.Write(writer, item.ParameterTwoRecord.FormKey);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
-        GetEventDataBinaryWriteTranslation.WriteCommonParams(writer, item);
-    }
-}
-
-partial class GetEventDataBinaryWriteTranslation
-{
-    public static void WriteCommonParams(MutagenWriter writer, IConditionDataGetter item)
-    {
-        EnumBinaryTranslation<Condition.RunOnType, MutagenFrame, MutagenWriter>.Instance.Write(
-            writer,
-            item.RunOnType,
-            length: 4);
-        FormLinkBinaryTranslation.Instance.Write(
-            writer: writer,
-            item: item.Reference);
-        writer.Write(item.Unknown3);
-    }
-
-    public static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IGetEventDataGetter item)
-    {
-        WriteCommonParams(writer, item);
-    }
-}
-
-partial class ConditionFloatBinaryOverlay
-{
-    public partial IConditionDataGetter GetDataCustom(int location)
-    {
-        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(location));
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
-        {
-            return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_structData.Slice(location), _package), _package);
-        }
-        else
-        {
-            return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new OverlayStream(_structData.Slice(location), _package), _package);
-        }
-    }
-
-    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-    {
-        stream.Position = offset;
-        _structData = stream.RemainingMemory;
-    }
-}
-
-partial class ConditionGlobalBinaryOverlay
-{
-    public partial IConditionDataGetter GetDataCustom(int location)
-    {
-        var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(location));
-        if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
-        {
-            return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_structData.Slice(location), _package), _package);
-        }
-        else
-        {
-            return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new OverlayStream(_structData.Slice(location), _package), _package);
-        }
-    }
-
-    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-    {
-        stream.Position = offset;
-        _structData = stream.RemainingMemory;
-    }
-}
-
-partial class ConditionDataBinaryOverlay
-{
-    public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
-    public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
-    public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
-}
-
-partial class FunctionConditionDataBinaryOverlay
-{
-    private ReadOnlyMemorySlice<byte> _data2;
-
-    public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2)));
-
-    public int ParameterOneNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2);
-
-    public IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data2.Slice(4))));
-
-    public int ParameterTwoNumber => BinaryPrimitives.ReadInt32LittleEndian(_data2.Slice(4));
-
-    private ReadOnlyMemorySlice<byte> _stringParamData1;
-    public bool ParameterOneStringIsSet { get; private set; }
-    public string? ParameterOneString => ParameterOneStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData1, _package.MetaData.Encodings.NonTranslated) : null;
-
-    private ReadOnlyMemorySlice<byte> _stringParamData2;
-    public bool ParameterTwoStringIsSet { get; private set; }
-    public string? ParameterTwoString => ParameterTwoStringIsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2, _package.MetaData.Encodings.NonTranslated) : null;
-
-    partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-    {
-        stream.Position -= 0x4;
-        _data2 = stream.RemainingMemory.Slice(4, 0x14);
-        stream.Position += 0x18;
-        ParseStringParameter(stream);
-        ParseStringParameter(stream);
-    }
-
-    private void ParseStringParameter(OverlayStream stream)
-    {
-        if (stream.Complete || !stream.TryGetSubrecordHeader(out var subFrame)) return;
-        switch (subFrame.RecordTypeInt)
-        {
-            case RecordTypeInts.CIS1:
-                _stringParamData1 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                ParameterOneStringIsSet = true;
-                stream.Position += subFrame.TotalLength;
-                break;
-            case RecordTypeInts.CIS2:
-                _stringParamData2 = stream.RemainingMemory.Slice(subFrame.HeaderLength, subFrame.ContentLength);
-                ParameterTwoStringIsSet = true;
-                stream.Position += subFrame.TotalLength;
-                break;
-            default:
-                break;
-        }
     }
 }

@@ -72,7 +72,7 @@ partial class QuestBinaryCreateTranslation
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
-        ConditionBinaryCreateTranslation.FillConditionsList(item.UnusedConditions, frame);
+        ConditionBinaryCreateTranslation.FillConditionsList(item.EventConditions, frame);
         return null;
     }
 
@@ -94,7 +94,7 @@ partial class QuestBinaryWriteTranslation
     public static partial void WriteBinaryUnusedConditionsLogicCustom(MutagenWriter writer, IQuestGetter item)
     {
         using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
-        ConditionBinaryWriteTranslation.WriteConditionsList(item.UnusedConditions, writer);
+        ConditionBinaryWriteTranslation.WriteConditionsList(item.EventConditions, writer);
     }
 
     public static partial void WriteBinaryNextAliasIDCustom(MutagenWriter writer, IQuestGetter item)
@@ -117,11 +117,11 @@ partial class QuestBinaryWriteTranslation
 partial class QuestBinaryOverlay
 {
     public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = Array.Empty<IConditionGetter>();
-    public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = Array.Empty<IConditionGetter>();
+    public IReadOnlyList<IConditionGetter> EventConditions { get; private set; } = Array.Empty<IConditionGetter>();
 
     partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, PreviousParse lastParsed)
     {
-        DialogConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+        DialogConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }
 
     public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
@@ -132,7 +132,7 @@ partial class QuestBinaryOverlay
         {
             throw new ArgumentException("Unexpected NEXT header");
         }
-        UnusedConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
+        EventConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
 
         return null;
     }

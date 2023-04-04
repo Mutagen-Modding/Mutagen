@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LensFlare" recordType="LENS" baseClass="SkyrimMajorRecord" objType="Record" GUID="a27b0490-aff4-4af1-8660-42103f100040" ID="244">
+    <Fields>
+      <Float name="ColorInfluence" recordType="CNAM" />
+      <Float name="FadeDistanceRadiusScale" recordType="DNAM" />
+      <RefList name="Sprites" refName="LensFlareSprite" counterRecType="LFSP" allowNoCounter="false" />
+    </Fields>
+  </Object>
+  <Object name="LensFlareSprite" objType="Subrecord" GUID="2739c896-c620-43df-b9dc-29b5885ff7bf" ID="10426">
+    <Fields>
+      <String name="LensFlareSpriteId" recordType="DNAM" />
+      <AssetLink name="Texture" recordType="FNAM" assetType="SkyrimTexture" />
+      <RefDirect name="Data" refName="LensFlareSpriteData" />
+    </Fields>
+  </Object>
+  <Object name="LensFlareSpriteData" objType="Subrecord" recordType="LFSD" GUID="766ec241-ca88-4b93-9e56-f1c0302e1b8f" ID="10427">
+    <Fields>
+      <Color name="Tint" binaryType="NoAlphaFloat" />
+      <Float name="Width" />
+      <Float name="Height" />
+      <Float name="Position" />
+      <Float name="AngularFade" />
+      <Float name="Opacity" />
+      <Enum name="Flags" enumName="LensFlareSpriteData.Flag" byteLength="4" />
+    </Fields>
   </Object>
 </Loqui>

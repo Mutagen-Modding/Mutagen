@@ -281,6 +281,8 @@ public partial class RecordTypes
     public static readonly RecordType LCUN = new(0x4E55434C);
     public static readonly RecordType LENS = new(0x534E454C);
     public static readonly RecordType LEVL = new(0x4C56454C);
+    public static readonly RecordType LFSD = new(0x4453464C);
+    public static readonly RecordType LFSP = new(0x5053464C);
     public static readonly RecordType LGTM = new(0x4D54474C);
     public static readonly RecordType LIAD = new(0x4441494C);
     public static readonly RecordType LIGH = new(0x4847494C);

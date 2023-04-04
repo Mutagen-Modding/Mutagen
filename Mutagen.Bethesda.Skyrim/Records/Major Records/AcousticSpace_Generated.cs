@@ -622,6 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAcousticSpaceInternal>,
         IObjectBounded,
         IPlaceableObject,
+        IReferenceableObject,
         ISkyrimMajorRecordInternal
     {
         /// <summary>
@@ -649,7 +650,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IAcousticSpaceGetter>,
         IMapsToGetter<IAcousticSpaceGetter>,
         IObjectBoundedGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         #region ObjectBounds

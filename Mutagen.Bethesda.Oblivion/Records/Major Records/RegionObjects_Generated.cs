@@ -111,9 +111,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Objects)
-            : base(Header: Header)
+            : base(
+                Flags: Flags,
+                Priority: Priority)
             {
                 this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, RegionObject.Mask<TItem>?>>());
             }
@@ -640,8 +643,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Field Index
     internal enum RegionObjects_FieldIndex
     {
-        Header = 0,
-        Objects = 1,
+        Flags = 0,
+        Priority = 1,
+        Objects = 2,
     }
     #endregion
 
@@ -661,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(RegionObjects.Mask<>);
 
@@ -767,6 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionObjectsBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionObjectsBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -882,7 +887,9 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (index)
             {
-                case RegionData_FieldIndex.Header:
+                case RegionData_FieldIndex.Flags:
+                    return (RegionObjects_FieldIndex)((int)index);
+                case RegionData_FieldIndex.Priority:
                     return (RegionObjects_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1138,6 +1145,9 @@ namespace Mutagen.Bethesda.Oblivion
             IRegionObjectsGetter item,
             TypedWriteParams translationParams)
         {
+            RegionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

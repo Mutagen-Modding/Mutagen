@@ -136,7 +136,9 @@ partial class NpcConfigurationBinaryWriteTranslation
 
 partial class NpcConfigurationBinaryOverlay
 {
-    public partial IANpcLevelGetter GetLevelCustom(int location)
+    public IANpcLevelGetter Level => GetLevelCustom(location: 0x8);
+    
+    public IANpcLevelGetter GetLevelCustom(int location)
     {
         uint rawFlags = BinaryPrimitives.ReadUInt32LittleEndian(_structData);
         if (Enums.HasFlag(rawFlags, NpcConfigurationBinaryCreateTranslation.PcLevelMultFlag))

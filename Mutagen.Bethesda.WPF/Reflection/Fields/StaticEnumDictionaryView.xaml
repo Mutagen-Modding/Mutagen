@@ -35,7 +35,7 @@
                 </TabControl.Resources>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Key}" />
+                        <TextBlock Text="{Binding Key}" FontSize="14" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>

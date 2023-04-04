@@ -13,5 +13,6 @@
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
 </Loqui>

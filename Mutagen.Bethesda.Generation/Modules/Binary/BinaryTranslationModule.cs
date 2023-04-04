@@ -157,46 +157,6 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
         }
     }
 
-    protected bool HasRecordTypeFields(ObjectGeneration obj)
-    {
-        return GetRecordTypeFields(obj).Any();
-    }
-
-    protected IEnumerable<TypeGeneration> GetRecordTypeFields(ObjectGeneration obj)
-    {
-        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
-        {
-            if (field.GetFieldData().HasTrigger)
-            {
-                yield return field;
-            }
-        }
-    }
-
-    protected IEnumerable<TypeGeneration> GetEmbeddedFields(ObjectGeneration obj)
-    {
-        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
-        {
-            if (field.GetFieldData().HasTrigger) continue;
-            if (!field.IntegrateField)
-            {
-                if (field is CustomLogic)
-                {
-                    yield return field;
-                }
-            }
-            else
-            {
-                yield return field;
-            }
-        }
-    }
-
-    protected bool HasEmbeddedFields(ObjectGeneration obj)
-    {
-        return GetEmbeddedFields(obj).Any();
-    }
-
     public bool HasAsyncStructs(ObjectGeneration obj, bool self)
     {
         IEnumerable<ObjectGeneration> enumer = obj.BaseClassTrail();
@@ -205,7 +165,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             enumer = enumer.And(obj);
         }
         return enumer
-            .SelectMany(o => GetEmbeddedFields(o))
+            .SelectMany(o => o.GetEmbeddedFields())
             .Any(t =>
             {
                 if (this.TryGetTypeGeneration(t.GetType(), out var gen))
@@ -224,7 +184,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             enumer = enumer.And(obj);
         }
         return enumer
-            .SelectMany(o => GetRecordTypeFields(o))
+            .SelectMany(o => o.GetRecordTypeFields())
             .Any(t =>
             {
                 if (this.TryGetTypeGeneration(t.GetType(), out var gen))
@@ -384,7 +344,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
 
     protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, StructuredStringBuilder sb, Accessor accessor)
     {
-        if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
+        if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => b.HasEmbeddedFields()))
         {
             using (var args = sb.Call(
                        $"base.{CopyInFromPrefix}{ModuleNickname}"))

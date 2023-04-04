@@ -1172,10 +1172,6 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        #region Owner
-        public partial IOwnerTargetGetter GetOwnerCustom(int location);
-        public IOwnerTargetGetter Owner => GetOwnerCustom(location: 0x0);
-        #endregion
         public Single ItemCondition => _structData.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

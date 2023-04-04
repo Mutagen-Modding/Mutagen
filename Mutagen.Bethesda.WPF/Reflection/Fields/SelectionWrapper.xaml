@@ -8,6 +8,13 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Mutagen.Bethesda.WPF;component/Reflection/Fields/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <UserControl.Template>
         <ControlTemplate TargetType="UserControl">
             <Border Width="{Binding Width, ElementName=ValueContent, Mode=OneWay}" BorderThickness="0,0,2,0">

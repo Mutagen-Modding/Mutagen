@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Skyrim
 {
     /// <summary>
-    /// Implemented by: [Faction, PlacedNpc]
+    /// Implemented by: [Faction, Npc]
     /// </summary>
     public partial interface IOwner :
         IOwnerGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     /// <summary>
-    /// Implemented by: [Faction, PlacedNpc]
+    /// Implemented by: [Faction, Npc]
     /// </summary>
     public partial interface IOwnerGetter : ISkyrimMajorRecordGetter
     {

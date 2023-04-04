@@ -56,19 +56,10 @@ public partial class MagicEffectArchetype
         Chameleon = 49,
     }
 
-    public virtual FormKey AssociationKey { get; set; } = FormKey.Null;
-
     public MagicEffectArchetype(TypeEnum type = TypeEnum.ValueModifier)
     {
         this.Type = type;
     }
-}
-
-internal partial class MagicEffectArchetypeBinaryOverlay
-{
-    public MagicEffectArchetype.TypeEnum Type => throw new NotImplementedException();
-
-    public FormKey AssociationKey => throw new NotImplementedException();
-
-    public IFormLinkGetter<IActorValueInformationGetter> ActorValue => throw new NotImplementedException();
+    
+    public override FormKey AssociationKey => Association.FormKey;
 }

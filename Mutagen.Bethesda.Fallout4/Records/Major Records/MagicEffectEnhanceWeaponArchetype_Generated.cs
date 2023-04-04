@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -38,11 +39,21 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class MagicEffectEnhanceWeaponArchetype :
-        MagicEffectArchetype,
+        AMagicEffectArchetype,
         IEquatable<IMagicEffectEnhanceWeaponArchetypeGetter>,
         ILoquiObjectSetter<MagicEffectEnhanceWeaponArchetype>,
-        IMagicEffectEnhanceWeaponArchetypeInternal
+        IMagicEffectEnhanceWeaponArchetype
     {
+        #region Association
+        private readonly IFormLink<IObjectEffectGetter> _Association = new FormLink<IObjectEffectGetter>();
+        public IFormLink<IObjectEffectGetter> Association
+        {
+            get => _Association;
+            set => _Association.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IObjectEffectGetter> IMagicEffectEnhanceWeaponArchetypeGetter.Association => this.Association;
+        #endregion
 
         #region To String
 
@@ -76,7 +87,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mask
         public new class Mask<TItem> :
-            MagicEffectArchetype.Mask<TItem>,
+            AMagicEffectArchetype.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -84,17 +95,15 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Association = initialValue;
             }
 
             public Mask(
-                TItem Type,
-                TItem AssociationKey,
-                TItem ActorValue)
-            : base(
-                Type: Type,
-                AssociationKey: AssociationKey,
-                ActorValue: ActorValue)
+                TItem ActorValue,
+                TItem Association)
+            : base(ActorValue: ActorValue)
             {
+                this.Association = Association;
             }
 
             #pragma warning disable CS8618
@@ -103,6 +112,10 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Association;
             #endregion
 
             #region Equals
@@ -116,11 +129,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Association, rhs.Association)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Association);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -131,6 +146,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Association)) return false;
                 return true;
             }
             #endregion
@@ -139,6 +155,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Association)) return true;
                 return false;
             }
             #endregion
@@ -154,6 +171,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Association = eval(this.Association);
             }
             #endregion
 
@@ -172,6 +190,10 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(MagicEffectEnhanceWeaponArchetype.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Association ?? true)
+                    {
+                        sb.AppendItem(Association, "Association");
+                    }
                 }
             }
             #endregion
@@ -179,15 +201,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public new class ErrorMask :
-            MagicEffectArchetype.ErrorMask,
+            AMagicEffectArchetype.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Association;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MagicEffectEnhanceWeaponArchetype_FieldIndex enu = (MagicEffectEnhanceWeaponArchetype_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectEnhanceWeaponArchetype_FieldIndex.Association:
+                        return Association;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -198,6 +226,9 @@ namespace Mutagen.Bethesda.Fallout4
                 MagicEffectEnhanceWeaponArchetype_FieldIndex enu = (MagicEffectEnhanceWeaponArchetype_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectEnhanceWeaponArchetype_FieldIndex.Association:
+                        this.Association = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -209,6 +240,9 @@ namespace Mutagen.Bethesda.Fallout4
                 MagicEffectEnhanceWeaponArchetype_FieldIndex enu = (MagicEffectEnhanceWeaponArchetype_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectEnhanceWeaponArchetype_FieldIndex.Association:
+                        this.Association = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -218,6 +252,7 @@ namespace Mutagen.Bethesda.Fallout4
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Association != null) return true;
                 return false;
             }
             #endregion
@@ -244,6 +279,9 @@ namespace Mutagen.Bethesda.Fallout4
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Association, "Association");
+                }
             }
             #endregion
 
@@ -252,6 +290,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Association = this.Association.Combine(rhs.Association);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -270,18 +309,29 @@ namespace Mutagen.Bethesda.Fallout4
 
         }
         public new class TranslationMask :
-            MagicEffectArchetype.TranslationMask,
+            AMagicEffectArchetype.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Association;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Association = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Association, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -289,6 +339,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MagicEffectEnhanceWeaponArchetypeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectEnhanceWeaponArchetypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -348,25 +403,22 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMagicEffectEnhanceWeaponArchetype :
-        ILoquiObjectSetter<IMagicEffectEnhanceWeaponArchetypeInternal>,
-        IMagicEffectArchetypeInternal,
+        IAMagicEffectArchetype,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IMagicEffectEnhanceWeaponArchetype>,
         IMagicEffectEnhanceWeaponArchetypeGetter
     {
-    }
-
-    public partial interface IMagicEffectEnhanceWeaponArchetypeInternal :
-        IMagicEffectArchetypeInternal,
-        IMagicEffectEnhanceWeaponArchetype,
-        IMagicEffectEnhanceWeaponArchetypeGetter
-    {
+        new IFormLink<IObjectEffectGetter> Association { get; set; }
     }
 
     public partial interface IMagicEffectEnhanceWeaponArchetypeGetter :
-        IMagicEffectArchetypeGetter,
+        IAMagicEffectArchetypeGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMagicEffectEnhanceWeaponArchetypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
+        IFormLinkGetter<IObjectEffectGetter> Association { get; }
 
     }
 
@@ -375,7 +427,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Common MixIn
     public static partial class MagicEffectEnhanceWeaponArchetypeMixIn
     {
-        public static void Clear(this IMagicEffectEnhanceWeaponArchetypeInternal item)
+        public static void Clear(this IMagicEffectEnhanceWeaponArchetype item)
         {
             ((MagicEffectEnhanceWeaponArchetypeSetterCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -427,7 +479,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectEnhanceWeaponArchetypeInternal lhs,
+            this IMagicEffectEnhanceWeaponArchetype lhs,
             IMagicEffectEnhanceWeaponArchetypeGetter rhs,
             out MagicEffectEnhanceWeaponArchetype.ErrorMask errorMask,
             MagicEffectEnhanceWeaponArchetype.TranslationMask? copyMask = null)
@@ -443,7 +495,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectEnhanceWeaponArchetypeInternal lhs,
+            this IMagicEffectEnhanceWeaponArchetype lhs,
             IMagicEffectEnhanceWeaponArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -489,7 +541,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMagicEffectEnhanceWeaponArchetypeInternal item,
+            this IMagicEffectEnhanceWeaponArchetype item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -511,9 +563,8 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum MagicEffectEnhanceWeaponArchetype_FieldIndex
     {
-        Type = 0,
-        AssociationKey = 1,
-        ActorValue = 2,
+        ActorValue = 0,
+        Association = 1,
     }
     #endregion
 
@@ -531,9 +582,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "9be01c63-f9c4-47f1-8c75-92a1fe1e6095";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(MagicEffectEnhanceWeaponArchetype.Mask<>);
 
@@ -547,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type SetterType = typeof(IMagicEffectEnhanceWeaponArchetype);
 
-        public static readonly Type? InternalSetterType = typeof(IMagicEffectEnhanceWeaponArchetypeInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Fallout4.MagicEffectEnhanceWeaponArchetype";
 
@@ -592,34 +643,36 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class MagicEffectEnhanceWeaponArchetypeSetterCommon : MagicEffectArchetypeSetterCommon
+    internal partial class MagicEffectEnhanceWeaponArchetypeSetterCommon : AMagicEffectArchetypeSetterCommon
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeSetterCommon Instance = new MagicEffectEnhanceWeaponArchetypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMagicEffectEnhanceWeaponArchetypeInternal item)
+        public void Clear(IMagicEffectEnhanceWeaponArchetype item)
         {
             ClearPartial();
+            item.Association.Clear();
             base.Clear(item);
         }
         
-        public override void Clear(IMagicEffectArchetypeInternal item)
+        public override void Clear(IAMagicEffectArchetype item)
         {
-            Clear(item: (IMagicEffectEnhanceWeaponArchetypeInternal)item);
+            Clear(item: (IMagicEffectEnhanceWeaponArchetype)item);
         }
         
         #region Mutagen
         public void RemapLinks(IMagicEffectEnhanceWeaponArchetype obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Association.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMagicEffectEnhanceWeaponArchetypeInternal item,
+            IMagicEffectEnhanceWeaponArchetype item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -631,7 +684,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public override void CopyInFromBinary(
-            IMagicEffectArchetypeInternal item,
+            IAMagicEffectArchetype item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -644,7 +697,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         
     }
-    internal partial class MagicEffectEnhanceWeaponArchetypeCommon : MagicEffectArchetypeCommon
+    internal partial class MagicEffectEnhanceWeaponArchetypeCommon : AMagicEffectArchetypeCommon
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeCommon Instance = new MagicEffectEnhanceWeaponArchetypeCommon();
 
@@ -668,6 +721,7 @@ namespace Mutagen.Bethesda.Fallout4
             MagicEffectEnhanceWeaponArchetype.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Association = item.Association.Equals(rhs.Association);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -713,21 +767,21 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             MagicEffectEnhanceWeaponArchetype.Mask<bool>? printMask = null)
         {
-            MagicEffectArchetypeCommon.ToStringFields(
+            AMagicEffectArchetypeCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Association ?? true)
+            {
+                sb.AppendItem(item.Association.FormKey, "Association");
+            }
         }
         
-        public static MagicEffectEnhanceWeaponArchetype_FieldIndex ConvertFieldIndex(MagicEffectArchetype_FieldIndex index)
+        public static MagicEffectEnhanceWeaponArchetype_FieldIndex ConvertFieldIndex(AMagicEffectArchetype_FieldIndex index)
         {
             switch (index)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                    return (MagicEffectEnhanceWeaponArchetype_FieldIndex)((int)index);
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                    return (MagicEffectEnhanceWeaponArchetype_FieldIndex)((int)index);
-                case MagicEffectArchetype_FieldIndex.ActorValue:
+                case AMagicEffectArchetype_FieldIndex.ActorValue:
                     return (MagicEffectEnhanceWeaponArchetype_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -741,13 +795,17 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((IAMagicEffectArchetypeGetter)lhs, (IAMagicEffectArchetypeGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffectEnhanceWeaponArchetype_FieldIndex.Association) ?? true))
+            {
+                if (!lhs.Association.Equals(rhs.Association)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
-            IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs,
+            IAMagicEffectArchetypeGetter? lhs,
+            IAMagicEffectArchetypeGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             return Equals(
@@ -759,11 +817,12 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IMagicEffectEnhanceWeaponArchetypeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Association);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IMagicEffectArchetypeGetter item)
+        public override int GetHashCode(IAMagicEffectArchetypeGetter item)
         {
             return GetHashCode(item: (IMagicEffectEnhanceWeaponArchetypeGetter)item);
         }
@@ -783,32 +842,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.Association);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon : MagicEffectArchetypeSetterTranslationCommon
+    internal partial class MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon : AMagicEffectArchetypeSetterTranslationCommon
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon Instance = new MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon();
 
         #region DeepCopyIn
-        public void DeepCopyIn(
-            IMagicEffectEnhanceWeaponArchetypeInternal item,
-            IMagicEffectEnhanceWeaponArchetypeGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
-        }
-        
         public void DeepCopyIn(
             IMagicEffectEnhanceWeaponArchetype item,
             IMagicEffectEnhanceWeaponArchetypeGetter rhs,
@@ -817,31 +862,21 @@ namespace Mutagen.Bethesda.Fallout4
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IMagicEffectArchetype)item,
-                (IMagicEffectArchetypeGetter)rhs,
+                (IAMagicEffectArchetype)item,
+                (IAMagicEffectArchetypeGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MagicEffectEnhanceWeaponArchetype_FieldIndex.Association) ?? true))
+            {
+                item.Association.SetTo(rhs.Association.FormKey);
+            }
         }
         
-        public override void DeepCopyIn(
-            IMagicEffectArchetypeInternal item,
-            IMagicEffectArchetypeGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IMagicEffectEnhanceWeaponArchetypeInternal)item,
-                rhs: (IMagicEffectEnhanceWeaponArchetypeGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
         
         public override void DeepCopyIn(
-            IMagicEffectArchetype item,
-            IMagicEffectArchetypeGetter rhs,
+            IAMagicEffectArchetype item,
+            IAMagicEffectArchetypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -935,17 +970,26 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     public partial class MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation :
-        MagicEffectArchetypeBinaryWriteTranslation,
+        AMagicEffectArchetypeBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation Instance = new();
+
+        public static void WriteEmbedded(
+            IMagicEffectEnhanceWeaponArchetypeGetter item,
+            MutagenWriter writer)
+        {
+            AMagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
 
         public void Write(
             MutagenWriter writer,
             IMagicEffectEnhanceWeaponArchetypeGetter item,
             TypedWriteParams translationParams)
         {
-            MagicEffectArchetypeBinaryWriteTranslation.WriteEmbedded(
+            WriteEmbedded(
                 item: item,
                 writer: writer);
         }
@@ -963,7 +1007,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public override void Write(
             MutagenWriter writer,
-            IMagicEffectArchetypeGetter item,
+            IAMagicEffectArchetypeGetter item,
             TypedWriteParams translationParams)
         {
             Write(
@@ -974,9 +1018,18 @@ namespace Mutagen.Bethesda.Fallout4
 
     }
 
-    internal partial class MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation : MagicEffectArchetypeBinaryCreateTranslation
+    internal partial class MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation : AMagicEffectArchetypeBinaryCreateTranslation
     {
         public new static readonly MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation Instance = new MagicEffectEnhanceWeaponArchetypeBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMagicEffectEnhanceWeaponArchetype item,
+            MutagenFrame frame)
+        {
+            AMagicEffectArchetypeBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
 
     }
 
@@ -993,116 +1046,6 @@ namespace Mutagen.Bethesda.Fallout4
 }
 namespace Mutagen.Bethesda.Fallout4
 {
-    internal partial class MagicEffectEnhanceWeaponArchetypeBinaryOverlay :
-        MagicEffectArchetypeBinaryOverlay,
-        IMagicEffectEnhanceWeaponArchetypeGetter
-    {
-        #region Common Routing
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => MagicEffectEnhanceWeaponArchetype_Registration.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonInstance() => MagicEffectEnhanceWeaponArchetypeCommon.Instance;
-        [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MagicEffectEnhanceWeaponArchetypeSetterTranslationCommon.Instance;
-
-        #endregion
-
-        void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation.Instance;
-        void IBinaryItem.WriteToBinary(
-            MutagenWriter writer,
-            TypedWriteParams translationParams = default)
-        {
-            ((MagicEffectEnhanceWeaponArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
-                item: this,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
-        partial void CustomFactoryEnd(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-
-        partial void CustomCtor();
-        protected MagicEffectEnhanceWeaponArchetypeBinaryOverlay(
-            MemoryPair memoryPair,
-            BinaryOverlayFactoryPackage package)
-            : base(
-                memoryPair: memoryPair,
-                package: package)
-        {
-            this.CustomCtor();
-        }
-
-        public static IMagicEffectEnhanceWeaponArchetypeGetter MagicEffectEnhanceWeaponArchetypeFactory(
-            OverlayStream stream,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            stream = ExtractTypelessSubrecordStructMemory(
-                stream: stream,
-                meta: package.MetaData.Constants,
-                translationParams: translationParams,
-                memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new MagicEffectEnhanceWeaponArchetypeBinaryOverlay(
-                memoryPair: memoryPair,
-                package: package);
-            ret.CustomFactoryEnd(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset);
-            return ret;
-        }
-
-        public static IMagicEffectEnhanceWeaponArchetypeGetter MagicEffectEnhanceWeaponArchetypeFactory(
-            ReadOnlyMemorySlice<byte> slice,
-            BinaryOverlayFactoryPackage package,
-            TypedParseParams translationParams = default)
-        {
-            return MagicEffectEnhanceWeaponArchetypeFactory(
-                stream: new OverlayStream(slice, package),
-                package: package,
-                translationParams: translationParams);
-        }
-
-        #region To String
-
-        public override void Print(
-            StructuredStringBuilder sb,
-            string? name = null)
-        {
-            MagicEffectEnhanceWeaponArchetypeMixIn.Print(
-                item: this,
-                sb: sb,
-                name: name);
-        }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (obj is not IMagicEffectEnhanceWeaponArchetypeGetter rhs) return false;
-            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
-        }
-
-        public bool Equals(IMagicEffectEnhanceWeaponArchetypeGetter? obj)
-        {
-            return ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
-        }
-
-        public override int GetHashCode() => ((MagicEffectEnhanceWeaponArchetypeCommon)((IMagicEffectEnhanceWeaponArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
-    }
-
 }
 #endregion
 

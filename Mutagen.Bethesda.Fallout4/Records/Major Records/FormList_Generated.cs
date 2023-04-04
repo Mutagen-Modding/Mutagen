@@ -623,6 +623,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequired,
         IObjectId,
         IPlaceableObject,
+        IReferenceableObject,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -654,6 +655,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter,
         IObjectIdGetter,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

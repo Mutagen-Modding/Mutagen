@@ -55,16 +55,11 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
-        #region Header
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RegionDataHeader? _Header;
-        public RegionDataHeader? Header
-        {
-            get => _Header;
-            set => _Header = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRegionDataHeaderGetter? IRegionDataGetter.Header => this.Header;
+        #region Flags
+        public RegionData.RegionDataFlag Flags { get; set; } = default;
+        #endregion
+        #region Priority
+        public Byte Priority { get; set; } = default;
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -123,15 +118,18 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Header = new MaskItem<TItem, RegionDataHeader.Mask<TItem>?>(initialValue, new RegionDataHeader.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.Priority = initialValue;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem Header,
+                TItem Flags,
+                TItem Priority,
                 TItem Icons)
             {
-                this.Header = new MaskItem<TItem, RegionDataHeader.Mask<TItem>?>(Header, new RegionDataHeader.Mask<TItem>(Header));
+                this.Flags = Flags;
+                this.Priority = Priority;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
             }
 
@@ -144,7 +142,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Members
-            public MaskItem<TItem, RegionDataHeader.Mask<TItem>?>? Header { get; set; }
+            public TItem Flags;
+            public TItem Priority;
             public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             #endregion
 
@@ -158,14 +157,16 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Header, rhs.Header)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
                 if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Header);
+                hash.Add(this.Flags);
+                hash.Add(this.Priority);
                 hash.Add(this.Icons);
                 return hash.ToHashCode();
             }
@@ -175,11 +176,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region All
             public virtual bool All(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (!eval(this.Header.Overall)) return false;
-                    if (this.Header.Specific != null && !this.Header.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Priority)) return false;
                 if (Icons != null)
                 {
                     if (!eval(this.Icons.Overall)) return false;
@@ -192,11 +190,8 @@ namespace Mutagen.Bethesda.Fallout4
             #region Any
             public virtual bool Any(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (eval(this.Header.Overall)) return true;
-                    if (this.Header.Specific != null && this.Header.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.Priority)) return true;
                 if (Icons != null)
                 {
                     if (eval(this.Icons.Overall)) return true;
@@ -216,7 +211,8 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Header = this.Header == null ? null : new MaskItem<R, RegionDataHeader.Mask<R>?>(eval(this.Header.Overall), this.Header.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.Priority = eval(this.Priority);
                 obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
             }
             #endregion
@@ -236,9 +232,13 @@ namespace Mutagen.Bethesda.Fallout4
                 sb.AppendLine($"{nameof(RegionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Header?.Overall ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        Header?.Print(sb);
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Priority ?? true)
+                    {
+                        sb.AppendItem(Priority, "Priority");
                     }
                     if (printMask?.Icons?.Overall ?? true)
                     {
@@ -268,7 +268,8 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, RegionDataHeader.ErrorMask?>? Header;
+            public Exception? Flags;
+            public Exception? Priority;
             public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             #endregion
 
@@ -278,8 +279,10 @@ namespace Mutagen.Bethesda.Fallout4
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Header:
-                        return Header;
+                    case RegionData_FieldIndex.Flags:
+                        return Flags;
+                    case RegionData_FieldIndex.Priority:
+                        return Priority;
                     case RegionData_FieldIndex.Icons:
                         return Icons;
                     default:
@@ -292,8 +295,11 @@ namespace Mutagen.Bethesda.Fallout4
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Header:
-                        this.Header = new MaskItem<Exception?, RegionDataHeader.ErrorMask?>(ex, null);
+                    case RegionData_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case RegionData_FieldIndex.Priority:
+                        this.Priority = ex;
                         break;
                     case RegionData_FieldIndex.Icons:
                         this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
@@ -308,8 +314,11 @@ namespace Mutagen.Bethesda.Fallout4
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.Header:
-                        this.Header = (MaskItem<Exception?, RegionDataHeader.ErrorMask?>?)obj;
+                    case RegionData_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case RegionData_FieldIndex.Priority:
+                        this.Priority = (Exception?)obj;
                         break;
                     case RegionData_FieldIndex.Icons:
                         this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
@@ -322,7 +331,8 @@ namespace Mutagen.Bethesda.Fallout4
             public virtual bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Header != null) return true;
+                if (Flags != null) return true;
+                if (Priority != null) return true;
                 if (Icons != null) return true;
                 return false;
             }
@@ -349,7 +359,12 @@ namespace Mutagen.Bethesda.Fallout4
             }
             protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
-                Header?.Print(sb);
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Priority, "Priority");
+                }
                 Icons?.Print(sb);
             }
             #endregion
@@ -359,7 +374,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Header = this.Header.Combine(rhs.Header, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Priority = this.Priority.Combine(rhs.Priority);
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -384,7 +400,8 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public RegionDataHeader.TranslationMask? Header;
+            public bool Flags;
+            public bool Priority;
             public Icons.TranslationMask? Icons;
             #endregion
 
@@ -395,6 +412,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Flags = defaultOn;
+                this.Priority = defaultOn;
             }
 
             #endregion
@@ -410,7 +429,8 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Header != null ? Header.OnOverall : DefaultOn, Header?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((Priority, null));
                 ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
             }
 
@@ -468,7 +488,8 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IRegionData>,
         IRegionDataGetter
     {
-        new RegionDataHeader? Header { get; set; }
+        new RegionData.RegionDataFlag Flags { get; set; }
+        new Byte Priority { get; set; }
         /// <summary>
         /// Aspects: IHasIcons
         /// </summary>
@@ -492,7 +513,8 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RegionData_Registration.Instance;
-        IRegionDataHeaderGetter? Header { get; }
+        RegionData.RegionDataFlag Flags { get; }
+        Byte Priority { get; }
         #region Icons
         /// <summary>
         /// Aspects: IHasIconsGetter
@@ -668,8 +690,9 @@ namespace Mutagen.Bethesda.Fallout4
     #region Field Index
     internal enum RegionData_FieldIndex
     {
-        Header = 0,
-        Icons = 1,
+        Flags = 0,
+        Priority = 1,
+        Icons = 2,
     }
     #endregion
 
@@ -687,9 +710,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "1e3646b5-839a-4a90-975e-7b6ff569e130";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(RegionData.Mask<>);
 
@@ -715,14 +738,16 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RDAT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var triggers = RecordCollection.Factory(RecordTypes.RDAT);
             var all = RecordCollection.Factory(
                 RecordTypes.RDAT,
                 RecordTypes.ICON,
                 RecordTypes.MICO);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataBinaryWriteTranslation);
         #region Interface
@@ -766,7 +791,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual void Clear(IRegionData item)
         {
             ClearPartial();
-            item.Header = null;
+            item.Flags = default;
+            item.Priority = default;
             item.Icons = null;
         }
         
@@ -787,6 +813,7 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
+                fillStructs: RegionDataBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RegionDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -817,11 +844,8 @@ namespace Mutagen.Bethesda.Fallout4
             RegionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Header = EqualsMaskHelper.EqualsHelper(
-                item.Header,
-                rhs.Header,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Priority = item.Priority == rhs.Priority;
             ret.Icons = EqualsMaskHelper.EqualsHelper(
                 item.Icons,
                 rhs.Icons,
@@ -871,10 +895,13 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             RegionData.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Header?.Overall ?? true)
-                && item.Header is {} HeaderItem)
+            if (printMask?.Flags ?? true)
             {
-                HeaderItem?.Print(sb, "Header");
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Priority ?? true)
+            {
+                sb.AppendItem(item.Priority, "Priority");
             }
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
@@ -890,13 +917,13 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Header, rhs.Header, out var lhsHeader, out var rhsHeader, out var isHeaderEqual))
-                {
-                    if (!((RegionDataHeaderCommon)((IRegionDataHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, equalsMask?.GetSubCrystal((int)RegionData_FieldIndex.Header))) return false;
-                }
-                else if (!isHeaderEqual) return false;
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
+            {
+                if (lhs.Priority != rhs.Priority) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RegionData_FieldIndex.Icons) ?? true))
             {
@@ -912,10 +939,8 @@ namespace Mutagen.Bethesda.Fallout4
         public virtual int GetHashCode(IRegionDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Header is {} Headeritem)
-            {
-                hash.Add(Headeritem);
-            }
+            hash.Add(item.Flags);
+            hash.Add(item.Priority);
             if (item.Icons is {} Iconsitem)
             {
                 hash.Add(Iconsitem);
@@ -952,31 +977,13 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)RegionData_FieldIndex.Header);
-                try
-                {
-                    if(rhs.Header is {} rhsHeader)
-                    {
-                        item.Header = rhsHeader.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)RegionData_FieldIndex.Header));
-                    }
-                    else
-                    {
-                        item.Header = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
+            {
+                item.Priority = rhs.Priority;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Icons) ?? true))
             {
@@ -1096,18 +1103,20 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly RegionDataBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IRegionDataGetter item,
+            MutagenWriter writer)
+        {
+        }
+
         public static void WriteRecordTypes(
             IRegionDataGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            if (item.Header is {} HeaderItem)
-            {
-                ((RegionDataHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
-                    item: HeaderItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            RegionDataBinaryWriteTranslation.WriteBinaryHeaderLogic(
+                writer: writer,
+                item: item);
             if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
@@ -1117,11 +1126,27 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
 
+        public static partial void WriteBinaryHeaderLogicCustom(
+            MutagenWriter writer,
+            IRegionDataGetter item);
+
+        public static void WriteBinaryHeaderLogic(
+            MutagenWriter writer,
+            IRegionDataGetter item)
+        {
+            WriteBinaryHeaderLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
         public virtual void Write(
             MutagenWriter writer,
             IRegionDataGetter item,
             TypedWriteParams translationParams)
         {
+            WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1145,6 +1170,12 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public static readonly RegionDataBinaryCreateTranslation Instance = new RegionDataBinaryCreateTranslation();
 
+        public static void FillBinaryStructs(
+            IRegionData item,
+            MutagenFrame frame)
+        {
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IRegionData item,
             MutagenFrame frame,
@@ -1159,14 +1190,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Header, translationParams)) return ParseResult.Stop;
-                    item.Header = Mutagen.Bethesda.Fallout4.RegionDataHeader.CreateFromBinary(frame: frame);
-                    return (int)RegionData_FieldIndex.Header;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    return RegionDataBinaryCreateTranslation.FillBinaryHeaderLogicCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ICON:
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Fallout4.Icons.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
@@ -1176,6 +1208,11 @@ namespace Mutagen.Bethesda.Fallout4
                     return ParseResult.Stop;
             }
         }
+
+        public static partial ParseResult FillBinaryHeaderLogicCustom(
+            MutagenFrame frame,
+            IRegionData item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1241,9 +1278,11 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        #region Header
-        private RangeInt32? _HeaderLocation;
-        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(_recordData.Slice(_HeaderLocation!.Value.Min), _package) : default;
+        #region HeaderLogic
+        public partial ParseResult HeaderLogicCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IIconsGetter? Icons { get; private set; }
         partial void CustomFactoryEnd(
@@ -1277,14 +1316,15 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Header, translationParams)) return ParseResult.Stop;
-                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)RegionData_FieldIndex.Header;
+                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    return HeaderLogicCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ICON:
                 case RecordTypeInts.MICO:
                 {
-                    if (lastParsed.ShortCircuit((int)RegionData_FieldIndex.Icons, translationParams)) return ParseResult.Stop;
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,

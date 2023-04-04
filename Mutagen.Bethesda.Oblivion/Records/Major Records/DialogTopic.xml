@@ -15,7 +15,8 @@
     <Fields>
       <RefDirect name="Data" refName="DialogItemData" />
       <FormLink name="Quest" recordType="QSTI" refName="Quest" />
-      <FormLink name="PreviousTopic" recordType="PNAM" refName="DialogItem" />
+      <FormLink name="Topic" recordType="TPIC" refName="DialogTopic" />
+      <FormLink name="PreviousItem" recordType="PNAM" refName="DialogItem" />
       <List name="Topics">
         <FormLink recordType="NAME" refName="DialogTopic" />
       </List>
@@ -27,7 +28,7 @@
       <List name="LinkFrom">
         <FormLink recordType="TCLF" refName="DialogTopic" />
       </List>
-      <RefDirect name="Script" refName="ScriptFields" singleton="true" />
+      <RefDirect name="Script" refName="ScriptFields" singleton="true" />d
     </Fields>
   </Object>
   <Object name="DialogItemData" objType="Subrecord" recordType="DATA" GUID="2261ed10-f5dd-4b02-b71a-8eedb897e41e" ID="186">

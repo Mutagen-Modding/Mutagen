@@ -42,6 +42,38 @@ public static class ObjectGenerationExt
         return TryGetRecordType(objGen, out var recType);
     }
 
+    public static bool HasRecordTypeFields(this ObjectGeneration obj)
+    {
+        return GetRecordTypeFields(obj).Any();
+    }
+
+    public static IEnumerable<TypeGeneration> GetRecordTypeFields(this ObjectGeneration obj)
+    {
+        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
+        {
+            if (field.GetFieldData().HasTrigger)
+            {
+                yield return field;
+            }
+        }
+    }
+
+    public static async Task<bool> HasAnyRecordTypesInTree(this ObjectGeneration objGen)
+    {
+        if (objGen.HasRecordTypeFields()) return true;
+        foreach (var baseObj in objGen.BaseClassTrail())
+        {
+            if (baseObj.HasRecordTypeFields()) return true;
+        }
+        var inherit = await objGen.InheritingObjects();
+        foreach (var inheritObj in inherit)
+        {
+            if (inheritObj.HasRecordTypeFields()) return true;
+        }
+
+        return false;
+    }
+
     public static string GetModName(this ObjectGeneration objGen, bool getter)
     {
         return objGen.GetObjectData().GameCategory.Value.ModInterface(getter: getter);
@@ -67,6 +99,30 @@ public static class ObjectGenerationExt
         }
         recType = data.MarkerType.Value;
         return true;
+    }
+
+    public static IEnumerable<TypeGeneration> GetEmbeddedFields(this ObjectGeneration obj)
+    {
+        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
+        {
+            if (field.GetFieldData().HasTrigger) continue;
+            if (!field.IntegrateField)
+            {
+                if (field is CustomLogic)
+                {
+                    yield return field;
+                }
+            }
+            else
+            {
+                yield return field;
+            }
+        }
+    }
+
+    public static bool HasEmbeddedFields(this ObjectGeneration obj)
+    {
+        return GetEmbeddedFields(obj).Any();
     }
 
     public static bool TryGetCustomRecordTypeTriggers(this ObjectGeneration objGen, out IEnumerable<RecordType> recTypes)

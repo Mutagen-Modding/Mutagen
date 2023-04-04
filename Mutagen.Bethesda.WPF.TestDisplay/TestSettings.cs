@@ -10,7 +10,7 @@ public class TestSettings
     public bool MyBool;
         
     [Tooltip("This is my string")]
-    public string MyString = string.Empty;
+    public string MyString = "Hello world";
         
     [Tooltip("This is my FormKey")]
     public FormKey MyFormKey;
@@ -20,6 +20,20 @@ public class TestSettings
 
     [Tooltip("This is an enum")]
     public MyEnum MyEnum = MyEnum.EnumValue2;
+
+    public SubClass SubObject = new();
+
+    public List<int> PrimitiveList = new();
+
+    public List<SubClass> ObjectList = new();
+
+    public Dictionary<int, SubClass> Dictionary = new();
+
+    public Dictionary<MyEnum, SubClass> DictionaryWithEnumKey = new();
+
+    public Dictionary<SubClass, SubClass> DictionaryWithComplexKey = new();
+
+    public Dictionary<IFormLinkGetter<IArmorGetter>, SubClass> DictionaryWithLinkKey = new();
 }
 
 public enum MyEnum
@@ -27,4 +41,9 @@ public enum MyEnum
     EnumValue1,
     EnumValue2,
     EnumValue3,
+}
+
+public class SubClass
+{
+    public int MyInt { get; set; } = 23;
 }

@@ -542,7 +542,8 @@ namespace Mutagen.Bethesda.Fallout4
         IDebrisGetter,
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<IDebrisInternal>,
-        IPlaceableObject
+        IPlaceableObject,
+        IReferenceableObject
     {
         new ExtendedList<DebrisModel> Models { get; }
     }
@@ -560,7 +561,8 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IReferenceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
         IReadOnlyList<IDebrisModelGetter> Models { get; }

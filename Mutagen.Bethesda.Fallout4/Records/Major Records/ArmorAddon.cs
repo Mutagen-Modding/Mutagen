@@ -1,11 +1,8 @@
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System.Collections;
-using Noggog.StructuredStrings;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.Internals;
 using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
 
 namespace Mutagen.Bethesda.Fallout4;
@@ -90,6 +87,11 @@ partial class ArmorAddonBinaryWriteTranslation
 
 internal partial class ArmorAddonBinaryOverlay
 {
+    #region WeightSliderEnabled
+    public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom();
+    public IGenderedItemGetter<Boolean> WeightSliderEnabled => GetWeightSliderEnabledCustom();
+    #endregion
+    
     public partial IGenderedItemGetter<Boolean> GetWeightSliderEnabledCustom() => new GenderedItem<bool>(
         _recordData.Slice(_DNAMLocation!.Value.Min + 2)[0] >= 2,
         _recordData.Slice(_DNAMLocation!.Value.Min + 3)[0] >= 2);

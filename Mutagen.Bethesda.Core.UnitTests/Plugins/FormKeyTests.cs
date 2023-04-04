@@ -22,6 +22,14 @@ public class FormKeyTests
             new FormKey(modKey: new ModKey("Oblivion", ModType.Master), id: 0x00C51A),
             id);
     }
+    
+    [Theory, MutagenAutoData]
+    public void Import_FilesafeString(FormKey fk)
+    {
+        FormKey.TryFactory(fk.ToFilesafeString(), out var id)
+            .Should().BeTrue();
+        id.Should().Be(fk);
+    }
 
     [Fact]
     public void Import_String0x()

@@ -61,10 +61,14 @@
       <RefDirect name="FaceParts" refName="NpcFaceParts" />
       <RefList name="TintLayers" refName="TintLayer" />
     </Fields>
+    <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
     <LinkInterface>ILockList</LinkInterface>
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>INpcOrList</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="32c58c3d-5a6e-4382-8bf1-7e6633863702" ID="201">
     <Fields>
@@ -95,7 +99,7 @@
   <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="e65aa7ba-d430-4857-97e8-59d0930b622a" ID="205">
     <Fields>
       <FormLink name="Faction" refName="Faction" />
-      <UInt8 name="Rank" />
+      <Int8 name="Rank" />
       <ByteArray name="Fluff" byteLength="3" nullable="False" />
     </Fields>
   </Object>

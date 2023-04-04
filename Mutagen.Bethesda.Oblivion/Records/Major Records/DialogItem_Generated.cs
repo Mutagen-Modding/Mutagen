@@ -75,15 +75,25 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IQuestGetter> IDialogItemGetter.Quest => this.Quest;
         #endregion
-        #region PreviousTopic
-        private readonly IFormLinkNullable<IDialogItemGetter> _PreviousTopic = new FormLinkNullable<IDialogItemGetter>();
-        public IFormLinkNullable<IDialogItemGetter> PreviousTopic
+        #region Topic
+        private readonly IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
+        public IFormLinkNullable<IDialogTopicGetter> Topic
         {
-            get => _PreviousTopic;
-            set => _PreviousTopic.SetTo(value);
+            get => _Topic;
+            set => _Topic.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IDialogItemGetter> IDialogItemGetter.PreviousTopic => this.PreviousTopic;
+        IFormLinkNullableGetter<IDialogTopicGetter> IDialogItemGetter.Topic => this.Topic;
+        #endregion
+        #region PreviousItem
+        private readonly IFormLinkNullable<IDialogItemGetter> _PreviousItem = new FormLinkNullable<IDialogItemGetter>();
+        public IFormLinkNullable<IDialogItemGetter> PreviousItem
+        {
+            get => _PreviousItem;
+            set => _PreviousItem.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogItemGetter> IDialogItemGetter.PreviousItem => this.PreviousItem;
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -189,7 +199,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Data = new MaskItem<TItem, DialogItemData.Mask<TItem>?>(initialValue, new DialogItemData.Mask<TItem>(initialValue));
                 this.Quest = initialValue;
-                this.PreviousTopic = initialValue;
+                this.Topic = initialValue;
+                this.PreviousItem = initialValue;
                 this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
@@ -206,7 +217,8 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem OblivionMajorRecordFlags,
                 TItem Data,
                 TItem Quest,
-                TItem PreviousTopic,
+                TItem Topic,
+                TItem PreviousItem,
                 TItem Topics,
                 TItem Responses,
                 TItem Conditions,
@@ -222,7 +234,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Data = new MaskItem<TItem, DialogItemData.Mask<TItem>?>(Data, new DialogItemData.Mask<TItem>(Data));
                 this.Quest = Quest;
-                this.PreviousTopic = PreviousTopic;
+                this.Topic = Topic;
+                this.PreviousItem = PreviousItem;
                 this.Topics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Topics, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>(Responses, Enumerable.Empty<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>());
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
@@ -242,7 +255,8 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public MaskItem<TItem, DialogItemData.Mask<TItem>?>? Data { get; set; }
             public TItem Quest;
-            public TItem PreviousTopic;
+            public TItem Topic;
+            public TItem PreviousItem;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Topics;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponse.Mask<TItem>?>>?>? Responses;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
@@ -264,7 +278,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Quest, rhs.Quest)) return false;
-                if (!object.Equals(this.PreviousTopic, rhs.PreviousTopic)) return false;
+                if (!object.Equals(this.Topic, rhs.Topic)) return false;
+                if (!object.Equals(this.PreviousItem, rhs.PreviousItem)) return false;
                 if (!object.Equals(this.Topics, rhs.Topics)) return false;
                 if (!object.Equals(this.Responses, rhs.Responses)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
@@ -278,7 +293,8 @@ namespace Mutagen.Bethesda.Oblivion
                 var hash = new HashCode();
                 hash.Add(this.Data);
                 hash.Add(this.Quest);
-                hash.Add(this.PreviousTopic);
+                hash.Add(this.Topic);
+                hash.Add(this.PreviousItem);
                 hash.Add(this.Topics);
                 hash.Add(this.Responses);
                 hash.Add(this.Conditions);
@@ -301,7 +317,8 @@ namespace Mutagen.Bethesda.Oblivion
                     if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Quest)) return false;
-                if (!eval(this.PreviousTopic)) return false;
+                if (!eval(this.Topic)) return false;
+                if (!eval(this.PreviousItem)) return false;
                 if (this.Topics != null)
                 {
                     if (!eval(this.Topics.Overall)) return false;
@@ -378,7 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
                     if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Quest)) return true;
-                if (eval(this.PreviousTopic)) return true;
+                if (eval(this.Topic)) return true;
+                if (eval(this.PreviousItem)) return true;
                 if (this.Topics != null)
                 {
                     if (eval(this.Topics.Overall)) return true;
@@ -458,7 +476,8 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 obj.Data = this.Data == null ? null : new MaskItem<R, DialogItemData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.Quest = eval(this.Quest);
-                obj.PreviousTopic = eval(this.PreviousTopic);
+                obj.Topic = eval(this.Topic);
+                obj.PreviousItem = eval(this.PreviousItem);
                 if (Topics != null)
                 {
                     obj.Topics = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Topics.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -558,9 +577,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendItem(Quest, "Quest");
                     }
-                    if (printMask?.PreviousTopic ?? true)
+                    if (printMask?.Topic ?? true)
                     {
-                        sb.AppendItem(PreviousTopic, "PreviousTopic");
+                        sb.AppendItem(Topic, "Topic");
+                    }
+                    if (printMask?.PreviousItem ?? true)
+                    {
+                        sb.AppendItem(PreviousItem, "PreviousItem");
                     }
                     if ((printMask?.Topics?.Overall ?? true)
                         && Topics is {} TopicsItem)
@@ -680,7 +703,8 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public MaskItem<Exception?, DialogItemData.ErrorMask?>? Data;
             public Exception? Quest;
-            public Exception? PreviousTopic;
+            public Exception? Topic;
+            public Exception? PreviousItem;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Topics;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>? Responses;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
@@ -699,8 +723,10 @@ namespace Mutagen.Bethesda.Oblivion
                         return Data;
                     case DialogItem_FieldIndex.Quest:
                         return Quest;
-                    case DialogItem_FieldIndex.PreviousTopic:
-                        return PreviousTopic;
+                    case DialogItem_FieldIndex.Topic:
+                        return Topic;
+                    case DialogItem_FieldIndex.PreviousItem:
+                        return PreviousItem;
                     case DialogItem_FieldIndex.Topics:
                         return Topics;
                     case DialogItem_FieldIndex.Responses:
@@ -729,8 +755,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case DialogItem_FieldIndex.Quest:
                         this.Quest = ex;
                         break;
-                    case DialogItem_FieldIndex.PreviousTopic:
-                        this.PreviousTopic = ex;
+                    case DialogItem_FieldIndex.Topic:
+                        this.Topic = ex;
+                        break;
+                    case DialogItem_FieldIndex.PreviousItem:
+                        this.PreviousItem = ex;
                         break;
                     case DialogItem_FieldIndex.Topics:
                         this.Topics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -767,8 +796,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case DialogItem_FieldIndex.Quest:
                         this.Quest = (Exception?)obj;
                         break;
-                    case DialogItem_FieldIndex.PreviousTopic:
-                        this.PreviousTopic = (Exception?)obj;
+                    case DialogItem_FieldIndex.Topic:
+                        this.Topic = (Exception?)obj;
+                        break;
+                    case DialogItem_FieldIndex.PreviousItem:
+                        this.PreviousItem = (Exception?)obj;
                         break;
                     case DialogItem_FieldIndex.Topics:
                         this.Topics = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -799,7 +831,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Overall != null) return true;
                 if (Data != null) return true;
                 if (Quest != null) return true;
-                if (PreviousTopic != null) return true;
+                if (Topic != null) return true;
+                if (PreviousItem != null) return true;
                 if (Topics != null) return true;
                 if (Responses != null) return true;
                 if (Conditions != null) return true;
@@ -837,7 +870,10 @@ namespace Mutagen.Bethesda.Oblivion
                     sb.AppendItem(Quest, "Quest");
                 }
                 {
-                    sb.AppendItem(PreviousTopic, "PreviousTopic");
+                    sb.AppendItem(Topic, "Topic");
+                }
+                {
+                    sb.AppendItem(PreviousItem, "PreviousItem");
                 }
                 if (Topics is {} TopicsItem)
                 {
@@ -946,7 +982,8 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.PreviousTopic = this.PreviousTopic.Combine(rhs.PreviousTopic);
+                ret.Topic = this.Topic.Combine(rhs.Topic);
+                ret.PreviousItem = this.PreviousItem.Combine(rhs.PreviousItem);
                 ret.Topics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Topics?.Overall, rhs.Topics?.Overall), Noggog.ExceptionExt.Combine(this.Topics?.Specific, rhs.Topics?.Specific));
                 ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponse.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
@@ -977,7 +1014,8 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public DialogItemData.TranslationMask? Data;
             public bool Quest;
-            public bool PreviousTopic;
+            public bool Topic;
+            public bool PreviousItem;
             public bool Topics;
             public DialogResponse.TranslationMask? Responses;
             public Condition.TranslationMask? Conditions;
@@ -993,7 +1031,8 @@ namespace Mutagen.Bethesda.Oblivion
                 : base(defaultOn, onOverall)
             {
                 this.Quest = defaultOn;
-                this.PreviousTopic = defaultOn;
+                this.Topic = defaultOn;
+                this.PreviousItem = defaultOn;
                 this.Topics = defaultOn;
                 this.Choices = defaultOn;
                 this.LinkFrom = defaultOn;
@@ -1006,7 +1045,8 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((Quest, null));
-                ret.Add((PreviousTopic, null));
+                ret.Add((Topic, null));
+                ret.Add((PreviousItem, null));
                 ret.Add((Topics, null));
                 ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
@@ -1145,7 +1185,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new DialogItemData? Data { get; set; }
         new IFormLinkNullable<IQuestGetter> Quest { get; set; }
-        new IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; set; }
+        new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
+        new IFormLinkNullable<IDialogItemGetter> PreviousItem { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1173,7 +1214,8 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration StaticRegistration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
-        IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic { get; }
+        IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
+        IFormLinkNullableGetter<IDialogItemGetter> PreviousItem { get; }
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; }
         IReadOnlyList<IDialogResponseGetter> Responses { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1356,13 +1398,14 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecordFlags = 4,
         Data = 5,
         Quest = 6,
-        PreviousTopic = 7,
-        Topics = 8,
-        Responses = 9,
-        Conditions = 10,
-        Choices = 11,
-        LinkFrom = 12,
-        Script = 13,
+        Topic = 7,
+        PreviousItem = 8,
+        Topics = 9,
+        Responses = 10,
+        Conditions = 11,
+        Choices = 12,
+        LinkFrom = 13,
+        Script = 14,
     }
     #endregion
 
@@ -1380,9 +1423,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const string GUID = "2d9149e0-aa5e-4b4e-8bef-93b32f602f3b";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(DialogItem.Mask<>);
 
@@ -1417,6 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.INFO,
                 RecordTypes.DATA,
                 RecordTypes.QSTI,
+                RecordTypes.TPIC,
                 RecordTypes.PNAM,
                 RecordTypes.NAME,
                 RecordTypes.TRDT,
@@ -1474,7 +1518,8 @@ namespace Mutagen.Bethesda.Oblivion
             ClearPartial();
             item.Data = null;
             item.Quest.Clear();
-            item.PreviousTopic.Clear();
+            item.Topic.Clear();
+            item.PreviousItem.Clear();
             item.Topics.Clear();
             item.Responses.Clear();
             item.Conditions.Clear();
@@ -1498,7 +1543,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             base.RemapLinks(obj, mapping);
             obj.Quest.Relink(mapping);
-            obj.PreviousTopic.Relink(mapping);
+            obj.Topic.Relink(mapping);
+            obj.PreviousItem.Relink(mapping);
             obj.Topics.RemapLinks(mapping);
             obj.Choices.RemapLinks(mapping);
             obj.LinkFrom.RemapLinks(mapping);
@@ -1576,7 +1622,8 @@ namespace Mutagen.Bethesda.Oblivion
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Quest = item.Quest.Equals(rhs.Quest);
-            ret.PreviousTopic = item.PreviousTopic.Equals(rhs.PreviousTopic);
+            ret.Topic = item.Topic.Equals(rhs.Topic);
+            ret.PreviousItem = item.PreviousItem.Equals(rhs.PreviousItem);
             ret.Topics = item.Topics.CollectionEqualsHelper(
                 rhs.Topics,
                 (l, r) => object.Equals(l, r),
@@ -1656,9 +1703,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
             }
-            if (printMask?.PreviousTopic ?? true)
+            if (printMask?.Topic ?? true)
             {
-                sb.AppendItem(item.PreviousTopic.FormKeyNullable, "PreviousTopic");
+                sb.AppendItem(item.Topic.FormKeyNullable, "Topic");
+            }
+            if (printMask?.PreviousItem ?? true)
+            {
+                sb.AppendItem(item.PreviousItem.FormKeyNullable, "PreviousItem");
             }
             if (printMask?.Topics?.Overall ?? true)
             {
@@ -1792,9 +1843,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topic) ?? true))
             {
-                if (!lhs.PreviousTopic.Equals(rhs.PreviousTopic)) return false;
+                if (!lhs.Topic.Equals(rhs.Topic)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousItem) ?? true))
+            {
+                if (!lhs.PreviousItem.Equals(rhs.PreviousItem)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {
@@ -1857,7 +1912,8 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(Dataitem);
             }
             hash.Add(item.Quest);
-            hash.Add(item.PreviousTopic);
+            hash.Add(item.Topic);
+            hash.Add(item.PreviousItem);
             hash.Add(item.Topics);
             hash.Add(item.Responses);
             hash.Add(item.Conditions);
@@ -1897,9 +1953,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 yield return QuestInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.PreviousTopic, out var PreviousTopicInfo))
+            if (FormLinkInformation.TryFactory(obj.Topic, out var TopicInfo))
             {
-                yield return PreviousTopicInfo;
+                yield return TopicInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.PreviousItem, out var PreviousItemInfo))
+            {
+                yield return PreviousItemInfo;
             }
             foreach (var item in obj.Topics)
             {
@@ -2024,9 +2084,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topic) ?? true))
             {
-                item.PreviousTopic.SetTo(rhs.PreviousTopic.FormKeyNullable);
+                item.Topic.SetTo(rhs.Topic.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousItem) ?? true))
+            {
+                item.PreviousItem.SetTo(rhs.PreviousItem.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
             {
@@ -2323,7 +2387,11 @@ namespace Mutagen.Bethesda.Oblivion
                 header: translationParams.ConvertToCustom(RecordTypes.QSTI));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PreviousTopic,
+                item: item.Topic,
+                header: translationParams.ConvertToCustom(RecordTypes.TPIC));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PreviousItem,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
@@ -2478,11 +2546,17 @@ namespace Mutagen.Bethesda.Oblivion
                     item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogItem_FieldIndex.Quest;
                 }
+                case RecordTypeInts.TPIC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogItem_FieldIndex.Topic;
+                }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)DialogItem_FieldIndex.PreviousTopic;
+                    item.PreviousItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogItem_FieldIndex.PreviousItem;
                 }
                 case RecordTypeInts.NAME:
                 {
@@ -2609,9 +2683,13 @@ namespace Mutagen.Bethesda.Oblivion
         private int? _QuestLocation;
         public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
-        #region PreviousTopic
-        private int? _PreviousTopicLocation;
-        public IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic => _PreviousTopicLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreviousTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
+        #region Topic
+        private int? _TopicLocation;
+        public IFormLinkNullableGetter<IDialogTopicGetter> Topic => _TopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        #endregion
+        #region PreviousItem
+        private int? _PreviousItemLocation;
+        public IFormLinkNullableGetter<IDialogItemGetter> PreviousItem => _PreviousItemLocation.HasValue ? new FormLinkNullable<IDialogItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PreviousItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogItemGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Topics { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         public IReadOnlyList<IDialogResponseGetter> Responses { get; private set; } = Array.Empty<IDialogResponseGetter>();
@@ -2701,10 +2779,15 @@ namespace Mutagen.Bethesda.Oblivion
                     _QuestLocation = (stream.Position - offset);
                     return (int)DialogItem_FieldIndex.Quest;
                 }
+                case RecordTypeInts.TPIC:
+                {
+                    _TopicLocation = (stream.Position - offset);
+                    return (int)DialogItem_FieldIndex.Topic;
+                }
                 case RecordTypeInts.PNAM:
                 {
-                    _PreviousTopicLocation = (stream.Position - offset);
-                    return (int)DialogItem_FieldIndex.PreviousTopic;
+                    _PreviousItemLocation = (stream.Position - offset);
+                    return (int)DialogItem_FieldIndex.PreviousItem;
                 }
                 case RecordTypeInts.NAME:
                 {

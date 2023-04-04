@@ -175,6 +175,9 @@
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
@@ -634,10 +637,28 @@
     <Compile Include="Records\Major Records\RegionDataObject.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\RegionGrasses.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionLand.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionMap.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\RegionObject.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\RegionObjects.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\RegionSound.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSounds.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Relationship.cs">
@@ -1188,9 +1209,6 @@
     <Compile Include="Records\Major Records\RegionData_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\RegionDataHeader_Generated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\RegionSounds_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
@@ -1444,12 +1462,6 @@
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffectCloakArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectWerewolfArchetype_Generated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectVampireArchetype_Generated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffectEnhanceWeaponArchetype_Generated.cs">
@@ -2435,6 +2447,10 @@
     <Compile Include="Records\Major Records\UnknownObjectModification_Generated.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AMagicEffectArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

@@ -4,8 +4,6 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class MagicEffectArchetype
 {
-    public static readonly ActorValue ActorValueDefault = ActorValue.None;
-
     public enum TypeEnum
     {
         ValueModifier = 0,
@@ -55,20 +53,11 @@ public partial class MagicEffectArchetype
         VampireLord = 46,
     }
 
-    public virtual FormKey AssociationKey { get; set; } = FormKey.Null;
-    public virtual ActorValue ActorValue { get; set; }
-
     public MagicEffectArchetype(TypeEnum type = TypeEnum.ValueModifier)
     {
         this.Type = type;
     }
-}
 
-partial class MagicEffectArchetypeBinaryOverlay
-{
-    public MagicEffectArchetype.TypeEnum Type => throw new NotImplementedException();
-
-    public FormKey AssociationKey => throw new NotImplementedException();
-
-    public ActorValue ActorValue => throw new NotImplementedException();
+    MagicEffectArchetype.TypeEnum IAMagicEffectArchetypeGetter.Type => Type;
+    public override FormKey AssociationKey => Association.FormKey;
 }

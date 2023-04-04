@@ -13,7 +13,7 @@ public class AssetLinkBinaryTranslation
         MutagenFrame reader,
         bool parseWhole = true,
         StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
-        where TAssetType : IAssetType
+        where TAssetType : class, IAssetType
     {
         return new AssetLink<TAssetType>(
             StringBinaryTranslation.Instance.Parse(reader, parseWhole, stringBinaryType));
@@ -24,7 +24,7 @@ public class AssetLinkBinaryTranslation
         bool parseWhole,
         [MaybeNullWhen(false)] out IAssetLink<TAssetType> item,
         StringBinaryType binaryType = StringBinaryType.NullTerminate)
-        where TAssetType : IAssetType
+        where TAssetType : class, IAssetType
     {
         if (StringBinaryTranslation.Instance.Parse(reader, parseWhole, out var str, binaryType))
         {

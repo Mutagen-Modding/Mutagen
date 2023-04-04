@@ -1678,6 +1678,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequired,
         IObjectBounded,
         IPlaceableObject,
+        IReferenceableObject,
         IStaticTarget,
         ITerminalGetter,
         ITranslatedNamed,
@@ -1743,6 +1744,7 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IPlaceableObjectGetter,
+        IReferenceableObjectGetter,
         IStaticTargetGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

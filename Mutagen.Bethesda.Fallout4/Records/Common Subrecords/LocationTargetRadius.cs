@@ -116,6 +116,11 @@ partial class LocationTargetRadiusBinaryWriteTranslation
 
 partial class LocationTargetRadiusBinaryOverlay
 {
+    #region Target
+    public partial IALocationTargetGetter GetTargetCustom(int location);
+    public IALocationTargetGetter Target => GetTargetCustom(location: 0x0);
+    #endregion
+    
     public partial IALocationTargetGetter GetTargetCustom(int location)
     {
         return LocationTargetRadiusBinaryCreateTranslation.GetLocationTarget(

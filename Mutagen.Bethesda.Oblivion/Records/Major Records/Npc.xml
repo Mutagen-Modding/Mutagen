@@ -106,7 +106,7 @@
   <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="825729c0-9865-4e99-87a2-ea87f3fc373a" ID="85">
     <Fields>
       <FormLink name="Faction" refName="Faction" />
-      <UInt8 name="Rank" />
+      <Int8 name="Rank" />
       <ByteArray name="Unused" byteLength="3" nullable="False" />
     </Fields>
   </Object>

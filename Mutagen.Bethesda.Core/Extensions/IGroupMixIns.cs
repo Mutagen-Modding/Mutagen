@@ -16,7 +16,7 @@ public static class IGroupMixIns
     /// <param name="formKey">FormKey assign the new record.</param>
     /// <returns>New record already added to the Group</returns>
     public static TMajor AddNew<TMajor>(this IGroup<TMajor> group, FormKey formKey)
-        where TMajor : IMajorRecordInternal
+        where TMajor : IMajorRecord
     {
         var ret = MajorRecordInstantiator<TMajor>.Activator(
             formKey,
@@ -48,7 +48,7 @@ public static class IGroupMixIns
     /// <param name="group">Group to add a record to</param>
     /// <returns>New record already added to the Group</returns>
     public static TMajor AddNew<TMajor>(this IGroup<TMajor> group)
-        where TMajor : IMajorRecordInternal
+        where TMajor : IMajorRecord
     {
         var ret = MajorRecordInstantiator<TMajor>.Activator(
             group.SourceMod.GetNextFormKey(),
@@ -81,7 +81,7 @@ public static class IGroupMixIns
     /// <param name="editorID">Editor ID to assign the new record, and use in any FormKey persistence logic.</param>
     /// <returns>New record already added to the Group</returns>
     public static TMajor AddNew<TMajor>(this IGroup<TMajor> group, string? editorID)
-        where TMajor : IMajorRecordInternal
+        where TMajor : IMajorRecord
     {
         var ret = MajorRecordInstantiator<TMajor>.Activator(
             group.SourceMod.GetNextFormKey(editorID),
@@ -116,7 +116,7 @@ public static class IGroupMixIns
     /// <param name="source">Source record to duplicate</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source)
-        where TMajor : class, IMajorRecordInternal, TMajorGetter
+        where TMajor : class, IMajorRecord, TMajorGetter
         where TMajorGetter : IMajorRecordGetter
     {
         return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source);
@@ -149,7 +149,7 @@ public static class IGroupMixIns
     /// <param name="source">Source record to duplicate</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source)
-        where TMajor : class, IMajorRecordInternal, TSharedParent
+        where TMajor : class, IMajorRecord, TSharedParent
         where TMajorGetter : TSharedParent
         where TSharedParent : IMajorRecordGetter
     {
@@ -173,7 +173,7 @@ public static class IGroupMixIns
     /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, string? edid)
-        where TMajor : class, IMajorRecordInternal, TMajorGetter
+        where TMajor : class, IMajorRecord, TMajorGetter
         where TMajorGetter : IMajorRecordGetter
     {
         return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source, edid);
@@ -187,7 +187,7 @@ public static class IGroupMixIns
     /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroup<TMajor> group, TMajorGetter source, string? edid)
-        where TMajor : class, IMajorRecordInternal, TSharedParent
+        where TMajor : class, IMajorRecord, TSharedParent
         where TMajorGetter : TSharedParent
         where TSharedParent : IMajorRecordGetter
     {

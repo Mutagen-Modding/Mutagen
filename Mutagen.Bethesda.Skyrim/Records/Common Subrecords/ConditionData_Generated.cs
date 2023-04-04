@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     /// <summary>
-    /// Implemented by: [FunctionConditionData, GetEventData]
+    /// Implemented by: [UnknownConditionData, GetEventDataConditionData, AGetVATSValueConditionData, GetWantBlockingConditionData, GetDistanceConditionData, GetLockedConditionData, GetPosConditionData, GetAngleConditionData, GetStartingPosConditionData, GetStartingAngleConditionData, GetSecondsPassedConditionData, GetActorValueConditionData, GetCurrentTimeConditionData, GetScaleConditionData, IsMovingConditionData, IsTurningConditionData, GetLineOfSightConditionData, GetInSameCellConditionData, GetDisabledConditionData, MenuModeConditionData, GetDiseaseConditionData, GetClothingValueConditionData, SameFactionConditionData, SameRaceConditionData, SameSexConditionData, GetDetectedConditionData, GetDeadConditionData, GetItemCountConditionData, GetGoldConditionData, GetSleepingConditionData, GetTalkedToPCConditionData, GetScriptVariableConditionData, GetQuestRunningConditionData, GetStageConditionData, GetStageDoneConditionData, GetFactionRankDifferenceConditionData, GetAlarmedConditionData, IsRainingConditionData, GetAttackedConditionData, GetIsCreatureConditionData, GetLockLevelConditionData, GetShouldAttackConditionData, GetInCellConditionData, GetIsClassConditionData, GetIsRaceConditionData, GetIsSexConditionData, GetInFactionConditionData, GetIsIDConditionData, GetFactionRankConditionData, GetGlobalValueConditionData, IsSnowingConditionData, GetRandomPercentConditionData, GetQuestVariableConditionData, GetLevelConditionData, IsRotatingConditionData, GetDeadCountConditionData, GetIsAlertedConditionData, GetPlayerControlsDisabledConditionData, GetHeadingAngleConditionData, IsWeaponMagicOutConditionData, IsTorchOutConditionData, IsShieldOutConditionData, IsFacingUpConditionData, GetKnockedStateConditionData, GetWeaponAnimTypeConditionData, IsWeaponSkillTypeConditionData, GetCurrentAIPackageConditionData, IsWaitingConditionData, IsIdlePlayingConditionData, IsIntimidatedbyPlayerConditionData, IsPlayerInRegionConditionData, GetActorAggroRadiusViolatedConditionData, GetCrimeConditionData, IsGreetingPlayerConditionData, IsGuardConditionData, HasBeenEatenConditionData, GetStaminaPercentageConditionData, GetPCIsClassConditionData, GetPCIsRaceConditionData, GetPCIsSexConditionData, GetPCInFactionConditionData, SameFactionAsPCConditionData, SameRaceAsPCConditionData, SameSexAsPCConditionData, GetIsReferenceConditionData, IsTalkingConditionData, GetWalkSpeedConditionData, GetCurrentAIProcedureConditionData, GetTrespassWarningLevelConditionData, IsTrespassingConditionData, IsInMyOwnedCellConditionData, GetWindSpeedConditionData, GetCurrentWeatherPercentConditionData, GetIsCurrentWeatherConditionData, IsContinuingPackagePCNearConditionData, GetIsCrimeFactionConditionData, CanHaveFlamesConditionData, HasFlamesConditionData, GetOpenStateConditionData, GetSittingConditionData, GetIsCurrentPackageConditionData, IsCurrentFurnitureRefConditionData, IsCurrentFurnitureObjConditionData, GetDayOfWeekConditionData, GetTalkedToPCParamConditionData, IsPCSleepingConditionData, IsPCAMurdererConditionData, HasSameEditorLocAsRefConditionData, HasSameEditorLocAsRefAliasConditionData, GetEquippedConditionData, IsSwimmingConditionData, GetAmountSoldStolenConditionData, GetIgnoreCrimeConditionData, GetPCExpelledConditionData, GetPCFactionMurderConditionData, GetPCEnemyofFactionConditionData, GetPCFactionAttackConditionData, GetDestroyedConditionData, HasMagicEffectConditionData, GetDefaultOpenConditionData, GetAnimActionConditionData, IsSpellTargetConditionData, GetVATSModeConditionData, GetPersuasionNumberConditionData, GetVampireFeedConditionData, GetCannibalConditionData, GetIsClassDefaultConditionData, GetClassDefaultMatchConditionData, GetInCellParamConditionData, GetVatsTargetHeightConditionData, GetIsGhostConditionData, GetUnconsciousConditionData, GetRestrainedConditionData, GetIsUsedItemConditionData, GetIsUsedItemTypeConditionData, IsScenePlayingConditionData, IsInDialogueWithPlayerConditionData, GetLocationClearedConditionData, GetIsPlayableRaceConditionData, GetOffersServicesNowConditionData, HasAssociationTypeConditionData, HasFamilyRelationshipConditionData, HasParentRelationshipConditionData, IsWarningAboutConditionData, IsWeaponOutConditionData, HasSpellConditionData, IsTimePassingConditionData, IsPleasantConditionData, IsCloudyConditionData, IsSmallBumpConditionData, GetBaseActorValueConditionData, IsOwnerConditionData, IsCellOwnerConditionData, IsHorseStolenConditionData, IsLeftUpConditionData, IsSneakingConditionData, IsRunningConditionData, GetFriendHitConditionData, IsInCombatConditionData, IsInInteriorConditionData, IsWaterObjectConditionData, GetPlayerActionConditionData, IsActorUsingATorchConditionData, IsXBoxConditionData, GetInWorldspaceConditionData, GetPCMiscStatConditionData, GetPairedAnimationConditionData, IsActorAVictimConditionData, GetTotalPersuasionNumberConditionData, GetIdleDoneOnceConditionData, GetNoRumorsConditionData, GetCombatStateConditionData, GetWithinPackageLocationConditionData, IsRidingMountConditionData, IsFleeingConditionData, IsInDangerousWaterConditionData, GetIgnoreFriendlyHitsConditionData, IsPlayersLastRiddenMountConditionData, IsActorConditionData, IsEssentialConditionData, IsPlayerMovingIntoNewSpaceConditionData, GetInCurrentLocConditionData, GetInCurrentLocAliasConditionData, GetTimeDeadConditionData, HasLinkedRefConditionData, IsChildConditionData, GetStolenItemValueNoCrimeConditionData, GetLastPlayerActionConditionData, IsPlayerActionActiveConditionData, IsTalkingActivatorActorConditionData, IsInListConditionData, GetStolenItemValueConditionData, GetCrimeGoldViolentConditionData, GetCrimeGoldNonviolentConditionData, HasShoutConditionData, GetHasNoteConditionData, GetHitLocationConditionData, IsPC1stPersonConditionData, GetCauseofDeathConditionData, IsLimbGoneConditionData, IsWeaponInListConditionData, IsBribedbyPlayerConditionData, GetRelationshipRankConditionData, IsKillerConditionData, IsKillerObjectConditionData, GetFactionCombatReactionConditionData, ExistsConditionData, GetGroupMemberCountConditionData, GetGroupTargetCountConditionData, GetIsVoiceTypeConditionData, GetPlantedExplosiveConditionData, IsScenePackageRunningConditionData, GetHealthPercentageConditionData, GetIsObjectTypeConditionData, GetDialogueEmotionConditionData, GetDialogueEmotionValueConditionData, GetIsCreatureTypeConditionData, GetInCurrentLocFormListConditionData, GetInZoneConditionData, GetVelocityConditionData, GetGraphVariableFloatConditionData, HasPerkConditionData, GetFactionRelationConditionData, IsLastIdlePlayedConditionData, GetPlayerTeammateConditionData, GetPlayerTeammateCountConditionData, GetActorCrimePlayerEnemyConditionData, GetCrimeGoldConditionData, IsPlayerGrabbedRefConditionData, GetKeywordItemCountConditionData, GetDestructionStageConditionData, GetIsAlignmentConditionData, IsProtectedConditionData, GetThreatRatioConditionData, GetIsUsedItemEquipTypeConditionData, IsCarryableConditionData, GetConcussedConditionData, GetMapMarkerVisibleConditionData, PlayerKnowsConditionData, GetPermanentActorValueConditionData, GetKillingBlowLimbConditionData, CanPayCrimeGoldConditionData, GetDaysInJailConditionData, EPAlchemyGetMakingPoisonConditionData, EPAlchemyEffectHasKeywordConditionData, GetAllowWorldInteractionsConditionData, GetLastHitCriticalConditionData, IsCombatTargetConditionData, GetVATSRightAreaFreeConditionData, GetVATSLeftAreaFreeConditionData, GetVATSBackAreaFreeConditionData, GetVATSFrontAreaFreeConditionData, GetLockIsBrokenConditionData, IsPS3ConditionData, IsWin32ConditionData, GetVATSRightTargetVisibleConditionData, GetVATSLeftTargetVisibleConditionData, GetVATSBackTargetVisibleConditionData, GetVATSFrontTargetVisibleConditionData, IsInCriticalStageConditionData, GetXPForNextLevelConditionData, GetInfamyConditionData, GetInfamyViolentConditionData, GetInfamyNonViolentConditionData, GetQuestCompletedConditionData, IsGoreDisabledConditionData, IsSceneActionCompleteConditionData, GetSpellUsageNumConditionData, GetActorsInHighConditionData, HasLoaded3DConditionData, HasKeywordConditionData, HasRefTypeConditionData, LocationHasKeywordConditionData, LocationHasRefTypeConditionData, GetIsEditorLocationConditionData, GetIsAliasRefConditionData, GetIsEditorLocAliasConditionData, IsSprintingConditionData, IsBlockingConditionData, HasEquippedSpellConditionData, GetCurrentCastingTypeConditionData, GetCurrentDeliveryTypeConditionData, GetAttackStateConditionData, IsCloserToAThanBConditionData, GetEquippedShoutConditionData, IsBleedingOutConditionData, GetRelativeAngleConditionData, GetMovementDirectionConditionData, IsInSceneConditionData, GetRefTypeDeadCountConditionData, GetRefTypeAliveCountConditionData, GetIsFlyingConditionData, IsCurrentSpellConditionData, SpellHasKeywordConditionData, GetEquippedItemTypeConditionData, GetLocationAliasClearedConditionData, GetLocAliasRefTypeDeadCountConditionData, GetLocAliasRefTypeAliveCountConditionData, IsWardStateConditionData, IsInSameCurrentLocAsRefConditionData, IsInSameCurrentLocAsRefAliasConditionData, LocAliasIsLocationConditionData, GetKeywordDataForLocationConditionData, GetKeywordDataForAliasConditionData, LocAliasHasKeywordConditionData, IsNullPackageDataConditionData, GetNumericPackageDataConditionData, IsFurnitureAnimTypeConditionData, IsFurnitureEntryTypeConditionData, GetHighestRelationshipRankConditionData, GetLowestRelationshipRankConditionData, HasAssociationTypeAnyConditionData, HasFamilyRelationshipAnyConditionData, GetPathingTargetOffsetConditionData, GetPathingTargetAngleOffsetConditionData, GetPathingTargetSpeedConditionData, GetPathingTargetSpeedAngleConditionData, GetMovementSpeedConditionData, GetInContainerConditionData, IsLocationLoadedConditionData, IsLocAliasLoadedConditionData, IsDualCastingConditionData, GetVMQuestVariableConditionData, GetVMScriptVariableConditionData, IsEnteringInteractionQuickConditionData, IsCastingConditionData, GetFlyingStateConditionData, IsInFavorStateConditionData, HasTwoHandedWeaponEquippedConditionData, IsExitingInstantConditionData, IsInFriendStateWithPlayerConditionData, GetWithinDistanceConditionData, GetActorValuePercentConditionData, IsUniqueConditionData, GetLastBumpDirectionConditionData, IsInFurnitureStateConditionData, GetIsInjuredConditionData, GetIsCrashLandRequestConditionData, GetIsHastyLandRequestConditionData, IsLinkedToConditionData, GetKeywordDataForCurrentLocationConditionData, GetInSharedCrimeFactionConditionData, GetBribeSuccessConditionData, GetIntimidateSuccessConditionData, GetArrestedStateConditionData, GetArrestingActorConditionData, EPTemperingItemIsEnchantedConditionData, EPTemperingItemHasKeywordConditionData, GetReplacedItemTypeConditionData, IsAttackingConditionData, IsPowerAttackingConditionData, IsLastHostileActorConditionData, GetGraphVariableIntConditionData, GetCurrentShoutVariationConditionData, ShouldAttackKillConditionData, GetActivatorHeightConditionData, EPMagic_IsAdvanceSkillConditionData, WornHasKeywordConditionData, GetPathingCurrentSpeedConditionData, GetPathingCurrentSpeedAngleConditionData, EPModSkillUsage_AdvanceObjectHasKeywordConditionData, EPModSkillUsage_IsAdvanceActionConditionData, EPMagic_SpellHasKeywordConditionData, GetNoBleedoutRecoveryConditionData, EPMagic_SpellHasSkillConditionData, IsAttackTypeConditionData, IsAllowedToFlyConditionData, HasMagicEffectKeywordConditionData, IsCommandedActorConditionData, IsStaggeredConditionData, IsRecoilingConditionData, IsExitingInteractionQuickConditionData, IsPathingConditionData, GetShouldHelpConditionData, HasBoundWeaponEquippedConditionData, GetCombatTargetHasKeywordConditionData, GetCombatGroupMemberCountConditionData, IsIgnoringCombatConditionData, GetLightLevelConditionData, SpellHasCastingPerkConditionData, IsBeingRiddenConditionData, IsUndeadConditionData, GetRealHoursPassedConditionData, IsUnlockedDoorConditionData, IsHostileToActorConditionData, GetTargetHeightConditionData, IsPoisonConditionData, WornApparelHasKeywordCountConditionData, GetItemHealthPercentConditionData, EffectWasDualCastConditionData, GetKnockedStateEnumConditionData, DoesNotExistConditionData, IsOnFlyingMountConditionData, CanFlyHereConditionData, IsFlyingMountPatrolQueudConditionData, IsFlyingMountFastTravellingConditionData, IsOverEncumberedConditionData, GetActorWarmthConditionData, GetSKSEVersionConditionData, GetSKSEVersionMinorConditionData, GetSKSEVersionBetaConditionData, GetSKSEReleaseConditionData, ClearInvalidRegistrationsConditionData]
     /// </summary>
     public abstract partial class ConditionData :
         IConditionData,
@@ -69,6 +69,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown3
         public static readonly Int32 Unknown3Default = -1;
         public Int32 Unknown3 { get; set; } = Unknown3Default;
+        #endregion
+        #region UseAliases
+        public Boolean UseAliases { get; set; } = default;
+        #endregion
+        #region UsePackageData
+        public Boolean UsePackageData { get; set; } = default;
         #endregion
 
         #region To String
@@ -112,16 +118,22 @@ namespace Mutagen.Bethesda.Skyrim
                 this.RunOnType = initialValue;
                 this.Reference = initialValue;
                 this.Unknown3 = initialValue;
+                this.UseAliases = initialValue;
+                this.UsePackageData = initialValue;
             }
 
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3)
+                TItem Unknown3,
+                TItem UseAliases,
+                TItem UsePackageData)
             {
                 this.RunOnType = RunOnType;
                 this.Reference = Reference;
                 this.Unknown3 = Unknown3;
+                this.UseAliases = UseAliases;
+                this.UsePackageData = UsePackageData;
             }
 
             #pragma warning disable CS8618
@@ -136,6 +148,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem RunOnType;
             public TItem Reference;
             public TItem Unknown3;
+            public TItem UseAliases;
+            public TItem UsePackageData;
             #endregion
 
             #region Equals
@@ -151,6 +165,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.RunOnType, rhs.RunOnType)) return false;
                 if (!object.Equals(this.Reference, rhs.Reference)) return false;
                 if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.UseAliases, rhs.UseAliases)) return false;
+                if (!object.Equals(this.UsePackageData, rhs.UsePackageData)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -159,6 +175,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.RunOnType);
                 hash.Add(this.Reference);
                 hash.Add(this.Unknown3);
+                hash.Add(this.UseAliases);
+                hash.Add(this.UsePackageData);
                 return hash.ToHashCode();
             }
 
@@ -170,6 +188,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.RunOnType)) return false;
                 if (!eval(this.Reference)) return false;
                 if (!eval(this.Unknown3)) return false;
+                if (!eval(this.UseAliases)) return false;
+                if (!eval(this.UsePackageData)) return false;
                 return true;
             }
             #endregion
@@ -180,6 +200,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.RunOnType)) return true;
                 if (eval(this.Reference)) return true;
                 if (eval(this.Unknown3)) return true;
+                if (eval(this.UseAliases)) return true;
+                if (eval(this.UsePackageData)) return true;
                 return false;
             }
             #endregion
@@ -197,6 +219,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.RunOnType = eval(this.RunOnType);
                 obj.Reference = eval(this.Reference);
                 obj.Unknown3 = eval(this.Unknown3);
+                obj.UseAliases = eval(this.UseAliases);
+                obj.UsePackageData = eval(this.UsePackageData);
             }
             #endregion
 
@@ -227,6 +251,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Unknown3, "Unknown3");
                     }
+                    if (printMask?.UseAliases ?? true)
+                    {
+                        sb.AppendItem(UseAliases, "UseAliases");
+                    }
+                    if (printMask?.UsePackageData ?? true)
+                    {
+                        sb.AppendItem(UsePackageData, "UsePackageData");
+                    }
                 }
             }
             #endregion
@@ -254,6 +286,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? RunOnType;
             public Exception? Reference;
             public Exception? Unknown3;
+            public Exception? UseAliases;
+            public Exception? UsePackageData;
             #endregion
 
             #region IErrorMask
@@ -268,6 +302,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Reference;
                     case ConditionData_FieldIndex.Unknown3:
                         return Unknown3;
+                    case ConditionData_FieldIndex.UseAliases:
+                        return UseAliases;
+                    case ConditionData_FieldIndex.UsePackageData:
+                        return UsePackageData;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -286,6 +324,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case ConditionData_FieldIndex.Unknown3:
                         this.Unknown3 = ex;
+                        break;
+                    case ConditionData_FieldIndex.UseAliases:
+                        this.UseAliases = ex;
+                        break;
+                    case ConditionData_FieldIndex.UsePackageData:
+                        this.UsePackageData = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -306,6 +350,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case ConditionData_FieldIndex.Unknown3:
                         this.Unknown3 = (Exception?)obj;
                         break;
+                    case ConditionData_FieldIndex.UseAliases:
+                        this.UseAliases = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.UsePackageData:
+                        this.UsePackageData = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -317,6 +367,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (RunOnType != null) return true;
                 if (Reference != null) return true;
                 if (Unknown3 != null) return true;
+                if (UseAliases != null) return true;
+                if (UsePackageData != null) return true;
                 return false;
             }
             #endregion
@@ -351,6 +403,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Unknown3, "Unknown3");
                 }
+                {
+                    sb.AppendItem(UseAliases, "UseAliases");
+                }
+                {
+                    sb.AppendItem(UsePackageData, "UsePackageData");
+                }
             }
             #endregion
 
@@ -362,6 +420,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.RunOnType = this.RunOnType.Combine(rhs.RunOnType);
                 ret.Reference = this.Reference.Combine(rhs.Reference);
                 ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.UseAliases = this.UseAliases.Combine(rhs.UseAliases);
+                ret.UsePackageData = this.UsePackageData.Combine(rhs.UsePackageData);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -388,6 +448,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool RunOnType;
             public bool Reference;
             public bool Unknown3;
+            public bool UseAliases;
+            public bool UsePackageData;
             #endregion
 
             #region Ctors
@@ -400,6 +462,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.RunOnType = defaultOn;
                 this.Reference = defaultOn;
                 this.Unknown3 = defaultOn;
+                this.UseAliases = defaultOn;
+                this.UsePackageData = defaultOn;
             }
 
             #endregion
@@ -418,6 +482,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((RunOnType, null));
                 ret.Add((Reference, null));
                 ret.Add((Unknown3, null));
+                ret.Add((UseAliases, null));
+                ret.Add((UsePackageData, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -466,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     /// <summary>
-    /// Implemented by: [FunctionConditionData, GetEventData]
+    /// Implemented by: [UnknownConditionData, GetEventDataConditionData, AGetVATSValueConditionData, GetWantBlockingConditionData, GetDistanceConditionData, GetLockedConditionData, GetPosConditionData, GetAngleConditionData, GetStartingPosConditionData, GetStartingAngleConditionData, GetSecondsPassedConditionData, GetActorValueConditionData, GetCurrentTimeConditionData, GetScaleConditionData, IsMovingConditionData, IsTurningConditionData, GetLineOfSightConditionData, GetInSameCellConditionData, GetDisabledConditionData, MenuModeConditionData, GetDiseaseConditionData, GetClothingValueConditionData, SameFactionConditionData, SameRaceConditionData, SameSexConditionData, GetDetectedConditionData, GetDeadConditionData, GetItemCountConditionData, GetGoldConditionData, GetSleepingConditionData, GetTalkedToPCConditionData, GetScriptVariableConditionData, GetQuestRunningConditionData, GetStageConditionData, GetStageDoneConditionData, GetFactionRankDifferenceConditionData, GetAlarmedConditionData, IsRainingConditionData, GetAttackedConditionData, GetIsCreatureConditionData, GetLockLevelConditionData, GetShouldAttackConditionData, GetInCellConditionData, GetIsClassConditionData, GetIsRaceConditionData, GetIsSexConditionData, GetInFactionConditionData, GetIsIDConditionData, GetFactionRankConditionData, GetGlobalValueConditionData, IsSnowingConditionData, GetRandomPercentConditionData, GetQuestVariableConditionData, GetLevelConditionData, IsRotatingConditionData, GetDeadCountConditionData, GetIsAlertedConditionData, GetPlayerControlsDisabledConditionData, GetHeadingAngleConditionData, IsWeaponMagicOutConditionData, IsTorchOutConditionData, IsShieldOutConditionData, IsFacingUpConditionData, GetKnockedStateConditionData, GetWeaponAnimTypeConditionData, IsWeaponSkillTypeConditionData, GetCurrentAIPackageConditionData, IsWaitingConditionData, IsIdlePlayingConditionData, IsIntimidatedbyPlayerConditionData, IsPlayerInRegionConditionData, GetActorAggroRadiusViolatedConditionData, GetCrimeConditionData, IsGreetingPlayerConditionData, IsGuardConditionData, HasBeenEatenConditionData, GetStaminaPercentageConditionData, GetPCIsClassConditionData, GetPCIsRaceConditionData, GetPCIsSexConditionData, GetPCInFactionConditionData, SameFactionAsPCConditionData, SameRaceAsPCConditionData, SameSexAsPCConditionData, GetIsReferenceConditionData, IsTalkingConditionData, GetWalkSpeedConditionData, GetCurrentAIProcedureConditionData, GetTrespassWarningLevelConditionData, IsTrespassingConditionData, IsInMyOwnedCellConditionData, GetWindSpeedConditionData, GetCurrentWeatherPercentConditionData, GetIsCurrentWeatherConditionData, IsContinuingPackagePCNearConditionData, GetIsCrimeFactionConditionData, CanHaveFlamesConditionData, HasFlamesConditionData, GetOpenStateConditionData, GetSittingConditionData, GetIsCurrentPackageConditionData, IsCurrentFurnitureRefConditionData, IsCurrentFurnitureObjConditionData, GetDayOfWeekConditionData, GetTalkedToPCParamConditionData, IsPCSleepingConditionData, IsPCAMurdererConditionData, HasSameEditorLocAsRefConditionData, HasSameEditorLocAsRefAliasConditionData, GetEquippedConditionData, IsSwimmingConditionData, GetAmountSoldStolenConditionData, GetIgnoreCrimeConditionData, GetPCExpelledConditionData, GetPCFactionMurderConditionData, GetPCEnemyofFactionConditionData, GetPCFactionAttackConditionData, GetDestroyedConditionData, HasMagicEffectConditionData, GetDefaultOpenConditionData, GetAnimActionConditionData, IsSpellTargetConditionData, GetVATSModeConditionData, GetPersuasionNumberConditionData, GetVampireFeedConditionData, GetCannibalConditionData, GetIsClassDefaultConditionData, GetClassDefaultMatchConditionData, GetInCellParamConditionData, GetVatsTargetHeightConditionData, GetIsGhostConditionData, GetUnconsciousConditionData, GetRestrainedConditionData, GetIsUsedItemConditionData, GetIsUsedItemTypeConditionData, IsScenePlayingConditionData, IsInDialogueWithPlayerConditionData, GetLocationClearedConditionData, GetIsPlayableRaceConditionData, GetOffersServicesNowConditionData, HasAssociationTypeConditionData, HasFamilyRelationshipConditionData, HasParentRelationshipConditionData, IsWarningAboutConditionData, IsWeaponOutConditionData, HasSpellConditionData, IsTimePassingConditionData, IsPleasantConditionData, IsCloudyConditionData, IsSmallBumpConditionData, GetBaseActorValueConditionData, IsOwnerConditionData, IsCellOwnerConditionData, IsHorseStolenConditionData, IsLeftUpConditionData, IsSneakingConditionData, IsRunningConditionData, GetFriendHitConditionData, IsInCombatConditionData, IsInInteriorConditionData, IsWaterObjectConditionData, GetPlayerActionConditionData, IsActorUsingATorchConditionData, IsXBoxConditionData, GetInWorldspaceConditionData, GetPCMiscStatConditionData, GetPairedAnimationConditionData, IsActorAVictimConditionData, GetTotalPersuasionNumberConditionData, GetIdleDoneOnceConditionData, GetNoRumorsConditionData, GetCombatStateConditionData, GetWithinPackageLocationConditionData, IsRidingMountConditionData, IsFleeingConditionData, IsInDangerousWaterConditionData, GetIgnoreFriendlyHitsConditionData, IsPlayersLastRiddenMountConditionData, IsActorConditionData, IsEssentialConditionData, IsPlayerMovingIntoNewSpaceConditionData, GetInCurrentLocConditionData, GetInCurrentLocAliasConditionData, GetTimeDeadConditionData, HasLinkedRefConditionData, IsChildConditionData, GetStolenItemValueNoCrimeConditionData, GetLastPlayerActionConditionData, IsPlayerActionActiveConditionData, IsTalkingActivatorActorConditionData, IsInListConditionData, GetStolenItemValueConditionData, GetCrimeGoldViolentConditionData, GetCrimeGoldNonviolentConditionData, HasShoutConditionData, GetHasNoteConditionData, GetHitLocationConditionData, IsPC1stPersonConditionData, GetCauseofDeathConditionData, IsLimbGoneConditionData, IsWeaponInListConditionData, IsBribedbyPlayerConditionData, GetRelationshipRankConditionData, IsKillerConditionData, IsKillerObjectConditionData, GetFactionCombatReactionConditionData, ExistsConditionData, GetGroupMemberCountConditionData, GetGroupTargetCountConditionData, GetIsVoiceTypeConditionData, GetPlantedExplosiveConditionData, IsScenePackageRunningConditionData, GetHealthPercentageConditionData, GetIsObjectTypeConditionData, GetDialogueEmotionConditionData, GetDialogueEmotionValueConditionData, GetIsCreatureTypeConditionData, GetInCurrentLocFormListConditionData, GetInZoneConditionData, GetVelocityConditionData, GetGraphVariableFloatConditionData, HasPerkConditionData, GetFactionRelationConditionData, IsLastIdlePlayedConditionData, GetPlayerTeammateConditionData, GetPlayerTeammateCountConditionData, GetActorCrimePlayerEnemyConditionData, GetCrimeGoldConditionData, IsPlayerGrabbedRefConditionData, GetKeywordItemCountConditionData, GetDestructionStageConditionData, GetIsAlignmentConditionData, IsProtectedConditionData, GetThreatRatioConditionData, GetIsUsedItemEquipTypeConditionData, IsCarryableConditionData, GetConcussedConditionData, GetMapMarkerVisibleConditionData, PlayerKnowsConditionData, GetPermanentActorValueConditionData, GetKillingBlowLimbConditionData, CanPayCrimeGoldConditionData, GetDaysInJailConditionData, EPAlchemyGetMakingPoisonConditionData, EPAlchemyEffectHasKeywordConditionData, GetAllowWorldInteractionsConditionData, GetLastHitCriticalConditionData, IsCombatTargetConditionData, GetVATSRightAreaFreeConditionData, GetVATSLeftAreaFreeConditionData, GetVATSBackAreaFreeConditionData, GetVATSFrontAreaFreeConditionData, GetLockIsBrokenConditionData, IsPS3ConditionData, IsWin32ConditionData, GetVATSRightTargetVisibleConditionData, GetVATSLeftTargetVisibleConditionData, GetVATSBackTargetVisibleConditionData, GetVATSFrontTargetVisibleConditionData, IsInCriticalStageConditionData, GetXPForNextLevelConditionData, GetInfamyConditionData, GetInfamyViolentConditionData, GetInfamyNonViolentConditionData, GetQuestCompletedConditionData, IsGoreDisabledConditionData, IsSceneActionCompleteConditionData, GetSpellUsageNumConditionData, GetActorsInHighConditionData, HasLoaded3DConditionData, HasKeywordConditionData, HasRefTypeConditionData, LocationHasKeywordConditionData, LocationHasRefTypeConditionData, GetIsEditorLocationConditionData, GetIsAliasRefConditionData, GetIsEditorLocAliasConditionData, IsSprintingConditionData, IsBlockingConditionData, HasEquippedSpellConditionData, GetCurrentCastingTypeConditionData, GetCurrentDeliveryTypeConditionData, GetAttackStateConditionData, IsCloserToAThanBConditionData, GetEquippedShoutConditionData, IsBleedingOutConditionData, GetRelativeAngleConditionData, GetMovementDirectionConditionData, IsInSceneConditionData, GetRefTypeDeadCountConditionData, GetRefTypeAliveCountConditionData, GetIsFlyingConditionData, IsCurrentSpellConditionData, SpellHasKeywordConditionData, GetEquippedItemTypeConditionData, GetLocationAliasClearedConditionData, GetLocAliasRefTypeDeadCountConditionData, GetLocAliasRefTypeAliveCountConditionData, IsWardStateConditionData, IsInSameCurrentLocAsRefConditionData, IsInSameCurrentLocAsRefAliasConditionData, LocAliasIsLocationConditionData, GetKeywordDataForLocationConditionData, GetKeywordDataForAliasConditionData, LocAliasHasKeywordConditionData, IsNullPackageDataConditionData, GetNumericPackageDataConditionData, IsFurnitureAnimTypeConditionData, IsFurnitureEntryTypeConditionData, GetHighestRelationshipRankConditionData, GetLowestRelationshipRankConditionData, HasAssociationTypeAnyConditionData, HasFamilyRelationshipAnyConditionData, GetPathingTargetOffsetConditionData, GetPathingTargetAngleOffsetConditionData, GetPathingTargetSpeedConditionData, GetPathingTargetSpeedAngleConditionData, GetMovementSpeedConditionData, GetInContainerConditionData, IsLocationLoadedConditionData, IsLocAliasLoadedConditionData, IsDualCastingConditionData, GetVMQuestVariableConditionData, GetVMScriptVariableConditionData, IsEnteringInteractionQuickConditionData, IsCastingConditionData, GetFlyingStateConditionData, IsInFavorStateConditionData, HasTwoHandedWeaponEquippedConditionData, IsExitingInstantConditionData, IsInFriendStateWithPlayerConditionData, GetWithinDistanceConditionData, GetActorValuePercentConditionData, IsUniqueConditionData, GetLastBumpDirectionConditionData, IsInFurnitureStateConditionData, GetIsInjuredConditionData, GetIsCrashLandRequestConditionData, GetIsHastyLandRequestConditionData, IsLinkedToConditionData, GetKeywordDataForCurrentLocationConditionData, GetInSharedCrimeFactionConditionData, GetBribeSuccessConditionData, GetIntimidateSuccessConditionData, GetArrestedStateConditionData, GetArrestingActorConditionData, EPTemperingItemIsEnchantedConditionData, EPTemperingItemHasKeywordConditionData, GetReplacedItemTypeConditionData, IsAttackingConditionData, IsPowerAttackingConditionData, IsLastHostileActorConditionData, GetGraphVariableIntConditionData, GetCurrentShoutVariationConditionData, ShouldAttackKillConditionData, GetActivatorHeightConditionData, EPMagic_IsAdvanceSkillConditionData, WornHasKeywordConditionData, GetPathingCurrentSpeedConditionData, GetPathingCurrentSpeedAngleConditionData, EPModSkillUsage_AdvanceObjectHasKeywordConditionData, EPModSkillUsage_IsAdvanceActionConditionData, EPMagic_SpellHasKeywordConditionData, GetNoBleedoutRecoveryConditionData, EPMagic_SpellHasSkillConditionData, IsAttackTypeConditionData, IsAllowedToFlyConditionData, HasMagicEffectKeywordConditionData, IsCommandedActorConditionData, IsStaggeredConditionData, IsRecoilingConditionData, IsExitingInteractionQuickConditionData, IsPathingConditionData, GetShouldHelpConditionData, HasBoundWeaponEquippedConditionData, GetCombatTargetHasKeywordConditionData, GetCombatGroupMemberCountConditionData, IsIgnoringCombatConditionData, GetLightLevelConditionData, SpellHasCastingPerkConditionData, IsBeingRiddenConditionData, IsUndeadConditionData, GetRealHoursPassedConditionData, IsUnlockedDoorConditionData, IsHostileToActorConditionData, GetTargetHeightConditionData, IsPoisonConditionData, WornApparelHasKeywordCountConditionData, GetItemHealthPercentConditionData, EffectWasDualCastConditionData, GetKnockedStateEnumConditionData, DoesNotExistConditionData, IsOnFlyingMountConditionData, CanFlyHereConditionData, IsFlyingMountPatrolQueudConditionData, IsFlyingMountFastTravellingConditionData, IsOverEncumberedConditionData, GetActorWarmthConditionData, GetSKSEVersionConditionData, GetSKSEVersionMinorConditionData, GetSKSEVersionBetaConditionData, GetSKSEReleaseConditionData, ClearInvalidRegistrationsConditionData]
     /// </summary>
     public partial interface IConditionData :
         IConditionDataGetter,
@@ -476,10 +542,12 @@ namespace Mutagen.Bethesda.Skyrim
         new Condition.RunOnType RunOnType { get; set; }
         new IFormLink<ISkyrimMajorRecordGetter> Reference { get; set; }
         new Int32 Unknown3 { get; set; }
+        new Boolean UseAliases { get; set; }
+        new Boolean UsePackageData { get; set; }
     }
 
     /// <summary>
-    /// Implemented by: [FunctionConditionData, GetEventData]
+    /// Implemented by: [UnknownConditionData, GetEventDataConditionData, AGetVATSValueConditionData, GetWantBlockingConditionData, GetDistanceConditionData, GetLockedConditionData, GetPosConditionData, GetAngleConditionData, GetStartingPosConditionData, GetStartingAngleConditionData, GetSecondsPassedConditionData, GetActorValueConditionData, GetCurrentTimeConditionData, GetScaleConditionData, IsMovingConditionData, IsTurningConditionData, GetLineOfSightConditionData, GetInSameCellConditionData, GetDisabledConditionData, MenuModeConditionData, GetDiseaseConditionData, GetClothingValueConditionData, SameFactionConditionData, SameRaceConditionData, SameSexConditionData, GetDetectedConditionData, GetDeadConditionData, GetItemCountConditionData, GetGoldConditionData, GetSleepingConditionData, GetTalkedToPCConditionData, GetScriptVariableConditionData, GetQuestRunningConditionData, GetStageConditionData, GetStageDoneConditionData, GetFactionRankDifferenceConditionData, GetAlarmedConditionData, IsRainingConditionData, GetAttackedConditionData, GetIsCreatureConditionData, GetLockLevelConditionData, GetShouldAttackConditionData, GetInCellConditionData, GetIsClassConditionData, GetIsRaceConditionData, GetIsSexConditionData, GetInFactionConditionData, GetIsIDConditionData, GetFactionRankConditionData, GetGlobalValueConditionData, IsSnowingConditionData, GetRandomPercentConditionData, GetQuestVariableConditionData, GetLevelConditionData, IsRotatingConditionData, GetDeadCountConditionData, GetIsAlertedConditionData, GetPlayerControlsDisabledConditionData, GetHeadingAngleConditionData, IsWeaponMagicOutConditionData, IsTorchOutConditionData, IsShieldOutConditionData, IsFacingUpConditionData, GetKnockedStateConditionData, GetWeaponAnimTypeConditionData, IsWeaponSkillTypeConditionData, GetCurrentAIPackageConditionData, IsWaitingConditionData, IsIdlePlayingConditionData, IsIntimidatedbyPlayerConditionData, IsPlayerInRegionConditionData, GetActorAggroRadiusViolatedConditionData, GetCrimeConditionData, IsGreetingPlayerConditionData, IsGuardConditionData, HasBeenEatenConditionData, GetStaminaPercentageConditionData, GetPCIsClassConditionData, GetPCIsRaceConditionData, GetPCIsSexConditionData, GetPCInFactionConditionData, SameFactionAsPCConditionData, SameRaceAsPCConditionData, SameSexAsPCConditionData, GetIsReferenceConditionData, IsTalkingConditionData, GetWalkSpeedConditionData, GetCurrentAIProcedureConditionData, GetTrespassWarningLevelConditionData, IsTrespassingConditionData, IsInMyOwnedCellConditionData, GetWindSpeedConditionData, GetCurrentWeatherPercentConditionData, GetIsCurrentWeatherConditionData, IsContinuingPackagePCNearConditionData, GetIsCrimeFactionConditionData, CanHaveFlamesConditionData, HasFlamesConditionData, GetOpenStateConditionData, GetSittingConditionData, GetIsCurrentPackageConditionData, IsCurrentFurnitureRefConditionData, IsCurrentFurnitureObjConditionData, GetDayOfWeekConditionData, GetTalkedToPCParamConditionData, IsPCSleepingConditionData, IsPCAMurdererConditionData, HasSameEditorLocAsRefConditionData, HasSameEditorLocAsRefAliasConditionData, GetEquippedConditionData, IsSwimmingConditionData, GetAmountSoldStolenConditionData, GetIgnoreCrimeConditionData, GetPCExpelledConditionData, GetPCFactionMurderConditionData, GetPCEnemyofFactionConditionData, GetPCFactionAttackConditionData, GetDestroyedConditionData, HasMagicEffectConditionData, GetDefaultOpenConditionData, GetAnimActionConditionData, IsSpellTargetConditionData, GetVATSModeConditionData, GetPersuasionNumberConditionData, GetVampireFeedConditionData, GetCannibalConditionData, GetIsClassDefaultConditionData, GetClassDefaultMatchConditionData, GetInCellParamConditionData, GetVatsTargetHeightConditionData, GetIsGhostConditionData, GetUnconsciousConditionData, GetRestrainedConditionData, GetIsUsedItemConditionData, GetIsUsedItemTypeConditionData, IsScenePlayingConditionData, IsInDialogueWithPlayerConditionData, GetLocationClearedConditionData, GetIsPlayableRaceConditionData, GetOffersServicesNowConditionData, HasAssociationTypeConditionData, HasFamilyRelationshipConditionData, HasParentRelationshipConditionData, IsWarningAboutConditionData, IsWeaponOutConditionData, HasSpellConditionData, IsTimePassingConditionData, IsPleasantConditionData, IsCloudyConditionData, IsSmallBumpConditionData, GetBaseActorValueConditionData, IsOwnerConditionData, IsCellOwnerConditionData, IsHorseStolenConditionData, IsLeftUpConditionData, IsSneakingConditionData, IsRunningConditionData, GetFriendHitConditionData, IsInCombatConditionData, IsInInteriorConditionData, IsWaterObjectConditionData, GetPlayerActionConditionData, IsActorUsingATorchConditionData, IsXBoxConditionData, GetInWorldspaceConditionData, GetPCMiscStatConditionData, GetPairedAnimationConditionData, IsActorAVictimConditionData, GetTotalPersuasionNumberConditionData, GetIdleDoneOnceConditionData, GetNoRumorsConditionData, GetCombatStateConditionData, GetWithinPackageLocationConditionData, IsRidingMountConditionData, IsFleeingConditionData, IsInDangerousWaterConditionData, GetIgnoreFriendlyHitsConditionData, IsPlayersLastRiddenMountConditionData, IsActorConditionData, IsEssentialConditionData, IsPlayerMovingIntoNewSpaceConditionData, GetInCurrentLocConditionData, GetInCurrentLocAliasConditionData, GetTimeDeadConditionData, HasLinkedRefConditionData, IsChildConditionData, GetStolenItemValueNoCrimeConditionData, GetLastPlayerActionConditionData, IsPlayerActionActiveConditionData, IsTalkingActivatorActorConditionData, IsInListConditionData, GetStolenItemValueConditionData, GetCrimeGoldViolentConditionData, GetCrimeGoldNonviolentConditionData, HasShoutConditionData, GetHasNoteConditionData, GetHitLocationConditionData, IsPC1stPersonConditionData, GetCauseofDeathConditionData, IsLimbGoneConditionData, IsWeaponInListConditionData, IsBribedbyPlayerConditionData, GetRelationshipRankConditionData, IsKillerConditionData, IsKillerObjectConditionData, GetFactionCombatReactionConditionData, ExistsConditionData, GetGroupMemberCountConditionData, GetGroupTargetCountConditionData, GetIsVoiceTypeConditionData, GetPlantedExplosiveConditionData, IsScenePackageRunningConditionData, GetHealthPercentageConditionData, GetIsObjectTypeConditionData, GetDialogueEmotionConditionData, GetDialogueEmotionValueConditionData, GetIsCreatureTypeConditionData, GetInCurrentLocFormListConditionData, GetInZoneConditionData, GetVelocityConditionData, GetGraphVariableFloatConditionData, HasPerkConditionData, GetFactionRelationConditionData, IsLastIdlePlayedConditionData, GetPlayerTeammateConditionData, GetPlayerTeammateCountConditionData, GetActorCrimePlayerEnemyConditionData, GetCrimeGoldConditionData, IsPlayerGrabbedRefConditionData, GetKeywordItemCountConditionData, GetDestructionStageConditionData, GetIsAlignmentConditionData, IsProtectedConditionData, GetThreatRatioConditionData, GetIsUsedItemEquipTypeConditionData, IsCarryableConditionData, GetConcussedConditionData, GetMapMarkerVisibleConditionData, PlayerKnowsConditionData, GetPermanentActorValueConditionData, GetKillingBlowLimbConditionData, CanPayCrimeGoldConditionData, GetDaysInJailConditionData, EPAlchemyGetMakingPoisonConditionData, EPAlchemyEffectHasKeywordConditionData, GetAllowWorldInteractionsConditionData, GetLastHitCriticalConditionData, IsCombatTargetConditionData, GetVATSRightAreaFreeConditionData, GetVATSLeftAreaFreeConditionData, GetVATSBackAreaFreeConditionData, GetVATSFrontAreaFreeConditionData, GetLockIsBrokenConditionData, IsPS3ConditionData, IsWin32ConditionData, GetVATSRightTargetVisibleConditionData, GetVATSLeftTargetVisibleConditionData, GetVATSBackTargetVisibleConditionData, GetVATSFrontTargetVisibleConditionData, IsInCriticalStageConditionData, GetXPForNextLevelConditionData, GetInfamyConditionData, GetInfamyViolentConditionData, GetInfamyNonViolentConditionData, GetQuestCompletedConditionData, IsGoreDisabledConditionData, IsSceneActionCompleteConditionData, GetSpellUsageNumConditionData, GetActorsInHighConditionData, HasLoaded3DConditionData, HasKeywordConditionData, HasRefTypeConditionData, LocationHasKeywordConditionData, LocationHasRefTypeConditionData, GetIsEditorLocationConditionData, GetIsAliasRefConditionData, GetIsEditorLocAliasConditionData, IsSprintingConditionData, IsBlockingConditionData, HasEquippedSpellConditionData, GetCurrentCastingTypeConditionData, GetCurrentDeliveryTypeConditionData, GetAttackStateConditionData, IsCloserToAThanBConditionData, GetEquippedShoutConditionData, IsBleedingOutConditionData, GetRelativeAngleConditionData, GetMovementDirectionConditionData, IsInSceneConditionData, GetRefTypeDeadCountConditionData, GetRefTypeAliveCountConditionData, GetIsFlyingConditionData, IsCurrentSpellConditionData, SpellHasKeywordConditionData, GetEquippedItemTypeConditionData, GetLocationAliasClearedConditionData, GetLocAliasRefTypeDeadCountConditionData, GetLocAliasRefTypeAliveCountConditionData, IsWardStateConditionData, IsInSameCurrentLocAsRefConditionData, IsInSameCurrentLocAsRefAliasConditionData, LocAliasIsLocationConditionData, GetKeywordDataForLocationConditionData, GetKeywordDataForAliasConditionData, LocAliasHasKeywordConditionData, IsNullPackageDataConditionData, GetNumericPackageDataConditionData, IsFurnitureAnimTypeConditionData, IsFurnitureEntryTypeConditionData, GetHighestRelationshipRankConditionData, GetLowestRelationshipRankConditionData, HasAssociationTypeAnyConditionData, HasFamilyRelationshipAnyConditionData, GetPathingTargetOffsetConditionData, GetPathingTargetAngleOffsetConditionData, GetPathingTargetSpeedConditionData, GetPathingTargetSpeedAngleConditionData, GetMovementSpeedConditionData, GetInContainerConditionData, IsLocationLoadedConditionData, IsLocAliasLoadedConditionData, IsDualCastingConditionData, GetVMQuestVariableConditionData, GetVMScriptVariableConditionData, IsEnteringInteractionQuickConditionData, IsCastingConditionData, GetFlyingStateConditionData, IsInFavorStateConditionData, HasTwoHandedWeaponEquippedConditionData, IsExitingInstantConditionData, IsInFriendStateWithPlayerConditionData, GetWithinDistanceConditionData, GetActorValuePercentConditionData, IsUniqueConditionData, GetLastBumpDirectionConditionData, IsInFurnitureStateConditionData, GetIsInjuredConditionData, GetIsCrashLandRequestConditionData, GetIsHastyLandRequestConditionData, IsLinkedToConditionData, GetKeywordDataForCurrentLocationConditionData, GetInSharedCrimeFactionConditionData, GetBribeSuccessConditionData, GetIntimidateSuccessConditionData, GetArrestedStateConditionData, GetArrestingActorConditionData, EPTemperingItemIsEnchantedConditionData, EPTemperingItemHasKeywordConditionData, GetReplacedItemTypeConditionData, IsAttackingConditionData, IsPowerAttackingConditionData, IsLastHostileActorConditionData, GetGraphVariableIntConditionData, GetCurrentShoutVariationConditionData, ShouldAttackKillConditionData, GetActivatorHeightConditionData, EPMagic_IsAdvanceSkillConditionData, WornHasKeywordConditionData, GetPathingCurrentSpeedConditionData, GetPathingCurrentSpeedAngleConditionData, EPModSkillUsage_AdvanceObjectHasKeywordConditionData, EPModSkillUsage_IsAdvanceActionConditionData, EPMagic_SpellHasKeywordConditionData, GetNoBleedoutRecoveryConditionData, EPMagic_SpellHasSkillConditionData, IsAttackTypeConditionData, IsAllowedToFlyConditionData, HasMagicEffectKeywordConditionData, IsCommandedActorConditionData, IsStaggeredConditionData, IsRecoilingConditionData, IsExitingInteractionQuickConditionData, IsPathingConditionData, GetShouldHelpConditionData, HasBoundWeaponEquippedConditionData, GetCombatTargetHasKeywordConditionData, GetCombatGroupMemberCountConditionData, IsIgnoringCombatConditionData, GetLightLevelConditionData, SpellHasCastingPerkConditionData, IsBeingRiddenConditionData, IsUndeadConditionData, GetRealHoursPassedConditionData, IsUnlockedDoorConditionData, IsHostileToActorConditionData, GetTargetHeightConditionData, IsPoisonConditionData, WornApparelHasKeywordCountConditionData, GetItemHealthPercentConditionData, EffectWasDualCastConditionData, GetKnockedStateEnumConditionData, DoesNotExistConditionData, IsOnFlyingMountConditionData, CanFlyHereConditionData, IsFlyingMountPatrolQueudConditionData, IsFlyingMountFastTravellingConditionData, IsOverEncumberedConditionData, GetActorWarmthConditionData, GetSKSEVersionConditionData, GetSKSEVersionMinorConditionData, GetSKSEVersionBetaConditionData, GetSKSEReleaseConditionData, ClearInvalidRegistrationsConditionData]
     /// </summary>
     public partial interface IConditionDataGetter :
         ILoquiObject,
@@ -497,6 +565,8 @@ namespace Mutagen.Bethesda.Skyrim
         Condition.RunOnType RunOnType { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
         Int32 Unknown3 { get; }
+        Boolean UseAliases { get; }
+        Boolean UsePackageData { get; }
 
     }
 
@@ -669,6 +739,8 @@ namespace Mutagen.Bethesda.Skyrim
         RunOnType = 0,
         Reference = 1,
         Unknown3 = 2,
+        UseAliases = 3,
+        UsePackageData = 4,
     }
     #endregion
 
@@ -686,9 +758,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "01abc3c5-fb9d-4e48-a375-fe2f3a4fa044";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(ConditionData.Mask<>);
 
@@ -759,6 +831,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.RunOnType = default;
             item.Reference.Clear();
             item.Unknown3 = ConditionData.Unknown3Default;
+            item.UseAliases = default;
+            item.UsePackageData = default;
         }
         
         #region Mutagen
@@ -812,6 +886,8 @@ namespace Mutagen.Bethesda.Skyrim
             ret.RunOnType = item.RunOnType == rhs.RunOnType;
             ret.Reference = item.Reference.Equals(rhs.Reference);
             ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.UseAliases = item.UseAliases == rhs.UseAliases;
+            ret.UsePackageData = item.UsePackageData == rhs.UsePackageData;
         }
         
         public string Print(
@@ -868,6 +944,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Unknown3, "Unknown3");
             }
+            if (printMask?.UseAliases ?? true)
+            {
+                sb.AppendItem(item.UseAliases, "UseAliases");
+            }
+            if (printMask?.UsePackageData ?? true)
+            {
+                sb.AppendItem(item.UsePackageData, "UsePackageData");
+            }
         }
         
         #region Equals and Hash
@@ -889,6 +973,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.Unknown3 != rhs.Unknown3) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ConditionData_FieldIndex.UseAliases) ?? true))
+            {
+                if (lhs.UseAliases != rhs.UseAliases) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConditionData_FieldIndex.UsePackageData) ?? true))
+            {
+                if (lhs.UsePackageData != rhs.UsePackageData) return false;
+            }
             return true;
         }
         
@@ -898,6 +990,8 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.RunOnType);
             hash.Add(item.Reference);
             hash.Add(item.Unknown3);
+            hash.Add(item.UseAliases);
+            hash.Add(item.UsePackageData);
             return hash.ToHashCode();
         }
         
@@ -942,6 +1036,14 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown3) ?? true))
             {
                 item.Unknown3 = rhs.Unknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.UseAliases) ?? true))
+            {
+                item.UseAliases = rhs.UseAliases;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.UsePackageData) ?? true))
+            {
+                item.UsePackageData = rhs.UsePackageData;
             }
         }
         

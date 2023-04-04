@@ -24,12 +24,14 @@ public class FormLinkType : ClassType
     public override bool IsEnumerable => false;
     public override bool CanBeNullable(bool getter) => false;
 
-    public string ClassTypeStringPrefix => this.FormIDType switch
+    public virtual string ClassTypeStringPrefix => this.FormIDType switch
     {
         FormIDTypeEnum.Normal => "Form",
         FormIDTypeEnum.EDIDChars => "EDID",
         _ => throw new NotImplementedException(),
     };
+
+    public virtual string ClassTypeString => $"{ClassTypeStringPrefix}Link";
 
     public string FormIDTypeString => this.FormIDType switch
     {
@@ -53,7 +55,7 @@ public class FormLinkType : ClassType
 
     public string DirectNonGenericTypeName()
     {
-        return $"{ClassTypeStringPrefix}Link{(this.Nullable ? "Nullable" : string.Empty)}";
+        return $"{ClassTypeString}{(this.Nullable ? "Nullable" : string.Empty)}";
     }
 
     public override async Task Load(XElement node, bool requireName = true)

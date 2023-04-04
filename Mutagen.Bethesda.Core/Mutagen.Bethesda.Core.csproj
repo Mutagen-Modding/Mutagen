@@ -17,12 +17,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Archives\Ba2\**" />
-    <EmbeddedResource Remove="Properties\**" />
-    <None Remove="Archives\Ba2\**" />
-    <None Remove="Properties\**" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="DotNetZip" />
     <PackageReference Include="ini-parser-netstandard" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" />
@@ -31,7 +25,6 @@
     <PackageReference Include="SharpZipLib" />
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.Text.Encoding.CodePages" />
-    <PackageReference Include="GameFinder" />
     <PackageReference Include="GameFinder.StoreHandlers.GOG" />
     <PackageReference Include="GameFinder.StoreHandlers.Steam" />
   </ItemGroup>
@@ -242,6 +235,7 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Plugins\Binary\Translations\AssetLinkBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\FormLinkOrIndexBinaryTranslation.cs" />
     <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
     <Compile Include="Plugins\Binary\Translations\RecordSpanExtensions.cs" />
     <Compile Include="Plugins\Binary\Translations\SubgroupsBinaryTranslation.cs" />
@@ -267,6 +261,8 @@
     <Compile Include="Plugins\Converters\FormKeyTypeConverter.cs" />
     <Compile Include="Plugins\Converters\ModKeyTypeConverter.cs" />
     <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
+    <Compile Include="Plugins\Exceptions\AssetPathMisalignedException.cs" />
+    <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
     <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
     <Compile Include="Plugins\Exceptions\ModPathException.cs" />
@@ -286,6 +282,8 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\FormLinkOrIndex.cs" />
+    <Compile Include="Plugins\IFormLinkOrIndex.cs" />
     <Compile Include="Plugins\Implicit\DI\ImplicitBaseMasterProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

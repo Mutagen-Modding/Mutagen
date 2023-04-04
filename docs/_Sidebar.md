@@ -23,11 +23,12 @@
   * [[Equality Checks]]
   * [[Translation Masks]]
   * [[Flags and Enums]]
+  * [[AssetLink]]
   * [[Binary Format Complexity Abstraction]]
   * [[Create, Duplicate, and Override]]
   * [[Abstract Subclassing]]
   * [[Printing]]
-  * [[Generic Newing or Importing Mods]]
+  * [[Typical Mod Construction and Importing]]
 </details>
 
 <details open>

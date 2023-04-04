@@ -66,6 +66,7 @@
       </CustomLogic>
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
   <Object name="WaterNoiseProperties" objType="Subrecord" GUID="94f64240-9ef5-4c59-a0d6-ee19ebbcff0d" ID="592">
     <Fields>

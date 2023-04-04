@@ -19,12 +19,17 @@ public partial class Condition
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IConditionDataGetter IConditionGetter.Data => this.Data;
     
+    internal const int UseGlobal = 0x04;
+    
+    /// <summary>
+    /// UseGlobal is implicit depending on the class type used for the Condition
+    /// </summary>
     [Flags]
     public enum Flag
     {
         OR = 0x01,
         ParametersUseAliases = 0x02,
-        UseGlobal = 0x04,
+        // UseGlobal = 0x04,
         UsePackData = 0x08,
         SwapSubjectAndTarget = 0x10
     }
@@ -836,16 +841,20 @@ public partial class Condition
 
         var flagByte = frame.GetUInt8(subRecMeta.HeaderLength);
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(flagByte);
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
+        Condition ret;
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
         {
-            return ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength,
+            ret = ConditionGlobal.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength,
                 checkFraming: false));
+            ret.Flags = ret.Flags.SetFlag((Condition.Flag)UseGlobal, false);
         }
         else
         {
-            return ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength,
+            ret = ConditionFloat.CreateFromBinary(frame.SpawnWithLength(subRecMeta.ContentLength,
                 checkFraming: false));
         }
+
+        return ret;
     }
 
     public static bool TryCreateFromBinary(
@@ -1017,7 +1026,12 @@ partial class ConditionBinaryWriteTranslation
 
     public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item)
     {
-        writer.Write(GetFlagWriteByte(item.Flags, item.CompareOperator));
+        var flags = item.Flags;
+        if (item is IConditionGlobalGetter)
+        {
+            flags = flags.SetFlag((Condition.Flag)UseGlobal, true);
+        }
+        writer.Write(GetFlagWriteByte(flags, item.CompareOperator));
     }
 
     public static void CustomStringExports(MutagenWriter writer, IConditionDataGetter obj)
@@ -1051,7 +1065,8 @@ abstract partial class ConditionBinaryOverlay
             RecordTypes.CIS1,
             RecordTypes.CIS2));
 
-    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location]);
+    public partial Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_structData.Span[location])
+        .SetFlag((Condition.Flag)Condition.UseGlobal, false);
     public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_structData.Span[0]);
 
     public static IConditionGetter ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
@@ -1062,7 +1077,7 @@ abstract partial class ConditionBinaryOverlay
             throw new ArgumentException();
         }
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
         {
             return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
         }
@@ -1080,7 +1095,7 @@ abstract partial class ConditionBinaryOverlay
             throw new ArgumentException();
         }
         Condition.Flag flag = ConditionBinaryCreateTranslation.GetFlag(subRecMeta.Content[0]);
-        if (flag.HasFlag(Condition.Flag.UseGlobal))
+        if (flag.HasFlag((Condition.Flag)Condition.UseGlobal))
         {
             return ConditionGlobalBinaryOverlay.ConditionGlobalFactory(stream, package);
         }
