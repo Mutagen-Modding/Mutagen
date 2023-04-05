@@ -135,6 +135,7 @@
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
   </Object>

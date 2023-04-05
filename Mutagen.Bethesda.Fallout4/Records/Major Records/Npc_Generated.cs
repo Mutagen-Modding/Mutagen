@@ -4890,6 +4890,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBounded,
         IObjectId,
         IOwner,
+        IReferenceableObject,
         IScripted,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -5026,6 +5027,7 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedGetter,
         IObjectIdGetter,
         IOwnerGetter,
+        IReferenceableObjectGetter,
         IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter

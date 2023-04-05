@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [Faction, Npc, PlacedNpc]
+    /// Implemented by: [Faction, Npc]
     /// </summary>
     public partial interface IOwner :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [Faction, Npc, PlacedNpc]
+    /// Implemented by: [Faction, Npc]
     /// </summary>
     public partial interface IOwnerGetter : IFallout4MajorRecordGetter
     {
