@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArtObject, BendableSpline, Book, Component, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, LeveledSpell, Light, MiscItem, MovableStatic, AObjectModification, Projectile, SoundMarker, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArtObject, BendableSpline, Book, Component, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, LeveledSpell, Light, MiscItem, MovableStatic, Npc, AObjectModification, Projectile, SoundMarker, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, Water, Weapon]
     /// </summary>
     public partial interface IReferenceableObject :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArtObject, BendableSpline, Book, Component, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, LeveledSpell, Light, MiscItem, MovableStatic, AObjectModification, Projectile, SoundMarker, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, Water, Weapon]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArtObject, BendableSpline, Book, Component, ConstructibleObject, Container, Debris, Door, Explosion, Flora, FormList, Furniture, Hazard, Holotape, IdleMarker, Ingestible, Ingredient, Key, LeveledItem, LeveledNpc, LeveledSpell, Light, MiscItem, MovableStatic, Npc, AObjectModification, Projectile, SoundMarker, Spell, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, Water, Weapon]
     /// </summary>
     public partial interface IReferenceableObjectGetter : IFallout4MajorRecordGetter
     {

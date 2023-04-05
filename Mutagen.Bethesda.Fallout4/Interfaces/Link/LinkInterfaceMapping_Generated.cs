@@ -94,6 +94,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
             Light_Registration.Instance,
             MiscItem_Registration.Instance,
             MovableStatic_Registration.Instance,
+            Npc_Registration.Instance,
             AObjectModification_Registration.Instance,
             Projectile_Registration.Instance,
             SoundMarker_Registration.Instance,
@@ -307,7 +308,6 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         {
             Faction_Registration.Instance,
             Npc_Registration.Instance,
-            PlacedNpc_Registration.Instance,
         });
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
         dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
