@@ -262,6 +262,7 @@
     <Compile Include="Plugins\Converters\ModKeyTypeConverter.cs" />
     <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
     <Compile Include="Plugins\Exceptions\AssetPathMisalignedException.cs" />
+    <Compile Include="Plugins\Exceptions\FloatStoredAsIntegerOverflowException.cs" />
     <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
     <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />

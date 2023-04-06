@@ -1,5 +1,7 @@
 using Noggog;
 using System.Buffers.Binary;
+using System.Runtime.CompilerServices;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
@@ -29,17 +31,17 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
             case FloatIntegerType.UInt:
             {
                 var raw = reader.ReadUInt32();
-                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
+                return FloatBinaryTranslation.ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.UShort:
             {
                 var raw = reader.ReadUInt16();
-                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
+                return FloatBinaryTranslation.ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.Byte:
             {
                 var raw = reader.ReadUInt8();
-                return ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
+                return FloatBinaryTranslation.ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             default:
                 throw new NotImplementedException();
@@ -50,7 +52,7 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         float? multiplier,
         float? divisor)
     {
-        return ApplyTransformations(Parse(reader), multiplier: multiplier, divisor: divisor);
+        return FloatBinaryTranslation.ApplyTransformations(Parse(reader), multiplier: multiplier, divisor: divisor);
     }
 
     public float GetFloat(
@@ -64,17 +66,17 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
             case FloatIntegerType.UInt:
             {
                 var raw = BinaryPrimitives.ReadUInt32LittleEndian(bytes);
-                return ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
+                return FloatBinaryTranslation.ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.UShort:
             {
                 var raw = BinaryPrimitives.ReadUInt16LittleEndian(bytes);
-                return ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
+                return FloatBinaryTranslation.ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.Byte:
             {
                 var raw = bytes[0];
-                return ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
+                return FloatBinaryTranslation.ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
             }
             default:
                 throw new NotImplementedException();
@@ -103,7 +105,7 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         float? multiplier,
         float? divisor)
     {
-        var transformed = ApplyTransformations(item, multiplier: multiplier, divisor: divisor);
+        var transformed = FloatBinaryTranslation.ApplyTransformations(item, multiplier: multiplier, divisor: divisor);
 
         Write(writer, transformed);
     }
@@ -113,29 +115,45 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         float? item,
         FloatIntegerType integerType, 
         float? multiplier = null,
-        float? divisor = null)
+        float? divisor = null,
+        [CallerArgumentExpression("item")] string? propertyName = default)
     {
         if (item == null) return;
 
-        var transformed = ApplyTransformationsToUInt32(item.Value, multiplier: multiplier, divisor: divisor);
-        
-        switch (integerType)
+        try
         {
-            case FloatIntegerType.UInt:
-                writer.Write(transformed);
-                break;
-            case FloatIntegerType.UShort:
-                writer.Write(checked((ushort)transformed));
-                break;
-            case FloatIntegerType.Byte:
-                writer.Write(checked((byte)transformed));
-                break;
-            default:
-                throw new NotImplementedException();
+            var transformed = FloatBinaryTranslation.ApplyTransformationsToUInt32(item.Value, multiplier: multiplier, divisor: divisor);
+        
+            switch (integerType)
+            {
+                case FloatIntegerType.UInt:
+                    writer.Write(transformed);
+                    break;
+                case FloatIntegerType.UShort:
+                    writer.Write(checked((ushort)transformed));
+                    break;
+                case FloatIntegerType.Byte:
+                    writer.Write(checked((byte)transformed));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        catch (OverflowException)
+        {
+            throw new FloatStoredAsIntegerOverflowException(
+                propertyName,
+                // Intentionally flipped
+                divisor: multiplier, 
+                multiplier: divisor,
+                integerType: integerType);
         }
     }
+}
 
-    private float ApplyTransformations(float input, float? multiplier, float? divisor)
+internal static class FloatBinaryTranslation
+{
+    public static float ApplyTransformations(float input, float? multiplier, float? divisor)
     {
         if (multiplier == null && divisor == null)
         {
@@ -155,7 +173,7 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         return input * multiplier.Value / divisor.Value;
     }
 
-    private uint ApplyTransformationsToUInt32(float input, float? multiplier, float? divisor)
+    public static uint ApplyTransformationsToUInt32(float input, float? multiplier, float? divisor)
     {
         if (multiplier == null && divisor == null)
         {
@@ -180,7 +198,7 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         return checked((uint)Math.Round(transformed));
     }
 
-    private float ApplyTransformationsFromUInt32(uint input, float? multiplier, float? divisor)
+    public static float ApplyTransformationsFromUInt32(uint input, float? multiplier, float? divisor)
     {
         if (multiplier == null && divisor == null)
         {
