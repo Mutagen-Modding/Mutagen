@@ -65,7 +65,7 @@
   <summary>Examples</summary>
 
   * [[Print Some Content]]
-  * [[Locate Records via FormLinks]]
+  * [[Accessing Known Records]]
   * [[Record Overrides and Duplication]]
   * [[Low Level Examples]]
 </details>
