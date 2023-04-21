@@ -2,7 +2,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public enum Aggression
 {
-    Unagressive,
+    Unaggressive,
     Aggressive,
     VeryAggressive,
     Frenzied,
