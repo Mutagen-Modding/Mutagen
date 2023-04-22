@@ -51,4 +51,14 @@ public class MajorRecordBuilderTests
     {
         responses.FormKey.ModKey.Should().Be(mod.ModKey);
     }
+    
+    [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void CellNestedMajorRecords(
+        SkyrimMod mod,
+        Cell cell)
+    {
+        cell.FormKey.ModKey.Should().Be(mod.ModKey);
+        cell.Temporary.Should().NotBeEmpty();
+    }
 }
