@@ -61,4 +61,14 @@ public class MajorRecordBuilderTests
         cell.FormKey.ModKey.Should().Be(mod.ModKey);
         cell.Temporary.Should().NotBeEmpty();
     }
+    
+    [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void WeaponDataSubArray(
+        SkyrimMod mod,
+        Weapon weapon)
+    {
+        weapon.Data.Should().NotBeNull();
+        weapon.Data!.Unknown3.Length.Should().Be(12);
+    }
 }
