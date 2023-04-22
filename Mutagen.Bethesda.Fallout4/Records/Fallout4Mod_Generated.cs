@@ -6671,7 +6671,7 @@ namespace Mutagen.Bethesda.Fallout4
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -6708,7 +6708,7 @@ namespace Mutagen.Bethesda.Fallout4
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -7632,7 +7632,7 @@ namespace Mutagen.Bethesda.Fallout4
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -25095,7 +25095,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceCollection(path.ModKey))
             {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
