@@ -51,10 +51,18 @@ public class MajorRecordBuilder : ISpecimenBuilder
         {
             FillAllProperties(context, ret, keepArraySizes: true);
         }
+
+        ModifyMajorRecordFields(ret);
         
         var group = _modBuilder.LastCreatedConcreteMod.TryGetTopLevelGroup(t);
         group?.AddUntyped(ret);
         return ret;
+    }
+
+    private static void ModifyMajorRecordFields(IMajorRecord rec)
+    {
+        rec.IsCompressed = false;
+        rec.IsDeleted = false;
     }
     
     public static void FillAllProperties(ISpecimenContext context, object item, bool keepArraySizes = false)
@@ -137,6 +145,10 @@ public class MajorRecordBuilder : ISpecimenBuilder
                 var subItem = Activator.CreateInstance(type);
                 if (subItem == null) return null;
                 FillAllProperties(context, subItem, keepArraySizes: keepArraySizes);
+                if (subItem is IMajorRecord majRec)
+                {
+                    ModifyMajorRecordFields(majRec);
+                }
                 return subItem;
             }
             catch (Exception)
