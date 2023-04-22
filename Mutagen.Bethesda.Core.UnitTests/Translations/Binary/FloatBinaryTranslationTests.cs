@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Translations.Binary;
@@ -168,7 +169,7 @@ public class FloatBinaryTranslationTests
     [Fact]
     public void WriteWithIntegerTypeLimit()
     {
-        Assert.Throws<OverflowException>(() =>
+        Assert.Throws<FloatStoredAsIntegerOverflowException>(() =>
         {
             var arr = GetWriteArray((transl, writer) =>
             {
@@ -246,7 +247,7 @@ public class FloatBinaryTranslationTests
     [Fact]
     public void WriteWithUShortTypeLimit()
     {
-        Assert.Throws<OverflowException>(() =>
+        Assert.Throws<FloatStoredAsIntegerOverflowException>(() =>
         {
             var arr = GetWriteArray((transl, writer) =>
             {
@@ -324,7 +325,7 @@ public class FloatBinaryTranslationTests
     [Fact]
     public void WriteWithByteTypeLimit()
     {
-        Assert.Throws<OverflowException>(() =>
+        Assert.Throws<FloatStoredAsIntegerOverflowException>(() =>
         {
             var arr = GetWriteArray((transl, writer) =>
             {
