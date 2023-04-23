@@ -150,6 +150,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         DataType? dataType = null)
     {
         var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
+        var posStr = dataType == null ? passedLengthAccessor : $"_{typeGen.Name}Location";
         switch (data.BinaryOverlayFallback)
         {
             case BinaryGenerationType.Normal:
@@ -202,7 +203,15 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
                 }
                 else if (data.Length.HasValue)
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
+                    // Only support up to 8 with Zeros array
+                    if (data.IsAfterBreak && data.Length.Value < 8)
+                    {
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span.Length <= {posStr} ? UtilityTranslation.Zeros.Slice({data.Length}) : {structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {structDataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
+                    }
                 }
                 else
                 {
