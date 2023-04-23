@@ -1,10 +1,14 @@
 ﻿using System.Reflection;
+using AutoFixture;
 using AutoFixture.Kernel;
 using Loqui;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using Noggog.Testing.AutoFixture.Testing;
+using NSubstitute;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
@@ -13,6 +17,7 @@ public class MajorRecordBuilder : ISpecimenBuilder
     private readonly GameRelease _release;
     private readonly ModConcreteBuilder _modBuilder;
     private readonly bool _configureMembers;
+    private bool _isBuilding;
 
     public MajorRecordBuilder(
         GameRelease release, 
@@ -26,14 +31,14 @@ public class MajorRecordBuilder : ISpecimenBuilder
 
     public object Create(object request, ISpecimenContext context)
     {
+        if (_isBuilding) return new NoSpecimen();
         if (request is SeededRequest seed)
         {
             request = seed.Request;
         }
         
         if (request is not Type t) return new NoSpecimen();
-        if (!t.IsAbstract && !t.IsInterface
-            && t.InheritsFrom(typeof(IMajorRecord)))
+        if (t.InheritsFrom(typeof(IMajorRecord)))
         {
             var ret = GetMajorRecord(t, context);
             if (ret != null) return ret;
@@ -44,25 +49,42 @@ public class MajorRecordBuilder : ISpecimenBuilder
 
     private IMajorRecord? GetMajorRecord(Type t, ISpecimenContext context)
     {
-        if (_modBuilder.LastCreatedConcreteMod == null) return null;
-        var ret = MajorRecordInstantiator.Activator(_modBuilder.LastCreatedConcreteMod.GetNextFormKey(), _release, t);
+        FormKey formKey = _modBuilder.LastCreatedConcreteMod?.GetNextFormKey() ?? context.Create<FormKey>();
+        IMajorRecordInternal? ret;
+        if (t.IsInterface
+            && MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(_release.ToCategory(), t, out var regis)
+            && regis.Registrations.Count > 0)
+        {
+            ret = MajorRecordInstantiator.Activator(formKey, _release, regis.Registrations.First().ClassType) as IMajorRecordInternal;
+        }
+        else if (!t.IsAbstract)
+        {
+            ret = MajorRecordInstantiator.Activator(formKey, _release, t) as IMajorRecordInternal;
+        }
+        else
+        {
+            return null;
+        }
+
+        if (ret == null) return null;
 
         if (_configureMembers)
         {
             FillAllProperties(context, ret, keepArraySizes: true);
         }
 
-        ModifyMajorRecordFields(ret);
+        ModifyMajorRecordFields(ret, formKey);
         
-        var group = _modBuilder.LastCreatedConcreteMod.TryGetTopLevelGroup(t);
+        var group = _modBuilder.LastCreatedConcreteMod?.TryGetTopLevelGroup(t);
         group?.AddUntyped(ret);
         return ret;
     }
 
-    private static void ModifyMajorRecordFields(IMajorRecord rec)
+    private static void ModifyMajorRecordFields(IMajorRecordInternal rec, FormKey formKey)
     {
         rec.IsCompressed = false;
         rec.IsDeleted = false;
+        rec.FormKey = formKey;
     }
     
     public static void FillAllProperties(ISpecimenContext context, object item, bool keepArraySizes = false)
@@ -145,9 +167,9 @@ public class MajorRecordBuilder : ISpecimenBuilder
                 var subItem = Activator.CreateInstance(type);
                 if (subItem == null) return null;
                 FillAllProperties(context, subItem, keepArraySizes: keepArraySizes);
-                if (subItem is IMajorRecord majRec)
+                if (subItem is IMajorRecordInternal majRec)
                 {
-                    ModifyMajorRecordFields(majRec);
+                    ModifyMajorRecordFields(majRec, majRec.FormKey);
                 }
                 return subItem;
             }
