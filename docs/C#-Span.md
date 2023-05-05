@@ -1,15 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Spans are Sub-Sections of Arrays](#spans-are-sub-sections-of-arrays)
-- [Faster Substring Alternative](#faster-substring-alternative)
-- [Interpreting Data as Another Type](#interpreting-data-as-another-type)
-- [Parsing Data from Span](#parsing-data-from-span)
-- [MemorySlice Alternative for Non-Stack Usage](#memoryslice-alternative-for-non-stack-usage)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 `Span`s are not a Mutagen concept, but rather a general C# concept.  However, since they are used extensively by Mutagen's parsing systems and they are a newer concept just recently added to C#, it will be covered to some extent here.
 
 If you are more interested in Mutagen-specific concepts, you can skip this section.

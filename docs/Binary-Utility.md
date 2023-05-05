@@ -1,21 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [BinaryStringUtility](#binarystringutility)
-    - [ToZString](#tozstring)
-    - [ProcessWholeToZString](#processwholetozstring)
-    - [ParseUnknownLengthString](#parseunknownlengthstring)
-- [SubRecord Iteration and Location](#subrecord-iteration-and-location)
-    - [EnumerateSubrecords](#enumeratesubrecords)
-    - [TryFindFirstSubrecord](#tryfindfirstsubrecord)
-    - [FindFirstSubrecords](#findfirstsubrecords)
-    - [CompileFirstSubrecordLocations](#compilefirstsubrecordlocations)
-- [RecordLocator](#recordlocator)
-- [Decompression](#decompression)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # BinaryStringUtility
 Bethesda games store their strings on disk in a single byte format, with a null terminator.  There are some convenience parsing functions inside `BinaryStringUtility` to convert these to C# strings.
 

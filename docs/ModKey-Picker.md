@@ -1,16 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [ModKey Picker](#modkey-picker)
-  - [View Side](#view-side)
-  - [ViewModel Side](#viewmodel-side)
-- [ModKey Multipicker](#modkey-multipicker)
-  - [View Side](#view-side-1)
-  - [ViewModel Side](#viewmodel-side-1)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 The ModKey Picker helps users select mod(s) by typing in their names.
 
 The picker can reference certain objects to know what mods actually exist on a user's active load order:

@@ -1,12 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [What is an ITPO](#what-is-an-itpo)
-- [Avoiding ITPOs](#avoiding-itpos)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # What is an ITPO
 A very typical thing that can happen during processing mods is exporting a record that doesn't have any changes compared to the original.  This is known as an ITPO (Identical to Previous Override), or sometimes ITM (Idential to Master).
 

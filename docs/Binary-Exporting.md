@@ -1,14 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Typical Export](#typical-export)
-  - [Master Content](#master-content)
-  - [Master Ordering](#master-ordering)
-- [Master Sync Options](#master-sync-options)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Typical Export
 A basic mod write call is pretty straightforward:
 ```

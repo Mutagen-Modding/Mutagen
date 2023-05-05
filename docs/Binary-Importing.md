@@ -1,13 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Basic Importing](#basic-importing)
-- [Group Masks](#group-masks)
-- [Notes](#notes)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 All Mods are generated with the ability to create themselves from their binary format.
 ## Basic Importing
 ```cs

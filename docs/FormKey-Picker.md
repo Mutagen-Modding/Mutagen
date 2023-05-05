@@ -1,16 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [FormKey Picker](#formkey-picker)
-  - [View Side](#view-side)
-  - [ViewModel Side](#viewmodel-side)
-- [FormKey Multipicker](#formkey-multipicker)
-  - [View Side](#view-side-1)
-  - [ViewModel Side](#viewmodel-side-1)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 The FormKey Picker helps users select record(s) by typing in:
 - EditorIDs
 - FormKeys

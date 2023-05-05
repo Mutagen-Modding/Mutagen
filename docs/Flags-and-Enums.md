@@ -1,12 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Normal Enum](#normal-enum)
-- [Flags Enum](#flags-enum)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 A lot of Record data is exposed via flags and enums.  All of known enum types and their options are defined explicitly for strongly typed use.
 ### Normal Enum
 Certain fields have a certain subset of valid options.  These are exposed as enums, where only one choice can be made.

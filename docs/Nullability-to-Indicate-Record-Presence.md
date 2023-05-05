@@ -1,17 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Most Subrecords are Optional](#most-subrecords-are-optional)
-  - [Dealing with Nullable Fields](#dealing-with-nullable-fields)
-    - [Don't Check Unless Needed](#dont-check-unless-needed)
-    - [Skipping if null](#skipping-if-null)
-    - [Using a fallback value if null](#using-a-fallback-value-if-null)
-    - [Setting the null field to have a value](#setting-the-null-field-to-have-a-value)
-    - [Other](#other)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Most Subrecords are Optional
 Most Bethesda subrecords are optional; They can be set to a value, or not exist at all.  Mutagen uses a field's nullability to indicate which fields/subrecords are optional.   This leverages one of C#'s newer concepts of [Nullable References](https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references).
 

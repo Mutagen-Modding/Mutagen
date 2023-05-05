@@ -1,13 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [TryResolve](#tryresolve)
-- [FormLink Entry Point](#formlink-entry-point)
-- [LinkCache Entry Point](#linkcache-entry-point)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # TryResolve
 `TryResolve` is the typical call for looking up records pointed to by a FormKey.  Similar to how Control-Clicking a FormID in xEdit will bring you to the record a FormID points to.  It takes a LinkCache as a parameter to the call, which will inspect the content it is attached to (whether it's a load order or a single mod) and try to locate the record that matches:
 - The FormKey (FormID)

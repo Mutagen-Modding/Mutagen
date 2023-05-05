@@ -1,12 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [BinaryReadStream](#binaryreadstream)
-- [MutagenBinaryReadStream](#mutagenbinaryreadstream)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # BinaryReadStream
 `IBinaryReadStream` is an interface that exposes binary extraction from a stream, with `BinaryReadStream` being a basic implementation.  The interface offers calls to read `int`, `short`, `uint`, `double`, `byte[]`, and even newer concepts such as `ReadOnlySpan<byte>` and `ReadOnlyMemorySlice<byte>`.
 

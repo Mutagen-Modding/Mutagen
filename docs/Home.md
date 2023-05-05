@@ -1,23 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Goals](#goals)
-- [Sample API](#sample-api)
-- [Major Features](#major-features)
-  - [Plugins](#plugins)
-  - [Linking and Record Lookups](#linking-and-record-lookups)
-  - [Load Order](#load-order)
-  - [Archives (Bsa/Ba2)](#archives-bsaba2)
-  - [Strings](#strings)
-  - [WPF UI Controls](#wpf-ui-controls)
-- [Seeing Mutagen in Action](#seeing-mutagen-in-action)
-  - [Synthesis](#synthesis)
-  - [Example Project](#example-project)
-- [Installing Mutagen](#installing-mutagen)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 [![Discord](https://discordapp.com/api/guilds/759302581448474626/widget.png)](https://discord.gg/53KMEsW)
 
 Mutagen is a C# library for analyzing, modifying, and creating Bethesda mods. One of its main features is offering interfaces and classes for the records that exist at compile time and are first class citizens in C#. With actual members for each field they get the benefits of type safety, simple live debugging, Intellisense features such as autocomplete. The interfaces offer clean API to the user and abstract away much of the binary record specifics and oddities of how they are stored on disk, while the actual implementation remains very closely tied to the data offering as much speed as it can by leveraging some of the latest C# features. Most of the public facing API is created by code generation, with small manual snippets of code for the one-off special cases. This means the library is able to provide consistent API with very little manual work when adding new record definitions or features.

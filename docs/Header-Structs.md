@@ -1,25 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [General Concept](#general-concept)
-- [Example Usage](#example-usage)
-- [Headers, Frames and Pins](#headers-frames-and-pins)
-  - [Categories](#categories)
-  - [Flavors](#flavors)
-    - [Header](#header)
-    - [Frame](#frame)
-    - [Pin](#pin)
-- [Additional Functionality](#additional-functionality)
-  - [Iteration](#iteration)
-  - [Subrecord Location](#subrecord-location)
-  - [Subrecord Frame Data Interpretation](#subrecord-frame-data-interpretation)
-    - [Primitives](#primitives)
-    - [Strings](#strings)
-- [Writable Structs](#writable-structs)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # General Concept
 Header Structs are lightweight overlays that "lay" on top of some bytes and offers API to retrieve the various header fields or content bytes they contain.  They are extremely cheap to create, as they do no parsing unless asked.  They are aware of any differences in data alignments from game to game, so the same systems can be applied even if alignments change slightly.
 

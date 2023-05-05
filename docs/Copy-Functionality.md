@@ -1,14 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [DeepCopy](#deepcopy)
-- [DeepCopyIn](#deepcopyin)
-- [Translation Masks](#translation-masks)
-- [CopyInFrom[Binary]](#copyinfrombinary)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 Mutagen provides functionality for copying in data to an already existing object.
 
 # DeepCopy
