@@ -459,7 +459,7 @@ public abstract class PassthroughTest
 
     public void TestPex(GameRelease release, ReadOnlyMemorySlice<byte> bytes)
     {
-        var memStream = new BinaryMemoryReadStream(bytes);
+        var memStream = BinaryMemoryReadStream.LittleEndian(bytes);
         PexFile.CreateFromStream(memStream, release.ToCategory());
     }
 
