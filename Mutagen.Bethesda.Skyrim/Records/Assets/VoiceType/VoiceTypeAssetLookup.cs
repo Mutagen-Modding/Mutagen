@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -34,12 +33,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var childRaces = new HashSet<FormKey>();
         foreach (var mod in _formLinkCache.PriorityOrder)
         {
-            foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>())
-            {
-                if (!_speakerVoices.ContainsKey(npc.FormKey))
-                {
-                    _speakerVoices.Add(npc.FormKey, GetVoiceTypes(npc));
-                }
+            foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>()) {
+                _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc));
 
                 foreach (var factionKey in GetFactions(npc))
                 {
@@ -369,9 +364,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         switch (data)
         {
             case IGetIsIDConditionDataGetter getIsId:
-                if (getIsId.Object.UsesLink())
-                {
-                    voices = new VoiceContainer(getIsId.Object.Link.FormKey, _speakerVoices[getIsId.Object.Link.FormKey]);
+                if (getIsId.Object.UsesLink()) {
+                    var getIsIdFormKey = getIsId.Object.Link.FormKey;
+                    if (_speakerVoices.TryGetValue(getIsIdFormKey, out var idVoices))
+                    {
+                        voices = new VoiceContainer(getIsIdFormKey, idVoices);
+                    }
                 }
 
                 break;
