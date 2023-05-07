@@ -29,12 +29,12 @@ public interface IAssetLinkGetter
     string Extension { get; }
 
     /// <summary>
-    /// Extension of the asset
+    /// Type of the asset
     /// </summary>
     IAssetType Type { get; }
 
     /// <summary>
-    /// Extension of the asset
+    /// True if Asset Link points to a null path
     /// </summary>
     public bool IsNull { get; }
 }
