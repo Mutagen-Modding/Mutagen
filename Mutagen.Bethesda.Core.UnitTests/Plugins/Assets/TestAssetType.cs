@@ -6,5 +6,5 @@ public class TestAssetType : IAssetType
 {
     public static readonly TestAssetType Instance = new();
     public string BaseFolder => "Meshes";
-    public IEnumerable<string> FileExtensions => new []{"nif"};
+    public IEnumerable<string> FileExtensions => new []{".nif"};
 }

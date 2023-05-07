@@ -7,5 +7,5 @@ public class SkyrimDeformedModelAssetType : IAssetType
 {
     public static readonly SkyrimDeformedModelAssetType Instance = new();
     public string BaseFolder => "Meshes";
-    public IEnumerable<string> FileExtensions => new []{"tri"};
+    public IEnumerable<string> FileExtensions => new []{".tri"};
 }

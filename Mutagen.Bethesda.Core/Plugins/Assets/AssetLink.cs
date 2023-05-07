@@ -45,7 +45,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     public string DataRelativePath => ConvertToDataRelativePath(RawPath);
 
-    public string Extension => Path.GetExtension(RawPath).TrimStart('.');
+    public string Extension => Path.GetExtension(RawPath);
 
     public IAssetType Type => AssetInstance;
 
