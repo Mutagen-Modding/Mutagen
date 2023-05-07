@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Skyrim.Assets;
 
 public class SkyrimSoundAssetType : IAssetType
 {
-#if NET7_0
+#if NET7_0_OR_GREATER
     public static IAssetType Instance { get; } = new SkyrimSoundAssetType();
 #else
     public static readonly SkyrimSoundAssetType Instance = new();

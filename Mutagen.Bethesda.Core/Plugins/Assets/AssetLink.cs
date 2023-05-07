@@ -28,7 +28,7 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
 
     static AssetLinkGetter()
     {
-#if NET7_0
+#if NET7_0_OR_GREATER
         AssetInstance = TAssetType.Instance;
 #else
         AssetInstance = (TAssetType)(typeof(TAssetType).GetProperty("Instance", BindingFlags.Static)?.GetValue(null) ?? Activator.CreateInstance(typeof(TAssetType)))!;

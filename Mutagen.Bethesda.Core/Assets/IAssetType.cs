@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Assets;
 /// </summary>
 public interface IAssetType
 {
-#if NET7_0
+#if NET7_0_OR_GREATER
     static abstract IAssetType Instance { get; }
 #endif
 
@@ -29,7 +29,7 @@ public interface IAssetType
     /// <param name="path">Path of the asset</param>
     /// <returns>Instance of the parsed asset type or null if no asset type could be determined</returns>
     public static IAssetType? GetAssetType(GameRelease gameRelease, string path) {
-#if NET7_0
+#if NET7_0_OR_GREATER
         switch (gameRelease) {
             case GameRelease.Oblivion:
                 break;

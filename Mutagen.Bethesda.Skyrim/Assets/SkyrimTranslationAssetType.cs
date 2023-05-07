@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Skyrim.Assets;
 
 public class SkyrimTranslationAssetType : IAssetType
 {
-#if NET7_0
+#if NET7_0_OR_GREATER
     public static IAssetType Instance { get; } = new SkyrimTranslationAssetType();
 #else
     public static readonly SkyrimTranslationAssetType Instance = new();

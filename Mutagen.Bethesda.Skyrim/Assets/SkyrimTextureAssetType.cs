@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim.Assets;
 
 public class SkyrimTextureAssetType : IAssetType
 {
-#if NET7_0
+#if NET7_0_OR_GREATER
     public static IAssetType Instance { get; } = new SkyrimTextureAssetType();
 #else
     public static readonly SkyrimTextureAssetType Instance = new();

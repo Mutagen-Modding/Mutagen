@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim.Assets;
 
 public class SkyrimScriptSourceAssetType : IAssetType
 {
-#if NET7_0
+#if NET7_0_OR_GREATER
     public static IAssetType Instance { get; } = new SkyrimScriptSourceAssetType();
 #else
     public static readonly SkyrimScriptSourceAssetType Instance = new();
