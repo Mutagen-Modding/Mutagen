@@ -4,16 +4,6 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 
 public interface IAssetLinkGetter
 {
-    protected static readonly string NullPath = string.Empty;
-    protected static readonly StringComparison PathComparison = StringComparison.OrdinalIgnoreCase;
-    protected static readonly StringComparer PathComparer = StringComparer.FromComparison(PathComparison);
-    protected const string DataDirectory = "Data";
-    protected static readonly string DataPrefix = DataDirectory + Path.DirectorySeparatorChar;
-    protected static readonly string DataPrefixAlt = DataDirectory + Path.AltDirectorySeparatorChar;
-    protected static readonly string DataInfix = Path.DirectorySeparatorChar + DataDirectory + Path.DirectorySeparatorChar;
-    protected static readonly string DataInfixAlt = Path.AltDirectorySeparatorChar + DataDirectory + Path.AltDirectorySeparatorChar;
-    protected static readonly int DataPrefixLength = DataDirectory.Length + 1;
-    
     /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
