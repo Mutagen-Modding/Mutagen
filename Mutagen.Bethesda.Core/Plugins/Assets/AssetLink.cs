@@ -23,14 +23,18 @@ public class AssetLinkGetter<TAssetType> : IComparable<AssetLinkGetter<TAssetTyp
     protected static readonly int DataPrefixLength = DataDirectory.Length + 1;
 
     protected string _rawPath;
-    protected static readonly TAssetType AssetInstance;
+    protected static readonly IAssetType AssetInstance;
     public static readonly AssetLinkGetter<TAssetType> Null = new();
 
     static AssetLinkGetter()
     {
+#if NET7_0
+        AssetInstance = TAssetType.Instance;
+#else
         AssetInstance = (TAssetType)(typeof(TAssetType).GetProperty("Instance", BindingFlags.Static)?.GetValue(null) ?? Activator.CreateInstance(typeof(TAssetType)))!;
+#endif
     }
-    
+
     public AssetLinkGetter()
     {
         _rawPath = NullPath;
