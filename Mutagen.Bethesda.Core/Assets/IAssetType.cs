@@ -47,8 +47,8 @@ public interface IAssetType
                 throw new ArgumentOutOfRangeException(nameof(gameRelease), gameRelease, null);
         }
 #else
-        throw new NotImplementedException();
 #endif
+        throw new NotImplementedException();
     }
 
     static IAssetType() {
