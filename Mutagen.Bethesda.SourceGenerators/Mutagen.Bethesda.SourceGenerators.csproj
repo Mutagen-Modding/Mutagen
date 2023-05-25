@@ -40,8 +40,4 @@
         <None Include="$(PkgLoqui_Generation)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
 
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.sourcegenerators&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-    </Target>
-
 </Project>

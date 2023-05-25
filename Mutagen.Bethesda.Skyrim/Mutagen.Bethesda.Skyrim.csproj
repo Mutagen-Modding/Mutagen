@@ -4680,7 +4680,4 @@
   <ItemGroup>
     <Folder Include="Records\Assets" />
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
 </Project>

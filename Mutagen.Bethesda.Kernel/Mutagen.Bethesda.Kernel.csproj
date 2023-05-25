@@ -23,10 +23,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.kernel&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
-
   <ItemGroup>
     <PackageReference Include="Noggog.CSharpExt" />
   </ItemGroup>
