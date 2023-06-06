@@ -102,7 +102,7 @@ public readonly struct ModKey : IEquatable<ModKey>
     {
         return (IsNull && other.IsNull)
                || (this.Type == other.Type
-                   && string.Equals(this.Name, other.Name, StringComparison.CurrentCultureIgnoreCase));
+                   && string.Equals(this.Name, other.Name, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
