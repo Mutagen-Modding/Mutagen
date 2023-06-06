@@ -205,6 +205,7 @@ public class ModKeyTests
         Assert.Equal(0, compare.Compare(k2, k1));
     }
     #endregion
+    
     #region ModKey List
     [Fact]
     public void Comparer_ModKeyList_Typical()
@@ -247,7 +248,41 @@ public class ModKeyTests
         var compare = ModKey.LoadOrderComparer(modKeys);
         Assert.Throws<ArgumentOutOfRangeException>(() => compare.Compare(k1, k2));
     }
+    
+    [Fact]
+    public void Comparer_ModKeyList_CapitalizationDifferences()
+    {
+        List<ModKey> modKeys = new List<ModKey>()
+        {
+            ModKey.FromNameAndExtension("Oblivion.esm"),
+            ModKey.FromNameAndExtension("Knights.esm"),
+        };
+        ModKey k1 = ModKey.FromNameAndExtension("oblivion.esm");
+        ModKey k2 = ModKey.FromNameAndExtension("Knights.esm");
+        var compare = ModKey.LoadOrderComparer(modKeys);
+        Assert.True(compare.Compare(k1, k2) < 0);
+    }
+    
+    [Fact]
+    public void Comparer_ModKeyList_CapitalizationDifferences2()
+    {
+        var arr = new ModKey[] { "ModA.esp", "ModB.esp", "modc.esp" };
+        var toSort = new List<ModKey> { "ModC.esp", "ModA.esp" };
+        toSort.Sort(ModKey.LoadOrderComparer(arr));
+        toSort.Should().Equal("ModA.esp", "ModC.esp");
+    }
+    
+    [Fact]
+    public void Comparer_ModKeyList_CapitalizationDifferences3()
+    {
+        var arr = new ModKey[] { "ModA.esp", "ModB.esp", "ModC.esp" };
+        var toSort = new List<ModKey> { "modc.esp", "ModA.esp" };
+        toSort.Sort(ModKey.LoadOrderComparer(arr));
+        toSort.Should().Equal("ModA.esp", "modc.esp");
+    }
+
     #endregion
+
     #endregion
 
     [Fact]
