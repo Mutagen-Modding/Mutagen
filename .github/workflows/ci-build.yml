@@ -59,7 +59,7 @@ jobs:
     - name: Install dependencies
       run: |
         dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
-        dotnet restore
+        dotnet restore Mutagen.Records.sln
     - name: Build
       run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Pack Preview
