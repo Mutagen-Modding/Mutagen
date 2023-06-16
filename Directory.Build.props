@@ -18,14 +18,14 @@
 		  BeforeTargets="GetAssemblyVersion;GetPackageVersion"
 		  DependsOnTargets="GitVersion"
 		  Returns="$(PackageVersion)">
-    <PropertyGroup>
-      <DevLabel Condition="$(GitCommits) != '0'">.1-dev</DevLabel>
-      <DevLabel Condition="$(GitCommits) == '0' And $(GitSemVerDashLabel) != ''">$(GitSemVerDashLabel)</DevLabel>
-      <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
-      <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
-      <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion>
-      <Version>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</Version>
-      <InformationalVersion>$(PackageVersion)</InformationalVersion>
-    </PropertyGroup>
+    <PropertyGroup> 
+        <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) == ''">.1-dev</DevLabel> 
+        <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) != ''">.1-$(VersionSuffix)</DevLabel> 
+        <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel> 
+      <AssemblyVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</AssemblyVersion> 
+      <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion> 
+      <PackageVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(DevLabel)</PackageVersion> 
+      <InformationalVersion>$(PackageVersion)</InformationalVersion> 
+    </PropertyGroup> 
   </Target>
 </Project>
