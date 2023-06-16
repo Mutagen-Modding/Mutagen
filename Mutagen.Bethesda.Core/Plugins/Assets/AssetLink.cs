@@ -229,4 +229,7 @@ public class AssetLink<TAssetType> :
 
     [return: NotNullIfNotNull("path")]
     public static implicit operator AssetLink<TAssetType>?(string? path) => path == null ? null : new(path);
+
+    [return: NotNullIfNotNull("path")]
+    public static implicit operator AssetLink<TAssetType>?(FilePath? path) => path == null ? null : new(path.Value.Path);
 }
