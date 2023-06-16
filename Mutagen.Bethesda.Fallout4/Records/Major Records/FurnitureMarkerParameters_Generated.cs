@@ -1423,7 +1423,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single RotationZ => _structData.Slice(0xC, 0x4).Float() * 57.2958f;
         public IFormLinkGetter<IKeywordGetter> Keyword => _structData.Length <= 0x10 ? FormLink<IKeywordGetter>.Null : new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
         public Furniture.EntryParameterType EntryTypes => _structData.Span.Length <= 0x14 ? default : (Furniture.EntryParameterType)_structData.Span.Slice(0x14, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Length <= 0x15 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x15, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

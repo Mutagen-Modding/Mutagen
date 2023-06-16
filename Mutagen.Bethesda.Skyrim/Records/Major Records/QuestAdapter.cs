@@ -97,7 +97,7 @@ partial class QuestAdapterBinaryOverlay
         if (_structData.Length <= this.ScriptsEndingPos) return;
         var frame = new MutagenFrame(
             new MutagenInterfaceReadStream(
-                new BinaryMemoryReadStream(_structData.Slice(ScriptsEndingPos)),
+                BinaryMemoryReadStream.LittleEndian(_structData.Slice(ScriptsEndingPos)),
                 _package.MetaData));
         // Skip unknown
         frame.Position += 1;

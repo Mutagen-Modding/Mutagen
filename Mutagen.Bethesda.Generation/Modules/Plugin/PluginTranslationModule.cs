@@ -466,7 +466,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("var frame = new MutagenFrame(reader);");
-                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
+                sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem));");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = path.ModKey;");
                 if (obj.GetObjectData().UsesStringFiles)
@@ -2443,7 +2443,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         sb.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceCollection)}(path.ModKey))");
                         using (sb.CurlyBrace(appendSemiColon: true))
                         {
-                            sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+                            sb.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}, fileSystem: fileSystem))");
                         }
                         using (var args = sb.Call(
                                    $"var stream = new {nameof(MutagenBinaryReadStream)}"))

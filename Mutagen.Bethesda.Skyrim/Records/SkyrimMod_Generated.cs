@@ -6040,7 +6040,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -6080,7 +6080,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -6999,7 +6999,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -23361,7 +23361,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceCollection(path.ModKey))
             {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
+                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: fileSystem))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,

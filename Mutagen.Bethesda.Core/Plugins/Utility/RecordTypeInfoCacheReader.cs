@@ -50,7 +50,7 @@ public sealed class RecordTypeInfoCacheReader
                 interestingTypes: PluginUtilityTranslation.GetRecordType<T>()));
         cache = new(locs.FormKeys.ToList(), locs.FormKeys.ToHashSet());
 
-        _cachedLocs = _cachedLocs.Add(typeof(T), cache);
+        _cachedLocs = _cachedLocs.SetItem(typeof(T), cache);
         return cache;
     }
 }

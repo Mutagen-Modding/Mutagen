@@ -1,12 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Normal ToString](#normal-tostring)
-- [IPrintable and StructuredStringBuilder](#iprintable-and-structuredstringbuilder)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 (Latest version of Mutagen does not match these docs.  Will soon be updated to match this documentation)
 
 # Normal ToString

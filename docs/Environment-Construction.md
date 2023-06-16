@@ -1,22 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Single Game Category Construction](#single-game-category-construction)
-  - [Synthesis Usage](#synthesis-usage)
-- [Unknown Game Construction](#unknown-game-construction)
-- [Game Environment Builder](#game-environment-builder)
-  - [Problem](#problem)
-  - [Builder Pattern](#builder-pattern)
-    - [Transform Load Order](#transform-load-order)
-      - [TransformLoadOrderListings](#transformloadorderlistings)
-      - [TransformModListings](#transformmodlistings)
-    - [WithOutputMod](#withoutputmod)
-    - [WithTargetDataFolder](#withtargetdatafolder)
-    - [WithLoadOrder](#withloadorder)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Single Game Category Construction
 As mentioned in the [overview section](Environment), the typical way to construct an environment if you know the game you want to target is:
 ```cs

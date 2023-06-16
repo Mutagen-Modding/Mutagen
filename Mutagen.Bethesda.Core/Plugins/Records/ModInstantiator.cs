@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// </summary>
     public static class ModInstantiator
     {
-        record Delegates(ModInstantiator<IModGetter>.ImporterDelegate Importer, ModInstantiator<IMod>.ActivatorDelegate Activator);
+        record Delegates(ModInstantiator<IModDisposeGetter>.ImporterDelegate Importer, ModInstantiator<IMod>.ActivatorDelegate Activator);
         
         private static Dictionary<GameCategory, Delegates> _dict = new();
 
@@ -28,13 +28,13 @@ namespace Mutagen.Bethesda.Plugins.Records
                 var modRegistration = obj as IModRegistration;
                 if (modRegistration == null) continue;
                 _dict[modRegistration.GameCategory] = new Delegates(
-                    ModInstantiatorReflection.GetOverlay<IModGetter>(modRegistration),
+                    ModInstantiatorReflection.GetOverlay<IModDisposeGetter>(modRegistration),
                     ModInstantiatorReflection.GetActivator<IMod>(modRegistration));
 
             }
         }
 
-        public static IModGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
+        public static IModDisposeGetter Importer(ModPath path, GameRelease release, IFileSystem? fileSystem = null, StringsReadParameters? stringsParam = null)
         {
             return _dict[release.ToCategory()].Importer(path, release, fileSystem, stringsParam);
         }

@@ -1,11 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Json Converters](#json-converters)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 Currently, the libraries that Mutagen offers related to Json targets `Newtonsoft.Json`.  Alternatives can be added for `System.Text.Json` if there's demand.
 
 # Json Converters

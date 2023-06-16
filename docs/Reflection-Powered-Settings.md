@@ -1,24 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Overview](#overview)
-- [Nesting](#nesting)
-- [Attributes](#attributes)
-  - [Ignore](#ignore)
-  - [Tooltip](#tooltip)
-  - [SettingName](#settingname)
-  - [JsonDiskName](#jsondiskname)
-  - [MaintainOrder](#maintainorder)
-  - [ObjectNameMember](#objectnamemember)
-  - [FormLinkPickerCustomization](#formlinkpickercustomization)
-- [Allowed Field Types](#allowed-field-types)
-- [Implementing Within a UI Yourself](#implementing-within-a-ui-yourself)
-  - [View Side](#view-side)
-  - [ViewModel Side](#viewmodel-side)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 This is a control that is able to attach to any DTO (Data Transfer Object) style class and generate a UI for each of the fields.  This is very good for getting a basic settings editor up and running with minimal WPF experience.
 
 Originally it was part of Synthesis to provide UI controls for patcher settings, but has been moved up to Mutagen's libraries for more general use.

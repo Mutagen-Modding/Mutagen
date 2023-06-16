@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Authors>Noggog</Authors>
@@ -58,7 +58,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\AdvanceAction.cs" />
-    <Compile Include="Enums\Agression.cs" />
+    <Compile Include="Enums\Aggression.cs" />
     <Compile Include="Enums\Alignment.cs" />
     <Compile Include="Enums\ArmorType.cs" />
     <Compile Include="Enums\Assistance.cs" />
@@ -4680,7 +4680,4 @@
   <ItemGroup>
     <Folder Include="Records\Assets" />
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
 </Project>

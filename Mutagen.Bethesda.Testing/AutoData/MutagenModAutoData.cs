@@ -17,7 +17,7 @@ public class MutagenModAutoDataAttribute : AutoDataAttribute
                 useMockFileSystem: UseMockFileSystem,
                 configureMembers: ConfigureMembers,
                 release: Release));
-            ret.Customize(new MutagenConcreteModsCustomization(release: Release));
+            ret.Customize(new MutagenConcreteModsCustomization(release: Release, configureMembers: ConfigureMembers));
             return ret;
         })
     {

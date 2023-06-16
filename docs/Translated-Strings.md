@@ -1,17 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [TranslatedString](#translatedstring)
-  - [Multi-Language Support](#multi-language-support)
-  - [Data Loading Patterns](#data-loading-patterns)
-- [Internals](#internals)
-  - [StringsLookupOverlay](#stringslookupoverlay)
-  - [StringsFolderLookupOverlay](#stringsfolderlookupoverlay)
-  - [StringsWriter](#stringswriter)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 Newer Bethesda titles come with the ability for a single string record to have multiple different translations in different languages.  This is provided via the concept of extra `.strings` files, which provide an index to string mapping to alternate translations for a language.  On the mod file binary side, string record contents are replaced with an index that can be used to lookup a value in the strings files for the language desired.
 
 # TranslatedString

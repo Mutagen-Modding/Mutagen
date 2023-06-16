@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Tests;
 public class StringParsing
 {
     public static byte[] data = Enumerable.Range(1, 15).Select(i => (byte)i).ToArray();
-    public static BinaryMemoryReadStream stream = new(data);
+    public static BinaryMemoryReadStream stream = BinaryMemoryReadStream.LittleEndian(data);
     [Benchmark]
     public string StringCreate()
     {

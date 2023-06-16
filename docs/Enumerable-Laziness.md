@@ -1,20 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Setup](#setup)
-- [Problem](#problem)
-  - [What's the problem?](#whats-the-problem)
-  - [What does this mean?](#what-does-this-mean)
-  - [Why does this matter?](#why-does-this-matter)
-- [Solution](#solution)
-  - [Small Metaphor](#small-metaphor)
-  - [The Fix](#the-fix)
-- [Why is Linq Deferred/Lazy?](#why-is-linq-deferredlazy)
-- [Conclusion](#conclusion)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Setup
 One common pitfall related to Enumerable/LINQ usage.  Take this basic Synthesis patcher example:
 ```cs

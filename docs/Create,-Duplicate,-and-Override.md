@@ -1,18 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Create New Records](#create-new-records)
-  - [By Constructor](#by-constructor)
-  - [From a Mod's Group](#from-a-mods-group)
-  - [By Duplication](#by-duplication)
-- [Overriding Records](#overriding-records)
-  - [GetOrAddAsOverride](#getoraddasoverride)
-  - [Deep Copy Then Insert](#deep-copy-then-insert)
-  - [Nested Records](#nested-records)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Create New Records
 New records can be constructed in a few ways.  Note that a record's FormKey is required during construction, and immutable.  If you want to change the FormKey of a record, a new one should be made.  Any desired fields can be brought over via [CopyIn](Copy-Functionality#deepcopyin) mechanics.
 ## By Constructor

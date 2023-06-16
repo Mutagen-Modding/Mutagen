@@ -1,25 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [EditorID vs FormLink](#editorid-vs-formlink)
-- [EditorID Upsides](#editorid-upsides)
-  - [Readability and FormLink Mapping](#readability-and-formlink-mapping)
-    - [EditorIDs are More Readable](#editorids-are-more-readable)
-    - [FormLink Mapping Brings Readability to FormLink-Based Systems](#formlink-mapping-brings-readability-to-formlink-based-systems)
-- [EditorID Downsides](#editorid-downsides)
-  - [Overriding Mods Can Ruin Lookups](#overriding-mods-can-ruin-lookups)
-  - [Type Info Is Lost, Potentially Losing Speed](#type-info-is-lost-potentially-losing-speed)
-  - [Requires Decompression, Losing Speed](#requires-decompression-losing-speed)
-  - [Some Records Cannot Be Looked Up](#some-records-cannot-be-looked-up)
-  - [Specialized UI Input Systems](#specialized-ui-input-systems)
-  - [Typos](#typos)
-    - [You Can Make Typos](#you-can-make-typos)
-    - [Your Users Can Make Typos](#your-users-can-make-typos)
-- [String Comparisons Are Slower than Int Comparisons](#string-comparisons-are-slower-than-int-comparisons)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # EditorID vs FormLink
 When choosing how you want to look up records, or store lists of record identifiers, there's the common choice between EditorIDs and FormLinks. 
 

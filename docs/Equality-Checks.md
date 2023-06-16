@@ -1,12 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Basic Equality](#basic-equality)
-- [Equals Mask](#equals-mask)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Basic Equality
 Mutagen generates Equals and Hash functions for all classes based on record content.  Normal C# equality checks can be used:
 ```cs

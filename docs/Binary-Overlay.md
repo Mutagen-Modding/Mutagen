@@ -1,32 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Reasoning for an Alternate Pattern](#reasoning-for-an-alternate-pattern)
-    - [Memory Usage is Frontloaded](#memory-usage-is-frontloaded)
-    - [User Must Specify Interest](#user-must-specify-interest)
-    - [All Records are Parsed (for Interest Groups)](#all-records-are-parsed-for-interest-groups)
-- [Introduction to Overlay Concepts](#introduction-to-overlay-concepts)
-    - [It returns a `Getter` interface.](#it-returns-a-getter-interface)
-    - [Requires an open Stream](#requires-an-open-stream)
-    - [No Up Front Parsing Work](#no-up-front-parsing-work)
-    - [No Persistent References to Records or Memory](#no-persistent-references-to-records-or-memory)
-- [Concrete Example](#concrete-example)
-    - [What work is actually done by this code?](#what-work-is-actually-done-by-this-code)
-    - [What are some things that were not done?](#what-are-some-things-that-were-not-done)
-- [Summary Overview](#summary-overview)
-    - [Pros](#pros)
-    - [Cons:](#cons)
-- [Best Practices](#best-practices)
-    - [Example of Misuse](#example-of-misuse)
-    - [Save to Variable](#save-to-variable)
-    - [Group Access Special Case](#group-access-special-case)
-    - [Pattern Matching](#pattern-matching)
-    - [Safe Navigation Operator](#safe-navigation-operator)
-    - [Null Coalescing Operator](#null-coalescing-operator)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 Binary Overlays are an alternative to the more simplistic [[Binary Importing]] concepts.
 
 # Reasoning for an Alternate Pattern

@@ -1,21 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Passthrough Testing](#passthrough-testing)
-  - [Definition](#definition)
-  - [Pre-Processing](#pre-processing)
-    - [Decompression](#decompression)
-    - [Float Standardization](#float-standardization)
-    - [Subrecord Order Standardization](#subrecord-order-standardization)
-    - [Strings File Key Reindexing](#strings-file-key-reindexing)
-    - [Other Minor Inconsistencies](#other-minor-inconsistencies)
-  - [Running](#running)
-- [Helper UI](#helper-ui)
-- [More References](#more-references)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Passthrough Testing
 Besides general unit tests for edge-case prone code section, Mutagen has a passthrough test suite that it uses to help confirm correctness.  
 ## Definition

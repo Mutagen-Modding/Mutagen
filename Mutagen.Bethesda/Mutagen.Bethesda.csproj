@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -34,7 +34,5 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
+  
 </Project>
