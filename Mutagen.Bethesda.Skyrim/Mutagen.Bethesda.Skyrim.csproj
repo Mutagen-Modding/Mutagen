@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
+    <Compile Include="Enums\ActorValueMapper.cs" />
     <Compile Include="Enums\AdvanceAction.cs" />
     <Compile Include="Enums\Aggression.cs" />
     <Compile Include="Enums\Alignment.cs" />
