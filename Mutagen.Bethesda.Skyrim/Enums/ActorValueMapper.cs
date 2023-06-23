@@ -1,6 +1,6 @@
 ﻿using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Skyrim.Enums;
 
 public static class ActorValueMapper
 {
