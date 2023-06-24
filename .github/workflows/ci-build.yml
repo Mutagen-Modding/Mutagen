@@ -5,6 +5,7 @@ on:
     branches:
       - dev
       - release
+      - prerelease
   pull_request:
   release:
     types: [published]
