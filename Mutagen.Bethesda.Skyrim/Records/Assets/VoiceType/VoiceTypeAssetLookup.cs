@@ -149,6 +149,15 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var quest = topic.Quest.TryResolve(_formLinkCache);
         if (quest == null) return null;
 
+        //When the quest doesn't allow export return no voices  
+        if ((quest.Flags & Quest.Flag.ExcludeFromDialogExport) != 0) return new VoiceContainer();
+
+        //When all responses use a sound override, return no voices
+        if (response.Responses.All(r => !r.Sound.IsNull)) return new VoiceContainer();
+
+        //If this is a shared info and it's not used, return no voices
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfosCache.ContainsKey(response.FormKey)) return new VoiceContainer();
+
         //Get quest voices
         VoiceContainer questVoices;
         if (_questCache.TryGetValue(quest.FormKey, out var questVoiceContainer))
@@ -159,9 +168,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             questVoices = GetVoices(quest, topic.FormKey.ModKey);
             _questCache.Add(quest.FormKey, questVoices);
         }
-
-        //If this is a shared info and it's not used, return no voices
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfosCache.ContainsKey(response.FormKey)) return new VoiceContainer();
 
         //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
         var voices = GetVoices(topic, response, quest);
