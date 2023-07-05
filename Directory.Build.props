@@ -7,10 +7,13 @@
     <LangVersion>preview</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup> 
-   
-  <ItemGroup>
-    <PackageReference Include="GitInfo"/>
-  </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="GitInfo" >  
+          <PrivateAssets>all</PrivateAssets>  
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>  
+        </PackageReference> 
+    </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
     <PackageReference Include="NuGetizer" >
