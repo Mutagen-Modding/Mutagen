@@ -1,0 +1,125 @@
+name: Publish
+
+on:
+  schedule:
+    - cron: '40 9 * * *'
+  workflow_dispatch:
+  release:
+    types: [published]
+    inputs:
+      is_release_event:
+        description: Should this be a release or a preview package
+        required: true
+        default: 'false'
+
+jobs:
+  activity-short-circuit:
+    runs-on: ubuntu-latest
+    outputs:
+      same_sha: ${{ steps.check.outputs.same_sha }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Get Activity Short Circuit
+        id: check
+        run: |
+          git branch -a
+          git fetch origin nightly:nightly
+          head_sha=$(git rev-parse --verify HEAD)
+          nightly_sha=$(git rev-parse --verify nightly)
+          if [[ "$head_sha" == "$nightly_sha" ]]; then
+              same_sha=true;
+          else
+              same_sha=false;
+          fi
+          echo "head_sha=$head_sha"
+          echo "nightly_sha=$nightly_sha"
+          echo "same_sha=${same_sha}"
+          echo "same_sha=${same_sha}" >> $GITHUB_OUTPUT
+        
+  build-test:
+    needs: activity-short-circuit
+    if: needs.activity-short-circuit.outputs.same_sha == 'false'
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        sln:
+          - Mutagen.Records.sln
+          - Mutagen.Records.Linux.sln
+        exclude:
+          - os: ubuntu-latest
+            sln: Mutagen.Records.sln
+          - os: macos-latest
+            sln: Mutagen.Records.sln
+          - os: windows-latest
+            sln: Mutagen.Records.Linux.sln
+          
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
+        dotnet restore
+    - name: Build
+      run: dotnet build ${{ matrix.sln }} -c Release --no-restore
+    - name: Test
+      run: dotnet test ${{ matrix.sln }} -c Release --no-build
+
+  build-test-push:
+    needs: [build-test, activity-short-circuit]
+    if: needs.activity-short-circuit.outputs.same_sha == 'false'
+    runs-on: windows-latest
+    steps:
+    - name: Get timestamp
+      uses: 1466587594/get-current-time@v1
+      id: current-time
+      with:
+        format: YYYYMMDD-HHmmSS
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install dependencies
+      run: |
+        dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
+        dotnet restore Mutagen.Records.sln
+    - name: Build
+      run: dotnet build -c Release --no-restore /p:GeneratePackageOnBuild=false
+    - name: Pack Preview
+      if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/master') }}
+      run: |
+        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
+    - name: Pack Release
+      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
+      run: | 
+        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out
+    - name: Publish to Github
+      uses: svenstaro/upload-release-action@v2
+      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
+      with:
+        file: "**/*.nupkg"
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ github.event.release.tag_name }}
+        file_glob: "true"
+    - name: Publish to Nuget.org
+      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --no-symbols
+  
+  update-nightly:
+    needs: [build-test-push, activity-short-circuit]
+    if: needs.activity-short-circuit.outputs.same_sha == 'false'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Reset nightly to master
+      run: |
+        head_sha=$(git rev-parse --verify HEAD)
+        echo "head_sha=$head_sha"
+        git checkout nightly
+        git reset --hard $head_sha
+        git push
