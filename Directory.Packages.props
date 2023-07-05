@@ -50,7 +50,11 @@
     <PackageVersion Include="Noggog.WPF">
       <Version>[2.59.0.1-nightly-20230704-091177]</Version>
     </PackageVersion>
-    <PackageVersion Include="NuGetizer" Version="0.9.5" />
+    <PackageVersion Include="NuGetizer">
+      <Version>0.9.5</Version>
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageVersion>
     <PackageVersion Include="ReactiveUI">
       <Version>18.4.26</Version>
     </PackageVersion>
