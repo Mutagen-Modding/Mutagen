@@ -27,6 +27,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         SkyrimMod mod,
         Scene scene,
         DialogTopic topic,
+        DialogResponse dialogResponse,
         Quest quest,
         DialogResponses dialogResponses,
         VoiceType voiceType,
@@ -38,6 +39,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         string edid2,
         uint aliasId)
     {
+        dialogResponses.Responses.Add(dialogResponse);
         topic.Responses.Add(dialogResponses);
         topic.Category = DialogTopic.CategoryEnum.Scene;
         topic.Quest.SetTo(quest);
