@@ -64,7 +64,7 @@ jobs:
     - name: Install dependencies
       run: |
         dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
-        dotnet restore
+        dotnet restore ${{ matrix.sln }}
     - name: Build
       run: dotnet build ${{ matrix.sln }} -c Release --no-restore
     - name: Test
