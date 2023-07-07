@@ -88,7 +88,7 @@ jobs:
         dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
         dotnet restore Mutagen.Records.sln
     - name: Build
-      run: dotnet build -c Release --no-restore /p:GeneratePackageOnBuild=false
+      run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Pack Preview
       if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/master') }}
       run: |
