@@ -61,6 +61,7 @@ public class SkyrimProcessor : Processor
         AddDynamicProcessing(RecordTypes.LSCR, ProcessLoadScreens);
         AddDynamicProcessing(RecordTypes.ACTI, ProcessActivators);
         AddDynamicProcessing(RecordTypes.WTHR, ProcessWeathers);
+        AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
     }
 
     private void ProcessGameSettings(
@@ -821,6 +822,25 @@ public class SkyrimProcessor : Processor
         foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
         {
             ProcessFormIDOverflow(snam, fileOffset);
+        }
+    }
+
+    private void ProcessStatics(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        const int blockSize = 0x104;
+        foreach (var mnam in majorFrame.FindEnumerateSubrecords(RecordTypes.MNAM))
+        {
+            var bytes = mnam.Content;
+            for (int i = 0; i < bytes.Length; i += blockSize)
+            {
+                var zeroIndex = bytes.Span.Slice(i).IndexOf((byte)0);
+                if (zeroIndex == -1) break;
+                var index = fileOffset + mnam.Location + mnam.HeaderLength + zeroIndex + i;
+                var byteSize = blockSize - zeroIndex;
+                _instructions.SetSubstitution(index, new byte[byteSize]);
+            }
         }
     }
 

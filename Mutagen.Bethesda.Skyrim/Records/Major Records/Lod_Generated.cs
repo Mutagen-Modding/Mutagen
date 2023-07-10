@@ -57,61 +57,17 @@ namespace Mutagen.Bethesda.Skyrim
         public AssetLink<SkyrimModelAssetType> Level0 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level0 => this.Level0;
         #endregion
-        #region Level0Extra
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Level0Extra;
-        public MemorySlice<Byte>? Level0Extra
-        {
-            get => this._Level0Extra;
-            set => this._Level0Extra = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILodGetter.Level0Extra => this.Level0Extra;
-        #endregion
         #region Level1
         public AssetLink<SkyrimModelAssetType> Level1 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level1 => this.Level1;
-        #endregion
-        #region Level1Extra
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Level1Extra;
-        public MemorySlice<Byte>? Level1Extra
-        {
-            get => this._Level1Extra;
-            set => this._Level1Extra = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILodGetter.Level1Extra => this.Level1Extra;
         #endregion
         #region Level2
         public AssetLink<SkyrimModelAssetType> Level2 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level2 => this.Level2;
         #endregion
-        #region Level2Extra
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Level2Extra;
-        public MemorySlice<Byte>? Level2Extra
-        {
-            get => this._Level2Extra;
-            set => this._Level2Extra = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILodGetter.Level2Extra => this.Level2Extra;
-        #endregion
         #region Level3
         public AssetLink<SkyrimModelAssetType> Level3 { get; set; } = new AssetLink<SkyrimModelAssetType>();
         AssetLinkGetter<SkyrimModelAssetType> ILodGetter.Level3 => this.Level3;
-        #endregion
-        #region Level3Extra
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Level3Extra;
-        public MemorySlice<Byte>? Level3Extra
-        {
-            get => this._Level3Extra;
-            set => this._Level3Extra = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILodGetter.Level3Extra => this.Level3Extra;
         #endregion
 
         #region To String
@@ -153,33 +109,21 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Level0 = initialValue;
-                this.Level0Extra = initialValue;
                 this.Level1 = initialValue;
-                this.Level1Extra = initialValue;
                 this.Level2 = initialValue;
-                this.Level2Extra = initialValue;
                 this.Level3 = initialValue;
-                this.Level3Extra = initialValue;
             }
 
             public Mask(
                 TItem Level0,
-                TItem Level0Extra,
                 TItem Level1,
-                TItem Level1Extra,
                 TItem Level2,
-                TItem Level2Extra,
-                TItem Level3,
-                TItem Level3Extra)
+                TItem Level3)
             {
                 this.Level0 = Level0;
-                this.Level0Extra = Level0Extra;
                 this.Level1 = Level1;
-                this.Level1Extra = Level1Extra;
                 this.Level2 = Level2;
-                this.Level2Extra = Level2Extra;
                 this.Level3 = Level3;
-                this.Level3Extra = Level3Extra;
             }
 
             #pragma warning disable CS8618
@@ -192,13 +136,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Level0;
-            public TItem Level0Extra;
             public TItem Level1;
-            public TItem Level1Extra;
             public TItem Level2;
-            public TItem Level2Extra;
             public TItem Level3;
-            public TItem Level3Extra;
             #endregion
 
             #region Equals
@@ -212,26 +152,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Level0, rhs.Level0)) return false;
-                if (!object.Equals(this.Level0Extra, rhs.Level0Extra)) return false;
                 if (!object.Equals(this.Level1, rhs.Level1)) return false;
-                if (!object.Equals(this.Level1Extra, rhs.Level1Extra)) return false;
                 if (!object.Equals(this.Level2, rhs.Level2)) return false;
-                if (!object.Equals(this.Level2Extra, rhs.Level2Extra)) return false;
                 if (!object.Equals(this.Level3, rhs.Level3)) return false;
-                if (!object.Equals(this.Level3Extra, rhs.Level3Extra)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Level0);
-                hash.Add(this.Level0Extra);
                 hash.Add(this.Level1);
-                hash.Add(this.Level1Extra);
                 hash.Add(this.Level2);
-                hash.Add(this.Level2Extra);
                 hash.Add(this.Level3);
-                hash.Add(this.Level3Extra);
                 return hash.ToHashCode();
             }
 
@@ -241,13 +173,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Level0)) return false;
-                if (!eval(this.Level0Extra)) return false;
                 if (!eval(this.Level1)) return false;
-                if (!eval(this.Level1Extra)) return false;
                 if (!eval(this.Level2)) return false;
-                if (!eval(this.Level2Extra)) return false;
                 if (!eval(this.Level3)) return false;
-                if (!eval(this.Level3Extra)) return false;
                 return true;
             }
             #endregion
@@ -256,13 +184,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Level0)) return true;
-                if (eval(this.Level0Extra)) return true;
                 if (eval(this.Level1)) return true;
-                if (eval(this.Level1Extra)) return true;
                 if (eval(this.Level2)) return true;
-                if (eval(this.Level2Extra)) return true;
                 if (eval(this.Level3)) return true;
-                if (eval(this.Level3Extra)) return true;
                 return false;
             }
             #endregion
@@ -278,13 +202,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Level0 = eval(this.Level0);
-                obj.Level0Extra = eval(this.Level0Extra);
                 obj.Level1 = eval(this.Level1);
-                obj.Level1Extra = eval(this.Level1Extra);
                 obj.Level2 = eval(this.Level2);
-                obj.Level2Extra = eval(this.Level2Extra);
                 obj.Level3 = eval(this.Level3);
-                obj.Level3Extra = eval(this.Level3Extra);
             }
             #endregion
 
@@ -307,33 +227,17 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Level0, "Level0");
                     }
-                    if (printMask?.Level0Extra ?? true)
-                    {
-                        sb.AppendItem(Level0Extra, "Level0Extra");
-                    }
                     if (printMask?.Level1 ?? true)
                     {
                         sb.AppendItem(Level1, "Level1");
-                    }
-                    if (printMask?.Level1Extra ?? true)
-                    {
-                        sb.AppendItem(Level1Extra, "Level1Extra");
                     }
                     if (printMask?.Level2 ?? true)
                     {
                         sb.AppendItem(Level2, "Level2");
                     }
-                    if (printMask?.Level2Extra ?? true)
-                    {
-                        sb.AppendItem(Level2Extra, "Level2Extra");
-                    }
                     if (printMask?.Level3 ?? true)
                     {
                         sb.AppendItem(Level3, "Level3");
-                    }
-                    if (printMask?.Level3Extra ?? true)
-                    {
-                        sb.AppendItem(Level3Extra, "Level3Extra");
                     }
                 }
             }
@@ -360,13 +264,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Level0;
-            public Exception? Level0Extra;
             public Exception? Level1;
-            public Exception? Level1Extra;
             public Exception? Level2;
-            public Exception? Level2Extra;
             public Exception? Level3;
-            public Exception? Level3Extra;
             #endregion
 
             #region IErrorMask
@@ -377,20 +277,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case Lod_FieldIndex.Level0:
                         return Level0;
-                    case Lod_FieldIndex.Level0Extra:
-                        return Level0Extra;
                     case Lod_FieldIndex.Level1:
                         return Level1;
-                    case Lod_FieldIndex.Level1Extra:
-                        return Level1Extra;
                     case Lod_FieldIndex.Level2:
                         return Level2;
-                    case Lod_FieldIndex.Level2Extra:
-                        return Level2Extra;
                     case Lod_FieldIndex.Level3:
                         return Level3;
-                    case Lod_FieldIndex.Level3Extra:
-                        return Level3Extra;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -404,26 +296,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case Lod_FieldIndex.Level0:
                         this.Level0 = ex;
                         break;
-                    case Lod_FieldIndex.Level0Extra:
-                        this.Level0Extra = ex;
-                        break;
                     case Lod_FieldIndex.Level1:
                         this.Level1 = ex;
-                        break;
-                    case Lod_FieldIndex.Level1Extra:
-                        this.Level1Extra = ex;
                         break;
                     case Lod_FieldIndex.Level2:
                         this.Level2 = ex;
                         break;
-                    case Lod_FieldIndex.Level2Extra:
-                        this.Level2Extra = ex;
-                        break;
                     case Lod_FieldIndex.Level3:
                         this.Level3 = ex;
-                        break;
-                    case Lod_FieldIndex.Level3Extra:
-                        this.Level3Extra = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -438,26 +318,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case Lod_FieldIndex.Level0:
                         this.Level0 = (Exception?)obj;
                         break;
-                    case Lod_FieldIndex.Level0Extra:
-                        this.Level0Extra = (Exception?)obj;
-                        break;
                     case Lod_FieldIndex.Level1:
                         this.Level1 = (Exception?)obj;
-                        break;
-                    case Lod_FieldIndex.Level1Extra:
-                        this.Level1Extra = (Exception?)obj;
                         break;
                     case Lod_FieldIndex.Level2:
                         this.Level2 = (Exception?)obj;
                         break;
-                    case Lod_FieldIndex.Level2Extra:
-                        this.Level2Extra = (Exception?)obj;
-                        break;
                     case Lod_FieldIndex.Level3:
                         this.Level3 = (Exception?)obj;
-                        break;
-                    case Lod_FieldIndex.Level3Extra:
-                        this.Level3Extra = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -468,13 +336,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Level0 != null) return true;
-                if (Level0Extra != null) return true;
                 if (Level1 != null) return true;
-                if (Level1Extra != null) return true;
                 if (Level2 != null) return true;
-                if (Level2Extra != null) return true;
                 if (Level3 != null) return true;
-                if (Level3Extra != null) return true;
                 return false;
             }
             #endregion
@@ -504,25 +368,13 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Level0, "Level0");
                 }
                 {
-                    sb.AppendItem(Level0Extra, "Level0Extra");
-                }
-                {
                     sb.AppendItem(Level1, "Level1");
-                }
-                {
-                    sb.AppendItem(Level1Extra, "Level1Extra");
                 }
                 {
                     sb.AppendItem(Level2, "Level2");
                 }
                 {
-                    sb.AppendItem(Level2Extra, "Level2Extra");
-                }
-                {
                     sb.AppendItem(Level3, "Level3");
-                }
-                {
-                    sb.AppendItem(Level3Extra, "Level3Extra");
                 }
             }
             #endregion
@@ -533,13 +385,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Level0 = this.Level0.Combine(rhs.Level0);
-                ret.Level0Extra = this.Level0Extra.Combine(rhs.Level0Extra);
                 ret.Level1 = this.Level1.Combine(rhs.Level1);
-                ret.Level1Extra = this.Level1Extra.Combine(rhs.Level1Extra);
                 ret.Level2 = this.Level2.Combine(rhs.Level2);
-                ret.Level2Extra = this.Level2Extra.Combine(rhs.Level2Extra);
                 ret.Level3 = this.Level3.Combine(rhs.Level3);
-                ret.Level3Extra = this.Level3Extra.Combine(rhs.Level3Extra);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -564,13 +412,9 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Level0;
-            public bool Level0Extra;
             public bool Level1;
-            public bool Level1Extra;
             public bool Level2;
-            public bool Level2Extra;
             public bool Level3;
-            public bool Level3Extra;
             #endregion
 
             #region Ctors
@@ -581,13 +425,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Level0 = defaultOn;
-                this.Level0Extra = defaultOn;
                 this.Level1 = defaultOn;
-                this.Level1Extra = defaultOn;
                 this.Level2 = defaultOn;
-                this.Level2Extra = defaultOn;
                 this.Level3 = defaultOn;
-                this.Level3Extra = defaultOn;
             }
 
             #endregion
@@ -604,13 +444,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Level0, null));
-                ret.Add((Level0Extra, null));
                 ret.Add((Level1, null));
-                ret.Add((Level1Extra, null));
                 ret.Add((Level2, null));
-                ret.Add((Level2Extra, null));
                 ret.Add((Level3, null));
-                ret.Add((Level3Extra, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -691,13 +527,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILod>
     {
         new AssetLink<SkyrimModelAssetType> Level0 { get; set; }
-        new MemorySlice<Byte>? Level0Extra { get; set; }
         new AssetLink<SkyrimModelAssetType> Level1 { get; set; }
-        new MemorySlice<Byte>? Level1Extra { get; set; }
         new AssetLink<SkyrimModelAssetType> Level2 { get; set; }
-        new MemorySlice<Byte>? Level2Extra { get; set; }
         new AssetLink<SkyrimModelAssetType> Level3 { get; set; }
-        new MemorySlice<Byte>? Level3Extra { get; set; }
     }
 
     public partial interface ILodGetter :
@@ -714,13 +546,9 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Lod_Registration.Instance;
         AssetLinkGetter<SkyrimModelAssetType> Level0 { get; }
-        ReadOnlyMemorySlice<Byte>? Level0Extra { get; }
         AssetLinkGetter<SkyrimModelAssetType> Level1 { get; }
-        ReadOnlyMemorySlice<Byte>? Level1Extra { get; }
         AssetLinkGetter<SkyrimModelAssetType> Level2 { get; }
-        ReadOnlyMemorySlice<Byte>? Level2Extra { get; }
         AssetLinkGetter<SkyrimModelAssetType> Level3 { get; }
-        ReadOnlyMemorySlice<Byte>? Level3Extra { get; }
 
     }
 
@@ -891,13 +719,9 @@ namespace Mutagen.Bethesda.Skyrim
     internal enum Lod_FieldIndex
     {
         Level0 = 0,
-        Level0Extra = 1,
-        Level1 = 2,
-        Level1Extra = 3,
-        Level2 = 4,
-        Level2Extra = 5,
-        Level3 = 6,
-        Level3Extra = 7,
+        Level1 = 1,
+        Level2 = 2,
+        Level3 = 3,
     }
     #endregion
 
@@ -915,9 +739,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "a708745a-1c62-4a97-afcc-345a6c66ad64";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Lod.Mask<>);
 
@@ -993,13 +817,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Level0.SetToNull();
-            item.Level0Extra = default;
             item.Level1.SetToNull();
-            item.Level1Extra = default;
             item.Level2.SetToNull();
-            item.Level2Extra = default;
             item.Level3.SetToNull();
-            item.Level3Extra = default;
         }
         
         #region Mutagen
@@ -1071,13 +891,9 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Level0 = object.Equals(item.Level0, rhs.Level0);
-            ret.Level0Extra = MemorySliceExt.SequenceEqual(item.Level0Extra, rhs.Level0Extra);
             ret.Level1 = object.Equals(item.Level1, rhs.Level1);
-            ret.Level1Extra = MemorySliceExt.SequenceEqual(item.Level1Extra, rhs.Level1Extra);
             ret.Level2 = object.Equals(item.Level2, rhs.Level2);
-            ret.Level2Extra = MemorySliceExt.SequenceEqual(item.Level2Extra, rhs.Level2Extra);
             ret.Level3 = object.Equals(item.Level3, rhs.Level3);
-            ret.Level3Extra = MemorySliceExt.SequenceEqual(item.Level3Extra, rhs.Level3Extra);
         }
         
         public string Print(
@@ -1126,37 +942,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Level0, "Level0");
             }
-            if ((printMask?.Level0Extra ?? true)
-                && item.Level0Extra is {} Level0ExtraItem)
-            {
-                sb.AppendLine($"Level0Extra => {SpanExt.ToHexString(Level0ExtraItem)}");
-            }
             if (printMask?.Level1 ?? true)
             {
                 sb.AppendItem(item.Level1, "Level1");
-            }
-            if ((printMask?.Level1Extra ?? true)
-                && item.Level1Extra is {} Level1ExtraItem)
-            {
-                sb.AppendLine($"Level1Extra => {SpanExt.ToHexString(Level1ExtraItem)}");
             }
             if (printMask?.Level2 ?? true)
             {
                 sb.AppendItem(item.Level2, "Level2");
             }
-            if ((printMask?.Level2Extra ?? true)
-                && item.Level2Extra is {} Level2ExtraItem)
-            {
-                sb.AppendLine($"Level2Extra => {SpanExt.ToHexString(Level2ExtraItem)}");
-            }
             if (printMask?.Level3 ?? true)
             {
                 sb.AppendItem(item.Level3, "Level3");
-            }
-            if ((printMask?.Level3Extra ?? true)
-                && item.Level3Extra is {} Level3ExtraItem)
-            {
-                sb.AppendLine($"Level3Extra => {SpanExt.ToHexString(Level3ExtraItem)}");
             }
         }
         
@@ -1171,33 +967,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!object.Equals(lhs.Level0, rhs.Level0)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.Level0Extra, rhs.Level0Extra)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1) ?? true))
             {
                 if (!object.Equals(lhs.Level1, rhs.Level1)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.Level1Extra, rhs.Level1Extra)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2) ?? true))
             {
                 if (!object.Equals(lhs.Level2, rhs.Level2)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.Level2Extra, rhs.Level2Extra)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3) ?? true))
             {
                 if (!object.Equals(lhs.Level3, rhs.Level3)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.Level3Extra, rhs.Level3Extra)) return false;
             }
             return true;
         }
@@ -1206,25 +986,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.Level0);
-            if (item.Level0Extra is {} Level0ExtraItem)
-            {
-                hash.Add(Level0ExtraItem);
-            }
             hash.Add(item.Level1);
-            if (item.Level1Extra is {} Level1ExtraItem)
-            {
-                hash.Add(Level1ExtraItem);
-            }
             hash.Add(item.Level2);
-            if (item.Level2Extra is {} Level2ExtraItem)
-            {
-                hash.Add(Level2ExtraItem);
-            }
             hash.Add(item.Level3);
-            if (item.Level3Extra is {} Level3ExtraItem)
-            {
-                hash.Add(Level3ExtraItem);
-            }
             return hash.ToHashCode();
         }
         
@@ -1270,53 +1034,9 @@ namespace Mutagen.Bethesda.Skyrim
             bool deepCopy)
         {
             item.Level0.RawPath = rhs.Level0.RawPath;
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
-            {
-                if(rhs.Level0Extra is {} Level0Extrarhs)
-                {
-                    item.Level0Extra = Level0Extrarhs.ToArray();
-                }
-                else
-                {
-                    item.Level0Extra = default;
-                }
-            }
             item.Level1.RawPath = rhs.Level1.RawPath;
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
-            {
-                if(rhs.Level1Extra is {} Level1Extrarhs)
-                {
-                    item.Level1Extra = Level1Extrarhs.ToArray();
-                }
-                else
-                {
-                    item.Level1Extra = default;
-                }
-            }
             item.Level2.RawPath = rhs.Level2.RawPath;
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
-            {
-                if(rhs.Level2Extra is {} Level2Extrarhs)
-                {
-                    item.Level2Extra = Level2Extrarhs.ToArray();
-                }
-                else
-                {
-                    item.Level2Extra = default;
-                }
-            }
             item.Level3.RawPath = rhs.Level3.RawPath;
-            if ((copyMask?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
-            {
-                if(rhs.Level3Extra is {} Level3Extrarhs)
-                {
-                    item.Level3Extra = Level3Extrarhs.ToArray();
-                }
-                else
-                {
-                    item.Level3Extra = default;
-                }
-            }
         }
         
         #endregion
