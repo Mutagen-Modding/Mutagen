@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Assets;
 public interface IAssetType
 {
 #if NET7_0_OR_GREATER
-    static abstract IAssetType Instance { get; }
+    static virtual IAssetType Instance => null!;
 #endif
 
     /// <summary>

@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Assets;
 namespace Mutagen.Bethesda.Skyrim.Assets;
 
-public class SkyrimBodyTextureAssetType : SkyrimModelAssetType
+public class SkyrimBodyTextureAssetType : IAssetType
 {
 #if NET7_0_OR_GREATER
     public static IAssetType Instance { get; } = new SkyrimBodyTextureAssetType();
