@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
@@ -56,7 +56,7 @@
 
   <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" DependsOnTargets="GitVersion" Returns="$(PackageVersion)">
     <PropertyGroup>
-      <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) == ''">.1-dev</DevLabel>
+      <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) == ''">.1-zdev</DevLabel>
       <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) != ''">.1-$(VersionSuffix)</DevLabel>
       <DevLabel Condition="$(GitCommits) == '0' And $(GitSemVerDashLabel) != ''">$(GitSemVerDashLabel)</DevLabel>
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
