@@ -39,16 +39,16 @@
     <PackageVersion Include="Microsoft.Reactive.Testing" Version="5.0.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Noggog.Autofac">
-      <Version>[2.59.0.1-nightly-20230704-091177]</Version>
+      <Version>[2.59.0.1-nightly-20230715-044535]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.CSharpExt">
-      <Version>[2.59.0.1-nightly-20230704-091177]</Version>
+      <Version>[2.59.0.1-nightly-20230715-044535]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.Testing">
-      <Version>[2.59.0.1-nightly-20230704-091177]</Version>
+      <Version>[2.59.0.1-nightly-20230715-044535]</Version>
     </PackageVersion>
     <PackageVersion Include="Noggog.WPF">
-      <Version>[2.59.0.1-nightly-20230704-091177]</Version>
+      <Version>[2.59.0.1-nightly-20230715-044535]</Version>
     </PackageVersion>
     <PackageVersion Include="NuGetizer">
       <Version>0.9.5</Version>
