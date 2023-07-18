@@ -17,6 +17,49 @@ public static class AssetLink
     public static readonly string DataInfix = Path.DirectorySeparatorChar + DataDirectory + Path.DirectorySeparatorChar;
     public static readonly string DataInfixAlt = Path.AltDirectorySeparatorChar + DataDirectory + Path.AltDirectorySeparatorChar;
     public static readonly int DataPrefixLength = DataDirectory.Length + 1;
+
+    public static string ConvertToDataRelativePath(ReadOnlySpan<char> inputPath)
+    {
+        Span<char> mySpan = stackalloc char[inputPath.Length];
+        inputPath.CopyTo(mySpan);
+        IFileSystemExt.CleanDirectorySeparators(mySpan);
+        
+        ReadOnlySpan<char> path = mySpan;
+        
+        // Reduce all absolute paths to the path under data directory
+        if (path.Contains(Path.VolumeSeparatorChar))
+        {
+            var dataDirectoryIndex = path.IndexOf(DataInfix, PathComparison);
+            if (dataDirectoryIndex != -1)
+            {
+                path = path[(dataDirectoryIndex + DataInfix.Length)..];
+            }
+            else
+            {
+                dataDirectoryIndex = path.IndexOf(DataInfixAlt, PathComparison);
+                if (dataDirectoryIndex != -1)
+                {
+                    path = path[(dataDirectoryIndex + DataInfixAlt.Length)..];
+                }
+            }
+        }
+
+        path = path
+            .TrimStart(Path.DirectorySeparatorChar)
+            .TrimStart(Path.AltDirectorySeparatorChar);
+
+        // Can be replaced with a version of TrimStart that takes the string comparison into account
+        if (path.StartsWith(DataPrefix, PathComparison))
+        {
+            path = path[DataPrefixLength..];
+        }
+        else if (path.StartsWith(DataPrefixAlt, PathComparison))
+        {
+            path = path[DataPrefixLength..];
+        }
+
+        return path.ToString();
+    }
 }
 
 /// <summary>
