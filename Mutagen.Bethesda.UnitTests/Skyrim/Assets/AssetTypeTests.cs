@@ -41,7 +41,6 @@ public class AssetTypeTests
             implementation.BaseType.Should().Be(objectType);
         }
     }
-#endif
 
     [Fact]
     public void TestGetAssetType()
@@ -76,4 +75,5 @@ public class AssetTypeTests
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Script", "HelloWorld.pex")).Should().BeNull();
         AssetTypeLocator.TryGetGetAssetType(GameCategory.Skyrim, Path.Combine("Scripts", "HelloWorld.abc")).Should().BeNull();
     }
+#endif
 }
