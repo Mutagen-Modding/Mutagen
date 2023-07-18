@@ -46,34 +46,34 @@ public class AssetTypeTests
     [Fact]
     public void TestGetAssetType()
     {
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Music\\Special\\Dungeon\\DungeonBoss01.xwm").Should().BeOfType<SkyrimMusicAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Music\\Special\\Dungeon\\DungeonBoss01.wav").Should().BeOfType<SkyrimMusicAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "XMusic\\Special\\Dungeon\\DungeonBoss01.wav").Should().BeNull();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Music\\Special\\Dungeon\\DungeonBoss01.mp3").Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Music", "Special", "Dungeon", "DungeonBoss01.xwm")).Should().BeOfType<SkyrimMusicAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Music", "Special", "Dungeon", "DungeonBoss01.wav")).Should().BeOfType<SkyrimMusicAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("XMusic", "Special", "Dungeon", "DungeonBoss01.wav")).Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Music", "Special", "Dungeon", "DungeonBoss01.mp3")).Should().BeNull();
 
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Meshes\\Armor\\Iron\\IronGauntlets.nif").Should().BeOfType<SkyrimModelAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "XMeshes\\Armor\\Iron\\IronGauntlets.nif").Should().BeNull();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Meshes\\Armor\\Iron\\IronGauntlets.abc").Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Meshes", "Armor", "Iron", "IronGauntlets.nif")).Should().BeOfType<SkyrimModelAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("XMeshes", "Armor", "Iron", "IronGauntlets.nif")).Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Meshes", "Armor", "Iron", "IronGauntlets.abc")).Should().BeNull();
 
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Textures\\Armor\\Iron\\IronGauntlets.dds").Should().BeOfType<SkyrimTextureAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "XTextures\\Armor\\Iron\\IronGauntlets.dds").Should().BeNull();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Textures\\Armor\\Iron\\IronGauntlets.abc").Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Textures", "Armor", "Iron", "IronGauntlets.dds")).Should().BeOfType<SkyrimTextureAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("XTextures", "Armor", "Iron", "IronGauntlets.dds")).Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Textures", "Armor", "Iron", "IronGauntlets.abc")).Should().BeNull();
 
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Sound\\FX\\IronGauntlets.wav").Should().BeOfType<SkyrimSoundAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "XSound\\FX\\IronGauntlets.wav").Should().BeNull();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Sound\\FX\\IronGauntlets.abc").Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Sound", "FX", "IronGauntlets.wav")).Should().BeOfType<SkyrimSoundAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("XSound", "FX", "IronGauntlets.wav")).Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Sound", "FX", "IronGauntlets.abc")).Should().BeNull();
 
-        IAssetType.GetAssetType(GameCategory.Skyrim, "SEQ\\Skyrim.seq").Should().BeOfType<SkyrimSeqAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "seq\\Skyrim.seq").Should().BeOfType<SkyrimSeqAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "s3q\\Skyrim.abc").Should().BeNull();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "SEQ\\Skyrim.abc").Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("SEQ", "Skyrim.seq")).Should().BeOfType<SkyrimSeqAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("seq", "Skyrim.seq")).Should().BeOfType<SkyrimSeqAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("s3q", "Skyrim.abc")).Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("SEQ", "Skyrim.abc")).Should().BeNull();
 
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Scripts\\Source\\HelloWorld.psc").Should().BeOfType<SkyrimScriptSourceAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Script\\Source\\HelloWorld.psc").Should().BeNull();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Scripts\\Source\\HelloWorld.abc").Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Scripts", "Source", "HelloWorld.psc")).Should().BeOfType<SkyrimScriptSourceAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Script", "Source", "HelloWorld.psc")).Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Scripts", "Source", "HelloWorld.abc")).Should().BeNull();
 
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Scripts\\HelloWorld.pex").Should().BeOfType<SkyrimScriptCompiledAssetType>();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Script\\HelloWorld.pex").Should().BeNull();
-        IAssetType.GetAssetType(GameCategory.Skyrim, "Scripts\\HelloWorld.abc").Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Scripts", "HelloWorld.pex")).Should().BeOfType<SkyrimScriptCompiledAssetType>();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Script", "HelloWorld.pex")).Should().BeNull();
+        IAssetType.GetAssetType(GameCategory.Skyrim, Path.Combine("Scripts", "HelloWorld.abc")).Should().BeNull();
     }
 }
