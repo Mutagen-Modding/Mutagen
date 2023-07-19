@@ -152,7 +152,7 @@ partial class BookCommon
     private const string Pattern = @"<img[\w\s='/,.:]*src='img:\/\/([\w\s=/,.:]*)'[\w\s='/,.:]*>";
     private static readonly Regex Regex = new(Pattern);
     
-    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IBookGetter obj, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IBookGetter obj, Type? assetType)
     {
         if (assetType != null && assetType != typeof(SkyrimTextureAssetType)) yield break;
         

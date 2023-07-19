@@ -25,7 +25,7 @@ public partial class SkyrimMod : AMod
 
 partial class SkyrimModCommon
 {
-    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType)
     {
         if (assetType != null && assetType != typeof(SkyrimTranslationAssetType)) yield break;
         if ((obj.ModHeader.Flags & SkyrimModHeader.HeaderFlag.Localized) == 0) yield break;

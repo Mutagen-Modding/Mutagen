@@ -20,7 +20,7 @@ public partial class Npc
     
 partial class NpcCommon
 {
-    public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(INpcGetter obj, IAssetLinkCache linkCache, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(INpcGetter obj, IAssetLinkCache linkCache, Type? assetType)
     {
         if (assetType != null 
             && assetType != typeof(SkyrimTextureAssetType)

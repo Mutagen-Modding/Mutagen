@@ -61,11 +61,11 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         {
             if (obj.GetObjectData().HasInferredAssets)
             {
-                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetInferredAssetLinks({obj.Interface(getter: true)} obj, Type? assetType);");
+                fg.AppendLine($"public static partial IEnumerable<{nameof(IAssetLinkGetter)}> GetInferredAssetLinks({obj.Interface(getter: true)} obj, Type? assetType);");
             }
             if (obj.GetObjectData().HasResolvedAssets)
             {
-                fg.AppendLine($"public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks({obj.Interface(getter: true)} obj, {nameof(IAssetLinkCache)} linkCache, Type? assetType);");
+                fg.AppendLine($"public static partial IEnumerable<{nameof(IAssetLinkGetter)}> GetResolvedAssetLinks({obj.Interface(getter: true)} obj, {nameof(IAssetLinkCache)} linkCache, Type? assetType);");
             }
             
             fg.AppendLine($"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, {nameof(AssetLinkQuery)} queryCategories, {nameof(IAssetLinkCache)}? linkCache, Type? assetType)");

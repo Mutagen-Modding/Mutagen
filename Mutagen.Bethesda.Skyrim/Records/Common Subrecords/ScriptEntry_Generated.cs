@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IScriptEntryGetter obj, Type? assetType);
+        public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IScriptEntryGetter obj, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IScriptEntryGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             if (queryCategories.HasFlag(AssetLinkQuery.Inferred))

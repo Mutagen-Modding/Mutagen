@@ -146,7 +146,7 @@ public partial class DialogTopic
 
 partial class DialogTopicCommon
 {
-    public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
     {
         if (assetType != null && assetType != typeof(SkyrimSoundAssetType)) yield break;
         

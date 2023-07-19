@@ -47,7 +47,7 @@ public partial class Quest
 
 partial class QuestCommon
 {
-    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IQuestGetter obj, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IQuestGetter obj, Type? assetType)
     {
         if (obj.Flags.HasFlag(Quest.Flag.StartGameEnabled))
         {

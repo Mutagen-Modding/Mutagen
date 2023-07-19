@@ -2371,7 +2371,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IBookGetter obj, Type? assetType);
+        public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IBookGetter obj, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBookGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))

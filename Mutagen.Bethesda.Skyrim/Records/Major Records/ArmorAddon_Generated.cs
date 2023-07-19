@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType);
+        public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IArmorAddonGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))

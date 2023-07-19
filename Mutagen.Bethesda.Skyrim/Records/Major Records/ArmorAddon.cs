@@ -69,7 +69,7 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
 
 partial class ArmorAddonCommon
 {
-    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
     {
         if (assetType != null && assetType != typeof(SkyrimModelAssetType)) yield break;
         
