@@ -83,9 +83,7 @@ foreach (var formList in loadOrder.PriorityOrder.FormList.WinningOverrides())
 If you know ahead of time the ones you want to look for and process, then it's more typical to do this:
 
 ```
-var link = FormKey.Factory("123456:Skyrim.esm").AsLink<IFormListGetter>();
-
-if (link.TryResolve(state.LinkCache, out var foundRecord))
+if (state.LinkCache.TryResolve<IFormListGetter>(FormKey.Factory("123456:Skyrim.esm"), out var foundRecord))
 {
     // Found the specific record we were looking for
 }
