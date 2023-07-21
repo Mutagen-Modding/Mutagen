@@ -1017,7 +1017,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => HeadDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => HeadDataSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => HeadDataSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => HeadDataSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -1449,10 +1450,14 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapAssetLinks(IHeadData obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
+        public void RemapAssetLinks(
+            IHeadData obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            obj.TintMasks.ForEach(x => x.RemapAssetLinks(mapping, query));
-            obj.Model?.RemapAssetLinks(mapping, query);
+            obj.TintMasks.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion

@@ -831,7 +831,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ClimateCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ClimateSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => ClimateSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ClimateSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ClimateSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1312,15 +1313,19 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapAssetLinks(IClimate obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
+        public void RemapAssetLinks(
+            IClimate obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapAssetLinks(obj, mapping, query);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.SunTexture?.Relink(mapping);
                 obj.SunGlareTexture?.Relink(mapping);
             }
-            obj.Model?.RemapAssetLinks(mapping, query);
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion

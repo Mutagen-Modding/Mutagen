@@ -441,7 +441,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LensFlareSpriteCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LensFlareSpriteSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => LensFlareSpriteSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LensFlareSpriteSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LensFlareSpriteSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -815,7 +816,11 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapAssetLinks(ILensFlareSprite obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
+        public void RemapAssetLinks(
+            ILensFlareSprite obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
             if (query.HasFlag(AssetLinkQuery.Listed))
             {

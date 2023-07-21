@@ -887,7 +887,8 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DialogTopicCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DialogTopicSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => DialogTopicSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DialogTopicSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DialogTopicSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1674,10 +1675,21 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapAssetLinks(IDialogTopic obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
+        public static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
+            IDialogTopic obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories);
+        
+        public void RemapAssetLinks(
+            IDialogTopic obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapAssetLinks(obj, mapping, query);
-            obj.Responses.ForEach(x => x.RemapAssetLinks(mapping, query));
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            RemapResolvedAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Responses.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
         }
         
         #endregion

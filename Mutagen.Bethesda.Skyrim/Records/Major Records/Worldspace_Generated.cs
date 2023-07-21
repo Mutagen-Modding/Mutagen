@@ -1834,7 +1834,8 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WorldspaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => WorldspaceSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => WorldspaceSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WorldspaceSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3013,10 +3014,14 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapAssetLinks(IWorldspace obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
+        public void RemapAssetLinks(
+            IWorldspace obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapAssetLinks(obj, mapping, query);
-            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, query));
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
             if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.MapImage?.Relink(mapping);
@@ -3026,8 +3031,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.HdLodNormalTexture?.Relink(mapping);
                 obj.WaterEnvironmentMap?.Relink(mapping);
             }
-            obj.CloudModel?.RemapAssetLinks(mapping, query);
-            obj.TopCell?.RemapAssetLinks(mapping, query);
+            obj.CloudModel?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.TopCell?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion

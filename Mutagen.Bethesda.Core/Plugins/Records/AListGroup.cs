@@ -81,9 +81,12 @@ public abstract class AListGroup<TObject> : IListGroup<TObject>
 
     /// <inheritdoc />
     public void Move(int original, int destination) => ProtectedList.Move(original, destination);
+
+    /// <inheritdoc />
+    public abstract void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
     
     /// <inheritdoc />
-    public abstract void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query);
+    public abstract void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query, IAssetLinkCache? linkCache);
     
     /// <inheritdoc />
     public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();

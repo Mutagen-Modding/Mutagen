@@ -831,7 +831,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RegionSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => RegionSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RegionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RegionSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1334,15 +1335,19 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapAssetLinks(IRegion obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
+        public void RemapAssetLinks(
+            IRegion obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapAssetLinks(obj, mapping, query);
-            obj.Objects?.RemapAssetLinks(mapping, query);
-            obj.Weather?.RemapAssetLinks(mapping, query);
-            obj.Map?.RemapAssetLinks(mapping, query);
-            obj.Land?.RemapAssetLinks(mapping, query);
-            obj.Grasses?.RemapAssetLinks(mapping, query);
-            obj.Sounds?.RemapAssetLinks(mapping, query);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Objects?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Weather?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Map?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Land?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Grasses?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Sounds?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion

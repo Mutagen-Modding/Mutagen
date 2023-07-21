@@ -11,7 +11,16 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     /// <summary>
     /// Swaps out all links to point to new assets
     /// </summary>
-    void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query);
+    /// <param name="mapping">Mapping to carry out</param>
+    /// <param name="query">Types of asset links to apply the remapping to</param>
+    /// <param name="linkCache">Asset Link Cache, which is required for Resolved asset links</param>
+    void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query, IAssetLinkCache? linkCache);
+    
+    /// <summary>
+    /// Swaps out all listed links to point to new assets
+    /// </summary>
+    /// <param name="mapping">Mapping to carry out</param>
+    void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
 
     /// <summary>
     /// Enumerates only AssetLinks that are explicitly listed in the record and can be modified directly.

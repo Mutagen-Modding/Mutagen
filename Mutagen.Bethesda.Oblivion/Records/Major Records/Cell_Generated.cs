@@ -1476,7 +1476,8 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CellCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CellSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => CellSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => CellSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CellSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2360,12 +2361,16 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
-        public void RemapAssetLinks(ICell obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
+        public void RemapAssetLinks(
+            ICell obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapAssetLinks(obj, mapping, query);
-            obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, query));
-            obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, query));
-            obj.VisibleWhenDistant.ForEach(x => x.RemapAssetLinks(mapping, query));
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.VisibleWhenDistant.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
         }
         
         #endregion
