@@ -52,7 +52,7 @@ partial class QuestSetterCommon
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)
     {
-        throw new NotImplementedException();
+        // Nothing to do here, we can't change the name of the mod
     }
 }
 

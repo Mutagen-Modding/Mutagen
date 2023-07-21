@@ -26,10 +26,10 @@ partial class NpcSetterCommon
         IAssetLinkCache? linkCache,
         AssetLinkQuery queryCategories)
     {
-        throw new NotImplementedException();
+        // Nothing to do here, we can't change the form key of the npc
     }
 }
-    
+
 partial class NpcCommon
 {
     public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(INpcGetter obj, IAssetLinkCache linkCache, Type? assetType)

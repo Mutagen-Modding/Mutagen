@@ -154,14 +154,31 @@ partial class BookSetterCommon
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)
     {
-        throw new NotImplementedException();
+        if (!queryCategories.HasFlag(AssetLinkQuery.Inferred)) return;
+
+        var text = obj.BookText.String;
+        if (string.IsNullOrWhiteSpace(text)) return;
+
+        string MatchEvaluator(Match match)
+        {
+            if (!match.Success) return match.Value;
+
+            var asset = new AssetLink<SkyrimTextureAssetType>(match.Groups[1].Value);
+            if (!mapping.TryGetValue(asset, out var assetPath)) return match.Value;
+
+            return match.Value.Replace(match.Groups[1].Value, assetPath);
+        }
+
+        var resultText = BookCommon.Regex.Replace(text, MatchEvaluator);
+
+        obj.BookText.String = resultText;
     }
 }
 
 partial class BookCommon
 {
     private const string Pattern = @"<img[\w\s='/,.:]*src='img:\/\/([\w\s=/,.:]*)'[\w\s='/,.:]*>";
-    private static readonly Regex Regex = new(Pattern);
+    internal static readonly Regex Regex = new(Pattern);
     
     public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IBookGetter obj, Type? assetType)
     {
@@ -170,10 +187,13 @@ partial class BookCommon
         var text = obj.BookText.String;
         if (string.IsNullOrWhiteSpace(text)) yield break;
 
-        var match = Regex.Match(text);
-        if (match.Success)
+        var matches = Regex.Matches(text);
+        foreach (Match match in matches)
         {
-            yield return new AssetLink<SkyrimTextureAssetType>(match.Groups[1].Value);
+            if (match.Success)
+            {
+                yield return new AssetLink<SkyrimTextureAssetType>(match.Groups[1].Value);
+            }
         }
     }
 }
