@@ -2368,9 +2368,9 @@ namespace Mutagen.Bethesda.Oblivion
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
-            obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
-            obj.VisibleWhenDistant.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.VisibleWhenDistant.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

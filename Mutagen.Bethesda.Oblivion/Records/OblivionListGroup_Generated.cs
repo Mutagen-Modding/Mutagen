@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
-            obj.Records.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Records.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

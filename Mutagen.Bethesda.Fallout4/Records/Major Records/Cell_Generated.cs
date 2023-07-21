@@ -3621,8 +3621,8 @@ namespace Mutagen.Bethesda.Fallout4
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
-            obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

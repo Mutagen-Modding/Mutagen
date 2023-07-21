@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.Models.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Models.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

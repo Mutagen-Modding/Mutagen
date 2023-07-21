@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
-            obj.Cells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Cells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

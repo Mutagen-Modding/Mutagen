@@ -3078,7 +3078,7 @@ namespace Mutagen.Bethesda.Fallout4
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.TopCell?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         

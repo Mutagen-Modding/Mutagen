@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Skyrim
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.WorldModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories));
+            obj.WorldModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.VirtualMachineAdapter?.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }

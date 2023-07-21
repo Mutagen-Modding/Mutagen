@@ -1567,7 +1567,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+        static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
             IArmorAddon obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
             IAssetLinkCache? linkCache,
@@ -1581,8 +1581,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             RemapInferredAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.WorldModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories));
-            obj.FirstPersonModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories));
+            obj.WorldModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.FirstPersonModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

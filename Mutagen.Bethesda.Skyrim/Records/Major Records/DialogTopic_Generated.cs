@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
+        static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
             IDialogTopic obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
             IAssetLinkCache? linkCache,
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             RemapResolvedAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.Responses.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.Responses.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

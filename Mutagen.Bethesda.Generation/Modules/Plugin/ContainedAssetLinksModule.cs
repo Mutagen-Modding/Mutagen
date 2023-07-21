@@ -365,7 +365,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (obj.GetObjectData().HasInferredAssets)
         {
             using (var f = fg.Function(
-                       $"public static partial IEnumerable<{nameof(IAssetLinkGetter)}> RemapInferredAssetLinks",
+                       $"private static partial IEnumerable<{nameof(IAssetLinkGetter)}> RemapInferredAssetLinks",
                        semiColon: true))
             {
                 f.Add($"{obj.Interface(getter: false)} obj");
@@ -379,7 +379,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (obj.GetObjectData().HasResolvedAssets)
         {
             using (var f = fg.Function(
-                       $"public static partial IEnumerable<{nameof(IAssetLinkGetter)}> RemapResolvedAssetLinks",
+                       $"private static partial IEnumerable<{nameof(IAssetLinkGetter)}> RemapResolvedAssetLinks",
                        semiColon: true))
             {
                 f.Add($"{obj.Interface(getter: false)} obj");
@@ -432,7 +432,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                          && await HasLinks(contLoqui, includeBaseClass: true) != Case.No))
                     {
                         fg.AppendLine(
-                            $"obj.{field.Name}{field.NullChar}.ForEach(x => x{contLoqui.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, queryCategories));");
+                            $"obj.{field.Name}{field.NullChar}.ForEach(x => x{contLoqui.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, queryCategories, linkCache));");
                     }
                     else if (cont.SubTypeGeneration is AssetLinkType subAsset)
                     {
@@ -447,12 +447,12 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
                     {
                         fg.AppendLine(
-                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, queryCategories);");
+                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, queryCategories, linkCache);");
                     }
                     else if (dict.ValueTypeGen is FormLinkType formIDType)
                     {
                         fg.AppendLine(
-                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, queryCategories);");
+                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, queryCategories, linkCache);");
                     }
                 }
             }

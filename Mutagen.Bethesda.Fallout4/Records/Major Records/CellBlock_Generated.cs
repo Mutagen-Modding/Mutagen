@@ -1420,7 +1420,7 @@ namespace Mutagen.Bethesda.Fallout4
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
-            obj.SubBlocks.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.SubBlocks.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

@@ -3021,7 +3021,7 @@ namespace Mutagen.Bethesda.Skyrim
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories));
+            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.MapImage?.Relink(mapping);
