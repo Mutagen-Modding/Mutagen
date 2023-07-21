@@ -1,4 +1,5 @@
-# Setup
+# Enumerable Laziness
+## Setup
 One common pitfall related to Enumerable/LINQ usage.  Take this basic Synthesis patcher example:
 ```cs
 var weaponsWithDamageMoreThanTen = 
@@ -20,18 +21,18 @@ foreach (var weaponGetter in weaponsWithDamageMoreThanTen)
 ```
 This works as expected, printing lots of weapons to the console.
 
-# Problem
+## Problem
 ## What's the problem?
 
 The variable `weaponsWithDamageMoreThanTen` is a deferred Linq statement.  Sometimes can also be called a "naked" or "lazy" Linq statement.
 
-## What does this mean?
+### What does this mean?
 
 This means `weaponsWithDamageMoreThanTen` does not contain all the weapons with damage more than 10.  Rather, it is instructions for HOW to iterate the load order to get weapons with damage more than 10.
 
 It is a set of instructions, not the actual data itself.
 
-## Why does this matter?
+### Why does this matter?
 It matters because multiple usages of these instructions means multiple executions of the instructions to get the results.
 
 Consider this:
@@ -63,10 +64,10 @@ Notice this logic read from the disk and parsed the weapons TWICE.  This is beca
 
 This concept where each usage does the work again can get catastrophically slow depending on what you're doing.
 
-# Solution
+## Solution
 Linq is powerful and useful, but with power comes responsibility. 
 
-## Small Metaphor
+### Small Metaphor
 A naked Linq statement is like a set of instructions.
 
 Which would be more efficient?
@@ -81,7 +82,7 @@ Obviously making one airplane and reusing it is the better option.
 
 Having instructions for how to make an airplane isn't a bad thing to have, but choosing when to execute those instructions is important.
 
-## The Fix
+### The Fix
 The fix is just to execute those instructions ahead of time once, so that downstream usages don't rerun the logic each time.  This can be done very simply:
 ```cs
 var weaponsWithDamageMoreThanTen = 
@@ -102,7 +103,7 @@ That's it.  Now all the usages downstream will loop over the contents of the arr
 
 This is the equivalent of using the airplane instructions once to make a plane, and now it can be reused by everyone downstream.
 
-# Why is Linq Deferred/Lazy?
+## Why is Linq Deferred/Lazy?
 It is important to understand why Linq statements are lazy in the first place?  Why have this dangerous behavior at all?
 
 The laziness of a Linq enumerable is actually very powerful, as it allows us to short circuit work that is not needed.
@@ -148,7 +149,7 @@ Now, if the Goblin was the first Npc record we found, we will still parse ALL Np
 
 Notice that the work was done ahead of time, so we couldn't short circuit the work early if we found what we wanted.  We will do ALL the work every time, even if we're tossing 99% of the results into the trash.
 
-# Conclusion
+## Conclusion
 The laziness of Linq statements is a powerful tool, but it is very dangerous if misused, and so must be understood.
 
 If a Linq statement is going to be reused, consider calling a `ToArray` to do the work once ahead of time.

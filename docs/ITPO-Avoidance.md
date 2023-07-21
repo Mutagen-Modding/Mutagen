@@ -1,11 +1,12 @@
-# What is an ITPO
+# ITPO Avoidance
+## What is an ITPO
 A very typical thing that can happen during processing mods is exporting a record that doesn't have any changes compared to the original.  This is known as an ITPO (Identical to Previous Override), or sometimes ITM (Idential to Master).
 
 Mutagen may or may not get ITPO removal tooling in the future.  This would be powered by Equality/HashCode concepts, which already exist, but are not heavily tested for accuracy yet.  If/when ITPO removal calls do get implemented, it will mostly be for feature completeness, rather than necessity.
 
 How does one avoid/deal with ITPOs in the meantime, then?
 
-# Avoiding ITPOs
+## Avoiding ITPOs
 
 Typically, the best patterns avoid making ITPOs in the first place, rather than cleaning them up after they exist.
 

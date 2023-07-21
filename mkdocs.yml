@@ -95,5 +95,14 @@ nav:
     - FormLinks Always Target Getter Interfaces: FormLinks-Always-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: FormLinks-vs-EditorID-as-Identifiers.md
     - FormLinks vs FormID/FormKey as Identifiers
+    - Reference FormLinks By EditorID
+    - LinkCache Resolution Type Choice
+    - Lists vs HashSet
+    - Enumerable Laziness: Enumerable-Laziness.md
+    - TryGet Concepts: TryGet-Concepts.md
+    - Access Overlays Once
+    - ITPO Avoidance: ITPO-Avoidance.md
+    - Reuse Translation Masks: Reuse-Translation-Masks.md
+    - Modifying Groups Being Iterated: Modifying-Groups-Being-Iterated.md
 
 index: Pages/index.md

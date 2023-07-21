@@ -1,4 +1,5 @@
-# Looping and Modifying the Same Record Types
+# Modifying Groups Being Iterated
+## Looping and Modifying the Same Record Types
 Consider this:
 ```cs
 foreach (var lvln in state.LoadOrder.PriorityOrder.LeveledNpc().WinningOverrides())
@@ -11,7 +12,7 @@ foreach (var lvln in state.LoadOrder.PriorityOrder.LeveledNpc().WinningOverrides
 ```
 This code is dangerous, as it modifies the same record types it's inspecting.
 
-# Modifying a Collection Being Enumerated
+## Modifying a Collection Being Enumerated
 Consider this simpler code:
 ```cs
 var list = new List<int>();
@@ -33,9 +34,9 @@ It will then try to loop to the next item, but C# will throw an exception
 
 In C#, you are not allowed to modify a collection as it's being looped.
 
-# Avoiding the Exceptions
+## Avoiding the Exceptions
 There are two routes to avoiding the `Collection was modified` exception
-## Create a Temporary Collection
+### Create a Temporary Collection
 This can be as simple as:
 ```cs
 foreach (var item in list
@@ -47,7 +48,7 @@ foreach (var item in list
 ```
 The reason this works is that the `ToArray` call eagerly copies all the items from `list` to a new array.  The `foreach` loop then loops over that array.  Then, when you add an item to the list, you're not actually modifying the same collection you are looping, and so it succeeds.
 
-## Stop looping after modification
+### Stop looping after modification
 Sometimes for certain purposes, you want to stop the logic after modifying once.
 ```cs
 foreach (var item in list)
@@ -58,7 +59,7 @@ foreach (var item in list)
 ```
 This self modification is allowed, because it is not the `list.Add` that is the problem, but rather the foreach loop trying to go to the next item right after.  So by breaking out of the loop, this code is safe.
 
-# Applying it to Mutagen
+## Applying it to Mutagen
 Taking these same concepts back to Mutagen, if you're adding/removing/replacing records from a mod/group that you're looping, you can get the same exception.
 
 If you're modifying the same record types you are looping, then you can follow the same patterns described above.  Just add a `ToArray` to keep yourself from modifying the collections you are looping:
