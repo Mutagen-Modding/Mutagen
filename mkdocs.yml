@@ -36,14 +36,14 @@ plugins:
 theme:
   name: material
   palette:
-    primary: red
-    accent: red
+    primary: deep purple
+    accent: deep orange
     scheme: slate
   features:
     - navigation.instant
     
 nav:
-  - Home: Home.md
+  - Home: index.md
   - Big Cheat Sheet: Big-Cheat-Sheet.md
   - Plugin Record Suite:
     - Generated Classes: Generated-Classes.md
