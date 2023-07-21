@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapAssetLinks(IClimate obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
             base.RemapAssetLinks(obj, mapping, query);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.SunTexture?.Relink(mapping);
                 obj.SunGlareTexture?.Relink(mapping);

@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         public void RemapAssetLinks(ILensFlareSprite obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.Texture?.Relink(mapping);
             }

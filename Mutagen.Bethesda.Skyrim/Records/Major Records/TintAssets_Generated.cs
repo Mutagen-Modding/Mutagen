@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         public void RemapAssetLinks(ITintAssets obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.FileName?.Relink(mapping);
             }

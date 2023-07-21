@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapAssetLinks(IMusicTrack obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
             base.RemapAssetLinks(obj, mapping, query);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.TrackFilename?.Relink(mapping);
                 obj.FinaleFilename?.Relink(mapping);

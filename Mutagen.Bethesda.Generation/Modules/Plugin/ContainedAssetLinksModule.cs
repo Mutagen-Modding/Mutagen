@@ -375,7 +375,6 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 }
             }
             
-            var startCount = fg.Count;
             var subFg = new StructuredStringBuilder();
             foreach (var field in obj.IterateFields(nonIntegrated: true))
             {
@@ -416,7 +415,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 
             if (subFg.Count > 0)
             {
-                fg.AppendLine($"if (queryCategories.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Listed)}))");
+                fg.AppendLine($"if (query.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Listed)}))");
                 using (fg.CurlyBrace())
                 {
                     fg.AppendLines(subFg);

@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapAssetLinks(ITextureSet obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
             base.RemapAssetLinks(obj, mapping, query);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.Diffuse?.Relink(mapping);
                 obj.NormalOrGloss?.Relink(mapping);

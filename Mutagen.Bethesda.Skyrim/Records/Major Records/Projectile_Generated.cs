@@ -2204,7 +2204,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapAssetLinks(IProjectile obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
             base.RemapAssetLinks(obj, mapping, query);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.MuzzleFlashModel.Relink(mapping);
             }

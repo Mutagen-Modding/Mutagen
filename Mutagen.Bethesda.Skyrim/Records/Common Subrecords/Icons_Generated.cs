@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         public void RemapAssetLinks(IIcons obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.LargeIconFilename.Relink(mapping);
                 obj.SmallIconFilename?.Relink(mapping);

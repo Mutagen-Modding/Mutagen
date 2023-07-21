@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         public void RemapAssetLinks(ILod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.Level0.Relink(mapping);
                 obj.Level1.Relink(mapping);

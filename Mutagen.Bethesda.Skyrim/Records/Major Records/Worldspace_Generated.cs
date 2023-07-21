@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             base.RemapAssetLinks(obj, mapping, query);
             obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, query));
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.MapImage?.Relink(mapping);
                 obj.CanopyShadow?.Relink(mapping);

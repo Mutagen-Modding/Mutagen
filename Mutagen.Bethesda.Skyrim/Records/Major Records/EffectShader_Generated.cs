@@ -5022,7 +5022,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapAssetLinks(IEffectShader obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
             base.RemapAssetLinks(obj, mapping, query);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (query.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.FillTexture?.Relink(mapping);
                 obj.ParticleShaderTexture?.Relink(mapping);
