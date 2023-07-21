@@ -48,7 +48,7 @@ public static class AssetLinkContainerExt
     public static void RemapAllAssetLinks(
         this IAssetLinkContainer assetLinkContainerGetter,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-        IAssetLinkCache? linkCache = null)
+        IAssetLinkCache linkCache)
     {
         assetLinkContainerGetter.RemapAssetLinks(mapping, AssetLinkQuery.Listed | AssetLinkQuery.Inferred | AssetLinkQuery.Resolved, linkCache);
     }
