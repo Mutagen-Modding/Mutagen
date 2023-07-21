@@ -251,6 +251,20 @@ public class AssetLink<TAssetType> :
         return DataRelativePath;
     }
 
+    public override int GetHashCode()
+    {
+        return AssetLink.PathComparer.GetHashCode(RawPath);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        if (other is not AssetLink<TAssetType> rhs) return false;
+
+        return AssetLink.PathComparer.Equals(RawPath, rhs.RawPath);
+    }
+
     public virtual bool Equals(AssetLink<TAssetType>? other)
     {
         if (ReferenceEquals(null, other)) return false;
