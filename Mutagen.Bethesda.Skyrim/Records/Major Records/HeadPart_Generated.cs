@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadPartCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => HeadPartSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => HeadPartSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => HeadPartSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1400,11 +1400,11 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IHeadPart obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IHeadPart obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.Model?.RemapListedAssetLinks(mapping);
-            obj.Parts.ForEach(x => x.RemapListedAssetLinks(mapping));
+            base.RemapAssetLinks(obj, mapping, query);
+            obj.Parts.ForEach(x => x.RemapAssetLinks(mapping, query));
+            obj.Model?.RemapAssetLinks(mapping, query);
         }
         
         #endregion

@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimGroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimGroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimGroupSetterCommon<T>.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => SkyrimGroupSetterCommon<T>.Instance.RemapAssetLinks(this, mapping, query);
         #endregion
 
         #region Binary Translation
@@ -872,9 +872,9 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(ISkyrimGroup<T> obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(ISkyrimGroup<T> obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            obj.RecordCache.RemapListedAssetLinks(mapping);
+            obj.RecordCache.RemapAssetLinks(mapping, query);
         }
         
         #endregion

@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WorldspaceBlockSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WorldspaceBlockSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => WorldspaceBlockSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #endregion
 
         #region Binary Translation
@@ -1332,9 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion
             yield break;
         }
         
-        public void RemapListedAssetLinks(IWorldspaceBlock obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IWorldspaceBlock obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            obj.Items.ForEach(x => x.RemapListedAssetLinks(mapping));
+            obj.Items.ForEach(x => x.RemapAssetLinks(mapping, query));
         }
         
         #endregion

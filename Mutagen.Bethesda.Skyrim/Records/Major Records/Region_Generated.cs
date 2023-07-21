@@ -831,7 +831,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RegionSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RegionSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => RegionSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1334,15 +1334,15 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IRegion obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IRegion obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.Objects?.RemapListedAssetLinks(mapping);
-            obj.Weather?.RemapListedAssetLinks(mapping);
-            obj.Map?.RemapListedAssetLinks(mapping);
-            obj.Land?.RemapListedAssetLinks(mapping);
-            obj.Grasses?.RemapListedAssetLinks(mapping);
-            obj.Sounds?.RemapListedAssetLinks(mapping);
+            base.RemapAssetLinks(obj, mapping, query);
+            obj.Objects?.RemapAssetLinks(mapping, query);
+            obj.Weather?.RemapAssetLinks(mapping, query);
+            obj.Map?.RemapAssetLinks(mapping, query);
+            obj.Land?.RemapAssetLinks(mapping, query);
+            obj.Grasses?.RemapAssetLinks(mapping, query);
+            obj.Sounds?.RemapAssetLinks(mapping, query);
         }
         
         #endregion

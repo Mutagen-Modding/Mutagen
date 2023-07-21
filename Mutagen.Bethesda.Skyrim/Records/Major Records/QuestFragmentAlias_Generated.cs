@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasSetterCommon.Instance.RemapLinks(this, mapping);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestFragmentAliasCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => QuestFragmentAliasSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => QuestFragmentAliasSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => QuestFragmentAliasSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #endregion
 
         #region Binary Translation
@@ -916,9 +916,9 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IQuestFragmentAlias obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IQuestFragmentAlias obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            obj.Scripts.ForEach(x => x.RemapListedAssetLinks(mapping));
+            obj.Scripts.ForEach(x => x.RemapAssetLinks(mapping, query));
         }
         
         #endregion

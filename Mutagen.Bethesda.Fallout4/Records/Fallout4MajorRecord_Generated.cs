@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout4MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => Fallout4MajorRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1136,9 +1136,9 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
-        public void RemapListedAssetLinks(IFallout4MajorRecord obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IFallout4MajorRecord obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
+            base.RemapAssetLinks(obj, mapping, query);
         }
         
         #endregion

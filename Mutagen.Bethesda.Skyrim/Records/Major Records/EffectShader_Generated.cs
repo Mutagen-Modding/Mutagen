@@ -4162,7 +4162,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => EffectShaderCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => EffectShaderSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => EffectShaderSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => EffectShaderSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -5019,14 +5019,17 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IEffectShader obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IEffectShader obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.FillTexture?.Relink(mapping);
-            obj.ParticleShaderTexture?.Relink(mapping);
-            obj.HolesTexture?.Relink(mapping);
-            obj.MembranePaletteTexture?.Relink(mapping);
-            obj.ParticlePaletteTexture?.Relink(mapping);
+            base.RemapAssetLinks(obj, mapping, query);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.FillTexture?.Relink(mapping);
+                obj.ParticleShaderTexture?.Relink(mapping);
+                obj.HolesTexture?.Relink(mapping);
+                obj.MembranePaletteTexture?.Relink(mapping);
+                obj.ParticlePaletteTexture?.Relink(mapping);
+            }
         }
         
         #endregion

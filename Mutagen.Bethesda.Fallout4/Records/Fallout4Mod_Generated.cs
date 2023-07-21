@@ -6654,7 +6654,7 @@ namespace Mutagen.Bethesda.Fallout4
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout4ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4ModSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4ModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => Fallout4ModSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #endregion
 
         #region Binary Translation
@@ -9932,10 +9932,10 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
-        public void RemapListedAssetLinks(IFallout4Mod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IFallout4Mod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            obj.Cells.RemapListedAssetLinks(mapping);
-            obj.Worldspaces.RemapListedAssetLinks(mapping);
+            obj.Cells.RemapAssetLinks(mapping, query);
+            obj.Worldspaces.RemapAssetLinks(mapping, query);
         }
         
         #endregion

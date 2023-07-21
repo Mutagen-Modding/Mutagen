@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CameraShotCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CameraShotSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CameraShotSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => CameraShotSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1353,10 +1353,10 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(ICameraShot obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(ICameraShot obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.Model?.RemapListedAssetLinks(mapping);
+            base.RemapAssetLinks(obj, mapping, query);
+            obj.Model?.RemapAssetLinks(mapping, query);
         }
         
         #endregion

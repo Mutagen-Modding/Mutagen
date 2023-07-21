@@ -41,22 +41,22 @@ public static class AssetLinkRemappingMixIn
         }
     }
     
-    public static void RemapListedAssetLinks<TItem>(this IList<IAssetLinkContainer> linkList, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+    public static void RemapAssetLinks<TItem>(this IList<IAssetLinkContainer> linkList, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
     {
         foreach (var item in linkList)
         {
-            item.RemapListedAssetLinks(mapping);
+            item.RemapAssetLinks(mapping, query);
         }
     }
     
-    public static void RemapListedAssetLinks<TItem>(this IGenderedItemGetter<TItem?> gendered, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+    public static void RemapAssetLinks<TItem>(this IGenderedItemGetter<TItem?> gendered, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         where TItem : class, IAssetLinkContainer
     {
-        gendered.Male?.RemapListedAssetLinks(mapping);
-        gendered.Female?.RemapListedAssetLinks(mapping);
+        gendered.Male?.RemapAssetLinks(mapping, query);
+        gendered.Female?.RemapAssetLinks(mapping, query);
     }
 
-    public static void RemapListedAssetLinks<TLinkType, TAssetType>(this IGenderedItem<TLinkType> gendered, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+    public static void RemapAssetLinks<TLinkType, TAssetType>(this IGenderedItem<TLinkType> gendered, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
         where TLinkType : IAssetLink<TLinkType, TAssetType>, new()
         where TAssetType : IAssetType
     {
@@ -64,12 +64,12 @@ public static class AssetLinkRemappingMixIn
         gendered.Female = gendered.Female.RelinkToNew<TLinkType, TAssetType>(mapping);
     }
 
-    public static void RemapListedAssetLinks<TMajorGetter>(this IReadOnlyCache<TMajorGetter, FormKey> cache, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+    public static void RemapAssetLinks<TMajorGetter>(this IReadOnlyCache<TMajorGetter, FormKey> cache, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         where TMajorGetter : class, IMajorRecordGetter, IAssetLinkContainer
     {
         foreach (var item in cache.Items)
         {
-            item.RemapListedAssetLinks(mapping);
+            item.RemapAssetLinks(mapping, query);
         }
     }
 }

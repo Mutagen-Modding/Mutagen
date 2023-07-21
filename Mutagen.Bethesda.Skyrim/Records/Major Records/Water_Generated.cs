@@ -2823,7 +2823,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WaterCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WaterSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WaterSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => WaterSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3554,13 +3554,16 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IWater obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IWater obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.NoiseLayerOneTexture?.Relink(mapping);
-            obj.NoiseLayerTwoTexture?.Relink(mapping);
-            obj.NoiseLayerThreeTexture?.Relink(mapping);
-            obj.FlowNormalsNoiseTexture?.Relink(mapping);
+            base.RemapAssetLinks(obj, mapping, query);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.NoiseLayerOneTexture?.Relink(mapping);
+                obj.NoiseLayerTwoTexture?.Relink(mapping);
+                obj.NoiseLayerThreeTexture?.Relink(mapping);
+                obj.FlowNormalsNoiseTexture?.Relink(mapping);
+            }
         }
         
         #endregion

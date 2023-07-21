@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => FurnitureCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => FurnitureSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => FurnitureSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => FurnitureSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1693,13 +1693,16 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IFurniture obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IFurniture obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
-            obj.Model?.RemapListedAssetLinks(mapping);
-            obj.Destructible?.RemapListedAssetLinks(mapping);
-            obj.ModelFilename?.Relink(mapping);
+            base.RemapAssetLinks(obj, mapping, query);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.ModelFilename?.Relink(mapping);
+            }
+            obj.VirtualMachineAdapter?.RemapAssetLinks(mapping, query);
+            obj.Model?.RemapAssetLinks(mapping, query);
+            obj.Destructible?.RemapAssetLinks(mapping, query);
         }
         
         #endregion

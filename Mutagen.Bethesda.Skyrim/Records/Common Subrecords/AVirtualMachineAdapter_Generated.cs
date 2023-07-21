@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AVirtualMachineAdapterCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AVirtualMachineAdapterSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AVirtualMachineAdapterSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public virtual void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => AVirtualMachineAdapterSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #endregion
 
         #region Binary Translation
@@ -861,9 +861,9 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IAVirtualMachineAdapter obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IAVirtualMachineAdapter obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            obj.Scripts.ForEach(x => x.RemapListedAssetLinks(mapping));
+            obj.Scripts.ForEach(x => x.RemapAssetLinks(mapping, query));
         }
         
         #endregion

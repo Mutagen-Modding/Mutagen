@@ -78,7 +78,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 
         if (maskTypes.Applicable(LoquiInterfaceType.ISetter, CommonGenerics.Class))
         {
-            await GenerateRemapListedAssetLinks(obj, fg);
+            await GenerateRemapAssetLinks(obj, fg);
         }
     }
 
@@ -360,43 +360,28 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         fg.AppendLine();
     }
 
-    private async Task GenerateRemapListedAssetLinks(ObjectGeneration obj, StructuredStringBuilder fg)
+    private async Task GenerateRemapAssetLinks(ObjectGeneration obj, StructuredStringBuilder fg)
     {
         fg.AppendLine(
-            $"public void {nameof(IAssetLinkContainer.RemapListedAssetLinks)}({obj.Interface(getter: false)} obj, IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping)");
+            $"public void {nameof(IAssetLinkContainer.RemapAssetLinks)}({obj.Interface(getter: false)} obj, IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping, {nameof(AssetLinkQuery)} query)");
         using (fg.CurlyBrace())
         {
             foreach (var baseClass in obj.BaseClassTrail())
             {
                 if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                 {
-                    fg.AppendLine($"base.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(obj, mapping);");
+                    fg.AppendLine($"base.{nameof(IAssetLinkContainer.RemapAssetLinks)}(obj, mapping, query);");
                     break;
                 }
             }
-
+            
             var startCount = fg.Count;
+            var subFg = new StructuredStringBuilder();
             foreach (var field in obj.IterateFields(nonIntegrated: true))
             {
                 if (field is AssetLinkType)
                 {
-                    fg.AppendLine($"obj.{field.Name}{field.NullChar}.Relink(mapping);");
-                }
-                else if (field is LoquiType loqui)
-                {
-                    Case subLinkCase;
-                    if (loqui.TargetObjectGeneration != null)
-                    {
-                        subLinkCase = await HasLinks(loqui, includeBaseClass: true);
-                    }
-                    else
-                    {
-                        subLinkCase = Case.Maybe;
-                    }
-
-                    if (subLinkCase == Case.No) continue;
-                    fg.AppendLine(
-                        $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(mapping);");
+                    subFg.AppendLine($"obj.{field.Name}{field.NullChar}.Relink(mapping);");
                 }
                 else if (field is WrapperType cont)
                 {
@@ -404,7 +389,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                          && await HasLinks(contLoqui, includeBaseClass: true) != Case.No))
                     {
                         fg.AppendLine(
-                            $"obj.{field.Name}{field.NullChar}.ForEach(x => x{contLoqui.NullChar}.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(mapping));");
+                            $"obj.{field.Name}{field.NullChar}.ForEach(x => x{contLoqui.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, query));");
                     }
                     else if (cont.SubTypeGeneration is AssetLinkType subAsset)
                     {
@@ -419,40 +404,49 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         && await HasLinks(dictLoqui, includeBaseClass: true) != Case.No)
                     {
                         fg.AppendLine(
-                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(mapping);");
+                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, query);");
                     }
                     else if (dict.ValueTypeGen is FormLinkType formIDType)
                     {
                         fg.AppendLine(
-                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapListedAssetLinks)}(mapping);");
-                    }
-                }
-                else if (field is BreakType breakType)
-                {
-                    if (fg.Count > startCount)
-                    {
-                        fg.AppendLine(
-                            $"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) return;");
+                            $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, query);");
                     }
                 }
             }
 
-            // Remove trailing breaks
-            while (fg.Count > startCount)
+            if (subFg.Count > 0)
             {
-                if (fg[^1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+                fg.AppendLine($"if (queryCategories.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Listed)}))");
+                using (fg.CurlyBrace())
                 {
-                    fg.RemoveAt(fg.Count - 1);
+                    fg.AppendLines(subFg);
                 }
-                else
+            }
+            
+            foreach (var field in obj.IterateFields(nonIntegrated: true))
+            {
+                if (field is LoquiType loqui)
                 {
-                    break;
+                    Case subLinkCase;
+                    if (loqui.TargetObjectGeneration != null)
+                    {
+                        subLinkCase = await HasLinks(loqui, includeBaseClass: true);
+                    }
+                    else
+                    {
+                        subLinkCase = Case.Maybe;
+                    }
+
+                    if (subLinkCase == Case.No) continue;
+                    fg.AppendLine(
+                        $"obj.{field.Name}{field.NullChar}.{nameof(IAssetLinkContainer.RemapAssetLinks)}(mapping, query);");
                 }
             }
         }
 
         fg.AppendLine();
     }
+
 
     private async Task YieldReturnListedAssets(ObjectGeneration obj, StructuredStringBuilder fg)
     {
@@ -670,7 +664,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (!getter)
         {
             fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLink)}> {nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}() => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(this);");
-            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}void {nameof(IAssetLinkContainer.RemapListedAssetLinks)}(IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapListedAssetLinks(this, mapping);");
+            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}void {nameof(IAssetLinkContainer.RemapAssetLinks)}(IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping, {nameof(AssetLinkQuery)} query) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapAssetLinks(this, mapping, query);");
         }
     }
 }

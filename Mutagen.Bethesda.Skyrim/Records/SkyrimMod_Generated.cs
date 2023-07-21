@@ -6021,7 +6021,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimModSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => SkyrimModSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #endregion
 
         #region Binary Translation
@@ -9409,67 +9409,67 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(ISkyrimMod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(ISkyrimMod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            obj.TextureSets.RemapListedAssetLinks(mapping);
-            obj.HeadParts.RemapListedAssetLinks(mapping);
-            obj.Eyes.RemapListedAssetLinks(mapping);
-            obj.Races.RemapListedAssetLinks(mapping);
-            obj.MagicEffects.RemapListedAssetLinks(mapping);
-            obj.Scrolls.RemapListedAssetLinks(mapping);
-            obj.Activators.RemapListedAssetLinks(mapping);
-            obj.TalkingActivators.RemapListedAssetLinks(mapping);
-            obj.Armors.RemapListedAssetLinks(mapping);
-            obj.Books.RemapListedAssetLinks(mapping);
-            obj.Containers.RemapListedAssetLinks(mapping);
-            obj.Doors.RemapListedAssetLinks(mapping);
-            obj.Ingredients.RemapListedAssetLinks(mapping);
-            obj.Lights.RemapListedAssetLinks(mapping);
-            obj.MiscItems.RemapListedAssetLinks(mapping);
-            obj.AlchemicalApparatuses.RemapListedAssetLinks(mapping);
-            obj.Statics.RemapListedAssetLinks(mapping);
-            obj.MoveableStatics.RemapListedAssetLinks(mapping);
-            obj.Grasses.RemapListedAssetLinks(mapping);
-            obj.Trees.RemapListedAssetLinks(mapping);
-            obj.Florae.RemapListedAssetLinks(mapping);
-            obj.Furniture.RemapListedAssetLinks(mapping);
-            obj.Weapons.RemapListedAssetLinks(mapping);
-            obj.Ammunitions.RemapListedAssetLinks(mapping);
-            obj.Npcs.RemapListedAssetLinks(mapping);
-            obj.LeveledNpcs.RemapListedAssetLinks(mapping);
-            obj.Keys.RemapListedAssetLinks(mapping);
-            obj.Ingestibles.RemapListedAssetLinks(mapping);
-            obj.IdleMarkers.RemapListedAssetLinks(mapping);
-            obj.Projectiles.RemapListedAssetLinks(mapping);
-            obj.Hazards.RemapListedAssetLinks(mapping);
-            obj.SoulGems.RemapListedAssetLinks(mapping);
-            obj.Weathers.RemapListedAssetLinks(mapping);
-            obj.Climates.RemapListedAssetLinks(mapping);
-            obj.ShaderParticleGeometries.RemapListedAssetLinks(mapping);
-            obj.Regions.RemapListedAssetLinks(mapping);
-            obj.Cells.RemapListedAssetLinks(mapping);
-            obj.Worldspaces.RemapListedAssetLinks(mapping);
-            obj.DialogTopics.RemapListedAssetLinks(mapping);
-            obj.Quests.RemapListedAssetLinks(mapping);
-            obj.IdleAnimations.RemapListedAssetLinks(mapping);
-            obj.Packages.RemapListedAssetLinks(mapping);
-            obj.LoadScreens.RemapListedAssetLinks(mapping);
-            obj.AnimatedObjects.RemapListedAssetLinks(mapping);
-            obj.Waters.RemapListedAssetLinks(mapping);
-            obj.EffectShaders.RemapListedAssetLinks(mapping);
-            obj.Explosions.RemapListedAssetLinks(mapping);
-            obj.Debris.RemapListedAssetLinks(mapping);
-            obj.Perks.RemapListedAssetLinks(mapping);
-            obj.BodyParts.RemapListedAssetLinks(mapping);
-            obj.AddonNodes.RemapListedAssetLinks(mapping);
-            obj.CameraShots.RemapListedAssetLinks(mapping);
-            obj.Impacts.RemapListedAssetLinks(mapping);
-            obj.ArmorAddons.RemapListedAssetLinks(mapping);
-            obj.MusicTracks.RemapListedAssetLinks(mapping);
-            obj.Scenes.RemapListedAssetLinks(mapping);
-            obj.ArtObjects.RemapListedAssetLinks(mapping);
-            obj.MaterialObjects.RemapListedAssetLinks(mapping);
-            obj.SoundDescriptors.RemapListedAssetLinks(mapping);
+            obj.TextureSets.RemapAssetLinks(mapping, query);
+            obj.HeadParts.RemapAssetLinks(mapping, query);
+            obj.Eyes.RemapAssetLinks(mapping, query);
+            obj.Races.RemapAssetLinks(mapping, query);
+            obj.MagicEffects.RemapAssetLinks(mapping, query);
+            obj.Scrolls.RemapAssetLinks(mapping, query);
+            obj.Activators.RemapAssetLinks(mapping, query);
+            obj.TalkingActivators.RemapAssetLinks(mapping, query);
+            obj.Armors.RemapAssetLinks(mapping, query);
+            obj.Books.RemapAssetLinks(mapping, query);
+            obj.Containers.RemapAssetLinks(mapping, query);
+            obj.Doors.RemapAssetLinks(mapping, query);
+            obj.Ingredients.RemapAssetLinks(mapping, query);
+            obj.Lights.RemapAssetLinks(mapping, query);
+            obj.MiscItems.RemapAssetLinks(mapping, query);
+            obj.AlchemicalApparatuses.RemapAssetLinks(mapping, query);
+            obj.Statics.RemapAssetLinks(mapping, query);
+            obj.MoveableStatics.RemapAssetLinks(mapping, query);
+            obj.Grasses.RemapAssetLinks(mapping, query);
+            obj.Trees.RemapAssetLinks(mapping, query);
+            obj.Florae.RemapAssetLinks(mapping, query);
+            obj.Furniture.RemapAssetLinks(mapping, query);
+            obj.Weapons.RemapAssetLinks(mapping, query);
+            obj.Ammunitions.RemapAssetLinks(mapping, query);
+            obj.Npcs.RemapAssetLinks(mapping, query);
+            obj.LeveledNpcs.RemapAssetLinks(mapping, query);
+            obj.Keys.RemapAssetLinks(mapping, query);
+            obj.Ingestibles.RemapAssetLinks(mapping, query);
+            obj.IdleMarkers.RemapAssetLinks(mapping, query);
+            obj.Projectiles.RemapAssetLinks(mapping, query);
+            obj.Hazards.RemapAssetLinks(mapping, query);
+            obj.SoulGems.RemapAssetLinks(mapping, query);
+            obj.Weathers.RemapAssetLinks(mapping, query);
+            obj.Climates.RemapAssetLinks(mapping, query);
+            obj.ShaderParticleGeometries.RemapAssetLinks(mapping, query);
+            obj.Regions.RemapAssetLinks(mapping, query);
+            obj.Cells.RemapAssetLinks(mapping, query);
+            obj.Worldspaces.RemapAssetLinks(mapping, query);
+            obj.DialogTopics.RemapAssetLinks(mapping, query);
+            obj.Quests.RemapAssetLinks(mapping, query);
+            obj.IdleAnimations.RemapAssetLinks(mapping, query);
+            obj.Packages.RemapAssetLinks(mapping, query);
+            obj.LoadScreens.RemapAssetLinks(mapping, query);
+            obj.AnimatedObjects.RemapAssetLinks(mapping, query);
+            obj.Waters.RemapAssetLinks(mapping, query);
+            obj.EffectShaders.RemapAssetLinks(mapping, query);
+            obj.Explosions.RemapAssetLinks(mapping, query);
+            obj.Debris.RemapAssetLinks(mapping, query);
+            obj.Perks.RemapAssetLinks(mapping, query);
+            obj.BodyParts.RemapAssetLinks(mapping, query);
+            obj.AddonNodes.RemapAssetLinks(mapping, query);
+            obj.CameraShots.RemapAssetLinks(mapping, query);
+            obj.Impacts.RemapAssetLinks(mapping, query);
+            obj.ArmorAddons.RemapAssetLinks(mapping, query);
+            obj.MusicTracks.RemapAssetLinks(mapping, query);
+            obj.Scenes.RemapAssetLinks(mapping, query);
+            obj.ArtObjects.RemapAssetLinks(mapping, query);
+            obj.MaterialObjects.RemapAssetLinks(mapping, query);
+            obj.SoundDescriptors.RemapAssetLinks(mapping, query);
         }
         
         #endregion

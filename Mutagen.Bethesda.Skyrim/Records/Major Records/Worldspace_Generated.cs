@@ -1834,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WorldspaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WorldspaceSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => WorldspaceSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3013,18 +3013,21 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IWorldspace obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IWorldspace obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.MapImage?.Relink(mapping);
-            obj.CloudModel?.RemapListedAssetLinks(mapping);
-            obj.CanopyShadow?.Relink(mapping);
-            obj.WaterNoiseTexture?.Relink(mapping);
-            obj.HdLodDiffuseTexture?.Relink(mapping);
-            obj.HdLodNormalTexture?.Relink(mapping);
-            obj.WaterEnvironmentMap?.Relink(mapping);
-            obj.TopCell?.RemapListedAssetLinks(mapping);
-            obj.SubCells.ForEach(x => x.RemapListedAssetLinks(mapping));
+            base.RemapAssetLinks(obj, mapping, query);
+            obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, query));
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.MapImage?.Relink(mapping);
+                obj.CanopyShadow?.Relink(mapping);
+                obj.WaterNoiseTexture?.Relink(mapping);
+                obj.HdLodDiffuseTexture?.Relink(mapping);
+                obj.HdLodNormalTexture?.Relink(mapping);
+                obj.WaterEnvironmentMap?.Relink(mapping);
+            }
+            obj.CloudModel?.RemapAssetLinks(mapping, query);
+            obj.TopCell?.RemapAssetLinks(mapping, query);
         }
         
         #endregion

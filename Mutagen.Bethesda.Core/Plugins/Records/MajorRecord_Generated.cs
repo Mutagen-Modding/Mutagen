@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
         public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MajorRecordSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public virtual void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query) => MajorRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, query);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             yield break;
         }
         
-        public void RemapListedAssetLinks(IMajorRecord obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(IMajorRecord obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query)
         {
         }
         
