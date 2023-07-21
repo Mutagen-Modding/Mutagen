@@ -883,7 +883,6 @@ namespace Mutagen.Bethesda.Skyrim
         private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
             IScriptEntry obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories);
         
         public void RemapAssetLinks(
@@ -892,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
-            RemapInferredAssetLinks(obj, mapping, linkCache, queryCategories);
+            RemapInferredAssetLinks(obj, mapping, queryCategories);
         }
         
         #endregion

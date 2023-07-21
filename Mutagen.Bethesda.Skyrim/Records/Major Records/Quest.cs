@@ -50,7 +50,6 @@ partial class QuestSetterCommon
     private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
         IQuest obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-        IAssetLinkCache? linkCache,
         AssetLinkQuery queryCategories)
     {
         throw new NotImplementedException();

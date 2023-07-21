@@ -28,7 +28,6 @@ partial class SkyrimModSetterCommon
     private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
         ISkyrimMod obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-        IAssetLinkCache? linkCache,
         AssetLinkQuery queryCategories)
     {
         throw new NotImplementedException();

@@ -152,7 +152,6 @@ partial class BookSetterCommon
     private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
         IBook obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-        IAssetLinkCache? linkCache,
         AssetLinkQuery queryCategories)
     {
         throw new NotImplementedException();

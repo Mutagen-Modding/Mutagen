@@ -126,7 +126,6 @@ partial class ArmorAddonSetterCommon
     private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
         IArmorAddon obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-        IAssetLinkCache? linkCache,
         AssetLinkQuery queryCategories)
     {
         throw new NotImplementedException();

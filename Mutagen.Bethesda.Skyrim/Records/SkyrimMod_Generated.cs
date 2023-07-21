@@ -9413,7 +9413,6 @@ namespace Mutagen.Bethesda.Skyrim
         private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
             ISkyrimMod obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories);
         
         public void RemapAssetLinks(
@@ -9422,7 +9421,7 @@ namespace Mutagen.Bethesda.Skyrim
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
-            RemapInferredAssetLinks(obj, mapping, linkCache, queryCategories);
+            RemapInferredAssetLinks(obj, mapping, queryCategories);
             obj.TextureSets.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Eyes.RemapAssetLinks(mapping, queryCategories, linkCache);

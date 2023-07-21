@@ -370,7 +370,6 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
             {
                 f.Add($"{obj.Interface(getter: false)} obj");
                 f.Add($"IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping");
-                f.Add($"{nameof(IAssetLinkCache)}? linkCache");
                 f.Add($"{nameof(AssetLinkQuery)} queryCategories");
             }
             fg.AppendLine();
@@ -411,7 +410,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
             
             if (obj.GetObjectData().HasInferredAssets)
             {
-                fg.AppendLine("RemapInferredAssetLinks(obj, mapping, linkCache, queryCategories);");
+                fg.AppendLine("RemapInferredAssetLinks(obj, mapping, queryCategories);");
             }
             
             if (obj.GetObjectData().HasResolvedAssets)

@@ -21,7 +21,6 @@ partial class ScriptEntrySetterCommon
     private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
         IScriptEntry obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-        IAssetLinkCache? linkCache,
         AssetLinkQuery queryCategories)
     {
         throw new NotImplementedException();
