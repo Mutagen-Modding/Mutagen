@@ -253,7 +253,9 @@ public class AssetLink<TAssetType> :
 
     public override int GetHashCode()
     {
-        return AssetLink.PathComparer.GetHashCode(RawPath);
+        return HashCode.Combine(
+                typeof(TAssetType).GetHashCode(),
+                AssetLink.PathComparer.GetHashCode(RawPath));
     }
 
     public override bool Equals(object? other)
