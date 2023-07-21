@@ -1,4 +1,4 @@
-# What is Abstract Subclassing
+## What is Abstract Subclassing
 Occasionally records will have an Abstract subobject.   
 
 This article will go over the concepts of Abstract Subclassing through the lens of looking at a specific example found in Skyrim Npc.   Other records have similar but different concepts.  
@@ -18,7 +18,7 @@ public interface INpcConfigurationGetter
 ```
 
 
-# Why is it Needed?
+## Why is it Needed?
 
 Why is the concept of `Level` a weird `ANpcLevel` object?  
 
@@ -30,7 +30,7 @@ Mutagen exposes this by using subclassing.  `ANpcLevel` has two subclasses:
 - `NpcLevel`, with `Level` as an integer
 - `PcLevelMult`, with `Level` as a float
 
-# Setting an Abstract Subclass Member
+## Setting an Abstract Subclass Member
 You will notice Mutagen does not expose the `Pc Level Mult` flag.   Instead, you simultaneously control both the "mode" that the `Level` is in, as well as `Level`'s value by choosing the appropriate subclass.  
 
 ```cs
@@ -50,7 +50,7 @@ n.Configuration.Level = new PcLevelMult()
 
 Now, it's very clear when `Level` is an integer, and when it is a float.  The flag's value and `Level`'s type are "bundled" as one choice, depending on which subclass you make.
 
-# Reading an Abstract Subclass Member
+## Reading an Abstract Subclass Member
 Reading needs to respect/consider these subclasses in the same way.  One easy way to do this is using a C# type switch:
 ```cs
 INpcGetter n = ...
@@ -76,12 +76,12 @@ int level = ((INpcLevelGetter)n.Configuration.Level).Level;
 ```
 This will break if you are processing an Npc with the `PC Level Mult` flag on, as the subobject won't be of type `INpcLevelGetter`.
 
-# Summary
+## Summary
 Abstract Subclassing is used when a concept is complex enough to warrant the need for extra control.  It often helps when a field's type can change based on the context, and it helps bundle the different typing WITH that context, so that there is no potential for desync.
 
 In the above example, you will never accidentally deal with a `Level` that is of type `float` unless it is in `Pc Level Mult` mode, and vice versa.  That is not the biggest deal, but in many other situations the concepts/differences are more extreme.
 
-# Other Records with Abstract Subclassing
+## Other Records with Abstract Subclassing
 Skyrim Npc is not the only record type that uses these concepts.  There are many other records that have the need for data structure to change depending on context, and they will use Abstract Subclassing to help expose that.
 
 Some other examples include:
@@ -93,7 +93,7 @@ These show a more extreme example where the fields that a Perk Effect contains v
 
 An effect can reference many different types of records, where some effect types can point to records of type ABC, while another effect type can only point to records of type XYZ.  The subclassing again helps expose only the correct typing depending on the effect type you're dealing with.
 
-# Documentation
+## Documentation
 Each subclassing situation is different and is trying to solve a different complexity specific to that record.  As things mature, documentation outlining each specific structure will probably be written.
 
 In the meantime, you can:

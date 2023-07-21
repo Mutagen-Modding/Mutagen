@@ -41,11 +41,13 @@ theme:
     scheme: slate
   features:
     - navigation.instant
+    - navigation.tracking
+    - navigation.sections
     
 nav:
   - Home: index.md
   - Big Cheat Sheet: Big-Cheat-Sheet.md
-  - Plugin Record Suite:
+  - Plugin Record Suite: Plugin-Record-Suite.md
     - Generated Classes: Generated-Classes.md
     - Binary Importing: Binary-Importing.md
     - Binary Overlay: Binary-Overlay.md

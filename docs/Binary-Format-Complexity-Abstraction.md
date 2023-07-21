@@ -1,9 +1,9 @@
 Bethesda's binary format contains a lot implementation complexities that are unrelated to the actual content of the records.  A lot of times the exposure of these details are a source of confusion, and don't add much upside in the way of flexibility or power into the hands of the user.  Mutagen attempts to abstract these complexities away so that the end user is dealing with the distilled record content more directly, rather than wading through the gritty specifics that only matter in the context of their binary format on disk.
 
-# FormKeys and FormLinks
+## FormKeys and FormLinks
 This topic was covered in detail in the [ModKey, FormKey, FormLink](ModKey%2C-FormKey%2C-FormLink#formkeys) section, and so will not be covered here.
 
-# Record Types
+## Record Types
 ### Four Character Headers
 Most seasoned modders are familiar with the 4 character record headers. `EDID` is `Editor ID`.  `FULL` is `Name`.  `MODL` is `Model`.  
 
@@ -14,7 +14,7 @@ Additionally, some common Record Types have alternate versions to denote differe
 
 (finish writing)
 
-# List Mechanics
+## List Mechanics
 ## Item Storage
 There are a lot of varying ways that lists are stored in the binary format:
 - Repeated subrecords, with their Record Header as the delimiter.  Unknown amount.
@@ -36,10 +36,10 @@ IList<FormLink<Keyword>> Keywords { get; set; }
 IList<AlternateTexture> AlternateTextures { get; set; }
 ```
 
-## Count Subrecords
+### Count Subrecords
 (finish writing)
 
-# Global/Gamesetting types
+## Global/Gamesetting types
 The Global and Gamesetting records contain many different types of data while each having their own unique rules of communicating what type of data they contain.  For example, `Global` records have a special subrecord `FNAM` with a single char `i`, `f`, `s` to symbolize the float field it contains should be interpreted as an `int`, `float`, or `short`.  `GameSetting` on the other hand prepends a character to its EditorID to communicate what type of data is stored in its `DATA` subrecord.
 
 This complexity is abstracted away by Mutagen by offering strongly typed subclasses for Globals and Gamesettings.  `GlobalInt`, `GlobalFloat`, `GameSettingInt`, `GameSettingString`, `GameSettingBool`, etc.  These subclasses expose a strongly typed member of the correct type to the user while internally handling the most of the details.
@@ -92,7 +92,7 @@ foreach (GameSetting setting in mod.GameSettings.Records)
 }
 ```
 
-# Markers
+## Markers
 Some subrecords have specialized "marker" subrecords that precede them.  Sometimes they just mark the location of a section of subrecords, while other times they affect the context of the following subrecords.
 
 A good specific example can be found in Skyrim's `Race`'s Body Data subrecords.  A `Race` has a body data struct for males, and a body data struct for females.  These records are first "marked" by an empty `NAM0` record.  They are then further "marked" by empty `MNAM` or `FNAM` subrecords, to indicate if the following data is for males or females.  The binary might follow this pattern:
@@ -108,15 +108,15 @@ MODL: Body Data content for females
 
 Mutagen abstracts the concepts of markers away from the user completely.  No concepts of markers exist in the API exposed.  A user can just directly access the data they're interested in, and if a marker-related field is set for exporting, the marker systems will be handled automatically during export internally.
 
-# PathGrid Point Zipping
+## PathGrid Point Zipping
 Path grid information in records such as Oblivion's `Road` are stored in two separate subrecord lists that need to be considered together in order to get the complete structure.  The points themselves are stored in the list `PGRP`, while the information about the connections between points is stored in `PGRR`.  If you want to know what points have what connections, you need to offset your queries into the `PGRR` subrecord properly.  Each Point exposes the number of connections it has.  Then, to find the connections for Point #7, you have to offset your query into `PGRR` by 12 * the number of connections Points #1-6 had.  You then have to extract the number of connection floats appropriate for Point #7, based on the number of connections it says it has.
 
 Mutagen abstracts this "zipping" work for you and offers a simple `IList<RoadPoint> Points;` member on `Road`.  Each `RoadPoint` has a `IList<P3Float> Connections;` with all the connections related to that point.  All the complexity of the dual subrecords is hidden from the user, and they can just manipulate these lists directly in a more straightforward and familiar fashion.
 
-# Multiple Flag Consolidation
+## Multiple Flag Consolidation
 Some records have so many flags that they overflow above the typical 4 bytes.  Bethesda will then put a second set of flags elsewhere in the record with the overflow flag values.  One example of this happening is in Skyrim's Race record.  Mutagen merges the overflow into one Flag field exposing all of the values in one place.
 
-# GenderedItem
+## GenderedItem
 Bethesda records have a lot of fields that come in a Male/Female pair.  While not too much of a problem by itself, most of the complexity comes in the variety of ways that these pairs can be organized.  Sometimes the M/F data is held in dedicated `MNAM`/`FNAM` records.  Sometimes those records are prepended by a marker, as mentioned above.  Sometimes instead both are found in a single subrecord, with the data just back to back.
 
 Mutagen standardizes all the various cases, and exposes the male/female alternatives using a `GenderedItem` struct in the public API:
@@ -134,7 +134,7 @@ race.Height.Male = 1.5f;
 float femaleHeight = race.Height.Female;
 ```
 
-# Pseudo Enum Dictionaries
+## Pseudo Enum Dictionaries
 Skyrim's Race record has a hacky binary implementation for its `Biped Object Names` field.
 
 This field is supposed to expose the names associated with the different values of this enum:

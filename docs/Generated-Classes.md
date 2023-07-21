@@ -1,10 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
+# Generated Classes
 Mutagen provides C# classes, as well as matching interfaces for all records it supports.
 
 Here's an example of what an interface for the `Potion` record might look like:

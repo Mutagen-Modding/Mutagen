@@ -1,6 +1,6 @@
 Binary Overlays are an alternative to the more simplistic [[Binary Importing]] concepts.
 
-# Reasoning for an Alternate Pattern
+## Reasoning for an Alternate Pattern
 ### Memory Usage is Frontloaded
 One of the downsides of typical importing is that all the data must be read into an object upfront and continues existing in memory until the object is released to the GC.  Many operations only want to process each record once and then move on.  They do not need all the records to exist in memory at the same time and would actually prefer if they weren't.
 
@@ -10,7 +10,7 @@ Additionally, the user must specify to the import function all of the record typ
 ### All Records are Parsed (for Interest Groups)
 When a specific Group is marked for interest and imported, all aspects of those Records are parsed and created in memory with no regard to whether the user will actually make use of them all.  This is a lot of wasted work and memory usage for data that will go unused.
 
-# Introduction to Overlay Concepts
+## Introduction to Overlay Concepts
 The Binary Overlay concept is an alternate method of importing/reading mods in an on-demand and transient way.  One of its main features is that only fields that are accessed get parsed, which saves a lot of time and work.
 
 ```cs
@@ -30,7 +30,7 @@ With the overlay pattern, a mod object is returned almost immediately for use af
 ### No Persistent References to Records or Memory
 Binary Overlays keep no internal references to any record objects.  This means that when a user is done working with something and discards it, the GC is allowed to immediately clean it up.
 
-# Concrete Example
+## Concrete Example
 It might be useful to walk through a concrete example, and some of the mechanics going on under the hood.  Consider this code:
 ```cs
 using (IOblivionModGetter mod = OblivionMod.CreateFromBinaryOverlay(pathToMod))
@@ -67,7 +67,7 @@ This code is intended to print each Potion's Editor ID to the console.
 - No object had a reference to all the Potion records, so as to keep their contents in memory.  The Group object simply has a list of locations.  The user has the only reference to any Potion record at any given moment, and as soon as they were done with it was cleaned up.
 - No extra code was written by the user to help indicate they were only interested in Potions or EditorIDs.  Writing code that accessed them was the implicit indication of interest itself.
 
-# Summary Overview
+## Summary Overview
 The Binary Overlay concept is a powerful tool that can be used for vast speed/memory improvements for certain jobs.  It is suggested for use in most importing scenarios.  Actual normal record objects should generally be reserved for use when constructing new/modified records for output.
 
 ### Pros

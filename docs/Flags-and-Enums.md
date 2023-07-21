@@ -1,5 +1,5 @@
 A lot of Record data is exposed via flags and enums.  All of known enum types and their options are defined explicitly for strongly typed use.
-### Normal Enum
+## Normal Enum
 Certain fields have a certain subset of valid options.  These are exposed as enums, where only one choice can be made.
 
 For example, Oblivion's `Creature` has an enum that looks like this:
@@ -38,7 +38,7 @@ switch (creature.CreatureType)
         break;
 }
 ```
-#### Unknown Flags
+### Unknown Flags
 Enums only list the values that are known and have "nicknames".  Sometimes mods have values for things that are "unknown" and don't have a name.   Rather than listing these, Mutagen opts to only list known values to keep things clean.
 
 You can still get at and set these values, though.  Enums in C# are backed by `int` (or other numeric primitives), and so you can write code like this:
@@ -53,7 +53,7 @@ if (e == (CreatureType)13)
 
 With this style API, you can still access all unknown values as needed.
 
-### Flags Enum
+## Flags Enum
 Certain fields are allowed to have several values, and so make use of C#'s [Flags] enum systems.
 
 For example, Oblivion `NPC`'s flags look like this:

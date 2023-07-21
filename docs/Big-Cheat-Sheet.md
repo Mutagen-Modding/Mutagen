@@ -1,6 +1,6 @@
 # Big Cheat Sheet
 ## Overview
-A massive list of code snippets without much contextual explanation.
+A massive list of code snippets without much contextual explaination.
 
 ### Related Reading
 Relevant wikis for more detailed reading will be linked.
