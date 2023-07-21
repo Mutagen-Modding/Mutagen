@@ -47,7 +47,7 @@ public partial class Quest
 
 partial class QuestSetterCommon
 {
-    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+    private static partial void RemapInferredAssetLinks(
         IQuest obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)

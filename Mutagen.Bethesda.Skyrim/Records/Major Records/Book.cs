@@ -149,7 +149,7 @@ partial class BookBinaryWriteTranslation
 
 partial class BookSetterCommon
 {
-    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+    private static partial void RemapInferredAssetLinks(
         IBook obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)

@@ -365,7 +365,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (obj.GetObjectData().HasInferredAssets)
         {
             using (var f = fg.Function(
-                       $"private static partial IEnumerable<{nameof(IAssetLinkGetter)}> RemapInferredAssetLinks",
+                       $"private static partial void RemapInferredAssetLinks",
                        semiColon: true))
             {
                 f.Add($"{obj.Interface(getter: false)} obj");
@@ -378,7 +378,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
         if (obj.GetObjectData().HasResolvedAssets)
         {
             using (var f = fg.Function(
-                       $"private static partial IEnumerable<{nameof(IAssetLinkGetter)}> RemapResolvedAssetLinks",
+                       $"private static partial void RemapResolvedAssetLinks",
                        semiColon: true))
             {
                 f.Add($"{obj.Interface(getter: false)} obj");

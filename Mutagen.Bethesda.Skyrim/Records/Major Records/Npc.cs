@@ -20,7 +20,7 @@ public partial class Npc
 
 partial class NpcSetterCommon
 {
-    private static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
+    private static partial void RemapResolvedAssetLinks(
         INpc obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         IAssetLinkCache? linkCache,

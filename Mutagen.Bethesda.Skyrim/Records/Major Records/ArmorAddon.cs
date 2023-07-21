@@ -123,7 +123,7 @@ partial class ArmorAddonCommon
 
 partial class ArmorAddonSetterCommon
 {
-    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+    private static partial void RemapInferredAssetLinks(
         IArmorAddon obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)

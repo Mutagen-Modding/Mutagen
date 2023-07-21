@@ -146,7 +146,7 @@ public partial class DialogTopic
 
 partial class DialogTopicSetterCommon
 {
-    private static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
+    private static partial void RemapResolvedAssetLinks(
         IDialogTopic obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         IAssetLinkCache? linkCache,

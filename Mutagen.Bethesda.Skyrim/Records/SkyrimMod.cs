@@ -25,7 +25,7 @@ public partial class SkyrimMod : AMod
 
 partial class SkyrimModSetterCommon
 {
-    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+    private static partial void RemapInferredAssetLinks(
         ISkyrimMod obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)

@@ -18,7 +18,7 @@ public partial class ScriptEntry
 
 partial class ScriptEntrySetterCommon
 {
-    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+    private static partial void RemapInferredAssetLinks(
         IScriptEntry obj,
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)
