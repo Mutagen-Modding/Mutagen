@@ -28,6 +28,32 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     new IEnumerable<IAssetLink> EnumerateListedAssetLinks();
 }
 
+public static class AssetLinkContainerExt
+{
+    public static void RemapInferredAssetLinks(
+        this IAssetLinkContainer assetLinkContainerGetter,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+    {
+        assetLinkContainerGetter.RemapAssetLinks(mapping, AssetLinkQuery.Inferred, null);
+    }
+    
+    public static void RemapResolvedAssetLinks(
+        this IAssetLinkContainer assetLinkContainerGetter,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache linkCache)
+    {
+        assetLinkContainerGetter.RemapAssetLinks(mapping, AssetLinkQuery.Resolved, linkCache);
+    }
+    
+    public static void RemapAllAssetLinks(
+        this IAssetLinkContainer assetLinkContainerGetter,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache = null)
+    {
+        assetLinkContainerGetter.RemapAssetLinks(mapping, AssetLinkQuery.Listed | AssetLinkQuery.Inferred | AssetLinkQuery.Resolved, linkCache);
+    }
+}
+
 /// <summary>
 /// An interface for classes that contain AssetLinks and can enumerate them.
 /// </summary>
