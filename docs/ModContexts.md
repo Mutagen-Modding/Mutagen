@@ -1,3 +1,4 @@
+# Mod Contexts
 Mod Contexts are an opt-in advanced feature of most LinkCache functionality.  They act as storage for contextual information and the wiring and logic needed to perform certain actions in a context aware manner.
 
 `ModContext`s contain:
@@ -7,10 +8,10 @@ Mod Contexts are an opt-in advanced feature of most LinkCache functionality.  Th
 
 ModContexts offer additional information as described above, but they also come with many useful features, which will be described in more detail below.
 
-# Retrieving a ModContext
+## Retrieving a ModContext
 ## By Looping WinningOverrides
 
-## By LinkCache Lookups
+### By LinkCache Lookups
 A more typical [Record Lookup](Record-Lookup) call returns the record object directly:
 ```cs
 IFormLinkGetter<INpcGetter> myFormLink = ...;
@@ -35,8 +36,8 @@ if (myFormLink.TryResolveContext<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>
 
 Note:  The API call is much more verbose.  More on that [here](https://github.com/Mutagen-Modding/Mutagen/wiki/ModContexts#complex-call-signature).
 
-# Parent Concepts
+## Parent Concepts
 
-# Deep Record Insertion and Duplication
+## Deep Record Insertion and Duplication
 
-# Complex Call Signature
+## Complex Call Signature

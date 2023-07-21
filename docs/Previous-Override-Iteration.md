@@ -1,8 +1,9 @@
+# Previous Override Iteration
 A lot of functionality like [Record Lookup](Record-Lookup) or [Winning Overrides](Winning-Overrides) deals with the "winning" version of a record, as in the record as it exists in the last Mod to override it on the Load Order.
 
 LinkCache offers an easy way to dig deeper into the load order and access the non-winning versions of records from previous mods.
 
-# ResolveAll
+## ResolveAll
 While you can call it on a LinkCache directly, typically the preferred way to tap into this functionality is off a [FormLink](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#formlink):
 ```cs
 IFormLinkGetter<INpcGetter> npcLink = ...;
@@ -17,7 +18,7 @@ foreach (INpcGetter npcRecord in npcLink.ResolveAll(myLinkCache))
 
 With this pattern, you can loop over and interact with every override a record has from within a load order.
 
-# ResolveAllContexts
+## ResolveAllContexts
 If you look at the above code snippet, it's not as useful as it could be.  It will print all the EditorIDs, but if anything interesting happened you would not be able to tell what mod was responsible.
 
 This is because `ResolveAll` enumerates over records directly, and records do not have knowledge of what mod contained them.  They know what mod defined the record in the first place (as that's part of its FormKey), but that might not be the mod that originated the record's state being interacted with.
@@ -37,7 +38,7 @@ This will now print more interesting information, as we can now tell what mod ma
 
 However, you will notice that the call is much more complex, and requires you specify a lot more details.  You can read about why [here](https://github.com/Mutagen-Modding/Mutagen/wiki/ModContexts#complex-call-signature).
 
-# Lazy Enumeration
+## Lazy Enumeration
 This is discussed in more detail [here](Enumerable-Laziness), but it is important to only loop over what you need.  This allows the Link Cache to only parse as deep into the Load Order as it needs.
 
 ```cs

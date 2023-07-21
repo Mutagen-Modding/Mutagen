@@ -1,6 +1,7 @@
+# Environment
 When writing a program that is going to interact with Bethesda mods, there are several things you typically want to interact with.  Mutagen comes with a convenience bootstrapper object that constructs them all for a typical installation and exposes them all in one place:
 
-# Typical Single Game Usage
+## Typical Single Game Usage
 ```cs
 using (var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE))
 {
@@ -18,7 +19,7 @@ using (var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE))
 // Environment is now disposed, so all contained objects are no longer accurate or valid
 ```
 
-# GameEnvironmentState
+## GameEnvironmentState
 The environment object that is given to you has lots of useful contextual items:
 - A LoadOrder object with the current load order 
 - ReadOnly Mod objects ready for use on the load order object, when they are found to exist
@@ -27,10 +28,10 @@ The environment object that is given to you has lots of useful contextual items:
 - Load order file path (Plugins.txt)
 - Creation Club load order file path (Skyrim.ccc)
 
-# Advanced Usage
+## Advanced Usage
 The above example just shows the basic one line environment definition to get the typical environment.  Mutagen by default will construct Game Environments relative the game installation registered by Steam, as [described here](https://github.com/Mutagen-Modding/Mutagen/wiki/Game-Locations#sources). 
 
 If you have custom requirements or want to mix in output mods, etc, be sure to check out the [Environment Construction](https://github.com/Mutagen-Modding/Mutagen/wiki/Environment-Construction) documentation.
 
-# Synthesis Usage
+## Synthesis Usage
 If you're coding within a [Synthesis Patcher](https://github.com/Mutagen-Modding/Synthesis), you should not make your own environment as described here.  Synthesis provides its own environment-like `IPatcherState` object in its Run function.  [Read More](https://github.com/Mutagen-Modding/Synthesis/wiki/Coding-a-Patcher#synthesis-state-object)

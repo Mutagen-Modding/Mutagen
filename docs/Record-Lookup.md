@@ -1,4 +1,5 @@
-# TryResolve
+# Record Lookup
+## TryResolve
 `TryResolve` is the typical call for looking up records pointed to by a FormKey.  Similar to how Control-Clicking a FormID in xEdit will bring you to the record a FormID points to.  It takes a LinkCache as a parameter to the call, which will inspect the content it is attached to (whether it's a load order or a single mod) and try to locate the record that matches:
 - The FormKey (FormID)
 - The type specified
@@ -7,7 +8,7 @@ If found, the record returned will be from the mod latest in the load order whic
 
 For [Immutable caches](https://github.com/Mutagen-Modding/Mutagen/wiki/LinkCache#immutable-link-caches), the results will be cached, and subsequent lookups will be almost instant.
 
-# FormLink Entry Point
+## FormLink Entry Point
 While the LinkCache is the object doing the work, lookups are typically initiated from FormLink objects.  This is because they contain the typing information (Npc/Weapon/etc) already, so the call can be quite succinct:
 ```cs
 ILinkCache myLinkCache = ...;
@@ -19,7 +20,7 @@ if (myLink.TryResolve(myLinkCache, out var npc))
 }
 ```
 
-# LinkCache Entry Point
+## LinkCache Entry Point
 You can also initiate off of a LinkCache directly
 ```cs
 FormKey myFormKey = ...;
