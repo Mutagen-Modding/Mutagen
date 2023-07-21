@@ -1,4 +1,5 @@
-# Record Navigation Using Header Structs
+# Low Level Examples
+## Record Navigation Using Header Structs
 The following code will open a _simple_ mod file from disk, and print all EditorIDs. 
 
 ```cs

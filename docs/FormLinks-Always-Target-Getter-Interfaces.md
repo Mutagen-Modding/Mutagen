@@ -1,10 +1,11 @@
-# Complication
+# FormLinks Always Target Getter Interfaces
+## Complication
 `FormLinks` are `FormKeys` with typing information mixed in as to which record type they should associate with.  As such, they require you specify the typing you want to target.  Assuming you just wanted to target Npcs, there are still a few options:
 - `Npc` -> The direct class
 - `INpc` -> The setter interface
 - `INpcGetter` -> The readonly interface
 
-# Best Practice
+## Best Practice
 The correct usage (99% of the time) is to always use the `INpcGetter` readonly interface.
 
 `IFormLinkGetter<INpcGetter>`
@@ -15,7 +16,7 @@ Or more rarely
 
 The above still has the generic targeting the getter interface `INpcGetter`, which is the important part
 
-# Why
+## Why
 
 Consider a [LinkCache resolve](https://github.com/Mutagen-Modding/Mutagen/wiki/Record-Lookup).  A FormLink and a LinkCache are combined to look up a record with a specific FormKey and Type.  
 

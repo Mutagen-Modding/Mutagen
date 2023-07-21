@@ -78,5 +78,22 @@ nav:
   - Archives (BSAs): Archives.md
   - Strings
     - Translated Strings: Translated-Strings.md
+    - Strings Overlays
+  - Examples
+    - Print Some Content: Print-Some-Content.md
+    - Accessing Known Records
+    - Record Overrides and Duplication
+    - Low Level Examples: Low-Level-Examples.md
+  - Getting Familiar with C#
+    - Namespaces: Namespaces.md
+    - Intellisense
+    - Nullability to Indicate Record Presence: Nullability-to-Indicate-Record-Presence.md
+    - Inspect Class Definitions
+    - Debugging
+  - Best Practices and Optimizations
+    - Getters Everywhere
+    - FormLinks Always Target Getter Interfaces: FormLinks-Always-Target-Getter-Interfaces.md
+    - FormLinks vs EditorID as Identifiers: FormLinks-vs-EditorID-as-Identifiers.md
+    - FormLinks vs FormID/FormKey as Identifiers
 
 index: Pages/index.md
