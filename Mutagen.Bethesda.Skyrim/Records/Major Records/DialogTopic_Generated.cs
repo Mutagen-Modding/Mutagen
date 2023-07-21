@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
+        private static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
             IDialogTopic obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
             IAssetLinkCache? linkCache,

@@ -144,6 +144,18 @@ public partial class DialogTopic
     }
 }
 
+partial class DialogTopicSetterCommon
+{
+    private static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
+        IDialogTopic obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache,
+        AssetLinkQuery queryCategories)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 partial class DialogTopicCommon
 {
     public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)

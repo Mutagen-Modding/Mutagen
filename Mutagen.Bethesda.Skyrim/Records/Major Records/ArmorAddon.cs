@@ -69,8 +69,6 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
 
 partial class ArmorAddonCommon
 {
-    
-    
     public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
     {
         if (assetType != null && assetType != typeof(SkyrimModelAssetType)) yield break;
@@ -120,6 +118,18 @@ partial class ArmorAddonCommon
             foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Male.File.RawPath))
                 yield return assetLink;
         }
+    }
+}
+
+partial class ArmorAddonSetterCommon
+{
+    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+        IArmorAddon obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache,
+        AssetLinkQuery queryCategories)
+    {
+        throw new NotImplementedException();
     }
 }
 

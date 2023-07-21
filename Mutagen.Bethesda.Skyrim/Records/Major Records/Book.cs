@@ -147,6 +147,18 @@ partial class BookBinaryWriteTranslation
     }
 }
 
+partial class BookSetterCommon
+{
+    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+        IBook obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache,
+        AssetLinkQuery queryCategories)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 partial class BookCommon
 {
     private const string Pattern = @"<img[\w\s='/,.:]*src='img:\/\/([\w\s=/,.:]*)'[\w\s='/,.:]*>";

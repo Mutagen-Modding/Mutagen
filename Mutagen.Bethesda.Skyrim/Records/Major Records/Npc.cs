@@ -17,6 +17,18 @@ public partial class Npc
         BleedoutOverride = 0x2000_0000
     }
 }
+
+partial class NpcSetterCommon
+{
+    private static partial IEnumerable<IAssetLinkGetter> RemapResolvedAssetLinks(
+        INpc obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache,
+        AssetLinkQuery queryCategories)
+    {
+        throw new NotImplementedException();
+    }
+}
     
 partial class NpcCommon
 {

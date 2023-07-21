@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+        private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
             IScriptEntry obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
             IAssetLinkCache? linkCache,

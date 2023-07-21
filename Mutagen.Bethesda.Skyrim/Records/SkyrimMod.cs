@@ -23,6 +23,18 @@ public partial class SkyrimMod : AMod
     }
 }
 
+partial class SkyrimModSetterCommon
+{
+    private static partial IEnumerable<IAssetLinkGetter> RemapInferredAssetLinks(
+        ISkyrimMod obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache,
+        AssetLinkQuery queryCategories)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 partial class SkyrimModCommon
 {
     public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType)
