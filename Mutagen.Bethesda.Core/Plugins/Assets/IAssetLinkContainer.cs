@@ -81,7 +81,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter> EnumerateResolvedAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache,
+        IAssetLinkCache linkCache,
         Type? assetType = null)
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, assetType);
@@ -89,7 +89,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateResolvedAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache)
+        IAssetLinkCache linkCache)
         where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, typeof(TAsset))
@@ -98,7 +98,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter> EnumerateAllAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache,
+        IAssetLinkCache linkCache,
         Type? assetType = null)
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
@@ -109,7 +109,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateAllAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache)
+        IAssetLinkCache linkCache)
         where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
