@@ -1,3 +1,4 @@
+# Typical Mod Construction and Importing
 If you're only dealing with one game, then code like this is typical:
 ```cs
 public void SomeFunction()

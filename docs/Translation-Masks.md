@@ -1,3 +1,4 @@
+# Translation Masks
 Several functionalities such as Equality, DeepCopy, and a few others have support for a concept called Translation Masks.  These allow for customization of what members are involved in those operations.
 
 ## Equality

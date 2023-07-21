@@ -1,3 +1,4 @@
+# Equality Checks
 ## Basic Equality
 Mutagen generates Equals and Hash functions for all classes based on record content.  Normal C# equality checks can be used:
 ```cs

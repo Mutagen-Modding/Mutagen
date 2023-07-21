@@ -1,3 +1,4 @@
+# Asset Links
 ## What is an AssetLink
 An AssetLink is a strongly typed object wrapping what is normally a `string` subpath pointing to an asset.
 

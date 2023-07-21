@@ -1,3 +1,4 @@
+# Binary Overlay
 Binary Overlays are an alternative to the more simplistic [[Binary Importing]] concepts.
 
 ## Reasoning for an Alternate Pattern

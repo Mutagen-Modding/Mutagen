@@ -1,3 +1,4 @@
+# Flags and Enums
 A lot of Record data is exposed via flags and enums.  All of known enum types and their options are defined explicitly for strongly typed use.
 ## Normal Enum
 Certain fields have a certain subset of valid options.  These are exposed as enums, where only one choice can be made.

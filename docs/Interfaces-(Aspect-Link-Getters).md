@@ -56,7 +56,7 @@ public interface INamed
 This is an interface that any record that contains a `Name` can implement.  Now we can tweak our `PrintName` function to apply to any of these records, no matter what they are.
 
 ### Typical Usage
-### Using Aspect Interfaces as a Parameter
+#### Using Aspect Interfaces as a Parameter
 In the problem described above, a common use case is wanting to write a function that applies to multiple record types:
 ```cs
 public static void PrintName(INamedGetter namedRecord)

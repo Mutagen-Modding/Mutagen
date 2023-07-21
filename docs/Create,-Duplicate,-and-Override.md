@@ -1,3 +1,4 @@
+# Create, Duplicate, and Override
 ## Create New Records
 New records can be constructed in a few ways.  Note that a record's FormKey is required during construction, and immutable.  If you want to change the FormKey of a record, a new one should be made.  Any desired fields can be brought over via [CopyIn](Copy-Functionality#deepcopyin) mechanics.
 ### By Constructor
