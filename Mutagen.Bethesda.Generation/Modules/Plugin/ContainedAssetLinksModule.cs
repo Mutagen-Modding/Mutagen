@@ -459,7 +459,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 
             if (subFg.Count > 0)
             {
-                fg.AppendLine($"if (query.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Listed)}))");
+                fg.AppendLine($"if (queryCategories.HasFlag({nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Listed)}))");
                 using (fg.CurlyBrace())
                 {
                     fg.AppendLines(subFg);

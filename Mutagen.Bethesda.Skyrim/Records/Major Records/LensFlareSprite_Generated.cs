@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
-            if (query.HasFlag(AssetLinkQuery.Listed))
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.Texture?.Relink(mapping);
             }

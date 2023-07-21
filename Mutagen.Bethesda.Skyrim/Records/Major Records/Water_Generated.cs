@@ -3562,7 +3562,7 @@ namespace Mutagen.Bethesda.Skyrim
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            if (query.HasFlag(AssetLinkQuery.Listed))
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.NoiseLayerOneTexture?.Relink(mapping);
                 obj.NoiseLayerTwoTexture?.Relink(mapping);
