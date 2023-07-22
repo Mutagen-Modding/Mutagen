@@ -18,7 +18,7 @@ The above still has the generic targeting the getter interface `INpcGetter`, whi
 
 ## Why
 
-Consider a [LinkCache resolve](https://github.com/Mutagen-Modding/Mutagen/wiki/Record-Lookup).  A FormLink and a LinkCache are combined to look up a record with a specific FormKey and Type.  
+Consider a [LinkCache resolve](../linkcache/Record-Lookup.md).  A FormLink and a LinkCache are combined to look up a record with a specific FormKey and Type.  
 
 Using a non-getter interface is less ideal, because it limits the scope that the LinkCache can match against.  This might result in a failure to match where it might find the Npc with the target FormKey, but not be able to satisfy the more restrictive type.
 ```cs
@@ -28,7 +28,7 @@ if (myTargetNpc.TryResolve(myLinkCache, out var npc))
    // Found a INpc!
 }
 ```
-The `TryResolve` call wants to return an `INpc` type to you.  But if all it can find is a [readonly `INpcGetter`](https://github.com/Mutagen-Modding/Mutagen/wiki/Getters-Everywhere%3F), it cannot pretend that it's settable, and so fails to match.  This is the result of you asking the system to find an Npc that is settable, when the ones that exist are only getters.
+The `TryResolve` call wants to return an `INpc` type to you.  But if all it can find is a [readonly `INpcGetter`](Getters-Everywhere.md), it cannot pretend that it's settable, and so fails to match.  This is the result of you asking the system to find an Npc that is settable, when the ones that exist are only getters.
 
 You can solve this issue by modifying the TryResolve scope:
 ```cs

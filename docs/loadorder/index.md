@@ -2,9 +2,9 @@
 A Load Order represents a set of mods in a given order, where the mods loaded later "win" and override the records from previous mods.
 
 ## Getting a Load Order
-Typically you will not construct a Load Order object yourself.  Most times, using a [Game Environment](Game-Environment-Bootstrapper) is more desirable, and will have a Load Order for you to use.
+Typically you will not construct a Load Order object yourself.  Most times, using a [Game Environment](../environment/index.md) is more desirable, and will have a Load Order for you to use.
 
-If you want to construct a Load Order object more manually, this will be discussed [later](#retrieving-a-load-order) in the article.
+If you want to construct a Load Order object more manually, this will be discussed later in the article.
 
 ## ModListings
 A `ModListing` consists of:
@@ -86,7 +86,7 @@ LoadOrder<IModListing<ISkyrimModGetter>> loadOrder = LoadOrder.Import<ISkyrimMod
 ```
 
 #### Specifying Getter vs Setter
-The choice of specifying Getter or Setter interfaces (`ISkyrimMod` vs `ISkyrimModGetter`) is important, as that will drive the style that the mods are imported with.  If the Getter is specified, then the more optimized [[Binary Overlay]] systems will be used.  If Setter is specified, then all the import work will need to be done up front into a mutable object.
+The choice of specifying Getter or Setter interfaces (`ISkyrimMod` vs `ISkyrimModGetter`) is important, as that will drive the style that the mods are imported with.  If the Getter is specified, then the more optimized [Binary Overlay](../plugins/Binary-Overlay.md) systems will be used.  If Setter is specified, then all the import work will need to be done up front into a mutable object.
 
 ## Writing a Load Order
 A `LoadOrder` can also export its contents to a file.

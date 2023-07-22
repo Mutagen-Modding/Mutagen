@@ -14,7 +14,7 @@ When `...` is seen, that generally means the example will not cover how that obj
 ### Missing Namespaces
 If you're just copy pasting code, often it will not compile because some required namespaces are missing.  You can have the IDE import them by clicking on the red object in question and activating quick fixes (`Ctrl - .` in Visual Studio).
 
-[More Reading](https://github.com/Mutagen-Modding/Mutagen/wiki/Namespaces)
+[More Reading](../familiar/Namespaces.md)
 
 ## Construct an Environment
 ```cs
@@ -28,7 +28,7 @@ foreach (var listing in state.LoadOrder.ListedOrder)
 }
 ```
 
-[Read About Environments](https://github.com/Mutagen-Modding/Mutagen/wiki/Environment)
+[Read About Environments](../Environment/index.md)
 
 ## Retrieve a Mod From a Load Order
 ```cs
@@ -42,14 +42,14 @@ if (myLoadOrder.TryGetValue("MyMod.esp", out var mod))
 }
 ```
 
-[Read About Mod Retrieval](https://github.com/Mutagen-Modding/Mutagen/wiki/Load-Order#accessing-specific-listings)
+[Read About Mod Retrieval](../loadorder/index.md#accessing-specific-listings)
 
 ## Construct a ModKey
 ```cs
 var modKey = ModKey.FromFileName("Skyrim.esm");
 modKey = new ModKey("Skyrim", ModType.Plugin);
 ```
-[Read About ModKeys](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#modkey)
+[Read About ModKeys](../plugin/ModKey,-FormKey,-FormLink.md#modkey)
 
 ## Get List of Masters From A Mod
 ### Via MasterReferenceCollection
@@ -100,7 +100,7 @@ IMasterReferenceCollection masterCollection = ...;
 FormID formID = masterCollection.GetFormID(formKey);
 ```
 
-[Read About FormKeys](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#formkey)
+[Read About FormKeys](../plugin/ModKey,-FormKey,-FormLink.md#formkey)
 
 ## Convert FormKey to FormLink
 ```cs
@@ -109,7 +109,7 @@ FormKey formKey = ...;
 var npcLink = formKey.ToLink<INpcGetter>();
 ```
 
-[Read About FormKeys](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#formkey)
+[Read About FormKeys](../plugin/ModKey,-FormKey,-FormLink.md#formkey)
 
 ## Convert MajorRecord to FormLink
 ```cs
@@ -153,7 +153,7 @@ if (target.FormKey.Equals(npc.Race))
 }
 ```
 
-[Read About FormKeys](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#formkey)
+[Read About FormKeys](../plugin/ModKey,-FormKey,-FormLink.md#formkey)
 
 ### By FormLink
 ```cs
@@ -166,7 +166,7 @@ if (target.Equals(npc.Race))
 }
 ```
 
-[Read About FormLinks](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#formlink)
+[Read About FormLinks](../plugin/ModKey,-FormKey,-FormLink.md#formlink)
 
 ### Using FormKey Mapping Library
 ```cs
@@ -192,5 +192,5 @@ var dup2 = someMod.Npcs.DuplicateInAsNewRecord(newFormKey);
 var dup3 = someMod.Npcs.DuplicateInAsNewRecord(someEditorId);
 ```
 
-[Read more about duplication](https://github.com/Mutagen-Modding/Mutagen/wiki/Create%2C-Duplicate%2C-and-Override#by-duplication)
-[Read more about FormKey Persistence](https://github.com/Mutagen-Modding/Mutagen/wiki/FormKey-Allocation-and-Persistence)
+[Read more about duplication](../plugin/Create,-Duplicate,-and-Override.md#by-duplication)
+[Read more about FormKey Persistence](../plugin/FormKey-Allocation-and-Persistence.md)

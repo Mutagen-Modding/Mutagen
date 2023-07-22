@@ -1,13 +1,13 @@
 # Link Cache
 The LinkCache is the record lookup engine.  It powers a lot of functionality, such as:
-- Looking up records by [FormKey/FormLink](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink#resolves)
-- Finding the [Winning Override](Winning-Overrides) in a [Load Order](Load-Order)
-- [Iterating over all versions of a record](Previous-Override-Iteration) within a [Load Order](Load-Order)
+- Looking up records by [FormKey/FormLink](../plugins/ModKey,-FormKey,-FormLink.md#resolves)
+- Finding the [Winning Override](Winning-Overrides) in a [Load Order](../loadorder/index.md)
+- [Iterating over all versions of a record](Previous-Override-Iteration) within a [Load Order](../loadorder/index.md)
 
 ## Context
 Every LinkCache is created from a context:
 - A single mod
-- A [Load Order](Load-Order)
+- A [Load Order](../loadorder/index.md)
 - Any arbitrary enumeration of mods
 
 ```cs
@@ -65,7 +65,7 @@ Mutable components of Link Caches do not cache records, and so will not use memo
 Since the LinkCache is just an object caching records relative to a context, you can easily release this memory by tossing your LinkCache away for the Garbage Collector to pick up once you're done with it, or want to make a new fresh cache.  (Perhaps a Clear() call will be added in the future, too)
 
 ### Identifier Only Caches
-In some situations like the [FormKey Picker](FormKey-Picker), we only care about the FormKey and EditorID of records.  Caching the entire record is a waste of memory.
+In some situations like the [FormKey Picker](../wpf/FormKey-Picker.md), we only care about the FormKey and EditorID of records.  Caching the entire record is a waste of memory.
 
 ```cs
 var linkCache = myLoadOrder.ToImmutableLinkCache(LinkCachePreferences.OnlyIdentifiers());

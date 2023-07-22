@@ -1,6 +1,6 @@
 # Create, Duplicate, and Override
 ## Create New Records
-New records can be constructed in a few ways.  Note that a record's FormKey is required during construction, and immutable.  If you want to change the FormKey of a record, a new one should be made.  Any desired fields can be brought over via [CopyIn](Copy-Functionality#deepcopyin) mechanics.
+New records can be constructed in a few ways.  Note that a record's FormKey is required during construction, and immutable.  If you want to change the FormKey of a record, a new one should be made.  Any desired fields can be brought over via [CopyIn](Copy-Functionality.md#deepcopyin) mechanics.
 ### By Constructor
 Any standalone record can be made by using its constructor.
 ```cs
@@ -17,7 +17,7 @@ var potion = mod.Potions.AddNew();
 The new record will have the next available `FormKey` from that mod based on the metadata in its header, and automatically be added to the Group it originated from.  Note this is not applicable to Binary Overlays, as they are getter only interfaces, so this concept is not applicable.  This is instead meant for new Mod objects that have been created for the purpose of modification and eventual export.
 
 ### By Duplication
-Duplicating a record is the equivalent of creating a fresh record, and then copying in data to match a different record.  This can be done via [CopyIn](Copy-Functionality#deepcopyin) API, but there are some convenience methods for this as well
+Duplicating a record is the equivalent of creating a fresh record, and then copying in data to match a different record.  This can be done via [CopyIn](Copy-Functionality.md#deepcopyin) API, but there are some convenience methods for this as well
 
 ```csharp
 INpcGetter sourceNpc = ...;
@@ -60,4 +60,4 @@ outputMod.Npcs.Add(npcCopy);
 This strategy works well if you might change your mind and not add the copied record to the outgoing mod.  It lets you get a mutable version of the record without adding it to your outgoing mod until you are certain you want to include it.
 
 ### Nested Records
-Some records like Placed Objects and Cells are often nested underneath other records.  This makes it harder to follow the above patterns.  For these you will want to make use of the [[ModContexts]] concepts.
+Some records like Placed Objects and Cells are often nested underneath other records.  This makes it harder to follow the above patterns.  For these you will want to make use of the [../linkcache/ModContexts.md] concepts.

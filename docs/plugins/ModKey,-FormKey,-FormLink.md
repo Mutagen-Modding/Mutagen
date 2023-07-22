@@ -79,7 +79,7 @@ They contain:
 As an example of the type safety they provide, consider an NPC's `Race` member, which is of type: `FormLink<IRace>`.  This link is not allowed to point to or link against any record that is not a `Race`.  It is hard to accidentally set a `FormLink<IRace>` link to point to an `IPotion` record, as attempting to do so would typically result in a compiler error.
 
 ## Resolves
-Combine a FormLink and a [[LinkCache]] to look up a record.  (The LinkCache is associated with a specific context like a load order or a single mod)
+Combine a FormLink and a [LinkCache](../linkcache/index.md) to look up a record.  (The LinkCache is associated with a specific context like a load order or a single mod)
 ```cs
 var someItemLink = new FormLink<IItemGetter>(FormKey.Factory("123456:Skyrim.esm"));
 

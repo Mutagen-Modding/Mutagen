@@ -104,7 +104,7 @@ public bool SecondSetting { get; set; }
 ```
 
 ### ObjectNameMember
-This attribute applies to the settings class itself, and defines the object type naming to show when [nested classes](Nesting) are involved.
+This attribute applies to the settings class itself, and defines the object type naming to show when [nested classes](#Nesting) are involved.
 
 ```cs
 [ObjectNameMember(nameof(TestSettings.MyString))]

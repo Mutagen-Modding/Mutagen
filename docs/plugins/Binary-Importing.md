@@ -21,4 +21,4 @@ var mod = OblivionMod.CreateFromBinary(
 This import call will only process and import Potions and NPCs.
 
 ## Notes
-While these basic import features sounds fundamental, they are overshadowed and depreciated somewhat by the [[Binary Overlay]] concepts.
+While these basic import features sounds fundamental, they are overshadowed and depreciated somewhat by the [Binary Overlay](Binary-Overlay.md) concepts.

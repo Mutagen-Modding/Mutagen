@@ -55,7 +55,7 @@ if (e == (CreatureType)13)
 With this style API, you can still access all unknown values as needed.
 
 ## Flags Enum
-Certain fields are allowed to have several values, and so make use of C#'s [Flags] enum systems.
+Certain fields are allowed to have several values, and so make use of C#'s flags enum systems.
 
 For example, Oblivion `NPC`'s flags look like this:
 ```cs

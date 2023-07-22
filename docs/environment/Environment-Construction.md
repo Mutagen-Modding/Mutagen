@@ -60,7 +60,7 @@ Order between multiple `TransformModListings` is respected, but will always come
 This lets you mix in a mod that you plan on exporting content with.  It will be added to the end of the LinkCache as a mutable mod that is safe to change.   You can put multiple `WithOutputMod` calls in your builder chain, and the order they appear will determine how they're placed on the Load Order and which ends up being the winning override.
 
 #### WithTargetDataFolder
-Allows you to customize what game folder the environment will be constructed against.  Useful when dealing with [ad-hoc installations](https://github.com/Mutagen-Modding/Mutagen/wiki/Game-Locations#adhoc-installations).
+Allows you to customize what game folder the environment will be constructed against.  Useful when dealing with [ad-hoc installations](Game-Locations.md#adhoc-installations).
 
 #### WithLoadOrder
 This is a `TransformLoadOrderListings` style call that simply discards any existing load order and injects an explicitly provided one.  Will respect the ordering alongside other `TransformLoadOrderListings` phase calls.

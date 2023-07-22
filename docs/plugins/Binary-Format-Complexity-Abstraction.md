@@ -2,7 +2,7 @@
 Bethesda's binary format contains a lot implementation complexities that are unrelated to the actual content of the records.  A lot of times the exposure of these details are a source of confusion, and don't add much upside in the way of flexibility or power into the hands of the user.  Mutagen attempts to abstract these complexities away so that the end user is dealing with the distilled record content more directly, rather than wading through the gritty specifics that only matter in the context of their binary format on disk.
 
 ## FormKeys and FormLinks
-This topic was covered in detail in the [ModKey, FormKey, FormLink](ModKey%2C-FormKey%2C-FormLink#formkeys) section, and so will not be covered here.
+This topic was covered in detail in the [ModKey, FormKey, FormLink](ModKey,-FormKey,-FormLink.md#formkeys) section, and so will not be covered here.
 
 ## Record Types
 ### Four Character Headers

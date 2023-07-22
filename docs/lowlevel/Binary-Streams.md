@@ -4,5 +4,5 @@
 
 ## MutagenBinaryReadStream
 This is just a further extension on BinaryReadStream, offering additionally:
-- A [[HeaderConstants]] object for reference when alignment is important
+- A [Header Struct](Header-Structs.md) object for reference when alignment is important
 - An offset member, to help calculate position relative to a source file, if the MutagenBinaryReadStream happens to be a substream on only a slice of data.

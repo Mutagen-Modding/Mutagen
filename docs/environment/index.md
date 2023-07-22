@@ -29,9 +29,9 @@ The environment object that is given to you has lots of useful contextual items:
 - Creation Club load order file path (Skyrim.ccc)
 
 ## Advanced Usage
-The above example just shows the basic one line environment definition to get the typical environment.  Mutagen by default will construct Game Environments relative the game installation registered by Steam, as [described here](https://github.com/Mutagen-Modding/Mutagen/wiki/Game-Locations#sources). 
+The above example just shows the basic one line environment definition to get the typical environment.  Mutagen by default will construct Game Environments relative the game installation registered by Steam, as [described here](Game-Locations.md#sources). 
 
-If you have custom requirements or want to mix in output mods, etc, be sure to check out the [Environment Construction](https://github.com/Mutagen-Modding/Mutagen/wiki/Environment-Construction) documentation.
+If you have custom requirements or want to mix in output mods, etc, be sure to check out the [Environment Construction](Environment-Construction.md) documentation.
 
 ## Synthesis Usage
 If you're coding within a [Synthesis Patcher](https://github.com/Mutagen-Modding/Synthesis), you should not make your own environment as described here.  Synthesis provides its own environment-like `IPatcherState` object in its Run function.  [Read More](https://github.com/Mutagen-Modding/Synthesis/wiki/Coding-a-Patcher#synthesis-state-object)

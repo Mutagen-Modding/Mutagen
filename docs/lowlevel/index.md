@@ -1,11 +1,11 @@
 # Low Level Tools
-The API and tools listed in the [[Plugin Record Suite]] are intended to expose Bethesda records in an organized, strongly typed, and (hopefully) less error prone fashion.  However, some tasks and some users require a less safe and more direct approach to get the job done.
+The API and tools listed in the [Plugin Record Suite](../plugins/index.md) are intended to expose Bethesda records in an organized, strongly typed, and (hopefully) less error prone fashion.  However, some tasks and some users require a less safe and more direct approach to get the job done.
 
 This section is about some of the mechanics and tools under the hood, and are recommended for more advanced users.
 
 ## Reasoning and Typical Applications of Low Level Tooling
 ## Cross-game Processing
-The [[Plugin Record Suite]] objects fall short when the task you are trying to accomplish is to be applied to multiple Bethesda games.  There are no halfway hybrid generated classes that can parse and contain both Skyrim and Oblivion NPCs, for example.
+The [Plugin Record Suite](../plugins/index.md) objects fall short when the task you are trying to accomplish is to be applied to multiple Bethesda games.  There are no halfway hybrid generated classes that can parse and contain both Skyrim and Oblivion NPCs, for example.
 
 Interfaces can provide a small bit of relief, allowing some fields that are common to many records to be exposed.  `INamed` is an example of this.  Both Skyrim and Oblivion NPCs implement it, and so code that processed an `IEnumerable<INamed>` could handle both.
 

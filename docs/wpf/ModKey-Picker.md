@@ -2,11 +2,11 @@
 The ModKey Picker helps users select mod(s) by typing in their names.
 
 The picker can reference certain objects to know what mods actually exist on a user's active load order:
-- A [[Load Order]] object
+- A [Load Order](../loadorder/index.md) object
 - Any enumerable of type `ModKey` or `IModListingGetter`
 - An `IObservable<IChangeSet<T>>` of type `ModKey` or `IModListingGetter`. (Reactive Extension concepts)
 
-Make sure you've added the [Required Resources](Adding-Required-Resources), or the controls will not have any display.
+Make sure you've added the [Required Resources](Adding-Required-Resources.md), or the controls will not have any display.
 
 The Mutagen [Test Display](https://github.com/Mutagen-Modding/Mutagen/tree/release/Mutagen.Bethesda.WPF.TestDisplay) app utilizes the ModKey pickers, and provides a good example of how to use them from within a WPF app.
 

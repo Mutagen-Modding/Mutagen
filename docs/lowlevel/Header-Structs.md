@@ -7,7 +7,7 @@ Using Header Structs, very performant and low level parsing is possible while re
 Some notable features:
 - **Alignment is handled internally**.  User can access the fields they are interested in, without needing to worry about proper offsetting.
 - **No parsing is done except what the user asks for**.  If only one field is accessed, then most of the header data will remain unparsed, and that work skipped.
-- **Code written with this setup can work with any Bethesda game**, as swapping out [[GameConstants|Game Constants]] will realign everything properly.
+- **Code written with this setup can work with any Bethesda game**, as swapping out [Game Constants](Game-Constants.md) will realign everything properly.
 - **No data is copied**, as the structs are simply overlaid on top of the original source bytes.
 
 They still require a lot of knowledge of the underlying binary structures of a mod, but the system goes a long way to empower the user to do it quickly, and with minimal potential for typo or misalignment errors.
@@ -72,7 +72,7 @@ Typical accessors include:
 - `TotalLength`
 - Other fields more specialized for the category (`MajorRecordFlags`, `FormID`, etc)
 
-All of these fields align themselves properly by bouncing off a [[GameConstants|Game Constants]] object which has all the appropriate alignment information.
+All of these fields align themselves properly by bouncing off a [Game Constants](Game-Constants.md)object which has all the appropriate alignment information.
 
 #### Frame
 Frames add a single additional member `ReadOnlyMemorySlice<byte> Content { get; }`, and thus overlay on top of a whole record in its entirety, both the header and its content.  This struct offers a nice easy package to access anything about an entire record in one location.

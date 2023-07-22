@@ -44,7 +44,7 @@ We're going to start out with the one upside that EditorIDs have: readability.
 Generally, this is the reason people initially gravitate towards EditorIDs, as lots of other tooling uses EditorIDs as they are more human friendly.
 
 #### FormLink Mapping Brings Readability to FormLink-Based Systems
-Work has been done to mitigate this readability downside of FormLinks.  [FormLink Mapping](https://github.com/Mutagen-Modding/Mutagen/wiki/Reference-FormLinks-By-EditorID) is a system where you can point to a mod and generate mappings so that you can reference and use FormLinks by their EditorID name.
+Work has been done to mitigate this readability downside of FormLinks.  [FormLink Mapping](https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys) is a system where you can point to a mod and generate mappings so that you can reference and use FormLinks by their EditorID name.
 
 This allows for the best of both worlds, where the code is human readable by writing EditorIDs, while still using FormLinks under the hood for the code to use.  These systems mostly nullify the readability problem that FormKeys have.
 

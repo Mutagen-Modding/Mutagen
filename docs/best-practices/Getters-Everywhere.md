@@ -27,7 +27,7 @@ foreach (INpcGetter npcGetter in env.LoadOrder.PriorityOrder.Npc().WinningOverri
 
 ## Reasoning
 ### Readonly Increases Speed
-A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](https://github.com/Mutagen-Modding/Mutagen/wiki/Binary-Overlay).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
+A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](../plugins/Binary-Overlay.md).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
 
 As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means creating a more "normal" settable `Npc` class, and reading ALL the data within that record to fill out each field one by one.  This is often a waste of time.
 

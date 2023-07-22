@@ -12,7 +12,7 @@ ModContexts offer additional information as described above, but they also come 
 ## By Looping WinningOverrides
 
 ### By LinkCache Lookups
-A more typical [Record Lookup](Record-Lookup) call returns the record object directly:
+A more typical [Record Lookup](Record-Lookup.md) call returns the record object directly:
 ```cs
 IFormLinkGetter<INpcGetter> myFormLink = ...;
 

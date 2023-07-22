@@ -1,5 +1,5 @@
 # Binary Overlay
-Binary Overlays are an alternative to the more simplistic [[Binary Importing]] concepts.
+Binary Overlays are an alternative to the more simplistic [Binary Importing](Binary-Importing.md) concepts.
 
 ## Reasoning for an Alternate Pattern
 ### Memory Usage is Frontloaded

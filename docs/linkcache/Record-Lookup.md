@@ -6,7 +6,7 @@
 
 If found, the record returned will be from the mod latest in the load order which is the "winning" override.
 
-For [Immutable caches](https://github.com/Mutagen-Modding/Mutagen/wiki/LinkCache#immutable-link-caches), the results will be cached, and subsequent lookups will be almost instant.
+For [Immutable caches](index.md#immutable-link-caches), the results will be cached, and subsequent lookups will be almost instant.
 
 ## FormLink Entry Point
 While the LinkCache is the object doing the work, lookups are typically initiated from FormLink objects.  This is because they contain the typing information (Npc/Weapon/etc) already, so the call can be quite succinct:
@@ -45,4 +45,4 @@ if (myLinkCache.TryResolve<INpcGetter>(myFormKey, out var npc))
 }
 ```
 
-Now that the type is specified, it will run faster and be able to return a more appropriate type (INpcGetter) for you to use.  As mentioned earlier, though, it is preferable to just [use FormLinks everywhere](https://github.com/Mutagen-Modding/Mutagen/wiki/FormLinks-Instead-of-FormID-FormKey) and initiate off of those.
+Now that the type is specified, it will run faster and be able to return a more appropriate type (INpcGetter) for you to use.

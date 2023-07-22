@@ -65,6 +65,7 @@ nav:
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
     - Printing: plugins/Printing.md
     - Typical Mod Construction and Importing: plugins/Typical-Mod-Construction-and-Importing.md
+    - FormKey Allocation and Persistence: FormKey-Allocation-and-Persistence.md
   - Environment:
     - environment/index.md
     - Environment Construction: environment/Environment-Construction.md
@@ -131,12 +132,12 @@ nav:
     - Binary Utility: lowlevel/Binary-Utility.md
   - Game Specific Documentation:
     - Oblivion:
-      - Oblivion Aspect Interfaces: game-specific/Oblivion-Aspect-Interfaces.md
-      - Oblivion Link Interfaces: game-specific/Oblivion-Link-Interfaces.md
+      - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
+      - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
     - Skyrim:
-      - Skyrim Perks: game-specific/Skyrim-Perks.md
-      - Skyrim Aspect Interfaces: game-specific/Skyrim-Aspect-Interfaces.md
-      - Skyrim Link Interfaces: game-specific/Skyrim-Link-Interfaces.md
+      - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
+      - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
+      - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
   - Correctness: top/Correctness.md
 
 index: Pages/index.md

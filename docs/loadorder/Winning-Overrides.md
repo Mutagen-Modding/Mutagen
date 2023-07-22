@@ -12,12 +12,12 @@ foreach (var npc in loadOrder.PriorityOrder.Npc().WinningOverrides())
 }
 ```
 
-If you then want to take winning overrides and add them to your mod with some modifications, this topic is covered more in depth [here](https://github.com/Mutagen-Modding/Mutagen/wiki/Create,-Duplicate,-and-Override#getoraddasoverride).
+If you then want to take winning overrides and add them to your mod with some modifications, this topic is covered more in depth [here](../plugins/Create,-Duplicate,-and-Override.md#getoraddasoverride).
 
 ## Winning Context Overrides
 The above loop will just give you each record in the game with it's "winning" content.  Sometimes more information is needed, though.
 
-You can instead opt to iterate over [ModContexts](https://github.com/Mutagen-Modding/Mutagen/wiki/ModContexts) which is a wrapper object containing the record of interest PLUS other useful information and features.
+You can instead opt to iterate over [ModContexts](../linkcache/ModContexts.md) which is a wrapper object containing the record of interest PLUS other useful information and features.
 
 ```csharp
 LoadOrder<ModListing<ISkyrimModGetter>> loadOrder = ...;
@@ -28,4 +28,4 @@ foreach (var npcContext in loadOrder.PriorityOrder.Npc().WinningContextOverrides
 }
 ```
 
-You can read more about [ModContexts](https://github.com/Mutagen-Modding/Mutagen/wiki/ModContexts) to see all the features they offer.
+You can read more about [ModContexts](../linkcache/ModContexts.md) to see all the features they offer.

@@ -4,11 +4,11 @@ The FormKey Picker helps users select record(s) by typing in:
 - FormKeys
 - FormIDs (Mod indices relative to current load order)
 
-The picker can reference a [[LinkCache]] to do lookups to help display and locate records that actually exist in the user's active load order.
+The picker can reference a [LinkCache](../linkcache/index.md) to do lookups to help display and locate records that actually exist in the user's active load order.
 
 They can also be scoped to only allow or search for specific record types, if desired.
 
-Make sure you've added the [Required Resources](Adding-Required-Resources), or the controls will not have any display.
+Make sure you've added the [Required Resources](Adding-Required-Resources.md), or the controls will not have any display.
 
 The Mutagen [Test Display](https://github.com/Mutagen-Modding/Mutagen/tree/release/Mutagen.Bethesda.WPF.TestDisplay) app utilizes the FormKey pickers, and provides a good example of how to use them from within a WPF app.
 
