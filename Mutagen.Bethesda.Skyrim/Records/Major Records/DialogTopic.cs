@@ -152,7 +152,7 @@ partial class DialogTopicSetterCommon
         IAssetLinkCache? linkCache,
         AssetLinkQuery queryCategories)
     {
-        throw new NotImplementedException();
+        // Nothing to do here, we can't change the form key of the dialogue or any other parameters, like quest editor id
     }
 }
 

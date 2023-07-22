@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Skyrim.Assets;
+using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -23,7 +24,31 @@ partial class ScriptEntrySetterCommon
         IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
         AssetLinkQuery queryCategories)
     {
-        throw new NotImplementedException();
+        if (!queryCategories.HasFlag(AssetLinkQuery.Inferred)) return;
+
+        if (string.IsNullOrWhiteSpace(obj.Name)) return;
+
+        var compiledAsset = new AssetLink<SkyrimScriptCompiledAssetType>(obj.Name + SkyrimScriptCompiledAssetType.PexExtension);
+        var sourceAsset = new AssetLink<SkyrimScriptSourceAssetType>(obj.Name + SkyrimScriptSourceAssetType.PscExtension);
+
+        if (mapping.TryGetValue(compiledAsset, out var newCompiledAsset))
+        {
+            var directoryParts = newCompiledAsset.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (directoryParts.Length > 1)
+            {
+                var newName = directoryParts[^1].TrimEnd(SkyrimScriptCompiledAssetType.PexExtension);
+                obj.Name = newName;
+            }
+        }
+        else if (mapping.TryGetValue(sourceAsset, out var newSourceAsset))
+        {
+            var directoryParts = newSourceAsset.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (directoryParts.Length > 1)
+            {
+                var newName = directoryParts[^1].TrimEnd(SkyrimScriptSourceAssetType.PscExtension);
+                obj.Name = newName;
+            }
+        }
     }
 }
 
