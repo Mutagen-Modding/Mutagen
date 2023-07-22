@@ -42,7 +42,6 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
-    - navigation.sections
     - navigation.indexes 
     
 nav:
@@ -95,16 +94,16 @@ nav:
     - Inspect Class Definitions
     - Debugging
   - Best Practices and Optimizations:
-    - Getters Everywhere
+    - Getters Everywhere:
     - FormLinks Always Target Getter Interfaces: FormLinks-Always-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: FormLinks-vs-EditorID-as-Identifiers.md
-    - FormLinks vs FormID/FormKey as Identifiers
-    - Reference FormLinks By EditorID
-    - LinkCache Resolution Type Choice
-    - Lists vs HashSet
+    - FormLinks vs FormID/FormKey as Identifiers:
+    - Reference FormLinks By EditorID:
+    - LinkCache Resolution Type Choice:
+    - Lists vs HashSet:
     - Enumerable Laziness: Enumerable-Laziness.md
     - TryGet Concepts: TryGet-Concepts.md
-    - Access Overlays Once
+    - Access Overlays Once:
     - ITPO Avoidance: ITPO-Avoidance.md
     - Reuse Translation Masks: Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: Modifying-Groups-Being-Iterated.md
