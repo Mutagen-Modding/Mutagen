@@ -74,32 +74,54 @@ nav:
     - Mod Contexts: ModContexts.md
     - Previous Override Iteration: Previous-Override-Iteration.md
   - Load Order:
+    # - Load-Order.md
     - Winning Override Iteration: Winning-Overrides.md
+    # - Has Mod Assertions
+    # - Live File Monitoring
   - Archives (BSAs): Archives.md
   - Strings:
     - Translated Strings: Translated-Strings.md
+    # - Strings Overlays
   - Examples:
     - Print Some Content: Print-Some-Content.md
+    # - Accessing Known Records
+    # - Record Overrides and Duplication
     - Low Level Examples: Low-Level-Examples.md
   - Getting Familiar with C#:
     - Namespaces: Namespaces.md
+    # - Intellisense
     - Nullability to Indicate Record Presence: Nullability-to-Indicate-Record-Presence.md
+    # - Inspect Class Definitions
+    # - Debugging
   - Best Practices and Optimizations:
+    # - Getters Everywhere:
     - FormLinks Always Target Getter Interfaces: FormLinks-Always-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: FormLinks-vs-EditorID-as-Identifiers.md
+    # - FormLinks vs FormID/FormKey as Identifiers:
+    # - Reference FormLinks By EditorID:
+    # - LinkCache Resolution Type Choice:
+    # - Lists vs HashSet:
     - Enumerable Laziness: Enumerable-Laziness.md
     - TryGet Concepts: TryGet-Concepts.md
+    # - Access Overlays Once:
     - ITPO Avoidance: ITPO-Avoidance.md
     - Reuse Translation Masks: Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: Modifying-Groups-Being-Iterated.md
-  - WPF Library: WPF-Library.md
+    # - Testing:
+    # - Auto Fixture:
+    # - Major Record Test Building:
+  - WPF Library:
+    - WPF-Library.md
     - FormKey Picker: FormKey-Picker.md
     - ModKey Picker: ModKey-Picker.md
+    # - Load Order Display
     - Reflection Powered Settings: Reflection-Powered-Settings.md
     - Adding Required Resources: Adding-Required-Resources.md
+  # - Dependency Injection: Dependency Injection
   - FormKey Allocation/Persistence: FormKey-Allocation-and-Persistence.md
   - Json: Json.md
-  - Low Level Tools: Low-Level-Tools.md
+  - Low Level Tools:
+    - Low-Level-Tools.md
     - Header Structs: Header-Structs.md
     - Game Constants: Game-Constants.md
     - Binary Streams: Binary-Streams.md
