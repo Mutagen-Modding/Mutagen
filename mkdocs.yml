@@ -80,21 +80,21 @@ nav:
     - Has Mod Assertions
     - Live File Monitoring
   - Archives (BSAs): Archives.md
-  - Strings
+  - Strings:
     - Translated Strings: Translated-Strings.md
     - Strings Overlays
-  - Examples
+  - Examples:
     - Print Some Content: Print-Some-Content.md
     - Accessing Known Records
     - Record Overrides and Duplication
     - Low Level Examples: Low-Level-Examples.md
-  - Getting Familiar with C#
+  - Getting Familiar with C#:
     - Namespaces: Namespaces.md
     - Intellisense
     - Nullability to Indicate Record Presence: Nullability-to-Indicate-Record-Presence.md
     - Inspect Class Definitions
     - Debugging
-  - Best Practices and Optimizations
+  - Best Practices and Optimizations:
     - Getters Everywhere
     - FormLinks Always Target Getter Interfaces: FormLinks-Always-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: FormLinks-vs-EditorID-as-Identifiers.md
