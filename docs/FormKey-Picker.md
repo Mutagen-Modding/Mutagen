@@ -1,3 +1,4 @@
+# FormKey Picker
 The FormKey Picker helps users select record(s) by typing in:
 - EditorIDs
 - FormKeys
@@ -11,12 +12,12 @@ Make sure you've added the [Required Resources](Adding-Required-Resources), or t
 
 The Mutagen [Test Display](https://github.com/Mutagen-Modding/Mutagen/tree/release/Mutagen.Bethesda.WPF.TestDisplay) app utilizes the FormKey pickers, and provides a good example of how to use them from within a WPF app.
 
-# FormKey Picker
+## FormKey Picker
 This is a picker to select a single FormKey.
 
 ![FormKey Picker](https://i.imgur.com/gtlg5Md.gif)
 
-## View Side
+### View Side
 ```cs
 <UserControl
     ...
@@ -28,7 +29,7 @@ This is a picker to select a single FormKey.
 </UserControl>
 ```
 
-## ViewModel Side
+### ViewModel Side
 ```cs
 // Some mechanics shown here are from `ReactiveUI`, or `Noggog.WPF`
 public class MyViewModel : ViewModel
@@ -62,12 +63,12 @@ public class MyViewModel : ViewModel
 }
 ```
 
-# FormKey Multipicker
+## FormKey Multipicker
 This is a picker to select any number of FormKeys.
 
 ![FormKey Multipicker](https://i.imgur.com/PlVXxu5.gif)
 
-## View Side
+### View Side
 ```cs
 <UserControl
     ...
@@ -79,7 +80,7 @@ This is a picker to select any number of FormKeys.
 </UserControl>
 ```
 
-## ViewModel Side
+### ViewModel Side
 ```cs
 // Some mechanics shown here are from `ReactiveUI`, or `Noggog.WPF`
 public class MyViewModel : ViewModel

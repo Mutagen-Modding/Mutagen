@@ -1,4 +1,5 @@
-# BinaryStringUtility
+# Binary Utility
+## BinaryStringUtility
 Bethesda games store their strings on disk in a single byte format, with a null terminator.  There are some convenience parsing functions inside `BinaryStringUtility` to convert these to C# strings.
 
 ### ToZString
@@ -21,7 +22,7 @@ var amountParsed = str.Length + 1; // +1 for the null termination that was trimm
 ```
 
 
-# SubRecord Iteration and Location
+## SubRecord Iteration and Location
 There are some convenience methods for iterating and locating Subrecords in a set of raw bytes in `UtilityTranslation`.  These are extension methods onto `HeaderConstants` and `MajorRecordFrame`, so they can be used directly from those objects.
 
 ### EnumerateSubrecords
@@ -104,7 +105,7 @@ if (finds.TryGetValue(full, out loc))
 }
 ```
 
-# RecordLocator
+## RecordLocator
 `RecordLocator` is a convenience class that processes a mod stream and returns all the locations of Groups and MajorRecords.
 
 
@@ -164,5 +165,5 @@ This class just provides a common use case of locating records.  If more fine tu
 
 Note that this class uses FormID, and does not make use of the abstraction concepts found in [[ModKey, FormKey, FormLink]]
 
-# Decompression
+## Decompression
 MajorRecords with their compression flag enabled come in a compressed format.  The byte content needs to be unzipped before it can be read.

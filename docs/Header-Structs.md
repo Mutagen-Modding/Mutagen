@@ -1,4 +1,5 @@
-# General Concept
+# Header Structs
+## General Concept
 Header Structs are lightweight overlays that "lay" on top of some bytes and offers API to retrieve the various header fields or content bytes they contain.  They are extremely cheap to create, as they do no parsing unless asked.  They are aware of any differences in data alignments from game to game, so the same systems can be applied even if alignments change slightly.
 
 Using Header Structs, very performant and low level parsing is possible while retaining a large degree of safety and usability.  
@@ -11,7 +12,7 @@ Some notable features:
 
 They still require a lot of knowledge of the underlying binary structures of a mod, but the system goes a long way to empower the user to do it quickly, and with minimal potential for typo or misalignment errors.
 
-# Example Usage
+## Example Usage
 The following code will print all EditorIDs of all npcs from any game type.
 ```csharp
 var modPath = ModPath.FromPath("SomeFolder/Skyrim.esm");
@@ -47,9 +48,9 @@ while (stream.TryReadGroupFrame(out var groupFrame))
 
 This code will only do the minimal parsing necessary to locate/print the EditorIDs.  Most data will be skipped over and left unparsed.
 
-# Headers, Frames and Pins
+## Headers, Frames and Pins
 Header Structs come in a few combinations and flavors.  The above code makes use of several of them.
-## Categories
+### Categories
 There are Header Structs for:
 - Groups
 - MajorRecords
@@ -58,10 +59,10 @@ There are Header Structs for:
 
 These are the few different types of records we can expect to encounter in a mod file, and there is a separate struct for each, offering the specific API for its type.
 
-## Flavors
+### Flavors
 Each category also comes in a few flavors.
 
-### Header
+#### Header
 This is the most basic version that has been discussed in the descriptions above.  It overlays on top of bytes and offers API to access the various aspects of the header.
 
 Typical accessors include:
@@ -73,13 +74,13 @@ Typical accessors include:
 
 All of these fields align themselves properly by bouncing off a [[GameConstants|Game Constants]] object which has all the appropriate alignment information.
 
-### Frame
+#### Frame
 Frames add a single additional member `ReadOnlyMemorySlice<byte> Content { get; }`, and thus overlay on top of a whole record in its entirety, both the header and its content.  This struct offers a nice easy package to access anything about an entire record in one location.
 
-### Pin
+#### Pin
 Pins add yet another single additional member `int Location { get; }`.  This represents the location a frame exists relative to its parent.  This facilitates parsing and operations where knowing a record's location is important.
 
-# Additional Functionality
+## Additional Functionality
 ## Iteration
 Both Group and MajorRecord Frames offer iteration functionality.
 ```
@@ -90,7 +91,7 @@ foreach (var subrecordPin in majorRecordFrame)
 ```
 This allows the user to easily iterate and process contained records without needing to manually construct and align the headers themselves.
 
-## Subrecord Location
+### Subrecord Location
 MajorRecord Frames also have API for searching for a specific subrecord type.
 
 ```
@@ -105,8 +106,8 @@ This allows users to easily locate a specific record they are looking for, witho
 
 Note that it does iterate each Subrecord internally, so it is not a good solution if you are trying to process/find a large portion of Subrecords within a single Major Record.  It is more appropriate for finding one or two specific ones.  If you want to process all subrecords by type, it is recommended you iterate and switch on the type directly, or store the resulting SubrecordPins in a dictionary for later use.
 
-## Subrecord Frame Data Interpretation
-### Primitives
+### Subrecord Frame Data Interpretation
+#### Primitives
 Once a Subrecord Frame is located that you wish to retrieve data from, the content is still only offered as raw bytes (or rather, `ReadOnlyMemorySlice<byte>`).  There are a lot of functions to help interpret that data to the appropriate type, while confirming correctness.
 ```
 var subrecordFrame = ...;
@@ -120,14 +121,14 @@ var subrecordFrame = ...;
 int contentAsInt = subrecordFrame.Content.Int32();
 ```
 This route will not do the check to enforce that the content length is exactly 4.  It would only throw if the content wasn't long enough to be an int at all (less than 4).
-### Strings
+#### Strings
 Strings, unlike primitives, do not have a set length.  So the call to interpret a Subrecord Frame's content as a string is just for convenience, and does not add any safety mechanisms.
 ```
 var subrecordFrame = ...;
 string contentAsString = subrecordFrame.AsString();
 ```
 
-# Writable Structs
+## Writable Structs
 All the above concepts mentioned have been read-only.  Header Structs can be overlaid on top of spans, and read data from them.
 
 There are writable structs as well, which have both getter and setter API.  You can then read a section of data, and then make modifications which will affect the source `byte[]` at the correct indices.

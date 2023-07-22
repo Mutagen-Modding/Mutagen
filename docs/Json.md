@@ -1,6 +1,7 @@
+# Json
 Currently, the libraries that Mutagen offers related to Json targets `Newtonsoft.Json`.  Alternatives can be added for `System.Text.Json` if there's demand.
 
-# Json Converters
+## Json Converters
 There are some built in converters to allow for FormKeys/FormLinks/ModKeys to be included in a Json DTO.
 
 ```cs

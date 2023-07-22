@@ -1,8 +1,9 @@
+# Adding Required Resources
 `Mutagen.WPF` is built with style-less controls.  This means the controls are just logic, and you can add your own look exactly how you want it.
 
 Typically though a default look is provided, and `Mutagen.WPF` does this as well.  It is built on top of [MahApps](https://mahapps.com/), and other reusable libraries.  
 
-# Global Import
+## Global Import
 To import these resources/looks, the easiest way is to modify the `App.xaml` file that comes with every WPF project:
 ```cs
 <Application ...>
@@ -29,8 +30,8 @@ To import these resources/looks, the easiest way is to modify the `App.xaml` fil
 </Application>
 ```
 
-# Non-Global Import
+## Non-Global Import
 You can also add the above ResourceDictionary to specific controls in your WPF app, if you don't want to import/apply them globally to everything.
 
-# Work In Progress
+## Work In Progress
 These patterns may be adjusted over time, as they don't allow for the easiest customization of color theming and such.  As better patterns for exposing more control are discovered, these suggestions might change.

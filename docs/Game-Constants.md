@@ -1,10 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
+# Game Constants
 As Bethesda games are released, headers are modified slightly.  They still have a lot in common, but certain things move or the total length changes, or something else that will misalign any common parsing code.
 
 `GameConstants` is a class containing all the various alignment information specific to a game.  Things like:

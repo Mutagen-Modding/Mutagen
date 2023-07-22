@@ -1,3 +1,4 @@
+# WPF Library
 If you are making a C# WPF UI application with Mutagen, you can import `Mutagen.Bethesda.WPF` to get some tooling related to Bethesda specific content.
 - Controls for Bethesda specific concepts, such as FormKeyPickers, LoadOrder displays, etc
 - Reflection powered settings editor
@@ -7,13 +8,13 @@ The Mutagen repository has a [Test Display](https://github.com/Mutagen-Modding/M
 
 Explore the right hand side bar for more specifics on the features provided by Mutagen's WPF library
 
-# FormKey Pickers
+## FormKey Pickers
 ![FormKey Picker](https://i.imgur.com/gtlg5Md.gif)
 ![FormKey Multipicker](https://i.imgur.com/PlVXxu5.gif)
 
-# ModKey Pickers
+## ModKey Pickers
 ![ModKey Picker](https://i.imgur.com/FYT1EDq.gif)
 ![ModKey Multipicker](https://i.imgur.com/TNnR53A.gif)
 
-# Reflection Powered Settings
+## Reflection Powered Settings
 ![Reflection Settings](https://i.imgur.com/PdXSnk5.gif)

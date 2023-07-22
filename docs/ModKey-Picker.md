@@ -1,3 +1,4 @@
+# ModKey Picker
 The ModKey Picker helps users select mod(s) by typing in their names.
 
 The picker can reference certain objects to know what mods actually exist on a user's active load order:
@@ -9,12 +10,12 @@ Make sure you've added the [Required Resources](Adding-Required-Resources), or t
 
 The Mutagen [Test Display](https://github.com/Mutagen-Modding/Mutagen/tree/release/Mutagen.Bethesda.WPF.TestDisplay) app utilizes the ModKey pickers, and provides a good example of how to use them from within a WPF app.
 
-# ModKey Picker
+## Single Picker
 This is a picker to select a single ModKey.
 
 ![ModKey Picker](https://i.imgur.com/FYT1EDq.gif)
 
-## View Side
+### View Side
 ```cs
 <UserControl
     ...
@@ -25,7 +26,7 @@ This is a picker to select a single ModKey.
 </UserControl>
 ```
 
-## ViewModel Side
+### ViewModel Side
 ```cs
 // Some mechanics shown here are from `ReactiveUI`, or `Noggog.WPF`
 public class MyViewModel : ViewModel
@@ -54,12 +55,12 @@ public class MyViewModel : ViewModel
 }
 ```
 
-# ModKey Multipicker
+## ModKey Multipicker
 This is a picker to select any number of ModKeys.
 
 ![ModKey Multipicker](https://i.imgur.com/TNnR53A.gif)
 
-## View Side
+### View Side
 ```cs
 <UserControl
     ...
@@ -70,7 +71,7 @@ This is a picker to select any number of ModKeys.
 </UserControl>
 ```
 
-## ViewModel Side
+### ViewModel Side
 ```cs
 // Some mechanics shown here are from `ReactiveUI`, or `Noggog.WPF`
 public class MyViewModel : ViewModel
