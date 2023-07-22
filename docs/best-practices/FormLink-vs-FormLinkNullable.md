@@ -1,15 +1,16 @@
+# FormLink vs FormLinkNullable
 FormLinks are used widely as a strongly typed identifier of a record, as an alternative to FormID, EditorID, or even FormKey.
 
 When using them, though, there are two variants:
 - `FormLink`
 - `FormLinkNullable`
 
-# Which You Should Use
+## Which You Should Use
 Generally, the answer is you should always use `FormLink`, rather than `FormLinkNullable`.
 
 Mutagen exposes `FormLinkNullable` in certain areas, but you yourself should rarely if ever decide to create a `FormLinkNullable` when writing your own code.
 
-# What is FormLinkNullable
+## What is FormLinkNullable
 If you shouldn't use it, what is `FormLinkNullable` for?
 
 It is used by Mutagen itself to expose a very specific difference in how FormIDs can be null within a binary file on the disk.

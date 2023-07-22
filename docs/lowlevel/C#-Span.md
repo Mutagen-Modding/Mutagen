@@ -1,8 +1,9 @@
+# C# Span
 `Span`s are not a Mutagen concept, but rather a general C# concept.  However, since they are used extensively by Mutagen's parsing systems and they are a newer concept just recently added to C#, it will be covered to some extent here.
 
 If you are more interested in Mutagen-specific concepts, you can skip this section.
 
-# Spans are Sub-Sections of Arrays
+## Spans are Sub-Sections of Arrays
 A `Span<T>` is very similar to a `T[]`.  It points to a spot in memory where T objects reside, like an array.  Consider using a typical array, however, where you wanted some logic to process just a subsection of it.  You would either have to:
 1) Pass the array to a function, with `start` and `end` indices of where you wanted to process.
 2) Make a new smaller array, and copy the data over, using that array with just the interesting data to represent a "subsection" of the original array.
@@ -24,7 +25,7 @@ evenSmallerSection[1] = 123;
 
 Changing the value in `evenSmallerSection` will affect all others; They point to the same underlying array and space in memory.
 
-# Faster Substring Alternative
+## Faster Substring Alternative
 Trimming off or grabbing a few characters on a `string` using Substring() means allocating a whole 2nd string with mostly the same data, just some characters trimmed off.  This is a fairly wasteful operation.
 
 `Span` concepts are great for Substring logic, as the original `string` memory can be reused while Span<char> just points to small substrings of the original string without copies or new allocations.
@@ -51,7 +52,7 @@ System.Console.WriteLine(result.ToString());
 // Additionally, the WriteLine() API might be upgraded in C# to eventually take ReadOnlySpan<char> as input, too
 ```
 
-# Interpreting Data as Another Type
+## Interpreting Data as Another Type
 Another cool trick `Span`s can do is overlay on top of a `byte[]` a `Span` of a different type:
 ```cs
 byte[] someBytes = new byte[16];
@@ -76,7 +77,7 @@ for (int i = 0 ; i < uintSpan.Length ; i++)
 // All bytes in someBytes now contain 255 / 0xFF
 ```
 
-# Parsing Data from Span
+## Parsing Data from Span
 Numeric primitives can be extracted from a `Span<byte>` fairly easily:
 ```cs
 Span<byte> span = ...;
@@ -100,7 +101,7 @@ string str = BinaryStringUtility.ProcessWholeToZString(span);
 str = BinaryStringUtility.ToZString(span.Slice(11, 23));
 ```
 
-# MemorySlice Alternative for Non-Stack Usage
+## MemorySlice Alternative for Non-Stack Usage
 One of the major downsides of `Span` is that it is a `ref struct` which can only "live" on the stack.  This means it cannot be a member of a class, or even be associated with async/await concepts, among other things.
 
 In this case, `MemorySlice` is an alternative concept (subsection of an array) that can live outside of the stack.

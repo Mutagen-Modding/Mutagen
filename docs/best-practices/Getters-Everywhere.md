@@ -1,4 +1,5 @@
-# Overview
+# Getters Everywhere
+## Overview
 Mutagen offers up records in several ways.  Consider dealing with an Npc, it would offer:
 - `Npc` class.   A class with all the fields an Npc has
 - `INpc` interface.   An interface with all the fields an Npc has.  The class implements this.
@@ -6,7 +7,7 @@ Mutagen offers up records in several ways.  Consider dealing with an Npc, it wou
 
 In most example code and projects you look at, most of the code will be dealing with `INpcGetter`, and you should too.
 
-# Best Practices
+## Best Practices
 The best practice is to have your code interact with Getter interfaces as much as possible.  Only at the last moment when you're sure you want to override a record and export it would you convert it to a settable version.
 
 A typical example:
@@ -24,16 +25,16 @@ foreach (INpcGetter npcGetter in env.LoadOrder.PriorityOrder.Npc().WinningOverri
 }
 ```
 
-# Reasoning
-## Readonly Increases Speed
+## Reasoning
+### Readonly Increases Speed
 A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](https://github.com/Mutagen-Modding/Mutagen/wiki/Binary-Overlay).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
 
 As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means creating a more "normal" settable `Npc` class, and reading ALL the data within that record to fill out each field one by one.  This is often a waste of time.
 
 Take a look at our original example, if the Npc in question has a Level higher than 5, then all that work and time of reading the other fields is wasted.  Once we find out the level is higher than 5, we no longer care about it anymore, and would prefer to have not parsed any of the other data.  This is just one small example where it is preferable to remain in the parse-on-demand readonly mode as long as possible.
 
-## Adds Clearer Intention to Modifications
-### A Fully Mutable Ecosystem Has Easy Pitfalls
+### Adds Clearer Intention to Modifications
+#### A Fully Mutable Ecosystem Has Easy Pitfalls
 Let's pretend for a moment that all records were mutable within the entire ecosystem.  This can easily lead to some very subtle bug prone situations.
 
 ```cs
@@ -53,7 +54,7 @@ The above logic has some unexpected and probably undesirable side effects.  We n
 
 Skyrim.esm should not be so easily modified.  We wanted to modify Orthorn as it was defined in our outgoing patch.  Skyrim.esm should be more or less immutable unless we take explicit intentional steps to do so.
 
-### Initially Immutable Environment Encourages Clearer Intentions
+#### Initially Immutable Environment Encourages Clearer Intentions
 Take the same situation, but in the actual ecosystem that provides getter interfaces by default:
 ```cs
 // Retrieve an Npc from Skyrim.esm

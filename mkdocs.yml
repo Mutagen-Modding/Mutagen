@@ -46,9 +46,10 @@ theme:
     
 nav:
   - Home: index.md
-  - Big Cheat Sheet: Big-Cheat-Sheet.md
+  - Big Cheat Sheet: top/Big-Cheat-Sheet.md
   - Plugin Record Suite:
     - plugins/index.md
+    - ModKey, FormKey, FormLink: plugins/ModKey,-FormKey,-FormLink.md
     - Generated Classes: plugins/Generated-Classes.md
     - Binary Importing: plugins/Binary-Importing.md
     - Binary Overlay: plugins/Binary-Overlay.md
@@ -69,71 +70,73 @@ nav:
     - Environment Construction: environment/Environment-Construction.md
     - Game Locations: environment/Game-Locations.md
   - Link Cache:
-    - LinkCache.md
-    - Record Lookup: Record-Lookup.md
-    - Mod Contexts: ModContexts.md
-    - Previous Override Iteration: Previous-Override-Iteration.md
+    - linkcache/index.md
+    - Record Lookup: linkcache/Record-Lookup.md
+    - Mod Contexts: linkcache/ModContexts.md
+    - Previous Override Iteration: linkcache/Previous-Override-Iteration.md
   - Load Order:
-    # - Load-Order.md
-    - Winning Override Iteration: Winning-Overrides.md
+    - loadorder/index.md
+    - Winning Override Iteration: loadorder/Winning-Overrides.md
     # - Has Mod Assertions
     # - Live File Monitoring
-  - Archives (BSAs): Archives.md
+  - Archives (BSAs): top/Archives.md
   - Strings:
-    - Translated Strings: Translated-Strings.md
+    - Translated Strings: strings/Translated-Strings.md
     # - Strings Overlays
   - Examples:
-    - Print Some Content: Print-Some-Content.md
-    # - Accessing Known Records
+    - Print Some Content: examples/Print-Some-Content.md
     # - Record Overrides and Duplication
-    - Low Level Examples: Low-Level-Examples.md
+    - Low Level Examples: examples/Low-Level-Examples.md
   - Getting Familiar with C#:
-    - Namespaces: Namespaces.md
+    - Namespaces: familiar/Namespaces.md
     # - Intellisense
-    - Nullability to Indicate Record Presence: Nullability-to-Indicate-Record-Presence.md
+    - Nullability to Indicate Record Presence: familiar/Nullability-to-Indicate-Record-Presence.md
     # - Inspect Class Definitions
     # - Debugging
   - Best Practices and Optimizations:
-    # - Getters Everywhere:
-    - FormLinks Always Target Getter Interfaces: FormLinks-Always-Target-Getter-Interfaces.md
-    - FormLinks vs EditorID as Identifiers: FormLinks-vs-EditorID-as-Identifiers.md
+    - Getters Everywhere: best-practices/Getters-Everywhere.md
+    - Accessing Known Records: best-practices/Accessing-Known-Records.md
+    - FormLinks Always Target Getter Interfaces: best-practices/FormLinks-Always-Target-Getter-Interfaces.md
+    - FormLinks vs EditorID as Identifiers: best-practices/FormLinks-vs-EditorID-as-Identifiers.md
+    - FormLink vs FormLinkNullable: best-practices/FormLink-vs-FormLinkNullable.md
     # - FormLinks vs FormID/FormKey as Identifiers:
     # - Reference FormLinks By EditorID:
     # - LinkCache Resolution Type Choice:
     # - Lists vs HashSet:
-    - Enumerable Laziness: Enumerable-Laziness.md
-    - TryGet Concepts: TryGet-Concepts.md
+    - Enumerable Laziness: best-practices/Enumerable-Laziness.md
+    - TryGet Concepts: best-practices/TryGet-Concepts.md
     # - Access Overlays Once:
-    - ITPO Avoidance: ITPO-Avoidance.md
-    - Reuse Translation Masks: Reuse-Translation-Masks.md
-    - Modifying Groups Being Iterated: Modifying-Groups-Being-Iterated.md
+    - ITPO Avoidance: best-practices/ITPO-Avoidance.md
+    - Reuse Translation Masks: best-practices/Reuse-Translation-Masks.md
+    - Modifying Groups Being Iterated: best-practices/Modifying-Groups-Being-Iterated.md
     # - Testing:
     # - Auto Fixture:
     # - Major Record Test Building:
   - WPF Library:
-    - WPF-Library.md
-    - FormKey Picker: FormKey-Picker.md
-    - ModKey Picker: ModKey-Picker.md
+    - wpf/index.md
+    - FormKey Picker: wpf/FormKey-Picker.md
+    - ModKey Picker: wpf/ModKey-Picker.md
     # - Load Order Display
-    - Reflection Powered Settings: Reflection-Powered-Settings.md
-    - Adding Required Resources: Adding-Required-Resources.md
+    - Reflection Powered Settings: wpf/Reflection-Powered-Settings.md
+    - Adding Required Resources: wpf/Adding-Required-Resources.md
   # - Dependency Injection: Dependency Injection
   - FormKey Allocation/Persistence: FormKey-Allocation-and-Persistence.md
-  - Json: Json.md
+  - Json: top/Json.md
   - Low Level Tools:
-    - Low-Level-Tools.md
-    - Header Structs: Header-Structs.md
-    - Game Constants: Game-Constants.md
-    - Binary Streams: Binary-Streams.md
-    - Binary Utility: Binary-Utility.md
+    - index.md
+    - C# Span: lowlevel/C#-Span.md
+    - Header Structs: lowlevel/Header-Structs.md
+    - Game Constants: lowlevel/Game-Constants.md
+    - Binary Streams: lowlevel/Binary-Streams.md
+    - Binary Utility: lowlevel/Binary-Utility.md
   - Game Specific Documentation:
     - Oblivion:
-      - Oblivion Aspect Interfaces: Oblivion-Aspect-Interfaces.md
-      - Oblivion Link Interfaces: Oblivion-Link-Interfaces.md
+      - Oblivion Aspect Interfaces: game-specific/Oblivion-Aspect-Interfaces.md
+      - Oblivion Link Interfaces: game-specific/Oblivion-Link-Interfaces.md
     - Skyrim:
-      - Skyrim Perks: Skyrim-Perks.md
-      - Skyrim Aspect Interfaces: Skyrim-Aspect-Interfaces.md
-      - Skyrim Link Interfaces: Skyrim-Link-Interfaces.md
-  - Correctness: Correctness.md
+      - Skyrim Perks: game-specific/Skyrim-Perks.md
+      - Skyrim Aspect Interfaces: game-specific/Skyrim-Aspect-Interfaces.md
+      - Skyrim Link Interfaces: game-specific/Skyrim-Link-Interfaces.md
+  - Correctness: top/Correctness.md
 
 index: Pages/index.md
