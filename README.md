@@ -29,6 +29,7 @@ foreach (var weaponEditorId in env.LoadOrder.PriorityOrder.Weapon().WinningOverr
 ```
 This example snippet would print all the unique Weapon EditorIDs from the load order to the console.
 
+## Wiki
 Check out the [Wiki](https://mutagen-modding.github.io/Mutagen/) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
 
 Also be sure to check out the [Big Cheat Sheet](https://mutagen-modding.github.io/Mutagen/top/Big-Cheat-Sheet/)
