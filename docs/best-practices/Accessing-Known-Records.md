@@ -49,7 +49,7 @@ if (env.LinkCache.TryResolve<IRaceGetter>("ArgonianRace", out var race))
 }
 ```
 
-However, they are not recommended for general use, for the reasons [outlined here](https://github.com/Mutagen-Modding/Mutagen/wiki/FormLinks-vs-EditorID-as-Identifiers).
+However, they are not recommended for general use, for the reasons [outlined here](FormLinks-vs-EditorID-as-Identifiers.md).
 
 ## Neither is Ideal
 Neither direct FormKeys or EditorIDs are ideal for looking up known records.  This is why the recommended pattern is to use the [FormLinks library](https://github.com/Mutagen-Modding/Mutagen.Bethesda.FormKeys) to bridge the gap and get the best of both worlds
