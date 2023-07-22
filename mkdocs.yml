@@ -48,22 +48,22 @@ nav:
   - Home: index.md
   - Big Cheat Sheet: Big-Cheat-Sheet.md
   - Plugin Record Suite:
-    - Plugin-Record-Suite.md
-    - Generated Classes: Generated-Classes.md
-    - Binary Importing: Binary-Importing.md
-    - Binary Overlay: Binary-Overlay.md
-    - Interfaces (Aspect/Link/Getters): Interfaces-(Aspect-Link-Getters).md
-    - Copy Functionality: Copy-Functionality.md
-    - Binary Exporting: Binary-Exporting.md
-    - Equality Checks: Equality-Checks.md
-    - Translation Masks: Translation-Masks.md
-    - Flags and Enums: Flags-and-Enums.md
-    - Asset Links: AssetLink.md
-    - Binary Format Complexity Abstraction: Binary-Format-Complexity-Abstraction.md
-    - Create, Duplicate, and Override: Create,-Duplicate,-and-Override.md
-    - Abstract Subclassing: Abstract-Subclassing.md
-    - Printing: Printing.md
-    - Typical Mod Construction and Importing: Typical-Mod-Construction-and-Importing.md
+    - plugins/index.md
+    - Generated Classes: plugins/Generated-Classes.md
+    - Binary Importing: plugins/Binary-Importing.md
+    - Binary Overlay: plugins/Binary-Overlay.md
+    - Interfaces (Aspect/Link/Getters): plugins/Interfaces-(Aspect-Link-Getters).md
+    - Copy Functionality: plugins/Copy-Functionality.md
+    - Binary Exporting: plugins/Binary-Exporting.md
+    - Equality Checks: plugins/Equality-Checks.md
+    - Translation Masks: plugins/Translation-Masks.md
+    - Flags and Enums: plugins/Flags-and-Enums.md
+    - Asset Links: plugins/AssetLink.md
+    - Binary Format Complexity Abstraction: plugins/Binary-Format-Complexity-Abstraction.md
+    - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
+    - Abstract Subclassing: plugins/Abstract-Subclassing.md
+    - Printing: plugins/Printing.md
+    - Typical Mod Construction and Importing: plugins/Typical-Mod-Construction-and-Importing.md
   - Environment:
     - Environment.md
     - Environment Construction: Environment-Construction.md
@@ -107,5 +107,31 @@ nav:
     - ITPO Avoidance: ITPO-Avoidance.md
     - Reuse Translation Masks: Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: Modifying-Groups-Being-Iterated.md
+    # - Testing:
+    # - Auto Fixture:
+    # - Major Record Test Building:
+  - WPF Library: WPF-Library.md
+    - FormKey Picker: FormKey-Picker.md
+    - ModKey Picker: ModKey-Picker.md
+    # - Load Order Display
+    - Reflection Powered Settings: Reflection-Powered-Settings.md
+    - Adding Required Resources: Adding-Required-Resources.md
+  # - Dependency Injection: Dependency Injection
+  - FormKey Allocation/Persistence: FormKey-Allocation-and-Persistence.md
+  - Json: Json.md
+  - Low Level Tools: Low-Level-Tools.md
+    - Header Structs: Header-Structs.md
+    - Game Constants: Game-Constants.md
+    - Binary Streams: Binary-Streams.md
+    - Binary Utility: Binary-Utility.md
+  - Game Specific Documentation:
+    - Oblivion:
+      - Oblivion Aspect Interfaces: Oblivion-Aspect-Interfaces.md
+      - Oblivion Link Interfaces: Oblivion-Link-Interfaces.md
+    - Skyrim:
+      - Skyrim Perks: Skyrim-Perks.md
+      - Skyrim Aspect Interfaces: Skyrim-Aspect-Interfaces.md
+      - Skyrim Link Interfaces: Skyrim-Link-Interfaces.md
+  - Correctness: Correctness.md
 
 index: Pages/index.md
