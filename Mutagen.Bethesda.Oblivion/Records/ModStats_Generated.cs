@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Version
-        public static readonly Single VersionDefault = 0.8f;
+        public static readonly Single VersionDefault = 1.0f;
         public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
