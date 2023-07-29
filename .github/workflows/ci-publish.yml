@@ -90,16 +90,16 @@ jobs:
     - name: Build
       run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Pack Preview
-      if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/master') }}
+      if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/release') }}
       run: |
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
-      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
+      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/release' }}
       run: | 
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
-      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/master' }}
+      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/release' }}
       with:
         file: "**/*.nupkg"
         repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -116,7 +116,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Reset nightly to master
+    - name: Reset nightly to release
       run: |
         head_sha=$(git rev-parse --verify HEAD)
         echo "head_sha=$head_sha"
