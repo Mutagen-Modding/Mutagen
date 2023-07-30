@@ -44,75 +44,77 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             return base.TranslatorReference(obj, item);
         }
-        return $"{this.TranslationWriteClass(obj)}.Instance";
+        return $"{TranslationWriteClass(obj)}.Instance";
     }
 
     public PluginTranslationModule(LoquiGenerator gen)
         : base(gen)
     {
-        this.DoErrorMasks = false;
-        this.TranslationMaskParameter = false;
-        this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(TranslationTerm);
-        this._typeGenerations[typeof(BoolType)] = new BooleanBinaryTranslationGeneration();
-        this._typeGenerations[typeof(CharType)] = new CharBinaryTranslationGeneration();
-        this._typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>(expectedLen: null);
-        this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
-        this._typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
-        this._typeGenerations[typeof(FloatType)] = new FloatBinaryTranslationGeneration();
-        this._typeGenerations[typeof(PercentType)] = new PercentBinaryTranslationGeneration();
-        this._typeGenerations[typeof(Int8Type)] = new SByteBinaryTranslationGeneration();
-        this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
-        this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
-        this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>(expectedLen: 8);
-        this._typeGenerations[typeof(P2UInt8Type)] = new PointBinaryTranslationGeneration<P2UInt8>(expectedLen: 2);
-        this._typeGenerations[typeof(P3UInt8Type)] = new PointBinaryTranslationGeneration<P3UInt8>(expectedLen: 3);
-        this._typeGenerations[typeof(P3UInt16Type)] = new PointBinaryTranslationGeneration<P3UInt16>(expectedLen: 6);
-        this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
-        this._typeGenerations[typeof(P3FloatType)] = new PointBinaryTranslationGeneration<P3Float>(expectedLen: 12);
-        this._typeGenerations[typeof(P2Int32Type)] = new PointBinaryTranslationGeneration<P2Int>(expectedLen: 8);
-        this._typeGenerations[typeof(P3IntType)] = new PointBinaryTranslationGeneration<P3Int>(expectedLen: 12);
-        this._typeGenerations[typeof(P2Int16Type)] = new PointBinaryTranslationGeneration<P2Int16>(expectedLen: 4);
-        this._typeGenerations[typeof(P3Int16Type)] = new PointBinaryTranslationGeneration<P3Int16>(expectedLen: 6);
-        this._typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
-        this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration()
+        DoErrorMasks = false;
+        TranslationMaskParameter = false;
+        _typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(TranslationTerm);
+        _typeGenerations[typeof(BoolType)] = new BooleanBinaryTranslationGeneration();
+        _typeGenerations[typeof(CharType)] = new CharBinaryTranslationGeneration();
+        _typeGenerations[typeof(DateTimeType)] = new PrimitiveBinaryTranslationGeneration<DateTime>(expectedLen: null);
+        _typeGenerations[typeof(TimeOnlyType)] = new PrimitiveBinaryTranslationGeneration<TimeOnly>(expectedLen: null);
+        _typeGenerations[typeof(DateOnlyType)] = new PrimitiveBinaryTranslationGeneration<DateOnly>(expectedLen: null);
+        _typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
+        _typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
+        _typeGenerations[typeof(FloatType)] = new FloatBinaryTranslationGeneration();
+        _typeGenerations[typeof(PercentType)] = new PercentBinaryTranslationGeneration();
+        _typeGenerations[typeof(Int8Type)] = new SByteBinaryTranslationGeneration();
+        _typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
+        _typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
+        _typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>(expectedLen: 8);
+        _typeGenerations[typeof(P2UInt8Type)] = new PointBinaryTranslationGeneration<P2UInt8>(expectedLen: 2);
+        _typeGenerations[typeof(P3UInt8Type)] = new PointBinaryTranslationGeneration<P3UInt8>(expectedLen: 3);
+        _typeGenerations[typeof(P3UInt16Type)] = new PointBinaryTranslationGeneration<P3UInt16>(expectedLen: 6);
+        _typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
+        _typeGenerations[typeof(P3FloatType)] = new PointBinaryTranslationGeneration<P3Float>(expectedLen: 12);
+        _typeGenerations[typeof(P2Int32Type)] = new PointBinaryTranslationGeneration<P2Int>(expectedLen: 8);
+        _typeGenerations[typeof(P3IntType)] = new PointBinaryTranslationGeneration<P3Int>(expectedLen: 12);
+        _typeGenerations[typeof(P2Int16Type)] = new PointBinaryTranslationGeneration<P2Int16>(expectedLen: 4);
+        _typeGenerations[typeof(P3Int16Type)] = new PointBinaryTranslationGeneration<P3Int16>(expectedLen: 6);
+        _typeGenerations[typeof(P2FloatType)] = new PointBinaryTranslationGeneration<P2Float>(expectedLen: 8);
+        _typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration()
         {
             PreferDirectTranslation = false
         };
-        this._typeGenerations[typeof(AssetLinkType)] = new AssetLinkBinaryTranslationGeneration()
+        _typeGenerations[typeof(AssetLinkType)] = new AssetLinkBinaryTranslationGeneration()
         {
             PreferDirectTranslation = false
         };
-        this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslationGeneration();
-        this._typeGenerations[typeof(UInt8Type)] = new ByteBinaryTranslationGeneration();
-        this._typeGenerations[typeof(UInt16Type)] = new PrimitiveBinaryTranslationGeneration<ushort>(expectedLen: 2);
-        this._typeGenerations[typeof(UInt32Type)] = new PrimitiveBinaryTranslationGeneration<uint>(expectedLen: 4);
-        this._typeGenerations[typeof(UInt64Type)] = new PrimitiveBinaryTranslationGeneration<ulong>(expectedLen: 8);
-        this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>(expectedLen: 4)
+        _typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslationGeneration();
+        _typeGenerations[typeof(UInt8Type)] = new ByteBinaryTranslationGeneration();
+        _typeGenerations[typeof(UInt16Type)] = new PrimitiveBinaryTranslationGeneration<ushort>(expectedLen: 2);
+        _typeGenerations[typeof(UInt32Type)] = new PrimitiveBinaryTranslationGeneration<uint>(expectedLen: 4);
+        _typeGenerations[typeof(UInt64Type)] = new PrimitiveBinaryTranslationGeneration<ulong>(expectedLen: 8);
+        _typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>(expectedLen: 4)
         {
             PreferDirectTranslation = false
         };
-        this._typeGenerations[typeof(FormKeyType)] = new FormKeyBinaryTranslationGeneration();
-        this._typeGenerations[typeof(ModKeyType)] = new ModKeyBinaryTranslationGeneration();
-        this._typeGenerations[typeof(RecordTypeType)] = new RecordTypeBinaryTranslationGeneration();
-        this._typeGenerations[typeof(FormLinkType)] = new FormLinkBinaryTranslationGeneration();
-        this._typeGenerations[typeof(FormLinkOrIndexType)] = new FormLinkOrIndexTranslationGeneration();
-        this._typeGenerations[typeof(ListType)] = new PluginListBinaryTranslationGeneration();
-        this._typeGenerations[typeof(Array2dType)] = new Array2dBinaryTranslationGeneration();
-        this._typeGenerations[typeof(ArrayType)] = new PluginArrayBinaryTranslationGeneration();
-        this._typeGenerations[typeof(DictType)] = new DictBinaryTranslationGeneration();
-        this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayBinaryTranslationGeneration();
-        this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
-        this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationGeneration();
-        this._typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration()
+        _typeGenerations[typeof(FormKeyType)] = new FormKeyBinaryTranslationGeneration();
+        _typeGenerations[typeof(ModKeyType)] = new ModKeyBinaryTranslationGeneration();
+        _typeGenerations[typeof(RecordTypeType)] = new RecordTypeBinaryTranslationGeneration();
+        _typeGenerations[typeof(FormLinkType)] = new FormLinkBinaryTranslationGeneration();
+        _typeGenerations[typeof(FormLinkOrIndexType)] = new FormLinkOrIndexTranslationGeneration();
+        _typeGenerations[typeof(ListType)] = new PluginListBinaryTranslationGeneration();
+        _typeGenerations[typeof(Array2dType)] = new Array2dBinaryTranslationGeneration();
+        _typeGenerations[typeof(ArrayType)] = new PluginArrayBinaryTranslationGeneration();
+        _typeGenerations[typeof(DictType)] = new DictBinaryTranslationGeneration();
+        _typeGenerations[typeof(ByteArrayType)] = new ByteArrayBinaryTranslationGeneration();
+        _typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
+        _typeGenerations[typeof(DataType)] = new DataBinaryTranslationGeneration();
+        _typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration()
         {
             PreferDirectTranslation = false
         };
-        this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
-        this._typeGenerations[typeof(NothingType)] = new NothingBinaryTranslationGeneration();
-        this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
-        this._typeGenerations[typeof(GenderedType)] = new GenderedTypeBinaryTranslationGeneration();
-        this._typeGenerations[typeof(BreakType)] = new BreakBinaryTranslationGeneration();
-        this._typeGenerations[typeof(MarkerType)] = new MarkerBinaryTranslationGeneration();
+        _typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
+        _typeGenerations[typeof(NothingType)] = new NothingBinaryTranslationGeneration();
+        _typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
+        _typeGenerations[typeof(GenderedType)] = new GenderedTypeBinaryTranslationGeneration();
+        _typeGenerations[typeof(BreakType)] = new BreakBinaryTranslationGeneration();
+        _typeGenerations[typeof(MarkerType)] = new MarkerBinaryTranslationGeneration();
         APILine[] modAPILines = new APILine[]
         {
             new APILine(
@@ -225,7 +227,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 return dir == TranslationDirection.Reader
                        && obj.GetObjectType() != ObjectType.Mod;
             });
-        this.MainAPI = new TranslationModuleAPI(
+        MainAPI = new TranslationModuleAPI(
             writerAPI: new MethodAPI(
                 majorAPI: new APILine[] { new APILine(WriterClass, $"{WriterClass} {WriterMemberName}") },
                 optionalAPI: modAPILines
@@ -249,7 +251,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     CustomMethodAPI.FactoryPublic(gameRelease),
                 }));
-        this.MinorAPIs.Add(
+        MinorAPIs.Add(
             new TranslationModuleAPI(
                 new MethodAPI(
                     majorAPI: new APILine[] { new APILine("Path", $"{nameof(ModPath)} path") },
@@ -266,12 +268,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                         .ToArray()))
             {
                 Funnel = new TranslationFunnel(
-                    this.MainAPI,
+                    MainAPI,
                     ConvertFromPathOut,
                     ConvertFromPathIn),
                 When = (o, d) => d == TranslationDirection.Reader && o.GetObjectType() == ObjectType.Mod
             });
-        this.MinorAPIs.Add(
+        MinorAPIs.Add(
             new TranslationModuleAPI(
                 new MethodAPI(
                     majorAPI: new APILine[] { new APILine("Path", $"{nameof(FilePath)} path") },
@@ -288,12 +290,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                         .ToArray()))
             {
                 Funnel = new TranslationFunnel(
-                    this.MainAPI,
+                    MainAPI,
                     ConvertFromPathOut,
                     ConvertFromPathIn),
                 When = (o, d) => d == TranslationDirection.Writer && o.GetObjectType() == ObjectType.Mod
             });
-        this.MinorAPIs.Add(
+        MinorAPIs.Add(
             new TranslationModuleAPI(
                 new MethodAPI(
                     majorAPI: new APILine[] { new APILine("Stream", "Stream stream") },
@@ -309,12 +311,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                         .ToArray()))
             {
                 Funnel = new TranslationFunnel(
-                    this.MainAPI,
+                    MainAPI,
                     ConvertFromStreamOut,
                     ConvertFromStreamIn),
                 When = (o, _) => o.GetObjectType() == ObjectType.Mod
             });
-        this.CustomLogic = new CustomLogicTranslationGeneration() { Module = this };
+        CustomLogic = new CustomLogicTranslationGeneration() { Module = this };
     }
 
     #region Minor API Translations
@@ -342,7 +344,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         using (sb.CurlyBrace())
         {
-            internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
+            internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
         }
     }
 
@@ -367,7 +369,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
                 sb.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.ModKey)} = modKey;");
-                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
+                internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
         sb.AppendLine("catch (Exception ex)"); 
@@ -429,7 +431,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         using (sb.CurlyBrace())
         {
-            internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
+            internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
         }
         sb.AppendLine($"using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
         using (sb.CurlyBrace())
@@ -484,7 +486,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         sb.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
                     }
                 }
-                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
+                internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
         sb.AppendLine("catch (Exception ex)");
@@ -582,13 +584,13 @@ public class PluginTranslationModule : BinaryTranslationModule
         if (obj.GetObjectType() == ObjectType.Mod)
         {
             using (var args = sb.Function(
-                       $"public{obj.NewOverride()}static {await this.ObjectReturn(obj, maskReturn: false)} {CreateFromPrefix}{TranslationTerm}"))
+                       $"public{obj.NewOverride()}static {await ObjectReturn(obj, maskReturn: false)} {CreateFromPrefix}{TranslationTerm}"))
             {
-                foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(obj,
+                foreach (var (API, Public) in MainAPI.ReaderAPI.IterateAPI(obj,
                              TranslationDirection.Reader, 
                              Context.Class,
-                             this.DoErrorMasks ? new APILine(ErrorMaskKey, "ErrorMaskBuilder? errorMask") : null,
-                             this.DoErrorMasks ? new APILine(TranslationMaskKey, $"{nameof(TranslationCrystal)}? translationMask", (o, i) => this.TranslationMaskParameter) : null))
+                             DoErrorMasks ? new APILine(ErrorMaskKey, "ErrorMaskBuilder? errorMask") : null,
+                             DoErrorMasks ? new APILine(TranslationMaskKey, $"{nameof(TranslationCrystal)}? translationMask", (o, i) => TranslationMaskParameter) : null))
                 {
                     args.Add(API.Result);
                 }
@@ -600,22 +602,22 @@ public class PluginTranslationModule : BinaryTranslationModule
                 {
                     await GenerateNewSnippet(obj, sb);
                     using (var args = sb.Call(
-                               $"{Loqui.Generation.Utility.Await(await AsyncImport(obj))}{obj.CommonClassInstance("ret", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.{CopyInFromPrefix}{TranslationTerm}"))
+                               $"{Utility.Await(await AsyncImport(obj))}{obj.CommonClassInstance("ret", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.{CopyInFromPrefix}{TranslationTerm}"))
                     {
                         args.Add("item: ret");
-                        foreach (var arg in this.MainAPI.PassArgs(obj, TranslationDirection.Reader, Context.Class, Context.Backend))
+                        foreach (var arg in MainAPI.PassArgs(obj, TranslationDirection.Reader, Context.Class, Context.Backend))
                         {
                             args.Add(arg);
                         }
-                        foreach (var arg in this.MainAPI.InternalPassArgs(obj, TranslationDirection.Reader, Context.Class, Context.Backend))
+                        foreach (var arg in MainAPI.InternalPassArgs(obj, TranslationDirection.Reader, Context.Class, Context.Backend))
                         {
                             args.Add(arg);
                         }
-                        if (this.DoErrorMasks)
+                        if (DoErrorMasks)
                         {
                             args.AddPassArg("errorMask");
                         }
-                        if (this.TranslationMaskParameter)
+                        if (TranslationMaskParameter)
                         {
                             args.AddPassArg("translationMask");
                         }
@@ -772,7 +774,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             if (obj.HasEmbeddedFields())
             {
                 using (var args = sb.Function(
-                           $"public static {Loqui.Generation.Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
+                           $"public static {Utility.TaskReturn(async)} Fill{ModuleNickname}Structs"))
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add($"{ReaderClass} {ReaderMemberName}");
@@ -782,7 +784,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => b.HasEmbeddedFields()))
                     {
                         using (var args = sb.Call(
-                                   $"{Loqui.Generation.Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
+                                   $"{Utility.Await(async)}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}Structs"))
                         {
                             args.AddPassArg("item");
                             args.AddPassArg(ReaderMemberName);
@@ -800,7 +802,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (!field.Enabled) continue;
-                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                        if (!TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             if (!field.IntegrateField) continue;
                             throw new ArgumentException("Unsupported type generator: " + field);
@@ -830,7 +832,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         if (obj.HasRecordTypeFields() && !obj.IsTopLevelGroup())
         {
             using (var args = sb.Function(
-                       $"public static {Loqui.Generation.Utility.TaskWrap(nameof(ParseResult), HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
+                       $"public static {Utility.TaskWrap(nameof(ParseResult), HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
             {
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                 args.Add($"{ReaderClass} {ReaderMemberName}");
@@ -867,7 +869,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         if (!fieldData.GenerationTypes.Any()) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                        if (!TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field.Field);
                         }
@@ -882,7 +884,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     foreach (var field in fields)
                     {
                         var fieldData = field.Field.GetFieldData();
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                        if (!TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field.Field);
                         }
@@ -959,7 +961,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     bool first = true;
                                     foreach (var doublesField in doubles)
                                     {
-                                        if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                        if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
                                             throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
                                         }
@@ -1015,7 +1017,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             int count = 0;
                                             foreach (var doublesField in doubles)
                                             {
-                                                if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                                if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                                 {
                                                     throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
                                                 }
@@ -1087,7 +1089,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 || fieldData.TriggeringRecordTypes.Count > 0
                                 || fieldData.GenerationTypes.Count() > 0) continue;
                             if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
-                            if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                            if (!TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
                                 throw new ArgumentException("Unsupported type generator: " + field.Field);
                             }
@@ -1132,7 +1134,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => b.HasRecordTypeFields()))
                         {
                             using (var args = sb.Call(
-                                       $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}RecordTypes"))
+                                       $"return {Utility.Await(HasAsyncRecords(obj, self: false))}{TranslationCreateClass(obj.BaseClass)}.Fill{ModuleNickname}RecordTypes"))
                             {
                                 args.AddPassArg("item");
                                 args.AddPassArg(ReaderMemberName);
@@ -1203,7 +1205,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 using (var args = sb.Call(
                            $"static partial void {field.Name}CustomVersionParse"))
                 {
-                    foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(
+                    foreach (var (API, Public) in MainAPI.ReaderAPI.IterateAPI(
                                  obj,
                                  TranslationDirection.Reader, 
                                  Context.Backend,
@@ -1264,7 +1266,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             bool isInRange = false;
             foreach (var subField in set.IterateFieldsWithMeta())
             {
-                if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
+                if (!TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
                 {
                     throw new ArgumentException("Unsupported type generator: " + subField.Field);
                 }
@@ -1543,7 +1545,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                             || !fieldData.GenerationTypes.Any()) continue;
                         if (fieldData.BinaryOverlayFallback == BinaryGenerationType.NoGeneration) continue;
                         if (field.Field.Derivative && fieldData.BinaryOverlayFallback != BinaryGenerationType.Custom) continue;
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                        if (!TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field.Field);
                         }
@@ -1558,7 +1560,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     foreach (var field in fields)
                     {
                         var fieldData = field.Field.GetFieldData();
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                        if (!TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field.Field);
                         }
@@ -1652,7 +1654,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     bool first = true;
                                     foreach (var doublesField in doubles)
                                     {
-                                        if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                        if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
                                             throw new ArgumentException("Unsupported type generator: " +
                                                                         doublesField.Field);
@@ -1717,7 +1719,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             int count = 0;
                                             foreach (var doublesField in doubles)
                                             {
-                                                if (!this.TryGetTypeGeneration(doublesField.Field.GetType(),
+                                                if (!TryGetTypeGeneration(doublesField.Field.GetType(),
                                                         out var doubleGen))
                                                 {
                                                     throw new ArgumentException("Unsupported type generator: " +
@@ -1900,7 +1902,7 @@ public class PluginTranslationModule : BinaryTranslationModule
 
         if (await obj.IsMajorRecord())
         {
-            bool async = this.HasAsync(obj, self: true);
+            bool async = HasAsync(obj, self: true);
             using (var args = sb.Call(
                        $"{nameof(PluginUtilityTranslation)}.MajorRecordParse<{obj.Interface(getter: false, internalInterface: true)}>"))
             {
@@ -1913,7 +1915,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             if (data.CustomBinaryEnd != CustomEnd.Off)
             {
                 using (var args = sb.Call(
-                           $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImport{(await this.AsyncImport(obj) ? null : "Public")}"))
+                           $"{Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{TranslationCreateClass(obj)}.CustomBinaryEndImport{(await AsyncImport(obj) ? null : "Public")}"))
                 {
                     args.AddPassArg(ReaderMemberName);
                     args.Add($"obj: {accessor}");
@@ -1973,7 +1975,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         throw new NotImplementedException();
                 }
             }
-            bool async = this.HasAsync(obj, self: true);
+            bool async = HasAsync(obj, self: true);
             var utilityTranslation = nameof(PluginUtilityTranslation);
             switch (objType)
             {
@@ -1984,7 +1986,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         using (var args = sb.Call(
                                    $"{utilityTranslation}.SubrecordParse",
-                                   suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                                   suffixLine: Utility.ConfigAwait(async)))
                         {
                             args.Add($"record: {accessor}");
                             args.AddPassArg("frame");
@@ -2003,7 +2005,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 case ObjectType.Record:
                     using (var args = sb.Call(
                                $"{utilityTranslation}.RecordParse",
-                               suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                               suffixLine: Utility.ConfigAwait(async)))
                     {
                         args.Add($"record: {accessor}");
                         args.AddPassArg(ReaderMemberName);
@@ -2021,7 +2023,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         using (var args = sb.Call(
                                    $"{utilityTranslation}.GroupParse<{obj.GetTypeName(LoquiInterfaceType.ISetter)}, T>",
-                                   suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                                   suffixLine: Utility.ConfigAwait(async)))
                         {
                             args.Add($"record: {accessor}");
                             args.AddPassArg(ReaderMemberName);
@@ -2034,7 +2036,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     {
                         using (var args = sb.Call(
                                    $"{utilityTranslation}.GroupParse",
-                                   suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                                   suffixLine: Utility.ConfigAwait(async)))
                         {
                             args.Add($"record: {accessor}");
                             args.AddPassArg(ReaderMemberName);
@@ -2051,7 +2053,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 case ObjectType.Mod:
                     using (var args = sb.Call(
                                $"{utilityTranslation}.ModParse",
-                               suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                               suffixLine: Utility.ConfigAwait(async)))
                     {
                         args.Add($"record: {accessor}");
                         args.AddPassArg(ReaderMemberName);
@@ -2066,7 +2068,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             if (data.CustomBinaryEnd != CustomEnd.Off)
             {
                 using (var args = sb.Call(
-                           $"{Loqui.Generation.Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{this.TranslationCreateClass(obj)}.CustomBinaryEndImportPublic"))
+                           $"{Utility.Await(data.CustomBinaryEnd == CustomEnd.Async)}{TranslationCreateClass(obj)}.CustomBinaryEndImportPublic"))
                 {
                     args.AddPassArg(ReaderMemberName);
                     args.Add($"obj: {accessor}");
@@ -2268,7 +2270,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         totalPassedLength = lengths.CurLength;
                     }
                 }
-                if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen))
+                if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen))
                 {
                     if (!lengths.Field.IntegrateField) continue;
                     throw new NotImplementedException();
@@ -2394,7 +2396,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                              expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                              nonIntegrated: true))
                 {
-                    if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
+                    if (!TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
                     await typeGen.GenerateWrapperCtor(
                         sb: sb,
                         objGen: obj,
@@ -2425,7 +2427,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
 
                     using (var args = sb.Function(
-                               $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
+                               $"public static {BinaryOverlayClass(obj)} {obj.Name}Factory"))
                     {
                         args.Add($"{nameof(ModPath)} path");
                         if (objData.GameReleaseOptions != null)
@@ -2582,7 +2584,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         var recordDataAccessor = new Accessor("_recordData");
         var objData = obj.GetObjectData();
         if (!objData.BinaryOverlayGenerateCtor) return;
-        var retValue = obj.GetObjectType() == ObjectType.Mod ? this.BinaryOverlayClass(obj) : obj.Interface(getter: true, internalInterface: true);
+        var retValue = obj.GetObjectType() == ObjectType.Mod ? BinaryOverlayClass(obj) : obj.Interface(getter: true, internalInterface: true);
         using (var args = sb.Function(
                    $"public static {retValue} {obj.Name}Factory"))
         {
@@ -2760,7 +2762,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                includeBaseClass: true,
                                passedLenPrefix: "ret."))
             {
-                if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
                 var data = lengths.Field.GetFieldData();
                 if (lengths.Field is CustomLogic) continue;
                 switch (data.BinaryOverlayFallback)
@@ -2781,7 +2783,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             // Parse ending positions  
             await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
             {
-                if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
                 var data = lengths.Field.GetFieldData();
                 switch (data.BinaryOverlayFallback)
                 {
@@ -2974,7 +2976,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             // Parse ending positions  
             await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
             {
-                if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
+                if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
                 var data = lengths.Field.GetFieldData();
                 switch (data.BinaryOverlayFallback)
                 {
@@ -3113,7 +3115,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     if (firstBase != null)
                     {
                         using (var args = sb.Call(
-                                   $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
+                                   $"{TranslationWriteClass(firstBase)}.WriteEmbedded"))
                         {
                             args.AddPassArg($"item");
                             args.Add($"writer: {writerNameToUse}");
@@ -3162,7 +3164,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         if (firstBase != null)
                         {
                             using (var args = sb.Call(
-                                       $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
+                                       $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
                             {
                                 args.AddPassArg($"item");
                                 args.Add($"writer: {writerNameToUse}");
@@ -3248,7 +3250,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     using (sb.CurlyBrace(doIt: conditions.Count > 0))
                     {
-                        var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                        var maskType = Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (fieldData.Binary == BinaryGenerationType.Custom)
                         {
                             CustomLogic.GenerateWrite(
@@ -3258,7 +3260,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 writerAccessor: WriterMemberName);
                             continue;
                         }
-                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                        if (!TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             if (!field.IntegrateField) continue;
                             throw new ArgumentException("Unsupported type generator: " + field);
@@ -3358,7 +3360,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         default:
                             throw new NotImplementedException();
                     }
-                    if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                    if (!TryGetTypeGeneration(field.GetType(), out var generator))
                     {
                         throw new ArgumentException("Unsupported type generator: " + field);
                     }
@@ -3380,7 +3382,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     bool isInRange = false;
                                     foreach (var subField in dataType.IterateFieldsWithMeta())
                                     {
-                                        if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
+                                        if (!TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
                                         {
                                             throw new ArgumentException("Unsupported type generator: " + subField.Field);
                                         }
