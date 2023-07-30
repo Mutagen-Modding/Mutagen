@@ -15,7 +15,7 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
     /// <summary>
     /// A readonly singleton representing an unlinked EDIDLink
     /// </summary>
-    public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
+    public static readonly IEDIDLinkGetter<TMajor> Null = new EDIDLink<TMajor>();
         
     /// <summary>
     /// Record type representing the target EditorID to link against
