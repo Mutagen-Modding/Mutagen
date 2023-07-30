@@ -8,10 +8,10 @@
       <RefDirect name="Model" refName="Model" />
       <Data recordType="TNAM">
         <Fields>
-          <UInt8 name="SunriseBeginRaw" />
-          <UInt8 name="SunriseEndRaw" />
-          <UInt8 name="SunsetBeginRaw" />
-          <UInt8 name="SunsetEndRaw" />
+          <TimeOnly name="SunriseBegin" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunriseEnd" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunsetBegin" binary="Custom" byteLength="1" />
+          <TimeOnly name="SunsetEnd" binary="Custom" byteLength="1" />
           <UInt8 name="Volatility" />
           <CustomLogic name="MoonAndPhaseLength" />
           <Enum name="Moons" enumName="Climate.Moon" binary="NoGeneration" />

@@ -56,14 +56,7 @@ partial class ClimateDataBinaryWriteTranslation
 
 partial class ClimateDataBinaryCreateTranslation
 {
-    private static DateTime DateConverter(DateTime d)
-    {
-        return DateTime.MinValue
-            .AddHours(d.Hour)
-            .AddMinutes(d.Minute / 10 * 10);
-    }
-
-    private static bool GetDate(byte b, out TimeOnly date)
+    private static bool GetTime(byte b, out TimeOnly date)
     {
         if (b > 144)
         {
@@ -75,7 +68,7 @@ partial class ClimateDataBinaryCreateTranslation
         return true;
     }
 
-    public static TimeOnly GetDate(byte b)
+    public static TimeOnly GetTime(byte b)
     {
         if (b > 144)
         {
@@ -86,7 +79,7 @@ partial class ClimateDataBinaryCreateTranslation
 
     public static partial void FillBinarySunriseBeginCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunriseBegin = date;
         }
@@ -94,7 +87,7 @@ partial class ClimateDataBinaryCreateTranslation
 
     public static partial void FillBinarySunriseEndCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunriseEnd = date;
         }
@@ -102,7 +95,7 @@ partial class ClimateDataBinaryCreateTranslation
 
     public static partial void FillBinarySunsetBeginCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunsetBegin = date;
         }
@@ -110,7 +103,7 @@ partial class ClimateDataBinaryCreateTranslation
 
     public static partial void FillBinarySunsetEndCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunsetEnd = date;
         }
@@ -140,10 +133,10 @@ partial class ClimateDataBinaryCreateTranslation
 
 partial class ClimateDataBinaryOverlay
 {
-    public partial TimeOnly GetSunriseBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[0]);
-    public partial TimeOnly GetSunriseEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[1]);
-    public partial TimeOnly GetSunsetBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[2]);
-    public partial TimeOnly GetSunsetEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[3]);
+    public partial TimeOnly GetSunriseBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[0]);
+    public partial TimeOnly GetSunriseEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[1]);
+    public partial TimeOnly GetSunsetBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[2]);
+    public partial TimeOnly GetSunsetEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[3]);
     public partial Climate.MoonPhase GetPhaseCustom(int location) => (Climate.MoonPhase)ClimateDataBinaryCreateTranslation.GetPhaseInt(_structData.Span[5]);
     public partial byte GetPhaseLengthCustom(int location) => ClimateDataBinaryCreateTranslation.GetPhaseLen(_structData.Span[5]);
 }
