@@ -24,7 +24,6 @@
 
     <ItemGroup>
         <PackageReference Include="Loqui" GeneratePathProperty="true" />
-        <PackageReference Include="Loqui.Generation" GeneratePathProperty="true" />
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
         <PackageReference Include="Noggog.CSharpExt" GeneratePathProperty="true" />
@@ -37,7 +36,6 @@
         <!-- Package the dependencies alongside the generator assembly -->
         <None Include="$(PkgNoggog_CSharpExt)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
         <None Include="$(PkgLoqui)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-        <None Include="$(PkgLoqui_Generation)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
 
 </Project>
