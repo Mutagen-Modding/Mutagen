@@ -18,11 +18,6 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
     public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
         
     /// <summary>
-    /// A readonly singleton representing a "null" record type
-    /// </summary>
-    public static readonly RecordType Null = new RecordType("\0\0\0\0");
-        
-    /// <summary>
     /// Record type representing the target EditorID to link against
     /// </summary>
     public RecordType EDID { get; set; }
@@ -31,7 +26,7 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
 
     public EDIDLink()
     {
-        EDID = Null;
+        EDID = RecordType.Null;
     }
 
     /// <summary>
@@ -72,7 +67,7 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
         IModGetter mod,
         [MaybeNullWhen(false)]out TMajor item)
     {
-        if (EDID == Null)
+        if (EDID == RecordType.Null)
         {
             item = default;
             return false;
@@ -105,7 +100,7 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
     /// <returns>True if link was resolved and a record was retrieved</returns>
     public bool TryResolve(ILinkCache cache, out TMajor major)
     {
-        if (EDID == Null)
+        if (EDID == RecordType.Null)
         {
             major = default!;
             return false;
@@ -182,7 +177,7 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
 
     public void Clear()
     {
-        EDID = Null;
+        EDID = RecordType.Null;
     }
 
     public static implicit operator EDIDLink<TMajor>(RecordType recordType)
@@ -194,7 +189,7 @@ public sealed class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<T
     {
         if (major.EditorID == null)
         {
-            return Null;
+            return RecordType.Null;
         }
         else
         {
