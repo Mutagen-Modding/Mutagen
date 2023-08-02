@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <PropertyGroup>
@@ -21,6 +20,7 @@
     <PackageReference Include="Loqui" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Noggog.CSharpExt" />
+    <PackageReference Include="CommandLineParser" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj" />
@@ -29,36 +29,5 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Fallout4\Mutagen.Bethesda.Fallout4.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Benchmarks\Benchmarks.cs" />
-    <Compile Include="Benchmarks\CustomBinarySnippets.cs" />
-    <Compile Include="Benchmarks\FormKeyParsing.cs" />
-    <Compile Include="Benchmarks\HeaderParsing.cs" />
-    <Compile Include="Benchmarks\Locators.cs" />
-    <Compile Include="Benchmarks\LoquiTranslationReflection.cs" />
-    <Compile Include="Benchmarks\MiscOverhead.cs" />
-    <Compile Include="Benchmarks\OblivionBinaryTranslation.cs" />
-    <Compile Include="Benchmarks\OblivionXmlTranslation.cs" />
-    <Compile Include="Benchmarks\StringParsing.cs" />
-    <Compile Include="Exceptions\DidNotMatchException.cs" />
-    <Compile Include="Exceptions\MoreDataException.cs" />
-    <Compile Include="Exceptions\UnexpectedlyMoreData.cs" />
-    <Compile Include="Passthrough Tests\Fallout4PassthroughTest.cs" />
-    <Compile Include="Processing\BinaryFileProcessor.cs" />
-    <Compile Include="ComparisonStream.cs" />
-    <Compile Include="FlattenedMod_Tests.cs" />
-    <Compile Include="Processing\OblivionProcessor.cs" />
-    <Compile Include="Processing\Processor.cs" />
-    <Compile Include="Processing\Fallout4Processor.cs" />
-    <Compile Include="Processing\SkyrimProcessor.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Passthrough Tests\OtherTests.cs" />
-    <Compile Include="Passthrough Tests\OblivionPassthroughTest.cs" />
-    <Compile Include="Passthrough Tests\PassthroughTest.cs" />
-    <Compile Include="Passthrough Tests\SkyrimPassthroughTest.cs" />
-    <Compile Include="Test.cs" />
-    <Compile Include="TestingSettings.cs" />
-    <Compile Include="TestBattery.cs" />
   </ItemGroup>
 </Project>

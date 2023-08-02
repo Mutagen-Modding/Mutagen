@@ -11,7 +11,7 @@ public class OblivionPassthroughTest : PassthroughTest
 {
     public override GameRelease GameRelease => GameRelease.Oblivion;
 
-    protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.ParallelProccessingSteps);
+    protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.ParallelProcessingSteps);
 
     public OblivionPassthroughTest(PassthroughTestParams param)
         : base(param)
@@ -27,7 +27,7 @@ public class OblivionPassthroughTest : PassthroughTest
     {
         return OblivionMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
-            parallel: Settings.ParallelProccessingSteps);
+            parallel: Settings.ParallelProcessingSteps);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

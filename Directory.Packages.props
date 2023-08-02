@@ -8,6 +8,7 @@
     <PackageVersion Include="Extended.Wpf.Toolkit">
       <Version>4.5.0</Version>
     </PackageVersion>
+    <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="FluentAssertions" Version="6.10.0" />
     <PackageVersion Include="GameFinder.StoreHandlers.GOG">
       <Version>2.4.0</Version>
