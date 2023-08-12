@@ -25,11 +25,12 @@ jobs:
       - name: Get Activity Short Circuit
         id: check
         run: |
+          echo "Event name: ${{ github.event_name }}"
           git branch -a
           git fetch origin nightly:nightly
           head_sha=$(git rev-parse --verify HEAD)
           nightly_sha=$(git rev-parse --verify nightly)
-          if [[ "$head_sha" == "$nightly_sha" ]]; then
+          if [[ "$head_sha" == "$nightly_sha" && ${{ github.event_name }} != "release" ]]; then
               same_sha=true;
           else
               same_sha=false;
@@ -90,11 +91,11 @@ jobs:
     - name: Build
       run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Pack Preview
-      if: ${{ success() && (github.event.inputs.is_release_event != 'true' || github.ref != 'refs/heads/release') }}
+      if: ${{ success() && github.event.release.prerelease }}
       run: |
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
-      if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/release' }}
+      if: ${{ success() && !github.event.release.prerelease }}
       run: | 
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out
     - name: Publish to Github
