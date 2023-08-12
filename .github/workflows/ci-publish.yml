@@ -48,17 +48,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         sln:
           - Mutagen.Records.sln
           - Mutagen.Records.Linux.sln
-        exclude:
-          - os: ubuntu-latest
-            sln: Mutagen.Records.sln
-          - os: macos-latest
-            sln: Mutagen.Records.sln
-          - os: windows-latest
-            sln: Mutagen.Records.Linux.sln
           
     steps:
     - uses: actions/checkout@v2
@@ -88,8 +81,6 @@ jobs:
       run: |
         dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
         dotnet restore Mutagen.Records.sln
-    - name: Build
-      run: dotnet build Mutagen.Records.sln -c Release --no-restore /p:GeneratePackageOnBuild=false
     - name: Pack Preview
       if: ${{ success() && github.event.release.prerelease }}
       run: |

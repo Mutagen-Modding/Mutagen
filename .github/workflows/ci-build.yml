@@ -30,10 +30,6 @@ jobs:
           - Mutagen.Records.sln
           - Mutagen.Records.Linux.sln
         exclude:
-          - os: ubuntu-latest
-            sln: Mutagen.Records.sln
-          - os: macos-latest
-            sln: Mutagen.Records.sln
           - os: windows-latest
             sln: Mutagen.Records.Linux.sln
           
