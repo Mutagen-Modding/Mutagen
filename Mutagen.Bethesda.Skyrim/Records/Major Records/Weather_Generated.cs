@@ -326,11 +326,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WindDirection
         public Single WindDirection { get; set; } = default;
-        public static RangeFloat WindDirection_Range = new RangeFloat(0, 0.7083333333333334f);
+        public static RangeFloat WindDirection_Range = new RangeFloat(0, 255f);
         #endregion
         #region WindDirectionRange
         public Single WindDirectionRange { get; set; } = default;
-        public static RangeFloat WindDirectionRange_Range = new RangeFloat(0, 1.4166666666666667f);
+        public static RangeFloat WindDirectionRange_Range = new RangeFloat(0, 255f);
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2953,7 +2953,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WeatherSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WeatherSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => WeatherSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WeatherSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3646,11 +3647,15 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IWeather obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            IWeather obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapListedAssetLinks(obj, mapping);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.CloudTextures.ForEach(x => x?.Relink(mapping));
-            obj.Aurora?.RemapListedAssetLinks(mapping);
+            obj.Aurora?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -5902,7 +5907,8 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     item: item.TransDelta,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 4);
+                    multiplier: null,
+                    divisor: 4f);
                 PercentBinaryTranslation.Write(
                     writer: writer,
                     item: item.SunGlare,
@@ -5951,12 +5957,14 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     item: item.WindDirection,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.002777777777777778);
+                    multiplier: 360f,
+                    divisor: null);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.WindDirectionRange,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.005555555555555556);
+                    multiplier: 180f,
+                    divisor: null);
             }
             WeatherBinaryWriteTranslation.WriteBinaryDisabledCloudLayers(
                 writer: writer,
@@ -6368,7 +6376,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.TransDelta = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
-                        multiplier: 4);
+                        multiplier: 4f,
+                        divisor: null);
                     if (dataFrame.Remaining < 1) return null;
                     item.SunGlare = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
@@ -6415,12 +6424,14 @@ namespace Mutagen.Bethesda.Skyrim
                     item.WindDirection = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
-                        multiplier: 0.002777777777777778);
+                        multiplier: null,
+                        divisor: 360f);
                     if (dataFrame.Remaining < 1) return null;
                     item.WindDirectionRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
-                        multiplier: 0.005555555555555556);
+                        multiplier: null,
+                        divisor: 180f);
                     return (int)Weather_FieldIndex.WindDirectionRange;
                 }
                 case RecordTypeInts.NAM1:
@@ -6804,7 +6815,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region TransDelta
         private int _TransDeltaLocation => _DATALocation!.Value.Min + 0x3;
         private bool _TransDelta_IsSet => _DATALocation.HasValue;
-        public Single TransDelta => _TransDelta_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_TransDeltaLocation, 1), FloatIntegerType.Byte, 4) : default;
+        public Single TransDelta => _TransDelta_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_TransDeltaLocation, 1), FloatIntegerType.Byte, multiplier: 4f, divisor: null) : default;
         #endregion
         #region SunGlare
         private int _SunGlareLocation => _DATALocation!.Value.Min + 0x4;
@@ -6864,12 +6875,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region WindDirection
         private int _WindDirectionLocation => _DATALocation!.Value.Min + 0x11;
         private bool _WindDirection_IsSet => _DATALocation.HasValue;
-        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, 0.002777777777777778) : default;
+        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 360f) : default;
         #endregion
         #region WindDirectionRange
         private int _WindDirectionRangeLocation => _DATALocation!.Value.Min + 0x12;
         private bool _WindDirectionRange_IsSet => _DATALocation.HasValue;
-        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, 0.005555555555555556) : default;
+        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 180f) : default;
         #endregion
         #region DisabledCloudLayers
         public partial ParseResult DisabledCloudLayersCustomParse(

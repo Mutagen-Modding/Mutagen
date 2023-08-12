@@ -100,17 +100,17 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region SunriseBeginRaw
-        public Byte SunriseBeginRaw { get; set; } = default;
+        #region SunriseBegin
+        public TimeOnly SunriseBegin { get; set; } = default;
         #endregion
-        #region SunriseEndRaw
-        public Byte SunriseEndRaw { get; set; } = default;
+        #region SunriseEnd
+        public TimeOnly SunriseEnd { get; set; } = default;
         #endregion
-        #region SunsetBeginRaw
-        public Byte SunsetBeginRaw { get; set; } = default;
+        #region SunsetBegin
+        public TimeOnly SunsetBegin { get; set; } = default;
         #endregion
-        #region SunsetEndRaw
-        public Byte SunsetEndRaw { get; set; } = default;
+        #region SunsetEnd
+        public TimeOnly SunsetEnd { get; set; } = default;
         #endregion
         #region Volatility
         public Byte Volatility { get; set; } = default;
@@ -151,10 +151,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SunTexture = initialValue;
                 this.SunGlareTexture = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.SunriseBeginRaw = initialValue;
-                this.SunriseEndRaw = initialValue;
-                this.SunsetBeginRaw = initialValue;
-                this.SunsetEndRaw = initialValue;
+                this.SunriseBegin = initialValue;
+                this.SunriseEnd = initialValue;
+                this.SunsetBegin = initialValue;
+                this.SunsetEnd = initialValue;
                 this.Volatility = initialValue;
                 this.Moons = initialValue;
                 this.PhaseLength = initialValue;
@@ -172,10 +172,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SunTexture,
                 TItem SunGlareTexture,
                 TItem Model,
-                TItem SunriseBeginRaw,
-                TItem SunriseEndRaw,
-                TItem SunsetBeginRaw,
-                TItem SunsetEndRaw,
+                TItem SunriseBegin,
+                TItem SunriseEnd,
+                TItem SunsetBegin,
+                TItem SunsetEnd,
                 TItem Volatility,
                 TItem Moons,
                 TItem PhaseLength)
@@ -192,10 +192,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SunTexture = SunTexture;
                 this.SunGlareTexture = SunGlareTexture;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.SunriseBeginRaw = SunriseBeginRaw;
-                this.SunriseEndRaw = SunriseEndRaw;
-                this.SunsetBeginRaw = SunsetBeginRaw;
-                this.SunsetEndRaw = SunsetEndRaw;
+                this.SunriseBegin = SunriseBegin;
+                this.SunriseEnd = SunriseEnd;
+                this.SunsetBegin = SunsetBegin;
+                this.SunsetEnd = SunsetEnd;
                 this.Volatility = Volatility;
                 this.Moons = Moons;
                 this.PhaseLength = PhaseLength;
@@ -214,10 +214,10 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem SunTexture;
             public TItem SunGlareTexture;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem SunriseBeginRaw;
-            public TItem SunriseEndRaw;
-            public TItem SunsetBeginRaw;
-            public TItem SunsetEndRaw;
+            public TItem SunriseBegin;
+            public TItem SunriseEnd;
+            public TItem SunsetBegin;
+            public TItem SunsetEnd;
             public TItem Volatility;
             public TItem Moons;
             public TItem PhaseLength;
@@ -238,10 +238,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.SunTexture, rhs.SunTexture)) return false;
                 if (!object.Equals(this.SunGlareTexture, rhs.SunGlareTexture)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.SunriseBeginRaw, rhs.SunriseBeginRaw)) return false;
-                if (!object.Equals(this.SunriseEndRaw, rhs.SunriseEndRaw)) return false;
-                if (!object.Equals(this.SunsetBeginRaw, rhs.SunsetBeginRaw)) return false;
-                if (!object.Equals(this.SunsetEndRaw, rhs.SunsetEndRaw)) return false;
+                if (!object.Equals(this.SunriseBegin, rhs.SunriseBegin)) return false;
+                if (!object.Equals(this.SunriseEnd, rhs.SunriseEnd)) return false;
+                if (!object.Equals(this.SunsetBegin, rhs.SunsetBegin)) return false;
+                if (!object.Equals(this.SunsetEnd, rhs.SunsetEnd)) return false;
                 if (!object.Equals(this.Volatility, rhs.Volatility)) return false;
                 if (!object.Equals(this.Moons, rhs.Moons)) return false;
                 if (!object.Equals(this.PhaseLength, rhs.PhaseLength)) return false;
@@ -254,10 +254,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.SunTexture);
                 hash.Add(this.SunGlareTexture);
                 hash.Add(this.Model);
-                hash.Add(this.SunriseBeginRaw);
-                hash.Add(this.SunriseEndRaw);
-                hash.Add(this.SunsetBeginRaw);
-                hash.Add(this.SunsetEndRaw);
+                hash.Add(this.SunriseBegin);
+                hash.Add(this.SunriseEnd);
+                hash.Add(this.SunsetBegin);
+                hash.Add(this.SunsetEnd);
                 hash.Add(this.Volatility);
                 hash.Add(this.Moons);
                 hash.Add(this.PhaseLength);
@@ -290,10 +290,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.SunriseBeginRaw)) return false;
-                if (!eval(this.SunriseEndRaw)) return false;
-                if (!eval(this.SunsetBeginRaw)) return false;
-                if (!eval(this.SunsetEndRaw)) return false;
+                if (!eval(this.SunriseBegin)) return false;
+                if (!eval(this.SunriseEnd)) return false;
+                if (!eval(this.SunsetBegin)) return false;
+                if (!eval(this.SunsetEnd)) return false;
                 if (!eval(this.Volatility)) return false;
                 if (!eval(this.Moons)) return false;
                 if (!eval(this.PhaseLength)) return false;
@@ -324,10 +324,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.SunriseBeginRaw)) return true;
-                if (eval(this.SunriseEndRaw)) return true;
-                if (eval(this.SunsetBeginRaw)) return true;
-                if (eval(this.SunsetEndRaw)) return true;
+                if (eval(this.SunriseBegin)) return true;
+                if (eval(this.SunriseEnd)) return true;
+                if (eval(this.SunsetBegin)) return true;
+                if (eval(this.SunsetEnd)) return true;
                 if (eval(this.Volatility)) return true;
                 if (eval(this.Moons)) return true;
                 if (eval(this.PhaseLength)) return true;
@@ -364,10 +364,10 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.SunTexture = eval(this.SunTexture);
                 obj.SunGlareTexture = eval(this.SunGlareTexture);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.SunriseBeginRaw = eval(this.SunriseBeginRaw);
-                obj.SunriseEndRaw = eval(this.SunriseEndRaw);
-                obj.SunsetBeginRaw = eval(this.SunsetBeginRaw);
-                obj.SunsetEndRaw = eval(this.SunsetEndRaw);
+                obj.SunriseBegin = eval(this.SunriseBegin);
+                obj.SunriseEnd = eval(this.SunriseEnd);
+                obj.SunsetBegin = eval(this.SunsetBegin);
+                obj.SunsetEnd = eval(this.SunsetEnd);
                 obj.Volatility = eval(this.Volatility);
                 obj.Moons = eval(this.Moons);
                 obj.PhaseLength = eval(this.PhaseLength);
@@ -420,21 +420,21 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.SunriseBeginRaw ?? true)
+                    if (printMask?.SunriseBegin ?? true)
                     {
-                        sb.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
+                        sb.AppendItem(SunriseBegin, "SunriseBegin");
                     }
-                    if (printMask?.SunriseEndRaw ?? true)
+                    if (printMask?.SunriseEnd ?? true)
                     {
-                        sb.AppendItem(SunriseEndRaw, "SunriseEndRaw");
+                        sb.AppendItem(SunriseEnd, "SunriseEnd");
                     }
-                    if (printMask?.SunsetBeginRaw ?? true)
+                    if (printMask?.SunsetBegin ?? true)
                     {
-                        sb.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
+                        sb.AppendItem(SunsetBegin, "SunsetBegin");
                     }
-                    if (printMask?.SunsetEndRaw ?? true)
+                    if (printMask?.SunsetEnd ?? true)
                     {
-                        sb.AppendItem(SunsetEndRaw, "SunsetEndRaw");
+                        sb.AppendItem(SunsetEnd, "SunsetEnd");
                     }
                     if (printMask?.Volatility ?? true)
                     {
@@ -463,10 +463,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? SunTexture;
             public Exception? SunGlareTexture;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? SunriseBeginRaw;
-            public Exception? SunriseEndRaw;
-            public Exception? SunsetBeginRaw;
-            public Exception? SunsetEndRaw;
+            public Exception? SunriseBegin;
+            public Exception? SunriseEnd;
+            public Exception? SunsetBegin;
+            public Exception? SunsetEnd;
             public Exception? Volatility;
             public Exception? Moons;
             public Exception? PhaseLength;
@@ -486,14 +486,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return SunGlareTexture;
                     case Climate_FieldIndex.Model:
                         return Model;
-                    case Climate_FieldIndex.SunriseBeginRaw:
-                        return SunriseBeginRaw;
-                    case Climate_FieldIndex.SunriseEndRaw:
-                        return SunriseEndRaw;
-                    case Climate_FieldIndex.SunsetBeginRaw:
-                        return SunsetBeginRaw;
-                    case Climate_FieldIndex.SunsetEndRaw:
-                        return SunsetEndRaw;
+                    case Climate_FieldIndex.SunriseBegin:
+                        return SunriseBegin;
+                    case Climate_FieldIndex.SunriseEnd:
+                        return SunriseEnd;
+                    case Climate_FieldIndex.SunsetBegin:
+                        return SunsetBegin;
+                    case Climate_FieldIndex.SunsetEnd:
+                        return SunsetEnd;
                     case Climate_FieldIndex.Volatility:
                         return Volatility;
                     case Climate_FieldIndex.Moons:
@@ -522,17 +522,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case Climate_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Climate_FieldIndex.SunriseBeginRaw:
-                        this.SunriseBeginRaw = ex;
+                    case Climate_FieldIndex.SunriseBegin:
+                        this.SunriseBegin = ex;
                         break;
-                    case Climate_FieldIndex.SunriseEndRaw:
-                        this.SunriseEndRaw = ex;
+                    case Climate_FieldIndex.SunriseEnd:
+                        this.SunriseEnd = ex;
                         break;
-                    case Climate_FieldIndex.SunsetBeginRaw:
-                        this.SunsetBeginRaw = ex;
+                    case Climate_FieldIndex.SunsetBegin:
+                        this.SunsetBegin = ex;
                         break;
-                    case Climate_FieldIndex.SunsetEndRaw:
-                        this.SunsetEndRaw = ex;
+                    case Climate_FieldIndex.SunsetEnd:
+                        this.SunsetEnd = ex;
                         break;
                     case Climate_FieldIndex.Volatility:
                         this.Volatility = ex;
@@ -566,17 +566,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case Climate_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Climate_FieldIndex.SunriseBeginRaw:
-                        this.SunriseBeginRaw = (Exception?)obj;
+                    case Climate_FieldIndex.SunriseBegin:
+                        this.SunriseBegin = (Exception?)obj;
                         break;
-                    case Climate_FieldIndex.SunriseEndRaw:
-                        this.SunriseEndRaw = (Exception?)obj;
+                    case Climate_FieldIndex.SunriseEnd:
+                        this.SunriseEnd = (Exception?)obj;
                         break;
-                    case Climate_FieldIndex.SunsetBeginRaw:
-                        this.SunsetBeginRaw = (Exception?)obj;
+                    case Climate_FieldIndex.SunsetBegin:
+                        this.SunsetBegin = (Exception?)obj;
                         break;
-                    case Climate_FieldIndex.SunsetEndRaw:
-                        this.SunsetEndRaw = (Exception?)obj;
+                    case Climate_FieldIndex.SunsetEnd:
+                        this.SunsetEnd = (Exception?)obj;
                         break;
                     case Climate_FieldIndex.Volatility:
                         this.Volatility = (Exception?)obj;
@@ -600,10 +600,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (SunTexture != null) return true;
                 if (SunGlareTexture != null) return true;
                 if (Model != null) return true;
-                if (SunriseBeginRaw != null) return true;
-                if (SunriseEndRaw != null) return true;
-                if (SunsetBeginRaw != null) return true;
-                if (SunsetEndRaw != null) return true;
+                if (SunriseBegin != null) return true;
+                if (SunriseEnd != null) return true;
+                if (SunsetBegin != null) return true;
+                if (SunsetEnd != null) return true;
                 if (Volatility != null) return true;
                 if (Moons != null) return true;
                 if (PhaseLength != null) return true;
@@ -659,16 +659,16 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 Model?.Print(sb);
                 {
-                    sb.AppendItem(SunriseBeginRaw, "SunriseBeginRaw");
+                    sb.AppendItem(SunriseBegin, "SunriseBegin");
                 }
                 {
-                    sb.AppendItem(SunriseEndRaw, "SunriseEndRaw");
+                    sb.AppendItem(SunriseEnd, "SunriseEnd");
                 }
                 {
-                    sb.AppendItem(SunsetBeginRaw, "SunsetBeginRaw");
+                    sb.AppendItem(SunsetBegin, "SunsetBegin");
                 }
                 {
-                    sb.AppendItem(SunsetEndRaw, "SunsetEndRaw");
+                    sb.AppendItem(SunsetEnd, "SunsetEnd");
                 }
                 {
                     sb.AppendItem(Volatility, "Volatility");
@@ -691,10 +691,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SunTexture = this.SunTexture.Combine(rhs.SunTexture);
                 ret.SunGlareTexture = this.SunGlareTexture.Combine(rhs.SunGlareTexture);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.SunriseBeginRaw = this.SunriseBeginRaw.Combine(rhs.SunriseBeginRaw);
-                ret.SunriseEndRaw = this.SunriseEndRaw.Combine(rhs.SunriseEndRaw);
-                ret.SunsetBeginRaw = this.SunsetBeginRaw.Combine(rhs.SunsetBeginRaw);
-                ret.SunsetEndRaw = this.SunsetEndRaw.Combine(rhs.SunsetEndRaw);
+                ret.SunriseBegin = this.SunriseBegin.Combine(rhs.SunriseBegin);
+                ret.SunriseEnd = this.SunriseEnd.Combine(rhs.SunriseEnd);
+                ret.SunsetBegin = this.SunsetBegin.Combine(rhs.SunsetBegin);
+                ret.SunsetEnd = this.SunsetEnd.Combine(rhs.SunsetEnd);
                 ret.Volatility = this.Volatility.Combine(rhs.Volatility);
                 ret.Moons = this.Moons.Combine(rhs.Moons);
                 ret.PhaseLength = this.PhaseLength.Combine(rhs.PhaseLength);
@@ -724,10 +724,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SunTexture;
             public bool SunGlareTexture;
             public Model.TranslationMask? Model;
-            public bool SunriseBeginRaw;
-            public bool SunriseEndRaw;
-            public bool SunsetBeginRaw;
-            public bool SunsetEndRaw;
+            public bool SunriseBegin;
+            public bool SunriseEnd;
+            public bool SunsetBegin;
+            public bool SunsetEnd;
             public bool Volatility;
             public bool Moons;
             public bool PhaseLength;
@@ -741,10 +741,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.SunTexture = defaultOn;
                 this.SunGlareTexture = defaultOn;
-                this.SunriseBeginRaw = defaultOn;
-                this.SunriseEndRaw = defaultOn;
-                this.SunsetBeginRaw = defaultOn;
-                this.SunsetEndRaw = defaultOn;
+                this.SunriseBegin = defaultOn;
+                this.SunriseEnd = defaultOn;
+                this.SunsetBegin = defaultOn;
+                this.SunsetEnd = defaultOn;
                 this.Volatility = defaultOn;
                 this.Moons = defaultOn;
                 this.PhaseLength = defaultOn;
@@ -759,10 +759,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SunTexture, null));
                 ret.Add((SunGlareTexture, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((SunriseBeginRaw, null));
-                ret.Add((SunriseEndRaw, null));
-                ret.Add((SunsetBeginRaw, null));
-                ret.Add((SunsetEndRaw, null));
+                ret.Add((SunriseBegin, null));
+                ret.Add((SunriseEnd, null));
+                ret.Add((SunsetBegin, null));
+                ret.Add((SunsetEnd, null));
                 ret.Add((Volatility, null));
                 ret.Add((Moons, null));
                 ret.Add((PhaseLength, null));
@@ -831,7 +831,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ClimateCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ClimateSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ClimateSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ClimateSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ClimateSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -925,10 +926,10 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new Byte SunriseBeginRaw { get; set; }
-        new Byte SunriseEndRaw { get; set; }
-        new Byte SunsetBeginRaw { get; set; }
-        new Byte SunsetEndRaw { get; set; }
+        new TimeOnly SunriseBegin { get; set; }
+        new TimeOnly SunriseEnd { get; set; }
+        new TimeOnly SunsetBegin { get; set; }
+        new TimeOnly SunsetEnd { get; set; }
         new Byte Volatility { get; set; }
         new Climate.Moon Moons { get; set; }
         new Byte PhaseLength { get; set; }
@@ -961,10 +962,10 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        Byte SunriseBeginRaw { get; }
-        Byte SunriseEndRaw { get; }
-        Byte SunsetBeginRaw { get; }
-        Byte SunsetEndRaw { get; }
+        TimeOnly SunriseBegin { get; }
+        TimeOnly SunriseEnd { get; }
+        TimeOnly SunsetBegin { get; }
+        TimeOnly SunsetEnd { get; }
         Byte Volatility { get; }
         Climate.Moon Moons { get; }
         Byte PhaseLength { get; }
@@ -1148,10 +1149,10 @@ namespace Mutagen.Bethesda.Skyrim
         SunTexture = 8,
         SunGlareTexture = 9,
         Model = 10,
-        SunriseBeginRaw = 11,
-        SunriseEndRaw = 12,
-        SunsetBeginRaw = 13,
-        SunsetEndRaw = 14,
+        SunriseBegin = 11,
+        SunriseEnd = 12,
+        SunsetBegin = 13,
+        SunsetEnd = 14,
         Volatility = 15,
         Moons = 16,
         PhaseLength = 17,
@@ -1260,10 +1261,10 @@ namespace Mutagen.Bethesda.Skyrim
             item.SunTexture = default;
             item.SunGlareTexture = default;
             item.Model = null;
-            item.SunriseBeginRaw = default;
-            item.SunriseEndRaw = default;
-            item.SunsetBeginRaw = default;
-            item.SunsetEndRaw = default;
+            item.SunriseBegin = default;
+            item.SunriseEnd = default;
+            item.SunsetBegin = default;
+            item.SunsetEnd = default;
             item.Volatility = default;
             item.Moons = default;
             item.PhaseLength = default;
@@ -1312,12 +1313,19 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IClimate obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            IClimate obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.SunTexture?.Relink(mapping);
-            obj.SunGlareTexture?.Relink(mapping);
-            obj.Model?.RemapListedAssetLinks(mapping);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.SunTexture?.Relink(mapping);
+                obj.SunGlareTexture?.Relink(mapping);
+            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1396,10 +1404,10 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.SunriseBeginRaw = item.SunriseBeginRaw == rhs.SunriseBeginRaw;
-            ret.SunriseEndRaw = item.SunriseEndRaw == rhs.SunriseEndRaw;
-            ret.SunsetBeginRaw = item.SunsetBeginRaw == rhs.SunsetBeginRaw;
-            ret.SunsetEndRaw = item.SunsetEndRaw == rhs.SunsetEndRaw;
+            ret.SunriseBegin = item.SunriseBegin == rhs.SunriseBegin;
+            ret.SunriseEnd = item.SunriseEnd == rhs.SunriseEnd;
+            ret.SunsetBegin = item.SunsetBegin == rhs.SunsetBegin;
+            ret.SunsetEnd = item.SunsetEnd == rhs.SunsetEnd;
             ret.Volatility = item.Volatility == rhs.Volatility;
             ret.Moons = item.Moons == rhs.Moons;
             ret.PhaseLength = item.PhaseLength == rhs.PhaseLength;
@@ -1482,21 +1490,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if (printMask?.SunriseBeginRaw ?? true)
+            if (printMask?.SunriseBegin ?? true)
             {
-                sb.AppendItem(item.SunriseBeginRaw, "SunriseBeginRaw");
+                sb.AppendItem(item.SunriseBegin, "SunriseBegin");
             }
-            if (printMask?.SunriseEndRaw ?? true)
+            if (printMask?.SunriseEnd ?? true)
             {
-                sb.AppendItem(item.SunriseEndRaw, "SunriseEndRaw");
+                sb.AppendItem(item.SunriseEnd, "SunriseEnd");
             }
-            if (printMask?.SunsetBeginRaw ?? true)
+            if (printMask?.SunsetBegin ?? true)
             {
-                sb.AppendItem(item.SunsetBeginRaw, "SunsetBeginRaw");
+                sb.AppendItem(item.SunsetBegin, "SunsetBegin");
             }
-            if (printMask?.SunsetEndRaw ?? true)
+            if (printMask?.SunsetEnd ?? true)
             {
-                sb.AppendItem(item.SunsetEndRaw, "SunsetEndRaw");
+                sb.AppendItem(item.SunsetEnd, "SunsetEnd");
             }
             if (printMask?.Volatility ?? true)
             {
@@ -1580,21 +1588,21 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBeginRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
             {
-                if (lhs.SunriseBeginRaw != rhs.SunriseBeginRaw) return false;
+                if (lhs.SunriseBegin != rhs.SunriseBegin) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEndRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
             {
-                if (lhs.SunriseEndRaw != rhs.SunriseEndRaw) return false;
+                if (lhs.SunriseEnd != rhs.SunriseEnd) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBeginRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
             {
-                if (lhs.SunsetBeginRaw != rhs.SunsetBeginRaw) return false;
+                if (lhs.SunsetBegin != rhs.SunsetBegin) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEndRaw) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
             {
-                if (lhs.SunsetEndRaw != rhs.SunsetEndRaw) return false;
+                if (lhs.SunsetEnd != rhs.SunsetEnd) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
             {
@@ -1649,10 +1657,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.SunriseBeginRaw);
-            hash.Add(item.SunriseEndRaw);
-            hash.Add(item.SunsetBeginRaw);
-            hash.Add(item.SunsetEndRaw);
+            hash.Add(item.SunriseBegin);
+            hash.Add(item.SunriseEnd);
+            hash.Add(item.SunsetBegin);
+            hash.Add(item.SunsetEnd);
             hash.Add(item.Volatility);
             hash.Add(item.Moons);
             hash.Add(item.PhaseLength);
@@ -1860,21 +1868,21 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBeginRaw) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBegin) ?? true))
             {
-                item.SunriseBeginRaw = rhs.SunriseBeginRaw;
+                item.SunriseBegin = rhs.SunriseBegin;
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEndRaw) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEnd) ?? true))
             {
-                item.SunriseEndRaw = rhs.SunriseEndRaw;
+                item.SunriseEnd = rhs.SunriseEnd;
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBeginRaw) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBegin) ?? true))
             {
-                item.SunsetBeginRaw = rhs.SunsetBeginRaw;
+                item.SunsetBegin = rhs.SunsetBegin;
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEndRaw) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEnd) ?? true))
             {
-                item.SunsetEndRaw = rhs.SunsetEndRaw;
+                item.SunsetEnd = rhs.SunsetEnd;
             }
             if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
             {
@@ -2076,15 +2084,75 @@ namespace Mutagen.Bethesda.Skyrim
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TNAM)))
             {
-                writer.Write(item.SunriseBeginRaw);
-                writer.Write(item.SunriseEndRaw);
-                writer.Write(item.SunsetBeginRaw);
-                writer.Write(item.SunsetEndRaw);
+                ClimateBinaryWriteTranslation.WriteBinarySunriseBegin(
+                    writer: writer,
+                    item: item);
+                ClimateBinaryWriteTranslation.WriteBinarySunriseEnd(
+                    writer: writer,
+                    item: item);
+                ClimateBinaryWriteTranslation.WriteBinarySunsetBegin(
+                    writer: writer,
+                    item: item);
+                ClimateBinaryWriteTranslation.WriteBinarySunsetEnd(
+                    writer: writer,
+                    item: item);
                 writer.Write(item.Volatility);
                 ClimateBinaryWriteTranslation.WriteBinaryMoonAndPhaseLength(
                     writer: writer,
                     item: item);
             }
+        }
+
+        public static partial void WriteBinarySunriseBeginCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunriseBegin(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunriseBeginCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySunriseEndCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunriseEnd(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunriseEndCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySunsetBeginCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunsetBegin(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunsetBeginCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySunsetEndCustom(
+            MutagenWriter writer,
+            IClimateGetter item);
+
+        public static void WriteBinarySunsetEnd(
+            MutagenWriter writer,
+            IClimateGetter item)
+        {
+            WriteBinarySunsetEndCustom(
+                writer: writer,
+                item: item);
         }
 
         public static partial void WriteBinaryMoonAndPhaseLengthCustom(
@@ -2220,14 +2288,18 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.SunriseBeginRaw = dataFrame.ReadUInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.SunriseEndRaw = dataFrame.ReadUInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.SunsetBeginRaw = dataFrame.ReadUInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.SunsetEndRaw = dataFrame.ReadUInt8();
+                    ClimateBinaryCreateTranslation.FillBinarySunriseBeginCustom(
+                        frame: dataFrame,
+                        item: item);
+                    ClimateBinaryCreateTranslation.FillBinarySunriseEndCustom(
+                        frame: dataFrame,
+                        item: item);
+                    ClimateBinaryCreateTranslation.FillBinarySunsetBeginCustom(
+                        frame: dataFrame,
+                        item: item);
+                    ClimateBinaryCreateTranslation.FillBinarySunsetEndCustom(
+                        frame: dataFrame,
+                        item: item);
                     if (dataFrame.Remaining < 1) return null;
                     item.Volatility = dataFrame.ReadUInt8();
                     ClimateBinaryCreateTranslation.FillBinaryMoonAndPhaseLengthCustom(
@@ -2246,6 +2318,22 @@ namespace Mutagen.Bethesda.Skyrim
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinarySunriseBeginCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
+
+        public static partial void FillBinarySunriseEndCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
+
+        public static partial void FillBinarySunsetBeginCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
+
+        public static partial void FillBinarySunsetEndCustom(
+            MutagenFrame frame,
+            IClimateInternal item);
 
         public static partial void FillBinaryMoonAndPhaseLengthCustom(
             MutagenFrame frame,
@@ -2310,25 +2398,25 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;
-        #region SunriseBeginRaw
-        private int _SunriseBeginRawLocation => _TNAMLocation!.Value.Min;
-        private bool _SunriseBeginRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunriseBeginRaw => _SunriseBeginRaw_IsSet ? _recordData.Span[_SunriseBeginRawLocation] : default;
+        #region SunriseBegin
+        private int _SunriseBeginLocation => _TNAMLocation!.Value.Min;
+        public partial TimeOnly GetSunriseBeginCustom();
+        public TimeOnly SunriseBegin => GetSunriseBeginCustom();
         #endregion
-        #region SunriseEndRaw
-        private int _SunriseEndRawLocation => _TNAMLocation!.Value.Min + 0x1;
-        private bool _SunriseEndRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunriseEndRaw => _SunriseEndRaw_IsSet ? _recordData.Span[_SunriseEndRawLocation] : default;
+        #region SunriseEnd
+        private int _SunriseEndLocation => _TNAMLocation!.Value.Min + 0x1;
+        public partial TimeOnly GetSunriseEndCustom();
+        public TimeOnly SunriseEnd => GetSunriseEndCustom();
         #endregion
-        #region SunsetBeginRaw
-        private int _SunsetBeginRawLocation => _TNAMLocation!.Value.Min + 0x2;
-        private bool _SunsetBeginRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunsetBeginRaw => _SunsetBeginRaw_IsSet ? _recordData.Span[_SunsetBeginRawLocation] : default;
+        #region SunsetBegin
+        private int _SunsetBeginLocation => _TNAMLocation!.Value.Min + 0x2;
+        public partial TimeOnly GetSunsetBeginCustom();
+        public TimeOnly SunsetBegin => GetSunsetBeginCustom();
         #endregion
-        #region SunsetEndRaw
-        private int _SunsetEndRawLocation => _TNAMLocation!.Value.Min + 0x3;
-        private bool _SunsetEndRaw_IsSet => _TNAMLocation.HasValue;
-        public Byte SunsetEndRaw => _SunsetEndRaw_IsSet ? _recordData.Span[_SunsetEndRawLocation] : default;
+        #region SunsetEnd
+        private int _SunsetEndLocation => _TNAMLocation!.Value.Min + 0x3;
+        public partial TimeOnly GetSunsetEndCustom();
+        public TimeOnly SunsetEnd => GetSunsetEndCustom();
         #endregion
         #region Volatility
         private int _VolatilityLocation => _TNAMLocation!.Value.Min + 0x4;

@@ -144,9 +144,21 @@ public partial class DialogTopic
     }
 }
 
+partial class DialogTopicSetterCommon
+{
+    private static partial void RemapResolvedAssetLinks(
+        IDialogTopic obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache,
+        AssetLinkQuery queryCategories)
+    {
+        // Nothing to do here, we can't change the form key of the dialogue or any other parameters, like quest editor id
+    }
+}
+
 partial class DialogTopicCommon
 {
-    public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
     {
         if (assetType != null && assetType != typeof(SkyrimSoundAssetType)) yield break;
         

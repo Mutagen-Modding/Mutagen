@@ -722,7 +722,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => StaticCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => StaticSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => StaticSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => StaticSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => StaticSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1217,11 +1218,15 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IStatic obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            IStatic obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.Model?.RemapListedAssetLinks(mapping);
-            obj.Lod?.RemapListedAssetLinks(mapping);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Lod?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion

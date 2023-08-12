@@ -65,7 +65,7 @@ public abstract class PassthroughTest
 
         var test = new Test(
             $"Setup Processed Files",
-            parallel: Settings.ParallelProccessingSteps,
+            parallel: Settings.ParallelProcessingSteps,
             toDo: async (o) =>
             {
                 o.OnNext(Nickname);
@@ -242,7 +242,7 @@ public abstract class PassthroughTest
                 "Binary Normal Passthrough",
                 GameRelease,
                 Target,
-                parallel: Settings.ParallelProccessingSteps,
+                parallel: Settings.ParallelProcessingSteps,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -275,7 +275,7 @@ public abstract class PassthroughTest
                     "Binary Normal Passthrough Parallel",
                     GameRelease,
                     Target,
-                    parallel: Settings.ParallelProccessingSteps,
+                    parallel: Settings.ParallelProcessingSteps,
                     toDo: async (o) =>
                     {
                         o.OnNext(FilePath.ToString());
@@ -333,7 +333,7 @@ public abstract class PassthroughTest
                 "Binary Overlay Passthrough",
                 GameRelease,
                 Target,
-                parallel: Settings.ParallelProccessingSteps,
+                parallel: Settings.ParallelProcessingSteps,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -373,7 +373,7 @@ public abstract class PassthroughTest
                 "Copy In Passthrough",
                 GameRelease,
                 Target,
-                parallel: Settings.ParallelProccessingSteps,
+                parallel: Settings.ParallelProcessingSteps,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -459,7 +459,7 @@ public abstract class PassthroughTest
 
     public void TestPex(GameRelease release, ReadOnlyMemorySlice<byte> bytes)
     {
-        var memStream = new BinaryMemoryReadStream(bytes);
+        var memStream = BinaryMemoryReadStream.LittleEndian(bytes);
         PexFile.CreateFromStream(memStream, release.ToCategory());
     }
 
@@ -562,7 +562,7 @@ public abstract class PassthroughTest
                         new FileStream(sourcePath, FileMode.Open),
                         pathToTest);
                 },
-                parallel: Settings.ParallelProccessingSteps);
+                parallel: Settings.ParallelProcessingSteps);
         }
     }
 

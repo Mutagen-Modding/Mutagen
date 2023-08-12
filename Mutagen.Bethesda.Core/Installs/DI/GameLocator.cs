@@ -29,7 +29,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         }
     }
     
-    private bool TryGetGameDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+    public bool TryGetGameDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
         foreach (var source in GetAllGameDirectories(release))
         {
@@ -56,7 +56,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         }
     }
 
-    private DirectoryPath GetGameDirectory(GameRelease release)
+    public DirectoryPath GetGameDirectory(GameRelease release)
     {
         if (TryGetGameDirectory(release, out var path))
         {
@@ -65,7 +65,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         throw new DirectoryNotFoundException($"Game folder for {release} cannot be found automatically");
     }
 
-    private bool TryGetDataDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+    public bool TryGetDataDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
     {
         if (TryGetGameDirectory(release, out path))
         {
@@ -76,7 +76,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
         return false;
     }
 
-    private DirectoryPath GetDataDirectory(GameRelease release)
+    public DirectoryPath GetDataDirectory(GameRelease release)
     {
         if (TryGetDataDirectory(release, out var path))
         {

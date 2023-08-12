@@ -64,11 +64,8 @@ public static class MajorRecordInstantiator
 
         if (!_activators.TryGetValue(regis.ClassType, out var activator))
         {
-            lock (_activators)
-            {
-                activator = GetActivatorFor(regis.ClassType);
-                _activators = _activators.Add(regis.ClassType, activator);
-            }
+            activator = GetActivatorFor(regis.ClassType);
+            _activators = _activators.SetItem(regis.ClassType, activator);
         }
 
         return activator(formKey, release);

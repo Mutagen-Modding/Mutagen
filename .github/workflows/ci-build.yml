@@ -1,0 +1,50 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - dev
+      - release
+      - prerelease
+    paths-ignore:
+      - 'docs/**'
+      - 'mkdocs.yml'
+  pull_request:
+    branches:
+      - dev
+      - release
+      - prerelease
+    paths-ignore:
+      - 'docs/**'
+      - 'mkdocs.yml'
+
+jobs:
+  build-test:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        sln:
+          - Mutagen.Records.sln
+          - Mutagen.Records.Linux.sln
+        exclude:
+          - os: ubuntu-latest
+            sln: Mutagen.Records.sln
+          - os: macos-latest
+            sln: Mutagen.Records.sln
+          - os: windows-latest
+            sln: Mutagen.Records.Linux.sln
+          
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
+        dotnet restore ${{ matrix.sln }}
+    - name: Build
+      run: dotnet build ${{ matrix.sln }} -c Release --no-restore /p:GeneratePackageOnBuild=false
+    - name: Test
+      run: dotnet test ${{ matrix.sln }} -c Release --no-build
+

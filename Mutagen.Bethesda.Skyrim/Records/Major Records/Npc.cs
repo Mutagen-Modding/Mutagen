@@ -17,10 +17,22 @@ public partial class Npc
         BleedoutOverride = 0x2000_0000
     }
 }
-    
+
+partial class NpcSetterCommon
+{
+    private static partial void RemapResolvedAssetLinks(
+        INpc obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache? linkCache,
+        AssetLinkQuery queryCategories)
+    {
+        // Nothing to do here, we can't change the form key of the npc
+    }
+}
+
 partial class NpcCommon
 {
-    public static partial IEnumerable<IAssetLink> GetResolvedAssetLinks(INpcGetter obj, IAssetLinkCache linkCache, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(INpcGetter obj, IAssetLinkCache linkCache, Type? assetType)
     {
         if (assetType != null 
             && assetType != typeof(SkyrimTextureAssetType)

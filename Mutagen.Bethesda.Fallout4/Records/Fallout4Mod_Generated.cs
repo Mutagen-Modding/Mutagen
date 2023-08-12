@@ -6654,7 +6654,8 @@ namespace Mutagen.Bethesda.Fallout4
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout4ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout4ModSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4ModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => Fallout4ModSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout4ModSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -6671,7 +6672,7 @@ namespace Mutagen.Bethesda.Fallout4
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -6708,7 +6709,7 @@ namespace Mutagen.Bethesda.Fallout4
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -7632,7 +7633,7 @@ namespace Mutagen.Bethesda.Fallout4
                 using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -9932,10 +9933,14 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
-        public void RemapListedAssetLinks(IFallout4Mod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            IFallout4Mod obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            obj.Cells.RemapListedAssetLinks(mapping);
-            obj.Worldspaces.RemapListedAssetLinks(mapping);
+            obj.Cells.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Worldspaces.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -25095,7 +25100,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceCollection(path.ModKey))
             {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,

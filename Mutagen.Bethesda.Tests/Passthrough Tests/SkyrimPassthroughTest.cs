@@ -228,7 +228,7 @@ public class SkyrimPassthroughTest : PassthroughTest
         return SkyrimMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
             GameRelease.ToSkyrimRelease(),
-            parallel: Settings.ParallelProccessingSteps);
+            parallel: Settings.ParallelProcessingSteps);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
@@ -239,5 +239,5 @@ public class SkyrimPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new SkyrimProcessor(GameRelease, Settings.ParallelProccessingSteps);
+    protected override Processor ProcessorFactory() => new SkyrimProcessor(GameRelease, Settings.ParallelProcessingSteps);
 }

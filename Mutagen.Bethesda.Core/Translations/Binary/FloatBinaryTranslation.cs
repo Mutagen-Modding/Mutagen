@@ -1,5 +1,7 @@
 using Noggog;
 using System.Buffers.Binary;
+using System.Runtime.CompilerServices;
+using Mutagen.Bethesda.Plugins.Exceptions;
 
 namespace Mutagen.Bethesda.Translations.Binary;
 
@@ -20,65 +22,61 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         return ret;
     }
 
-    public float Parse(TReader reader, FloatIntegerType integerType, double multiplier)
+    public float Parse(TReader reader, FloatIntegerType integerType,
+        float? multiplier = null,
+        float? divisor = null)
     {
         switch (integerType)
         {
             case FloatIntegerType.UInt:
             {
                 var raw = reader.ReadUInt32();
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return FloatBinaryTranslation.ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.UShort:
             {
                 var raw = reader.ReadUInt16();
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return FloatBinaryTranslation.ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.Byte:
             {
                 var raw = reader.ReadUInt8();
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return FloatBinaryTranslation.ApplyTransformations(raw, multiplier: multiplier, divisor: divisor);
             }
             default:
                 throw new NotImplementedException();
         }
     }
 
-    public float Parse(TReader reader, float multiplier)
+    public float Parse(TReader reader,
+        float? multiplier,
+        float? divisor)
     {
-        return Parse(reader) * multiplier;
+        return FloatBinaryTranslation.ApplyTransformations(Parse(reader), multiplier: multiplier, divisor: divisor);
     }
 
-    public float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, double multiplier)
+    public float GetFloat(
+        ReadOnlySpan<byte> bytes,
+        FloatIntegerType integerType,
+        float? multiplier = null,
+        float? divisor = null)
     {
         switch (integerType)
         {
             case FloatIntegerType.UInt:
             {
                 var raw = BinaryPrimitives.ReadUInt32LittleEndian(bytes);
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return FloatBinaryTranslation.ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.UShort:
             {
                 var raw = BinaryPrimitives.ReadUInt16LittleEndian(bytes);
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return FloatBinaryTranslation.ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
             }
             case FloatIntegerType.Byte:
             {
                 var raw = bytes[0];
-                double d = raw;
-                d *= multiplier;
-                return (float)d;
+                return FloatBinaryTranslation.ApplyTransformationsFromUInt32(raw, multiplier: multiplier, divisor: divisor);
             }
             default:
                 throw new NotImplementedException();
@@ -101,33 +99,122 @@ public sealed class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTr
         }
     }
 
-    public void Write(TWriter writer, float item, float multiplier)
+    public void Write(
+        TWriter writer,
+        float item,
+        float? multiplier,
+        float? divisor)
     {
-        Write(writer, item / multiplier);
+        var transformed = FloatBinaryTranslation.ApplyTransformations(item, multiplier: multiplier, divisor: divisor);
+
+        Write(writer, transformed);
     }
 
-    public void WriteNullable(TWriter writer, float? item, float multiplier)
-    {
-        if (!item.HasValue) return;
-        Write(writer, item.Value / multiplier);
-    }
-
-    public void Write(TWriter writer, float? item, FloatIntegerType integerType, double multiplier)
+    public void Write(
+        TWriter writer,
+        float? item,
+        FloatIntegerType integerType, 
+        float? multiplier = null,
+        float? divisor = null,
+        [CallerArgumentExpression("item")] string? propertyName = default)
     {
         if (item == null) return;
-        switch (integerType)
+
+        try
         {
-            case FloatIntegerType.UInt:
-                writer.Write((uint)Math.Round(item.Value / multiplier));
-                break;
-            case FloatIntegerType.UShort:
-                writer.Write((ushort)Math.Round(item.Value / multiplier));
-                break;
-            case FloatIntegerType.Byte:
-                writer.Write((byte)Math.Round(item.Value / multiplier));
-                break;
-            default:
-                throw new NotImplementedException();
+            var transformed = FloatBinaryTranslation.ApplyTransformationsToUInt32(item.Value, multiplier: multiplier, divisor: divisor);
+        
+            switch (integerType)
+            {
+                case FloatIntegerType.UInt:
+                    writer.Write(transformed);
+                    break;
+                case FloatIntegerType.UShort:
+                    writer.Write(checked((ushort)transformed));
+                    break;
+                case FloatIntegerType.Byte:
+                    writer.Write(checked((byte)transformed));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
+        catch (OverflowException)
+        {
+            throw new FloatStoredAsIntegerOverflowException(
+                propertyName,
+                // Intentionally flipped
+                divisor: multiplier, 
+                multiplier: divisor,
+                integerType: integerType);
+        }
+    }
+}
+
+internal static class FloatBinaryTranslation
+{
+    public static float ApplyTransformations(float input, float? multiplier, float? divisor)
+    {
+        if (multiplier == null && divisor == null)
+        {
+            return input;
+        }
+
+        if (multiplier == null)
+        {
+            return input / divisor!.Value;
+        }
+
+        if (divisor == null)
+        {
+            return input * multiplier.Value;
+        }
+
+        return input * multiplier.Value / divisor.Value;
+    }
+
+    public static uint ApplyTransformationsToUInt32(float input, float? multiplier, float? divisor)
+    {
+        if (multiplier == null && divisor == null)
+        {
+            return checked((uint)Math.Round(input));
+        }
+
+        double transformed = input;
+        
+        if (multiplier == null)
+        {
+            transformed /= divisor!.Value;
+        }
+        else if (divisor == null)
+        {
+            transformed *= multiplier.Value;
+        }
+        else
+        {
+            transformed = (transformed * multiplier.Value) / divisor.Value;
+        }
+
+        return checked((uint)Math.Round(transformed));
+    }
+
+    public static float ApplyTransformationsFromUInt32(uint input, float? multiplier, float? divisor)
+    {
+        if (multiplier == null && divisor == null)
+        {
+            return input;
+        }
+
+        if (multiplier == null)
+        {
+            return input / divisor!.Value;
+        }
+
+        if (divisor == null)
+        {
+            return input * multiplier.Value;
+        }
+
+        return input * multiplier.Value / divisor.Value;
     }
 }

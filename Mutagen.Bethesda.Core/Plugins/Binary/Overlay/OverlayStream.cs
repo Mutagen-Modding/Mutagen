@@ -27,7 +27,7 @@ internal sealed class OverlayStream : IMutagenReadStream
     public OverlayStream(ReadOnlyMemorySlice<byte> data, ParsingBundle constants)
     {
         Data = data;
-        _readStream = new BinaryMemoryReadStream(data);
+        _readStream = BinaryMemoryReadStream.LittleEndian(data);
         MetaData = constants;
     }
 

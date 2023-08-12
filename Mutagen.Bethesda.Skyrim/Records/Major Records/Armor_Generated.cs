@@ -1434,7 +1434,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ArmorCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ArmorSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ArmorSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ArmorSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ArmorSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2099,12 +2100,16 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IArmor obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            IArmor obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.VirtualMachineAdapter?.RemapListedAssetLinks(mapping);
-            obj.WorldModel?.ForEach(x => x?.RemapListedAssetLinks(mapping));
-            obj.Destructible?.RemapListedAssetLinks(mapping);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.WorldModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.VirtualMachineAdapter?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -3306,7 +3311,8 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.ArmorRating,
                 integerType: FloatIntegerType.UInt,
-                multiplier: 0.01,
+                multiplier: 100f,
+                divisor: null,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3563,7 +3569,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.ArmorRating = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         integerType: FloatIntegerType.UInt,
-                        multiplier: 0.01);
+                        multiplier: null,
+                        divisor: 100f);
                     return (int)Armor_FieldIndex.ArmorRating;
                 }
                 case RecordTypeInts.TNAM:
@@ -3736,7 +3743,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ArmorRating
         private int? _ArmorRatingLocation;
-        public Single ArmorRating => _ArmorRatingLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRatingLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 0.01) : default;
+        public Single ArmorRating => _ArmorRatingLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRatingLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, multiplier: null, divisor: 100f) : default;
         #endregion
         #region TemplateArmor
         private int? _TemplateArmorLocation;

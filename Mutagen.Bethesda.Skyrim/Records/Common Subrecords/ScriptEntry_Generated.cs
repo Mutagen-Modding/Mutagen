@@ -505,7 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptEntrySetterCommon.Instance.RemapLinks(this, mapping);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ScriptEntryCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ScriptEntrySetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ScriptEntrySetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ScriptEntrySetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ScriptEntrySetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -879,8 +880,18 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IScriptEntry obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        private static partial void RemapInferredAssetLinks(
+            IScriptEntry obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            AssetLinkQuery queryCategories);
+        
+        public void RemapAssetLinks(
+            IScriptEntry obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
+            RemapInferredAssetLinks(obj, mapping, queryCategories);
         }
         
         #endregion
@@ -1049,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IScriptEntryGetter obj, Type? assetType);
+        public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IScriptEntryGetter obj, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IScriptEntryGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             if (queryCategories.HasFlag(AssetLinkQuery.Inferred))

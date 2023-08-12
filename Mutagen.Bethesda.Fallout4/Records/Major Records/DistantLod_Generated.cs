@@ -52,17 +52,6 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mesh
         public String Mesh { get; set; } = string.Empty;
         #endregion
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Data;
-        public MemorySlice<Byte>? Data
-        {
-            get => this._Data;
-            set => this._Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDistantLodGetter.Data => this.Data;
-        #endregion
 
         #region To String
 
@@ -100,18 +89,9 @@ namespace Mutagen.Bethesda.Fallout4
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem initialValue)
-            {
-                this.Mesh = initialValue;
-                this.Data = initialValue;
-            }
-
-            public Mask(
-                TItem Mesh,
-                TItem Data)
+            public Mask(TItem Mesh)
             {
                 this.Mesh = Mesh;
-                this.Data = Data;
             }
 
             #pragma warning disable CS8618
@@ -124,7 +104,6 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Mesh;
-            public TItem Data;
             #endregion
 
             #region Equals
@@ -138,14 +117,12 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Mesh, rhs.Mesh)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Mesh);
-                hash.Add(this.Data);
                 return hash.ToHashCode();
             }
 
@@ -155,7 +132,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Mesh)) return false;
-                if (!eval(this.Data)) return false;
                 return true;
             }
             #endregion
@@ -164,7 +140,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Mesh)) return true;
-                if (eval(this.Data)) return true;
                 return false;
             }
             #endregion
@@ -180,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Mesh = eval(this.Mesh);
-                obj.Data = eval(this.Data);
             }
             #endregion
 
@@ -202,10 +176,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.Mesh ?? true)
                     {
                         sb.AppendItem(Mesh, "Mesh");
-                    }
-                    if (printMask?.Data ?? true)
-                    {
-                        sb.AppendItem(Data, "Data");
                     }
                 }
             }
@@ -232,7 +202,6 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? Mesh;
-            public Exception? Data;
             #endregion
 
             #region IErrorMask
@@ -243,8 +212,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case DistantLod_FieldIndex.Mesh:
                         return Mesh;
-                    case DistantLod_FieldIndex.Data:
-                        return Data;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -257,9 +224,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case DistantLod_FieldIndex.Mesh:
                         this.Mesh = ex;
-                        break;
-                    case DistantLod_FieldIndex.Data:
-                        this.Data = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -274,9 +238,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case DistantLod_FieldIndex.Mesh:
                         this.Mesh = (Exception?)obj;
                         break;
-                    case DistantLod_FieldIndex.Data:
-                        this.Data = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -286,7 +247,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Mesh != null) return true;
-                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -315,9 +275,6 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     sb.AppendItem(Mesh, "Mesh");
                 }
-                {
-                    sb.AppendItem(Data, "Data");
-                }
             }
             #endregion
 
@@ -327,7 +284,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Mesh = this.Mesh.Combine(rhs.Mesh);
-                ret.Data = this.Data.Combine(rhs.Data);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -352,7 +308,6 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Mesh;
-            public bool Data;
             #endregion
 
             #region Ctors
@@ -363,7 +318,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Mesh = defaultOn;
-                this.Data = defaultOn;
             }
 
             #endregion
@@ -380,7 +334,6 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Mesh, null));
-                ret.Add((Data, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -454,7 +407,6 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IDistantLod>
     {
         new String Mesh { get; set; }
-        new MemorySlice<Byte>? Data { get; set; }
     }
 
     public partial interface IDistantLodGetter :
@@ -470,7 +422,6 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DistantLod_Registration.Instance;
         String Mesh { get; }
-        ReadOnlyMemorySlice<Byte>? Data { get; }
 
     }
 
@@ -641,7 +592,6 @@ namespace Mutagen.Bethesda.Fallout4
     internal enum DistantLod_FieldIndex
     {
         Mesh = 0,
-        Data = 1,
     }
     #endregion
 
@@ -659,9 +609,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const string GUID = "795bff20-ec22-4c22-a3f5-bfb3b2ee105e";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 1;
 
         public static readonly Type MaskType = typeof(DistantLod.Mask<>);
 
@@ -730,7 +680,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Mesh = string.Empty;
-            item.Data = default;
         }
         
         #region Mutagen
@@ -781,7 +730,6 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Mesh = string.Equals(item.Mesh, rhs.Mesh);
-            ret.Data = MemorySliceExt.SequenceEqual(item.Data, rhs.Data);
         }
         
         public string Print(
@@ -830,11 +778,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Mesh, "Mesh");
             }
-            if ((printMask?.Data ?? true)
-                && item.Data is {} DataItem)
-            {
-                sb.AppendLine($"Data => {SpanExt.ToHexString(DataItem)}");
-            }
         }
         
         #region Equals and Hash
@@ -848,10 +791,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.Mesh, rhs.Mesh)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Data) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.Data, rhs.Data)) return false;
-            }
             return true;
         }
         
@@ -859,10 +798,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.Mesh);
-            if (item.Data is {} DataItem)
-            {
-                hash.Add(DataItem);
-            }
             return hash.ToHashCode();
         }
         
@@ -898,17 +833,6 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Mesh) ?? true))
             {
                 item.Mesh = rhs.Mesh;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Data) ?? true))
-            {
-                if(rhs.Data is {} Datarhs)
-                {
-                    item.Data = Datarhs.ToArray();
-                }
-                else
-                {
-                    item.Data = default;
-                }
             }
         }
         
@@ -1006,24 +930,20 @@ namespace Mutagen.Bethesda.Fallout4
             IDistantLodGetter item,
             MutagenWriter writer)
         {
-            StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Mesh,
-                binaryType: StringBinaryType.NullTerminate);
-            DistantLodBinaryWriteTranslation.WriteBinaryData(
+            DistantLodBinaryWriteTranslation.WriteBinaryMesh(
                 writer: writer,
                 item: item);
         }
 
-        public static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryMeshCustom(
             MutagenWriter writer,
             IDistantLodGetter item);
 
-        public static void WriteBinaryData(
+        public static void WriteBinaryMesh(
             MutagenWriter writer,
             IDistantLodGetter item)
         {
-            WriteBinaryDataCustom(
+            WriteBinaryMeshCustom(
                 writer: writer,
                 item: item);
         }
@@ -1059,17 +979,12 @@ namespace Mutagen.Bethesda.Fallout4
             IDistantLod item,
             MutagenFrame frame)
         {
-            item.Mesh = StringBinaryTranslation.Instance.Parse(
-                reader: frame,
-                stringBinaryType: StringBinaryType.NullTerminate,
-                parseWhole: false);
-            if (frame.Complete) return;
-            DistantLodBinaryCreateTranslation.FillBinaryDataCustom(
+            DistantLodBinaryCreateTranslation.FillBinaryMeshCustom(
                 frame: frame,
                 item: item);
         }
 
-        public static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryMeshCustom(
             MutagenFrame frame,
             IDistantLod item);
 
@@ -1139,12 +1054,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mesh
         public String Mesh { get; private set; } = string.Empty;
         protected int MeshEndingPos;
-        #endregion
-        #region Data
-        public partial ReadOnlyMemorySlice<Byte>? GetDataCustom(int location);
-        public ReadOnlyMemorySlice<Byte>? Data => GetDataCustom(location: MeshEndingPos);
-        protected int DataEndingPos;
-        partial void CustomDataEndPos();
+        partial void CustomMeshEndPos();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1177,10 +1087,8 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new DistantLodBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.Mesh = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
-            ret.MeshEndingPos = ret.Mesh.Length + 1;
-            ret.CustomDataEndPos();
-            stream.Position += ret.DataEndingPos;
+            ret.CustomMeshEndPos();
+            stream.Position += ret.MeshEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -85,6 +85,7 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\IArchiveReader.cs" />
+    <Compile Include="Assets\AssetTypeLocator.cs" />
     <Compile Include="Assets\IAssetType.cs" />
     <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
     <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
@@ -262,6 +263,7 @@
     <Compile Include="Plugins\Converters\ModKeyTypeConverter.cs" />
     <Compile Include="Plugins\Converters\ModPathTypeConverter.cs" />
     <Compile Include="Plugins\Exceptions\AssetPathMisalignedException.cs" />
+    <Compile Include="Plugins\Exceptions\FloatStoredAsIntegerOverflowException.cs" />
     <Compile Include="Plugins\Exceptions\UnmappableFormIDException.cs" />
     <Compile Include="Plugins\Exceptions\MalformedDataException.cs" />
     <Compile Include="Plugins\Exceptions\ModHeaderMalformedException.cs" />
@@ -818,7 +820,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.core&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
 </Project>

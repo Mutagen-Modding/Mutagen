@@ -781,7 +781,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => TextureSetCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => TextureSetSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TextureSetSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => TextureSetSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TextureSetSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1289,17 +1290,24 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(ITextureSet obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            ITextureSet obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.Diffuse?.Relink(mapping);
-            obj.NormalOrGloss?.Relink(mapping);
-            obj.EnvironmentMaskOrSubsurfaceTint?.Relink(mapping);
-            obj.GlowOrDetailMap?.Relink(mapping);
-            obj.Height?.Relink(mapping);
-            obj.Environment?.Relink(mapping);
-            obj.Multilayer?.Relink(mapping);
-            obj.BacklightMaskOrSpecular?.Relink(mapping);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Diffuse?.Relink(mapping);
+                obj.NormalOrGloss?.Relink(mapping);
+                obj.EnvironmentMaskOrSubsurfaceTint?.Relink(mapping);
+                obj.GlowOrDetailMap?.Relink(mapping);
+                obj.Height?.Relink(mapping);
+                obj.Environment?.Relink(mapping);
+                obj.Multilayer?.Relink(mapping);
+                obj.BacklightMaskOrSpecular?.Relink(mapping);
+            }
         }
         
         #endregion

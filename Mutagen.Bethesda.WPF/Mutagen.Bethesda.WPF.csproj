@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net6.0</TargetFramework>
+	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
@@ -45,10 +45,6 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
   </ItemGroup>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.wpf&quot;" Condition="!$([MSBuild]::IsOSUnixLike())" />
-  </Target>
   
   <PropertyGroup>
     <GitInfoReportImportance Condition="$(Configuration) == 'Release'">high</GitInfoReportImportance>
@@ -60,7 +56,8 @@
 
   <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" DependsOnTargets="GitVersion" Returns="$(PackageVersion)">
     <PropertyGroup>
-      <DevLabel Condition="'$(GitCommits)' != '0'">.1-dev</DevLabel>
+      <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) == ''">.1-zdev</DevLabel>
+      <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) != ''">.1-$(VersionSuffix)</DevLabel>
       <DevLabel Condition="$(GitCommits) == '0' And $(GitSemVerDashLabel) != ''">$(GitSemVerDashLabel)</DevLabel>
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
       <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>

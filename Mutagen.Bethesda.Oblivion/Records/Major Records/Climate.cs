@@ -16,7 +16,7 @@ public partial class Climate
 
 partial class ClimateDataBinaryWriteTranslation
 {
-    private static byte GetByte(DateTime d)
+    private static byte GetByte(TimeOnly d)
     {
         var mins = d.Hour * 60 + d.Minute;
         return (byte)(mins / 10);
@@ -56,37 +56,30 @@ partial class ClimateDataBinaryWriteTranslation
 
 partial class ClimateDataBinaryCreateTranslation
 {
-    private static DateTime DateConverter(DateTime d)
-    {
-        return DateTime.MinValue
-            .AddHours(d.Hour)
-            .AddMinutes(d.Minute / 10 * 10);
-    }
-
-    private static bool GetDate(byte b, out DateTime date)
+    private static bool GetTime(byte b, out TimeOnly date)
     {
         if (b > 144)
         {
             throw new ArgumentException("Cannot have a time value greater than 144");
-            date = default(DateTime);
+            date = default(TimeOnly);
             return false;
         }
-        date = DateTime.MinValue.AddMinutes(b * 10);
+        date = new TimeOnly().AddMinutes(b * 10);
         return true;
     }
 
-    public static DateTime GetDate(byte b)
+    public static TimeOnly GetTime(byte b)
     {
         if (b > 144)
         {
             throw new ArgumentException("Cannot have a time value greater than 144");
         }
-        return DateTime.MinValue.AddMinutes(b * 10);
+        return new TimeOnly().AddMinutes(b * 10);
     }
 
     public static partial void FillBinarySunriseBeginCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunriseBegin = date;
         }
@@ -94,7 +87,7 @@ partial class ClimateDataBinaryCreateTranslation
 
     public static partial void FillBinarySunriseEndCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunriseEnd = date;
         }
@@ -102,7 +95,7 @@ partial class ClimateDataBinaryCreateTranslation
 
     public static partial void FillBinarySunsetBeginCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunsetBegin = date;
         }
@@ -110,7 +103,7 @@ partial class ClimateDataBinaryCreateTranslation
 
     public static partial void FillBinarySunsetEndCustom(MutagenFrame frame, IClimateData item)
     {
-        if (GetDate(frame.Reader.ReadUInt8(), out var date))
+        if (GetTime(frame.Reader.ReadUInt8(), out var date))
         {
             item.SunsetEnd = date;
         }
@@ -140,10 +133,10 @@ partial class ClimateDataBinaryCreateTranslation
 
 partial class ClimateDataBinaryOverlay
 {
-    public partial DateTime GetSunriseBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[0]);
-    public partial DateTime GetSunriseEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[1]);
-    public partial DateTime GetSunsetBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[2]);
-    public partial DateTime GetSunsetEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetDate(_structData.Span[3]);
+    public partial TimeOnly GetSunriseBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[0]);
+    public partial TimeOnly GetSunriseEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[1]);
+    public partial TimeOnly GetSunsetBeginCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[2]);
+    public partial TimeOnly GetSunsetEndCustom(int location) => ClimateDataBinaryCreateTranslation.GetTime(_structData.Span[3]);
     public partial Climate.MoonPhase GetPhaseCustom(int location) => (Climate.MoonPhase)ClimateDataBinaryCreateTranslation.GetPhaseInt(_structData.Span[5]);
     public partial byte GetPhaseLengthCustom(int location) => ClimateDataBinaryCreateTranslation.GetPhaseLen(_structData.Span[5]);
 }

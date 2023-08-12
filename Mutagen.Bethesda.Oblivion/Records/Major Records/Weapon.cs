@@ -8,8 +8,8 @@ public partial class Weapon
         BladeTwoHand,
         BluntOneHand,
         BluntTwoHand,
-        Bow,
         Staff,
+        Bow,
     }
 
     [Flags]

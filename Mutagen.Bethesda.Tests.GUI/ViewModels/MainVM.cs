@@ -295,7 +295,7 @@ public class MainVM : ViewModel
         return new PassthroughSettings()
         {
             DeleteCachesAfter = false,
-            ParallelProccessingSteps = false,
+            ParallelProcessingSteps = false,
             CacheReuse = new CacheReuse()
             {
                 ReuseAlignment = CacheAlignment,
@@ -306,7 +306,6 @@ public class MainVM : ViewModel
             },
             TestBinaryOverlay = TestOverlay,
             TestCopyIn = TestCopyIn,
-            TestFolder = false,
             TestImport = TestImport,
             TestNormal = TestNormal,
             ParallelWriting = TestParallel,

@@ -11,10 +11,23 @@ public static class FloatBinaryTranslationExt
         MutagenWriter writer,
         float item,
         RecordType header,
-        float multiplier)
+        float? divisor, 
+        float? multiplier)
         where TReader : IMutagenReadStream
     {
-        transl.Write(writer, item / multiplier, header);
+        try
+        {
+            using (HeaderExport.Subrecord(writer, header))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer, item, 
+                    multiplier: multiplier, divisor: divisor);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw SubrecordException.Enrich(ex, header);
+        }
     }
 
     public static void WriteNullable<TReader>(
@@ -22,11 +35,24 @@ public static class FloatBinaryTranslationExt
         MutagenWriter writer,
         float? item,
         RecordType header,
-        float multiplier)
+        float? divisor, 
+        float? multiplier)
         where TReader : IMutagenReadStream
     {
-        if (!item.HasValue) return;
-        transl.Write(writer, item.Value / multiplier, header);
+        try
+        {
+            if (item == null) return;
+            using (HeaderExport.Subrecord(writer, header))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer, item.Value, 
+                    multiplier: multiplier, divisor: divisor);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw SubrecordException.Enrich(ex, header);
+        }
     }
 
     public static void Write<TReader>(
@@ -35,7 +61,8 @@ public static class FloatBinaryTranslationExt
         float? item,
         RecordType header,
         FloatIntegerType integerType,
-        double multiplier)
+        float? divisor = null, 
+        float? multiplier = null)
         where TReader : IMutagenReadStream
     {
         try
@@ -43,7 +70,9 @@ public static class FloatBinaryTranslationExt
             if (item == null) return;
             using (HeaderExport.Subrecord(writer, header))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item, integerType, multiplier);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer, item, integerType,
+                    multiplier: multiplier, divisor: divisor);
             }
         }
         catch (Exception ex)

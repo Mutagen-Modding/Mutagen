@@ -45,9 +45,20 @@ public partial class Quest
     }
 }
 
+partial class QuestSetterCommon
+{
+    private static partial void RemapInferredAssetLinks(
+        IQuest obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        AssetLinkQuery queryCategories)
+    {
+        // Nothing to do here, we can't change the name of the mod
+    }
+}
+
 partial class QuestCommon
 {
-    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IQuestGetter obj, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IQuestGetter obj, Type? assetType)
     {
         if (obj.Flags.HasFlag(Quest.Flag.StartGameEnabled))
         {

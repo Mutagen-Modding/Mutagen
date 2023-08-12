@@ -3,6 +3,9 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Exceptions;
 
+/// <summary>
+/// An exception contains information about an associated Record
+/// </summary>
 public class RecordException : Exception
 {
     public ModKey? ModKey { get; private set; }
@@ -46,16 +49,25 @@ public class RecordException : Exception
     }
 
     #region Enrich
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
     public static RecordException Enrich(Exception ex, IMajorRecordGetter? majorRec)
     {
         return Enrich(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID);
     }
 
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
     public static RecordException Enrich(Exception ex, ModKey? modKey, IMajorRecordGetter? majorRec)
     {
         return Enrich(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID, modKey);
     }
 
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
     public static RecordException Enrich(Exception ex, FormKey? formKey, Type? recordType, string? edid = null, ModKey? modKey = null)
     {
         if (ex is RecordException rec)
@@ -96,6 +108,9 @@ public class RecordException : Exception
         return t;
     }
 
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
     public static RecordException Enrich<TMajor>(Exception ex, FormKey? formKey, string? edid, ModKey? modKey = null)
         where TMajor : IMajorRecordGetter
     {
@@ -107,6 +122,9 @@ public class RecordException : Exception
             modKey);
     }
 
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
     public static RecordException Enrich(Exception ex, ModKey modKey)
     {
         if (ex is RecordException rec)
@@ -128,6 +146,9 @@ public class RecordException : Exception
     #endregion
 
     #region Create
+    /// <summary>
+    /// Creates an exception associated with a specific major record
+    /// </summary>
     public static RecordException Create(string message, IMajorRecordGetter majorRec, Exception? innerException = null)
     {
         return new RecordException(
@@ -139,6 +160,9 @@ public class RecordException : Exception
             innerException: innerException);
     }
 
+    /// <summary>
+    /// Creates an exception associated with a specific major record
+    /// </summary>
     public static RecordException Create(string message, ModKey? modKey, IMajorRecordGetter majorRec, Exception? innerException = null)
     {
         return new RecordException(
@@ -150,6 +174,9 @@ public class RecordException : Exception
             innerException: innerException);
     }
 
+    /// <summary>
+    /// Creates an exception associated with a specific major record
+    /// </summary>
     public static RecordException Create(string message, FormKey? formKey, Type? recordType, string? edid, ModKey? modKey = null, Exception? innerException = null)
     {
         return new RecordException(
@@ -161,6 +188,9 @@ public class RecordException : Exception
             innerException: innerException);
     }
 
+    /// <summary>
+    /// Creates an exception associated with a specific major record
+    /// </summary>
     public static RecordException Create(string message, ModKey modKey, Exception? innerException = null)
     {
         return new RecordException(
@@ -172,6 +202,9 @@ public class RecordException : Exception
             innerException: innerException);
     }
 
+    /// <summary>
+    /// Creates an exception associated with a specific major record
+    /// </summary>
     public static RecordException Create<TMajor>(string message, FormKey? formKey, string? edid, ModKey? modKey = null, Exception? innerException = null)
         where TMajor : IMajorRecordGetter
     {

@@ -99,11 +99,10 @@ partial class StaticBinaryCreateTranslation
             reader: frame,
             stringBinaryType: StringBinaryType.NullTerminate,
             parseWhole: false);
-        var bytes = frame.ReadBytes(260 - str.Length - 1);
+        frame.ReadBytes(260 - str.Length - 1);
         return new DistantLod()
         {
             Mesh = str,
-            Data = bytes
         };
     }
 }

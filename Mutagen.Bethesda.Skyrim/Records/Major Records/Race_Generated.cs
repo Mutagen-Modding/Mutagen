@@ -3995,7 +3995,8 @@ namespace Mutagen.Bethesda.Skyrim
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RaceSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -4865,13 +4866,17 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(IRace obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            IRace obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapListedAssetLinks(obj, mapping);
-            obj.SkeletalModel?.ForEach(x => x?.RemapListedAssetLinks(mapping));
-            obj.BodyData.ForEach(x => x?.RemapListedAssetLinks(mapping));
-            obj.BehaviorGraph.ForEach(x => x?.RemapListedAssetLinks(mapping));
-            obj.HeadData?.ForEach(x => x?.RemapListedAssetLinks(mapping));
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.SkeletalModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.BodyData.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.BehaviorGraph.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.HeadData?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion

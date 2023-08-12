@@ -1,22 +1,14 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-## Table Of Contents
-
-- [Mutagen](#mutagen)
-  - [Goals](#goals)
-  - [Sample API](#sample-api)
-  - [Seeing Mutagen in Action](#seeing-mutagen-in-action)
-    - [Synthesis](#synthesis)
-  - [Installing Mutagen](#installing-mutagen)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ![Release](https://github.com/Mutagen-Modding/Mutagen/workflows/Release/badge.svg) ![Dev](https://github.com/Mutagen-Modding/Mutagen/workflows/Dev/badge.svg) [![NuGet Stats](https://img.shields.io/nuget/v/Mutagen.Bethesda.svg)](https://www.nuget.org/packages/Mutagen.Bethesda)
 
 [![Discord](https://discordapp.com/api/guilds/759302581448474626/widget.png)](https://discord.gg/53KMEsW)
 
 # Mutagen
 Mutagen is a C# library for analyzing, modifying, and creating Bethesda mods. One of its main features is offering interfaces and classes for the records that exist at compile time and are first class citizens in C#. With actual members for each field they get the benefits of type safety, simple live debugging, Intellisense features such as autocomplete. The interfaces offer clean API to the user and abstract away much of the binary record specifics and oddities of how they are stored on disk, while the actual implementation remains very closely tied to the data offering as much speed as it can by leveraging some of the latest C# features. Most of the public facing API is created by code generation, with small manual snippets of code for the one-off special cases. This means the library is able to provide consistent API with very little manual work when adding new record definitions or features.
+
+## Wiki
+Check out the [Wiki](https://mutagen-modding.github.io/Mutagen/) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
+
+Also be sure to check out the [Big Cheat Sheet](https://mutagen-modding.github.io/Mutagen/top/Big-Cheat-Sheet/)
 
 ## Goals
 What is Mutagen trying to provide?
@@ -41,10 +33,6 @@ foreach (var weaponEditorId in env.LoadOrder.PriorityOrder.Weapon().WinningOverr
 }
 ```
 This example snippet would print all the unique Weapon EditorIDs from the load order to the console.
-
-Check out the [Wiki](https://github.com/Mutagen-Modding/Mutagen/wiki) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
-
-Also be sure to check out the [Big Cheat Sheet](https://github.com/Mutagen-Modding/Mutagen/wiki/Big-Cheat-Sheet)
 
 ## Seeing Mutagen in Action
 ### Synthesis

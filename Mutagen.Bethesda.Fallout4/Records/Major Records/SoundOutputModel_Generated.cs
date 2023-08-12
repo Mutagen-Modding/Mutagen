@@ -1692,7 +1692,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.StaticAttenuation,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01,
+                multiplier: 100f,
+                divisor: null,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM));
             if (item.OutputChannels is {} OutputChannelsItem)
             {
@@ -1816,7 +1817,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         integerType: FloatIntegerType.UShort,
-                        multiplier: 0.01);
+                        multiplier: null,
+                        divisor: 100f);
                     return (int)SoundOutputModel_FieldIndex.StaticAttenuation;
                 }
                 case RecordTypeInts.ONAM:
@@ -1904,7 +1906,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region StaticAttenuation
         private int? _StaticAttenuationLocation;
-        public Single? StaticAttenuation => _StaticAttenuationLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticAttenuationLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 0.01) : default(Single?);
+        public Single? StaticAttenuation => _StaticAttenuationLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticAttenuationLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, multiplier: null, divisor: 100f) : default(Single?);
         #endregion
         #region OutputChannels
         private RangeInt32? _OutputChannelsLocation;

@@ -462,7 +462,7 @@ public class Fallout4PassthroughTest : PassthroughTest
     {
         return Fallout4Mod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
-            parallel: Settings.ParallelProccessingSteps);
+            parallel: Settings.ParallelProcessingSteps);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
@@ -473,5 +473,5 @@ public class Fallout4PassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new Fallout4Processor(Settings.ParallelProccessingSteps);
+    protected override Processor ProcessorFactory() => new Fallout4Processor(Settings.ParallelProcessingSteps);
 }

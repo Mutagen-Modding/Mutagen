@@ -13,22 +13,66 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         : base(expectedLen: 4, typeName: "Float")
     {
         PreferDirectTranslation = false;
-        this.CustomRead = ReadFloat;
-        this.CustomWrite = WriteFloat;
-        this.AdditionalWriteParams.Add(AdditionalParam);
-        this.AdditionalCopyInParams.Add(AdditionalParam);
-        this.AdditionalCopyInRetParams.Add(AdditionalParam);
+        CustomRead = ReadFloat;
+        CustomWrite = WriteFloat;
+        AdditionalWriteParams.Add(AdditionalMultWriteParam);
+        AdditionalWriteParams.Add(AdditionalDivisorWriteParam);
+        AdditionalCopyInParams.Add(AdditionalMultReadParam);
+        AdditionalCopyInParams.Add(AdditionalDivisorReadParam);
+        AdditionalCopyInRetParams.Add(AdditionalMultReadParam);
+        AdditionalCopyInRetParams.Add(AdditionalDivisorReadParam);
     }
 
-    private static TryGet<string> AdditionalParam(
+    private static TryGet<string> AdditionalMultReadParam(
         ObjectGeneration objGen,
         TypeGeneration typeGen)
     {
         var floatType = typeGen as FloatType;
         if (floatType.IntegerType == null
-            && !floatType.Multiplier.EqualsWithin(1))
+            && floatType.HasTransformations)
         {
-            return TryGet<string>.Succeed($"multiplier: {(float)floatType.Multiplier}f");
+            return TryGet<string>.Succeed($"multiplier: {floatType.MultiplierString}");
+        }
+        return TryGet<string>.Failure;
+    }
+
+    private static TryGet<string> AdditionalDivisorReadParam(
+        ObjectGeneration objGen,
+        TypeGeneration typeGen)
+    {
+        var floatType = typeGen as FloatType;
+        if (floatType.IntegerType == null
+            && floatType.HasTransformations)
+        {
+            return TryGet<string>.Succeed($"divisor: {floatType.DivisorString}");
+        }
+        return TryGet<string>.Failure;
+    }
+
+    private static TryGet<string> AdditionalMultWriteParam(
+        ObjectGeneration objGen,
+        TypeGeneration typeGen)
+    {
+        var floatType = typeGen as FloatType;
+        if (floatType.IntegerType == null
+            && floatType.HasTransformations)
+        {
+            // Intentionally flipped
+            return TryGet<string>.Succeed($"divisor: {floatType.MultiplierString}");
+        }
+        return TryGet<string>.Failure;
+    }
+
+    private static TryGet<string> AdditionalDivisorWriteParam(
+        ObjectGeneration objGen,
+        TypeGeneration typeGen)
+    {
+        var floatType = typeGen as FloatType;
+        if (floatType.IntegerType == null
+            && floatType.HasTransformations)
+        {
+            // Intentionally flipped
+            return TryGet<string>.Succeed($"multiplier: {floatType.DivisorString}");
         }
         return TryGet<string>.Failure;
     }
@@ -62,11 +106,19 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
         var floatType = typeGen as FloatType;
         if (floatType.IntegerType.HasValue)
         {
-            return $"{GetTranslatorInstance(typeGen, getter: true)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
+            return $"{GetTranslatorInstance(typeGen, getter: true)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, multiplier: {floatType.MultiplierString}, divisor: {floatType.DivisorString})";
         }
-        else if (!floatType.Multiplier.EqualsWithin(1))
+        else if (floatType.HasMultiplier && floatType.HasDivisor)
+        {
+            return $"{dataAccessor}.Float() * {(float)floatType.Multiplier}f / {(float)floatType.Divisor}f";
+        }
+        else if (floatType.HasMultiplier)
         {
             return $"{dataAccessor}.Float() * {(float)floatType.Multiplier}f";
+        }
+        else if (floatType.HasDivisor)
+        {
+            return $"{dataAccessor}.Float() / {(float)floatType.Divisor}f";
         }
         else
         {
@@ -84,7 +136,11 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
             {
                 args.Add($"reader: {reader}");
                 args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
-                args.Add($"multiplier: {floatType.Multiplier}");
+                if (floatType.HasTransformations)
+                {
+                    args.Add($"multiplier: {floatType.MultiplierString}");
+                    args.Add($"divisor: {floatType.DivisorString}");
+                }
             }
             return true;
         }
@@ -106,7 +162,12 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
                 args.Add($"writer: {writer}");
                 args.Add($"item: {item}");
                 args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
-                args.Add($"multiplier: {floatType.Multiplier}");
+                if (floatType.HasTransformations)
+                {
+                    // Intentionally flipped
+                    args.Add($"multiplier: {floatType.DivisorString}");
+                    args.Add($"divisor: {floatType.MultiplierString}");
+                }
                 if (data.RecordType.HasValue
                     && data.HandleTrigger)
                 {

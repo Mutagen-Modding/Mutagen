@@ -1281,7 +1281,8 @@ namespace Mutagen.Bethesda.Fallout4
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RotationZ,
-                multiplier: 57.2958f);
+                divisor: 57.295799255371094f,
+                multiplier: null);
             if (!item.Versioning.HasFlag(FurnitureMarkerParameters.VersioningBreaks.Break0))
             {
                 FormLinkBinaryTranslation.Instance.Write(
@@ -1334,7 +1335,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.Offset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.RotationZ = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                multiplier: 57.2958f);
+                multiplier: 57.295799255371094f,
+                divisor: null);
             if (frame.Complete)
             {
                 item.Versioning |= FurnitureMarkerParameters.VersioningBreaks.Break0;
@@ -1421,7 +1423,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single RotationZ => _structData.Slice(0xC, 0x4).Float() * 57.2958f;
         public IFormLinkGetter<IKeywordGetter> Keyword => _structData.Length <= 0x10 ? FormLink<IKeywordGetter>.Null : new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
         public Furniture.EntryParameterType EntryTypes => _structData.Span.Length <= 0x14 ? default : (Furniture.EntryParameterType)_structData.Span.Slice(0x14, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Length <= 0x15 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x15, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

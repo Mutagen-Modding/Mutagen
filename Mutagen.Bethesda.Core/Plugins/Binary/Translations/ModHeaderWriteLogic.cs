@@ -235,7 +235,7 @@ public sealed class ModHeaderWriteLogic
                 }
                 catch (Exception ex)
                 {
-                    if (!(ex is ArgumentOutOfRangeException) && !(ex is InvalidOperationException)) throw;
+                    if (ex is not ArgumentOutOfRangeException && ex is not InvalidOperationException) throw;
                     var keys = modKeys.ToHashSet();
                     keys.Remove(lo.LoadOrder);
                     var modToComplainAbout = keys.First();

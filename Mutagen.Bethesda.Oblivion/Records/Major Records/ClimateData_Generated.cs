@@ -50,16 +50,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SunriseBegin
-        public DateTime SunriseBegin { get; set; } = default;
+        public TimeOnly SunriseBegin { get; set; } = default;
         #endregion
         #region SunriseEnd
-        public DateTime SunriseEnd { get; set; } = default;
+        public TimeOnly SunriseEnd { get; set; } = default;
         #endregion
         #region SunsetBegin
-        public DateTime SunsetBegin { get; set; } = default;
+        public TimeOnly SunsetBegin { get; set; } = default;
         #endregion
         #region SunsetEnd
-        public DateTime SunsetEnd { get; set; } = default;
+        public TimeOnly SunsetEnd { get; set; } = default;
         #endregion
         #region Volatility
         public Byte Volatility { get; set; } = default;
@@ -611,10 +611,10 @@ namespace Mutagen.Bethesda.Oblivion
         IClimateDataGetter,
         ILoquiObjectSetter<IClimateData>
     {
-        new DateTime SunriseBegin { get; set; }
-        new DateTime SunriseEnd { get; set; }
-        new DateTime SunsetBegin { get; set; }
-        new DateTime SunsetEnd { get; set; }
+        new TimeOnly SunriseBegin { get; set; }
+        new TimeOnly SunriseEnd { get; set; }
+        new TimeOnly SunsetBegin { get; set; }
+        new TimeOnly SunsetEnd { get; set; }
         new Byte Volatility { get; set; }
         new Climate.MoonPhase Phase { get; set; }
         new Byte PhaseLength { get; set; }
@@ -632,10 +632,10 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ClimateData_Registration.Instance;
-        DateTime SunriseBegin { get; }
-        DateTime SunriseEnd { get; }
-        DateTime SunsetBegin { get; }
-        DateTime SunsetEnd { get; }
+        TimeOnly SunriseBegin { get; }
+        TimeOnly SunriseEnd { get; }
+        TimeOnly SunsetBegin { get; }
+        TimeOnly SunsetEnd { get; }
         Byte Volatility { get; }
         Climate.MoonPhase Phase { get; }
         Byte PhaseLength { get; }
@@ -1500,20 +1500,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region SunriseBegin
-        public partial DateTime GetSunriseBeginCustom(int location);
-        public DateTime SunriseBegin => GetSunriseBeginCustom(location: 0x0);
+        public partial TimeOnly GetSunriseBeginCustom(int location);
+        public TimeOnly SunriseBegin => GetSunriseBeginCustom(location: 0x0);
         #endregion
         #region SunriseEnd
-        public partial DateTime GetSunriseEndCustom(int location);
-        public DateTime SunriseEnd => GetSunriseEndCustom(location: 0x1);
+        public partial TimeOnly GetSunriseEndCustom(int location);
+        public TimeOnly SunriseEnd => GetSunriseEndCustom(location: 0x1);
         #endregion
         #region SunsetBegin
-        public partial DateTime GetSunsetBeginCustom(int location);
-        public DateTime SunsetBegin => GetSunsetBeginCustom(location: 0x2);
+        public partial TimeOnly GetSunsetBeginCustom(int location);
+        public TimeOnly SunsetBegin => GetSunsetBeginCustom(location: 0x2);
         #endregion
         #region SunsetEnd
-        public partial DateTime GetSunsetEndCustom(int location);
-        public DateTime SunsetEnd => GetSunsetEndCustom(location: 0x3);
+        public partial TimeOnly GetSunsetEndCustom(int location);
+        public TimeOnly SunsetEnd => GetSunsetEndCustom(location: 0x3);
         #endregion
         public Byte Volatility => _structData.Span[0x4];
         #region Phase

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -50,5 +51,46 @@ public class MajorRecordBuilderTests
         DialogResponses responses)
     {
         responses.FormKey.ModKey.Should().Be(mod.ModKey);
+    }
+    
+    [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void CellNestedMajorRecords(
+        SkyrimMod mod,
+        Cell cell)
+    {
+        cell.FormKey.ModKey.Should().Be(mod.ModKey);
+        cell.Temporary.Should().NotBeEmpty();
+    }
+    
+    [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void WeaponDataSubArray(
+        SkyrimMod mod,
+        Weapon weapon)
+    {
+        weapon.Data.Should().NotBeNull();
+        weapon.Data!.Unknown3.Length.Should().Be(12);
+    }
+    
+    [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void IPlacedWithMod(
+        SkyrimMod mod,
+        IPlaced placed)
+    {
+        placed.FormKey.ModKey.Should().Be(mod.ModKey);
+        placed.IsCompressed.Should().BeFalse();
+        placed.IsDeleted.Should().BeFalse();
+    }
+    
+    [Theory]
+    [MutagenModAutoData(ConfigureMembers: true)]
+    public void IPlacedNoMod(
+        IPlaced placed)
+    {
+        placed.FormKey.Should().NotBe(FormKey.Null);
+        placed.IsCompressed.Should().BeFalse();
+        placed.IsDeleted.Should().BeFalse();
     }
 }

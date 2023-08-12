@@ -987,7 +987,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SoundDescriptorCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SoundDescriptorSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SoundDescriptorSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SoundDescriptorSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SoundDescriptorSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1465,9 +1466,13 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(ISoundDescriptor obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        public void RemapAssetLinks(
+            ISoundDescriptor obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            base.RemapListedAssetLinks(obj, mapping);
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.SoundFiles.ForEach(x => x.Relink(mapping));
         }
         
@@ -2307,7 +2312,8 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     item: item.StaticAttenuation,
                     integerType: FloatIntegerType.UShort,
-                    multiplier: 0.01);
+                    multiplier: 100f,
+                    divisor: null);
             }
         }
 
@@ -2479,7 +2485,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.UShort,
-                        multiplier: 0.01);
+                        multiplier: null,
+                        divisor: 100f);
                     return (int)SoundDescriptor_FieldIndex.StaticAttenuation;
                 }
                 default:
@@ -2592,7 +2599,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region StaticAttenuation
         private int _StaticAttenuationLocation => _BNAMLocation!.Value.Min + 0x4;
         private bool _StaticAttenuation_IsSet => _BNAMLocation.HasValue;
-        public Single StaticAttenuation => _StaticAttenuation_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_StaticAttenuationLocation, 2), FloatIntegerType.UShort, 0.01) : default;
+        public Single StaticAttenuation => _StaticAttenuation_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_StaticAttenuationLocation, 2), FloatIntegerType.UShort, multiplier: null, divisor: 100f) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

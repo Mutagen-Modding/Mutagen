@@ -32,8 +32,7 @@
   </Object>
   <Object name="DistantLod" objType="Subrecord" GUID="795bff20-ec22-4c22-a3f5-bfb3b2ee105e" ID="331">
     <Fields>
-      <String name="Mesh" />
-      <ByteArray name="Data" nullable="True" binary="Custom" />
+      <String name="Mesh" maxLength="259" binary="Custom" />
     </Fields>
   </Object>
 </Loqui>

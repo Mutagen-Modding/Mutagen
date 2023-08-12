@@ -50,7 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Version
-        public Single Version { get; set; } = default;
+        public static readonly Single VersionDefault = 1.0f;
+        public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
         public UInt32 NumRecords { get; set; } = default;
@@ -765,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IModStats item)
         {
             ClearPartial();
-            item.Version = default;
+            item.Version = ModStats.VersionDefault;
             item.NumRecords = default;
             item.NextFormID = ModStats.NextFormIDDefault;
         }

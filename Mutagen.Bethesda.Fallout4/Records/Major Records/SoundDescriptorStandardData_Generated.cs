@@ -1184,7 +1184,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.StaticAttenuation,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01);
+                multiplier: 100f,
+                divisor: null);
         }
 
         public void Write(
@@ -1240,7 +1241,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01);
+                multiplier: null,
+                divisor: 100f);
         }
 
     }
@@ -1291,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Percent PercentFrequencyVariance => PercentBinaryTranslation.GetPercent(_structData.Slice(0x1, 0x1), FloatIntegerType.Byte);
         public SByte Priority => (sbyte)_structData.Slice(0x2, 0x1)[0];
         public SByte Variance => (sbyte)_structData.Slice(0x3, 0x1)[0];
-        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x4, 0x2), FloatIntegerType.UShort, 0.01);
+        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x4, 0x2), FloatIntegerType.UShort, multiplier: null, divisor: 100f);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

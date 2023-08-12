@@ -3259,53 +3259,65 @@ namespace Mutagen.Bethesda.Fallout4
                         FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.PitchStanding,
-                            multiplier: 57.2958f);
+                            divisor: 57.295799255371094f,
+                            multiplier: null);
                         if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break2))
                         {
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.PitchWalk,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.PitchRun,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.PitchSprint,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollStanding,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollWalk,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollRun,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.RollSprint,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawStanding,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawWalk,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawRun,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.YawSprint,
-                                multiplier: 57.2958f);
+                                divisor: 57.295799255371094f,
+                                multiplier: null);
                         }
                     }
                 }
@@ -3476,7 +3488,8 @@ namespace Mutagen.Bethesda.Fallout4
                     if (dataFrame.Remaining < 4) return null;
                     item.PitchStanding = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Complete)
                     {
                         item.SPEDDataTypeState |= MovementType.SPEDDataType.Break2;
@@ -3485,47 +3498,58 @@ namespace Mutagen.Bethesda.Fallout4
                     if (dataFrame.Remaining < 4) return null;
                     item.PitchWalk = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.PitchRun = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.PitchSprint = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.RollStanding = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.RollWalk = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.RollRun = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.RollSprint = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.YawStanding = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.YawWalk = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.YawRun = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.YawSprint = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     return (int)MovementType_FieldIndex.YawSprint;
                 }
                 case RecordTypeInts.INAM:

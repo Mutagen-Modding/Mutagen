@@ -30,6 +30,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         AddDynamicProcessing(RecordTypes.RACE, ProcessRaces);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
+        AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
         AddDynamicProcessing(RecordTypes.WEAP, ProcessWeapons);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
@@ -183,6 +184,31 @@ public class Fallout4Processor : Processor
             int offset = 0;
             ProcessZeroFloats(frame, fileOffset, ref offset);
         }
+    }
+
+    private void ProcessStatics(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.FormID.ID == 0x05D672)
+        {
+            int wer = 23;
+            wer++;
+        }
+        
+        const int blockSize = 0x104; 
+        foreach (var mnam in majorFrame.FindEnumerateSubrecords(RecordTypes.MNAM)) 
+        { 
+            var bytes = mnam.Content; 
+            for (int i = 0; i < bytes.Length; i += blockSize) 
+            { 
+                var zeroIndex = bytes.Span.Slice(i).IndexOf((byte)0); 
+                if (zeroIndex == -1) break; 
+                var index = fileOffset + mnam.Location + mnam.HeaderLength + zeroIndex + i; 
+                var byteSize = blockSize - zeroIndex; 
+                _instructions.SetSubstitution(index, new byte[byteSize]); 
+            } 
+        } 
     }
 
     private void ProcessFurniture(

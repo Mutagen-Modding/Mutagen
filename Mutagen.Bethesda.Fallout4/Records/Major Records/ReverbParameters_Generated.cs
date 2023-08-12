@@ -1871,7 +1871,8 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     item: item.DecayHfRatio,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.01);
+                    multiplier: 100f,
+                    divisor: null);
                 writer.Write(item.ReflectDelayMS);
                 writer.Write(item.ReverbDelayMS);
                 PercentBinaryTranslation.Write(
@@ -1994,7 +1995,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.DecayHfRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
-                        multiplier: 0.01);
+                        multiplier: null,
+                        divisor: 100f);
                     if (dataFrame.Remaining < 1) return null;
                     item.ReflectDelayMS = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
@@ -2111,7 +2113,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DecayHfRatio
         private int _DecayHfRatioLocation => _DATALocation!.Value.Min + 0x8;
         private bool _DecayHfRatio_IsSet => _DATALocation.HasValue;
-        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
+        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_recordData.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, multiplier: null, divisor: 100f) : default;
         #endregion
         #region ReflectDelayMS
         private int _ReflectDelayMSLocation => _DATALocation!.Value.Min + 0x9;

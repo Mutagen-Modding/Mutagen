@@ -69,31 +69,15 @@ internal class ArmorAddonWeightSliderContainer : IGenderedItem<bool>
 
 partial class ArmorAddonCommon
 {
-    public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
+    public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(IArmorAddonGetter obj, Type? assetType)
     {
         if (assetType != null && assetType != typeof(SkyrimModelAssetType)) yield break;
         
-        IEnumerable<IAssetLink> TryToAddWeightModel(string path)
-        {
-            var name = Path.GetFileNameWithoutExtension(path);
-            if (name.Length < 3) yield break;
-
-            IAssetLink ReplaceWeightSuffix(string newFileSuffix)
+        IEnumerable<IAssetLink> TryToAddWeightModel(string path) {
+            var otherWeight = GetOtherWeight(path);
+            if (otherWeight != null)
             {
-                var dir = Path.GetDirectoryName(path);
-                var newFile = $"{name[..^2]}{newFileSuffix}.{SkyrimModelAssetType.Instance.FileExtensions.First()}";
-                return dir == null ? new AssetLink<SkyrimModelAssetType>(newFile) : new AssetLink<SkyrimModelAssetType>(Path.Combine(dir, newFile));
-            }
-
-            const string zeroSuffix = "_0";
-            const string oneSuffix = "_1";
-            if (name.EndsWith(oneSuffix))
-            {
-                yield return ReplaceWeightSuffix(zeroSuffix);
-            }
-            else if (name.EndsWith(zeroSuffix))
-            {
-                yield return ReplaceWeightSuffix(oneSuffix);
+                yield return otherWeight;
             }
         }
 
@@ -118,6 +102,44 @@ partial class ArmorAddonCommon
             foreach (var assetLink in TryToAddWeightModel(obj.FirstPersonModel.Male.File.RawPath))
                 yield return assetLink;
         }
+    }
+
+    internal static IAssetLink? GetOtherWeight(string path) {
+        const string zeroSuffix = "_0";
+        const string oneSuffix = "_1";
+
+        var name = Path.GetFileNameWithoutExtension(path);
+        if (name.Length < 3) return null;
+
+        if (name.EndsWith(oneSuffix))
+        {
+            return ReplaceWeightSuffix(zeroSuffix, path, name);
+        }
+
+        if (name.EndsWith(zeroSuffix))
+        {
+            return ReplaceWeightSuffix(oneSuffix, path, name);
+        }
+
+        return null;
+    }
+
+    internal static IAssetLink ReplaceWeightSuffix(string newFileSuffix, string path, string name)
+    {
+        var dir = Path.GetDirectoryName(path);
+        var newFile = name[..^2] + newFileSuffix + Path.GetExtension(path);
+        return dir == null ? new AssetLink<SkyrimModelAssetType>(newFile) : new AssetLink<SkyrimModelAssetType>(Path.Combine(dir, newFile));
+    }
+}
+
+partial class ArmorAddonSetterCommon
+{
+    private static partial void RemapInferredAssetLinks(
+        IArmorAddon obj,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        AssetLinkQuery queryCategories)
+    {
+        // Let the linked asset remap function handle this
     }
 }
 

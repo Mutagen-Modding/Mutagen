@@ -1,14 +1,8 @@
 <Project>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
-    <ImplicitUsings>true</ImplicitUsings>
-  </PropertyGroup>
-   
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <PackageReference Include="NuGetizer" > 
-      <PrivateAssets>all</PrivateAssets> 
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets> 
-    </PackageReference> 
-  </ItemGroup> 
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Condition="'$(IsWindows)'=='true' And $(PackageId) != ''" Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" />
+    <Exec Condition="'$(IsLinux)'=='true' And $(PackageId) != ''" Command="rm -rf &quot;%25USERPROFILE%25\.nuget\packages\$(PackageId)&quot;" />
+  </Target>
+  
 </Project>

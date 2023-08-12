@@ -1645,7 +1645,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.WeatherAttenuationDb,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.01,
+                multiplier: 100f,
+                divisor: null,
                 header: translationParams.ConvertToCustom(RecordTypes.WNAM));
         }
 
@@ -1767,7 +1768,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.WeatherAttenuationDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         integerType: FloatIntegerType.UShort,
-                        multiplier: 0.01);
+                        multiplier: null,
+                        divisor: 100f);
                     return (int)AcousticSpace_FieldIndex.WeatherAttenuationDb;
                 }
                 default:
@@ -1852,7 +1854,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region WeatherAttenuationDb
         private int? _WeatherAttenuationDbLocation;
-        public Single? WeatherAttenuationDb => _WeatherAttenuationDbLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeatherAttenuationDbLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 0.01) : default(Single?);
+        public Single? WeatherAttenuationDb => _WeatherAttenuationDbLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeatherAttenuationDbLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, multiplier: null, divisor: 100f) : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

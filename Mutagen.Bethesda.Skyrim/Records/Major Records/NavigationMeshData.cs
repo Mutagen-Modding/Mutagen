@@ -8,6 +8,14 @@ using System.Collections;
 
 namespace Mutagen.Bethesda.Skyrim;
 
+partial class NavigationMeshData
+{
+    partial void CustomCtor()
+    {
+        Parent = new CellNavmeshParent();
+    }
+}
+
 partial class NavigationMeshDataBinaryCreateTranslation
 {
     public static partial void FillBinaryCoverTrianglesLogicCustom(MutagenFrame frame, INavigationMeshData item)

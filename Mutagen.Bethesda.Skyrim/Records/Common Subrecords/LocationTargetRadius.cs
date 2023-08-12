@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class LocationTargetRadius
 {
-    public ALocationTarget Target { get; set; } = null!;
+    public ALocationTarget Target { get; set; } = new LocationFallback();
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IALocationTargetGetter ILocationTargetRadiusGetter.Target => Target;
 

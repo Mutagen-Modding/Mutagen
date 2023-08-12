@@ -14,13 +14,9 @@ partial class LodBinaryCreateTranslation
     public static partial void FillBinaryLevel0Custom(MutagenFrame frame, ILod item)
     {
         item.Level0.RawPath = ReadString(frame, out var bytes);
-        item.Level0Extra = bytes;
         item.Level1.RawPath = ReadString(frame, out bytes);
-        item.Level1Extra = bytes;
         item.Level2.RawPath = ReadString(frame, out bytes);
-        item.Level2Extra = bytes;
         item.Level3.RawPath = ReadString(frame, out bytes);
-        item.Level3Extra = bytes;
     }
 
     public static string ReadString(MutagenFrame frame, out MemorySlice<byte> extraBytes)
@@ -35,26 +31,19 @@ partial class LodBinaryWriteTranslation
 {
     public static partial void WriteBinaryLevel0Custom(MutagenWriter writer, ILodGetter item)
     {
-        WriteString(writer, item.Level0.RawPath, item.Level0Extra);
-        WriteString(writer, item.Level1.RawPath, item.Level1Extra);
-        WriteString(writer, item.Level2.RawPath, item.Level2Extra);
-        WriteString(writer, item.Level3.RawPath, item.Level3Extra);
+        WriteString(writer, item.Level0.RawPath);
+        WriteString(writer, item.Level1.RawPath);
+        WriteString(writer, item.Level2.RawPath);
+        WriteString(writer, item.Level3.RawPath);
     }
 
-    public static void WriteString(MutagenWriter writer, string str, ReadOnlyMemorySlice<byte>? bytes)
+    public static void WriteString(MutagenWriter writer, string str)
     {
         if (str.Length >= LodBinaryCreateTranslation.TotalLen)
         {
         }
         writer.Write(str, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
-        if (bytes == null)
-        {
-            writer.WriteZeros((uint)(LodBinaryCreateTranslation.TotalLen - str.Length - 1));
-        }
-        else
-        {
-            writer.Write(bytes.Value);
-        }
+        writer.WriteZeros((uint)(LodBinaryCreateTranslation.TotalLen - str.Length - 1));
     }
 }
 

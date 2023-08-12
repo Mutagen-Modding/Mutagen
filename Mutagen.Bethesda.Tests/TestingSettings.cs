@@ -23,6 +23,15 @@ public record DataFolderLocations
     public string SkyrimVR { get; set; } = string.Empty;
     public string Fallout4 { get; set; } = string.Empty;
 
+    public DataFolderLocations()
+    {
+    }
+
+    public DataFolderLocations(GameRelease release, string path)
+    {
+        Set(release, path);
+    }
+
     public string Get(GameRelease mode)
     {
         switch (mode)
@@ -39,6 +48,27 @@ public record DataFolderLocations
                 throw new NotImplementedException();
         }
     }
+
+    public void Set(GameRelease mode, string path)
+    {
+        switch (mode)
+        {
+            case GameRelease.Oblivion:
+                Oblivion = path;
+                break;
+            case GameRelease.SkyrimLE:
+                Skyrim = path;
+                break;
+            case GameRelease.SkyrimSE:
+                SkyrimSpecialEdition = path;
+                break;
+            case GameRelease.Fallout4:
+                Fallout4 = path;
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
 }
 
 public record PassthroughSettings
@@ -49,14 +79,12 @@ public record PassthroughSettings
     public bool TestNormal { get; set; }
     public bool TestBinaryOverlay { get; set; }
     public bool TestImport { get; set; }
-    public bool TestFolder { get; set; }
     public bool TestCopyIn { get; set; }
     public bool ParallelWriting { get; set; }
-    public bool ParallelProccessingSteps { get; set; }
+    public bool ParallelProcessingSteps { get; set; }
 
     public bool HasAnyToRun => TestNormal
                                || TestBinaryOverlay
-                               || TestFolder
                                || TestCopyIn;
 }
 
@@ -67,6 +95,19 @@ public record CacheReuse
     public bool ReuseAlignment { get; set; }
     public bool ReuseProcessing { get; set; }
     public bool ReuseTrimming { get; set; }
+
+    public CacheReuse()
+    {
+    }
+
+    public CacheReuse(bool on)
+    {
+        ReuseDecompression = on;
+        ReuseMerge = on;
+        ReuseAlignment = on;
+        ReuseProcessing = on;
+        ReuseTrimming = on;
+    }
 }
 
 public record TrimmingSettings

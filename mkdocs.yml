@@ -1,0 +1,143 @@
+site_name: Mutagen Documentation
+site_url: https://mutagen-modding.github.io/Mutagen/
+
+repo_name: Mutagen-Modding/Mutagen
+repo_url: https://github.com/Mutagen-Modding/Mutagen
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mutagen-Modding
+
+markdown_extensions:
+  - admonition
+  - tables
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences 
+  - pymdownx.tasklist
+  - def_list
+  - meta
+  - md_in_html
+  - attr_list
+  - footnotes
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+extra_css:
+  - Custom/Stylesheets/extra.css
+
+plugins:
+  - search
+
+theme:
+  name: material
+  palette:
+    primary: deep purple
+    accent: deep orange
+    scheme: slate
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.indexes 
+    
+nav:
+  - Home: index.md
+  - Big Cheat Sheet: top/Big-Cheat-Sheet.md
+  - Plugin Record Suite:
+    - plugins/index.md
+    - ModKey, FormKey, FormLink: plugins/ModKey,-FormKey,-FormLink.md
+    - Generated Classes: plugins/Generated-Classes.md
+    - Binary Importing: plugins/Binary-Importing.md
+    - Binary Overlay: plugins/Binary-Overlay.md
+    - Interfaces (Aspect/Link/Getters): plugins/Interfaces-(Aspect-Link-Getters).md
+    - Copy Functionality: plugins/Copy-Functionality.md
+    - Binary Exporting: plugins/Binary-Exporting.md
+    - Equality Checks: plugins/Equality-Checks.md
+    - Translation Masks: plugins/Translation-Masks.md
+    - Flags and Enums: plugins/Flags-and-Enums.md
+    - Asset Links: plugins/AssetLink.md
+    - Binary Format Complexity Abstraction: plugins/Binary-Format-Complexity-Abstraction.md
+    - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
+    - Abstract Subclassing: plugins/Abstract-Subclassing.md
+    - Printing: plugins/Printing.md
+    - Typical Mod Construction and Importing: plugins/Typical-Mod-Construction-and-Importing.md
+    - FormKey Allocation and Persistence: FormKey-Allocation-and-Persistence.md
+  - Environment:
+    - environment/index.md
+    - Environment Construction: environment/Environment-Construction.md
+    - Game Locations: environment/Game-Locations.md
+  - Link Cache:
+    - linkcache/index.md
+    - Record Lookup: linkcache/Record-Lookup.md
+    - Mod Contexts: linkcache/ModContexts.md
+    - Previous Override Iteration: linkcache/Previous-Override-Iteration.md
+  - Load Order:
+    - loadorder/index.md
+    - Winning Override Iteration: loadorder/Winning-Overrides.md
+    # - Has Mod Assertions
+    # - Live File Monitoring
+  - Archives (BSAs): top/Archives.md
+  - Strings:
+    - Translated Strings: strings/Translated-Strings.md
+    # - Strings Overlays
+  - Examples:
+    - Print Some Content: examples/Print-Some-Content.md
+    # - Record Overrides and Duplication
+    - Low Level Examples: examples/Low-Level-Examples.md
+  - Getting Familiar with C#:
+    - Namespaces: familiar/Namespaces.md
+    # - Intellisense
+    - Nullability to Indicate Record Presence: familiar/Nullability-to-Indicate-Record-Presence.md
+    # - Inspect Class Definitions
+    # - Debugging
+  - Best Practices and Optimizations:
+    - Getters Everywhere: best-practices/Getters-Everywhere.md
+    - Accessing Known Records: best-practices/Accessing-Known-Records.md
+    - FormLinks Always Target Getter Interfaces: best-practices/FormLinks-Always-Target-Getter-Interfaces.md
+    - FormLinks vs EditorID as Identifiers: best-practices/FormLinks-vs-EditorID-as-Identifiers.md
+    - FormLink vs FormLinkNullable: best-practices/FormLink-vs-FormLinkNullable.md
+    # - FormLinks vs FormID/FormKey as Identifiers:
+    # - Reference FormLinks By EditorID:
+    # - LinkCache Resolution Type Choice:
+    # - Lists vs HashSet:
+    - Enumerable Laziness: best-practices/Enumerable-Laziness.md
+    - TryGet Concepts: best-practices/TryGet-Concepts.md
+    # - Access Overlays Once:
+    - ITPO Avoidance: best-practices/ITPO-Avoidance.md
+    - Reuse Translation Masks: best-practices/Reuse-Translation-Masks.md
+    - Modifying Groups Being Iterated: best-practices/Modifying-Groups-Being-Iterated.md
+    # - Testing:
+    # - Auto Fixture:
+    # - Major Record Test Building:
+  - WPF Library:
+    - wpf/index.md
+    - FormKey Picker: wpf/FormKey-Picker.md
+    - ModKey Picker: wpf/ModKey-Picker.md
+    # - Load Order Display
+    - Reflection Powered Settings: wpf/Reflection-Powered-Settings.md
+    - Adding Required Resources: wpf/Adding-Required-Resources.md
+  # - Dependency Injection: Dependency Injection
+  - FormKey Allocation/Persistence: FormKey-Allocation-and-Persistence.md
+  - Json: top/Json.md
+  - Low Level Tools:
+    - index.md
+    - C# Span: lowlevel/C#-Span.md
+    - Header Structs: lowlevel/Header-Structs.md
+    - Game Constants: lowlevel/Game-Constants.md
+    - Binary Streams: lowlevel/Binary-Streams.md
+    - Binary Utility: lowlevel/Binary-Utility.md
+  - Game Specific Documentation:
+    - Oblivion:
+      - Oblivion Aspect Interfaces: game-specific/oblivion/Oblivion-Aspect-Interfaces.md
+      - Oblivion Link Interfaces: game-specific/oblivion/Oblivion-Link-Interfaces.md
+    - Skyrim:
+      - Skyrim Perks: game-specific/skyrim/Skyrim-Perks.md
+      - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
+      - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
+  - Correctness: top/Correctness.md
+
+index: Pages/index.md

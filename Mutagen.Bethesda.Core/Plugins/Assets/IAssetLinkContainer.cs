@@ -11,12 +11,47 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     /// <summary>
     /// Swaps out all links to point to new assets
     /// </summary>
+    /// <param name="mapping">Mapping to carry out</param>
+    /// <param name="query">Types of asset links to apply the remapping to</param>
+    /// <param name="linkCache">Asset Link Cache, which is required for Resolved asset links</param>
+    void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query, IAssetLinkCache? linkCache);
+    
+    /// <summary>
+    /// Swaps out all listed links to point to new assets
+    /// </summary>
+    /// <param name="mapping">Mapping to carry out</param>
     void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
 
     /// <summary>
     /// Enumerates only AssetLinks that are explicitly listed in the record and can be modified directly.
     /// </summary>
     new IEnumerable<IAssetLink> EnumerateListedAssetLinks();
+}
+
+public static class AssetLinkContainerExt
+{
+    public static void RemapInferredAssetLinks(
+        this IAssetLinkContainer assetLinkContainerGetter,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+    {
+        assetLinkContainerGetter.RemapAssetLinks(mapping, AssetLinkQuery.Inferred, null);
+    }
+    
+    public static void RemapResolvedAssetLinks(
+        this IAssetLinkContainer assetLinkContainerGetter,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache linkCache)
+    {
+        assetLinkContainerGetter.RemapAssetLinks(mapping, AssetLinkQuery.Resolved, linkCache);
+    }
+    
+    public static void RemapAllAssetLinks(
+        this IAssetLinkContainer assetLinkContainerGetter,
+        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+        IAssetLinkCache linkCache)
+    {
+        assetLinkContainerGetter.RemapAssetLinks(mapping, AssetLinkQuery.Listed | AssetLinkQuery.Inferred | AssetLinkQuery.Resolved, linkCache);
+    }
 }
 
 /// <summary>
@@ -72,7 +107,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter> EnumerateResolvedAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache,
+        IAssetLinkCache linkCache,
         Type? assetType = null)
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, assetType);
@@ -80,7 +115,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateResolvedAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache)
+        IAssetLinkCache linkCache)
         where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, typeof(TAsset))
@@ -89,7 +124,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter> EnumerateAllAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache,
+        IAssetLinkCache linkCache,
         Type? assetType = null)
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
@@ -100,7 +135,7 @@ public static class AssetLinkContainerGetterExt
     
     public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateAllAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache? linkCache)
+        IAssetLinkCache linkCache)
         where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(

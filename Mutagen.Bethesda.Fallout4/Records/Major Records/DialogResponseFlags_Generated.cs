@@ -1006,7 +1006,8 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.ResetHours,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.0003663003663003663);
+                multiplier: 65535f,
+                divisor: 24f);
         }
 
         public void Write(
@@ -1053,7 +1054,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.ResetHours = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 0.0003663003663003663);
+                multiplier: 24f,
+                divisor: 65535f);
         }
 
     }
@@ -1120,7 +1122,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public DialogResponses.Flag Flags => (DialogResponses.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
-        public Single ResetHours => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.0003663003663003663);
+        public Single ResetHours => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x2, 0x2), FloatIntegerType.UShort, multiplier: 24f, divisor: 65535f);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

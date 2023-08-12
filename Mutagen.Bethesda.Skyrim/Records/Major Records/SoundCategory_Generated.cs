@@ -1570,13 +1570,15 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.StaticVolumeMultiplier,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1.5259021896696422E-05,
+                multiplier: 65535f,
+                divisor: null,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DefaultMenuVolume,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1.5259021896696422E-05,
+                multiplier: 65535f,
+                divisor: null,
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM));
         }
 
@@ -1692,7 +1694,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.StaticVolumeMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         integerType: FloatIntegerType.UShort,
-                        multiplier: 1.5259021896696422E-05);
+                        multiplier: null,
+                        divisor: 65535f);
                     return (int)SoundCategory_FieldIndex.StaticVolumeMultiplier;
                 }
                 case RecordTypeInts.UNAM:
@@ -1701,7 +1704,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.DefaultMenuVolume = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         integerType: FloatIntegerType.UShort,
-                        multiplier: 1.5259021896696422E-05);
+                        multiplier: null,
+                        divisor: 65535f);
                     return (int)SoundCategory_FieldIndex.DefaultMenuVolume;
                 }
                 default:
@@ -1785,11 +1789,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region StaticVolumeMultiplier
         private int? _StaticVolumeMultiplierLocation;
-        public Single? StaticVolumeMultiplier => _StaticVolumeMultiplierLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticVolumeMultiplierLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
+        public Single? StaticVolumeMultiplier => _StaticVolumeMultiplierLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StaticVolumeMultiplierLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, multiplier: null, divisor: 65535f) : default(Single?);
         #endregion
         #region DefaultMenuVolume
         private int? _DefaultMenuVolumeLocation;
-        public Single? DefaultMenuVolume => _DefaultMenuVolumeLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultMenuVolumeLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
+        public Single? DefaultMenuVolume => _DefaultMenuVolumeLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DefaultMenuVolumeLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, multiplier: null, divisor: 65535f) : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

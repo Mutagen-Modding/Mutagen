@@ -2055,17 +2055,20 @@ namespace Mutagen.Bethesda.Skyrim
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceWalk,
-                    multiplier: 57.2958f);
+                    divisor: 57.295799255371094f,
+                    multiplier: null);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceRun,
-                    multiplier: 57.2958f);
+                    divisor: 57.295799255371094f,
+                    multiplier: null);
                 if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
                 {
                     FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.RotateWhileMovingRun,
-                        multiplier: 57.2958f);
+                        divisor: 57.295799255371094f,
+                        multiplier: null);
                 }
             }
             if (item.AnimationChangeThresholds is {} AnimationChangeThresholdsItem)
@@ -2200,11 +2203,13 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 4) return null;
                     item.RotateInPlaceWalk = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Remaining < 4) return null;
                     item.RotateInPlaceRun = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     if (dataFrame.Complete)
                     {
                         item.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;
@@ -2213,7 +2218,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (dataFrame.Remaining < 4) return null;
                     item.RotateWhileMovingRun = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        multiplier: 57.2958f);
+                        multiplier: 57.295799255371094f,
+                        divisor: null);
                     return (int)MovementType_FieldIndex.RotateWhileMovingRun;
                 }
                 case RecordTypeInts.INAM:

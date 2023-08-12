@@ -164,6 +164,11 @@ public class TestMajorRecord : ITestMajorRecord
 
     public Type Type => throw new NotImplementedException();
     
+    public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query, IAssetLinkCache? linkCache)
+    {
+        throw new NotImplementedException();
+    }
+
     public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
     {
         throw new NotImplementedException();

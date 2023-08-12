@@ -6021,7 +6021,8 @@ namespace Mutagen.Bethesda.Skyrim
         IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown) => this.EnumerateMajorRecordContexts(linkCache: null!, type: type, throwIfUnknown: throwIfUnknown);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkyrimModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkyrimModSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimModSetterCommon.Instance.RemapListedAssetLinks(this, mapping);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SkyrimModSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkyrimModSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -6040,7 +6041,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -6080,7 +6081,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -6999,7 +7000,7 @@ namespace Mutagen.Bethesda.Skyrim
                 using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
                     frame.MetaData.Parallel = parallel;
                     frame.MetaData.ModKey = path.ModKey;
                     frame.MetaData.Absorb(stringsParam);
@@ -9409,67 +9410,77 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public void RemapListedAssetLinks(ISkyrimMod obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping)
+        private static partial void RemapInferredAssetLinks(
+            ISkyrimMod obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            AssetLinkQuery queryCategories);
+        
+        public void RemapAssetLinks(
+            ISkyrimMod obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
         {
-            obj.TextureSets.RemapListedAssetLinks(mapping);
-            obj.HeadParts.RemapListedAssetLinks(mapping);
-            obj.Eyes.RemapListedAssetLinks(mapping);
-            obj.Races.RemapListedAssetLinks(mapping);
-            obj.MagicEffects.RemapListedAssetLinks(mapping);
-            obj.Scrolls.RemapListedAssetLinks(mapping);
-            obj.Activators.RemapListedAssetLinks(mapping);
-            obj.TalkingActivators.RemapListedAssetLinks(mapping);
-            obj.Armors.RemapListedAssetLinks(mapping);
-            obj.Books.RemapListedAssetLinks(mapping);
-            obj.Containers.RemapListedAssetLinks(mapping);
-            obj.Doors.RemapListedAssetLinks(mapping);
-            obj.Ingredients.RemapListedAssetLinks(mapping);
-            obj.Lights.RemapListedAssetLinks(mapping);
-            obj.MiscItems.RemapListedAssetLinks(mapping);
-            obj.AlchemicalApparatuses.RemapListedAssetLinks(mapping);
-            obj.Statics.RemapListedAssetLinks(mapping);
-            obj.MoveableStatics.RemapListedAssetLinks(mapping);
-            obj.Grasses.RemapListedAssetLinks(mapping);
-            obj.Trees.RemapListedAssetLinks(mapping);
-            obj.Florae.RemapListedAssetLinks(mapping);
-            obj.Furniture.RemapListedAssetLinks(mapping);
-            obj.Weapons.RemapListedAssetLinks(mapping);
-            obj.Ammunitions.RemapListedAssetLinks(mapping);
-            obj.Npcs.RemapListedAssetLinks(mapping);
-            obj.LeveledNpcs.RemapListedAssetLinks(mapping);
-            obj.Keys.RemapListedAssetLinks(mapping);
-            obj.Ingestibles.RemapListedAssetLinks(mapping);
-            obj.IdleMarkers.RemapListedAssetLinks(mapping);
-            obj.Projectiles.RemapListedAssetLinks(mapping);
-            obj.Hazards.RemapListedAssetLinks(mapping);
-            obj.SoulGems.RemapListedAssetLinks(mapping);
-            obj.Weathers.RemapListedAssetLinks(mapping);
-            obj.Climates.RemapListedAssetLinks(mapping);
-            obj.ShaderParticleGeometries.RemapListedAssetLinks(mapping);
-            obj.Regions.RemapListedAssetLinks(mapping);
-            obj.Cells.RemapListedAssetLinks(mapping);
-            obj.Worldspaces.RemapListedAssetLinks(mapping);
-            obj.DialogTopics.RemapListedAssetLinks(mapping);
-            obj.Quests.RemapListedAssetLinks(mapping);
-            obj.IdleAnimations.RemapListedAssetLinks(mapping);
-            obj.Packages.RemapListedAssetLinks(mapping);
-            obj.LoadScreens.RemapListedAssetLinks(mapping);
-            obj.AnimatedObjects.RemapListedAssetLinks(mapping);
-            obj.Waters.RemapListedAssetLinks(mapping);
-            obj.EffectShaders.RemapListedAssetLinks(mapping);
-            obj.Explosions.RemapListedAssetLinks(mapping);
-            obj.Debris.RemapListedAssetLinks(mapping);
-            obj.Perks.RemapListedAssetLinks(mapping);
-            obj.BodyParts.RemapListedAssetLinks(mapping);
-            obj.AddonNodes.RemapListedAssetLinks(mapping);
-            obj.CameraShots.RemapListedAssetLinks(mapping);
-            obj.Impacts.RemapListedAssetLinks(mapping);
-            obj.ArmorAddons.RemapListedAssetLinks(mapping);
-            obj.MusicTracks.RemapListedAssetLinks(mapping);
-            obj.Scenes.RemapListedAssetLinks(mapping);
-            obj.ArtObjects.RemapListedAssetLinks(mapping);
-            obj.MaterialObjects.RemapListedAssetLinks(mapping);
-            obj.SoundDescriptors.RemapListedAssetLinks(mapping);
+            RemapInferredAssetLinks(obj, mapping, queryCategories);
+            obj.TextureSets.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Eyes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Races.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MagicEffects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Scrolls.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Activators.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.TalkingActivators.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Armors.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Books.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Containers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Doors.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Ingredients.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Lights.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MiscItems.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AlchemicalApparatuses.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Statics.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MoveableStatics.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Grasses.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Trees.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Florae.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Furniture.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Weapons.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Ammunitions.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Npcs.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LeveledNpcs.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Keys.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Ingestibles.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.IdleMarkers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Projectiles.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Hazards.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.SoulGems.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Climates.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ShaderParticleGeometries.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Regions.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Cells.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Worldspaces.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.DialogTopics.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.IdleAnimations.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Packages.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LoadScreens.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Waters.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.EffectShaders.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Explosions.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.BodyParts.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AddonNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.CameraShots.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Impacts.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MusicTracks.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Scenes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MaterialObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.SoundDescriptors.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -16774,7 +16785,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static partial IEnumerable<IAssetLink> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType);
+        public static partial IEnumerable<IAssetLinkGetter> GetInferredAssetLinks(ISkyrimModGetter obj, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISkyrimModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             if (queryCategories.HasFlag(AssetLinkQuery.Inferred))
@@ -23361,7 +23372,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceCollection(path.ModKey))
             {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
+                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: fileSystem))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
