@@ -71,7 +71,7 @@
       <Int32 name="IDLB" recordType="IDLB" />
     </Fields>
   </Object>
-  <Object name="APackageData" ctorPermission="internal" objType="Subrecord" GUID="bad45f96-b102-4310-bfd5-60779c9cd665" ID="565">
+  <Object name="APackageData" objType="Subrecord" GUID="bad45f96-b102-4310-bfd5-60779c9cd665" ID="565">
     <Fields>
       <String name="Name" recordType="BNAM" binary="NoGeneration" nullable="True" />
       <Enum name="Flags" enumName="APackageData.Flag" recordType="PNAM" nullable="True" binary="NoGeneration" />

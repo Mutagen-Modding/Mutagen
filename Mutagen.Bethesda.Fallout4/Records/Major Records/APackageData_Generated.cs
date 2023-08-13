@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<APackageData>
     {
         #region Ctor
-        internal APackageData()
+        public APackageData()
         {
             CustomCtor();
         }
