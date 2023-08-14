@@ -136,7 +136,7 @@ public partial class Weapon
         EquipSound = 57,
         UnEquipSound = 58,
         SoundLevel = 59,
-        ImpactDataSet = 50,
+        ImpactDataSet = 60,
         Ammo = 61,
         CritEffect = 62,
         BashImpactDataSet = 63,
