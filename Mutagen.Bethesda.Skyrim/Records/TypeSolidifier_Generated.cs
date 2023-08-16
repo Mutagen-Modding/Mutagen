@@ -1524,9 +1524,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LensFlare</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter> LensFlare(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter> LensFlare(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter>(
+            return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILensFlareGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1536,9 +1536,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on LensFlare</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter> LensFlare(this IEnumerable<ISkyrimModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter> LensFlare(this IEnumerable<ISkyrimModGetter> mods)
         {
-            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter>(
+            return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILensFlareGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

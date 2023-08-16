@@ -173,6 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Colors_Object = new SkyrimGroup<ColorRecord>(this);
             _ReverbParameters_Object = new SkyrimGroup<ReverbParameters>(this);
             _VolumetricLightings_Object = new SkyrimGroup<VolumetricLighting>(this);
+            _LensFlares_Object = new SkyrimGroup<LensFlare>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -976,6 +977,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISkyrimGroupGetter<IVolumetricLightingGetter> ISkyrimModGetter.VolumetricLightings => _VolumetricLightings_Object;
         #endregion
+        #region LensFlares
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SkyrimGroup<LensFlare> _LensFlares_Object;
+        public SkyrimGroup<LensFlare> LensFlares => _LensFlares_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISkyrimGroupGetter<ILensFlareGetter> ISkyrimModGetter.LensFlares => _LensFlares_Object;
+        #endregion
 
         #region To String
 
@@ -1129,6 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Colors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
                 this.ReverbParameters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
                 this.VolumetricLightings = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
+                this.LensFlares = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(initialValue, new SkyrimGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1245,7 +1254,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem CollisionLayers,
                 TItem Colors,
                 TItem ReverbParameters,
-                TItem VolumetricLightings)
+                TItem VolumetricLightings,
+                TItem LensFlares)
             {
                 this.ModHeader = new MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>(ModHeader, new SkyrimModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(GameSettings, new SkyrimGroup.Mask<TItem>(GameSettings));
@@ -1361,6 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Colors = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(Colors, new SkyrimGroup.Mask<TItem>(Colors));
                 this.ReverbParameters = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(ReverbParameters, new SkyrimGroup.Mask<TItem>(ReverbParameters));
                 this.VolumetricLightings = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(VolumetricLightings, new SkyrimGroup.Mask<TItem>(VolumetricLightings));
+                this.LensFlares = new MaskItem<TItem, SkyrimGroup.Mask<TItem>?>(LensFlares, new SkyrimGroup.Mask<TItem>(LensFlares));
             }
 
             #pragma warning disable CS8618
@@ -1486,6 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? Colors { get; set; }
             public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? ReverbParameters { get; set; }
             public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? VolumetricLightings { get; set; }
+            public MaskItem<TItem, SkyrimGroup.Mask<TItem>?>? LensFlares { get; set; }
             #endregion
 
             #region Equals
@@ -1612,6 +1624,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Colors, rhs.Colors)) return false;
                 if (!object.Equals(this.ReverbParameters, rhs.ReverbParameters)) return false;
                 if (!object.Equals(this.VolumetricLightings, rhs.VolumetricLightings)) return false;
+                if (!object.Equals(this.LensFlares, rhs.LensFlares)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1731,6 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Colors);
                 hash.Add(this.ReverbParameters);
                 hash.Add(this.VolumetricLightings);
+                hash.Add(this.LensFlares);
                 return hash.ToHashCode();
             }
 
@@ -2309,6 +2323,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.VolumetricLightings.Overall)) return false;
                     if (this.VolumetricLightings.Specific != null && !this.VolumetricLightings.Specific.All(eval)) return false;
                 }
+                if (LensFlares != null)
+                {
+                    if (!eval(this.LensFlares.Overall)) return false;
+                    if (this.LensFlares.Specific != null && !this.LensFlares.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2886,6 +2905,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.VolumetricLightings.Overall)) return true;
                     if (this.VolumetricLightings.Specific != null && this.VolumetricLightings.Specific.Any(eval)) return true;
                 }
+                if (LensFlares != null)
+                {
+                    if (eval(this.LensFlares.Overall)) return true;
+                    if (this.LensFlares.Specific != null && this.LensFlares.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -3014,6 +3038,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Colors = this.Colors == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
                 obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
                 obj.VolumetricLightings = this.VolumetricLightings == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.VolumetricLightings.Overall), this.VolumetricLightings.Specific?.Translate(eval));
+                obj.LensFlares = this.LensFlares == null ? null : new MaskItem<R, SkyrimGroup.Mask<R>?>(eval(this.LensFlares.Overall), this.LensFlares.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3488,6 +3513,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         VolumetricLightings?.Print(sb);
                     }
+                    if (printMask?.LensFlares?.Overall ?? true)
+                    {
+                        LensFlares?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3626,6 +3655,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, SkyrimGroup.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
             public MaskItem<Exception?, SkyrimGroup.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
             public MaskItem<Exception?, SkyrimGroup.ErrorMask<VolumetricLighting.ErrorMask>?>? VolumetricLightings;
+            public MaskItem<Exception?, SkyrimGroup.ErrorMask<LensFlare.ErrorMask>?>? LensFlares;
             #endregion
 
             #region IErrorMask
@@ -3862,6 +3892,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return ReverbParameters;
                     case SkyrimMod_FieldIndex.VolumetricLightings:
                         return VolumetricLightings;
+                    case SkyrimMod_FieldIndex.LensFlares:
+                        return LensFlares;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4213,6 +4245,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.VolumetricLightings:
                         this.VolumetricLightings = new MaskItem<Exception?, SkyrimGroup.ErrorMask<VolumetricLighting.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.LensFlares:
+                        this.LensFlares = new MaskItem<Exception?, SkyrimGroup.ErrorMask<LensFlare.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4566,6 +4601,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.VolumetricLightings:
                         this.VolumetricLightings = (MaskItem<Exception?, SkyrimGroup.ErrorMask<VolumetricLighting.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.LensFlares:
+                        this.LensFlares = (MaskItem<Exception?, SkyrimGroup.ErrorMask<LensFlare.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4688,6 +4726,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Colors != null) return true;
                 if (ReverbParameters != null) return true;
                 if (VolumetricLightings != null) return true;
+                if (LensFlares != null) return true;
                 return false;
             }
             #endregion
@@ -4827,6 +4866,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Colors?.Print(sb);
                 ReverbParameters?.Print(sb);
                 VolumetricLightings?.Print(sb);
+                LensFlares?.Print(sb);
             }
             #endregion
 
@@ -4949,6 +4989,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Colors = this.Colors.Combine(rhs.Colors, (l, r) => l.Combine(r));
                 ret.ReverbParameters = this.ReverbParameters.Combine(rhs.ReverbParameters, (l, r) => l.Combine(r));
                 ret.VolumetricLightings = this.VolumetricLightings.Combine(rhs.VolumetricLightings, (l, r) => l.Combine(r));
+                ret.LensFlares = this.LensFlares.Combine(rhs.LensFlares, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5086,6 +5127,7 @@ namespace Mutagen.Bethesda.Skyrim
             public SkyrimGroup.TranslationMask<ColorRecord.TranslationMask>? Colors;
             public SkyrimGroup.TranslationMask<ReverbParameters.TranslationMask>? ReverbParameters;
             public SkyrimGroup.TranslationMask<VolumetricLighting.TranslationMask>? VolumetricLightings;
+            public SkyrimGroup.TranslationMask<LensFlare.TranslationMask>? LensFlares;
             #endregion
 
             #region Ctors
@@ -5224,6 +5266,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Colors != null ? Colors.OnOverall : DefaultOn, Colors?.GetCrystal()));
                 ret.Add((ReverbParameters != null ? ReverbParameters.OnOverall : DefaultOn, ReverbParameters?.GetCrystal()));
                 ret.Add((VolumetricLightings != null ? VolumetricLightings.OnOverall : DefaultOn, VolumetricLightings?.GetCrystal()));
+                ret.Add((LensFlares != null ? LensFlares.OnOverall : DefaultOn, LensFlares?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -5383,6 +5426,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Colors_Object = new SkyrimGroup<ColorRecord>(this);
             _ReverbParameters_Object = new SkyrimGroup<ReverbParameters>(this);
             _VolumetricLightings_Object = new SkyrimGroup<VolumetricLighting>(this);
+            _LensFlares_Object = new SkyrimGroup<LensFlare>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5844,6 +5888,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.VolumetricLightings.RecordCache.Set(rhsMod.VolumetricLightings.RecordCache.Items);
             }
+            if (mask?.LensFlares ?? true)
+            {
+                this.LensFlares.RecordCache.Set(rhsMod.LensFlares.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5967,6 +6015,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Colors.RecordCache.Count > 0 ? 1 : default(uint);
             count += ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
             count += VolumetricLightings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6354,6 +6403,7 @@ namespace Mutagen.Bethesda.Skyrim
         new SkyrimGroup<ColorRecord> Colors { get; }
         new SkyrimGroup<ReverbParameters> ReverbParameters { get; }
         new SkyrimGroup<VolumetricLighting> VolumetricLightings { get; }
+        new SkyrimGroup<LensFlare> LensFlares { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -6487,6 +6537,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimGroupGetter<IColorRecordGetter> Colors { get; }
         ISkyrimGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
         ISkyrimGroupGetter<IVolumetricLightingGetter> VolumetricLightings { get; }
+        ISkyrimGroupGetter<ILensFlareGetter> LensFlares { get; }
 
         #region Mutagen
         SkyrimRelease SkyrimRelease { get; }
@@ -7182,6 +7233,7 @@ namespace Mutagen.Bethesda.Skyrim
         Colors = 111,
         ReverbParameters = 112,
         VolumetricLightings = 113,
+        LensFlares = 114,
     }
     #endregion
 
@@ -7199,9 +7251,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 114;
+        public const ushort AdditionalFieldCount = 115;
 
-        public const ushort FieldCount = 114;
+        public const ushort FieldCount = 115;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -7382,6 +7434,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Colors.Clear();
             item.ReverbParameters.Clear();
             item.VolumetricLightings.Clear();
+            item.LensFlares.Clear();
         }
         
         #region Mutagen
@@ -7625,6 +7678,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Colors.Remove(keys);
             obj.ReverbParameters.Remove(keys);
             obj.VolumetricLightings.Remove(keys);
+            obj.LensFlares.Remove(keys);
         }
         
         public void Remove(
@@ -8572,6 +8626,14 @@ namespace Mutagen.Bethesda.Skyrim
                         type: type,
                         keys: keys);
                     break;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    obj.LensFlares.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -9407,6 +9469,12 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.LensFlares.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -9481,6 +9549,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.MaterialObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.SoundDescriptors.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LensFlares.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -9640,6 +9709,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Colors = MaskItemExt.Factory(item.Colors.GetEqualsMask(rhs.Colors, include), include);
             ret.ReverbParameters = MaskItemExt.Factory(item.ReverbParameters.GetEqualsMask(rhs.ReverbParameters, include), include);
             ret.VolumetricLightings = MaskItemExt.Factory(item.VolumetricLightings.GetEqualsMask(rhs.VolumetricLightings, include), include);
+            ret.LensFlares = MaskItemExt.Factory(item.LensFlares.GetEqualsMask(rhs.LensFlares, include), include);
         }
         
         public string Print(
@@ -10139,6 +10209,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.VolumetricLightings?.Overall ?? true)
             {
                 item.VolumetricLightings?.Print(sb, "VolumetricLightings");
+            }
+            if (printMask?.LensFlares?.Overall ?? true)
+            {
+                item.LensFlares?.Print(sb, "LensFlares");
             }
         }
         
@@ -11061,6 +11135,14 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else if (!isVolumetricLightingsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LensFlares) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LensFlares, rhs.LensFlares, out var lhsLensFlares, out var rhsLensFlares, out var isLensFlaresEqual))
+                {
+                    if (!object.Equals(lhsLensFlares, rhsLensFlares)) return false;
+                }
+                else if (!isLensFlaresEqual) return false;
+            }
             return true;
         }
         
@@ -11181,6 +11263,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Colors);
             hash.Add(item.ReverbParameters);
             hash.Add(item.VolumetricLightings);
+            hash.Add(item.LensFlares);
             return hash.ToHashCode();
         }
         
@@ -11763,6 +11846,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case "IVolumetricLighting":
                 case "IVolumetricLightingInternal":
                     return obj.VolumetricLightings;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    return obj.LensFlares;
                 default:
                     return null;
             }
@@ -11789,7 +11877,7 @@ namespace Mutagen.Bethesda.Skyrim
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[113];
+            Stream[] outputStreams = new Stream[114];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -11904,6 +11992,7 @@ namespace Mutagen.Bethesda.Skyrim
             toDo.Add(() => WriteGroupParallel(item.Colors, 110, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ReverbParameters, 111, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, 112, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LensFlares, 113, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12769,6 +12858,10 @@ namespace Mutagen.Bethesda.Skyrim
                 yield return item;
             }
             foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LensFlares.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13811,6 +13904,15 @@ namespace Mutagen.Bethesda.Skyrim
                 case "IVolumetricLighting":
                 case "IVolumetricLightingInternal":
                     foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    foreach (var item in obj.LensFlares.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -14964,6 +15066,15 @@ namespace Mutagen.Bethesda.Skyrim
                 modKey: obj.ModKey,
                 group: (m) => m.VolumetricLightings,
                 groupGetter: (m) => m.VolumetricLightings))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LensFlare, ILensFlareGetter>(
+                srcGroup: obj.LensFlares,
+                type: typeof(ILensFlareGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LensFlares,
+                groupGetter: (m) => m.LensFlares))
             {
                 yield return item;
             }
@@ -16566,6 +16677,20 @@ namespace Mutagen.Bethesda.Skyrim
                         yield return item;
                     }
                     yield break;
+                case "LensFlare":
+                case "ILensFlareGetter":
+                case "ILensFlare":
+                case "ILensFlareInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<ISkyrimMod, ISkyrimModGetter, LensFlare, ILensFlareGetter>(
+                        srcGroup: obj.LensFlares,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LensFlares,
+                        groupGetter: (m) => m.LensFlares))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -17033,6 +17158,10 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return item;
                 }
                 foreach (var item in obj.SoundDescriptors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                foreach (var item in obj.LensFlares.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -19335,6 +19464,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LensFlares) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LensFlares);
+                try
+                {
+                    item.LensFlares.DeepCopyIn(
+                        rhs: rhs.LensFlares,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LensFlares));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -19538,6 +19687,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Colors;
         public bool ReverbParameters;
         public bool VolumetricLightings;
+        public bool LensFlares;
         public GroupMask()
         {
         }
@@ -19656,6 +19806,7 @@ namespace Mutagen.Bethesda.Skyrim
             Colors = defaultValue;
             ReverbParameters = defaultValue;
             VolumetricLightings = defaultValue;
+            LensFlares = defaultValue;
         }
     }
 
@@ -20969,6 +21120,17 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)VolumetricLightingsItem).BinaryWriteTranslator).Write<IVolumetricLightingGetter>(
                         item: VolumetricLightingsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LensFlares ?? true)
+            {
+                var LensFlaresItem = item.LensFlares;
+                if (LensFlaresItem.RecordCache.Count > 0)
+                {
+                    ((SkyrimGroupBinaryWriteTranslation)((IBinaryItem)LensFlaresItem).BinaryWriteTranslator).Write<ILensFlareGetter>(
+                        item: LensFlaresItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -22615,6 +22777,20 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     return (int)SkyrimMod_FieldIndex.VolumetricLightings;
                 }
+                case RecordTypeInts.LENS:
+                {
+                    if (importMask?.LensFlares ?? true)
+                    {
+                        item.LensFlares.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.LensFlares;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -23350,6 +23526,11 @@ namespace Mutagen.Bethesda.Skyrim
         private List<RangeInt64>? _VolumetricLightingsLocations;
         private ISkyrimGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocations != null ? SkyrimGroupBinaryOverlay<IVolumetricLightingGetter>.SkyrimGroupFactory(_stream, _VolumetricLightingsLocations, _package) : default;
         public ISkyrimGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new SkyrimGroup<VolumetricLighting>(this);
+        #endregion
+        #region LensFlares
+        private List<RangeInt64>? _LensFlaresLocations;
+        private ISkyrimGroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? SkyrimGroupBinaryOverlay<ILensFlareGetter>.SkyrimGroupFactory(_stream, _LensFlaresLocations, _package) : default;
+        public ISkyrimGroupGetter<ILensFlareGetter> LensFlares => _LensFlares ?? new SkyrimGroup<LensFlare>(this);
         #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
@@ -24121,6 +24302,12 @@ namespace Mutagen.Bethesda.Skyrim
                     _VolumetricLightingsLocations ??= new();
                     _VolumetricLightingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.VolumetricLightings;
+                }
+                case RecordTypeInts.LENS:
+                {
+                    _LensFlaresLocations ??= new();
+                    _LensFlaresLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)SkyrimMod_FieldIndex.LensFlares;
                 }
                 default:
                     return default(int?);

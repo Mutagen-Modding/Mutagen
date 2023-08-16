@@ -120,6 +120,7 @@
       <Group name="Colors" refName="ColorRecord" />
       <Group name="ReverbParameters" refName="ReverbParameters" />
       <Group name="VolumetricLightings" refName="VolumetricLighting" />
+      <Group name="LensFlares" refName="LensFlare" />
     </Fields>
     <GameReleaseOptions>SkyrimLE</GameReleaseOptions>
     <GameReleaseOptions>SkyrimSE</GameReleaseOptions>
