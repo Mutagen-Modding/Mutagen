@@ -48,10 +48,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         sln:
           - Mutagen.Records.sln
           - Mutagen.Records.Linux.sln
+        exclude:
+          - os: ubuntu-latest
+            sln: Mutagen.Records.sln
+          - os: macos-latest
+            sln: Mutagen.Records.sln
+          - os: windows-latest
+            sln: Mutagen.Records.Linux.sln
           
     steps:
     - uses: actions/checkout@v2
@@ -84,11 +91,11 @@ jobs:
     - name: Pack Preview
       if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
       run: |
-        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
+        dotnet pack Mutagen.Records.sln -c Release -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
       if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       run: | 
-        dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out
+        dotnet pack Mutagen.Records.sln -c Release -o out
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
       if: ${{ success() && github.event.inputs.is_release_event == 'true' && github.ref == 'refs/heads/release' }}
