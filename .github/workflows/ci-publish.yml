@@ -82,11 +82,11 @@ jobs:
         dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
         dotnet restore Mutagen.Records.sln
     - name: Pack Preview
-      if: ${{ success() && github.event.release.prerelease }}
+      if: ${{ success() && (github.event.release.prerelease || github.event_name != 'release') }}
       run: |
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --version-suffix "nightly-${{ steps.current-time.outputs.formattedTime }}"
     - name: Pack Release
-      if: ${{ success() && !github.event.release.prerelease }}
+      if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
       run: | 
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out
     - name: Publish to Github
