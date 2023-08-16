@@ -111,7 +111,6 @@
       <Group name="Outfits" refName="Outfit" />
       <Group name="ArtObjects" refName="ArtObject" />
       <Group name="MaterialObjects" refName="MaterialObject" />
-      <Group name="VolumetricLightings" refName="VolumetricLighting" />
       <Group name="MovementTypes" refName="MovementType" />
       <Group name="SoundDescriptors" refName="SoundDescriptor" />
       <Group name="DualCastData" refName="DualCastData" />
@@ -120,6 +119,7 @@
       <Group name="CollisionLayers" refName="CollisionLayer" />
       <Group name="Colors" refName="ColorRecord" />
       <Group name="ReverbParameters" refName="ReverbParameters" />
+      <Group name="VolumetricLightings" refName="VolumetricLighting" />
       <Group name="LensFlares" refName="LensFlare" />
     </Fields>
     <GameReleaseOptions>SkyrimLE</GameReleaseOptions>
