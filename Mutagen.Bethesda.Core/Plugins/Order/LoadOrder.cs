@@ -459,6 +459,7 @@ public static class LoadOrder
         var provider = new PluginListingsProvider(
             gameContext,
             new TimestampedPluginListingsProvider(
+                fs,
                 new TimestampAligner(fs),
                 new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = throwOnMissingMods},
                 new PluginRawListingsReader(
@@ -467,6 +468,7 @@ public static class LoadOrder
                 dataDirectory,
                 listingsPathContext),
             new EnabledPluginListingsProvider(
+                fs,
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),

@@ -215,12 +215,14 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                     new PluginListingsProvider(
                         Release,
                         new TimestampedPluginListingsProvider(
+                            fs,
                             new TimestampAligner(fs),
                             new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                             pluginRawListingsReader,
                             dataDirectory,
                             pluginPathProvider),
                         new EnabledPluginListingsProvider(
+                            fs,
                             pluginRawListingsReader,
                             pluginPathProvider)),
                     new CreationClubListingsProvider(
@@ -464,12 +466,14 @@ public sealed record GameEnvironmentBuilder
                     new PluginListingsProvider(
                         Release,
                         new TimestampedPluginListingsProvider(
+                            fs,
                             new TimestampAligner(fs),
                             new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
                             pluginRawListingsReader,
                             dataDirectory,
                             pluginPathProvider),
                         new EnabledPluginListingsProvider(
+                            fs,
                             pluginRawListingsReader,
                             pluginPathProvider)),
                     new CreationClubListingsProvider(
