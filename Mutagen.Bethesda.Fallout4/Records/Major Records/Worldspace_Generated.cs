@@ -4083,7 +4083,7 @@ namespace Mutagen.Bethesda.Fallout4
             ModKey modKey,
             IModContext? parent,
             Func<IFallout4Mod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<IFallout4Mod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<IFallout4Mod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
@@ -4106,10 +4106,10 @@ namespace Mutagen.Bethesda.Fallout4
                             baseRec.TopCell = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                             baseRec.TopCell = dupRec;
                             return dupRec;
                         });
@@ -4126,10 +4126,10 @@ namespace Mutagen.Bethesda.Fallout4
                             baseRec.TopCell = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                             baseRec.TopCell = dupRec;
                             return dupRec;
                         }))
@@ -4159,7 +4159,7 @@ namespace Mutagen.Bethesda.Fallout4
             IModContext? parent,
             bool throwIfUnknown,
             Func<IFallout4Mod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<IFallout4Mod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<IFallout4Mod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
@@ -4221,10 +4221,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 });
@@ -4243,10 +4243,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4304,10 +4304,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4350,10 +4350,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4396,10 +4396,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4442,10 +4442,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4488,10 +4488,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))

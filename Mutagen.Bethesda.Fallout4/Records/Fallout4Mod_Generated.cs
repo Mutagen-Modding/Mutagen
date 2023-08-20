@@ -15409,7 +15409,7 @@ namespace Mutagen.Bethesda.Fallout4
                     modKey: obj.ModKey,
                     parent: null,
                     getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                    duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                 {
                     yield return item;
                 }
@@ -15431,7 +15431,7 @@ namespace Mutagen.Bethesda.Fallout4
                     modKey: obj.ModKey,
                     parent: null,
                     getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(linkCache.Resolve<IQuestGetter>(r.FormKey)),
-                    duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e)))
+                    duplicateInto: (m, r, e, f) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e, f)))
                 {
                     yield return item;
                 }
@@ -17861,7 +17861,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -17890,7 +17890,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -17919,7 +17919,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -17948,7 +17948,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -17977,7 +17977,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -18006,7 +18006,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -18026,7 +18026,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(linkCache.Resolve<IQuestGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -18046,7 +18046,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(linkCache.Resolve<IQuestGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -18066,7 +18066,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(linkCache.Resolve<IQuestGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -18086,7 +18086,7 @@ namespace Mutagen.Bethesda.Fallout4
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Quests.GetOrAddAsOverride(linkCache.Resolve<IQuestGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Quests.DuplicateInAsNewRecord(linkCache.Resolve<IQuestGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }

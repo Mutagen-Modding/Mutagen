@@ -7883,7 +7883,7 @@ namespace Mutagen.Bethesda.Oblivion
                     modKey: obj.ModKey,
                     parent: null,
                     getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                    duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                    duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                 {
                     yield return item;
                 }
@@ -7905,7 +7905,7 @@ namespace Mutagen.Bethesda.Oblivion
                     modKey: obj.ModKey,
                     parent: null,
                     getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
-                    duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
+                    duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
                 {
                     yield return item;
                 }
@@ -8815,7 +8815,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -8844,7 +8844,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -8873,7 +8873,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -8902,7 +8902,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -8931,7 +8931,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -8960,7 +8960,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -8980,7 +8980,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }
@@ -9000,7 +9000,7 @@ namespace Mutagen.Bethesda.Oblivion
                             modKey: obj.ModKey,
                             parent: null,
                             getOrAddAsOverride: (m, r) => m.DialogTopics.GetOrAddAsOverride(linkCache.Resolve<IDialogTopicGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e)))
+                            duplicateInto: (m, r, e, f) => m.DialogTopics.DuplicateInAsNewRecord(linkCache.Resolve<IDialogTopicGetter>(r.FormKey), e, f)))
                         {
                             yield return item;
                         }

@@ -4782,7 +4782,7 @@ namespace Mutagen.Bethesda.Fallout4
             ModKey modKey,
             IModContext? parent,
             Func<IFallout4Mod, ICellGetter, ICell> getOrAddAsOverride,
-            Func<IFallout4Mod, ICellGetter, string?, ICell> duplicateInto)
+            Func<IFallout4Mod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, ICell, ICellGetter>(
                 modKey,
@@ -4805,10 +4805,10 @@ namespace Mutagen.Bethesda.Fallout4
                             baseRec.Landscape = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
                             baseRec.Landscape = dupRec;
                             return dupRec;
                         });
@@ -4829,9 +4829,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.NavigationMeshes.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
                         return dup;
                     });
@@ -4851,9 +4851,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.Persistent.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                         return dup;
                     });
@@ -4873,9 +4873,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.Temporary.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                         return dup;
                     });
@@ -4890,7 +4890,7 @@ namespace Mutagen.Bethesda.Fallout4
             IModContext? parent,
             bool throwIfUnknown,
             Func<IFallout4Mod, ICellGetter, ICell> getOrAddAsOverride,
-            Func<IFallout4Mod, ICellGetter, string?, ICell> duplicateInto)
+            Func<IFallout4Mod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, ICell, ICellGetter>(
                 modKey,
@@ -4952,10 +4952,10 @@ namespace Mutagen.Bethesda.Fallout4
                                     baseRec.Landscape = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
                                     baseRec.Landscape = dupRec;
                                     return dupRec;
                                 });
@@ -4983,9 +4983,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.NavigationMeshes.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
                                     return dup;
                                 });
@@ -5011,9 +5011,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -5036,9 +5036,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -5066,9 +5066,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -5091,9 +5091,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -5121,9 +5121,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -5146,9 +5146,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -5176,9 +5176,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -5201,9 +5201,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });

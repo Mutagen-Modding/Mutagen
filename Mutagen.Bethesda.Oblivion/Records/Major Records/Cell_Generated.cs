@@ -3221,7 +3221,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey,
             IModContext? parent,
             Func<IOblivionMod, ICellGetter, ICell> getOrAddAsOverride,
-            Func<IOblivionMod, ICellGetter, string?, ICell> duplicateInto)
+            Func<IOblivionMod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, IOblivionModGetter, ICell, ICellGetter>(
                 modKey,
@@ -3244,10 +3244,10 @@ namespace Mutagen.Bethesda.Oblivion
                             baseRec.PathGrid = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
                             baseRec.PathGrid = dupRec;
                             return dupRec;
                         });
@@ -3268,10 +3268,10 @@ namespace Mutagen.Bethesda.Oblivion
                             baseRec.Landscape = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
                             baseRec.Landscape = dupRec;
                             return dupRec;
                         });
@@ -3292,9 +3292,9 @@ namespace Mutagen.Bethesda.Oblivion
                         parent.Persistent.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                         return dup;
                     });
@@ -3314,9 +3314,9 @@ namespace Mutagen.Bethesda.Oblivion
                         parent.Temporary.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                         return dup;
                     });
@@ -3336,9 +3336,9 @@ namespace Mutagen.Bethesda.Oblivion
                         parent.VisibleWhenDistant.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
                         return dup;
                     });
@@ -3353,7 +3353,7 @@ namespace Mutagen.Bethesda.Oblivion
             IModContext? parent,
             bool throwIfUnknown,
             Func<IOblivionMod, ICellGetter, ICell> getOrAddAsOverride,
-            Func<IOblivionMod, ICellGetter, string?, ICell> duplicateInto)
+            Func<IOblivionMod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
         {
             var curContext = new ModContext<IOblivionMod, IOblivionModGetter, ICell, ICellGetter>(
                 modKey,
@@ -3411,10 +3411,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.PathGrid = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.PathGridCopyMask);
                                     baseRec.PathGrid = dupRec;
                                     return dupRec;
                                 });
@@ -3440,10 +3440,10 @@ namespace Mutagen.Bethesda.Oblivion
                                     baseRec.Landscape = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
                                     baseRec.Landscape = dupRec;
                                     return dupRec;
                                 });
@@ -3466,9 +3466,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -3491,9 +3491,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -3516,9 +3516,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.VisibleWhenDistant.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
                                     return dup;
                                 });
@@ -3544,9 +3544,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -3569,9 +3569,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -3594,9 +3594,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.VisibleWhenDistant.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
                                     return dup;
                                 });
@@ -3624,9 +3624,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -3649,9 +3649,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -3674,9 +3674,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.VisibleWhenDistant.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
                                     return dup;
                                 });
@@ -3704,9 +3704,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -3729,9 +3729,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -3754,9 +3754,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.VisibleWhenDistant.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
                                     return dup;
                                 });
@@ -3784,9 +3784,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -3809,9 +3809,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -3834,9 +3834,9 @@ namespace Mutagen.Bethesda.Oblivion
                                     parent.VisibleWhenDistant.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
                                     return dup;
                                 });

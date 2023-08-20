@@ -24,7 +24,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
         where TTargetGetter : notnull
     {
         TTarget GetOrAddAsOverride(TMod mod);
-        TTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID = null);
+        TTarget DuplicateIntoAsNewRecord(TMod mod, FormKey? formKey = null);
+        TTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID);
         bool TryGetParentContext<TScopedTarget, TScopedTargetGetter>([MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TScopedTarget, TScopedTargetGetter> parent)
             where TScopedTarget : TScopedTargetGetter
             where TScopedTargetGetter : notnull;
@@ -81,7 +82,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         where TTargetGetter : notnull
     {
         private readonly Func<TMod, TTargetGetter, TTarget> _getOrAddAsOverride;
-        private readonly Func<TMod, TTargetGetter, string?, TTarget> _duplicateInto;
+        private readonly Func<TMod, TTargetGetter, string?, FormKey?, TTarget> _duplicateInto;
 
         /// <summary>
         /// The contained record
@@ -111,7 +112,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             ModKey modKey,
             TTargetGetter record,
             Func<TMod, TTargetGetter, TTarget> getOrAddAsOverride,
-            Func<TMod, TTargetGetter, string?, TTarget> duplicateInto,
+            Func<TMod, TTargetGetter, string?, FormKey?, TTarget> duplicateInto,
             IModContext? parent = null)
         {
             ModKey = modKey;
@@ -180,9 +181,14 @@ namespace Mutagen.Bethesda.Plugins.Cache
             return false;
         }
 
-        public TTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
+        public TTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID)
         {
-            return _duplicateInto(mod, Record, editorID);
+            return _duplicateInto(mod, Record, editorID, default(FormKey?));
+        }
+
+        public TTarget DuplicateIntoAsNewRecord(TMod mod, FormKey? formKey = null)
+        {
+            return _duplicateInto(mod, Record, default(string?), formKey);
         }
     }
 
@@ -214,9 +220,14 @@ namespace Mutagen.Bethesda.Plugins.Cache
             return (RTarget)_context.GetOrAddAsOverride(mod);
         }
 
-        public RTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
+        public RTarget DuplicateIntoAsNewRecord(TMod mod, string? editorID)
         {
             return (RTarget)_context.DuplicateIntoAsNewRecord(mod, editorID);
+        }
+
+        public RTarget DuplicateIntoAsNewRecord(TMod mod, FormKey? formKey = null)
+        {
+            return (RTarget)_context.DuplicateIntoAsNewRecord(mod, formKey);
         }
 
         public bool TryGetParentContext<TScoped, TScopedGetter>(
@@ -289,9 +300,14 @@ namespace Mutagen.Bethesda.Plugins.Cache
             _groupGetter = groupGetter;
         }
 
-        public TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID = null)
+        public TMajor DuplicateIntoAsNewRecord(TMod mod, string? editorID)
         {
             return _group(mod).DuplicateInAsNewRecord(Record, editorID);
+        }
+
+        public TMajor DuplicateIntoAsNewRecord(TMod mod, FormKey? formKey = null)
+        {
+            return _group(mod).DuplicateInAsNewRecord(Record, formKey);
         }
 
         public TMajor GetOrAddAsOverride(TMod mod)

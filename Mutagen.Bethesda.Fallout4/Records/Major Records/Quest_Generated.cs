@@ -3662,7 +3662,7 @@ namespace Mutagen.Bethesda.Fallout4
             ModKey modKey,
             IModContext? parent,
             Func<IFallout4Mod, IQuestGetter, IQuest> getOrAddAsOverride,
-            Func<IFallout4Mod, IQuestGetter, string?, IQuest> duplicateInto)
+            Func<IFallout4Mod, IQuestGetter, string?, FormKey?, IQuest> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IQuest, IQuestGetter>(
                 modKey,
@@ -3685,9 +3685,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.DialogBranches.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
                         return dup;
                     });
@@ -3707,9 +3707,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.DialogTopics.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                         return dup;
                     });
@@ -3727,9 +3727,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.DialogTopics.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                         return dup;
                     }))
@@ -3752,9 +3752,9 @@ namespace Mutagen.Bethesda.Fallout4
                         parent.Scenes.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (Scene)((ISceneGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
                         return dup;
                     });
@@ -3769,7 +3769,7 @@ namespace Mutagen.Bethesda.Fallout4
             IModContext? parent,
             bool throwIfUnknown,
             Func<IFallout4Mod, IQuestGetter, IQuest> getOrAddAsOverride,
-            Func<IFallout4Mod, IQuestGetter, string?, IQuest> duplicateInto)
+            Func<IFallout4Mod, IQuestGetter, string?, FormKey?, IQuest> duplicateInto)
         {
             var curContext = new ModContext<IFallout4Mod, IFallout4ModGetter, IQuest, IQuestGetter>(
                 modKey,
@@ -3845,9 +3845,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.DialogBranches.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogBranch)((IDialogBranchGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogBranches.Add(dup);
                                     return dup;
                                 });
@@ -3875,9 +3875,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.DialogTopics.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                     return dup;
                                 });
@@ -3898,9 +3898,9 @@ namespace Mutagen.Bethesda.Fallout4
                                 parent.DialogTopics.Add(ret);
                                 return ret;
                             },
-                            duplicateInto: (m, r, e) =>
+                            duplicateInto: (m, r, e, f) =>
                             {
-                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                 getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                 return dup;
                             }))
@@ -3930,9 +3930,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.Scenes.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (Scene)((ISceneGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (Scene)((ISceneGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).Scenes.Add(dup);
                                     return dup;
                                 });
@@ -3960,9 +3960,9 @@ namespace Mutagen.Bethesda.Fallout4
                                     parent.DialogTopics.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                     return dup;
                                 });
@@ -3983,9 +3983,9 @@ namespace Mutagen.Bethesda.Fallout4
                                 parent.DialogTopics.Add(ret);
                                 return ret;
                             },
-                            duplicateInto: (m, r, e) =>
+                            duplicateInto: (m, r, e, f) =>
                             {
-                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(m.GetNextFormKey(e));
+                                var dup = (DialogTopic)((IDialogTopicGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                 getOrAddAsOverride(m, linkCache.Resolve<IQuestGetter>(obj.FormKey)).DialogTopics.Add(dup);
                                 return dup;
                             }))

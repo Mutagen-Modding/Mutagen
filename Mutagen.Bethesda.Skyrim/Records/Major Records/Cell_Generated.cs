@@ -4082,7 +4082,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             IModContext? parent,
             Func<ISkyrimMod, ICellGetter, ICell> getOrAddAsOverride,
-            Func<ISkyrimMod, ICellGetter, string?, ICell> duplicateInto)
+            Func<ISkyrimMod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(
                 modKey,
@@ -4105,10 +4105,10 @@ namespace Mutagen.Bethesda.Skyrim
                             baseRec.Landscape = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
                             baseRec.Landscape = dupRec;
                             return dupRec;
                         });
@@ -4129,9 +4129,9 @@ namespace Mutagen.Bethesda.Skyrim
                         parent.NavigationMeshes.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
                         return dup;
                     });
@@ -4151,9 +4151,9 @@ namespace Mutagen.Bethesda.Skyrim
                         parent.Persistent.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                         return dup;
                     });
@@ -4173,9 +4173,9 @@ namespace Mutagen.Bethesda.Skyrim
                         parent.Temporary.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                         return dup;
                     });
@@ -4190,7 +4190,7 @@ namespace Mutagen.Bethesda.Skyrim
             IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, ICellGetter, ICell> getOrAddAsOverride,
-            Func<ISkyrimMod, ICellGetter, string?, ICell> duplicateInto)
+            Func<ISkyrimMod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(
                 modKey,
@@ -4248,10 +4248,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.Landscape = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.LandscapeCopyMask);
                                     baseRec.Landscape = dupRec;
                                     return dupRec;
                                 });
@@ -4279,9 +4279,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.NavigationMeshes.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (NavigationMesh)((INavigationMeshGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).NavigationMeshes.Add(dup);
                                     return dup;
                                 });
@@ -4307,9 +4307,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -4332,9 +4332,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -4362,9 +4362,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -4387,9 +4387,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -4417,9 +4417,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -4442,9 +4442,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });
@@ -4472,9 +4472,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Persistent.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
                                     return dup;
                                 });
@@ -4497,9 +4497,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Temporary.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
                                     return dup;
                                 });

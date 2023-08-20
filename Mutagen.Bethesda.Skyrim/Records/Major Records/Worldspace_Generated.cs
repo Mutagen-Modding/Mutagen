@@ -4014,7 +4014,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             IModContext? parent,
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<ISkyrimMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<ISkyrimMod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
@@ -4037,10 +4037,10 @@ namespace Mutagen.Bethesda.Skyrim
                             baseRec.TopCell = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                             baseRec.TopCell = dupRec;
                             return dupRec;
                         });
@@ -4057,10 +4057,10 @@ namespace Mutagen.Bethesda.Skyrim
                             baseRec.TopCell = copy;
                             return copy;
                         },
-                        duplicateInto: (m, r, e) =>
+                        duplicateInto: (m, r, e, f) =>
                         {
                             var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                            var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                            var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                             baseRec.TopCell = dupRec;
                             return dupRec;
                         }))
@@ -4090,7 +4090,7 @@ namespace Mutagen.Bethesda.Skyrim
             IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, IWorldspaceGetter, IWorldspace> getOrAddAsOverride,
-            Func<ISkyrimMod, IWorldspaceGetter, string?, IWorldspace> duplicateInto)
+            Func<ISkyrimMod, IWorldspaceGetter, string?, FormKey?, IWorldspace> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(
                 modKey,
@@ -4152,10 +4152,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 });
@@ -4174,10 +4174,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4235,10 +4235,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4281,10 +4281,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4327,10 +4327,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4373,10 +4373,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))
@@ -4419,10 +4419,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     baseRec.TopCell = copy;
                                     return copy;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
                                     var baseRec = getOrAddAsOverride(m, linkCache.Resolve<IWorldspaceGetter>(obj.FormKey));
-                                    var dupRec = r.Duplicate(m.GetNextFormKey(e), ModContextExt.CellCopyMask);
+                                    var dupRec = r.Duplicate(f ?? m.GetNextFormKey(e), ModContextExt.CellCopyMask);
                                     baseRec.TopCell = dupRec;
                                     return dupRec;
                                 }))

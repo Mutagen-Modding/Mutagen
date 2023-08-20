@@ -2145,7 +2145,7 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             IModContext? parent,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
-            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+            Func<ISkyrimMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
@@ -2168,9 +2168,9 @@ namespace Mutagen.Bethesda.Skyrim
                         parent.Responses.Add(ret);
                         return ret;
                     },
-                    duplicateInto: (m, r, e) =>
+                    duplicateInto: (m, r, e, f) =>
                     {
-                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                        var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                         getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
                         return dup;
                     });
@@ -2185,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim
             IModContext? parent,
             bool throwIfUnknown,
             Func<ISkyrimMod, IDialogTopicGetter, IDialogTopic> getOrAddAsOverride,
-            Func<ISkyrimMod, IDialogTopicGetter, string?, IDialogTopic> duplicateInto)
+            Func<ISkyrimMod, IDialogTopicGetter, string?, FormKey?, IDialogTopic> duplicateInto)
         {
             var curContext = new ModContext<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter>(
                 modKey,
@@ -2245,9 +2245,9 @@ namespace Mutagen.Bethesda.Skyrim
                                     parent.Responses.Add(ret);
                                     return ret;
                                 },
-                                duplicateInto: (m, r, e) =>
+                                duplicateInto: (m, r, e, f) =>
                                 {
-                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(m.GetNextFormKey(e));
+                                    var dup = (DialogResponses)((IDialogResponsesGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
                                     getOrAddAsOverride(m, linkCache.Resolve<IDialogTopicGetter>(obj.FormKey)).Responses.Add(dup);
                                     return dup;
                                 });
