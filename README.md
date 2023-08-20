@@ -5,8 +5,8 @@
 # Mutagen
 Mutagen is a C# library for analyzing, modifying, and creating Bethesda mods. One of its main features is offering interfaces and classes for the records that exist at compile time and are first class citizens in C#. With actual members for each field they get the benefits of type safety, simple live debugging, Intellisense features such as autocomplete. The interfaces offer clean API to the user and abstract away much of the binary record specifics and oddities of how they are stored on disk, while the actual implementation remains very closely tied to the data offering as much speed as it can by leveraging some of the latest C# features. Most of the public facing API is created by code generation, with small manual snippets of code for the one-off special cases. This means the library is able to provide consistent API with very little manual work when adding new record definitions or features.
 
-## Wiki
-Check out the [Wiki](https://mutagen-modding.github.io/Mutagen/) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
+## Documentation
+Check out the [![Documentation](https://i.imgur.com/DGoSrNg.png)](https://mutagen-modding.github.io/Mutagen/) [Official Documentation](https://mutagen-modding.github.io/Mutagen/) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
 
 Also be sure to check out the [Big Cheat Sheet](https://mutagen-modding.github.io/Mutagen/top/Big-Cheat-Sheet/)
 
