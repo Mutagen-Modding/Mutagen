@@ -43,7 +43,7 @@ theme:
     - navigation.instant
     - navigation.tracking
     - navigation.indexes 
-    - navigation.sections
+    - navigation.path
     
 nav:
   - Home: index.md
