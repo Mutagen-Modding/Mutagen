@@ -48,6 +48,7 @@
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TimeOfDay.cs" />
     <Compile Include="Extensions\GameSettingsGroupMixin.cs" />
+    <Compile Include="Extensions\GlobalGroupMixin.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -342,6 +343,21 @@
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Global.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalBool.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Grass.cs">
@@ -842,9 +858,6 @@
     </Compile>
     <Compile Include="Records\Major Records\Component_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Global_Generated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
@@ -2451,6 +2464,24 @@
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
+    <Compile Include="Records\Major Records\GlobalInt_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Global_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />
@@ -2509,5 +2540,4 @@
       <BuildAction>None</BuildAction>
     </None>
   </ItemGroup>
-  
 </Project>

@@ -9,6 +9,10 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
     public static void Register()
     {
         LoquiRegistration.Register(
+            GlobalInt_Registration.Instance,
+            GlobalShort_Registration.Instance,
+            GlobalFloat_Registration.Instance,
+            GlobalBool_Registration.Instance,
             Fallout4MajorRecord_Registration.Instance,
             Fallout4Mod_Registration.Instance,
             Fallout4ModHeader_Registration.Instance,
@@ -549,7 +553,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             NavigationMapInfoWorldspaceParent_Registration.Instance,
             NavigationMapInfoCellParent_Registration.Instance,
             UnknownObjectModification_Registration.Instance,
-            AMagicEffectArchetype_Registration.Instance
+            AMagicEffectArchetype_Registration.Instance,
+            GlobalUnknown_Registration.Instance
         );
     }
 }
