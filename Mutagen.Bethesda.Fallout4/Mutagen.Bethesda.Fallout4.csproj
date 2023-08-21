@@ -47,6 +47,7 @@
     <Compile Include="Enums\Stagger.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TimeOfDay.cs" />
+    <Compile Include="Extensions\GameSettingsGroupMixin.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
