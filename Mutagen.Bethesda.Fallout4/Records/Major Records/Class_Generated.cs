@@ -627,6 +627,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Class(FormKey formKey)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameRelease.Fallout4.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 

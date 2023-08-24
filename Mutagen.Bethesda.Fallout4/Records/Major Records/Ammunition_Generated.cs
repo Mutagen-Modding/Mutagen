@@ -1126,6 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Ammunition(FormKey formKey)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameRelease.Fallout4.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 

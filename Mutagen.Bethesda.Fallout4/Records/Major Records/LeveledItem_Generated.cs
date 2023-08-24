@@ -806,6 +806,7 @@ namespace Mutagen.Bethesda.Fallout4
         public LeveledItem(FormKey formKey)
         {
             this.FormKey = formKey;
+            this.FormVersion = GameRelease.Fallout4.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
