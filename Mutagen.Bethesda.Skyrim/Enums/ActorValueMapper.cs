@@ -118,7 +118,7 @@ public static class ActorValueMapper
             { FormKey.Factory("000618:Skyrim.esm"), ActorValue.EnchantingModifier },
             { FormKey.Factory("000619:Skyrim.esm"), ActorValue.OneHandedSkillAdvance },
             { FormKey.Factory("00061A:Skyrim.esm"), ActorValue.TwoHandedSkillAdvance },
-            { FormKey.Factory("00061B:Skyrim.esm"), ActorValue.MarksmanSKillAdvance },
+            { FormKey.Factory("00061B:Skyrim.esm"), ActorValue.MarksmanSkillAdvance },
             { FormKey.Factory("00061C:Skyrim.esm"), ActorValue.BlockSkillAdvance },
             { FormKey.Factory("00061D:Skyrim.esm"), ActorValue.SmithingSkillAdvance },
             { FormKey.Factory("00061E:Skyrim.esm"), ActorValue.HeavyArmorSkillAdvance },
