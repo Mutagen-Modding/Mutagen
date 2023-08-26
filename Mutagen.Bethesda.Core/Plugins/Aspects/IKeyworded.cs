@@ -219,48 +219,12 @@ namespace Mutagen.Bethesda
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keywordKeys">FormKeys of the Keyword records to look for</param>
         /// <returns>True if the Keyworded record contains a Keyword link /w any of the given FormKeys</returns>
-        public static bool HasKeyword<TKeyword>(
+        public static bool HasAnyKeyword<TKeyword>(
             this IKeywordedGetter<TKeyword> keyworded,
             IEnumerable<FormKey> keywordKeys)
             where TKeyword : class, IKeywordCommonGetter
         {
             return keyworded.Keywords?.IntersectBy(keywordKeys, x => x.FormKey).Any() ?? false;
-        }
-        
-        /// <summary>
-        /// Checks if a Keyworded record contains any specific Keyword, by FormKey.
-        /// Also looks up that keyword in the given cache. <br />
-        /// <br />
-        /// Note that this function only succeeds if the record contains the keyword,
-        /// and the cache found it as well. <br />
-        /// <br />
-        /// It is possible that the record contains the keyword, but it could not be found
-        /// by the cache.
-        /// <br />
-        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
-        /// </summary>
-        /// <param name="keyworded">Keyworded record to check</param>
-        /// <param name="keywordKeys">FormKeys of the Keyword records to look for</param>
-        /// <param name="cache">LinkCache to resolve against</param>
-        /// <param name="keyword">Keyword record retrieved, if keyworded record does contain</param>
-        /// <returns>True if the Keyworded record contains a Keyword link /w any of the given FormKeys</returns>
-        public static bool TryResolveKeyword<TKeyword>(
-            this IKeywordedGetter<TKeyword> keyworded,
-            IEnumerable<FormKey> keywordKeys,
-            ILinkCache cache,
-            [MaybeNullWhen(false)] out TKeyword keyword)
-            where TKeyword : class, IKeywordCommonGetter
-        {
-            foreach (var keywordKey in keywordKeys)
-            {
-                if (cache.TryResolve(keywordKey, out keyword) && HasKeyword(keyworded, keywordKey))
-                {
-                    return true;
-                }
-            }
-
-            keyword = default;
-            return false;
         }
         
          /// <summary>
@@ -271,39 +235,12 @@ namespace Mutagen.Bethesda
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keywordLink">FormLinks of the Keyword records to look for</param>
         /// <returns>True if the Keyworded record contains a Keyword link /w any of the given FormKeys</returns>
-        public static bool HasKeyword<TKeyword>(
+        public static bool HasAnyKeyword<TKeyword>(
             this IKeywordedGetter<TKeyword> keyworded,
             IEnumerable<IFormLinkGetter<TKeyword>> keywordLink)
             where TKeyword : class, IKeywordCommonGetter
         {
-            return HasKeyword(keyworded, keywordLink.Select(x => x.FormKey));
-        }
-
-        /// <summary>
-        /// Checks if a Keyworded record contains any specific Keyword, by FormKey.
-        /// Also looks up that keyword in the given cache. <br />
-        /// <br />
-        /// Note that this function only succeeds if the record contains the keyword,
-        /// and the cache found it as well. <br />
-        /// <br />
-        /// It is possible that the record contains the keyword, but it could not be found
-        /// by the cache.
-        /// <br />
-        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
-        /// </summary>
-        /// <param name="keyworded">Keyworded record to check</param>
-        /// <param name="keywordLinks">FormLinks of the Keyword records to look for</param>
-        /// <param name="cache">LinkCache to resolve against</param>
-        /// <param name="keyword">Keyword record retrieved, if keyworded record does contain</param>
-        /// <returns>True if the Keyworded record contains a Keyword link /w any of the given FormKeys</returns>
-        public static bool TryResolveKeyword<TKeyword>(
-            this IKeywordedGetter<TKeyword> keyworded,
-            IEnumerable<IFormLinkGetter<TKeyword>> keywordLinks,
-            ILinkCache cache,
-            [MaybeNullWhen(false)] out TKeyword keyword)
-            where TKeyword : class, IKeywordCommonGetter
-        {
-            return TryResolveKeyword(keyworded, keywordLinks.Select(x => x.FormKey), cache, out keyword);
+            return HasAnyKeyword(keyworded, keywordLink.Select(x => x.FormKey));
         }
         
          /// <summary>
@@ -314,58 +251,12 @@ namespace Mutagen.Bethesda
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keywords">Keyword records to look for</param>
         /// <returns>True if the Keyworded record contains a Keyword link /w any of the given Keyword records' FormKey</returns>
-        public static bool HasKeyword<TKeyword>(
+        public static bool HasAnyKeyword<TKeyword>(
             this IKeywordedGetter<TKeyword> keyworded,
             IEnumerable<TKeyword> keywords)
             where TKeyword : class, IKeywordCommonGetter
         {
-            return keyworded.HasKeyword(keywords.Select(x => x.FormKey));
-        }
-
-        /// <summary>
-        /// Checks if a Keyworded record contains any specific Keyword, by EditorID.
-        /// Also looks up that keyword in the given cache.
-        /// <br />
-        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
-        /// </summary>
-        /// <param name="keyworded">Keyworded record to check</param>
-        /// <param name="editorIDs">EditorIDs of the Keywordsto look for</param>
-        /// <param name="cache">LinkCache to resolve against</param>
-        /// <param name="keyword">Keyword record retrieved, if keyworded record does contain</param>
-        /// <param name="stringComparison">
-        /// What string comparison type to use.<br />
-        /// By default EditorIDs are case insensitive.
-        /// </param>
-        /// <returns>True if the Keyworded record contains a Keyword link that points to a winning Keyword record /w the any of the given EditorIDs</returns>
-        public static bool TryResolveKeyword<TKeyword>(
-            this IKeywordedGetter<TKeyword> keyworded,
-            IEnumerable<string> editorIDs,
-            ILinkCache cache,
-            [MaybeNullWhen(false)] out TKeyword keyword,
-            StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
-            where TKeyword : class, IKeywordCommonGetter
-        {
-            // ToDo
-            // Consider EDID link cache systems if/when available
-            if (keyworded.Keywords == null)
-            {
-                keyword = default;
-                return false;
-            }
-            foreach (var keywordForm in keyworded.Keywords.Select(link => link.FormKey))
-            {
-                if (cache.TryResolve(keywordForm, out keyword))
-                {
-                    var kwEditorID = keyword.EditorID;
-                    if (editorIDs.Any(editorID => kwEditorID?.Equals(editorID, stringComparison) ?? false))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            keyword = default;
-            return false;
+            return keyworded.HasAnyKeyword(keywords.Select(x => x.FormKey));
         }
 
         /// <summary>
@@ -381,14 +272,33 @@ namespace Mutagen.Bethesda
         /// By default EditorIDs are case insensitive.
         /// </param>
         /// <returns>True if the Keyworded record contains a Keyword link that points to a winning Keyword record /w any of the the given EditorIDs</returns>
-        public static bool HasKeyword<TKeyword>(
+        public static bool HasAnyKeyword<TKeyword>(
             this IKeywordedGetter<TKeyword> keyworded,
             IEnumerable<string> editorIDs,
             ILinkCache cache,
             StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
             where TKeyword : class, IKeywordCommonGetter
         {
-            return TryResolveKeyword(keyworded, editorIDs, cache, out _, stringComparison);
+            // ToDo
+            // Consider EDID link cache systems if/when available
+            if (keyworded.Keywords == null)
+            {
+                return false;
+            }
+            foreach (var keywordForm in keyworded.Keywords.Select(link => link.FormKey))
+            {
+                TKeyword keyword;
+                if (cache.TryResolve(keywordForm, out keyword!))
+                {
+                    var kwEditorID = keyword.EditorID;
+                    if (editorIDs.Any(editorID => kwEditorID?.Equals(editorID, stringComparison) ?? false))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
