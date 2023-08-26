@@ -287,8 +287,7 @@ namespace Mutagen.Bethesda
             }
             foreach (var keywordForm in keyworded.Keywords.Select(link => link.FormKey))
             {
-                TKeyword keyword;
-                if (cache.TryResolve(keywordForm, out keyword!))
+                if (cache.TryResolve<TKeyword>(keywordForm, out var keyword))
                 {
                     var kwEditorID = keyword.EditorID;
                     if (editorIDs.Any(editorID => kwEditorID?.Equals(editorID, stringComparison) ?? false))
