@@ -111,7 +111,7 @@ public enum ActorValue
     EnchantingModifier = 113,
     OneHandedSkillAdvance = 114,
     TwoHandedSkillAdvance = 115,
-    MarksmanSKillAdvance = 116,
+    MarksmanSkillAdvance = 116,
     BlockSkillAdvance = 117,
     SmithingSkillAdvance = 118,
     HeavyArmorSkillAdvance = 119,
