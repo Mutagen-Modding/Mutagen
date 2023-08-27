@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda
             [MaybeNullWhen(false)] out TKeyword keyword)
             where TKeyword : class, IKeywordCommonGetter
         {
-            if (!keyworded.Keywords?.Any(x => x.FormKey == keywordKey) ?? true)
+            if (!HasKeyword(keyworded, keywordKey))
             {
                 keyword = default;
                 return false;
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda
             IFormLinkGetter<TKeyword> keywordLink)
             where TKeyword : class, IKeywordCommonGetter
         {
-            return keyworded.Keywords?.Any(x => x.FormKey == keywordLink.FormKey) ?? false;
+            return HasKeyword(keyworded, keywordLink.FormKey);
         }
 
         /// <summary>
@@ -126,12 +126,7 @@ namespace Mutagen.Bethesda
             [MaybeNullWhen(false)] out TKeyword keyword)
             where TKeyword : class, IKeywordCommonGetter
         {
-            if (!keyworded.Keywords?.Any(x => x.FormKey == keywordLink.FormKey) ?? true)
-            {
-                keyword = default;
-                return false;
-            }
-            return keywordLink.TryResolve<TKeyword>(cache, out keyword);
+            return TryResolveKeyword(keyworded, keywordLink.FormKey, cache, out keyword);
         }
 
         /// <summary>
@@ -214,6 +209,95 @@ namespace Mutagen.Bethesda
             where TKeyword : class, IKeywordCommonGetter
         {
             return TryResolveKeyword(keyworded, editorID, cache, out _, stringComparison);
+        }
+        
+        /// <summary>
+        /// Checks if a Keyworded record contains any specific Keyword, by FormKey.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
+        /// </summary>
+        /// <param name="keyworded">Keyworded record to check</param>
+        /// <param name="keywordKeys">FormKeys of the Keyword records to look for</param>
+        /// <returns>True if the Keyworded record contains a Keyword link /w any of the given FormKeys</returns>
+        public static bool HasAnyKeyword<TKeyword>(
+            this IKeywordedGetter<TKeyword> keyworded,
+            IEnumerable<FormKey> keywordKeys)
+            where TKeyword : class, IKeywordCommonGetter
+        {
+            return keyworded.Keywords?.IntersectBy(keywordKeys, x => x.FormKey).Any() ?? false;
+        }
+        
+         /// <summary>
+        /// Checks if a Keyworded record contains any specific Keyword, by FormKey.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
+        /// </summary>
+        /// <param name="keyworded">Keyworded record to check</param>
+        /// <param name="keywordLink">FormLinks of the Keyword records to look for</param>
+        /// <returns>True if the Keyworded record contains a Keyword link /w any of the given FormKeys</returns>
+        public static bool HasAnyKeyword<TKeyword>(
+            this IKeywordedGetter<TKeyword> keyworded,
+            IEnumerable<IFormLinkGetter<TKeyword>> keywordLink)
+            where TKeyword : class, IKeywordCommonGetter
+        {
+            return HasAnyKeyword(keyworded, keywordLink.Select(x => x.FormKey));
+        }
+        
+         /// <summary>
+        /// Checks if a Keyworded record contains any specific Keyword, by FormKey.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
+        /// </summary>
+        /// <param name="keyworded">Keyworded record to check</param>
+        /// <param name="keywords">Keyword records to look for</param>
+        /// <returns>True if the Keyworded record contains a Keyword link /w any of the given Keyword records' FormKey</returns>
+        public static bool HasAnyKeyword<TKeyword>(
+            this IKeywordedGetter<TKeyword> keyworded,
+            IEnumerable<TKeyword> keywords)
+            where TKeyword : class, IKeywordCommonGetter
+        {
+            return keyworded.HasAnyKeyword(keywords.Select(x => x.FormKey));
+        }
+
+        /// <summary>
+        /// Checks if a Keyworded record contains any specific Keyword, by EditorID.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
+        /// </summary>
+        /// <param name="keyworded">Keyworded record to check</param>
+        /// <param name="editorIDs">EditorIDs of the Keywords to look for</param>
+        /// <param name="cache">LinkCache to resolve against</param>
+        /// <param name="stringComparison">
+        /// What string comparison type to use.<br />
+        /// By default EditorIDs are case insensitive.
+        /// </param>
+        /// <returns>True if the Keyworded record contains a Keyword link that points to a winning Keyword record /w any of the the given EditorIDs</returns>
+        public static bool HasAnyKeyword<TKeyword>(
+            this IKeywordedGetter<TKeyword> keyworded,
+            IEnumerable<string> editorIDs,
+            ILinkCache cache,
+            StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)
+            where TKeyword : class, IKeywordCommonGetter
+        {
+            // ToDo
+            // Consider EDID link cache systems if/when available
+            if (keyworded.Keywords == null)
+            {
+                return false;
+            }
+            foreach (var keywordForm in keyworded.Keywords.Select(link => link.FormKey))
+            {
+                if (cache.TryResolve<TKeyword>(keywordForm, out var keyword))
+                {
+                    var kwEditorID = keyword.EditorID;
+                    if (editorIDs.Any(editorID => kwEditorID?.Equals(editorID, stringComparison) ?? false))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
