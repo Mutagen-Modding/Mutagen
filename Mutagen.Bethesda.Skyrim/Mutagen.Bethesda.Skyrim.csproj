@@ -98,11 +98,13 @@
     <Compile Include="Enums\WardState.cs" />
     <Compile Include="Enums\WeaponAnimationType.cs" />
     <Compile Include="Enums\Emotion.cs" />
+    <Compile Include="Extensions\CellGroupExt.cs" />
     <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
     <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Extensions\PlacedContextExt.cs" />
+    <Compile Include="Extensions\WorldspaceExt.cs" />
     <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
