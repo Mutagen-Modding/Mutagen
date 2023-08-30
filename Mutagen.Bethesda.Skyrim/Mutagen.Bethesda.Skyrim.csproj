@@ -10,8 +10,8 @@
     <Description>A C# library for manipulating, creating, and analyzing Skyrim mods</Description>
     <Copyright>2021</Copyright>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>

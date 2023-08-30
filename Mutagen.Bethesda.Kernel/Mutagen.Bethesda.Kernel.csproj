@@ -6,8 +6,8 @@
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Description>A C# library containing the very minimal basics about Bethesda structures.  Meant to be a lightweight import with some basic definitions</Description>
-    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>

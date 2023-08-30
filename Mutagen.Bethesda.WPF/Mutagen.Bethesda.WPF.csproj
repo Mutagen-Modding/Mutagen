@@ -10,8 +10,8 @@
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Authors>Noggog</Authors>
-    <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Mutagen-Modding/Mutagen</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Mutagen-Modding/Mutagen</RepositoryUrl>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>A C# library for Mutagen/Bethesda related WPF controls and styling</Description>
