@@ -69,6 +69,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Starfield", "Mutagen.Bethesda.Starfield\Mutagen.Bethesda.Starfield.csproj", "{470374D2-B508-4A3D-8A87-B0FE31FFA82E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,10 @@ Global
 		{F2EF14F7-CED7-4832-9CE4-5CD65F1B6550}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2EF14F7-CED7-4832-9CE4-5CD65F1B6550}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2EF14F7-CED7-4832-9CE4-5CD65F1B6550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{470374D2-B508-4A3D-8A87-B0FE31FFA82E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{470374D2-B508-4A3D-8A87-B0FE31FFA82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{470374D2-B508-4A3D-8A87-B0FE31FFA82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{470374D2-B508-4A3D-8A87-B0FE31FFA82E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -199,6 +205,7 @@ Global
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90} = {89AC8733-A707-495A-88B1-8F9570CDA329}
 		{F2EF14F7-CED7-4832-9CE4-5CD65F1B6550} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 		{AB5B2624-FAB0-44A5-86C1-680D04A55B59} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
+		{470374D2-B508-4A3D-8A87-B0FE31FFA82E} = {181455C8-DDBD-40BE-8891-0950A3F62101}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C76E1C6-5B27-4005-8051-03C82E3A4849}
