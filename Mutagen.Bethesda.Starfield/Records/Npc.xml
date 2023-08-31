@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Npc" recordType="NPC_" objType="Record" baseClass="StarfieldMajorRecord" GUID="bcf13200-857c-4f8b-b325-5ed79e6a0fde" ID="67">
+    <Fields>
+      <FormLink name="Race" refName="Race" recordType="RNAM" nullable="False" />
+    </Fields>
+  </Object>
+</Loqui>

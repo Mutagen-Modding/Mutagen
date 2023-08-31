@@ -272,6 +272,76 @@ public sealed record GameConstants
         },
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
+
+    /// <summary> 
+    /// Readonly singleton of Starfield game constants 
+    /// </summary> 
+    public static readonly GameConstants Starfield = new GameConstants(
+        release: GameRelease.Starfield,
+        modHeaderLength: 24,
+        modHeaderFluffLength: 16,
+        groupConstants: new GroupConstants(
+            ObjectType.Group,
+            headerLength: 24,
+            lengthLength: 4,
+            cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9 }),
+            world: new GroupWorldConstants(
+                TopGroupType: 1,
+                CellGroupTypes: new[] { 2, 4 },
+                CellSubGroupTypes: new[] { 3, 5 }),
+            topic: new GroupTopicConstants(7),
+            hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
+            new GroupNesting[]
+            {
+                new GroupNesting(2,
+                    new GroupNesting(HasTopLevelRecordType: true, 3,
+                        new GroupNesting(6,
+                            new GroupNesting(8),
+                            new GroupNesting(9)))),
+                new GroupNesting(HasTopLevelRecordType: true, GroupType: 10,
+                    new GroupNesting(GroupType: 7)),
+                new GroupNesting(
+                    HasTopLevelRecordType: true, GroupType: 1,
+                    new GroupNesting(
+                        GroupType: 6,
+                        new GroupNesting(8),
+                        new GroupNesting(9)),
+                    new GroupNesting(4,
+                        new GroupNesting(HasTopLevelRecordType: true, 5,
+                            new GroupNesting(
+                                GroupType: 6,
+                                new GroupNesting(8),
+                                new GroupNesting(9))))),
+            })
+        {
+            Quest = new GroupQuestConstants(10)
+        },
+        majorConstants: new MajorRecordConstants(
+            headerLength: 24,
+            lengthLength: 4,
+            flagsLoc: 8,
+            formIDloc: 12,
+            formVersionLoc: 20),
+        subConstants: new RecordHeaderConstants(
+            ObjectType.Subrecord,
+            headerLength: 6,
+            lengthLength: 2),
+        languages: new Language[]
+        {
+            Language.English,
+            Language.German,
+            Language.Italian,
+            Language.Spanish,
+            Language.Spanish_Mexico,
+            Language.French,
+            Language.Polish,
+            Language.Portuguese_Brazil,
+            Language.Chinese,
+            Language.Russian,
+            Language.Japanese,
+        },
+        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+
     /// <summary> 
     /// Returns record constants related to a certain ObjectType 
     /// </summary> 
@@ -310,6 +380,8 @@ public sealed record GameConstants
                 return SkyrimVR;
             case GameRelease.Fallout4:
                 return Fallout4;
+            case GameRelease.Starfield:
+                return Starfield;
             default:
                 throw new NotImplementedException();
         }

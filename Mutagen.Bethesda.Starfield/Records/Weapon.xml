@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weapon" recordType="WEAP" baseClass="StarfieldMajorRecord" objType="Record" GUID="28054fa6-f5f2-4fa5-965a-280c2ba06910" ID="69">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+    </Fields>
+  </Object>
+</Loqui>

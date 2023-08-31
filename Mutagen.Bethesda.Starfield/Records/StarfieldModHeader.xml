@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="StarfieldModHeader" recordType="TES4" objType="Record" GUID="5c10abbb-9600-4bd1-ba4c-8a244a69f0be" ID="63">
+    <Fields>
+      <Enum name="Flags" enumName="StarfieldModHeader.HeaderFlag" byteLength="4" />
+      <UInt32 name="FormID" />
+      <Int32 name="Version" />
+      <UInt16 name="FormVersion" />
+      <UInt16 name="Version2" />
+      <RefDirect name="Stats" refName="ModStats" nullable="False" />
+      <ByteArray name="TypeOffsets" recordType="OFST" />
+      <ByteArray name="Deleted" recordType="DELE" />
+      <String name="Author" recordType="CNAM" maxLength="512" />
+      <String name="Description" recordType="SNAM" maxLength="512" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" nullable="False" binary="Custom" binaryOverlay="Normal" />
+      <List name="OverriddenForms" recordType="ONAM" overflowRecordType="XXXX" >
+        <FormLink refName="StarfieldMajorRecord" />
+      </List>
+      <Int32 name="INTV" recordType="INTV" />
+      <Int32 name="INCC" recordType="INCC" />
+    </Fields>
+  </Object>
+  <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="14fe521a-e32e-433c-9915-71a5f7ca5c5b" ID="64">
+    <Fields>
+      <Float name="Version" default="1.7f" />
+      <UInt32 name="NumRecords" />
+      <UInt32 name="NextFormID" default="0x800" />
+    </Fields>
+  </Object>
+</Loqui>
