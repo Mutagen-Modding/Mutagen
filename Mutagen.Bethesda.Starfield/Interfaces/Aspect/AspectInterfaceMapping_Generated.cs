@@ -20,11 +20,36 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            });
+            dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Weapon_Registration.Instance,
             });
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
+            dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            });
+            dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
+            dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            });
+            dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
+            dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            });
+            dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
+            dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Keyword_Registration.Instance,
+            });
+            dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

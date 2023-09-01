@@ -25,7 +25,9 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             GameSettingFloat_Registration.Instance,
             GameSettingString_Registration.Instance,
             GameSettingBool_Registration.Instance,
-            GameSettingUInt_Registration.Instance
+            GameSettingUInt_Registration.Instance,
+            Keyword_Registration.Instance,
+            AttractionRule_Registration.Instance
         );
     }
 }

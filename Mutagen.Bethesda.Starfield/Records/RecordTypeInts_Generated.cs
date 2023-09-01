@@ -2,16 +2,24 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypeInts
 {
+    public const int AORU = 0x55524F41;
+    public const int BFCB = 0x42434642;
+    public const int BFCE = 0x45434642;
     public const int CHGL = 0x4C474843;
     public const int CNAM = 0x4D414E43;
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
+    public const int DNAM = 0x4D414E44;
     public const int EDID = 0x44494445;
+    public const int ENAM = 0x4D414E45;
+    public const int FNAM = 0x4D414E46;
+    public const int FULL = 0x4C4C5546;
     public const int GMST = 0x54534D47;
     public const int GRUP = 0x50555247;
     public const int HEDR = 0x52444548;
     public const int INCC = 0x43434E49;
     public const int INTV = 0x56544E49;
+    public const int KYWD = 0x4457594B;
     public const int MAST = 0x5453414D;
     public const int MODF = 0x46444F4D;
     public const int MODL = 0x4C444F4D;

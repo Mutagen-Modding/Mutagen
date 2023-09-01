@@ -85,6 +85,9 @@
     <Compile Include="Records\GameSettingUInt.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Keyword.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\ModStats_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
     </Compile>
@@ -154,6 +157,14 @@
     </Compile>
     <Compile Include="Records\GameSettingUInt_Generated.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Keyword_Generated.cs">
+      <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
+    <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\AttractionRule_Generated.cs">
+      <DependentUpon>AttractionRule.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

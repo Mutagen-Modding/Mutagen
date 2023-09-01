@@ -4,16 +4,24 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypes
 {
+    public static readonly RecordType AORU = new(0x55524F41);
+    public static readonly RecordType BFCB = new(0x42434642);
+    public static readonly RecordType BFCE = new(0x45434642);
     public static readonly RecordType CHGL = new(0x4C474843);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
+    public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType EDID = new(0x44494445);
+    public static readonly RecordType ENAM = new(0x4D414E45);
+    public static readonly RecordType FNAM = new(0x4D414E46);
+    public static readonly RecordType FULL = new(0x4C4C5546);
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HEDR = new(0x52444548);
     public static readonly RecordType INCC = new(0x43434E49);
     public static readonly RecordType INTV = new(0x56544E49);
+    public static readonly RecordType KYWD = new(0x4457594B);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MODF = new(0x46444F4D);
     public static readonly RecordType MODL = new(0x4C444F4D);
