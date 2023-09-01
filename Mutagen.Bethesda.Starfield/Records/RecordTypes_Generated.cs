@@ -14,6 +14,7 @@ public partial class RecordTypes
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType EDID = new(0x44494445);
     public static readonly RecordType ENAM = new(0x4D414E45);
+    public static readonly RecordType FFKW = new(0x574B4646);
     public static readonly RecordType FNAM = new(0x4D414E46);
     public static readonly RecordType FULL = new(0x4C4C5546);
     public static readonly RecordType GMST = new(0x54534D47);
@@ -29,6 +30,7 @@ public partial class RecordTypes
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
     public static readonly RecordType RACE = new(0x45434152);
+    public static readonly RecordType REFL = new(0x4C464552);
     public static readonly RecordType RNAM = new(0x4D414E52);
     public static readonly RecordType SCRN = new(0x4E524353);
     public static readonly RecordType SNAM = new(0x4D414E53);

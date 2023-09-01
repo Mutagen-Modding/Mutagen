@@ -63,6 +63,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Keywords_Object = new StarfieldGroup<Keyword>(this);
+            _FFKW_Object = new StarfieldGroup<FFKW>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
@@ -91,6 +92,13 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<Keyword> Keywords => _Keywords_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IKeywordGetter> IStarfieldModGetter.Keywords => _Keywords_Object;
+        #endregion
+        #region FFKW
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<FFKW> _FFKW_Object;
+        public StarfieldGroup<FFKW> FFKW => _FFKW_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IFFKWGetter> IStarfieldModGetter.FFKW => _FFKW_Object;
         #endregion
         #region Npcs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -155,6 +163,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(initialValue, new StarfieldModHeader.Mask<TItem>(initialValue));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.FFKW = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -164,6 +173,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ModHeader,
                 TItem GameSettings,
                 TItem Keywords,
+                TItem FFKW,
                 TItem Npcs,
                 TItem Races,
                 TItem Weapons)
@@ -171,6 +181,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
                 this.Keywords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Keywords, new StarfieldGroup.Mask<TItem>(Keywords));
+                this.FFKW = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FFKW, new StarfieldGroup.Mask<TItem>(FFKW));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Npcs, new StarfieldGroup.Mask<TItem>(Npcs));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weapons, new StarfieldGroup.Mask<TItem>(Weapons));
@@ -188,6 +199,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>? ModHeader { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GameSettings { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Keywords { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FFKW { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Npcs { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weapons { get; set; }
@@ -206,6 +218,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
                 if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.FFKW, rhs.FFKW)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
@@ -217,6 +230,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ModHeader);
                 hash.Add(this.GameSettings);
                 hash.Add(this.Keywords);
+                hash.Add(this.FFKW);
                 hash.Add(this.Npcs);
                 hash.Add(this.Races);
                 hash.Add(this.Weapons);
@@ -242,6 +256,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Keywords.Overall)) return false;
                     if (this.Keywords.Specific != null && !this.Keywords.Specific.All(eval)) return false;
+                }
+                if (FFKW != null)
+                {
+                    if (!eval(this.FFKW.Overall)) return false;
+                    if (this.FFKW.Specific != null && !this.FFKW.Specific.All(eval)) return false;
                 }
                 if (Npcs != null)
                 {
@@ -280,6 +299,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Keywords.Overall)) return true;
                     if (this.Keywords.Specific != null && this.Keywords.Specific.Any(eval)) return true;
                 }
+                if (FFKW != null)
+                {
+                    if (eval(this.FFKW.Overall)) return true;
+                    if (this.FFKW.Specific != null && this.FFKW.Specific.Any(eval)) return true;
+                }
                 if (Npcs != null)
                 {
                     if (eval(this.Npcs.Overall)) return true;
@@ -312,6 +336,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, StarfieldModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
                 obj.Keywords = this.Keywords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
+                obj.FFKW = this.FFKW == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FFKW.Overall), this.FFKW.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
@@ -344,6 +369,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Keywords?.Overall ?? true)
                     {
                         Keywords?.Print(sb);
+                    }
+                    if (printMask?.FFKW?.Overall ?? true)
+                    {
+                        FFKW?.Print(sb);
                     }
                     if (printMask?.Npcs?.Overall ?? true)
                     {
@@ -384,6 +413,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldModHeader.ErrorMask?>? ModHeader;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Keyword.ErrorMask>?>? Keywords;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<FFKW.ErrorMask>?>? FFKW;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>? Npcs;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
@@ -401,6 +431,8 @@ namespace Mutagen.Bethesda.Starfield
                         return GameSettings;
                     case StarfieldMod_FieldIndex.Keywords:
                         return Keywords;
+                    case StarfieldMod_FieldIndex.FFKW:
+                        return FFKW;
                     case StarfieldMod_FieldIndex.Npcs:
                         return Npcs;
                     case StarfieldMod_FieldIndex.Races:
@@ -425,6 +457,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Keyword.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.FFKW:
+                        this.FFKW = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FFKW.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>(ex, null);
@@ -454,6 +489,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Keyword.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.FFKW:
+                        this.FFKW = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FFKW.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
@@ -474,6 +512,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ModHeader != null) return true;
                 if (GameSettings != null) return true;
                 if (Keywords != null) return true;
+                if (FFKW != null) return true;
                 if (Npcs != null) return true;
                 if (Races != null) return true;
                 if (Weapons != null) return true;
@@ -505,6 +544,7 @@ namespace Mutagen.Bethesda.Starfield
                 ModHeader?.Print(sb);
                 GameSettings?.Print(sb);
                 Keywords?.Print(sb);
+                FFKW?.Print(sb);
                 Npcs?.Print(sb);
                 Races?.Print(sb);
                 Weapons?.Print(sb);
@@ -519,6 +559,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
                 ret.GameSettings = this.GameSettings.Combine(rhs.GameSettings, (l, r) => l.Combine(r));
                 ret.Keywords = this.Keywords.Combine(rhs.Keywords, (l, r) => l.Combine(r));
+                ret.FFKW = this.FFKW.Combine(rhs.FFKW, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
@@ -548,6 +589,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldModHeader.TranslationMask? ModHeader;
             public StarfieldGroup.TranslationMask<GameSetting.TranslationMask>? GameSettings;
             public StarfieldGroup.TranslationMask<Keyword.TranslationMask>? Keywords;
+            public StarfieldGroup.TranslationMask<FFKW.TranslationMask>? FFKW;
             public StarfieldGroup.TranslationMask<Npc.TranslationMask>? Npcs;
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
             public StarfieldGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
@@ -578,6 +620,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ModHeader != null ? ModHeader.OnOverall : DefaultOn, ModHeader?.GetCrystal()));
                 ret.Add((GameSettings != null ? GameSettings.OnOverall : DefaultOn, GameSettings?.GetCrystal()));
                 ret.Add((Keywords != null ? Keywords.OnOverall : DefaultOn, Keywords?.GetCrystal()));
+                ret.Add((FFKW != null ? FFKW.OnOverall : DefaultOn, FFKW?.GetCrystal()));
                 ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
@@ -626,6 +669,7 @@ namespace Mutagen.Bethesda.Starfield
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
             _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Keywords_Object = new StarfieldGroup<Keyword>(this);
+            _FFKW_Object = new StarfieldGroup<FFKW>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
@@ -642,6 +686,10 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.Keywords ?? true)
             {
                 this.Keywords.RecordCache.Set(rhsMod.Keywords.RecordCache.Items);
+            }
+            if (mask?.FFKW ?? true)
+            {
+                this.FFKW.RecordCache.Set(rhsMod.FFKW.RecordCache.Items);
             }
             if (mask?.Npcs ?? true)
             {
@@ -667,6 +715,7 @@ namespace Mutagen.Bethesda.Starfield
             uint count = (uint)this.EnumerateMajorRecords().Count();
             count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
             count += Keywords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += FFKW.RecordCache.Count > 0 ? 1 : default(uint);
             count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
@@ -928,6 +977,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldModHeader ModHeader { get; }
         new StarfieldGroup<GameSetting> GameSettings { get; }
         new StarfieldGroup<Keyword> Keywords { get; }
+        new StarfieldGroup<FFKW> FFKW { get; }
         new StarfieldGroup<Npc> Npcs { get; }
         new StarfieldGroup<Race> Races { get; }
         new StarfieldGroup<Weapon> Weapons { get; }
@@ -953,6 +1003,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldModHeaderGetter ModHeader { get; }
         IStarfieldGroupGetter<IGameSettingGetter> GameSettings { get; }
         IStarfieldGroupGetter<IKeywordGetter> Keywords { get; }
+        IStarfieldGroupGetter<IFFKWGetter> FFKW { get; }
         IStarfieldGroupGetter<INpcGetter> Npcs { get; }
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
         IStarfieldGroupGetter<IWeaponGetter> Weapons { get; }
@@ -1529,9 +1580,10 @@ namespace Mutagen.Bethesda.Starfield
         ModHeader = 0,
         GameSettings = 1,
         Keywords = 2,
-        Npcs = 3,
-        Races = 4,
-        Weapons = 5,
+        FFKW = 3,
+        Npcs = 4,
+        Races = 5,
+        Weapons = 6,
     }
     #endregion
 
@@ -1549,9 +1601,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -1622,6 +1674,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.GameSettings.Clear();
             item.Keywords.Clear();
+            item.FFKW.Clear();
             item.Npcs.Clear();
             item.Races.Clear();
             item.Weapons.Clear();
@@ -1669,6 +1722,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             obj.GameSettings.Remove(keys);
             obj.Keywords.Remove(keys);
+            obj.FFKW.Remove(keys);
             obj.Npcs.Remove(keys);
             obj.Races.Remove(keys);
             obj.Weapons.Remove(keys);
@@ -1724,6 +1778,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IKeyword":
                 case "IKeywordInternal":
                     obj.Keywords.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "FFKW":
+                case "IFFKWGetter":
+                case "IFFKW":
+                case "IFFKWInternal":
+                    obj.FFKW.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -1838,6 +1900,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
+            ret.FFKW = MaskItemExt.Factory(item.FFKW.GetEqualsMask(rhs.FFKW, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
@@ -1897,6 +1960,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Keywords?.Print(sb, "Keywords");
             }
+            if (printMask?.FFKW?.Overall ?? true)
+            {
+                item.FFKW?.Print(sb, "FFKW");
+            }
             if (printMask?.Npcs?.Overall ?? true)
             {
                 item.Npcs?.Print(sb, "Npcs");
@@ -1942,6 +2009,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isKeywordsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FFKW) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FFKW, rhs.FFKW, out var lhsFFKW, out var rhsFFKW, out var isFFKWEqual))
+                {
+                    if (!object.Equals(lhsFFKW, rhsFFKW)) return false;
+                }
+                else if (!isFFKWEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Npcs) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Npcs, rhs.Npcs, out var lhsNpcs, out var rhsNpcs, out var isNpcsEqual))
@@ -1975,6 +2050,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ModHeader);
             hash.Add(item.GameSettings);
             hash.Add(item.Keywords);
+            hash.Add(item.FFKW);
             hash.Add(item.Npcs);
             hash.Add(item.Races);
             hash.Add(item.Weapons);
@@ -2006,6 +2082,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IKeyword":
                 case "IKeywordInternal":
                     return obj.Keywords;
+                case "FFKW":
+                case "IFFKWGetter":
+                case "IFFKW":
+                case "IFFKWInternal":
+                    return obj.FFKW;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
@@ -2046,13 +2127,14 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[5];
+            Stream[] outputStreams = new Stream[6];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 2, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Races, 3, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 4, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FFKW, 2, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 3, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Races, 4, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 5, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2122,6 +2204,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.FFKW.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.Npcs.EnumerateMajorRecords())
             {
                 yield return item;
@@ -2183,6 +2269,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IKeyword":
                 case "IKeywordInternal":
                     foreach (var item in obj.Keywords.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FFKW":
+                case "IFFKWGetter":
+                case "IFFKW":
+                case "IFFKWInternal":
+                    foreach (var item in obj.FFKW.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -2253,6 +2348,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Keywords,
                 groupGetter: (m) => m.Keywords))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FFKW, IFFKWGetter>(
+                srcGroup: obj.FFKW,
+                type: typeof(IFFKWGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FFKW,
+                groupGetter: (m) => m.FFKW))
             {
                 yield return item;
             }
@@ -2338,6 +2442,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Keywords,
                         groupGetter: (m) => m.Keywords))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FFKW":
+                case "IFFKWGetter":
+                case "IFFKW":
+                case "IFFKWInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FFKW, IFFKWGetter>(
+                        srcGroup: obj.FFKW,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FFKW,
+                        groupGetter: (m) => m.FFKW))
                     {
                         yield return item;
                     }
@@ -2504,6 +2622,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FFKW) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.FFKW);
+                try
+                {
+                    item.FFKW.DeepCopyIn(
+                        rhs: rhs.FFKW,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.FFKW));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Npcs) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Npcs);
@@ -2656,6 +2794,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         public bool GameSettings;
         public bool Keywords;
+        public bool FFKW;
         public bool Npcs;
         public bool Races;
         public bool Weapons;
@@ -2666,6 +2805,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             GameSettings = defaultValue;
             Keywords = defaultValue;
+            FFKW = defaultValue;
             Npcs = defaultValue;
             Races = defaultValue;
             Weapons = defaultValue;
@@ -2718,6 +2858,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)KeywordsItem).BinaryWriteTranslator).Write<IKeywordGetter>(
                         item: KeywordsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.FFKW ?? true)
+            {
+                var FFKWItem = item.FFKW;
+                if (FFKWItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FFKWItem).BinaryWriteTranslator).Write<IFFKWGetter>(
+                        item: FFKWItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -2842,6 +2993,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.FFKW:
+                {
+                    if (importMask?.FFKW ?? true)
+                    {
+                        item.FFKW.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.FFKW;
                 }
                 case RecordTypeInts.NPC_:
                 {
@@ -3065,6 +3230,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? StarfieldGroupBinaryOverlay<IKeywordGetter>.StarfieldGroupFactory(_stream, _KeywordsLocations, _package) : default;
         public IStarfieldGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new StarfieldGroup<Keyword>(this);
         #endregion
+        #region FFKW
+        private List<RangeInt64>? _FFKWLocations;
+        private IStarfieldGroupGetter<IFFKWGetter>? _FFKW => _FFKWLocations != null ? StarfieldGroupBinaryOverlay<IFFKWGetter>.StarfieldGroupFactory(_stream, _FFKWLocations, _package) : default;
+        public IStarfieldGroupGetter<IFFKWGetter> FFKW => _FFKW ?? new StarfieldGroup<FFKW>(this);
+        #endregion
         #region Npcs
         private List<RangeInt64>? _NpcsLocations;
         private IStarfieldGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? StarfieldGroupBinaryOverlay<INpcGetter>.StarfieldGroupFactory(_stream, _NpcsLocations, _package) : default;
@@ -3179,6 +3349,12 @@ namespace Mutagen.Bethesda.Starfield
                     _KeywordsLocations ??= new();
                     _KeywordsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.FFKW:
+                {
+                    _FFKWLocations ??= new();
+                    _FFKWLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.FFKW;
                 }
                 case RecordTypeInts.NPC_:
                 {

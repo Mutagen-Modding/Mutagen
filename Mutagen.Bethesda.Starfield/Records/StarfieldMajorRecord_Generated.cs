@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AttractionRule, GameSetting, Keyword, Npc, Race, Weapon]
+    /// Implemented by: [AttractionRule, FFKW, GameSetting, Keyword, Npc, Race, Weapon]
     /// </summary>
     public abstract partial class StarfieldMajorRecord :
         MajorRecord,
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AttractionRule, GameSetting, Keyword, Npc, Race, Weapon]
+    /// Implemented by: [AttractionRule, FFKW, GameSetting, Keyword, Npc, Race, Weapon]
     /// </summary>
     public partial interface IStarfieldMajorRecord :
         IAssetLinkContainer,
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [AttractionRule, GameSetting, Keyword, Npc, Race, Weapon]
+    /// Implemented by: [AttractionRule, FFKW, GameSetting, Keyword, Npc, Race, Weapon]
     /// </summary>
     public partial interface IStarfieldMajorRecordGetter :
         IMajorRecordGetter,

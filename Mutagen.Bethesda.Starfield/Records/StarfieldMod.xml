@@ -5,6 +5,7 @@
       <RefDirect name="ModHeader" refName="StarfieldModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
+      <Group name="FFKW" refName="FFKW" />
       <Group name="Npcs" refName="Npc" />
       <Group name="Races" refName="Race" />
       <Group name="Weapons" refName="Weapon" />

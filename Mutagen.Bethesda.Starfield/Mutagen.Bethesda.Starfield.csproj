@@ -166,5 +166,8 @@
     <Compile Include="Records\AttractionRule_Generated.cs">
       <DependentUpon>AttractionRule.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\FFKW_Generated.cs">
+      <DependentUpon>FFKW.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
