@@ -25,5 +25,6 @@ public partial class RecordTypeInts
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
     public const int WEAP = 0x50414557;
+    public const int XALG = 0x474C4158;
     public const int XXXX = 0x58585858;
 }

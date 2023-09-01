@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="GameSetting" recordType="GMST" baseClass="StarfieldMajorRecord" objType="Record" abstract="true" GUID="f9e386c8-531a-4fef-934b-b89464e1d024" ID="73">
     <Fields>
+      <ByteArray name="XALG" recordType="XALG" />
     </Fields>
   </Object>
   <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="bec2181a-7426-4b64-83ab-071c32279c1d" ID="74">

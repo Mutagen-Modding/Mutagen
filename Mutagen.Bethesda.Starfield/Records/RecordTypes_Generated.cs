@@ -27,5 +27,6 @@ public partial class RecordTypes
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType WEAP = new(0x50414557);
+    public static readonly RecordType XALG = new(0x474C4158);
     public static readonly RecordType XXXX = new(0x58585858);
 }

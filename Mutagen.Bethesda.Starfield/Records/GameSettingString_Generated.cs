@@ -95,6 +95,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem XALG,
                 TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -103,7 +104,8 @@ namespace Mutagen.Bethesda.Starfield
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
-                StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
+                StarfieldMajorRecordFlags: StarfieldMajorRecordFlags,
+                XALG: XALG)
             {
                 this.Data = Data;
             }
@@ -666,7 +668,8 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Data = 7,
+        XALG = 7,
+        Data = 8,
     }
     #endregion
 
@@ -686,7 +689,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GameSettingString.Mask<>);
 
@@ -939,6 +942,8 @@ namespace Mutagen.Bethesda.Starfield
                 case GameSetting_FieldIndex.Version2:
                     return (GameSettingString_FieldIndex)((int)index);
                 case GameSetting_FieldIndex.StarfieldMajorRecordFlags:
+                    return (GameSettingString_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.XALG:
                     return (GameSettingString_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1346,7 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+            GameSettingBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
