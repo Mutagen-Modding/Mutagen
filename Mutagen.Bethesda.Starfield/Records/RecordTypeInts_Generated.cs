@@ -7,6 +7,7 @@ public partial class RecordTypeInts
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
     public const int EDID = 0x44494445;
+    public const int GMST = 0x54534D47;
     public const int GRUP = 0x50555247;
     public const int HEDR = 0x52444548;
     public const int INCC = 0x43434E49;

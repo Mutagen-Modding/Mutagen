@@ -19,7 +19,13 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Weapon_Registration.Instance,
             SimpleModel_Registration.Instance,
             Model_Registration.Instance,
-            StarfieldModHeader_Registration.Instance
+            StarfieldModHeader_Registration.Instance,
+            GameSetting_Registration.Instance,
+            GameSettingInt_Registration.Instance,
+            GameSettingFloat_Registration.Instance,
+            GameSettingString_Registration.Instance,
+            GameSettingBool_Registration.Instance,
+            GameSettingUInt_Registration.Instance
         );
     }
 }

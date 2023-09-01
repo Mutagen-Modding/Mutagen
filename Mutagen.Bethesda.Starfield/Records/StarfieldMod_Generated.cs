@@ -61,6 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Ctor
         protected StarfieldMod()
         {
+            _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
@@ -75,6 +76,13 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldModHeaderGetter IStarfieldModGetter.ModHeader => _ModHeader_Object;
+        #endregion
+        #region GameSettings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<GameSetting> _GameSettings_Object;
+        public StarfieldGroup<GameSetting> GameSettings => _GameSettings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IGameSettingGetter> IStarfieldModGetter.GameSettings => _GameSettings_Object;
         #endregion
         #region Npcs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -137,6 +145,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(initialValue, new StarfieldModHeader.Mask<TItem>(initialValue));
+                this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -144,11 +153,13 @@ namespace Mutagen.Bethesda.Starfield
 
             public Mask(
                 TItem ModHeader,
+                TItem GameSettings,
                 TItem Npcs,
                 TItem Races,
                 TItem Weapons)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
+                this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Npcs, new StarfieldGroup.Mask<TItem>(Npcs));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weapons, new StarfieldGroup.Mask<TItem>(Weapons));
@@ -164,6 +175,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>? ModHeader { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GameSettings { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Npcs { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weapons { get; set; }
@@ -180,6 +192,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
+                if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
@@ -189,6 +202,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.ModHeader);
+                hash.Add(this.GameSettings);
                 hash.Add(this.Npcs);
                 hash.Add(this.Races);
                 hash.Add(this.Weapons);
@@ -204,6 +218,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ModHeader.Overall)) return false;
                     if (this.ModHeader.Specific != null && !this.ModHeader.Specific.All(eval)) return false;
+                }
+                if (GameSettings != null)
+                {
+                    if (!eval(this.GameSettings.Overall)) return false;
+                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.All(eval)) return false;
                 }
                 if (Npcs != null)
                 {
@@ -231,6 +250,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.ModHeader.Overall)) return true;
                     if (this.ModHeader.Specific != null && this.ModHeader.Specific.Any(eval)) return true;
+                }
+                if (GameSettings != null)
+                {
+                    if (eval(this.GameSettings.Overall)) return true;
+                    if (this.GameSettings.Specific != null && this.GameSettings.Specific.Any(eval)) return true;
                 }
                 if (Npcs != null)
                 {
@@ -262,6 +286,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, StarfieldModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
+                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
@@ -286,6 +311,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ModHeader?.Overall ?? true)
                     {
                         ModHeader?.Print(sb);
+                    }
+                    if (printMask?.GameSettings?.Overall ?? true)
+                    {
+                        GameSettings?.Print(sb);
                     }
                     if (printMask?.Npcs?.Overall ?? true)
                     {
@@ -324,6 +353,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public MaskItem<Exception?, StarfieldModHeader.ErrorMask?>? ModHeader;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>? Npcs;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
@@ -337,6 +367,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case StarfieldMod_FieldIndex.ModHeader:
                         return ModHeader;
+                    case StarfieldMod_FieldIndex.GameSettings:
+                        return GameSettings;
                     case StarfieldMod_FieldIndex.Npcs:
                         return Npcs;
                     case StarfieldMod_FieldIndex.Races:
@@ -355,6 +387,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case StarfieldMod_FieldIndex.ModHeader:
                         this.ModHeader = new MaskItem<Exception?, StarfieldModHeader.ErrorMask?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.GameSettings:
+                        this.GameSettings = new MaskItem<Exception?, StarfieldGroup.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>(ex, null);
@@ -378,6 +413,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ModHeader:
                         this.ModHeader = (MaskItem<Exception?, StarfieldModHeader.ErrorMask?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.GameSettings:
+                        this.GameSettings = (MaskItem<Exception?, StarfieldGroup.ErrorMask<GameSetting.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
@@ -396,6 +434,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (ModHeader != null) return true;
+                if (GameSettings != null) return true;
                 if (Npcs != null) return true;
                 if (Races != null) return true;
                 if (Weapons != null) return true;
@@ -425,6 +464,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 ModHeader?.Print(sb);
+                GameSettings?.Print(sb);
                 Npcs?.Print(sb);
                 Races?.Print(sb);
                 Weapons?.Print(sb);
@@ -437,6 +477,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
+                ret.GameSettings = this.GameSettings.Combine(rhs.GameSettings, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
@@ -464,6 +505,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public StarfieldModHeader.TranslationMask? ModHeader;
+            public StarfieldGroup.TranslationMask<GameSetting.TranslationMask>? GameSettings;
             public StarfieldGroup.TranslationMask<Npc.TranslationMask>? Npcs;
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
             public StarfieldGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
@@ -492,6 +534,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((ModHeader != null ? ModHeader.OnOverall : DefaultOn, ModHeader?.GetCrystal()));
+                ret.Add((GameSettings != null ? GameSettings.OnOverall : DefaultOn, GameSettings?.GetCrystal()));
                 ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
@@ -538,6 +581,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(modKey)
         {
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID();
+            _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
@@ -547,6 +591,10 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMod rhsMod,
             GroupMask? mask = null)
         {
+            if (mask?.GameSettings ?? true)
+            {
+                this.GameSettings.RecordCache.Set(rhsMod.GameSettings.RecordCache.Items);
+            }
             if (mask?.Npcs ?? true)
             {
                 this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
@@ -569,6 +617,7 @@ namespace Mutagen.Bethesda.Starfield
         public uint GetRecordCount()
         {
             uint count = (uint)this.EnumerateMajorRecords().Count();
+            count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
             count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
@@ -828,6 +877,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldModGetter
     {
         new StarfieldModHeader ModHeader { get; }
+        new StarfieldGroup<GameSetting> GameSettings { get; }
         new StarfieldGroup<Npc> Npcs { get; }
         new StarfieldGroup<Race> Races { get; }
         new StarfieldGroup<Weapon> Weapons { get; }
@@ -851,6 +901,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => StarfieldMod_Registration.Instance;
         IStarfieldModHeaderGetter ModHeader { get; }
+        IStarfieldGroupGetter<IGameSettingGetter> GameSettings { get; }
         IStarfieldGroupGetter<INpcGetter> Npcs { get; }
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
         IStarfieldGroupGetter<IWeaponGetter> Weapons { get; }
@@ -1425,9 +1476,10 @@ namespace Mutagen.Bethesda.Starfield
     internal enum StarfieldMod_FieldIndex
     {
         ModHeader = 0,
-        Npcs = 1,
-        Races = 2,
-        Weapons = 3,
+        GameSettings = 1,
+        Npcs = 2,
+        Races = 3,
+        Weapons = 4,
     }
     #endregion
 
@@ -1445,9 +1497,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -1516,6 +1568,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IStarfieldMod item)
         {
             ClearPartial();
+            item.GameSettings.Clear();
             item.Npcs.Clear();
             item.Races.Clear();
             item.Weapons.Clear();
@@ -1560,6 +1613,7 @@ namespace Mutagen.Bethesda.Starfield
             IStarfieldMod obj,
             HashSet<FormKey> keys)
         {
+            obj.GameSettings.Remove(keys);
             obj.Npcs.Remove(keys);
             obj.Races.Remove(keys);
             obj.Weapons.Remove(keys);
@@ -1581,6 +1635,34 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStarfieldMajorRecordGetter":
                     if (!StarfieldMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
+                    break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
+                case "GameSettingBool":
+                case "IGameSettingBoolGetter":
+                case "IGameSettingBool":
+                case "IGameSettingBoolInternal":
+                case "GameSettingUInt":
+                case "IGameSettingUIntGetter":
+                case "IGameSettingUInt":
+                case "IGameSettingUIntInternal":
+                    obj.GameSettings.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "Npc":
                 case "INpcGetter":
@@ -1687,6 +1769,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
+            ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
@@ -1738,6 +1821,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ModHeader?.Print(sb, "ModHeader");
             }
+            if (printMask?.GameSettings?.Overall ?? true)
+            {
+                item.GameSettings?.Print(sb, "GameSettings");
+            }
             if (printMask?.Npcs?.Overall ?? true)
             {
                 item.Npcs?.Print(sb, "Npcs");
@@ -1766,6 +1853,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (!((StarfieldModHeaderCommon)((IStarfieldModHeaderGetter)lhsModHeader).CommonInstance()!).Equals(lhsModHeader, rhsModHeader, equalsMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ModHeader))) return false;
                 }
                 else if (!isModHeaderEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GameSettings) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GameSettings, rhs.GameSettings, out var lhsGameSettings, out var rhsGameSettings, out var isGameSettingsEqual))
+                {
+                    if (!object.Equals(lhsGameSettings, rhsGameSettings)) return false;
+                }
+                else if (!isGameSettingsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Npcs) ?? true))
             {
@@ -1798,6 +1893,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.ModHeader);
+            hash.Add(item.GameSettings);
             hash.Add(item.Npcs);
             hash.Add(item.Races);
             hash.Add(item.Weapons);
@@ -1819,6 +1915,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             switch (type.Name)
             {
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    return obj.GameSettings;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
@@ -1859,11 +1960,12 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[3];
+            Stream[] outputStreams = new Stream[4];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 0, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Races, 1, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 2, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 1, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Races, 2, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 3, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -1921,6 +2023,10 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IStarfieldModGetter obj)
         {
+            foreach (var item in obj.GameSettings.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.Npcs.EnumerateMajorRecords())
             {
                 yield return item;
@@ -1964,6 +2070,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IMajorRecordGetter":
                 case "IStarfieldMajorRecordGetter":
                     foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -2019,6 +2134,15 @@ namespace Mutagen.Bethesda.Starfield
             IStarfieldModGetter obj,
             ILinkCache linkCache)
         {
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GameSetting, IGameSettingGetter>(
+                srcGroup: obj.GameSettings,
+                type: typeof(IGameSettingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GameSettings,
+                groupGetter: (m) => m.GameSettings))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Npc, INpcGetter>(
                 srcGroup: obj.Npcs,
                 type: typeof(INpcGetter),
@@ -2073,6 +2197,20 @@ namespace Mutagen.Bethesda.Starfield
                     foreach (var item in this.EnumerateMajorRecordContexts(
                         obj,
                         linkCache: linkCache))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GameSetting, IGameSettingGetter>(
+                        srcGroup: obj.GameSettings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GameSettings,
+                        groupGetter: (m) => m.GameSettings))
                     {
                         yield return item;
                     }
@@ -2188,6 +2326,26 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.ModHeader,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ModHeader));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.GameSettings) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.GameSettings);
+                try
+                {
+                    item.GameSettings.DeepCopyIn(
+                        rhs: rhs.GameSettings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.GameSettings));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2349,6 +2507,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     public class GroupMask
     {
+        public bool GameSettings;
         public bool Npcs;
         public bool Races;
         public bool Weapons;
@@ -2357,6 +2516,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         public GroupMask(bool defaultValue)
         {
+            GameSettings = defaultValue;
             Npcs = defaultValue;
             Races = defaultValue;
             Weapons = defaultValue;
@@ -2391,6 +2551,17 @@ namespace Mutagen.Bethesda.Starfield
             GroupMask? importMask,
             TypedWriteParams translationParams = default)
         {
+            if (importMask?.GameSettings ?? true)
+            {
+                var GameSettingsItem = item.GameSettings;
+                if (GameSettingsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
+                        item: GameSettingsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.Npcs ?? true)
             {
                 var NpcsItem = item.Npcs;
@@ -2483,6 +2654,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame: frame,
                         translationParams: null);
                     return (int)StarfieldMod_FieldIndex.ModHeader;
+                }
+                case RecordTypeInts.GMST:
+                {
+                    if (importMask?.GameSettings ?? true)
+                    {
+                        item.GameSettings.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.NPC_:
                 {
@@ -2696,6 +2881,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? StarfieldModHeaderBinaryOverlay.StarfieldModHeaderFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package) : default;
         public IStarfieldModHeaderGetter ModHeader => _ModHeader ?? new StarfieldModHeader();
         #endregion
+        #region GameSettings
+        private List<RangeInt64>? _GameSettingsLocations;
+        private IStarfieldGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? StarfieldGroupBinaryOverlay<IGameSettingGetter>.StarfieldGroupFactory(_stream, _GameSettingsLocations, _package) : default;
+        public IStarfieldGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new StarfieldGroup<GameSetting>(this);
+        #endregion
         #region Npcs
         private List<RangeInt64>? _NpcsLocations;
         private IStarfieldGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? StarfieldGroupBinaryOverlay<INpcGetter>.StarfieldGroupFactory(_stream, _NpcsLocations, _package) : default;
@@ -2798,6 +2988,12 @@ namespace Mutagen.Bethesda.Starfield
                                 FileSize = master.FileSize,
                             }));
                     return (int)StarfieldMod_FieldIndex.ModHeader;
+                }
+                case RecordTypeInts.GMST:
+                {
+                    _GameSettingsLocations ??= new();
+                    _GameSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.NPC_:
                 {

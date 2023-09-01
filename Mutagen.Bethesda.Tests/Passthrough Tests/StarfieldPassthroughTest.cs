@@ -42,6 +42,6 @@ public class StarfieldPassthroughTest : PassthroughTest
     
     public override AlignmentRules GetAlignmentRules()
     {
-        throw new NotImplementedException();
+        return new AlignmentRules();
     }
 }

@@ -9,6 +9,7 @@ public partial class RecordTypes
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType EDID = new(0x44494445);
+    public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HEDR = new(0x52444548);
     public static readonly RecordType INCC = new(0x43434E49);

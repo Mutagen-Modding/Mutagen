@@ -19,6 +19,31 @@ internal class StarfieldInheritingInterfaceMapping : IInterfaceMapping
     public StarfieldInheritingInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IGameSettingBool)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            GameSetting_Registration.Instance,
+        });
+        dict[typeof(IGameSettingBoolGetter)] = dict[typeof(IGameSettingBool)] with { Setter = false };
+        dict[typeof(IGameSettingFloat)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            GameSetting_Registration.Instance,
+        });
+        dict[typeof(IGameSettingFloatGetter)] = dict[typeof(IGameSettingFloat)] with { Setter = false };
+        dict[typeof(IGameSettingInt)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            GameSetting_Registration.Instance,
+        });
+        dict[typeof(IGameSettingIntGetter)] = dict[typeof(IGameSettingInt)] with { Setter = false };
+        dict[typeof(IGameSettingString)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            GameSetting_Registration.Instance,
+        });
+        dict[typeof(IGameSettingStringGetter)] = dict[typeof(IGameSettingString)] with { Setter = false };
+        dict[typeof(IGameSettingUInt)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            GameSetting_Registration.Instance,
+        });
+        dict[typeof(IGameSettingUIntGetter)] = dict[typeof(IGameSettingUInt)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

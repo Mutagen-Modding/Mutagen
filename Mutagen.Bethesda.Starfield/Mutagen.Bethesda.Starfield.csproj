@@ -67,6 +67,24 @@
     <Compile Include="Records\Common Subrecords\SimpleModel_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\GameSetting.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingBool.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingFloat.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingString.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingUInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\ModStats_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
     </Compile>
@@ -118,6 +136,24 @@
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Records\TransientType_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSetting_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingInt_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingFloat_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingString_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingBool_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameSettingUInt_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

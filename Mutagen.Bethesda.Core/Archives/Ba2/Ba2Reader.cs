@@ -49,7 +49,7 @@ class Ba2Reader : IArchiveReader
             switch (entryType)
             {
                 case Ba2EntryType.GNRL:
-                    files.Add(new BA2FileEntry(this, idx, reader));
+                    files.Add(new BA2FileEntry(this, version, idx, reader));
                     break;
                 case Ba2EntryType.DX10:
                     files.Add(new BA2DX10Entry(this, idx, reader));
@@ -310,12 +310,12 @@ class BA2DX10Entry : IArchiveFile
 
 class BA2TextureChunk
 {
-    internal ulong _offset;
-    internal uint _packSz;
-    internal uint _fullSz;
-    internal ushort _startMip;
-    internal ushort _endMip;
-    internal uint _align;
+    internal readonly ulong _offset;
+    internal readonly uint _packSz;
+    internal readonly uint _fullSz;
+    internal readonly ushort _startMip;
+    internal readonly ushort _endMip;
+    internal readonly uint _align;
 
     public BA2TextureChunk(BinaryReader rdr)
     {
@@ -330,25 +330,29 @@ class BA2TextureChunk
 
 class BA2FileEntry : IArchiveFile
 {
-    internal uint _nameHash;
-    internal string _extension;
-    internal uint _dirHash;
-    internal uint _flags;
-    internal ulong _offset;
-    internal uint _size;
-    internal uint _realSize;
-    internal uint _align;
-    internal Ba2Reader _bsa;
-    internal int _index;
+    internal readonly uint _nameHash;
+    internal readonly string _extension;
+    internal readonly uint _dirHash;
+    internal readonly uint _flags;
+    internal readonly ulong _offset;
+    internal readonly uint _size;
+    internal readonly uint _realSize;
+    internal readonly uint _align;
+    internal readonly Ba2Reader _bsa;
+    internal readonly int _index;
 
     public bool Compressed => _size != 0;
 
-    public BA2FileEntry(Ba2Reader ba2Reader, int index, BinaryReader reader)
+    public BA2FileEntry(Ba2Reader ba2Reader, uint version, int index, BinaryReader reader)
     {
         _index = index;
         _bsa = ba2Reader;
         _nameHash = reader.ReadUInt32();
         Path = _nameHash.ToString("X");
+        if (version > 1)
+        {
+            var unknown = reader.ReadUInt64();
+        }
         _extension = Encoding.UTF8.GetString(reader.ReadBytes(4));
         _dirHash = reader.ReadUInt32();
         _flags = reader.ReadUInt32();
@@ -379,7 +383,8 @@ class BA2FileEntry : IArchiveFile
                 {
                     IsStreamOwner = true
                 }, 
-                _realSize);
+                _realSize,
+                doubleCheckLength: false);
         }
     }
 

@@ -8,6 +8,30 @@ namespace Mutagen.Bethesda.Starfield
     {
         #region Normal
         /// <summary>
+        /// Scope a load order query to GameSetting
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on GameSetting</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameSetting, IGameSettingGetter> GameSetting(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameSetting, IGameSettingGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGameSetting, IGameSettingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to GameSetting
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on GameSetting</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameSetting, IGameSettingGetter> GameSetting(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IGameSetting, IGameSettingGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IGameSetting, IGameSettingGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to Npc
         /// </summary>
         /// <param name="listings">ModListings to query</param>
