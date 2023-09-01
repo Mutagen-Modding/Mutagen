@@ -48,7 +48,7 @@ public static class GameReleaseKernelExt
             GameRelease.EnderalSE => 44,
             GameRelease.SkyrimVR => 44,
             GameRelease.Fallout4 => 131,
-            GameRelease.Starfield => throw new NotImplementedException(),
+            GameRelease.Starfield => 131,
             _ => throw new NotImplementedException(),
         };
     }
