@@ -281,7 +281,24 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                     {
                         "SkyrimVR.exe"
                     })
-            }
+            },
+            {
+            GameRelease.Starfield, new GameMetaData(
+                GameRelease.Starfield,
+                NexusName: "starfield",
+                NexusGameId: 1151,
+                GameSources: new IGameSource[]
+                {
+                    new SteamGameSource() 
+                    {
+                        Id = 1716740
+                    },
+                },
+                RequiredFiles: new string[]
+                {
+                    "Starfield.exe"
+                })
+        },
         };
         games[GameRelease.EnderalLE] = games[GameRelease.SkyrimLE] with
         {
