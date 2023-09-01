@@ -73,8 +73,7 @@ public abstract class Processor
         _numMasters = GetNumMasters();
         _alignedFileLocs = RecordLocator.GetLocations(new ModPath(ModKey, preprocessedPath), GameRelease);
 
-        var preprocessedBytes = File.ReadAllBytes(preprocessedPath);
-        IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, Bundle);
+        IMutagenReadStream streamGetter() => new MutagenBinaryReadStream(File.OpenRead(preprocessedPath), Bundle);
         using (var stream = streamGetter())
         {
             lock (_lengthTracker)
