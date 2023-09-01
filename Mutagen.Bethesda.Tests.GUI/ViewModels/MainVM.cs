@@ -244,6 +244,11 @@ public class MainVM : ViewModel
             df.DataFolder.TargetPath = settings.DataFolderLocations.Fallout4;
         }
 
+        if (DataFolders.TryGetValue(GameRelease.Starfield, out df))
+        {
+            df.DataFolder.TargetPath = settings.DataFolderLocations.Starfield;
+        }
+
     }
 
     public void SaveToSettings(TestingSettings settings)
@@ -288,6 +293,7 @@ public class MainVM : ViewModel
         settings.DataFolderLocations.SkyrimSpecialEdition = DataFolders.Get(GameRelease.SkyrimSE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimVR = DataFolders.Get(GameRelease.SkyrimVR).DataFolder.TargetPath;
         settings.DataFolderLocations.Fallout4 = DataFolders.Get(GameRelease.Fallout4).DataFolder.TargetPath;
+        settings.DataFolderLocations.Starfield = DataFolders.Get(GameRelease.Starfield).DataFolder.TargetPath;
     }
 
     public PassthroughSettings GetPassthroughSettings()
