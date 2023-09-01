@@ -286,7 +286,7 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
             GameRelease.Starfield, new GameMetaData(
                 GameRelease.Starfield,
                 NexusName: "starfield",
-                NexusGameId: 1151,
+                NexusGameId: 4187,
                 GameSources: new IGameSource[]
                 {
                     new SteamGameSource() 
