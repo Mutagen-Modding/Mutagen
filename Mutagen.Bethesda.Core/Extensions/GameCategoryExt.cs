@@ -56,10 +56,11 @@ public static class GameCategoryExt
         switch (category)
         {
             case GameCategory.Oblivion:
+            // Mark as false, for now
+            case GameCategory.Starfield:
                 return false;
             case GameCategory.Skyrim:
             case GameCategory.Fallout4:
-            case GameCategory.Starfield:
             default:
                 return true;
         }
