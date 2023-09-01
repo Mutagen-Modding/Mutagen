@@ -498,7 +498,7 @@ public abstract class PassthroughTest
             GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimSE),
             GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimVR),
             GameRelease.Fallout4 => new Fallout4PassthroughTest(passthroughSettings),
-            GameRelease.Starfield => new Fallout4PassthroughTest(passthroughSettings),
+            GameRelease.Starfield => new StarfieldPassthroughTest(passthroughSettings),
             _ => throw new NotImplementedException(),
         };
     }
