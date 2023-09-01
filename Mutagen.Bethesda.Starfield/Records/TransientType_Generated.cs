@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -36,29 +37,35 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ModStats :
-        IEquatable<IModStatsGetter>,
-        ILoquiObjectSetter<ModStats>,
-        IModStats
+    public partial class TransientType :
+        IEquatable<ITransientTypeGetter>,
+        ILoquiObjectSetter<TransientType>,
+        ITransientType
     {
         #region Ctor
-        public ModStats()
+        public TransientType()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Version
-        public static readonly Single VersionDefault = 1f;
-        public Single Version { get; set; } = VersionDefault;
+        #region FormType
+        public UInt32 FormType { get; set; } = default;
         #endregion
-        #region NumRecords
-        public UInt32 NumRecords { get; set; } = default;
+        #region Links
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> _Links = new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Links
+        {
+            get => this._Links;
+            init => this._Links = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> ITransientTypeGetter.Links => _Links;
         #endregion
-        #region NextFormID
-        public static readonly UInt32 NextFormIDDefault = 0x800;
-        public UInt32 NextFormID { get; set; } = NextFormIDDefault;
+
         #endregion
 
         #region To String
@@ -67,7 +74,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ModStatsMixIn.Print(
+            TransientTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -78,16 +85,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IModStatsGetter rhs) return false;
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ITransientTypeGetter rhs) return false;
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IModStatsGetter? obj)
+        public bool Equals(ITransientTypeGetter? obj)
         {
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,19 +106,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Version = initialValue;
-                this.NumRecords = initialValue;
-                this.NextFormID = initialValue;
+                this.FormType = initialValue;
+                this.Links = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
-                TItem Version,
-                TItem NumRecords,
-                TItem NextFormID)
+                TItem FormType,
+                TItem Links)
             {
-                this.Version = Version;
-                this.NumRecords = NumRecords;
-                this.NextFormID = NextFormID;
+                this.FormType = FormType;
+                this.Links = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Links, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -123,9 +127,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Version;
-            public TItem NumRecords;
-            public TItem NextFormID;
+            public TItem FormType;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Links;
             #endregion
 
             #region Equals
@@ -138,17 +141,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Version, rhs.Version)) return false;
-                if (!object.Equals(this.NumRecords, rhs.NumRecords)) return false;
-                if (!object.Equals(this.NextFormID, rhs.NextFormID)) return false;
+                if (!object.Equals(this.FormType, rhs.FormType)) return false;
+                if (!object.Equals(this.Links, rhs.Links)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Version);
-                hash.Add(this.NumRecords);
-                hash.Add(this.NextFormID);
+                hash.Add(this.FormType);
+                hash.Add(this.Links);
                 return hash.ToHashCode();
             }
 
@@ -157,9 +158,18 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Version)) return false;
-                if (!eval(this.NumRecords)) return false;
-                if (!eval(this.NextFormID)) return false;
+                if (!eval(this.FormType)) return false;
+                if (this.Links != null)
+                {
+                    if (!eval(this.Links.Overall)) return false;
+                    if (this.Links.Specific != null)
+                    {
+                        foreach (var item in this.Links.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -167,9 +177,18 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Version)) return true;
-                if (eval(this.NumRecords)) return true;
-                if (eval(this.NextFormID)) return true;
+                if (eval(this.FormType)) return true;
+                if (this.Links != null)
+                {
+                    if (eval(this.Links.Overall)) return true;
+                    if (this.Links.Specific != null)
+                    {
+                        foreach (var item in this.Links.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -177,45 +196,70 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ModStats.Mask<R>();
+                var ret = new TransientType.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Version = eval(this.Version);
-                obj.NumRecords = eval(this.NumRecords);
-                obj.NextFormID = eval(this.NextFormID);
+                obj.FormType = eval(this.FormType);
+                if (Links != null)
+                {
+                    obj.Links = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Links.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Links.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Links.Specific = l;
+                        foreach (var item in Links.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ModStats.Mask<bool>? printMask = null)
+            public string Print(TransientType.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ModStats.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, TransientType.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ModStats.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(TransientType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Version ?? true)
+                    if (printMask?.FormType ?? true)
                     {
-                        sb.AppendItem(Version, "Version");
+                        sb.AppendItem(FormType, "FormType");
                     }
-                    if (printMask?.NumRecords ?? true)
+                    if ((printMask?.Links?.Overall ?? true)
+                        && Links is {} LinksItem)
                     {
-                        sb.AppendItem(NumRecords, "NumRecords");
-                    }
-                    if (printMask?.NextFormID ?? true)
-                    {
-                        sb.AppendItem(NextFormID, "NextFormID");
+                        sb.AppendLine("Links =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LinksItem.Overall);
+                            if (LinksItem.Specific != null)
+                            {
+                                foreach (var subItem in LinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -241,23 +285,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Version;
-            public Exception? NumRecords;
-            public Exception? NextFormID;
+            public Exception? FormType;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Links;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
+                TransientType_FieldIndex enu = (TransientType_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModStats_FieldIndex.Version:
-                        return Version;
-                    case ModStats_FieldIndex.NumRecords:
-                        return NumRecords;
-                    case ModStats_FieldIndex.NextFormID:
-                        return NextFormID;
+                    case TransientType_FieldIndex.FormType:
+                        return FormType;
+                    case TransientType_FieldIndex.Links:
+                        return Links;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -265,17 +306,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
+                TransientType_FieldIndex enu = (TransientType_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModStats_FieldIndex.Version:
-                        this.Version = ex;
+                    case TransientType_FieldIndex.FormType:
+                        this.FormType = ex;
                         break;
-                    case ModStats_FieldIndex.NumRecords:
-                        this.NumRecords = ex;
-                        break;
-                    case ModStats_FieldIndex.NextFormID:
-                        this.NextFormID = ex;
+                    case TransientType_FieldIndex.Links:
+                        this.Links = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -284,17 +322,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ModStats_FieldIndex enu = (ModStats_FieldIndex)index;
+                TransientType_FieldIndex enu = (TransientType_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModStats_FieldIndex.Version:
-                        this.Version = (Exception?)obj;
+                    case TransientType_FieldIndex.FormType:
+                        this.FormType = (Exception?)obj;
                         break;
-                    case ModStats_FieldIndex.NumRecords:
-                        this.NumRecords = (Exception?)obj;
-                        break;
-                    case ModStats_FieldIndex.NextFormID:
-                        this.NextFormID = (Exception?)obj;
+                    case TransientType_FieldIndex.Links:
+                        this.Links = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -304,9 +339,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Version != null) return true;
-                if (NumRecords != null) return true;
-                if (NextFormID != null) return true;
+                if (FormType != null) return true;
+                if (Links != null) return true;
                 return false;
             }
             #endregion
@@ -333,13 +367,27 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Version, "Version");
+                    sb.AppendItem(FormType, "FormType");
                 }
+                if (Links is {} LinksItem)
                 {
-                    sb.AppendItem(NumRecords, "NumRecords");
-                }
-                {
-                    sb.AppendItem(NextFormID, "NextFormID");
+                    sb.AppendLine("Links =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LinksItem.Overall);
+                        if (LinksItem.Specific != null)
+                        {
+                            foreach (var subItem in LinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -349,9 +397,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Version = this.Version.Combine(rhs.Version);
-                ret.NumRecords = this.NumRecords.Combine(rhs.NumRecords);
-                ret.NextFormID = this.NextFormID.Combine(rhs.NextFormID);
+                ret.FormType = this.FormType.Combine(rhs.FormType);
+                ret.Links = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Links?.Overall, rhs.Links?.Overall), Noggog.ExceptionExt.Combine(this.Links?.Specific, rhs.Links?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -375,9 +422,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Version;
-            public bool NumRecords;
-            public bool NextFormID;
+            public bool FormType;
+            public bool Links;
             #endregion
 
             #region Ctors
@@ -387,9 +433,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Version = defaultOn;
-                this.NumRecords = defaultOn;
-                this.NextFormID = defaultOn;
+                this.FormType = defaultOn;
+                this.Links = defaultOn;
             }
 
             #endregion
@@ -405,9 +450,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Version, null));
-                ret.Add((NumRecords, null));
-                ret.Add((NextFormID, null));
+                ret.Add((FormType, null));
+                ret.Add((Links, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -418,27 +462,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TransientTypeCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TransientTypeSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => TransientTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ModStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((TransientTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ModStats CreateFromBinary(
+        public static TransientType CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ModStats();
-            ((ModStatsSetterCommon)((IModStatsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new TransientType();
+            ((TransientTypeSetterCommon)((ITransientTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -449,7 +498,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ModStats item,
+            out TransientType item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -464,31 +513,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ModStatsSetterCommon)((IModStatsGetter)this).CommonSetterInstance()!).Clear(this);
+            ((TransientTypeSetterCommon)((ITransientTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ModStats GetNew()
+        internal static TransientType GetNew()
         {
-            return new ModStats();
+            return new TransientType();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IModStats :
-        ILoquiObjectSetter<IModStats>,
-        IModStatsGetter
+    public partial interface ITransientType :
+        IFormLinkContainer,
+        ILoquiObjectSetter<ITransientType>,
+        ITransientTypeGetter
     {
-        new Single Version { get; set; }
-        new UInt32 NumRecords { get; set; }
-        new UInt32 NextFormID { get; set; }
+        new UInt32 FormType { get; set; }
+        new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Links { get; }
     }
 
-    public partial interface IModStatsGetter :
+    public partial interface ITransientTypeGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IModStatsGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<ITransientTypeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -496,52 +546,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ModStats_Registration.Instance;
-        Single Version { get; }
-        UInt32 NumRecords { get; }
-        UInt32 NextFormID { get; }
+        static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
+        UInt32 FormType { get; }
+        IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Links { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ModStatsMixIn
+    public static partial class TransientTypeMixIn
     {
-        public static void Clear(this IModStats item)
+        public static void Clear(this ITransientType item)
         {
-            ((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((TransientTypeSetterCommon)((ITransientTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ModStats.Mask<bool> GetEqualsMask(
-            this IModStatsGetter item,
-            IModStatsGetter rhs,
+        public static TransientType.Mask<bool> GetEqualsMask(
+            this ITransientTypeGetter item,
+            ITransientTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IModStatsGetter item,
+            this ITransientTypeGetter item,
             string? name = null,
-            ModStats.Mask<bool>? printMask = null)
+            TransientType.Mask<bool>? printMask = null)
         {
-            return ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).Print(
+            return ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IModStatsGetter item,
+            this ITransientTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ModStats.Mask<bool>? printMask = null)
+            TransientType.Mask<bool>? printMask = null)
         {
-            ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).Print(
+            ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -549,21 +598,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IModStatsGetter item,
-            IModStatsGetter rhs,
-            ModStats.TranslationMask? equalsMask = null)
+            this ITransientTypeGetter item,
+            ITransientTypeGetter rhs,
+            TransientType.TranslationMask? equalsMask = null)
         {
-            return ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).Equals(
+            return ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IModStats lhs,
-            IModStatsGetter rhs)
+            this ITransientType lhs,
+            ITransientTypeGetter rhs)
         {
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -572,11 +621,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IModStats lhs,
-            IModStatsGetter rhs,
-            ModStats.TranslationMask? copyMask = null)
+            this ITransientType lhs,
+            ITransientTypeGetter rhs,
+            TransientType.TranslationMask? copyMask = null)
         {
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -585,28 +634,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IModStats lhs,
-            IModStatsGetter rhs,
-            out ModStats.ErrorMask errorMask,
-            ModStats.TranslationMask? copyMask = null)
+            this ITransientType lhs,
+            ITransientTypeGetter rhs,
+            out TransientType.ErrorMask errorMask,
+            TransientType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ModStats.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TransientType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IModStats lhs,
-            IModStatsGetter rhs,
+            this ITransientType lhs,
+            ITransientTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -614,32 +663,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ModStats DeepCopy(
-            this IModStatsGetter item,
-            ModStats.TranslationMask? copyMask = null)
+        public static TransientType DeepCopy(
+            this ITransientTypeGetter item,
+            TransientType.TranslationMask? copyMask = null)
         {
-            return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ModStats DeepCopy(
-            this IModStatsGetter item,
-            out ModStats.ErrorMask errorMask,
-            ModStats.TranslationMask? copyMask = null)
+        public static TransientType DeepCopy(
+            this ITransientTypeGetter item,
+            out TransientType.ErrorMask errorMask,
+            TransientType.TranslationMask? copyMask = null)
         {
-            return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ModStats DeepCopy(
-            this IModStatsGetter item,
+        public static TransientType DeepCopy(
+            this ITransientTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ModStatsSetterTranslationCommon)((IModStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -647,11 +696,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IModStats item,
+            this ITransientType item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ModStatsSetterCommon)((IModStatsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((TransientTypeSetterCommon)((ITransientTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -667,49 +716,48 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ModStats_FieldIndex
+    internal enum TransientType_FieldIndex
     {
-        Version = 0,
-        NumRecords = 1,
-        NextFormID = 2,
+        FormType = 0,
+        Links = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class ModStats_Registration : ILoquiRegistration
+    internal partial class TransientType_Registration : ILoquiRegistration
     {
-        public static readonly ModStats_Registration Instance = new ModStats_Registration();
+        public static readonly TransientType_Registration Instance = new TransientType_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 21,
+            msgID: 30,
             version: 0);
 
-        public const string GUID = "4011569e-322f-4e65-b436-d7c6667be637";
+        public const string GUID = "8585f14c-55ea-4087-8212-937bdd6064a0";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ModStats.Mask<>);
+        public static readonly Type MaskType = typeof(TransientType.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ModStats.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(TransientType.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ModStats);
+        public static readonly Type ClassType = typeof(TransientType);
 
-        public static readonly Type GetterType = typeof(IModStatsGetter);
+        public static readonly Type GetterType = typeof(ITransientTypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IModStats);
+        public static readonly Type SetterType = typeof(ITransientType);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ModStats";
+        public const string FullName = "Mutagen.Bethesda.Starfield.TransientType";
 
-        public const string Name = "ModStats";
+        public const string Name = "TransientType";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -717,14 +765,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.HEDR;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.TNAM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.HEDR);
+            var all = RecordCollection.Factory(RecordTypes.TNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ModStatsBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(TransientTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -757,58 +805,58 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ModStatsSetterCommon
+    internal partial class TransientTypeSetterCommon
     {
-        public static readonly ModStatsSetterCommon Instance = new ModStatsSetterCommon();
+        public static readonly TransientTypeSetterCommon Instance = new TransientTypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IModStats item)
+        public void Clear(ITransientType item)
         {
             ClearPartial();
-            item.Version = ModStats.VersionDefault;
-            item.NumRecords = default;
-            item.NextFormID = ModStats.NextFormIDDefault;
+            item.FormType = default;
+            item.Links.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IModStats obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ITransientType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Links.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IModStats item,
+            ITransientType item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.HEDR),
+                translationParams.ConvertToCustom(RecordTypes.TNAM),
                 translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ModStatsBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: TransientTypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class ModStatsCommon
+    internal partial class TransientTypeCommon
     {
-        public static readonly ModStatsCommon Instance = new ModStatsCommon();
+        public static readonly TransientTypeCommon Instance = new TransientTypeCommon();
 
-        public ModStats.Mask<bool> GetEqualsMask(
-            IModStatsGetter item,
-            IModStatsGetter rhs,
+        public TransientType.Mask<bool> GetEqualsMask(
+            ITransientTypeGetter item,
+            ITransientTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ModStats.Mask<bool>(false);
-            ((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new TransientType.Mask<bool>(false);
+            ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -817,20 +865,22 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IModStatsGetter item,
-            IModStatsGetter rhs,
-            ModStats.Mask<bool> ret,
+            ITransientTypeGetter item,
+            ITransientTypeGetter rhs,
+            TransientType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Version = item.Version.EqualsWithin(rhs.Version);
-            ret.NumRecords = item.NumRecords == rhs.NumRecords;
-            ret.NextFormID = item.NextFormID == rhs.NextFormID;
+            ret.FormType = item.FormType == rhs.FormType;
+            ret.Links = item.Links.CollectionEqualsHelper(
+                rhs.Links,
+                (l, r) => object.Equals(l, r),
+                include);
         }
         
         public string Print(
-            IModStatsGetter item,
+            ITransientTypeGetter item,
             string? name = null,
-            ModStats.Mask<bool>? printMask = null)
+            TransientType.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -842,18 +892,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IModStatsGetter item,
+            ITransientTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ModStats.Mask<bool>? printMask = null)
+            TransientType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ModStats =>");
+                sb.AppendLine($"TransientType =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ModStats) =>");
+                sb.AppendLine($"{name} (TransientType) =>");
             }
             using (sb.Brace())
             {
@@ -865,52 +915,53 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IModStatsGetter item,
+            ITransientTypeGetter item,
             StructuredStringBuilder sb,
-            ModStats.Mask<bool>? printMask = null)
+            TransientType.Mask<bool>? printMask = null)
         {
-            if (printMask?.Version ?? true)
+            if (printMask?.FormType ?? true)
             {
-                sb.AppendItem(item.Version, "Version");
+                sb.AppendItem(item.FormType, "FormType");
             }
-            if (printMask?.NumRecords ?? true)
+            if (printMask?.Links?.Overall ?? true)
             {
-                sb.AppendItem(item.NumRecords, "NumRecords");
-            }
-            if (printMask?.NextFormID ?? true)
-            {
-                sb.AppendItem(item.NextFormID, "NextFormID");
+                sb.AppendLine("Links =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Links)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IModStatsGetter? lhs,
-            IModStatsGetter? rhs,
+            ITransientTypeGetter? lhs,
+            ITransientTypeGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ModStats_FieldIndex.Version) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TransientType_FieldIndex.FormType) ?? true))
             {
-                if (!lhs.Version.EqualsWithin(rhs.Version)) return false;
+                if (lhs.FormType != rhs.FormType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ModStats_FieldIndex.NumRecords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TransientType_FieldIndex.Links) ?? true))
             {
-                if (lhs.NumRecords != rhs.NumRecords) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ModStats_FieldIndex.NextFormID) ?? true))
-            {
-                if (lhs.NextFormID != rhs.NextFormID) return false;
+                if (!lhs.Links.SequenceEqualNullable(rhs.Links)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IModStatsGetter item)
+        public virtual int GetHashCode(ITransientTypeGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Version);
-            hash.Add(item.NumRecords);
-            hash.Add(item.NextFormID);
+            hash.Add(item.FormType);
+            hash.Add(item.Links);
             return hash.ToHashCode();
         }
         
@@ -919,52 +970,67 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ModStats.GetNew();
+            return TransientType.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModStatsGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ITransientTypeGetter obj)
         {
+            foreach (var item in obj.Links)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class ModStatsSetterTranslationCommon
+    internal partial class TransientTypeSetterTranslationCommon
     {
-        public static readonly ModStatsSetterTranslationCommon Instance = new ModStatsSetterTranslationCommon();
+        public static readonly TransientTypeSetterTranslationCommon Instance = new TransientTypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IModStats item,
-            IModStatsGetter rhs,
+            ITransientType item,
+            ITransientTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.Version) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TransientType_FieldIndex.FormType) ?? true))
             {
-                item.Version = rhs.Version;
+                item.FormType = rhs.FormType;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.NumRecords) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TransientType_FieldIndex.Links) ?? true))
             {
-                item.NumRecords = rhs.NumRecords;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ModStats_FieldIndex.NextFormID) ?? true))
-            {
-                item.NextFormID = rhs.NextFormID;
+                errorMask?.PushIndex((int)TransientType_FieldIndex.Links);
+                try
+                {
+                    item.Links.SetTo(
+                        rhs.Links
+                        .Select(r => (IFormLinkGetter<IStarfieldMajorRecordGetter>)new FormLink<IStarfieldMajorRecordGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
         #endregion
         
-        public ModStats DeepCopy(
-            IModStatsGetter item,
-            ModStats.TranslationMask? copyMask = null)
+        public TransientType DeepCopy(
+            ITransientTypeGetter item,
+            TransientType.TranslationMask? copyMask = null)
         {
-            ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            TransientType ret = (TransientType)((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).GetNew();
+            ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -973,30 +1039,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ModStats DeepCopy(
-            IModStatsGetter item,
-            out ModStats.ErrorMask errorMask,
-            ModStats.TranslationMask? copyMask = null)
+        public TransientType DeepCopy(
+            ITransientTypeGetter item,
+            out TransientType.ErrorMask errorMask,
+            TransientType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            TransientType ret = (TransientType)((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).GetNew();
+            ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ModStats.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = TransientType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ModStats DeepCopy(
-            IModStatsGetter item,
+        public TransientType DeepCopy(
+            ITransientTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ModStats ret = (ModStats)((ModStatsCommon)((IModStatsGetter)item).CommonInstance()!).GetNew();
-            ((ModStatsSetterTranslationCommon)((IModStatsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            TransientType ret = (TransientType)((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).GetNew();
+            ((TransientTypeSetterTranslationCommon)((ITransientTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1012,27 +1078,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ModStats
+    public partial class TransientType
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ModStats_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModStatsCommon.Instance;
+        protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ModStatsSetterCommon.Instance;
+            return TransientTypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModStatsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => TransientTypeSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IModStatsGetter.CommonInstance() => this.CommonInstance();
+        object ITransientTypeGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IModStatsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ITransientTypeGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IModStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ITransientTypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1043,29 +1109,34 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ModStatsBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class TransientTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ModStatsBinaryWriteTranslation Instance = new();
+        public static readonly TransientTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IModStatsGetter item,
+            ITransientTypeGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            writer.Write(item.FormType);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IStarfieldMajorRecordGetter>>.Instance.Write(
                 writer: writer,
-                item: item.Version);
-            writer.Write(item.NumRecords);
-            writer.Write(item.NextFormID);
+                items: item.Links,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IStarfieldMajorRecordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
         }
 
         public void Write(
             MutagenWriter writer,
-            IModStatsGetter item,
+            ITransientTypeGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.HEDR),
+                record: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 overflowRecord: translationParams.OverflowRecordType,
                 out var writerToUse))
             {
@@ -1081,24 +1152,26 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IModStatsGetter)item,
+                item: (ITransientTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ModStatsBinaryCreateTranslation
+    internal partial class TransientTypeBinaryCreateTranslation
     {
-        public static readonly ModStatsBinaryCreateTranslation Instance = new ModStatsBinaryCreateTranslation();
+        public static readonly TransientTypeBinaryCreateTranslation Instance = new TransientTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IModStats item,
+            ITransientType item,
             MutagenFrame frame)
         {
-            item.Version = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.NumRecords = frame.ReadUInt32();
-            item.NextFormID = frame.ReadUInt32();
+            item.FormType = frame.ReadUInt32();
+            item.Links.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IStarfieldMajorRecordGetter>>.Instance.Parse(
+                    reader: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
         }
 
     }
@@ -1107,14 +1180,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ModStatsBinaryTranslationMixIn
+    public static class TransientTypeBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IModStatsGetter item,
+            this ITransientTypeGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ModStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((TransientTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1127,53 +1200,56 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ModStatsBinaryOverlay :
+    internal partial class TransientTypeBinaryOverlay :
         PluginBinaryOverlay,
-        IModStatsGetter
+        ITransientTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModStats_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ModStats_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => TransientType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => TransientType_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModStatsCommon.Instance;
+        protected object CommonInstance() => TransientTypeCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModStatsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => TransientTypeSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IModStatsGetter.CommonInstance() => this.CommonInstance();
+        object ITransientTypeGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IModStatsGetter.CommonSetterInstance() => null;
+        object? ITransientTypeGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IModStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ITransientTypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TransientTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModStatsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => TransientTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ModStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((TransientTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Single Version => _structData.Slice(0x0, 0x4).Float();
-        public UInt32 NumRecords => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public UInt32 NextFormID => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        #region Links
+        public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IStarfieldMajorRecordGetter>>(_structData.Slice(0x4), _package, 4, (s, p) => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        protected int LinksEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ModStatsBinaryOverlay(
+        protected TransientTypeBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1183,7 +1259,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IModStatsGetter ModStatsFactory(
+        public static ITransientTypeGetter TransientTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1192,13 +1268,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0xC,
                 memoryPair: out var memoryPair,
-                offset: out var offset);
-            var ret = new ModStatsBinaryOverlay(
+                offset: out var offset,
+                finalPos: out var finalPos);
+            var ret = new TransientTypeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
+            ret.LinksEndingPos = ret._structData.Length;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1206,12 +1282,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IModStatsGetter ModStatsFactory(
+        public static ITransientTypeGetter TransientTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ModStatsFactory(
+            return TransientTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1223,7 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ModStatsMixIn.Print(
+            TransientTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1234,16 +1310,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IModStatsGetter rhs) return false;
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ITransientTypeGetter rhs) return false;
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IModStatsGetter? obj)
+        public bool Equals(ITransientTypeGetter? obj)
         {
-            return ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ModStatsCommon)((IModStatsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

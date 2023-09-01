@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypeInts
 {
+    public const int CHGL = 0x4C474843;
     public const int CNAM = 0x4D414E43;
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
@@ -18,8 +19,10 @@ public partial class RecordTypeInts
     public const int ONAM = 0x4D414E4F;
     public const int RACE = 0x45434152;
     public const int RNAM = 0x4D414E52;
+    public const int SCRN = 0x4E524353;
     public const int SNAM = 0x4D414E53;
     public const int TES4 = 0x34534554;
+    public const int TNAM = 0x4D414E54;
     public const int WEAP = 0x50414557;
     public const int XXXX = 0x58585858;
 }

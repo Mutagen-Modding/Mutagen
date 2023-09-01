@@ -9,16 +9,17 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
     public static void Register()
     {
         LoquiRegistration.Register(
-            StarfieldGroup_Registration.Instance,
-            StarfieldModHeader_Registration.Instance,
             ModStats_Registration.Instance,
+            TransientType_Registration.Instance,
+            StarfieldGroup_Registration.Instance,
             StarfieldMajorRecord_Registration.Instance,
             StarfieldMod_Registration.Instance,
             Npc_Registration.Instance,
             Race_Registration.Instance,
             Weapon_Registration.Instance,
             SimpleModel_Registration.Instance,
-            Model_Registration.Instance
+            Model_Registration.Instance,
+            StarfieldModHeader_Registration.Instance
         );
     }
 }

@@ -116,5 +116,8 @@
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\TransientType_Generated.cs">
+      <DependentUpon>StarfieldModHeader.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

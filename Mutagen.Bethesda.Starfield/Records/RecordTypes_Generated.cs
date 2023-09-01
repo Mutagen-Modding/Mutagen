@@ -4,6 +4,7 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypes
 {
+    public static readonly RecordType CHGL = new(0x4C474843);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
@@ -20,8 +21,10 @@ public partial class RecordTypes
     public static readonly RecordType ONAM = new(0x4D414E4F);
     public static readonly RecordType RACE = new(0x45434152);
     public static readonly RecordType RNAM = new(0x4D414E52);
+    public static readonly RecordType SCRN = new(0x4E524353);
     public static readonly RecordType SNAM = new(0x4D414E53);
     public static readonly RecordType TES4 = new(0x34534554);
+    public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType WEAP = new(0x50414557);
     public static readonly RecordType XXXX = new(0x58585858);
 }

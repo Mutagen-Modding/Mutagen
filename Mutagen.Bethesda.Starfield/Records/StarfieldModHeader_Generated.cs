@@ -131,15 +131,57 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region INTV
-        public Int32? INTV { get; set; }
+        #region Screenshot
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IStarfieldModHeaderGetter.INTV => this.INTV;
+        protected MemorySlice<Byte>? _Screenshot;
+        public MemorySlice<Byte>? Screenshot
+        {
+            get => this._Screenshot;
+            set => this._Screenshot = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IStarfieldModHeaderGetter.Screenshot => this.Screenshot;
+        #endregion
+        #region TransientTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<TransientType> _TransientTypes = new ExtendedList<TransientType>();
+        public ExtendedList<TransientType> TransientTypes
+        {
+            get => this._TransientTypes;
+            init => this._TransientTypes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ITransientTypeGetter> IStarfieldModHeaderGetter.TransientTypes => _TransientTypes;
+        #endregion
+
+        #endregion
+        #region INTV
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _INTV;
+        public MemorySlice<Byte>? INTV
+        {
+            get => this._INTV;
+            set => this._INTV = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IStarfieldModHeaderGetter.INTV => this.INTV;
         #endregion
         #region INCC
         public Int32? INCC { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Int32? IStarfieldModHeaderGetter.INCC => this.INCC;
+        #endregion
+        #region CHGL
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _CHGL;
+        public MemorySlice<Byte>? CHGL
+        {
+            get => this._CHGL;
+            set => this._CHGL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IStarfieldModHeaderGetter.CHGL => this.CHGL;
         #endregion
 
         #region To String
@@ -192,8 +234,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.Description = initialValue;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Screenshot = initialValue;
+                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>());
                 this.INTV = initialValue;
                 this.INCC = initialValue;
+                this.CHGL = initialValue;
             }
 
             public Mask(
@@ -209,8 +254,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Description,
                 TItem MasterReferences,
                 TItem OverriddenForms,
+                TItem Screenshot,
+                TItem TransientTypes,
                 TItem INTV,
-                TItem INCC)
+                TItem INCC,
+                TItem CHGL)
             {
                 this.Flags = Flags;
                 this.FormID = FormID;
@@ -224,8 +272,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.Description = Description;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
                 this.OverriddenForms = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OverriddenForms, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Screenshot = Screenshot;
+                this.TransientTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>(TransientTypes, Enumerable.Empty<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>());
                 this.INTV = INTV;
                 this.INCC = INCC;
+                this.CHGL = CHGL;
             }
 
             #pragma warning disable CS8618
@@ -249,8 +300,11 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>? MasterReferences;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? OverriddenForms;
+            public TItem Screenshot;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TransientType.Mask<TItem>?>>?>? TransientTypes;
             public TItem INTV;
             public TItem INCC;
+            public TItem CHGL;
             #endregion
 
             #region Equals
@@ -275,8 +329,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
                 if (!object.Equals(this.OverriddenForms, rhs.OverriddenForms)) return false;
+                if (!object.Equals(this.Screenshot, rhs.Screenshot)) return false;
+                if (!object.Equals(this.TransientTypes, rhs.TransientTypes)) return false;
                 if (!object.Equals(this.INTV, rhs.INTV)) return false;
                 if (!object.Equals(this.INCC, rhs.INCC)) return false;
+                if (!object.Equals(this.CHGL, rhs.CHGL)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -294,8 +351,11 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Description);
                 hash.Add(this.MasterReferences);
                 hash.Add(this.OverriddenForms);
+                hash.Add(this.Screenshot);
+                hash.Add(this.TransientTypes);
                 hash.Add(this.INTV);
                 hash.Add(this.INCC);
+                hash.Add(this.CHGL);
                 return hash.ToHashCode();
             }
 
@@ -341,8 +401,22 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.Screenshot)) return false;
+                if (this.TransientTypes != null)
+                {
+                    if (!eval(this.TransientTypes.Overall)) return false;
+                    if (this.TransientTypes.Specific != null)
+                    {
+                        foreach (var item in this.TransientTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.INTV)) return false;
                 if (!eval(this.INCC)) return false;
+                if (!eval(this.CHGL)) return false;
                 return true;
             }
             #endregion
@@ -387,8 +461,22 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.Screenshot)) return true;
+                if (this.TransientTypes != null)
+                {
+                    if (eval(this.TransientTypes.Overall)) return true;
+                    if (this.TransientTypes.Specific != null)
+                    {
+                        foreach (var item in this.TransientTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.INTV)) return true;
                 if (eval(this.INCC)) return true;
+                if (eval(this.CHGL)) return true;
                 return false;
             }
             #endregion
@@ -442,8 +530,25 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.Screenshot = eval(this.Screenshot);
+                if (TransientTypes != null)
+                {
+                    obj.TransientTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TransientType.Mask<R>?>>?>(eval(this.TransientTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, TransientType.Mask<R>?>>());
+                    if (TransientTypes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, TransientType.Mask<R>?>>();
+                        obj.TransientTypes.Specific = l;
+                        foreach (var item in TransientTypes.Specific)
+                        {
+                            MaskItemIndexed<R, TransientType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TransientType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.INTV = eval(this.INTV);
                 obj.INCC = eval(this.INCC);
+                obj.CHGL = eval(this.CHGL);
             }
             #endregion
 
@@ -542,6 +647,29 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.Screenshot ?? true)
+                    {
+                        sb.AppendItem(Screenshot, "Screenshot");
+                    }
+                    if ((printMask?.TransientTypes?.Overall ?? true)
+                        && TransientTypes is {} TransientTypesItem)
+                    {
+                        sb.AppendLine("TransientTypes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TransientTypesItem.Overall);
+                            if (TransientTypesItem.Specific != null)
+                            {
+                                foreach (var subItem in TransientTypesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.INTV ?? true)
                     {
                         sb.AppendItem(INTV, "INTV");
@@ -549,6 +677,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.INCC ?? true)
                     {
                         sb.AppendItem(INCC, "INCC");
+                    }
+                    if (printMask?.CHGL ?? true)
+                    {
+                        sb.AppendItem(CHGL, "CHGL");
                     }
                 }
             }
@@ -586,8 +718,11 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>? MasterReferences;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OverriddenForms;
+            public Exception? Screenshot;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>? TransientTypes;
             public Exception? INTV;
             public Exception? INCC;
+            public Exception? CHGL;
             #endregion
 
             #region IErrorMask
@@ -620,10 +755,16 @@ namespace Mutagen.Bethesda.Starfield
                         return MasterReferences;
                     case StarfieldModHeader_FieldIndex.OverriddenForms:
                         return OverriddenForms;
+                    case StarfieldModHeader_FieldIndex.Screenshot:
+                        return Screenshot;
+                    case StarfieldModHeader_FieldIndex.TransientTypes:
+                        return TransientTypes;
                     case StarfieldModHeader_FieldIndex.INTV:
                         return INTV;
                     case StarfieldModHeader_FieldIndex.INCC:
                         return INCC;
+                    case StarfieldModHeader_FieldIndex.CHGL:
+                        return CHGL;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -670,11 +811,20 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldModHeader_FieldIndex.OverriddenForms:
                         this.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
+                    case StarfieldModHeader_FieldIndex.Screenshot:
+                        this.Screenshot = ex;
+                        break;
+                    case StarfieldModHeader_FieldIndex.TransientTypes:
+                        this.TransientTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>(ex, null);
+                        break;
                     case StarfieldModHeader_FieldIndex.INTV:
                         this.INTV = ex;
                         break;
                     case StarfieldModHeader_FieldIndex.INCC:
                         this.INCC = ex;
+                        break;
+                    case StarfieldModHeader_FieldIndex.CHGL:
+                        this.CHGL = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -722,11 +872,20 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldModHeader_FieldIndex.OverriddenForms:
                         this.OverriddenForms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
+                    case StarfieldModHeader_FieldIndex.Screenshot:
+                        this.Screenshot = (Exception?)obj;
+                        break;
+                    case StarfieldModHeader_FieldIndex.TransientTypes:
+                        this.TransientTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>)obj;
+                        break;
                     case StarfieldModHeader_FieldIndex.INTV:
                         this.INTV = (Exception?)obj;
                         break;
                     case StarfieldModHeader_FieldIndex.INCC:
                         this.INCC = (Exception?)obj;
+                        break;
+                    case StarfieldModHeader_FieldIndex.CHGL:
+                        this.CHGL = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -748,8 +907,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (Description != null) return true;
                 if (MasterReferences != null) return true;
                 if (OverriddenForms != null) return true;
+                if (Screenshot != null) return true;
+                if (TransientTypes != null) return true;
                 if (INTV != null) return true;
                 if (INCC != null) return true;
+                if (CHGL != null) return true;
                 return false;
             }
             #endregion
@@ -842,10 +1004,34 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
+                    sb.AppendItem(Screenshot, "Screenshot");
+                }
+                if (TransientTypes is {} TransientTypesItem)
+                {
+                    sb.AppendLine("TransientTypes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TransientTypesItem.Overall);
+                        if (TransientTypesItem.Specific != null)
+                        {
+                            foreach (var subItem in TransientTypesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
                     sb.AppendItem(INTV, "INTV");
                 }
                 {
                     sb.AppendItem(INCC, "INCC");
+                }
+                {
+                    sb.AppendItem(CHGL, "CHGL");
                 }
             }
             #endregion
@@ -867,8 +1053,11 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), Noggog.ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
                 ret.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OverriddenForms?.Overall, rhs.OverriddenForms?.Overall), Noggog.ExceptionExt.Combine(this.OverriddenForms?.Specific, rhs.OverriddenForms?.Specific));
+                ret.Screenshot = this.Screenshot.Combine(rhs.Screenshot);
+                ret.TransientTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TransientType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TransientTypes?.Overall, rhs.TransientTypes?.Overall), Noggog.ExceptionExt.Combine(this.TransientTypes?.Specific, rhs.TransientTypes?.Specific));
                 ret.INTV = this.INTV.Combine(rhs.INTV);
                 ret.INCC = this.INCC.Combine(rhs.INCC);
+                ret.CHGL = this.CHGL.Combine(rhs.CHGL);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -904,8 +1093,11 @@ namespace Mutagen.Bethesda.Starfield
             public bool Description;
             public MasterReference.TranslationMask? MasterReferences;
             public bool OverriddenForms;
+            public bool Screenshot;
+            public TransientType.TranslationMask? TransientTypes;
             public bool INTV;
             public bool INCC;
+            public bool CHGL;
             #endregion
 
             #region Ctors
@@ -925,8 +1117,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Author = defaultOn;
                 this.Description = defaultOn;
                 this.OverriddenForms = defaultOn;
+                this.Screenshot = defaultOn;
                 this.INTV = defaultOn;
                 this.INCC = defaultOn;
+                this.CHGL = defaultOn;
             }
 
             #endregion
@@ -954,8 +1148,11 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Description, null));
                 ret.Add((MasterReferences == null ? DefaultOn : !MasterReferences.GetCrystal().CopyNothing, MasterReferences?.GetCrystal()));
                 ret.Add((OverriddenForms, null));
+                ret.Add((Screenshot, null));
+                ret.Add((TransientTypes == null ? DefaultOn : !TransientTypes.GetCrystal().CopyNothing, TransientTypes?.GetCrystal()));
                 ret.Add((INTV, null));
                 ret.Add((INCC, null));
+                ret.Add((CHGL, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1047,8 +1244,11 @@ namespace Mutagen.Bethesda.Starfield
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
         new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>>? OverriddenForms { get; set; }
-        new Int32? INTV { get; set; }
+        new MemorySlice<Byte>? Screenshot { get; set; }
+        new ExtendedList<TransientType> TransientTypes { get; }
+        new MemorySlice<Byte>? INTV { get; set; }
         new Int32? INCC { get; set; }
+        new MemorySlice<Byte>? CHGL { get; set; }
     }
 
     public partial interface IStarfieldModHeaderGetter :
@@ -1076,8 +1276,11 @@ namespace Mutagen.Bethesda.Starfield
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
         IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>>? OverriddenForms { get; }
-        Int32? INTV { get; }
+        ReadOnlyMemorySlice<Byte>? Screenshot { get; }
+        IReadOnlyList<ITransientTypeGetter> TransientTypes { get; }
+        ReadOnlyMemorySlice<Byte>? INTV { get; }
         Int32? INCC { get; }
+        ReadOnlyMemorySlice<Byte>? CHGL { get; }
 
     }
 
@@ -1259,8 +1462,11 @@ namespace Mutagen.Bethesda.Starfield
         Description = 9,
         MasterReferences = 10,
         OverriddenForms = 11,
-        INTV = 12,
-        INCC = 13,
+        Screenshot = 12,
+        TransientTypes = 13,
+        INTV = 14,
+        INCC = 15,
+        CHGL = 16,
     }
     #endregion
 
@@ -1273,14 +1479,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 63,
+            msgID: 72,
             version: 0);
 
-        public const string GUID = "5c10abbb-9600-4bd1-ba4c-8a244a69f0be";
+        public const string GUID = "8e750e17-6c37-40f0-a16f-4efaaac21143";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(StarfieldModHeader.Mask<>);
 
@@ -1322,8 +1528,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DATA,
                 RecordTypes.ONAM,
                 RecordTypes.XXXX,
+                RecordTypes.SCRN,
+                RecordTypes.TNAM,
                 RecordTypes.INTV,
-                RecordTypes.INCC);
+                RecordTypes.INCC,
+                RecordTypes.CHGL);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StarfieldModHeaderBinaryWriteTranslation);
@@ -1380,14 +1589,18 @@ namespace Mutagen.Bethesda.Starfield
             item.Description = default;
             item.MasterReferences.Clear();
             item.OverriddenForms = null;
+            item.Screenshot = default;
+            item.TransientTypes.Clear();
             item.INTV = default;
             item.INCC = default;
+            item.CHGL = default;
         }
         
         #region Mutagen
         public void RemapLinks(IStarfieldModHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.OverriddenForms?.RemapLinks(mapping);
+            obj.TransientTypes.RemapLinks(mapping);
         }
         
         #endregion
@@ -1454,8 +1667,14 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.OverriddenForms,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.INTV = item.INTV == rhs.INTV;
+            ret.Screenshot = MemorySliceExt.SequenceEqual(item.Screenshot, rhs.Screenshot);
+            ret.TransientTypes = item.TransientTypes.CollectionEqualsHelper(
+                rhs.TransientTypes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.INTV = MemorySliceExt.SequenceEqual(item.INTV, rhs.INTV);
             ret.INCC = item.INCC == rhs.INCC;
+            ret.CHGL = MemorySliceExt.SequenceEqual(item.CHGL, rhs.CHGL);
         }
         
         public string Print(
@@ -1573,15 +1792,39 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if ((printMask?.Screenshot ?? true)
+                && item.Screenshot is {} ScreenshotItem)
+            {
+                sb.AppendLine($"Screenshot => {SpanExt.ToHexString(ScreenshotItem)}");
+            }
+            if (printMask?.TransientTypes?.Overall ?? true)
+            {
+                sb.AppendLine("TransientTypes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.TransientTypes)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if ((printMask?.INTV ?? true)
                 && item.INTV is {} INTVItem)
             {
-                sb.AppendItem(INTVItem, "INTV");
+                sb.AppendLine($"INTV => {SpanExt.ToHexString(INTVItem)}");
             }
             if ((printMask?.INCC ?? true)
                 && item.INCC is {} INCCItem)
             {
                 sb.AppendItem(INCCItem, "INCC");
+            }
+            if ((printMask?.CHGL ?? true)
+                && item.CHGL is {} CHGLItem)
+            {
+                sb.AppendLine($"CHGL => {SpanExt.ToHexString(CHGLItem)}");
             }
         }
         
@@ -1644,13 +1887,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.Screenshot) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.Screenshot, rhs.Screenshot)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.TransientTypes) ?? true))
+            {
+                if (!lhs.TransientTypes.SequenceEqual(rhs.TransientTypes, (l, r) => ((TransientTypeCommon)((ITransientTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)StarfieldModHeader_FieldIndex.TransientTypes)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.INTV) ?? true))
             {
-                if (lhs.INTV != rhs.INTV) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.INTV, rhs.INTV)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.INCC) ?? true))
             {
                 if (lhs.INCC != rhs.INCC) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.CHGL) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.CHGL, rhs.CHGL)) return false;
             }
             return true;
         }
@@ -1682,13 +1937,22 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.MasterReferences);
             hash.Add(item.OverriddenForms);
-            if (item.INTV is {} INTVitem)
+            if (item.Screenshot is {} ScreenshotItem)
             {
-                hash.Add(INTVitem);
+                hash.Add(ScreenshotItem);
+            }
+            hash.Add(item.TransientTypes);
+            if (item.INTV is {} INTVItem)
+            {
+                hash.Add(INTVItem);
             }
             if (item.INCC is {} INCCitem)
             {
                 hash.Add(INCCitem);
+            }
+            if (item.CHGL is {} CHGLItem)
+            {
+                hash.Add(CHGLItem);
             }
             return hash.ToHashCode();
         }
@@ -1710,6 +1974,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
+            }
+            foreach (var item in obj.TransientTypes.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1852,13 +2120,66 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.Screenshot) ?? true))
+            {
+                if(rhs.Screenshot is {} Screenshotrhs)
+                {
+                    item.Screenshot = Screenshotrhs.ToArray();
+                }
+                else
+                {
+                    item.Screenshot = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.TransientTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldModHeader_FieldIndex.TransientTypes);
+                try
+                {
+                    item.TransientTypes.SetTo(
+                        rhs.TransientTypes
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.INTV) ?? true))
             {
-                item.INTV = rhs.INTV;
+                if(rhs.INTV is {} INTVrhs)
+                {
+                    item.INTV = INTVrhs.ToArray();
+                }
+                else
+                {
+                    item.INTV = default;
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.INCC) ?? true))
             {
                 item.INCC = rhs.INCC;
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldModHeader_FieldIndex.CHGL) ?? true))
+            {
+                if(rhs.CHGL is {} CHGLrhs)
+                {
+                    item.CHGL = CHGLrhs.ToArray();
+                }
+                else
+                {
+                    item.CHGL = default;
+                }
             }
         }
         
@@ -2008,7 +2329,22 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Screenshot,
+                header: translationParams.ConvertToCustom(RecordTypes.SCRN));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITransientTypeGetter>.Instance.Write(
+                writer: writer,
+                items: item.TransientTypes,
+                transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((TransientTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.INTV,
                 header: translationParams.ConvertToCustom(RecordTypes.INTV));
@@ -2016,6 +2352,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.INCC,
                 header: translationParams.ConvertToCustom(RecordTypes.INCC));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.CHGL,
+                header: translationParams.ConvertToCustom(RecordTypes.CHGL));
         }
 
         public static partial void WriteBinaryMasterReferencesCustom(
@@ -2142,10 +2482,26 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>>();
                     return (int)StarfieldModHeader_FieldIndex.OverriddenForms;
                 }
+                case RecordTypeInts.SCRN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Screenshot = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)StarfieldModHeader_FieldIndex.Screenshot;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    item.TransientTypes.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TransientType>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: TransientType_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: TransientType.TryCreateFromBinary));
+                    return (int)StarfieldModHeader_FieldIndex.TransientTypes;
+                }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTV = frame.ReadInt32();
+                    item.INTV = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)StarfieldModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
@@ -2153,6 +2509,12 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
                     return (int)StarfieldModHeader_FieldIndex.INCC;
+                }
+                case RecordTypeInts.CHGL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CHGL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)StarfieldModHeader_FieldIndex.CHGL;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -2261,13 +2623,22 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = Array.Empty<IMasterReferenceGetter>();
         public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>>? OverriddenForms { get; private set; }
+        #region Screenshot
+        private int? _ScreenshotLocation;
+        public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<ITransientTypeGetter> TransientTypes { get; private set; } = Array.Empty<ITransientTypeGetter>();
         #region INTV
         private int? _INTVLocation;
-        public Int32? INTV => _INTVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTVLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        public ReadOnlyMemorySlice<Byte>? INTV => _INTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INTVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region INCC
         private int? _INCCLocation;
         public Int32? INCC => _INCCLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INCCLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
+        #region CHGL
+        private int? _CHGLLocation;
+        public ReadOnlyMemorySlice<Byte>? CHGL => _CHGLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CHGLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2381,6 +2752,26 @@ namespace Mutagen.Bethesda.Starfield
                     stream.Position += subLen;
                     return (int)StarfieldModHeader_FieldIndex.OverriddenForms;
                 }
+                case RecordTypeInts.SCRN:
+                {
+                    _ScreenshotLocation = (stream.Position - offset);
+                    return (int)StarfieldModHeader_FieldIndex.Screenshot;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    this.TransientTypes = BinaryOverlayList.FactoryByArray<ITransientTypeGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => TransientTypeBinaryOverlay.TransientTypeFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: TransientType_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)StarfieldModHeader_FieldIndex.TransientTypes;
+                }
                 case RecordTypeInts.INTV:
                 {
                     _INTVLocation = (stream.Position - offset);
@@ -2390,6 +2781,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _INCCLocation = (stream.Position - offset);
                     return (int)StarfieldModHeader_FieldIndex.INCC;
+                }
+                case RecordTypeInts.CHGL:
+                {
+                    _CHGLLocation = (stream.Position - offset);
+                    return (int)StarfieldModHeader_FieldIndex.CHGL;
                 }
                 case RecordTypeInts.XXXX:
                 {
