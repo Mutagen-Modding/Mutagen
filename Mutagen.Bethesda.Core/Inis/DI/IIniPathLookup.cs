@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Environments.DI;
+using Noggog;
 
 namespace Mutagen.Bethesda.Inis.DI;
 
@@ -9,8 +10,19 @@ public interface IIniPathLookup
 
 public class IniPathLookup : IIniPathLookup
 {
+    private readonly IGameDirectoryLookup _gameDirectoryLookup;
+
+    public IniPathLookup(IGameDirectoryLookup gameDirectoryLookup)
+    {
+        _gameDirectoryLookup = gameDirectoryLookup;
+    }
+    
     public FilePath Get(GameRelease release)
     {
+        if (release == GameRelease.Starfield)
+        {
+            return Path.Combine(_gameDirectoryLookup.Get(release), ToIniName(release));
+        }
         var docsString = ToMyDocumentsString(release);
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
@@ -47,6 +59,7 @@ public class IniPathLookup : IIniPathLookup
             GameRelease.EnderalSE => "Enderal",
             GameRelease.SkyrimVR => "SkyrimVR",
             GameRelease.Fallout4 => "Fallout4",
+            GameRelease.Starfield => "Starfield",
             _ => throw new NotImplementedException(),
         };
     }

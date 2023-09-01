@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Inis.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Inis;
@@ -6,7 +7,8 @@ namespace Mutagen.Bethesda.Inis;
 // Private until API can be made more mature
 internal class Ini
 {
-    private static readonly IniPathLookup Lookup = new();
+    private static readonly IniPathLookup Lookup = new(
+        new GameLocator());
     
     public static FilePath GetTypicalPath(GameRelease release)
     {
