@@ -21,14 +21,14 @@ public class IniPathLookup : IIniPathLookup
     {
         if (release == GameRelease.Starfield)
         {
-            return Path.Combine(_gameDirectoryLookup.Get(release), ToIniName(release));
+            return Path.Combine(_gameDirectoryLookup.Get(release), ToIniFileName(release));
         }
         var docsString = ToMyDocumentsString(release);
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             "My Games",
             docsString, 
-            $"{ToIniName(release)}.ini");
+            ToIniFileName(release));
     }
 
     public static string ToMyDocumentsString(GameRelease release)
@@ -62,5 +62,10 @@ public class IniPathLookup : IIniPathLookup
             GameRelease.Starfield => "Starfield",
             _ => throw new NotImplementedException(),
         };
+    }
+
+    public static string ToIniFileName(GameRelease release)
+    {
+        return $"{ToIniName(release)}.ini";
     }
 }
