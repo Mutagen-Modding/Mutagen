@@ -2,13 +2,12 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Keyword" recordType="KYWD" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" GUID="d8cd5433-f6e7-4487-8706-3ef3547903da" ID="79">
     <Fields>
-      <String name="BFCB" recordType="BFCB" />
-      <ByteArray name="BFCE" recordType="BFCE" />
+      <RefList name="BFCBs" refName="BFCBRecord" unknown="true" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <String name="Notes" recordType="DNAM" />
       <Enum name="Type" enumName="Keyword.TypeEnum" byteLength="4" recordType="TNAM" />
-      <ByteArray name="FNAM" recordType="FNAM" />
-      <String name="ENAM" recordType="ENAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <String name="ENAM" recordType="ENAM" unknown="true" />
       <FormLink name="AttractionRule" refName="AttractionRule" recordType="DATA" />
       <String name="Name" recordType="FULL" translated="Normal" />
     </Fields>

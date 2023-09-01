@@ -9,12 +9,10 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -24,7 +22,6 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
-using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -43,17 +40,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    /// <summary>
-    /// Aspects: IKeywordCommon
-    /// </summary>
-    public partial class Keyword :
+    public partial class LocationReferenceType :
         StarfieldMajorRecord,
-        IEquatable<IKeywordGetter>,
-        IKeywordInternal,
-        ILoquiObjectSetter<Keyword>
+        IEquatable<ILocationReferenceTypeGetter>,
+        ILocationReferenceTypeInternal,
+        ILoquiObjectSetter<LocationReferenceType>
     {
         #region Ctor
-        protected Keyword()
+        protected LocationReferenceType()
         {
             CustomCtor();
         }
@@ -70,24 +64,25 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IBFCBRecordGetter> IKeywordGetter.BFCBs => _BFCBs;
+        IReadOnlyList<IBFCBRecordGetter> ILocationReferenceTypeGetter.BFCBs => _BFCBs;
         #endregion
 
         #endregion
         #region Color
         public Color? Color { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color? IKeywordGetter.Color => this.Color;
+        Color? ILocationReferenceTypeGetter.Color => this.Color;
         #endregion
-        #region Notes
-        public String? Notes { get; set; }
+        #region TNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IKeywordGetter.Notes => this.Notes;
-        #endregion
-        #region Type
-        public Keyword.TypeEnum? Type { get; set; }
+        protected MemorySlice<Byte>? _TNAM;
+        public MemorySlice<Byte>? TNAM
+        {
+            get => this._TNAM;
+            set => this._TNAM = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Keyword.TypeEnum? IKeywordGetter.Type => this.Type;
+        ReadOnlyMemorySlice<Byte>? ILocationReferenceTypeGetter.TNAM => this.TNAM;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,58 +93,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._FNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IKeywordGetter.FNAM => this.FNAM;
-        #endregion
-        #region ENAM
-        public String? ENAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IKeywordGetter.ENAM => this.ENAM;
-        #endregion
-        #region AttractionRule
-        private readonly IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
-        public IFormLinkNullable<IAttractionRuleGetter> AttractionRule
-        {
-            get => _AttractionRule;
-            set => _AttractionRule.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;
-        #endregion
-        #region Name
-        /// <summary>
-        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
-        /// </summary>
-        public TranslatedString? Name { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IKeywordGetter.Name => this.Name;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamedGetter.Name => this.Name?.String;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamed.Name
-        {
-            get => this.Name?.String;
-            set => this.Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name?.String ?? string.Empty;
-            set => this.Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TranslatedString ITranslatedNamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-        #endregion
+        ReadOnlyMemorySlice<Byte>? ILocationReferenceTypeGetter.FNAM => this.FNAM;
         #endregion
 
         #region To String
@@ -158,7 +102,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            KeywordMixIn.Print(
+            LocationReferenceTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -178,12 +122,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BFCBs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BFCBRecord.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BFCBRecord.Mask<TItem>?>>());
                 this.Color = initialValue;
-                this.Notes = initialValue;
-                this.Type = initialValue;
+                this.TNAM = initialValue;
                 this.FNAM = initialValue;
-                this.ENAM = initialValue;
-                this.AttractionRule = initialValue;
-                this.Name = initialValue;
             }
 
             public Mask(
@@ -196,12 +136,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem BFCBs,
                 TItem Color,
-                TItem Notes,
-                TItem Type,
-                TItem FNAM,
-                TItem ENAM,
-                TItem AttractionRule,
-                TItem Name)
+                TItem TNAM,
+                TItem FNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -213,12 +149,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BFCBs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BFCBRecord.Mask<TItem>?>>?>(BFCBs, Enumerable.Empty<MaskItemIndexed<TItem, BFCBRecord.Mask<TItem>?>>());
                 this.Color = Color;
-                this.Notes = Notes;
-                this.Type = Type;
+                this.TNAM = TNAM;
                 this.FNAM = FNAM;
-                this.ENAM = ENAM;
-                this.AttractionRule = AttractionRule;
-                this.Name = Name;
             }
 
             #pragma warning disable CS8618
@@ -232,12 +164,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BFCBRecord.Mask<TItem>?>>?>? BFCBs;
             public TItem Color;
-            public TItem Notes;
-            public TItem Type;
+            public TItem TNAM;
             public TItem FNAM;
-            public TItem ENAM;
-            public TItem AttractionRule;
-            public TItem Name;
             #endregion
 
             #region Equals
@@ -253,12 +181,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.BFCBs, rhs.BFCBs)) return false;
                 if (!object.Equals(this.Color, rhs.Color)) return false;
-                if (!object.Equals(this.Notes, rhs.Notes)) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.ENAM, rhs.ENAM)) return false;
-                if (!object.Equals(this.AttractionRule, rhs.AttractionRule)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -266,12 +190,8 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.BFCBs);
                 hash.Add(this.Color);
-                hash.Add(this.Notes);
-                hash.Add(this.Type);
+                hash.Add(this.TNAM);
                 hash.Add(this.FNAM);
-                hash.Add(this.ENAM);
-                hash.Add(this.AttractionRule);
-                hash.Add(this.Name);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -295,12 +215,8 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Color)) return false;
-                if (!eval(this.Notes)) return false;
-                if (!eval(this.Type)) return false;
+                if (!eval(this.TNAM)) return false;
                 if (!eval(this.FNAM)) return false;
-                if (!eval(this.ENAM)) return false;
-                if (!eval(this.AttractionRule)) return false;
-                if (!eval(this.Name)) return false;
                 return true;
             }
             #endregion
@@ -322,12 +238,8 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Color)) return true;
-                if (eval(this.Notes)) return true;
-                if (eval(this.Type)) return true;
+                if (eval(this.TNAM)) return true;
                 if (eval(this.FNAM)) return true;
-                if (eval(this.ENAM)) return true;
-                if (eval(this.AttractionRule)) return true;
-                if (eval(this.Name)) return true;
                 return false;
             }
             #endregion
@@ -335,7 +247,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Keyword.Mask<R>();
+                var ret = new LocationReferenceType.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -359,28 +271,24 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Color = eval(this.Color);
-                obj.Notes = eval(this.Notes);
-                obj.Type = eval(this.Type);
+                obj.TNAM = eval(this.TNAM);
                 obj.FNAM = eval(this.FNAM);
-                obj.ENAM = eval(this.ENAM);
-                obj.AttractionRule = eval(this.AttractionRule);
-                obj.Name = eval(this.Name);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Keyword.Mask<bool>? printMask = null)
+            public string Print(LocationReferenceType.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Keyword.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationReferenceType.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Keyword.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(LocationReferenceType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if ((printMask?.BFCBs?.Overall ?? true)
@@ -406,29 +314,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Color, "Color");
                     }
-                    if (printMask?.Notes ?? true)
+                    if (printMask?.TNAM ?? true)
                     {
-                        sb.AppendItem(Notes, "Notes");
-                    }
-                    if (printMask?.Type ?? true)
-                    {
-                        sb.AppendItem(Type, "Type");
+                        sb.AppendItem(TNAM, "TNAM");
                     }
                     if (printMask?.FNAM ?? true)
                     {
                         sb.AppendItem(FNAM, "FNAM");
-                    }
-                    if (printMask?.ENAM ?? true)
-                    {
-                        sb.AppendItem(ENAM, "ENAM");
-                    }
-                    if (printMask?.AttractionRule ?? true)
-                    {
-                        sb.AppendItem(AttractionRule, "AttractionRule");
-                    }
-                    if (printMask?.Name ?? true)
-                    {
-                        sb.AppendItem(Name, "Name");
                     }
                 }
             }
@@ -443,36 +335,24 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BFCBRecord.ErrorMask?>>?>? BFCBs;
             public Exception? Color;
-            public Exception? Notes;
-            public Exception? Type;
+            public Exception? TNAM;
             public Exception? FNAM;
-            public Exception? ENAM;
-            public Exception? AttractionRule;
-            public Exception? Name;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
+                LocationReferenceType_FieldIndex enu = (LocationReferenceType_FieldIndex)index;
                 switch (enu)
                 {
-                    case Keyword_FieldIndex.BFCBs:
+                    case LocationReferenceType_FieldIndex.BFCBs:
                         return BFCBs;
-                    case Keyword_FieldIndex.Color:
+                    case LocationReferenceType_FieldIndex.Color:
                         return Color;
-                    case Keyword_FieldIndex.Notes:
-                        return Notes;
-                    case Keyword_FieldIndex.Type:
-                        return Type;
-                    case Keyword_FieldIndex.FNAM:
+                    case LocationReferenceType_FieldIndex.TNAM:
+                        return TNAM;
+                    case LocationReferenceType_FieldIndex.FNAM:
                         return FNAM;
-                    case Keyword_FieldIndex.ENAM:
-                        return ENAM;
-                    case Keyword_FieldIndex.AttractionRule:
-                        return AttractionRule;
-                    case Keyword_FieldIndex.Name:
-                        return Name;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -480,32 +360,20 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
+                LocationReferenceType_FieldIndex enu = (LocationReferenceType_FieldIndex)index;
                 switch (enu)
                 {
-                    case Keyword_FieldIndex.BFCBs:
+                    case LocationReferenceType_FieldIndex.BFCBs:
                         this.BFCBs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BFCBRecord.ErrorMask?>>?>(ex, null);
                         break;
-                    case Keyword_FieldIndex.Color:
+                    case LocationReferenceType_FieldIndex.Color:
                         this.Color = ex;
                         break;
-                    case Keyword_FieldIndex.Notes:
-                        this.Notes = ex;
+                    case LocationReferenceType_FieldIndex.TNAM:
+                        this.TNAM = ex;
                         break;
-                    case Keyword_FieldIndex.Type:
-                        this.Type = ex;
-                        break;
-                    case Keyword_FieldIndex.FNAM:
+                    case LocationReferenceType_FieldIndex.FNAM:
                         this.FNAM = ex;
-                        break;
-                    case Keyword_FieldIndex.ENAM:
-                        this.ENAM = ex;
-                        break;
-                    case Keyword_FieldIndex.AttractionRule:
-                        this.AttractionRule = ex;
-                        break;
-                    case Keyword_FieldIndex.Name:
-                        this.Name = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -515,32 +383,20 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Keyword_FieldIndex enu = (Keyword_FieldIndex)index;
+                LocationReferenceType_FieldIndex enu = (LocationReferenceType_FieldIndex)index;
                 switch (enu)
                 {
-                    case Keyword_FieldIndex.BFCBs:
+                    case LocationReferenceType_FieldIndex.BFCBs:
                         this.BFCBs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BFCBRecord.ErrorMask?>>?>)obj;
                         break;
-                    case Keyword_FieldIndex.Color:
+                    case LocationReferenceType_FieldIndex.Color:
                         this.Color = (Exception?)obj;
                         break;
-                    case Keyword_FieldIndex.Notes:
-                        this.Notes = (Exception?)obj;
+                    case LocationReferenceType_FieldIndex.TNAM:
+                        this.TNAM = (Exception?)obj;
                         break;
-                    case Keyword_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
-                        break;
-                    case Keyword_FieldIndex.FNAM:
+                    case LocationReferenceType_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
-                        break;
-                    case Keyword_FieldIndex.ENAM:
-                        this.ENAM = (Exception?)obj;
-                        break;
-                    case Keyword_FieldIndex.AttractionRule:
-                        this.AttractionRule = (Exception?)obj;
-                        break;
-                    case Keyword_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -553,12 +409,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (BFCBs != null) return true;
                 if (Color != null) return true;
-                if (Notes != null) return true;
-                if (Type != null) return true;
+                if (TNAM != null) return true;
                 if (FNAM != null) return true;
-                if (ENAM != null) return true;
-                if (AttractionRule != null) return true;
-                if (Name != null) return true;
                 return false;
             }
             #endregion
@@ -607,22 +459,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Color, "Color");
                 }
                 {
-                    sb.AppendItem(Notes, "Notes");
-                }
-                {
-                    sb.AppendItem(Type, "Type");
+                    sb.AppendItem(TNAM, "TNAM");
                 }
                 {
                     sb.AppendItem(FNAM, "FNAM");
-                }
-                {
-                    sb.AppendItem(ENAM, "ENAM");
-                }
-                {
-                    sb.AppendItem(AttractionRule, "AttractionRule");
-                }
-                {
-                    sb.AppendItem(Name, "Name");
                 }
             }
             #endregion
@@ -634,12 +474,8 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.BFCBs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BFCBRecord.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BFCBs?.Overall, rhs.BFCBs?.Overall), Noggog.ExceptionExt.Combine(this.BFCBs?.Specific, rhs.BFCBs?.Specific));
                 ret.Color = this.Color.Combine(rhs.Color);
-                ret.Notes = this.Notes.Combine(rhs.Notes);
-                ret.Type = this.Type.Combine(rhs.Type);
+                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.ENAM = this.ENAM.Combine(rhs.ENAM);
-                ret.AttractionRule = this.AttractionRule.Combine(rhs.AttractionRule);
-                ret.Name = this.Name.Combine(rhs.Name);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -664,12 +500,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public BFCBRecord.TranslationMask? BFCBs;
             public bool Color;
-            public bool Notes;
-            public bool Type;
+            public bool TNAM;
             public bool FNAM;
-            public bool ENAM;
-            public bool AttractionRule;
-            public bool Name;
             #endregion
 
             #region Ctors
@@ -679,12 +511,8 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Color = defaultOn;
-                this.Notes = defaultOn;
-                this.Type = defaultOn;
+                this.TNAM = defaultOn;
                 this.FNAM = defaultOn;
-                this.ENAM = defaultOn;
-                this.AttractionRule = defaultOn;
-                this.Name = defaultOn;
             }
 
             #endregion
@@ -694,12 +522,8 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((BFCBs == null ? DefaultOn : !BFCBs.GetCrystal().CopyNothing, BFCBs?.GetCrystal()));
                 ret.Add((Color, null));
-                ret.Add((Notes, null));
-                ret.Add((Type, null));
+                ret.Add((TNAM, null));
                 ret.Add((FNAM, null));
-                ret.Add((ENAM, null));
-                ret.Add((AttractionRule, null));
-                ret.Add((Name, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -711,17 +535,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Keyword_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => KeywordCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeywordSetterCommon.Instance.RemapLinks(this, mapping);
-        public Keyword(FormKey formKey)
+        public static readonly RecordType GrupRecordType = LocationReferenceType_Registration.TriggeringRecordType;
+        public LocationReferenceType(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private Keyword(
+        private LocationReferenceType(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -730,7 +552,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Keyword(
+        internal LocationReferenceType(
             FormKey formKey,
             ushort formVersion)
         {
@@ -739,12 +561,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Keyword(IStarfieldMod mod)
+        public LocationReferenceType(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Keyword(IStarfieldMod mod, string editorID)
+        public LocationReferenceType(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -752,16 +574,11 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Keyword>.ToString(this);
+            return MajorRecordPrinter<LocationReferenceType>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IKeyword);
+        protected override Type LinkType => typeof(ILocationReferenceType);
 
-        public MajorFlag MajorFlags
-        {
-            get => (MajorFlag)this.MajorRecordFlagsRaw;
-            set => this.MajorRecordFlagsRaw = (int)value;
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -769,16 +586,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IKeywordGetter rhs) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILocationReferenceTypeGetter rhs) return false;
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IKeywordGetter? obj)
+        public bool Equals(ILocationReferenceTypeGetter? obj)
         {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -786,23 +603,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LocationReferenceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((KeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Keyword CreateFromBinary(
+        public new static LocationReferenceType CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Keyword();
-            ((KeywordSetterCommon)((IKeywordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LocationReferenceType();
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -813,7 +630,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Keyword item,
+            out LocationReferenceType item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -828,134 +645,92 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((KeywordSetterCommon)((IKeywordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Keyword GetNew()
+        internal static new LocationReferenceType GetNew()
         {
-            return new Keyword();
+            return new LocationReferenceType();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Aspects: IKeywordCommon
-    /// </summary>
-    public partial interface IKeyword :
-        IFormLinkContainer,
-        IKeywordCommon,
-        IKeywordGetter,
-        IKeywordLinkedReference,
-        ILoquiObjectSetter<IKeywordInternal>,
-        INamed,
-        INamedRequired,
-        IStarfieldMajorRecordInternal,
-        ITranslatedNamed,
-        ITranslatedNamedRequired
+    public partial interface ILocationReferenceType :
+        ILocationRecord,
+        ILocationReferenceTypeGetter,
+        ILoquiObjectSetter<ILocationReferenceTypeInternal>,
+        IStarfieldMajorRecordInternal
     {
         new ExtendedList<BFCBRecord> BFCBs { get; }
         new Color? Color { get; set; }
-        new String? Notes { get; set; }
-        new Keyword.TypeEnum? Type { get; set; }
+        new MemorySlice<Byte>? TNAM { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
-        new String? ENAM { get; set; }
-        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
-        /// <summary>
-        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
-        /// </summary>
-        new TranslatedString? Name { get; set; }
-        #region Mutagen
-        new Keyword.MajorFlag MajorFlags { get; set; }
-        #endregion
-
     }
 
-    public partial interface IKeywordInternal :
+    public partial interface ILocationReferenceTypeInternal :
         IStarfieldMajorRecordInternal,
-        IKeyword,
-        IKeywordGetter
+        ILocationReferenceType,
+        ILocationReferenceTypeGetter
     {
     }
 
-    /// <summary>
-    /// Aspects: IKeywordCommonGetter
-    /// </summary>
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.KYWD)]
-    public partial interface IKeywordGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.LCRT)]
+    public partial interface ILocationReferenceTypeGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        IKeywordCommonGetter,
-        IKeywordLinkedReferenceGetter,
-        ILoquiObject<IKeywordGetter>,
-        IMapsToGetter<IKeywordGetter>,
-        INamedGetter,
-        INamedRequiredGetter,
-        ITranslatedNamedGetter,
-        ITranslatedNamedRequiredGetter
+        ILocationRecordGetter,
+        ILoquiObject<ILocationReferenceTypeGetter>,
+        IMapsToGetter<ILocationReferenceTypeGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         IReadOnlyList<IBFCBRecordGetter> BFCBs { get; }
         Color? Color { get; }
-        String? Notes { get; }
-        Keyword.TypeEnum? Type { get; }
+        ReadOnlyMemorySlice<Byte>? TNAM { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
-        String? ENAM { get; }
-        IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
-        #region Name
-        /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
-        /// </summary>
-        ITranslatedStringGetter? Name { get; }
-        #endregion
-
-        #region Mutagen
-        Keyword.MajorFlag MajorFlags { get; }
-        #endregion
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class KeywordMixIn
+    public static partial class LocationReferenceTypeMixIn
     {
-        public static void Clear(this IKeywordInternal item)
+        public static void Clear(this ILocationReferenceTypeInternal item)
         {
-            ((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Keyword.Mask<bool> GetEqualsMask(
-            this IKeywordGetter item,
-            IKeywordGetter rhs,
+        public static LocationReferenceType.Mask<bool> GetEqualsMask(
+            this ILocationReferenceTypeGetter item,
+            ILocationReferenceTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IKeywordGetter item,
+            this ILocationReferenceTypeGetter item,
             string? name = null,
-            Keyword.Mask<bool>? printMask = null)
+            LocationReferenceType.Mask<bool>? printMask = null)
         {
-            return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Print(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IKeywordGetter item,
+            this ILocationReferenceTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Keyword.Mask<bool>? printMask = null)
+            LocationReferenceType.Mask<bool>? printMask = null)
         {
-            ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Print(
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -963,39 +738,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IKeywordGetter item,
-            IKeywordGetter rhs,
-            Keyword.TranslationMask? equalsMask = null)
+            this ILocationReferenceTypeGetter item,
+            ILocationReferenceTypeGetter rhs,
+            LocationReferenceType.TranslationMask? equalsMask = null)
         {
-            return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Equals(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IKeywordInternal lhs,
-            IKeywordGetter rhs,
-            out Keyword.ErrorMask errorMask,
-            Keyword.TranslationMask? copyMask = null)
+            this ILocationReferenceTypeInternal lhs,
+            ILocationReferenceTypeGetter rhs,
+            out LocationReferenceType.ErrorMask errorMask,
+            LocationReferenceType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Keyword.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocationReferenceType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IKeywordInternal lhs,
-            IKeywordGetter rhs,
+            this ILocationReferenceTypeInternal lhs,
+            ILocationReferenceTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((KeywordSetterTranslationCommon)((IKeywordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1003,55 +778,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Keyword DeepCopy(
-            this IKeywordGetter item,
-            Keyword.TranslationMask? copyMask = null)
+        public static LocationReferenceType DeepCopy(
+            this ILocationReferenceTypeGetter item,
+            LocationReferenceType.TranslationMask? copyMask = null)
         {
-            return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Keyword DeepCopy(
-            this IKeywordGetter item,
-            out Keyword.ErrorMask errorMask,
-            Keyword.TranslationMask? copyMask = null)
+        public static LocationReferenceType DeepCopy(
+            this ILocationReferenceTypeGetter item,
+            out LocationReferenceType.ErrorMask errorMask,
+            LocationReferenceType.TranslationMask? copyMask = null)
         {
-            return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Keyword DeepCopy(
-            this IKeywordGetter item,
+        public static LocationReferenceType DeepCopy(
+            this ILocationReferenceTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((KeywordSetterTranslationCommon)((IKeywordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Keyword Duplicate(
-            this IKeywordGetter item,
+        public static LocationReferenceType Duplicate(
+            this ILocationReferenceTypeGetter item,
             FormKey formKey,
-            Keyword.TranslationMask? copyMask = null)
+            LocationReferenceType.TranslationMask? copyMask = null)
         {
-            return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Duplicate(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Keyword Duplicate(
-            this IKeywordGetter item,
+        public static LocationReferenceType Duplicate(
+            this ILocationReferenceTypeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Duplicate(
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -1061,11 +836,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IKeywordInternal item,
+            this ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((KeywordSetterCommon)((IKeywordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LocationReferenceTypeSetterCommon)((ILocationReferenceTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -1081,7 +856,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Keyword_FieldIndex
+    internal enum LocationReferenceType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1092,50 +867,46 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         BFCBs = 7,
         Color = 8,
-        Notes = 9,
-        Type = 10,
-        FNAM = 11,
-        ENAM = 12,
-        AttractionRule = 13,
-        Name = 14,
+        TNAM = 9,
+        FNAM = 10,
     }
     #endregion
 
     #region Registration
-    internal partial class Keyword_Registration : ILoquiRegistration
+    internal partial class LocationReferenceType_Registration : ILoquiRegistration
     {
-        public static readonly Keyword_Registration Instance = new Keyword_Registration();
+        public static readonly LocationReferenceType_Registration Instance = new LocationReferenceType_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 79,
+            msgID: 33,
             version: 0);
 
-        public const string GUID = "d8cd5433-f6e7-4487-8706-3ef3547903da";
+        public const string GUID = "c5ecd244-8303-4cd2-8eb5-007a988a3842";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 11;
 
-        public static readonly Type MaskType = typeof(Keyword.Mask<>);
+        public static readonly Type MaskType = typeof(LocationReferenceType.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Keyword.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LocationReferenceType.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Keyword);
+        public static readonly Type ClassType = typeof(LocationReferenceType);
 
-        public static readonly Type GetterType = typeof(IKeywordGetter);
+        public static readonly Type GetterType = typeof(ILocationReferenceTypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IKeyword);
+        public static readonly Type SetterType = typeof(ILocationReferenceType);
 
-        public static readonly Type? InternalSetterType = typeof(IKeywordInternal);
+        public static readonly Type? InternalSetterType = typeof(ILocationReferenceTypeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Keyword";
+        public const string FullName = "Mutagen.Bethesda.Starfield.LocationReferenceType";
 
-        public const string Name = "Keyword";
+        public const string Name = "LocationReferenceType";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -1143,27 +914,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.KYWD;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.LCRT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.KYWD);
+            var triggers = RecordCollection.Factory(RecordTypes.LCRT);
             var all = RecordCollection.Factory(
-                RecordTypes.KYWD,
+                RecordTypes.LCRT,
                 RecordTypes.BFCB,
                 RecordTypes.INTV,
                 RecordTypes.FLTR,
                 RecordTypes.BFCE,
                 RecordTypes.CNAM,
-                RecordTypes.DNAM,
                 RecordTypes.TNAM,
-                RecordTypes.FNAM,
-                RecordTypes.ENAM,
-                RecordTypes.DATA,
-                RecordTypes.FULL);
+                RecordTypes.FNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(KeywordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1196,57 +963,52 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class KeywordSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class LocationReferenceTypeSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly KeywordSetterCommon Instance = new KeywordSetterCommon();
+        public new static readonly LocationReferenceTypeSetterCommon Instance = new LocationReferenceTypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IKeywordInternal item)
+        public void Clear(ILocationReferenceTypeInternal item)
         {
             ClearPartial();
             item.BFCBs.Clear();
             item.Color = default;
-            item.Notes = default;
-            item.Type = default;
+            item.TNAM = default;
             item.FNAM = default;
-            item.ENAM = default;
-            item.AttractionRule.Clear();
-            item.Name = default;
             base.Clear(item);
         }
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IKeywordInternal)item);
+            Clear(item: (ILocationReferenceTypeInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IKeywordInternal)item);
+            Clear(item: (ILocationReferenceTypeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IKeyword obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILocationReferenceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AttractionRule.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IKeywordInternal item,
+            ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IKeywordInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ILocationReferenceTypeInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: KeywordBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: KeywordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: LocationReferenceTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LocationReferenceTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1255,7 +1017,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Keyword)item,
+                item: (LocationReferenceType)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1266,7 +1028,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Keyword)item,
+                item: (LocationReferenceType)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1274,17 +1036,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class KeywordCommon : StarfieldMajorRecordCommon
+    internal partial class LocationReferenceTypeCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly KeywordCommon Instance = new KeywordCommon();
+        public new static readonly LocationReferenceTypeCommon Instance = new LocationReferenceTypeCommon();
 
-        public Keyword.Mask<bool> GetEqualsMask(
-            IKeywordGetter item,
-            IKeywordGetter rhs,
+        public LocationReferenceType.Mask<bool> GetEqualsMask(
+            ILocationReferenceTypeGetter item,
+            ILocationReferenceTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Keyword.Mask<bool>(false);
-            ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LocationReferenceType.Mask<bool>(false);
+            ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1293,9 +1055,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IKeywordGetter item,
-            IKeywordGetter rhs,
-            Keyword.Mask<bool> ret,
+            ILocationReferenceTypeGetter item,
+            ILocationReferenceTypeGetter rhs,
+            LocationReferenceType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.BFCBs = item.BFCBs.CollectionEqualsHelper(
@@ -1303,19 +1065,15 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.Notes = string.Equals(item.Notes, rhs.Notes);
-            ret.Type = item.Type == rhs.Type;
+            ret.TNAM = MemorySliceExt.SequenceEqual(item.TNAM, rhs.TNAM);
             ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
-            ret.ENAM = string.Equals(item.ENAM, rhs.ENAM);
-            ret.AttractionRule = item.AttractionRule.Equals(rhs.AttractionRule);
-            ret.Name = object.Equals(item.Name, rhs.Name);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IKeywordGetter item,
+            ILocationReferenceTypeGetter item,
             string? name = null,
-            Keyword.Mask<bool>? printMask = null)
+            LocationReferenceType.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1327,18 +1085,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IKeywordGetter item,
+            ILocationReferenceTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Keyword.Mask<bool>? printMask = null)
+            LocationReferenceType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Keyword =>");
+                sb.AppendLine($"LocationReferenceType =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Keyword) =>");
+                sb.AppendLine($"{name} (LocationReferenceType) =>");
             }
             using (sb.Brace())
             {
@@ -1350,9 +1108,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IKeywordGetter item,
+            ILocationReferenceTypeGetter item,
             StructuredStringBuilder sb,
-            Keyword.Mask<bool>? printMask = null)
+            LocationReferenceType.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1377,72 +1135,53 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ColorItem, "Color");
             }
-            if ((printMask?.Notes ?? true)
-                && item.Notes is {} NotesItem)
+            if ((printMask?.TNAM ?? true)
+                && item.TNAM is {} TNAMItem)
             {
-                sb.AppendItem(NotesItem, "Notes");
-            }
-            if ((printMask?.Type ?? true)
-                && item.Type is {} TypeItem)
-            {
-                sb.AppendItem(TypeItem, "Type");
+                sb.AppendLine($"TNAM => {SpanExt.ToHexString(TNAMItem)}");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM is {} FNAMItem)
             {
                 sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
-            if ((printMask?.ENAM ?? true)
-                && item.ENAM is {} ENAMItem)
-            {
-                sb.AppendItem(ENAMItem, "ENAM");
-            }
-            if (printMask?.AttractionRule ?? true)
-            {
-                sb.AppendItem(item.AttractionRule.FormKeyNullable, "AttractionRule");
-            }
-            if ((printMask?.Name ?? true)
-                && item.Name is {} NameItem)
-            {
-                sb.AppendItem(NameItem, "Name");
-            }
         }
         
-        public static Keyword_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static LocationReferenceType_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Keyword_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new LocationReferenceType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Keyword_FieldIndex)((int)index);
+                    return (LocationReferenceType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1450,43 +1189,27 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IKeywordGetter? lhs,
-            IKeywordGetter? rhs,
+            ILocationReferenceTypeGetter? lhs,
+            ILocationReferenceTypeGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.BFCBs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.BFCBs) ?? true))
             {
-                if (!lhs.BFCBs.SequenceEqual(rhs.BFCBs, (l, r) => ((BFCBRecordCommon)((IBFCBRecordGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Keyword_FieldIndex.BFCBs)))) return false;
+                if (!lhs.BFCBs.SequenceEqual(rhs.BFCBs, (l, r) => ((BFCBRecordCommon)((IBFCBRecordGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LocationReferenceType_FieldIndex.BFCBs)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TNAM, rhs.TNAM)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
-            {
-                if (lhs.Type != rhs.Type) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.FNAM) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.ENAM) ?? true))
-            {
-                if (!string.Equals(lhs.ENAM, rhs.ENAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
-            {
-                if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
-            {
-                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             return true;
         }
@@ -1497,8 +1220,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IKeywordGetter?)lhs,
-                rhs: rhs as IKeywordGetter,
+                lhs: (ILocationReferenceTypeGetter?)lhs,
+                rhs: rhs as ILocationReferenceTypeGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1508,12 +1231,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IKeywordGetter?)lhs,
-                rhs: rhs as IKeywordGetter,
+                lhs: (ILocationReferenceTypeGetter?)lhs,
+                rhs: rhs as ILocationReferenceTypeGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IKeywordGetter item)
+        public virtual int GetHashCode(ILocationReferenceTypeGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.BFCBs);
@@ -1521,26 +1244,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Coloritem);
             }
-            if (item.Notes is {} Notesitem)
+            if (item.TNAM is {} TNAMItem)
             {
-                hash.Add(Notesitem);
-            }
-            if (item.Type is {} Typeitem)
-            {
-                hash.Add(Typeitem);
+                hash.Add(TNAMItem);
             }
             if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
-            }
-            if (item.ENAM is {} ENAMitem)
-            {
-                hash.Add(ENAMitem);
-            }
-            hash.Add(item.AttractionRule);
-            if (item.Name is {} Nameitem)
-            {
-                hash.Add(Nameitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1548,12 +1258,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IKeywordGetter)item);
+            return GetHashCode(item: (ILocationReferenceTypeGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IKeywordGetter)item);
+            return GetHashCode(item: (ILocationReferenceTypeGetter)item);
         }
         
         #endregion
@@ -1561,30 +1271,26 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Keyword.GetNew();
+            return LocationReferenceType.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IKeywordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationReferenceTypeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.AttractionRule, out var AttractionRuleInfo))
-            {
-                yield return AttractionRuleInfo;
-            }
             yield break;
         }
         
         #region Duplicate
-        public Keyword Duplicate(
-            IKeywordGetter item,
+        public LocationReferenceType Duplicate(
+            ILocationReferenceTypeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Keyword(formKey);
+            var newRec = new LocationReferenceType(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1595,7 +1301,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IKeywordGetter)item,
+                item: (ILocationReferenceTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1606,7 +1312,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IKeywordGetter)item,
+                item: (ILocationReferenceTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1616,14 +1322,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class KeywordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class LocationReferenceTypeSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly KeywordSetterTranslationCommon Instance = new KeywordSetterTranslationCommon();
+        public new static readonly LocationReferenceTypeSetterTranslationCommon Instance = new LocationReferenceTypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IKeywordInternal item,
-            IKeywordGetter rhs,
+            ILocationReferenceTypeInternal item,
+            ILocationReferenceTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1637,8 +1343,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IKeyword item,
-            IKeywordGetter rhs,
+            ILocationReferenceType item,
+            ILocationReferenceTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1649,9 +1355,9 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.BFCBs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.BFCBs) ?? true))
             {
-                errorMask?.PushIndex((int)Keyword_FieldIndex.BFCBs);
+                errorMask?.PushIndex((int)LocationReferenceType_FieldIndex.BFCBs);
                 try
                 {
                     item.BFCBs.SetTo(
@@ -1673,19 +1379,22 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
             {
                 item.Color = rhs.Color;
             }
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.TNAM) ?? true))
             {
-                item.Notes = rhs.Notes;
+                if(rhs.TNAM is {} TNAMrhs)
+                {
+                    item.TNAM = TNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.TNAM = default;
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
-            {
-                item.Type = rhs.Type;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.FNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.FNAM) ?? true))
             {
                 if(rhs.FNAM is {} FNAMrhs)
                 {
@@ -1695,18 +1404,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.FNAM = default;
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.ENAM) ?? true))
-            {
-                item.ENAM = rhs.ENAM;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
-            {
-                item.AttractionRule.SetTo(rhs.AttractionRule.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
-            {
-                item.Name = rhs.Name?.DeepCopy();
             }
         }
         
@@ -1718,8 +1415,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IKeywordInternal)item,
-                rhs: (IKeywordGetter)rhs,
+                item: (ILocationReferenceTypeInternal)item,
+                rhs: (ILocationReferenceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1733,8 +1430,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IKeyword)item,
-                rhs: (IKeywordGetter)rhs,
+                item: (ILocationReferenceType)item,
+                rhs: (ILocationReferenceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1748,8 +1445,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IKeywordInternal)item,
-                rhs: (IKeywordGetter)rhs,
+                item: (ILocationReferenceTypeInternal)item,
+                rhs: (ILocationReferenceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1763,8 +1460,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IKeyword)item,
-                rhs: (IKeywordGetter)rhs,
+                item: (ILocationReferenceType)item,
+                rhs: (ILocationReferenceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1772,12 +1469,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Keyword DeepCopy(
-            IKeywordGetter item,
-            Keyword.TranslationMask? copyMask = null)
+        public LocationReferenceType DeepCopy(
+            ILocationReferenceTypeGetter item,
+            LocationReferenceType.TranslationMask? copyMask = null)
         {
-            Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
-            ((KeywordSetterTranslationCommon)((IKeywordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetNew();
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1786,30 +1483,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Keyword DeepCopy(
-            IKeywordGetter item,
-            out Keyword.ErrorMask errorMask,
-            Keyword.TranslationMask? copyMask = null)
+        public LocationReferenceType DeepCopy(
+            ILocationReferenceTypeGetter item,
+            out LocationReferenceType.ErrorMask errorMask,
+            LocationReferenceType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
-            ((KeywordSetterTranslationCommon)((IKeywordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetNew();
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Keyword.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocationReferenceType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Keyword DeepCopy(
-            IKeywordGetter item,
+        public LocationReferenceType DeepCopy(
+            ILocationReferenceTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Keyword ret = (Keyword)((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).GetNew();
-            ((KeywordSetterTranslationCommon)((IKeywordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LocationReferenceType ret = (LocationReferenceType)((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)item).CommonInstance()!).GetNew();
+            ((LocationReferenceTypeSetterTranslationCommon)((ILocationReferenceTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1825,21 +1522,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Keyword
+    public partial class LocationReferenceType
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => KeywordCommon.Instance;
+        protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return KeywordSetterCommon.Instance;
+            return LocationReferenceTypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => KeywordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LocationReferenceTypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1850,14 +1547,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class KeywordBinaryWriteTranslation :
+    public partial class LocationReferenceTypeBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly KeywordBinaryWriteTranslation Instance = new();
+        public new static readonly LocationReferenceTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IKeywordGetter item,
+            ILocationReferenceTypeGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1880,45 +1577,24 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Color,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Notes,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                binaryType: StringBinaryType.NullTerminate);
-            EnumBinaryTranslation<Keyword.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer,
-                item.Type,
-                length: 4,
+                item: item.TNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.ENAM,
-                header: translationParams.ConvertToCustom(RecordTypes.ENAM),
-                binaryType: StringBinaryType.NullTerminate);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.AttractionRule,
-                header: translationParams.ConvertToCustom(RecordTypes.DATA));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Name,
-                header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
         }
 
         public void Write(
             MutagenWriter writer,
-            IKeywordGetter item,
+            ILocationReferenceTypeGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.KYWD)))
+                record: translationParams.ConvertToCustom(RecordTypes.LCRT)))
             {
                 try
                 {
@@ -1948,7 +1624,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IKeywordGetter)item,
+                item: (ILocationReferenceTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1959,7 +1635,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IKeywordGetter)item,
+                item: (ILocationReferenceTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1970,20 +1646,20 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IKeywordGetter)item,
+                item: (ILocationReferenceTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class KeywordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class LocationReferenceTypeBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly KeywordBinaryCreateTranslation Instance = new KeywordBinaryCreateTranslation();
+        public new static readonly LocationReferenceTypeBinaryCreateTranslation Instance = new LocationReferenceTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.KYWD;
+        public override RecordType RecordType => RecordTypes.LCRT;
         public static ParseResult FillBinaryRecordTypes(
-            IKeywordInternal item,
+            ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -2005,58 +1681,25 @@ namespace Mutagen.Bethesda.Starfield
                             triggeringRecord: BFCBRecord_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: BFCBRecord.TryCreateFromBinary));
-                    return (int)Keyword_FieldIndex.BFCBs;
+                    return (int)LocationReferenceType_FieldIndex.BFCBs;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-                    return (int)Keyword_FieldIndex.Color;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Notes = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Keyword_FieldIndex.Notes;
+                    return (int)LocationReferenceType_FieldIndex.Color;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<Keyword.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)Keyword_FieldIndex.Type;
+                    item.TNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LocationReferenceType_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Keyword_FieldIndex.FNAM;
-                }
-                case RecordTypeInts.ENAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ENAM = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Keyword_FieldIndex.ENAM;
-                }
-                case RecordTypeInts.DATA:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttractionRule.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Keyword_FieldIndex.AttractionRule;
-                }
-                case RecordTypeInts.FULL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)Keyword_FieldIndex.Name;
+                    return (int)LocationReferenceType_FieldIndex.FNAM;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2076,7 +1719,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class KeywordBinaryTranslationMixIn
+    public static class LocationReferenceTypeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2085,75 +1728,49 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class KeywordBinaryOverlay :
+    internal partial class LocationReferenceTypeBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IKeywordGetter
+        ILocationReferenceTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Keyword_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Keyword_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LocationReferenceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => KeywordCommon.Instance;
+        protected override object CommonInstance() => LocationReferenceTypeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => KeywordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LocationReferenceTypeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => KeywordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LocationReferenceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((KeywordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LocationReferenceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IKeyword);
+        protected override Type LinkType => typeof(ILocationReferenceType);
 
-        public Keyword.MajorFlag MajorFlags => (Keyword.MajorFlag)this.MajorRecordFlagsRaw;
 
         public IReadOnlyList<IBFCBRecordGetter> BFCBs { get; private set; } = Array.Empty<IBFCBRecordGetter>();
         #region Color
         private int? _ColorLocation;
         public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
-        #region Notes
-        private int? _NotesLocation;
-        public String? Notes => _NotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        #region Type
-        private int? _TypeLocation;
-        public Keyword.TypeEnum? Type => _TypeLocation.HasValue ? (Keyword.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(Keyword.TypeEnum?);
+        #region TNAM
+        private int? _TNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
         public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region ENAM
-        private int? _ENAMLocation;
-        public String? ENAM => _ENAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        #region AttractionRule
-        private int? _AttractionRuleLocation;
-        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
-        #endregion
-        #region Name
-        private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string? INamedGetter.Name => this.Name?.String;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
-        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2161,7 +1778,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected KeywordBinaryOverlay(
+        protected LocationReferenceTypeBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2171,7 +1788,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IKeywordGetter KeywordFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -2183,7 +1800,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new KeywordBinaryOverlay(
+            var ret = new LocationReferenceTypeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -2201,12 +1818,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IKeywordGetter KeywordFactory(
+        public static ILocationReferenceTypeGetter LocationReferenceTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return KeywordFactory(
+            return LocationReferenceTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -2234,42 +1851,22 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams,
                         trigger: BFCBRecord_Registration.TriggerSpecs,
                         factory: BFCBRecordBinaryOverlay.BFCBRecordFactory);
-                    return (int)Keyword_FieldIndex.BFCBs;
+                    return (int)LocationReferenceType_FieldIndex.BFCBs;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
-                    return (int)Keyword_FieldIndex.Color;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    _NotesLocation = (stream.Position - offset);
-                    return (int)Keyword_FieldIndex.Notes;
+                    return (int)LocationReferenceType_FieldIndex.Color;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TypeLocation = (stream.Position - offset);
-                    return (int)Keyword_FieldIndex.Type;
+                    _TNAMLocation = (stream.Position - offset);
+                    return (int)LocationReferenceType_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
-                    return (int)Keyword_FieldIndex.FNAM;
-                }
-                case RecordTypeInts.ENAM:
-                {
-                    _ENAMLocation = (stream.Position - offset);
-                    return (int)Keyword_FieldIndex.ENAM;
-                }
-                case RecordTypeInts.DATA:
-                {
-                    _AttractionRuleLocation = (stream.Position - offset);
-                    return (int)Keyword_FieldIndex.AttractionRule;
-                }
-                case RecordTypeInts.FULL:
-                {
-                    _NameLocation = (stream.Position - offset);
-                    return (int)Keyword_FieldIndex.Name;
+                    return (int)LocationReferenceType_FieldIndex.FNAM;
                 }
                 default:
                     return base.FillRecordType(
@@ -2288,7 +1885,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            KeywordMixIn.Print(
+            LocationReferenceTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -2298,7 +1895,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Keyword>.ToString(this);
+            return MajorRecordPrinter<LocationReferenceType>.ToString(this);
         }
 
         #region Equals and Hash
@@ -2308,16 +1905,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IKeywordGetter rhs) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILocationReferenceTypeGetter rhs) return false;
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IKeywordGetter? obj)
+        public bool Equals(ILocationReferenceTypeGetter? obj)
         {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LocationReferenceTypeCommon)((ILocationReferenceTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

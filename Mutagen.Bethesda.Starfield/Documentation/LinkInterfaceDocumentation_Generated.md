@@ -7,6 +7,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ## Interfaces to Concrete Classes
 ### IKeywordLinkedReference
 - Keyword
+### ILocationRecord
+- LocationReferenceType
 ## Concrete Classes to Interfaces
 ### Keyword
 - IKeywordLinkedReference
+### LocationReferenceType
+- ILocationRecord

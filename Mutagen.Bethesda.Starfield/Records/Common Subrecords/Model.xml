@@ -7,7 +7,7 @@
   </Object>
   <Object name="Model" objType="Subrecord" baseClass="SimpleModel" GUID="0ad037a7-7bd0-4b69-976b-b5c7869c325f" ID="71">
     <Fields>
-      <ByteArray name="Unknown" recordType="MODF" />
+      <ByteArray name="Unknown" recordType="MODF" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

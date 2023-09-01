@@ -6,6 +6,7 @@
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
       <Group name="FFKW" refName="FFKW" />
+      <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
       <Group name="Npcs" refName="Npc" />
       <Group name="Races" refName="Race" />
       <Group name="Weapons" refName="Weapon" />

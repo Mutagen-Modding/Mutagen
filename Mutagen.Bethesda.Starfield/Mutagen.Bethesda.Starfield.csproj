@@ -169,5 +169,12 @@
     <Compile Include="Records\FFKW_Generated.cs">
       <DependentUpon>FFKW.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\LocationReferenceType_Generated.cs">
+      <DependentUpon>LocationReferenceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\BFCBRecord_Generated.cs">
+      <DependentUpon>BFCBRecord.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

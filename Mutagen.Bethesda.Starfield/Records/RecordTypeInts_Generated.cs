@@ -13,6 +13,7 @@ public partial class RecordTypeInts
     public const int EDID = 0x44494445;
     public const int ENAM = 0x4D414E45;
     public const int FFKW = 0x574B4646;
+    public const int FLTR = 0x52544C46;
     public const int FNAM = 0x4D414E46;
     public const int FULL = 0x4C4C5546;
     public const int GMST = 0x54534D47;
@@ -21,6 +22,7 @@ public partial class RecordTypeInts
     public const int INCC = 0x43434E49;
     public const int INTV = 0x56544E49;
     public const int KYWD = 0x4457594B;
+    public const int LCRT = 0x5452434C;
     public const int MAST = 0x5453414D;
     public const int MODF = 0x46444F4D;
     public const int MODL = 0x4C444F4D;

@@ -11,6 +11,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
         LoquiRegistration.Register(
             ModStats_Registration.Instance,
             TransientType_Registration.Instance,
+            LocationReferenceType_Registration.Instance,
             StarfieldGroup_Registration.Instance,
             StarfieldMajorRecord_Registration.Instance,
             StarfieldMod_Registration.Instance,
@@ -28,7 +29,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             GameSettingUInt_Registration.Instance,
             Keyword_Registration.Instance,
             AttractionRule_Registration.Instance,
-            FFKW_Registration.Instance
+            FFKW_Registration.Instance,
+            BFCBRecord_Registration.Instance
         );
     }
 }

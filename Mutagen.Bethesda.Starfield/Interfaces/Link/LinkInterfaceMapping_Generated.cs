@@ -24,6 +24,11 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Keyword_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
+        dict[typeof(ILocationRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            LocationReferenceType_Registration.Instance,
+        });
+        dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }
