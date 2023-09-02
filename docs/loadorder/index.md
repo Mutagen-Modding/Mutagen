@@ -8,11 +8,13 @@ If you want to construct a Load Order object more manually, this will be discuss
 
 ## ModListings
 A `ModListing` consists of:
+
 - A `ModKey`
 - Whether it's marked as enabled
 - Whether "ghosted" and has an extra suffix causes the game to ignore it
 
 A `ModListing` can also be generic, such as `ModListing<ISkyrimModGetter>`.  This will then also contain:
+
 - A nullable Mod object, which is present if the Mod in question exists on disk in the Data Folder
 
 
@@ -21,6 +23,7 @@ A `ModListing` can also be generic, such as `ModListing<ISkyrimModGetter>`.  Thi
 
 ### Priority vs Listed Ordering
 While `LoadOrder` is a "list" of `ModListing` object, two properties are exposed for when you want to enumerate to help clarify behavior:
+
 - **ListedOrder** - Enumerates items in the order they were listed
 - **PriorityOrder** - Enumerates the items so that highest priority comes first (reverse)
 
@@ -100,11 +103,13 @@ LoadOrder.Write(
 
 ## PluginListings and CreationClubListings
 The above API abstracts away the complications that a Load Order is driven from a few sources:
+
 - Implicit Listings (Mods that don't need to be listed, but are assumed)
 - Normal Plugins File (Plugins.txt)
 - Installed Creation Club Mods ([GameName].ccc)
 
 Logic related to each concept lives in its own class:
+
 - Implicits.Listings
 - PluginListings
 - CreationClubListings

@@ -1,4 +1,5 @@
 This article covers three fundamental identifiers:
+
 - **[ModKey](#modkey)** _(a unique identifier for a mod)_
 - **[FormKey](#formkey)** _(FormID)_
 - **[FormLink](#formlink)** _(Typing added to a FormKey)_
@@ -7,6 +8,7 @@ This article covers three fundamental identifiers:
 `ModKey`s represent a unique identifier for a mod, as an alternative to a raw string.
 
 They contain:
+
 - `string` of a mod's name (without '.esp' or '.esm')
 - An `enum` of whether it is a master, plugin, or light master
 
@@ -36,6 +38,7 @@ modKey = ModKey.FromFileName("Skyrim.esm");
 A `FormKey` represents a unique identifier for a record. They are Mutagen's interpretation of a `FormID`.
 
 They contain:
+
 - A record's `uint` ID (without master indices)
 - A `ModKey`
 
@@ -73,6 +76,7 @@ formKey = FormKey.Factory("123456:Skyrim.esm");
 A `FormLink` adds type safety to the concept of a `FormKey`
 
 They contain:
+
 - A `FormKey`
 - A Major Record type `<T>`
 

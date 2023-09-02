@@ -7,12 +7,15 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
 ### IAliasVoiceType
+
 - FormList
 - Npc
 ### IComplexLocation
+
 - Cell
 - Worldspace
 ### IConstructible
+
 - AlchemicalApparatus
 - Ammunition
 - Armor
@@ -26,23 +29,29 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - SoulGem
 - Weapon
 ### IDialog
+
 - DialogResponses
 - DialogTopic
 ### IEffectRecord
+
 - ObjectEffect
 - Spell
 ### IEmittance
+
 - Light
 - Region
 ### IHarvestTarget
+
 - Ingestible
 - Ingredient
 - LeveledItem
 - MiscItem
 ### IIdleRelation
+
 - ActionRecord
 - IdleAnimation
 ### IItem
+
 - AlchemicalApparatus
 - Ammunition
 - Armor
@@ -57,28 +66,35 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - SoulGem
 - Weapon
 ### IKeywordLinkedReference
+
 - APlacedTrap
 - Keyword
 - PlacedNpc
 - PlacedObject
 ### ILinkedReference
+
 - APlacedTrap
 - PlacedNpc
 - PlacedObject
 ### ILocationRecord
+
 - Location
 - LocationReferenceType
 ### ILocationTargetable
+
 - Door
 - PlacedNpc
 - PlacedObject
 ### ILockList
+
 - FormList
 - Npc
 ### INpcSpawn
+
 - LeveledNpc
 - Npc
 ### IObjectId
+
 - Activator
 - Ammunition
 - Armor
@@ -104,147 +120,193 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - TextureSet
 - Weapon
 ### IOutfitTarget
+
 - Armor
 - LeveledItem
 ### IOwner
+
 - Faction
 - PlacedNpc
 ### IPlaced
+
 - APlaced
 - APlacedTrap
 - PlacedNpc
 - PlacedObject
 ### IPlacedSimple
+
 - PlacedNpc
 - PlacedObject
 ### IPlacedThing
+
 - APlacedTrap
 - PlacedObject
 ### IPlacedTrapTarget
+
 - Hazard
 - Projectile
 ### IRegionTarget
+
 - Flora
 - LandscapeTexture
 - MoveableStatic
 - Static
 - Tree
 ### IRelatable
+
 - Faction
 - Race
 ### ISound
+
 - SoundDescriptor
 - SoundMarker
 ### ISpellSpawn
+
 - LeveledSpell
 - Spell
 ## Concrete Classes to Interfaces
 ### ActionRecord
+
 - IIdleRelation
 ### Activator
+
 - IObjectId
 ### AlchemicalApparatus
+
 - IConstructible
 - IItem
 ### Ammunition
+
 - IConstructible
 - IItem
 - IObjectId
 ### APlaced
+
 - IPlaced
 ### APlacedTrap
+
 - IKeywordLinkedReference
 - ILinkedReference
 - IPlaced
 - IPlacedThing
 ### Armor
+
 - IConstructible
 - IItem
 - IObjectId
 - IOutfitTarget
 ### Book
+
 - IConstructible
 - IItem
 - IObjectId
 ### Cell
+
 - IComplexLocation
 ### Container
+
 - IObjectId
 ### DialogResponses
+
 - IDialog
 ### DialogTopic
+
 - IDialog
 ### Door
+
 - ILocationTargetable
 - IObjectId
 ### Faction
+
 - IObjectId
 - IOwner
 - IRelatable
 ### Flora
+
 - IRegionTarget
 ### FormList
+
 - IAliasVoiceType
 - ILockList
 - IObjectId
 ### Furniture
+
 - IObjectId
 ### Hazard
+
 - IPlacedTrapTarget
 ### IdleAnimation
+
 - IIdleRelation
 ### IdleMarker
+
 - IObjectId
 ### Ingestible
+
 - IConstructible
 - IHarvestTarget
 - IItem
 - IObjectId
 ### Ingredient
+
 - IConstructible
 - IHarvestTarget
 - IItem
 ### Key
+
 - IConstructible
 - IItem
 - IObjectId
 ### Keyword
+
 - IKeywordLinkedReference
 ### LandscapeTexture
+
 - IRegionTarget
 ### LeveledItem
+
 - IHarvestTarget
 - IItem
 - IOutfitTarget
 ### LeveledNpc
+
 - INpcSpawn
 ### LeveledSpell
+
 - ISpellSpawn
 ### Light
+
 - IConstructible
 - IEmittance
 - IItem
 - IObjectId
 ### Location
+
 - ILocationRecord
 ### LocationReferenceType
+
 - ILocationRecord
 ### MiscItem
+
 - IConstructible
 - IHarvestTarget
 - IItem
 - IObjectId
 ### MoveableStatic
+
 - IObjectId
 - IRegionTarget
 ### Npc
+
 - IAliasVoiceType
 - ILockList
 - INpcSpawn
 - IObjectId
 ### ObjectEffect
+
 - IEffectRecord
 ### PlacedNpc
+
 - IKeywordLinkedReference
 - ILinkedReference
 - ILocationTargetable
@@ -252,6 +314,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 - IPlacedSimple
 ### PlacedObject
+
 - IKeywordLinkedReference
 - ILinkedReference
 - ILocationTargetable
@@ -259,40 +322,54 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlacedSimple
 - IPlacedThing
 ### Projectile
+
 - IObjectId
 - IPlacedTrapTarget
 ### Race
+
 - IRelatable
 ### Region
+
 - IEmittance
 ### Scroll
+
 - IConstructible
 - IItem
 - IObjectId
 ### Shout
+
 - IObjectId
 ### SoulGem
+
 - IConstructible
 - IItem
 ### SoundDescriptor
+
 - ISound
 ### SoundMarker
+
 - IObjectId
 - ISound
 ### Spell
+
 - IEffectRecord
 - IObjectId
 - ISpellSpawn
 ### Static
+
 - IObjectId
 - IRegionTarget
 ### TextureSet
+
 - IObjectId
 ### Tree
+
 - IRegionTarget
 ### Weapon
+
 - IConstructible
 - IItem
 - IObjectId
 ### Worldspace
+
 - IComplexLocation

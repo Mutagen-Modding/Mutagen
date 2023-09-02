@@ -24,6 +24,7 @@ if (GameLocations.TryGetDataFolder(GameRelease.SkyrimSE, out var dataFolder))
 
 ## Sources
 Currently, Mutagen locates games via a few sources:
+
 - Looks in the registry
 - Looks in Steam systems (via [GameFinder](https://github.com/erri120/GameFinder))
 

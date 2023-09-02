@@ -1,6 +1,7 @@
 # Record Lookup
 ## TryResolve
 `TryResolve` is the typical call for looking up records pointed to by a FormKey.  Similar to how Control-Clicking a FormID in xEdit will bring you to the record a FormID points to.  It takes a LinkCache as a parameter to the call, which will inspect the content it is attached to (whether it's a load order or a single mod) and try to locate the record that matches:
+
 - The FormKey (FormID)
 - The type specified
 
@@ -32,6 +33,7 @@ if (myLinkCache.TryResolve(myFormKey, out var record))
 ```
 
 But the code above has two problems:
+
 - It will only be able to return `IMajorRecordGetter` or some other very umbrella type
 - It will complain that an unoptimized call is used
 

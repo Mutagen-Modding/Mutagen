@@ -1,5 +1,6 @@
 # Interfaces
 Mutagen exposes a few categories of interfaces:
+
 - **[Getters and Setters](#getters-and-setters)** _(Immutable vs Mutable)_
 - **[Aspect](#aspect-interfaces)** _(Expose aspects common to many records)_
 - **[Link](#link-interfaces)** _(Enables FormLinks to point to an umbrella of record types)_
