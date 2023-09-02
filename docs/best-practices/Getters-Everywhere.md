@@ -1,6 +1,7 @@
 # Getters Everywhere
 ## Overview
 Mutagen offers up records in several ways.  Consider dealing with an Npc, it would offer:
+
 - `Npc` class.   A class with all the fields an Npc has
 - `INpc` interface.   An interface with all the fields an Npc has.  The class implements this.
 - `INpcGetter` interface.  An interface with all the fields an Npc has, but only gettable.  Cannot be modified.
@@ -70,6 +71,7 @@ orthornSetter.Speed *= 2;
 ```
 
 This is better in a few ways:
+
 - As part of the modification process, we are required to indicate which mod is going to "house" those modifications
 - The object instance we are modifying only exists in our outgoing patch, rather than many mods
 - The original Skyrim.esm definition is left intact.  In fact, it cannot possibly be modified as the entire mod object is readonly fundamentally.

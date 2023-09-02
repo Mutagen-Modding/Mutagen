@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AttractionRule" recordType="AORU" objType="Record" baseClass="StarfieldMajorRecord" GUID="5319be48-fef9-44f5-9154-dd9542e84f59" ID="80">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

@@ -20,6 +20,7 @@ We can supply that definition to this control, and get a UI immediately:
 ![Reflection Powered Settings](https://i.imgur.com/PdXSnk5.gif)
 
 As such, it is an easy way to get a decent UI for any class, and is very helpful if:
+
 - You aren't used to WPF and just want to get something up and running
 - If you don't know ahead of time what fields will exist (Synthesis patchers being a prime example)
 
@@ -129,6 +130,7 @@ public IFormLinkGetter ArmorsAndWeapons { get; set; } = FormLinkInformation.Null
 ```
 
 # Allowed Field Types
+
 - `bool`
 - `string`
 - Integers (signed and unsigned)

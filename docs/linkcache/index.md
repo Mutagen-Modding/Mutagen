@@ -1,11 +1,13 @@
 # Link Cache
 The LinkCache is the record lookup engine.  It powers a lot of functionality, such as:
+
 - Looking up records by [FormKey/FormLink](../plugins/ModKey,-FormKey,-FormLink.md#resolves)
 - Finding the [Winning Override](Winning-Overrides) in a [Load Order](../loadorder/index.md)
 - [Iterating over all versions of a record](Previous-Override-Iteration) within a [Load Order](../loadorder/index.md)
 
 ## Context
 Every LinkCache is created from a context:
+
 - A single mod
 - A [Load Order](../loadorder/index.md)
 - Any arbitrary enumeration of mods
@@ -38,6 +40,7 @@ If you do not plan to add/remove records from the Mods, it is always recommended
 Sometimes it is desirable to have a mod on a Link Cache that you are allowed to modify.  [Synthesis](https://github.com/Mutagen-Modding/Synthesis), for example, needs to be able to modify the outgoing Patch Mod object.
 
 In these scenarios, we can create a Mutable Link Cache.  This is a combination of an Immutable Link Cache for most of the mods in a load order, PLUS a mutable component for the final mods at the end that we want to modify.  As such there are a few things to consider:
+
 - Most of the load order still gets the speed optimizations of being immutable
 - We only pay the speed price when dealing with the one (few) mutable mods at the end.
 - Because of this structure, the mutable mods MUST be at the end.

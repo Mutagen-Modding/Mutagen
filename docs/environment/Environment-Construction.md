@@ -27,6 +27,7 @@ Lets you fluently tweak the environment that will be built to be customized to y
 
 ### Problem
 There are a lot of times when the [Single Game Category Construction](#single-game-category-construction) game environment does not suit your needs.  Consider:
+
 - Wanting to omit a mod
 - Wanting to add an output mod, and integrate it with the link cache
 

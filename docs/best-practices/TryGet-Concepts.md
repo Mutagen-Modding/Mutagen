@@ -2,6 +2,7 @@
 There are many concepts within Mutagen that are optional, nullable, or may not link up at runtime.
 
 It is good practice to code in a way that is able to handle both situations:
+
 - The field is not null.  The lookup found its target.  Etc
 - The field is null.  The lookup failed to find its target.  Etc
 

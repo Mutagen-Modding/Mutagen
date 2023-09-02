@@ -18,6 +18,7 @@ public static class GameReleaseExt
             case GameRelease.EnderalSE:
                 return StringsLanguageFormat.FullName;
             case GameRelease.Fallout4:
+            case GameRelease.Starfield:
                 return StringsLanguageFormat.Iso;
             default:
                 throw new NotImplementedException();

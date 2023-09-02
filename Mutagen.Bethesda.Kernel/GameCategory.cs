@@ -13,6 +13,8 @@ public enum GameCategory
     Skyrim, 
     [Description("Fallout4")]
     Fallout4,
+    [Description("Starfield")]
+    Starfield,
 }
 
 public static class GameReleaseKernelExt
@@ -29,6 +31,7 @@ public static class GameReleaseKernelExt
             GameRelease.EnderalLE => GameCategory.Skyrim,
             GameRelease.EnderalSE => GameCategory.Skyrim,
             GameRelease.Fallout4 => GameCategory.Fallout4,
+            GameRelease.Starfield => GameCategory.Starfield,
             _ => throw new NotImplementedException(),
         };
     }
@@ -45,6 +48,7 @@ public static class GameReleaseKernelExt
             GameRelease.EnderalSE => 44,
             GameRelease.SkyrimVR => 44,
             GameRelease.Fallout4 => 131,
+            GameRelease.Starfield => 131,
             _ => throw new NotImplementedException(),
         };
     }

@@ -110,6 +110,7 @@ if (finds.TryGetValue(full, out loc))
 
 
 It takes a few optional arguments:
+
 - RecordInterest, to limit the search to specific `RecordType`s
 - Additional Criteria lambda, to add custom filter logic
 

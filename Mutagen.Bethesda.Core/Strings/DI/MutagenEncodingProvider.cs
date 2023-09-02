@@ -79,6 +79,7 @@ public sealed class MutagenEncodingProvider : IMutagenEncodingProvider
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalSE:
             case GameRelease.Fallout4:
+            case GameRelease.Starfield:
                 return GetSkyrimSeEncoding(language);
             default:
                 throw new NotImplementedException();

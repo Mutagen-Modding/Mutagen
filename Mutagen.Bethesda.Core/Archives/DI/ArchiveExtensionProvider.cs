@@ -28,6 +28,7 @@ public sealed class ArchiveExtensionProvider : IArchiveExtensionProvider
             case GameCategory.Skyrim:
                 return ".bsa";
             case GameCategory.Fallout4:
+            case GameCategory.Starfield:
                 return ".ba2";
             default:
                 throw new NotImplementedException();

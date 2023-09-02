@@ -76,6 +76,10 @@ public class Test
             while (ex != null)
             {
                 _output.OnNext(ex.ToString());
+                if (ex.StackTrace != null)
+                {
+                    _output.OnNext(ex.StackTrace);
+                }
                 ex = ex.InnerException;
             }
             _output.OnNext("Failed");

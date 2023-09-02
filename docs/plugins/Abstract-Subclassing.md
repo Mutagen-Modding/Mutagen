@@ -28,6 +28,7 @@ The subclassing helps encapsulate some complexity while remaining consistent and
 Consider that `NPC_`'s `Level` field is an integer normally.  But if you turn on the `PC Level Mult` flag, it suddenly acts as a float.   So how can Mutagen expose this in a type safe manner if the field can just change its type depending on a switch somewhere else?
 
 Mutagen exposes this by using subclassing.  `ANpcLevel` has two subclasses:
+
 - `NpcLevel`, with `Level` as an integer
 - `PcLevelMult`, with `Level` as a float
 
@@ -98,6 +99,7 @@ An effect can reference many different types of records, where some effect types
 Each subclassing situation is different and is trying to solve a different complexity specific to that record.  As things mature, documentation outlining each specific structure will probably be written.
 
 In the meantime, you can:
+
 - Utilize Intellisense, and follow references in the IDE to see the classes and what they contain.
 - Of importance:  The interfaces of these abstract classes contain comments of what options are available:
 ```cs
@@ -110,4 +112,5 @@ public partial interface IANpcLevel
 }
 ```
 This helps narrow down which types it can be so you know what to switch on and handle.
+
 - Also, you can sometimes refer to the xmls that define the records, like the ones linked above.

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FFKW" recordType="FFKW" objType="Record" baseClass="StarfieldMajorRecord" GUID="6a5bb3d0-d821-4c5c-b6df-e48c366afcea" ID="81">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+      <!-- Might have nested subrecords underneath REFL? BETH, STRT, TYPE, CLAS, OBJR, LIST  -->
+    </Fields>
+  </Object>
+</Loqui>

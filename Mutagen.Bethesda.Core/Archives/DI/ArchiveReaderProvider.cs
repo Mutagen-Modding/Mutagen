@@ -42,6 +42,7 @@ public sealed class ArchiveReaderProvider : IArchiveReaderProvider
             case GameRelease.EnderalLE:
             case GameRelease.EnderalSE:
                 return new BsaReader(path, _fileSystem);
+            case GameRelease.Starfield:
             case GameRelease.Fallout4:
                 return new Ba2Reader(path, _fileSystem);
             default:

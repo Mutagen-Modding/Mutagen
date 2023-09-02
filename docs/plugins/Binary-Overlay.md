@@ -48,6 +48,7 @@ using (IOblivionModGetter mod = OblivionMod.CreateFromBinaryOverlay(pathToMod))
 This code is intended to print each Potion's Editor ID to the console.
 
 ### What work is actually done by this code?
+
 - A file is opened
 - An overlay class that implements `IOblivionModGetter` and has a reference to the file stream is instantiated.
 - Quick skip-over parsing of the file is done to locate the locations of the Groups.
@@ -63,6 +64,7 @@ This code is intended to print each Potion's Editor ID to the console.
 - After loop is over, the stream is closed.
 
 ### What are some things that were not done?
+
 - No Groups besides Potion were parsed. Their top level locations were noted, but no contents were processed.
 - No subrecords were parsed, except EditorID (EDID).
 - No object had a reference to all the Potion records, so as to keep their contents in memory.  The Group object simply has a list of locations.  The user has the only reference to any Potion record at any given moment, and as soon as they were done with it was cleaned up.
@@ -72,11 +74,13 @@ This code is intended to print each Potion's Editor ID to the console.
 The Binary Overlay concept is a powerful tool that can be used for vast speed/memory improvements for certain jobs.  It is suggested for use in most importing scenarios.  Actual normal record objects should generally be reserved for use when constructing new/modified records for output.
 
 ### Pros
+
 - Much faster as there is no parsing of fields that are not used.
 - No need to specify ahead of time which records will be used.
 - Much lower memory footprint as records only exist as the user is interacting with them.
 
 ### Cons:
+
 - The source stream must remain open for the lifetime of the overlay.
 - Any access of the mod or group objects can only be done if the stream is open.
 - Overlays are readonly, so copies to new objects must be made if user wishes to modify contents.

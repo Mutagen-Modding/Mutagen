@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="StarfieldGroup" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="bf12722f-f38f-429d-b80e-b055025380eb" ID="62">
+    <Generic name="T" isLoqui="true" getterVariance="Out" override="true" isClass="true">
+      <Where>StarfieldMajorRecord</Where>
+    </Generic>
+    <Fields>
+      <CustomLogic byteLength="4" name="ContainedRecordTypeParse" />
+      <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <Dict name="RecordCache" nullable="False">
+        <KeyedValue keyAccessor="FormKey" keyType="FormKey">
+          <Ref>
+            <Generic>T</Generic>
+          </Ref>
+        </KeyedValue>
+      </Dict>
+    </Fields>
+  </Object>
+</Loqui>

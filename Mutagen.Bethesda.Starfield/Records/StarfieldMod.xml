@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="StarfieldMod" objType="Mod" ctorPermission="protected" inferredAssets="true" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
+    <Fields>
+      <RefDirect name="ModHeader" refName="StarfieldModHeader" singleton="true" />
+      <Group name="GameSettings" refName="GameSetting" />
+      <Group name="Keywords" refName="Keyword" />
+      <Group name="FFKW" refName="FFKW" />
+      <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
+      <Group name="Actions" refName="ActionRecord" />
+      <Group name="Transforms" refName="Transform" />
+      <Group name="Npcs" refName="Npc" />
+      <Group name="Races" refName="Race" />
+      <Group name="Weapons" refName="Weapon" />
+    </Fields>
+  </Object>
+</Loqui>

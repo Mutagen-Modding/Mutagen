@@ -18,10 +18,13 @@ Additionally, some common Record Types have alternate versions to denote differe
 ## List Mechanics
 ## Item Storage
 There are a lot of varying ways that lists are stored in the binary format:
+
 - Repeated subrecords, with their Record Header as the delimiter.  Unknown amount.
   _(SPLO records in Oblivion)_
+
 - Extra prepended subrecord /w the count of items in the list.  This can then be followed by repeated subrecords with Record Headers, or headerless raw data of known lengths.
   _(Keyword lists in Skyrim)_
+
 - A Record Header for the list itself, followed immediately by a uint count, followed by undelimited content of known length. _(Skyrim Model's Alternate Textures)_
 - Probably others
 

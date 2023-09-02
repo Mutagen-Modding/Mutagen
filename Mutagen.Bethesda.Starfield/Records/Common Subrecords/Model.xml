@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SimpleModel" objType="Subrecord" GUID="4cd9cae6-96f3-483f-9f1f-730cf7bcb016" ID="70">
+    <Fields>
+      <AssetLink name="File" recordType="MODL" nullable="False" assetType="StarfieldModel" />
+    </Fields>
+  </Object>
+  <Object name="Model" objType="Subrecord" baseClass="SimpleModel" GUID="0ad037a7-7bd0-4b69-976b-b5c7869c325f" ID="71">
+    <Fields>
+      <ByteArray name="Unknown" recordType="MODF" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

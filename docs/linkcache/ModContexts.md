@@ -2,6 +2,7 @@
 Mod Contexts are an opt-in advanced feature of most LinkCache functionality.  They act as storage for contextual information and the wiring and logic needed to perform certain actions in a context aware manner.
 
 `ModContext`s contain:
+
 - `Record` - The record itself
 - `ModKey` - The `ModKey` that the associated record came from.  Not where it was originally defined and declared, but rather what mod contained the version of the record as it is. (usually the winning override mod)
 - `Parent` - If dealing with a "nested" record like `PlacedObject`, this will contain a reference to the parent record (like a `Cell`).

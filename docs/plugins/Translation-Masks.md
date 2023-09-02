@@ -97,6 +97,7 @@ rec.DeepCopy(new Npc.TranslationMask(true)
 This is an easy way to specify that you want all fields copied except the name.  Destructible's submask object will be left null, but in this case, that means we want to copy it.  (we shouldn't have to define Destructible's subobject in order to bring it over)
 
 Okay, but what about the case when we want to omit Destructible, then?  There's some confusion when you try to do this with nullable subobjects.  Does a false mean:
+
 - Destructible should not be considered at all during equality
 - All fields on the destructible mask should be false.
 Those are two slightly different things.
