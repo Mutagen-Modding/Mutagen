@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypeInts
 {
+    public const int AACT = 0x54434141;
     public const int AORU = 0x55524F41;
     public const int BFCB = 0x42434642;
     public const int BFCE = 0x45434642;

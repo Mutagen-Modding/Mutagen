@@ -32,11 +32,13 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
             dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                ActionRecord_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                ActionRecord_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };

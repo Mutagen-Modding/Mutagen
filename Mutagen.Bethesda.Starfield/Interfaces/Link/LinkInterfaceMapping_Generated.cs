@@ -19,6 +19,11 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
     public StarfieldLinkInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IIdleRelation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            ActionRecord_Registration.Instance,
+        });
+        dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,

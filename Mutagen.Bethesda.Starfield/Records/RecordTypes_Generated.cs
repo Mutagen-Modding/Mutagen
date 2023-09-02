@@ -4,6 +4,7 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypes
 {
+    public static readonly RecordType AACT = new(0x54434141);
     public static readonly RecordType AORU = new(0x55524F41);
     public static readonly RecordType BFCB = new(0x42434642);
     public static readonly RecordType BFCE = new(0x45434642);

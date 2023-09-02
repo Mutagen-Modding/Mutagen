@@ -61,6 +61,9 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Records\ActionRecord.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Model_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
@@ -176,5 +179,9 @@
     <Compile Include="Records\Common Subrecords\BFCBRecord_Generated.cs">
       <DependentUpon>BFCBRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\ActionRecord_Generated.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
   </ItemGroup>
 </Project>
