@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Starfield
             _FFKW_Object = new StarfieldGroup<FFKW>(this);
             _LocationReferenceTypes_Object = new StarfieldGroup<LocationReferenceType>(this);
             _Actions_Object = new StarfieldGroup<ActionRecord>(this);
+            _Transforms_Object = new StarfieldGroup<Transform>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
@@ -115,6 +116,13 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<ActionRecord> Actions => _Actions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IActionRecordGetter> IStarfieldModGetter.Actions => _Actions_Object;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Transform> _Transforms_Object;
+        public StarfieldGroup<Transform> Transforms => _Transforms_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ITransformGetter> IStarfieldModGetter.Transforms => _Transforms_Object;
         #endregion
         #region Npcs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -182,6 +190,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FFKW = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LocationReferenceTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Actions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -194,6 +203,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FFKW,
                 TItem LocationReferenceTypes,
                 TItem Actions,
+                TItem Transforms,
                 TItem Npcs,
                 TItem Races,
                 TItem Weapons)
@@ -204,6 +214,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FFKW = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FFKW, new StarfieldGroup.Mask<TItem>(FFKW));
                 this.LocationReferenceTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LocationReferenceTypes, new StarfieldGroup.Mask<TItem>(LocationReferenceTypes));
                 this.Actions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Actions, new StarfieldGroup.Mask<TItem>(Actions));
+                this.Transforms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Transforms, new StarfieldGroup.Mask<TItem>(Transforms));
                 this.Npcs = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Npcs, new StarfieldGroup.Mask<TItem>(Npcs));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weapons, new StarfieldGroup.Mask<TItem>(Weapons));
@@ -224,6 +235,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FFKW { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LocationReferenceTypes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Actions { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Transforms { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Npcs { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weapons { get; set; }
@@ -245,6 +257,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.FFKW, rhs.FFKW)) return false;
                 if (!object.Equals(this.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
                 if (!object.Equals(this.Actions, rhs.Actions)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
@@ -259,6 +272,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.FFKW);
                 hash.Add(this.LocationReferenceTypes);
                 hash.Add(this.Actions);
+                hash.Add(this.Transforms);
                 hash.Add(this.Npcs);
                 hash.Add(this.Races);
                 hash.Add(this.Weapons);
@@ -299,6 +313,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Actions.Overall)) return false;
                     if (this.Actions.Specific != null && !this.Actions.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
                 }
                 if (Npcs != null)
                 {
@@ -352,6 +371,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Actions.Overall)) return true;
                     if (this.Actions.Specific != null && this.Actions.Specific.Any(eval)) return true;
                 }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
                 if (Npcs != null)
                 {
                     if (eval(this.Npcs.Overall)) return true;
@@ -387,6 +411,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FFKW = this.FFKW == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FFKW.Overall), this.FFKW.Specific?.Translate(eval));
                 obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
                 obj.Actions = this.Actions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
@@ -432,6 +457,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Actions?.Print(sb);
                     }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
                     if (printMask?.Npcs?.Overall ?? true)
                     {
                         Npcs?.Print(sb);
@@ -474,6 +503,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FFKW.ErrorMask>?>? FFKW;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Transform.ErrorMask>?>? Transforms;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>? Npcs;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
@@ -497,6 +527,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LocationReferenceTypes;
                     case StarfieldMod_FieldIndex.Actions:
                         return Actions;
+                    case StarfieldMod_FieldIndex.Transforms:
+                        return Transforms;
                     case StarfieldMod_FieldIndex.Npcs:
                         return Npcs;
                     case StarfieldMod_FieldIndex.Races:
@@ -530,6 +562,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Actions:
                         this.Actions = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ActionRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Transform.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>(ex, null);
@@ -568,6 +603,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Actions:
                         this.Actions = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ActionRecord.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Transform.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
@@ -591,6 +629,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (FFKW != null) return true;
                 if (LocationReferenceTypes != null) return true;
                 if (Actions != null) return true;
+                if (Transforms != null) return true;
                 if (Npcs != null) return true;
                 if (Races != null) return true;
                 if (Weapons != null) return true;
@@ -625,6 +664,7 @@ namespace Mutagen.Bethesda.Starfield
                 FFKW?.Print(sb);
                 LocationReferenceTypes?.Print(sb);
                 Actions?.Print(sb);
+                Transforms?.Print(sb);
                 Npcs?.Print(sb);
                 Races?.Print(sb);
                 Weapons?.Print(sb);
@@ -642,6 +682,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.FFKW = this.FFKW.Combine(rhs.FFKW, (l, r) => l.Combine(r));
                 ret.LocationReferenceTypes = this.LocationReferenceTypes.Combine(rhs.LocationReferenceTypes, (l, r) => l.Combine(r));
                 ret.Actions = this.Actions.Combine(rhs.Actions, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
@@ -674,6 +715,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<FFKW.TranslationMask>? FFKW;
             public StarfieldGroup.TranslationMask<LocationReferenceType.TranslationMask>? LocationReferenceTypes;
             public StarfieldGroup.TranslationMask<ActionRecord.TranslationMask>? Actions;
+            public StarfieldGroup.TranslationMask<Transform.TranslationMask>? Transforms;
             public StarfieldGroup.TranslationMask<Npc.TranslationMask>? Npcs;
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
             public StarfieldGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
@@ -707,6 +749,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((FFKW != null ? FFKW.OnOverall : DefaultOn, FFKW?.GetCrystal()));
                 ret.Add((LocationReferenceTypes != null ? LocationReferenceTypes.OnOverall : DefaultOn, LocationReferenceTypes?.GetCrystal()));
                 ret.Add((Actions != null ? Actions.OnOverall : DefaultOn, Actions?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
@@ -758,6 +801,7 @@ namespace Mutagen.Bethesda.Starfield
             _FFKW_Object = new StarfieldGroup<FFKW>(this);
             _LocationReferenceTypes_Object = new StarfieldGroup<LocationReferenceType>(this);
             _Actions_Object = new StarfieldGroup<ActionRecord>(this);
+            _Transforms_Object = new StarfieldGroup<Transform>(this);
             _Npcs_Object = new StarfieldGroup<Npc>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
@@ -787,6 +831,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Actions.RecordCache.Set(rhsMod.Actions.RecordCache.Items);
             }
+            if (mask?.Transforms ?? true)
+            {
+                this.Transforms.RecordCache.Set(rhsMod.Transforms.RecordCache.Items);
+            }
             if (mask?.Npcs ?? true)
             {
                 this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
@@ -814,6 +862,7 @@ namespace Mutagen.Bethesda.Starfield
             count += FFKW.RecordCache.Count > 0 ? 1 : default(uint);
             count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Actions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Transforms.RecordCache.Count > 0 ? 1 : default(uint);
             count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
@@ -1078,6 +1127,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<FFKW> FFKW { get; }
         new StarfieldGroup<LocationReferenceType> LocationReferenceTypes { get; }
         new StarfieldGroup<ActionRecord> Actions { get; }
+        new StarfieldGroup<Transform> Transforms { get; }
         new StarfieldGroup<Npc> Npcs { get; }
         new StarfieldGroup<Race> Races { get; }
         new StarfieldGroup<Weapon> Weapons { get; }
@@ -1106,6 +1156,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IFFKWGetter> FFKW { get; }
         IStarfieldGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
         IStarfieldGroupGetter<IActionRecordGetter> Actions { get; }
+        IStarfieldGroupGetter<ITransformGetter> Transforms { get; }
         IStarfieldGroupGetter<INpcGetter> Npcs { get; }
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
         IStarfieldGroupGetter<IWeaponGetter> Weapons { get; }
@@ -1685,9 +1736,10 @@ namespace Mutagen.Bethesda.Starfield
         FFKW = 3,
         LocationReferenceTypes = 4,
         Actions = 5,
-        Npcs = 6,
-        Races = 7,
-        Weapons = 8,
+        Transforms = 6,
+        Npcs = 7,
+        Races = 8,
+        Weapons = 9,
     }
     #endregion
 
@@ -1705,9 +1757,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -1781,6 +1833,7 @@ namespace Mutagen.Bethesda.Starfield
             item.FFKW.Clear();
             item.LocationReferenceTypes.Clear();
             item.Actions.Clear();
+            item.Transforms.Clear();
             item.Npcs.Clear();
             item.Races.Clear();
             item.Weapons.Clear();
@@ -1831,6 +1884,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.FFKW.Remove(keys);
             obj.LocationReferenceTypes.Remove(keys);
             obj.Actions.Remove(keys);
+            obj.Transforms.Remove(keys);
             obj.Npcs.Remove(keys);
             obj.Races.Remove(keys);
             obj.Weapons.Remove(keys);
@@ -1910,6 +1964,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActionRecord":
                 case "IActionRecordInternal":
                     obj.Actions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    obj.Transforms.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -2035,6 +2097,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.FFKW = MaskItemExt.Factory(item.FFKW.GetEqualsMask(rhs.FFKW, include), include);
             ret.LocationReferenceTypes = MaskItemExt.Factory(item.LocationReferenceTypes.GetEqualsMask(rhs.LocationReferenceTypes, include), include);
             ret.Actions = MaskItemExt.Factory(item.Actions.GetEqualsMask(rhs.Actions, include), include);
+            ret.Transforms = MaskItemExt.Factory(item.Transforms.GetEqualsMask(rhs.Transforms, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
@@ -2106,6 +2169,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Actions?.Print(sb, "Actions");
             }
+            if (printMask?.Transforms?.Overall ?? true)
+            {
+                item.Transforms?.Print(sb, "Transforms");
+            }
             if (printMask?.Npcs?.Overall ?? true)
             {
                 item.Npcs?.Print(sb, "Npcs");
@@ -2175,6 +2242,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isActionsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!object.Equals(lhsTransforms, rhsTransforms)) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Npcs) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Npcs, rhs.Npcs, out var lhsNpcs, out var rhsNpcs, out var isNpcsEqual))
@@ -2211,6 +2286,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.FFKW);
             hash.Add(item.LocationReferenceTypes);
             hash.Add(item.Actions);
+            hash.Add(item.Transforms);
             hash.Add(item.Npcs);
             hash.Add(item.Races);
             hash.Add(item.Weapons);
@@ -2257,6 +2333,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActionRecord":
                 case "IActionRecordInternal":
                     return obj.Actions;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    return obj.Transforms;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
@@ -2297,16 +2378,17 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[8];
+            Stream[] outputStreams = new Stream[9];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.FFKW, 2, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, 3, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Actions, 4, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 5, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Races, 6, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 7, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Transforms, 5, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 6, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Races, 7, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 8, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2385,6 +2467,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Actions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Transforms.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2476,6 +2562,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActionRecord":
                 case "IActionRecordInternal":
                     foreach (var item in obj.Actions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    foreach (var item in obj.Transforms.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -2573,6 +2668,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Actions,
                 groupGetter: (m) => m.Actions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Transform, ITransformGetter>(
+                srcGroup: obj.Transforms,
+                type: typeof(ITransformGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Transforms,
+                groupGetter: (m) => m.Transforms))
             {
                 yield return item;
             }
@@ -2700,6 +2804,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Actions,
                         groupGetter: (m) => m.Actions))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Transform":
+                case "ITransformGetter":
+                case "ITransform":
+                case "ITransformInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Transform, ITransformGetter>(
+                        srcGroup: obj.Transforms,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Transforms,
+                        groupGetter: (m) => m.Transforms))
                     {
                         yield return item;
                     }
@@ -2926,6 +3044,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Transforms);
+                try
+                {
+                    item.Transforms.DeepCopyIn(
+                        rhs: rhs.Transforms,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Transforms));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Npcs) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Npcs);
@@ -3081,6 +3219,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool FFKW;
         public bool LocationReferenceTypes;
         public bool Actions;
+        public bool Transforms;
         public bool Npcs;
         public bool Races;
         public bool Weapons;
@@ -3094,6 +3233,7 @@ namespace Mutagen.Bethesda.Starfield
             FFKW = defaultValue;
             LocationReferenceTypes = defaultValue;
             Actions = defaultValue;
+            Transforms = defaultValue;
             Npcs = defaultValue;
             Races = defaultValue;
             Weapons = defaultValue;
@@ -3179,6 +3319,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ActionsItem).BinaryWriteTranslator).Write<IActionRecordGetter>(
                         item: ActionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Transforms ?? true)
+            {
+                var TransformsItem = item.Transforms;
+                if (TransformsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write<ITransformGetter>(
+                        item: TransformsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -3345,6 +3496,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.Actions;
+                }
+                case RecordTypeInts.TRNS:
+                {
+                    if (importMask?.Transforms ?? true)
+                    {
+                        item.Transforms.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Transforms;
                 }
                 case RecordTypeInts.NPC_:
                 {
@@ -3583,6 +3748,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? StarfieldGroupBinaryOverlay<IActionRecordGetter>.StarfieldGroupFactory(_stream, _ActionsLocations, _package) : default;
         public IStarfieldGroupGetter<IActionRecordGetter> Actions => _Actions ?? new StarfieldGroup<ActionRecord>(this);
         #endregion
+        #region Transforms
+        private List<RangeInt64>? _TransformsLocations;
+        private IStarfieldGroupGetter<ITransformGetter>? _Transforms => _TransformsLocations != null ? StarfieldGroupBinaryOverlay<ITransformGetter>.StarfieldGroupFactory(_stream, _TransformsLocations, _package) : default;
+        public IStarfieldGroupGetter<ITransformGetter> Transforms => _Transforms ?? new StarfieldGroup<Transform>(this);
+        #endregion
         #region Npcs
         private List<RangeInt64>? _NpcsLocations;
         private IStarfieldGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? StarfieldGroupBinaryOverlay<INpcGetter>.StarfieldGroupFactory(_stream, _NpcsLocations, _package) : default;
@@ -3715,6 +3885,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ActionsLocations ??= new();
                     _ActionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Actions;
+                }
+                case RecordTypeInts.TRNS:
+                {
+                    _TransformsLocations ??= new();
+                    _TransformsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Transforms;
                 }
                 case RecordTypeInts.NPC_:
                 {

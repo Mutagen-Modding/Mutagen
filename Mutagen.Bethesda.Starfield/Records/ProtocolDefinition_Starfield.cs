@@ -31,7 +31,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             AttractionRule_Registration.Instance,
             FFKW_Registration.Instance,
             BFCBRecord_Registration.Instance,
-            ActionRecord_Registration.Instance
+            ActionRecord_Registration.Instance,
+            Transform_Registration.Instance
         );
     }
 }

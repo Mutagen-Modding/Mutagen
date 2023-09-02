@@ -6,6 +6,7 @@ public partial class RecordTypeInts
     public const int AORU = 0x55524F41;
     public const int BFCB = 0x42434642;
     public const int BFCE = 0x45434642;
+    public const int BNAM = 0x4D414E42;
     public const int CHGL = 0x4C474843;
     public const int CNAM = 0x4D414E43;
     public const int DATA = 0x41544144;
@@ -37,6 +38,7 @@ public partial class RecordTypeInts
     public const int SNAM = 0x4D414E53;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
+    public const int TRNS = 0x534E5254;
     public const int WEAP = 0x50414557;
     public const int XALG = 0x474C4158;
     public const int XXXX = 0x58585858;

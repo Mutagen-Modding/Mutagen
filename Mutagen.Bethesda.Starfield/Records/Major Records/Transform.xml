@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Transform" recordType="TRNS" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" GUID="216cda2a-f726-4cfb-a87c-772493c24c28" ID="84">
+    <Fields>
+      <Data recordType="DATA">
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+          <Float name="Scale" />
+          <Float name="ZoomMin" />
+          <Float name="ZoomMax" />
+        </Fields>
+      </Data>
+      <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
+      <ByteArray name="ENAM" recordType="ENAM" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

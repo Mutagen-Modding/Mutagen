@@ -5,7 +5,7 @@
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <String name="Notes" recordType="DNAM" />
       <Enum name="Type" enumName="ActionRecord.TypeEnum" byteLength="4" recordType="TNAM" />
-      <ByteArray name="FNAM" recordType="FNAM" />
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
       <String name="Name" recordType="FULL" />
     </Fields>
     <LinkInterface>IIdleRelation</LinkInterface>

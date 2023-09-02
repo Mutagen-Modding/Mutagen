@@ -8,6 +8,7 @@ public partial class RecordTypes
     public static readonly RecordType AORU = new(0x55524F41);
     public static readonly RecordType BFCB = new(0x42434642);
     public static readonly RecordType BFCE = new(0x45434642);
+    public static readonly RecordType BNAM = new(0x4D414E42);
     public static readonly RecordType CHGL = new(0x4C474843);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType DATA = new(0x41544144);
@@ -39,6 +40,7 @@ public partial class RecordTypes
     public static readonly RecordType SNAM = new(0x4D414E53);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
+    public static readonly RecordType TRNS = new(0x534E5254);
     public static readonly RecordType WEAP = new(0x50414557);
     public static readonly RecordType XALG = new(0x474C4158);
     public static readonly RecordType XXXX = new(0x58585858);

@@ -52,6 +52,11 @@ namespace Mutagen.Bethesda.Starfield
                 Keyword_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
+            dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Transform_Registration.Instance,
+            });
+            dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

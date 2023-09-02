@@ -20,6 +20,7 @@ public class StarfieldProcessor : Processor
     {
         base.AddDynamicProcessorInstructions();
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
+        AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -84,5 +85,14 @@ public class StarfieldProcessor : Processor
 
         if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec)) return;
         ProcessZeroFloat(dataRec, fileOffset);
+    }
+
+    private void ProcessTransforms(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec)) return;
+        int offset = 0;
+        ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
     }
 }

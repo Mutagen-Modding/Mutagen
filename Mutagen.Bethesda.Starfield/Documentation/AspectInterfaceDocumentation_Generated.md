@@ -10,11 +10,15 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### INamed
 - ActionRecord
 - Keyword
+### IPositionRotation
+- Transform
 ## Concrete Classes to Interfaces
 ### ActionRecord
 - INamed
 ### Keyword
 - IKeywordCommon
 - INamed
+### Transform
+- IPositionRotation
 ### Weapon
 - IModeled
