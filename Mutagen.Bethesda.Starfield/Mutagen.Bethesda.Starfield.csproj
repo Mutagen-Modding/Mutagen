@@ -51,6 +51,42 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
+    <None Update="Records\Major Records\ActionRecord.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\AttractionRule.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\FFKW.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\GameSetting.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\Keyword.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\Race.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\Npc.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\LocationReferenceType.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Major Records\Weapon.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
@@ -61,36 +97,34 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="InternalsPermissions.cs" />
-    <Compile Include="Records\ActionRecord.cs">
-      <DependentUpon>ActionRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Model_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\SimpleModel_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\GameSetting.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingBool.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingFloat.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingInt.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingString.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingUInt.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Keyword.cs">
-      <DependentUpon>Keyword.xml</DependentUpon>
-    </Compile>
+    <Compile Include="Records\Major Records\ActionRecord.cs" />
+    <Compile Include="Records\Major Records\ActionRecord_Generated.cs" />
+    <Compile Include="Records\Major Records\AttractionRule_Generated.cs" />
+    <Compile Include="Records\Major Records\FFKW_Generated.cs" />
+    <Compile Include="Records\Major Records\GameSetting.cs" />
+    <Compile Include="Records\Major Records\GameSettingBool.cs" />
+    <Compile Include="Records\Major Records\GameSettingBool_Generated.cs" />
+    <Compile Include="Records\Major Records\GameSettingFloat.cs" />
+    <Compile Include="Records\Major Records\GameSettingFloat_Generated.cs" />
+    <Compile Include="Records\Major Records\GameSettingInt.cs" />
+    <Compile Include="Records\Major Records\GameSettingInt_Generated.cs" />
+    <Compile Include="Records\Major Records\GameSettingString.cs" />
+    <Compile Include="Records\Major Records\GameSettingString_Generated.cs" />
+    <Compile Include="Records\Major Records\GameSettingUInt.cs" />
+    <Compile Include="Records\Major Records\GameSettingUInt_Generated.cs" />
+    <Compile Include="Records\Major Records\GameSetting_Generated.cs" />
+    <Compile Include="Records\Major Records\Keyword.cs" />
+    <Compile Include="Records\Major Records\Keyword_Generated.cs" />
+    <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs" />
+    <Compile Include="Records\Major Records\Npc_Generated.cs" />
+    <Compile Include="Records\Major Records\Race_Generated.cs" />
+    <Compile Include="Records\Major Records\Weapon_Generated.cs" />
     <Compile Include="Records\ModStats_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
     </Compile>
@@ -130,57 +164,15 @@
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
-    <Compile Include="Records\Npc_Generated.cs">
-      <DependentUpon>Npc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Race_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Weapon_Generated.cs">
-      <DependentUpon>Weapon.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Records\TransientType_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\GameSetting_Generated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingInt_Generated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingFloat_Generated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingString_Generated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingBool_Generated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameSettingUInt_Generated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Keyword_Generated.cs">
-      <DependentUpon>Keyword.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
-    <Compile Include="Records\AttractionRule_Generated.cs">
-      <DependentUpon>AttractionRule.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\FFKW_Generated.cs">
-      <DependentUpon>FFKW.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\LocationReferenceType_Generated.cs">
-      <DependentUpon>LocationReferenceType.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
     <Compile Include="Records\Common Subrecords\BFCBRecord_Generated.cs">
       <DependentUpon>BFCBRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\ActionRecord_Generated.cs">
-      <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
   </ItemGroup>
