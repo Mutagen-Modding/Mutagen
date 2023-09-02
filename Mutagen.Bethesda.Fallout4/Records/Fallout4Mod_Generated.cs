@@ -8423,10 +8423,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IGlobalBoolGetter":
                 case "IGlobalBool":
                 case "IGlobalBoolInternal":
-                case "GlobalUnknown":
-                case "IGlobalUnknownGetter":
-                case "IGlobalUnknown":
-                case "IGlobalUnknownInternal":
                     obj.Globals.Remove(
                         type: type,
                         keys: keys);

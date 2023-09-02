@@ -41,12 +41,16 @@ public partial class Global : GlobalCustomParsing.IGlobalCommon
                         return GlobalInt.CreateFromBinary(f);
                     case GlobalShort.TRIGGER_CHAR:
                         return GlobalShort.CreateFromBinary(f);
-                    case GlobalFloat.TRIGGER_CHAR:
-                        return GlobalFloat.CreateFromBinary(f);
                     case GlobalBool.TRIGGER_CHAR:
-                        return GlobalFloat.CreateFromBinary(f);
+                        return GlobalBool.CreateFromBinary(f);
+                    case GlobalFloat.TRIGGER_CHAR:
+                    {
+                        var ret = GlobalFloat.CreateFromBinary(f);
+                        ret.OutputChar = true;
+                        return ret;
+                    }
                     default:
-                        return GlobalUnknown.CreateFromBinary(f);
+                        return GlobalFloat.CreateFromBinary(f);
                 }
             });
     }
@@ -67,10 +71,13 @@ partial class GlobalBinaryWriteTranslation
         MutagenWriter writer,
         IGlobalGetter item)
     {
-        CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-            writer,
-            item.TypeChar,
-            header: RecordTypes.FNAM);
+        if (item.TypeChar != GlobalFloat.TRIGGER_CHAR || item is IGlobalFloatGetter { OutputChar: true })
+        {
+            CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.TypeChar,
+                header: RecordTypes.FNAM);
+        }
     }
 }
 
@@ -98,15 +105,19 @@ abstract partial class GlobalBinaryOverlay
                     stream,
                     package);
             case GlobalFloat.TRIGGER_CHAR:
-                return GlobalFloatBinaryOverlay.GlobalFloatFactory(
+            {
+                var ret = (GlobalFloatBinaryOverlay)GlobalFloatBinaryOverlay.GlobalFloatFactory(
                     stream,
                     package);
+                ret.OutputChar = true;
+                return ret;
+            }
             case GlobalBool.TRIGGER_CHAR:
                 return GlobalBoolBinaryOverlay.GlobalBoolFactory(
                     stream,
                     package);
             default:
-                return GlobalUnknownBinaryOverlay.GlobalUnknownFactory(
+                return GlobalFloatBinaryOverlay.GlobalFloatFactory(
                     stream,
                     package);
         }
@@ -116,4 +127,9 @@ abstract partial class GlobalBinaryOverlay
     {
         return null;
     }
+}
+
+partial class GlobalFloatBinaryOverlay
+{
+    public bool OutputChar { get; set; }
 }

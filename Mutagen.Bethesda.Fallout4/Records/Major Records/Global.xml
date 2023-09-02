@@ -18,17 +18,12 @@
   <Object name="GlobalFloat" recordType="GLOB" baseClass="Global" objType="Record" GUID="5bfe4364-b00f-48be-840e-b79a252985b5" ID="15">
     <Fields>
       <Float name="Data" recordType="FLTV" />
+      <Bool name="OutputChar" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record" GUID="f1f69742-d1da-4bbd-951c-f2bac3f7ea98" ID="16">
     <Fields>
       <Bool name="Data" recordType="FLTV" binary="Custom" />
-    </Fields>
-  </Object>
-  <Object name="GlobalUnknown" recordType="GLOB" baseClass="Global" objType="Record" GUID="8783e16b-176f-4b40-852d-74a2b6ef5c1c" ID="690">
-    <Fields>
-      <Char name="TypeChar" recordType="FNAM" nullable="False" binary="Custom" />
-      <Float name="Data" recordType="FLTV" />
     </Fields>
   </Object>
 </Loqui>

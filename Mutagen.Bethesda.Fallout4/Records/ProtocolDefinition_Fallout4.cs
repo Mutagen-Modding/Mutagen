@@ -553,8 +553,7 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             NavigationMapInfoWorldspaceParent_Registration.Instance,
             NavigationMapInfoCellParent_Registration.Instance,
             UnknownObjectModification_Registration.Instance,
-            AMagicEffectArchetype_Registration.Instance,
-            GlobalUnknown_Registration.Instance
+            AMagicEffectArchetype_Registration.Instance
         );
     }
 }

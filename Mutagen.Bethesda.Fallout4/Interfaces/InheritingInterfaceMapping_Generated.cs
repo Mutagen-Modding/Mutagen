@@ -79,11 +79,6 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
             Global_Registration.Instance,
         });
         dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
-        dict[typeof(IGlobalUnknown)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-        {
-            Global_Registration.Instance,
-        });
-        dict[typeof(IGlobalUnknownGetter)] = dict[typeof(IGlobalUnknown)] with { Setter = false };
         dict[typeof(INpcModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AObjectModification_Registration.Instance,

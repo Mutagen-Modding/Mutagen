@@ -357,9 +357,6 @@
     <Compile Include="Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GlobalUnknown.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Grass.cs">
       <DependentUpon>Grass.xml</DependentUpon>
     </Compile>
@@ -2471,9 +2468,6 @@
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GlobalFloat_Generated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Global_Generated.cs">
