@@ -7,23 +7,31 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
 ### IOwner
+
 - Faction
 - Npc
 ### IPlaced
+
 - Landscape
 - PlacedCreature
 - PlacedNpc
 - PlacedObject
 ## Concrete Classes to Interfaces
 ### Faction
+
 - IOwner
 ### Landscape
+
 - IPlaced
 ### Npc
+
 - IOwner
 ### PlacedCreature
+
 - IPlaced
 ### PlacedNpc
+
 - IPlaced
 ### PlacedObject
+
 - IPlaced

@@ -21,6 +21,7 @@ using (var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE))
 
 ## GameEnvironmentState
 The environment object that is given to you has lots of useful contextual items:
+
 - A LoadOrder object with the current load order 
 - ReadOnly Mod objects ready for use on the load order object, when they are found to exist
 - LinkCache relative to the load order

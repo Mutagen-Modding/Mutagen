@@ -14,6 +14,7 @@ foreach (var name in mod.NPCs.Records
 ```
 
 An outline of what is going on in the code above:
+
 - A mod object is created (in the [Overlay Pattern](Binary-Overlay))
 - The NPC group's records are iterated over
 - Using typical C# LINQ patterns, `Name` is selected and filtered out if empty or duplicates

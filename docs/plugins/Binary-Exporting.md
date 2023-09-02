@@ -19,6 +19,7 @@ This extra information helps keep the masters in proper order, as the load order
 
 ### Master Content
 Mutagen automatically handles the logic to determine which masters are required.  It will iterate all records for:
+
 - Overridden 
 
 ### Master Ordering

@@ -12,6 +12,7 @@ Potion potionCopy = (Potion)potionSource.DeepCopy();
 ```
 
 Some things to note:
+
 - FormKey will match the original source
 - Changes to either object will not affect the other
 - The new record will not be a part of any Mod or Group unless added explicity.
@@ -27,6 +28,7 @@ potionCopy.DeepCopyIn(potionSource);
 ```
 
 Some things to note:
+
 - `FormKey`s are immutable, and will never be changed even with a copy in.  If you want a second record with the original's `FormKey`, use DeepCopy instead.
 - Changes to either object will not affect the other
 

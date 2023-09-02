@@ -2,6 +2,7 @@
 FormLinks are used widely as a strongly typed identifier of a record, as an alternative to FormID, EditorID, or even FormKey.
 
 When using them, though, there are two variants:
+
 - `FormLink`
 - `FormLinkNullable`
 
@@ -19,10 +20,12 @@ A FormLinkNullable can be null in two ways:
 
 An example of this is in Skyrim Npc's Worn Armor.   It is a `FormID` in the subrecord `WNAM`, which points to an Armor an Npc wears.
 Consider how this Worn Armor can be null:
+
 - `WNAM`'s value can be 0
 - WNAM can be missing entirely
 
 And how a `FormLinkNullable`'s `FormKey` will be exposed in those differing scenarios:
+
 - When `WNAM`s value is 0, `FormKey` will not be null, and will contain a zero ID
 - When `WNAM` is missing entirely, `FormKey` member will be null
 

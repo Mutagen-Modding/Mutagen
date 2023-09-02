@@ -5,6 +5,7 @@ Header Structs are lightweight overlays that "lay" on top of some bytes and offe
 Using Header Structs, very performant and low level parsing is possible while retaining a large degree of safety and usability.  
 
 Some notable features:
+
 - **Alignment is handled internally**.  User can access the fields they are interested in, without needing to worry about proper offsetting.
 - **No parsing is done except what the user asks for**.  If only one field is accessed, then most of the header data will remain unparsed, and that work skipped.
 - **Code written with this setup can work with any Bethesda game**, as swapping out [Game Constants](Game-Constants.md) will realign everything properly.
@@ -52,6 +53,7 @@ This code will only do the minimal parsing necessary to locate/print the EditorI
 Header Structs come in a few combinations and flavors.  The above code makes use of several of them.
 ### Categories
 There are Header Structs for:
+
 - Groups
 - MajorRecords
 - Subrecords
@@ -66,6 +68,7 @@ Each category also comes in a few flavors.
 This is the most basic version that has been discussed in the descriptions above.  It overlays on top of bytes and offers API to access the various aspects of the header.
 
 Typical accessors include:
+
 - `RecordType` that the header is (EDID, NPC_, etc)
 - `HeaderLength`
 - `ContentLength`

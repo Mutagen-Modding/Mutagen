@@ -2,6 +2,7 @@
 As Bethesda games are released, headers are modified slightly.  They still have a lot in common, but certain things move or the total length changes, or something else that will misalign any common parsing code.
 
 `GameConstants` is a class containing all the various alignment information specific to a game.  Things like:
+
 - ModHeaderLength
 - HeaderIncludedInLength
 - LengthLength (amount of bytes the 'length' section is)

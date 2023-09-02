@@ -27,6 +27,7 @@ In all examples, the `DataRelativePath` remains the same, as that is what it's a
 
 ## AssetTypes - AssetLink's Generic Type
 An `AssetLink`'s generic type is the type of asset it relates to.  So, for example, a Skyrim Model path will be of type `AssetLink<SkyrimModelAssetType>`, where `SkyrimModelAssetType` is a meta class containing information about Skyrim Model assets:
+
 - `BaseFolder`, what subfolder underneath /Data/ these assests are expected to live
 - `FileExtensions`, what expected file extensions these types of meta files will have
 
@@ -54,11 +55,14 @@ foreach (var asset in assetContainer.EnumerateAllAssetLinks(assetLinkCache))
 
 ## AssetLinkQuery
 This is a flag enum with three options, letting you control what type of Assets you want to enumerate:
+
 - `Listed`.  Assets explicitly listed in the records:
   - Skyrim Model Path
+
 - `Inferred`.  Assets that can be inferred by fields that exist on the record
   - Armor Addon World Model `_0` `_1` suffix assets
   - Book text `src` links pointing to textures
+
 - `Resolved`.  Assets that can be inferred by looking at other records, and require FormLink lookups on a Link Cache.
   - Dialog Topic's Voice Type paths 
 
