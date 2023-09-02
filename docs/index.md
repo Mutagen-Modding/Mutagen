@@ -5,6 +5,7 @@ Mutagen is a C# library for analyzing, modifying, and creating Bethesda mods. On
 
 ## Goals
 What is Mutagen trying to provide?
+
 - Ability to analyze, create, or manipulate Bethesda mods in C#.
 - Strongly typed objects and fields for all records, which naturally offer Intellisense and type safety.
 - User abstraction from complex binary record structures/patterns, when appropriate and beneficial.
@@ -42,28 +43,34 @@ PrintAll(mod.Armors);
 Check out the [Wiki](https://github.com/Mutagen-Modding/Mutagen/wiki) for more detailed explainations of Mutagen's API, and more typical use cases and examples.
 ### [Plugins](https://github.com/Mutagen-Modding/Mutagen/wiki/Plugin-Record-Suite)
 Importing, exporting, and manipulating plugins (esp/esm.esl files)
+
  - [Mutable Classes](https://github.com/Mutagen-Modding/Mutagen/wiki/Generated-Classes)
  - [Lightweight Read-only Access](https://github.com/Mutagen-Modding/Mutagen/wiki/Binary-Overlay)
  - [Enhanced FormID Concepts](https://github.com/Mutagen-Modding/Mutagen/wiki/ModKey%2C-FormKey%2C-FormLink)
 ### Linking and Record Lookups
 Following FormID pointers and looking up records by FormID/FormKey/EditorID
+
  - [Record Lookup](https://github.com/Mutagen-Modding/Mutagen/wiki/LinkCache---Record-Lookup#querying-a-linkcache)
  - Context Concepts
  - Mutable vs Immutable Caches
 ### Load Order
 Accessing the order mods should load and override one another
+
  - [Read/Write support](https://github.com/Mutagen-Modding/Mutagen/wiki/Load-Orders-and-Winning-Overrides)
  - Live monitoring that adapts to on-disk changes
  - Winning Override Iteration
 ### Archives (Bsa/Ba2)
 Extracting assets from archive files
+
  - Read support
 ### Strings
 Multi language string support systems
+
  - [Dictionary Style API](https://github.com/Mutagen-Modding/Mutagen/wiki/Translated-Strings#translatedstring)
  - [Read/Write support](https://github.com/Mutagen-Modding/Mutagen/wiki/Translated-Strings#stringslookupoverlay)
 ### WPF UI Controls
 Controls that can be used in any WPF app
+
  - FormKey Pickers
  - ModKey Pickers
  - Load Order display and manipulation
