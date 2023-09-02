@@ -6,7 +6,7 @@ public partial class Scene
     public enum Flag
     {
         BeginOnQuestStart = 0x001,
-        StopOnQuestEnd = 0x002,
+        StopQuestOnEnd = 0x002,
         RepeatConditionsWhileTrue = 0x008,
         Interruptable = 0x010,
     }

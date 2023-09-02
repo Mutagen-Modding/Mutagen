@@ -89,6 +89,17 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> IPlacedCreatureGetter.GlobalVariable => this.GlobalVariable;
         #endregion
+        #region DistantLODData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DistantLODData? _DistantLODData;
+        public DistantLODData? DistantLODData
+        {
+            get => _DistantLODData;
+            set => _DistantLODData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDistantLODDataGetter? IPlacedCreatureGetter.DistantLODData => this.DistantLODData;
+        #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private EnableParent? _EnableParent;
@@ -156,6 +167,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = initialValue;
                 this.FactionRank = initialValue;
                 this.GlobalVariable = initialValue;
+                this.DistantLODData = new MaskItem<TItem, DistantLODData.Mask<TItem>?>(initialValue, new DistantLODData.Mask<TItem>(initialValue));
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(initialValue, new EnableParent.Mask<TItem>(initialValue));
                 this.RagdollData = initialValue;
                 this.Scale = initialValue;
@@ -172,6 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Owner,
                 TItem FactionRank,
                 TItem GlobalVariable,
+                TItem DistantLODData,
                 TItem EnableParent,
                 TItem RagdollData,
                 TItem Scale,
@@ -187,6 +200,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = Owner;
                 this.FactionRank = FactionRank;
                 this.GlobalVariable = GlobalVariable;
+                this.DistantLODData = new MaskItem<TItem, DistantLODData.Mask<TItem>?>(DistantLODData, new DistantLODData.Mask<TItem>(DistantLODData));
                 this.EnableParent = new MaskItem<TItem, EnableParent.Mask<TItem>?>(EnableParent, new EnableParent.Mask<TItem>(EnableParent));
                 this.RagdollData = RagdollData;
                 this.Scale = Scale;
@@ -206,6 +220,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Owner;
             public TItem FactionRank;
             public TItem GlobalVariable;
+            public MaskItem<TItem, DistantLODData.Mask<TItem>?>? DistantLODData { get; set; }
             public MaskItem<TItem, EnableParent.Mask<TItem>?>? EnableParent { get; set; }
             public TItem RagdollData;
             public TItem Scale;
@@ -227,6 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Owner, rhs.Owner)) return false;
                 if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
+                if (!object.Equals(this.DistantLODData, rhs.DistantLODData)) return false;
                 if (!object.Equals(this.EnableParent, rhs.EnableParent)) return false;
                 if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
@@ -240,6 +256,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Owner);
                 hash.Add(this.FactionRank);
                 hash.Add(this.GlobalVariable);
+                hash.Add(this.DistantLODData);
                 hash.Add(this.EnableParent);
                 hash.Add(this.RagdollData);
                 hash.Add(this.Scale);
@@ -258,6 +275,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Owner)) return false;
                 if (!eval(this.FactionRank)) return false;
                 if (!eval(this.GlobalVariable)) return false;
+                if (DistantLODData != null)
+                {
+                    if (!eval(this.DistantLODData.Overall)) return false;
+                    if (this.DistantLODData.Specific != null && !this.DistantLODData.Specific.All(eval)) return false;
+                }
                 if (EnableParent != null)
                 {
                     if (!eval(this.EnableParent.Overall)) return false;
@@ -282,6 +304,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Owner)) return true;
                 if (eval(this.FactionRank)) return true;
                 if (eval(this.GlobalVariable)) return true;
+                if (DistantLODData != null)
+                {
+                    if (eval(this.DistantLODData.Overall)) return true;
+                    if (this.DistantLODData.Specific != null && this.DistantLODData.Specific.Any(eval)) return true;
+                }
                 if (EnableParent != null)
                 {
                     if (eval(this.EnableParent.Overall)) return true;
@@ -313,6 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Owner = eval(this.Owner);
                 obj.FactionRank = eval(this.FactionRank);
                 obj.GlobalVariable = eval(this.GlobalVariable);
+                obj.DistantLODData = this.DistantLODData == null ? null : new MaskItem<R, DistantLODData.Mask<R>?>(eval(this.DistantLODData.Overall), this.DistantLODData.Specific?.Translate(eval));
                 obj.EnableParent = this.EnableParent == null ? null : new MaskItem<R, EnableParent.Mask<R>?>(eval(this.EnableParent.Overall), this.EnableParent.Specific?.Translate(eval));
                 obj.RagdollData = eval(this.RagdollData);
                 obj.Scale = eval(this.Scale);
@@ -351,6 +379,10 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendItem(GlobalVariable, "GlobalVariable");
                     }
+                    if (printMask?.DistantLODData?.Overall ?? true)
+                    {
+                        DistantLODData?.Print(sb);
+                    }
                     if (printMask?.EnableParent?.Overall ?? true)
                     {
                         EnableParent?.Print(sb);
@@ -382,6 +414,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Owner;
             public Exception? FactionRank;
             public Exception? GlobalVariable;
+            public MaskItem<Exception?, DistantLODData.ErrorMask?>? DistantLODData;
             public MaskItem<Exception?, EnableParent.ErrorMask?>? EnableParent;
             public Exception? RagdollData;
             public Exception? Scale;
@@ -402,6 +435,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return FactionRank;
                     case PlacedCreature_FieldIndex.GlobalVariable:
                         return GlobalVariable;
+                    case PlacedCreature_FieldIndex.DistantLODData:
+                        return DistantLODData;
                     case PlacedCreature_FieldIndex.EnableParent:
                         return EnableParent;
                     case PlacedCreature_FieldIndex.RagdollData:
@@ -431,6 +466,9 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case PlacedCreature_FieldIndex.GlobalVariable:
                         this.GlobalVariable = ex;
+                        break;
+                    case PlacedCreature_FieldIndex.DistantLODData:
+                        this.DistantLODData = new MaskItem<Exception?, DistantLODData.ErrorMask?>(ex, null);
                         break;
                     case PlacedCreature_FieldIndex.EnableParent:
                         this.EnableParent = new MaskItem<Exception?, EnableParent.ErrorMask?>(ex, null);
@@ -467,6 +505,9 @@ namespace Mutagen.Bethesda.Oblivion
                     case PlacedCreature_FieldIndex.GlobalVariable:
                         this.GlobalVariable = (Exception?)obj;
                         break;
+                    case PlacedCreature_FieldIndex.DistantLODData:
+                        this.DistantLODData = (MaskItem<Exception?, DistantLODData.ErrorMask?>?)obj;
+                        break;
                     case PlacedCreature_FieldIndex.EnableParent:
                         this.EnableParent = (MaskItem<Exception?, EnableParent.ErrorMask?>?)obj;
                         break;
@@ -492,6 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Owner != null) return true;
                 if (FactionRank != null) return true;
                 if (GlobalVariable != null) return true;
+                if (DistantLODData != null) return true;
                 if (EnableParent != null) return true;
                 if (RagdollData != null) return true;
                 if (Scale != null) return true;
@@ -534,6 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     sb.AppendItem(GlobalVariable, "GlobalVariable");
                 }
+                DistantLODData?.Print(sb);
                 EnableParent?.Print(sb);
                 {
                     sb.AppendItem(RagdollData, "RagdollData");
@@ -554,6 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Owner = this.Owner.Combine(rhs.Owner);
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
+                ret.DistantLODData = this.DistantLODData.Combine(rhs.DistantLODData, (l, r) => l.Combine(r));
                 ret.EnableParent = this.EnableParent.Combine(rhs.EnableParent, (l, r) => l.Combine(r));
                 ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
@@ -584,6 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Owner;
             public bool FactionRank;
             public bool GlobalVariable;
+            public DistantLODData.TranslationMask? DistantLODData;
             public EnableParent.TranslationMask? EnableParent;
             public bool RagdollData;
             public bool Scale;
@@ -613,6 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((GlobalVariable, null));
+                ret.Add((DistantLODData != null ? DistantLODData.OnOverall : DefaultOn, DistantLODData?.GetCrystal()));
                 ret.Add((EnableParent != null ? EnableParent.OnOverall : DefaultOn, EnableParent?.GetCrystal()));
                 ret.Add((RagdollData, null));
                 ret.Add((Scale, null));
@@ -752,6 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
         new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
+        new DistantLODData? DistantLODData { get; set; }
         new EnableParent? EnableParent { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new Single? Scale { get; set; }
@@ -779,6 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IFactionGetter> Owner { get; }
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
+        IDistantLODDataGetter? DistantLODData { get; }
         IEnableParentGetter? EnableParent { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         Single? Scale { get; }
@@ -961,10 +1009,11 @@ namespace Mutagen.Bethesda.Oblivion
         Owner = 6,
         FactionRank = 7,
         GlobalVariable = 8,
-        EnableParent = 9,
-        RagdollData = 10,
-        Scale = 11,
-        Location = 12,
+        DistantLODData = 9,
+        EnableParent = 10,
+        RagdollData = 11,
+        Scale = 12,
+        Location = 13,
     }
     #endregion
 
@@ -982,9 +1031,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public const string GUID = "b0f41e71-09f4-46b3-8769-7252455d209f";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(PlacedCreature.Mask<>);
 
@@ -1021,6 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.XOWN,
                 RecordTypes.XRNK,
                 RecordTypes.XGLB,
+                RecordTypes.XLOD,
                 RecordTypes.XESP,
                 RecordTypes.XRGD,
                 RecordTypes.XSCL,
@@ -1073,6 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion
             item.Owner.Clear();
             item.FactionRank = default;
             item.GlobalVariable.Clear();
+            item.DistantLODData = null;
             item.EnableParent = null;
             item.RagdollData = default;
             item.Scale = default;
@@ -1169,6 +1220,11 @@ namespace Mutagen.Bethesda.Oblivion
             ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.GlobalVariable = item.GlobalVariable.Equals(rhs.GlobalVariable);
+            ret.DistantLODData = EqualsMaskHelper.EqualsHelper(
+                item.DistantLODData,
+                rhs.DistantLODData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.EnableParent = EqualsMaskHelper.EqualsHelper(
                 item.EnableParent,
                 rhs.EnableParent,
@@ -1246,6 +1302,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (printMask?.GlobalVariable ?? true)
             {
                 sb.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
+            }
+            if ((printMask?.DistantLODData?.Overall ?? true)
+                && item.DistantLODData is {} DistantLODDataItem)
+            {
+                DistantLODDataItem?.Print(sb, "DistantLODData");
             }
             if ((printMask?.EnableParent?.Overall ?? true)
                 && item.EnableParent is {} EnableParentItem)
@@ -1329,6 +1390,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.DistantLODData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DistantLODData, rhs.DistantLODData, out var lhsDistantLODData, out var rhsDistantLODData, out var isDistantLODDataEqual))
+                {
+                    if (!((DistantLODDataCommon)((IDistantLODDataGetter)lhsDistantLODData).CommonInstance()!).Equals(lhsDistantLODData, rhsDistantLODData, equalsMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.DistantLODData))) return false;
+                }
+                else if (!isDistantLODDataEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
@@ -1388,6 +1457,10 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(FactionRankitem);
             }
             hash.Add(item.GlobalVariable);
+            if (item.DistantLODData is {} DistantLODDataitem)
+            {
+                hash.Add(DistantLODDataitem);
+            }
             if (item.EnableParent is {} EnableParentitem)
             {
                 hash.Add(EnableParentitem);
@@ -1541,6 +1614,32 @@ namespace Mutagen.Bethesda.Oblivion
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.GlobalVariable) ?? true))
             {
                 item.GlobalVariable.SetTo(rhs.GlobalVariable.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.DistantLODData) ?? true))
+            {
+                errorMask?.PushIndex((int)PlacedCreature_FieldIndex.DistantLODData);
+                try
+                {
+                    if(rhs.DistantLODData is {} rhsDistantLODData)
+                    {
+                        item.DistantLODData = rhsDistantLODData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedCreature_FieldIndex.DistantLODData));
+                    }
+                    else
+                    {
+                        item.DistantLODData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedCreature_FieldIndex.EnableParent) ?? true))
             {
@@ -1782,6 +1881,13 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 item: item.GlobalVariable,
                 header: translationParams.ConvertToCustom(RecordTypes.XGLB));
+            if (item.DistantLODData is {} DistantLODDataItem)
+            {
+                ((DistantLODDataBinaryWriteTranslation)((IBinaryItem)DistantLODDataItem).BinaryWriteTranslator).Write(
+                    item: DistantLODDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.EnableParent is {} EnableParentItem)
             {
                 ((EnableParentBinaryWriteTranslation)((IBinaryItem)EnableParentItem).BinaryWriteTranslator).Write(
@@ -1916,6 +2022,11 @@ namespace Mutagen.Bethesda.Oblivion
                     item.GlobalVariable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedCreature_FieldIndex.GlobalVariable;
                 }
+                case RecordTypeInts.XLOD:
+                {
+                    item.DistantLODData = Mutagen.Bethesda.Oblivion.DistantLODData.CreateFromBinary(frame: frame);
+                    return (int)PlacedCreature_FieldIndex.DistantLODData;
+                }
                 case RecordTypeInts.XESP:
                 {
                     item.EnableParent = Mutagen.Bethesda.Oblivion.EnableParent.CreateFromBinary(frame: frame);
@@ -2013,6 +2124,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
         public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => _GlobalVariableLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlobalVariableLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        #region DistantLODData
+        private RangeInt32? _DistantLODDataLocation;
+        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(_recordData.Slice(_DistantLODDataLocation!.Value.Min), _package) : default;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
@@ -2115,6 +2230,11 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     _GlobalVariableLocation = (stream.Position - offset);
                     return (int)PlacedCreature_FieldIndex.GlobalVariable;
+                }
+                case RecordTypeInts.XLOD:
+                {
+                    _DistantLODDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)PlacedCreature_FieldIndex.DistantLODData;
                 }
                 case RecordTypeInts.XESP:
                 {

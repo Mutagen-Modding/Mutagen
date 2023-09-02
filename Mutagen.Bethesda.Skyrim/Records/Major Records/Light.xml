@@ -26,6 +26,7 @@
       </Data>
       <Float name="FadeValue" recordType="FNAM" nullable="False" />
       <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="Lens" refName="LensFlare" recordType="LNAM" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IItemOrList</LinkInterface>
