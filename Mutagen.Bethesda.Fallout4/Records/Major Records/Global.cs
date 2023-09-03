@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -15,8 +14,6 @@ public partial interface IGlobalGetter
 
 public partial class Global : GlobalCustomParsing.IGlobalCommon
 {
-    protected static readonly RecordType FNAM = new("FNAM");
-
     public abstract float? RawFloat { get; set; }
     
     char IGlobalGetter.TypeChar => throw new NotImplementedException();

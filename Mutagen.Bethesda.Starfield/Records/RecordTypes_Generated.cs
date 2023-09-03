@@ -18,9 +18,12 @@ public partial class RecordTypes
     public static readonly RecordType EDID = new(0x44494445);
     public static readonly RecordType ENAM = new(0x4D414E45);
     public static readonly RecordType FFKW = new(0x574B4646);
+    public static readonly RecordType FLCS = new(0x53434C46);
     public static readonly RecordType FLTR = new(0x52544C46);
+    public static readonly RecordType FLTV = new(0x56544C46);
     public static readonly RecordType FNAM = new(0x4D414E46);
     public static readonly RecordType FULL = new(0x4C4C5546);
+    public static readonly RecordType GLOB = new(0x424F4C47);
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HEDR = new(0x52444548);

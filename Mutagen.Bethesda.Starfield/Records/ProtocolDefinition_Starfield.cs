@@ -34,7 +34,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ActionRecord_Registration.Instance,
             Transform_Registration.Instance,
             ObjectBounds_Registration.Instance,
-            TextureSet_Registration.Instance
+            TextureSet_Registration.Instance,
+            Global_Registration.Instance
         );
     }
 }

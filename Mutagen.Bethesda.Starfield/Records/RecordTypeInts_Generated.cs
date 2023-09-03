@@ -16,9 +16,12 @@ public partial class RecordTypeInts
     public const int EDID = 0x44494445;
     public const int ENAM = 0x4D414E45;
     public const int FFKW = 0x574B4646;
+    public const int FLCS = 0x53434C46;
     public const int FLTR = 0x52544C46;
+    public const int FLTV = 0x56544C46;
     public const int FNAM = 0x4D414E46;
     public const int FULL = 0x4C4C5546;
+    public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GRUP = 0x50555247;
     public const int HEDR = 0x52444548;
