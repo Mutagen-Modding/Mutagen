@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.AutoFixture;
 using NSubstitute;
 using Xunit;
 
@@ -155,5 +156,25 @@ public class EnumCompletenessTests
             IniPathLookup.ToIniName(release);
         }
     }
+    #endregion
+
+    #region PluginListingsPathProvider
+
+    [Theory, DefaultAutoData]
+    public void PluginListingsPathProviderTest(PluginListingsPathProvider prov)
+    {
+        foreach (var release in Enums<GameRelease>.Values)
+        {
+            try
+            {
+                prov.GetGameFolder(release).Should().NotBeEmpty();
+            }
+            catch (ArgumentException)
+            {
+                // Acceptable
+            }
+        }
+    }
+
     #endregion
 }

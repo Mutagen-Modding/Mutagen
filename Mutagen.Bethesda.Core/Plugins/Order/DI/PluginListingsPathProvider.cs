@@ -9,7 +9,7 @@ public interface IPluginListingsPathProvider
 
 public class PluginListingsPathProvider : IPluginListingsPathProvider
 {
-    private string GetGameFolder(GameRelease release)
+    internal string GetGameFolder(GameRelease release)
     {
         return release switch
         {
@@ -21,6 +21,7 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
             GameRelease.EnderalSE => "Enderal Special Edition",
             GameRelease.SkyrimVR => "Skyrim VR",
             GameRelease.Fallout4 => "Fallout4",
+            GameRelease.Starfield => "Starfield",
             _ => throw new NotImplementedException()
         };
     }
