@@ -27,6 +27,7 @@ public sealed class CreationClubEnabledProvider : ICreationClubEnabledProvider
                     return false;
                 case GameCategory.Skyrim:
                 case GameCategory.Fallout4:
+                case GameCategory.Starfield:
                     return true;
                 default:
                     throw new NotImplementedException();

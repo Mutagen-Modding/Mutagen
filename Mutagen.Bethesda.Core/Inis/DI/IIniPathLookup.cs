@@ -43,6 +43,7 @@ public class IniPathLookup : IIniPathLookup
             GameRelease.EnderalSE => "Enderal Special Edition",
             GameRelease.SkyrimVR => "Skyrim VR",
             GameRelease.Fallout4 => "Fallout4",
+            GameRelease.Starfield => throw new ArgumentException("Starfield does not have ini in My Documents"),
             _ => throw new NotImplementedException(),
         };
     }

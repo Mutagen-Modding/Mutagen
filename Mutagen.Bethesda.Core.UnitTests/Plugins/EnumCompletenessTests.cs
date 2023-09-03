@@ -134,7 +134,14 @@ public class EnumCompletenessTests
     {
         foreach (var release in Enums<GameRelease>.Values)
         {
-            IniPathLookup.ToMyDocumentsString(release);
+            try
+            {
+                IniPathLookup.ToMyDocumentsString(release);
+            }
+            catch (ArgumentException)
+            {
+                // Acceptable
+            }
         }
     }
     #endregion

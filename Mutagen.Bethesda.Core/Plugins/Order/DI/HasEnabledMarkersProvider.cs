@@ -18,6 +18,7 @@ public sealed class HasEnabledMarkersProvider : IHasEnabledMarkersProvider
             return _gameReleaseContext.Release switch
             {
                 GameRelease.Fallout4 => true,
+                GameRelease.Starfield => true,
                 GameRelease.SkyrimSE => true,
                 GameRelease.SkyrimSEGog => true,
                 GameRelease.EnderalSE => true,
