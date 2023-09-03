@@ -528,13 +528,6 @@ namespace Mutagen.Bethesda.Fallout4
                 PackIn_Registration.Instance,
             });
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
-            dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-            {
-                Component_Registration.Instance,
-                SoundMarker_Registration.Instance,
-                TextureSet_Registration.Instance,
-            });
-            dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 APlacedTrap_Registration.Instance,
@@ -552,12 +545,6 @@ namespace Mutagen.Bethesda.Fallout4
                 StaticPlacement_Registration.Instance,
                 TeleportDestination_Registration.Instance,
                 Transform_Registration.Instance,
-            });
-            dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
-            dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
-            {
-                PlacedNpc_Registration.Instance,
-                APlacedTrap_Registration.Instance,
             });
             dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

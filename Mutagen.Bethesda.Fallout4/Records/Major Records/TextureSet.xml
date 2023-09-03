@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="Fallout4MajorRecord" GUID="526a513c-010f-4dba-afef-b371137e2a21" ID="42">
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Diffuse" recordType="TX00" />

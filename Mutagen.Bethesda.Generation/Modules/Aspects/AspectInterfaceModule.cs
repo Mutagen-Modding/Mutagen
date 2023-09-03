@@ -188,6 +188,8 @@ public class AspectInterfaceModule : GenerationModule
                 mappingGen.AppendLine($"public {proto.Protocol.Namespace}AspectInterfaceMapping()");
                 using (mappingGen.CurlyBrace())
                 {
+                    HashSet<string> addedKeys = new();
+                    
                     mappingGen.AppendLine($"var dict = new Dictionary<Type, {nameof(InterfaceMappingResult)}>();");
                     List<(string Name, Action ToDo)> toDo = new();
                     foreach (var aspectDef in mappings)
@@ -202,6 +204,11 @@ public class AspectInterfaceModule : GenerationModule
                                     if (first == null)
                                     {
                                         first = reg;
+                                        if (!addedKeys.Add(first.Value.Name))
+                                        {
+                                            throw new ArgumentException(
+                                                $"Added two keys for aspect interface definition: {first.Value.Name}");
+                                        }
                                         mappingGen.AppendLine($"dict[typeof({first.Value.Name})] = new {nameof(InterfaceMappingResult)}({first.Value.Setter.ToString().ToLower()}, new {nameof(ILoquiRegistration)}[]");
                                         using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
                                         {
@@ -213,6 +220,11 @@ public class AspectInterfaceModule : GenerationModule
                                     }
                                     else
                                     {
+                                        if (!addedKeys.Add(reg.Name))
+                                        {
+                                            throw new ArgumentException(
+                                                $"Added two keys for aspect interface definition: {reg.Name}");
+                                        }
                                         mappingGen.AppendLine($"dict[typeof({reg.Name})] = dict[typeof({first.Value.Name})] with {{ Setter = {reg.Setter.ToString().ToLower()} }};");
                                     }
                                 }
@@ -233,6 +245,11 @@ public class AspectInterfaceModule : GenerationModule
                     {
                         toDo.Add((loose.Key, () =>
                         {
+                            if (!addedKeys.Add(loose.Key))
+                            {
+                                throw new ArgumentException(
+                                    $"Added two keys for aspect interface definition: {loose.Key}");
+                            }
                             mappingGen.AppendLine($"dict[typeof({loose.Key})] = new {nameof(InterfaceMappingResult)}(true, new {nameof(ILoquiRegistration)}[]");
                             using (mappingGen.CurlyBrace(appendSemiColon: true, appendParenthesis: true))
                             {
@@ -240,6 +257,11 @@ public class AspectInterfaceModule : GenerationModule
                                 {
                                     mappingGen.AppendLine($"{obj.RegistrationName}.Instance,");
                                 }
+                            }
+                            if (!addedKeys.Add($"{loose.Key}Getter"))
+                            {
+                                throw new ArgumentException(
+                                    $"Added two keys for aspect interface definition: {loose.Key}Getter");
                             }
                             mappingGen.AppendLine($"dict[typeof({loose.Key}Getter)] = dict[typeof({loose.Key})] with {{ Setter = false }};");
                         }));

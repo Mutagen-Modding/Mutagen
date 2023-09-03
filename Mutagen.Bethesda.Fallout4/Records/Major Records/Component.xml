@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Component" recordType="CMPO" objType="Record" baseClass="Fallout4MajorRecord" GUID="e43c4f0e-2b13-48e6-bf24-396a30d48a02" ID="37">
-    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="APlacedTrap" baseClass="Fallout4MajorRecord" abstract="true" objType="Record" majorFlag="true" GUID="31d1155a-457d-4775-ab46-54c028d5613e" ID="474">
-    <Interface>IPositionRotation</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <CustomLogic name="TrapForm" byteLength="4" recordType="NAME" />
