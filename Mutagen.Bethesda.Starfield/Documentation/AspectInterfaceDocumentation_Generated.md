@@ -10,6 +10,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### INamed
 - ActionRecord
 - Keyword
+### IObjectBounded
+- TextureSet
 ### IPositionRotation
 - Transform
 ## Concrete Classes to Interfaces
@@ -18,6 +20,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Keyword
 - IKeywordCommon
 - INamed
+### TextureSet
+- IObjectBounded
 ### Transform
 - IPositionRotation
 ### Weapon

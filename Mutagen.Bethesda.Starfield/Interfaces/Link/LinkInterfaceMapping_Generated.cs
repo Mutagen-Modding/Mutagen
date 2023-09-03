@@ -34,6 +34,26 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             LocationReferenceType_Registration.Instance,
         });
         dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
+        dict[typeof(IObjectId)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            TextureSet_Registration.Instance,
+        });
+        dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)] with { Setter = false };
+        dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            TextureSet_Registration.Instance,
+        });
+        dict[typeof(IPlaceableObjectGetter)] = dict[typeof(IPlaceableObject)] with { Setter = false };
+        dict[typeof(IReferenceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            TextureSet_Registration.Instance,
+        });
+        dict[typeof(IReferenceableObjectGetter)] = dict[typeof(IReferenceableObject)] with { Setter = false };
+        dict[typeof(IExplodeSpawn)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            TextureSet_Registration.Instance,
+        });
+        dict[typeof(IExplodeSpawnGetter)] = dict[typeof(IExplodeSpawn)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

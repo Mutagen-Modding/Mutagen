@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="StarfieldMajorRecord" GUID="9ec6bbcb-6d54-42bc-8824-e567d98c2a22" ID="86">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False"/>
+      <ByteArray name="ODTY" recordType="ODTY"/>
+      <String name="TX00" recordType="TX00"/>
+      <String name="TX01" recordType="TX01"/>
+      <String name="TX08" recordType="TX08"/>
+      <String name="TX09" recordType="TX09"/>
+      <String name="TX17" recordType="TX17"/>
+      <String name="TX19" recordType="TX19"/>
+      <ByteArray name="DODT" recordType="DODT"/>
+      <Enum name="Flags" enumName="TextureSet.Flag" byteLength="2" recordType="DNAM" nullable="false"/>
+      <String name="Material" recordType="MNAM"/>
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IReferenceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

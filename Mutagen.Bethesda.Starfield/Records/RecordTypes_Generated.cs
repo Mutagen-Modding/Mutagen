@@ -14,6 +14,7 @@ public partial class RecordTypes
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DNAM = new(0x4D414E44);
+    public static readonly RecordType DODT = new(0x54444F44);
     public static readonly RecordType EDID = new(0x44494445);
     public static readonly RecordType ENAM = new(0x4D414E45);
     public static readonly RecordType FFKW = new(0x574B4646);
@@ -28,9 +29,12 @@ public partial class RecordTypes
     public static readonly RecordType KYWD = new(0x4457594B);
     public static readonly RecordType LCRT = new(0x5452434C);
     public static readonly RecordType MAST = new(0x5453414D);
+    public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType MODF = new(0x46444F4D);
     public static readonly RecordType MODL = new(0x4C444F4D);
     public static readonly RecordType NPC_ = new(0x5F43504E);
+    public static readonly RecordType OBND = new(0x444E424F);
+    public static readonly RecordType ODTY = new(0x5954444F);
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
     public static readonly RecordType RACE = new(0x45434152);
@@ -41,6 +45,13 @@ public partial class RecordTypes
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TRNS = new(0x534E5254);
+    public static readonly RecordType TX00 = new(0x30305854);
+    public static readonly RecordType TX01 = new(0x31305854);
+    public static readonly RecordType TX08 = new(0x38305854);
+    public static readonly RecordType TX09 = new(0x39305854);
+    public static readonly RecordType TX17 = new(0x37315854);
+    public static readonly RecordType TX19 = new(0x39315854);
+    public static readonly RecordType TXST = new(0x54535854);
     public static readonly RecordType WEAP = new(0x50414557);
     public static readonly RecordType XALG = new(0x474C4158);
     public static readonly RecordType XXXX = new(0x58585858);

@@ -32,7 +32,9 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             FFKW_Registration.Instance,
             BFCBRecord_Registration.Instance,
             ActionRecord_Registration.Instance,
-            Transform_Registration.Instance
+            Transform_Registration.Instance,
+            ObjectBounds_Registration.Instance,
+            TextureSet_Registration.Instance
         );
     }
 }

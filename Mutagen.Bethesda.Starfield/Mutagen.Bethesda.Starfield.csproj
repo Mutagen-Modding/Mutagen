@@ -96,6 +96,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IObjectBounded.cs" />
     <Compile Include="Interfaces\Aspect\IPositionRotation.cs" />
     <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Records\Common Subrecords\Model_Generated.cs">
@@ -167,6 +168,9 @@
     <Compile Include="Records\Major Records\Race_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\TextureSet.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Transform.cs">
       <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
@@ -226,5 +230,15 @@
     <Compile Include="Records\Major Records\Transform_Generated.cs">
       <DependentUpon>Transform.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectBounds_Generated.cs">
+      <DependentUpon>ObjectBounds.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TextureSet_Generated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
+    <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
+    <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
   </ItemGroup>
 </Project>

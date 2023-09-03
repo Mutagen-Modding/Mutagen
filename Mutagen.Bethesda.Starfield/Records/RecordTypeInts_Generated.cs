@@ -12,6 +12,7 @@ public partial class RecordTypeInts
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
     public const int DNAM = 0x4D414E44;
+    public const int DODT = 0x54444F44;
     public const int EDID = 0x44494445;
     public const int ENAM = 0x4D414E45;
     public const int FFKW = 0x574B4646;
@@ -26,9 +27,12 @@ public partial class RecordTypeInts
     public const int KYWD = 0x4457594B;
     public const int LCRT = 0x5452434C;
     public const int MAST = 0x5453414D;
+    public const int MNAM = 0x4D414E4D;
     public const int MODF = 0x46444F4D;
     public const int MODL = 0x4C444F4D;
     public const int NPC_ = 0x5F43504E;
+    public const int OBND = 0x444E424F;
+    public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
     public const int ONAM = 0x4D414E4F;
     public const int RACE = 0x45434152;
@@ -39,6 +43,13 @@ public partial class RecordTypeInts
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
     public const int TRNS = 0x534E5254;
+    public const int TX00 = 0x30305854;
+    public const int TX01 = 0x31305854;
+    public const int TX08 = 0x38305854;
+    public const int TX09 = 0x39305854;
+    public const int TX17 = 0x37315854;
+    public const int TX19 = 0x39315854;
+    public const int TXST = 0x54535854;
     public const int WEAP = 0x50414557;
     public const int XALG = 0x474C4158;
     public const int XXXX = 0x58585858;
