@@ -59,6 +59,26 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
             GameSetting_Registration.Instance,
         });
         dict[typeof(IGameSettingUIntGetter)] = dict[typeof(IGameSettingUInt)] with { Setter = false };
+        dict[typeof(IGlobalBool)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Global_Registration.Instance,
+        });
+        dict[typeof(IGlobalBoolGetter)] = dict[typeof(IGlobalBool)] with { Setter = false };
+        dict[typeof(IGlobalFloat)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Global_Registration.Instance,
+        });
+        dict[typeof(IGlobalFloatGetter)] = dict[typeof(IGlobalFloat)] with { Setter = false };
+        dict[typeof(IGlobalInt)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Global_Registration.Instance,
+        });
+        dict[typeof(IGlobalIntGetter)] = dict[typeof(IGlobalInt)] with { Setter = false };
+        dict[typeof(IGlobalShort)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Global_Registration.Instance,
+        });
+        dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
         dict[typeof(INpcModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AObjectModification_Registration.Instance,
