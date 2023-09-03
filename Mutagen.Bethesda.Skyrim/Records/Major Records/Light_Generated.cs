@@ -230,6 +230,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ILightGetter.Sound => this.Sound;
         #endregion
+        #region Lens
+        private readonly IFormLinkNullable<ILensFlareGetter> _Lens = new FormLinkNullable<ILensFlareGetter>();
+        public IFormLinkNullable<ILensFlareGetter> Lens
+        {
+            get => _Lens;
+            set => _Lens.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILensFlareGetter> ILightGetter.Lens => this.Lens;
+        #endregion
 
         #region To String
 
@@ -275,6 +285,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = initialValue;
                 this.FadeValue = initialValue;
                 this.Sound = initialValue;
+                this.Lens = initialValue;
             }
 
             public Mask(
@@ -304,7 +315,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Value,
                 TItem Weight,
                 TItem FadeValue,
-                TItem Sound)
+                TItem Sound,
+                TItem Lens)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -334,6 +346,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = Weight;
                 this.FadeValue = FadeValue;
                 this.Sound = Sound;
+                this.Lens = Lens;
             }
 
             #pragma warning disable CS8618
@@ -365,6 +378,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Weight;
             public TItem FadeValue;
             public TItem Sound;
+            public TItem Lens;
             #endregion
 
             #region Equals
@@ -398,6 +412,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.FadeValue, rhs.FadeValue)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.Lens, rhs.Lens)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -423,6 +438,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Weight);
                 hash.Add(this.FadeValue);
                 hash.Add(this.Sound);
+                hash.Add(this.Lens);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -473,6 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Weight)) return false;
                 if (!eval(this.FadeValue)) return false;
                 if (!eval(this.Sound)) return false;
+                if (!eval(this.Lens)) return false;
                 return true;
             }
             #endregion
@@ -521,6 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Weight)) return true;
                 if (eval(this.FadeValue)) return true;
                 if (eval(this.Sound)) return true;
+                if (eval(this.Lens)) return true;
                 return false;
             }
             #endregion
@@ -556,6 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Weight = eval(this.Weight);
                 obj.FadeValue = eval(this.FadeValue);
                 obj.Sound = eval(this.Sound);
+                obj.Lens = eval(this.Lens);
             }
             #endregion
 
@@ -654,6 +673,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Sound, "Sound");
                     }
+                    if (printMask?.Lens ?? true)
+                    {
+                        sb.AppendItem(Lens, "Lens");
+                    }
                 }
             }
             #endregion
@@ -685,6 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Weight;
             public Exception? FadeValue;
             public Exception? Sound;
+            public Exception? Lens;
             #endregion
 
             #region IErrorMask
@@ -733,6 +757,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return FadeValue;
                     case Light_FieldIndex.Sound:
                         return Sound;
+                    case Light_FieldIndex.Lens:
+                        return Lens;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -802,6 +828,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Light_FieldIndex.Sound:
                         this.Sound = ex;
+                        break;
+                    case Light_FieldIndex.Lens:
+                        this.Lens = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -874,6 +903,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Light_FieldIndex.Sound:
                         this.Sound = (Exception?)obj;
                         break;
+                    case Light_FieldIndex.Lens:
+                        this.Lens = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -903,6 +935,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Weight != null) return true;
                 if (FadeValue != null) return true;
                 if (Sound != null) return true;
+                if (Lens != null) return true;
                 return false;
             }
             #endregion
@@ -979,6 +1012,9 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Sound, "Sound");
                 }
+                {
+                    sb.AppendItem(Lens, "Lens");
+                }
             }
             #endregion
 
@@ -1007,6 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.FadeValue = this.FadeValue.Combine(rhs.FadeValue);
                 ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.Lens = this.Lens.Combine(rhs.Lens);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1049,6 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Weight;
             public bool FadeValue;
             public bool Sound;
+            public bool Lens;
             #endregion
 
             #region Ctors
@@ -1072,6 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weight = defaultOn;
                 this.FadeValue = defaultOn;
                 this.Sound = defaultOn;
+                this.Lens = defaultOn;
             }
 
             #endregion
@@ -1099,6 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weight, null));
                 ret.Add((FadeValue, null));
                 ret.Add((Sound, null));
+                ret.Add((Lens, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1308,6 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Weight { get; set; }
         new Single FadeValue { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
+        new IFormLinkNullable<ILensFlareGetter> Lens { get; set; }
         #region Mutagen
         new Light.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1394,6 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single Weight { get; }
         Single FadeValue { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkNullableGetter<ILensFlareGetter> Lens { get; }
 
         #region Mutagen
         Light.MajorFlag MajorFlags { get; }
@@ -1594,6 +1636,7 @@ namespace Mutagen.Bethesda.Skyrim
         Weight = 24,
         FadeValue = 25,
         Sound = 26,
+        Lens = 27,
     }
     #endregion
 
@@ -1611,9 +1654,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const string GUID = "749a2492-52b8-4580-ac1c-b645cabfd20b";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -1657,7 +1700,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.ICON,
                 RecordTypes.DATA,
                 RecordTypes.FNAM,
-                RecordTypes.SNAM);
+                RecordTypes.SNAM,
+                RecordTypes.LNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LightBinaryWriteTranslation);
@@ -1722,6 +1766,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Weight = default;
             item.FadeValue = default;
             item.Sound.Clear();
+            item.Lens.Clear();
             base.Clear(item);
         }
         
@@ -1743,6 +1788,7 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Sound.Relink(mapping);
+            obj.Lens.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILight obj)
@@ -1896,6 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.FadeValue = item.FadeValue.EqualsWithin(rhs.FadeValue);
             ret.Sound = item.Sound.Equals(rhs.Sound);
+            ret.Lens = item.Lens.Equals(rhs.Lens);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2029,6 +2076,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (printMask?.Sound ?? true)
             {
                 sb.AppendItem(item.Sound.FormKeyNullable, "Sound");
+            }
+            if (printMask?.Lens ?? true)
+            {
+                sb.AppendItem(item.Lens.FormKeyNullable, "Lens");
             }
         }
         
@@ -2180,6 +2231,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
+            {
+                if (!lhs.Lens.Equals(rhs.Lens)) return false;
+            }
             return true;
         }
         
@@ -2243,6 +2298,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Weight);
             hash.Add(item.FadeValue);
             hash.Add(item.Sound);
+            hash.Add(item.Lens);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2296,6 +2352,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
             {
                 yield return SoundInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Lens, out var LensInfo))
+            {
+                yield return LensInfo;
             }
             yield break;
         }
@@ -2597,6 +2657,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
+            {
+                item.Lens.SetTo(rhs.Lens.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -2835,6 +2899,10 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Sound,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Lens,
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
         }
 
         public void Write(
@@ -3008,6 +3076,12 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Light_FieldIndex.Sound;
                 }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Lens.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Light_FieldIndex.Lens;
+                }
                 case RecordTypeInts.XXXX:
                 {
                     var overflowHeader = frame.ReadSubrecord();
@@ -3169,6 +3243,10 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _SoundLocation;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
+        #region Lens
+        private int? _LensLocation;
+        public IFormLinkNullableGetter<ILensFlareGetter> Lens => _LensLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LensLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3298,6 +3376,11 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     _SoundLocation = (stream.Position - offset);
                     return (int)Light_FieldIndex.Sound;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _LensLocation = (stream.Position - offset);
+                    return (int)Light_FieldIndex.Lens;
                 }
                 case RecordTypeInts.XXXX:
                 {

@@ -92,6 +92,9 @@
     <Compile Include="Records\Common Subrecords\EnableParent.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Model.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\NavmeshGeometry.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>

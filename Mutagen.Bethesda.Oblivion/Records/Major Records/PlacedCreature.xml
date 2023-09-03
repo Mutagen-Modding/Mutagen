@@ -6,6 +6,7 @@
       <FormLink name="Owner" recordType="XOWN" refName="Faction" />
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
+      <RefDirect name="DistantLODData" refName="DistantLODData" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />

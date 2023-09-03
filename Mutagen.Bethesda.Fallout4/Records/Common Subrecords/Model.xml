@@ -10,7 +10,7 @@
   </Object>
   <Object name="Model" objType="Subrecord" baseClass="SimpleModel" GUID="c791d9f6-adea-4c99-b582-43b365850cf8" ID="84">
     <Fields>
-      <ByteArray name="Unknown" recordType="MODF" />
+      <Enum name="Flags" enumName="Model.Flag" byteLength="1" recordType="MODF" />
     </Fields>
   </Object>
 </Loqui>
