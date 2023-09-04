@@ -28,7 +28,7 @@ foreach (var listing in state.LoadOrder.ListedOrder)
 }
 ```
 
-[Read About Environments](../Environment/index.md)
+[Read About Environments](../environment/index.md)
 
 ## Retrieve a Mod From a Load Order
 ```cs
@@ -49,7 +49,7 @@ if (myLoadOrder.TryGetValue("MyMod.esp", out var mod))
 var modKey = ModKey.FromFileName("Skyrim.esm");
 modKey = new ModKey("Skyrim", ModType.Plugin);
 ```
-[Read About ModKeys](../plugin/ModKey,-FormKey,-FormLink.md#modkey)
+[Read About ModKeys](../plugins/ModKey,%2C-FormKey,%2C-FormLink.md#modkey)
 
 ## Get List of Masters From A Mod
 ### Via MasterReferenceCollection
@@ -100,7 +100,7 @@ IMasterReferenceCollection masterCollection = ...;
 FormID formID = masterCollection.GetFormID(formKey);
 ```
 
-[Read About FormKeys](../plugin/ModKey,-FormKey,-FormLink.md#formkey)
+[Read About FormKeys](../plugins/ModKey,%2C-FormKey,%2C-FormLink.md#formkey)
 
 ## Convert FormKey to FormLink
 ```cs
@@ -109,7 +109,7 @@ FormKey formKey = ...;
 var npcLink = formKey.ToLink<INpcGetter>();
 ```
 
-[Read About FormKeys](../plugin/ModKey,-FormKey,-FormLink.md#formkey)
+[Read About FormKeys](../plugins/ModKey,%2C-FormKey,%2C-FormLink.md#formkey)
 
 ## Convert MajorRecord to FormLink
 ```cs
@@ -153,7 +153,7 @@ if (target.FormKey.Equals(npc.Race))
 }
 ```
 
-[Read About FormKeys](../plugin/ModKey,-FormKey,-FormLink.md#formkey)
+[Read About FormKeys](../plugins/ModKey,%2C-FormKey,%2C-FormLink.md#formkey)
 
 ### By FormLink
 ```cs
@@ -166,7 +166,7 @@ if (target.Equals(npc.Race))
 }
 ```
 
-[Read About FormLinks](../plugin/ModKey,-FormKey,-FormLink.md#formlink)
+[Read About FormLinks](../plugins/ModKey,%2C-FormKey,%2C-FormLink.md#formlink)
 
 ### Using FormKey Mapping Library
 ```cs
@@ -192,8 +192,8 @@ var dup2 = someMod.Npcs.DuplicateInAsNewRecord(newFormKey);
 var dup3 = someMod.Npcs.DuplicateInAsNewRecord(someEditorId);
 ```
 
-[Read more about duplication](../plugin/Create,-Duplicate,-and-Override.md#by-duplication)
-[Read more about FormKey Persistence](../plugin/FormKey-Allocation-and-Persistence.md)
+[Read more about duplication](../plugins/Create,-Duplicate,-and-Override.md#by-duplication)
+[Read more about FormKey Persistence](../plugins/FormKey-Allocation-and-Persistence.md)
 
 ## Detect if Given Plugin is the Winning Override for a Specific Record
 There might be several ways to accomplish this, depending on the gritty situation, but here is one route:
