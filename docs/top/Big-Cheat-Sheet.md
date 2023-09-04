@@ -194,3 +194,21 @@ var dup3 = someMod.Npcs.DuplicateInAsNewRecord(someEditorId);
 
 [Read more about duplication](../plugin/Create,-Duplicate,-and-Override.md#by-duplication)
 [Read more about FormKey Persistence](../plugin/FormKey-Allocation-and-Persistence.md)
+
+## Detect if Given Plugin is the Winning Override for a Specific Record
+There might be several ways to accomplish this, depending on the gritty situation, but here is one route:
+```cs
+// Use the link cache to locate the winning record, with additional context
+if (formLinkOfRecordOfInterest.TryResolveSimpleContext(someLinkCache, out var context))
+{
+    // The context's ModKey will be from the record that contained it
+    if (context.ModKey == givenPlugin.ModKey)
+    {
+        // givenPlugin was the winningmost override for the record!
+    }
+    else
+    {
+        // Some other mod is the winningmost override for this record:  context.ModKey will have which one that is
+    }
+}
+```
