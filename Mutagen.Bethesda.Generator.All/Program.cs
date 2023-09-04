@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Fallout4.Generator;
 using Mutagen.Bethesda.Pex.Generator;
 using Mutagen.Bethesda.Skyrim.Generator;
 using System.Diagnostics;
+using Mutagen.Bethesda.Starfield.Generator;
 
 ContainerBuilder builder = new();
 builder.RegisterModule<GeneratorAutofacModule>();
@@ -13,7 +14,8 @@ builder.RegisterAssemblyTypes(
         typeof(PexGenerationConstructor).Assembly,
         typeof(OblivionGenerationConstructor).Assembly,
         typeof(SkyrimGenerationConstructor).Assembly,
-        typeof(Fallout4GenerationConstructor).Assembly)
+        typeof(Fallout4GenerationConstructor).Assembly,
+        typeof(StarfieldGenerationConstructor).Assembly)
     .AsSelf()
     .AsImplementedInterfaces();
 var cont = builder.Build();
