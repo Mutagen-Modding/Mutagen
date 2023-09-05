@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class FFKW :
+    public partial class FFKWRecord :
         StarfieldMajorRecord,
-        IEquatable<IFFKWGetter>,
-        IFFKWInternal,
-        ILoquiObjectSetter<FFKW>
+        IEquatable<IFFKWRecordGetter>,
+        IFFKWRecordInternal,
+        ILoquiObjectSetter<FFKWRecord>
     {
         #region Ctor
-        protected FFKW()
+        protected FFKWRecord()
         {
             CustomCtor();
         }
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._REFL = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFFKWGetter.REFL => this.REFL;
+        ReadOnlyMemorySlice<Byte>? IFFKWRecordGetter.REFL => this.REFL;
         #endregion
 
         #region To String
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FFKWMixIn.Print(
+            FFKWRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new FFKW.Mask<R>();
+                var ret = new FFKWRecord.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -185,16 +185,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(FFKW.Mask<bool>? printMask = null)
+            public string Print(FFKWRecord.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, FFKW.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FFKWRecord.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(FFKW.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(FFKWRecord.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.REFL ?? true)
@@ -218,10 +218,10 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                FFKW_FieldIndex enu = (FFKW_FieldIndex)index;
+                FFKWRecord_FieldIndex enu = (FFKWRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case FFKW_FieldIndex.REFL:
+                    case FFKWRecord_FieldIndex.REFL:
                         return REFL;
                     default:
                         return base.GetNthMask(index);
@@ -230,10 +230,10 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                FFKW_FieldIndex enu = (FFKW_FieldIndex)index;
+                FFKWRecord_FieldIndex enu = (FFKWRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case FFKW_FieldIndex.REFL:
+                    case FFKWRecord_FieldIndex.REFL:
                         this.REFL = ex;
                         break;
                     default:
@@ -244,10 +244,10 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                FFKW_FieldIndex enu = (FFKW_FieldIndex)index;
+                FFKWRecord_FieldIndex enu = (FFKWRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case FFKW_FieldIndex.REFL:
+                    case FFKWRecord_FieldIndex.REFL:
                         this.REFL = (Exception?)obj;
                         break;
                     default:
@@ -349,15 +349,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = FFKW_Registration.TriggeringRecordType;
-        public FFKW(FormKey formKey)
+        public static readonly RecordType GrupRecordType = FFKWRecord_Registration.TriggeringRecordType;
+        public FFKWRecord(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private FFKW(
+        private FFKWRecord(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal FFKW(
+        internal FFKWRecord(
             FormKey formKey,
             ushort formVersion)
         {
@@ -375,12 +375,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public FFKW(IStarfieldMod mod)
+        public FFKWRecord(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public FFKW(IStarfieldMod mod, string editorID)
+        public FFKWRecord(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -388,10 +388,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<FFKW>.ToString(this);
+            return MajorRecordPrinter<FFKWRecord>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IFFKW);
+        protected override Type LinkType => typeof(IFFKWRecord);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -400,16 +400,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IFFKWGetter rhs) return false;
-            return ((FFKWCommon)((IFFKWGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFFKWRecordGetter rhs) return false;
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFFKWGetter? obj)
+        public bool Equals(IFFKWRecordGetter? obj)
         {
-            return ((FFKWCommon)((IFFKWGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FFKWCommon)((IFFKWGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FFKWRecordCommon)((IFFKWRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -417,23 +417,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => FFKWBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => FFKWRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FFKWBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FFKWRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static FFKW CreateFromBinary(
+        public new static FFKWRecord CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new FFKW();
-            ((FFKWSetterCommon)((IFFKWGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new FFKWRecord();
+            ((FFKWRecordSetterCommon)((IFFKWRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out FFKW item,
+            out FFKWRecord item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -459,41 +459,41 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((FFKWSetterCommon)((IFFKWGetter)this).CommonSetterInstance()!).Clear(this);
+            ((FFKWRecordSetterCommon)((IFFKWRecordGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new FFKW GetNew()
+        internal static new FFKWRecord GetNew()
         {
-            return new FFKW();
+            return new FFKWRecord();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IFFKW :
-        IFFKWGetter,
-        ILoquiObjectSetter<IFFKWInternal>,
+    public partial interface IFFKWRecord :
+        IFFKWRecordGetter,
+        ILoquiObjectSetter<IFFKWRecordInternal>,
         IStarfieldMajorRecordInternal
     {
         new MemorySlice<Byte>? REFL { get; set; }
     }
 
-    public partial interface IFFKWInternal :
+    public partial interface IFFKWRecordInternal :
         IStarfieldMajorRecordInternal,
-        IFFKW,
-        IFFKWGetter
+        IFFKWRecord,
+        IFFKWRecordGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.FFKW)]
-    public partial interface IFFKWGetter :
+    public partial interface IFFKWRecordGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IFFKWGetter>,
-        IMapsToGetter<IFFKWGetter>
+        ILoquiObject<IFFKWRecordGetter>,
+        IMapsToGetter<IFFKWRecordGetter>
     {
-        static new ILoquiRegistration StaticRegistration => FFKW_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => FFKWRecord_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? REFL { get; }
 
     }
@@ -501,42 +501,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class FFKWMixIn
+    public static partial class FFKWRecordMixIn
     {
-        public static void Clear(this IFFKWInternal item)
+        public static void Clear(this IFFKWRecordInternal item)
         {
-            ((FFKWSetterCommon)((IFFKWGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((FFKWRecordSetterCommon)((IFFKWRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FFKW.Mask<bool> GetEqualsMask(
-            this IFFKWGetter item,
-            IFFKWGetter rhs,
+        public static FFKWRecord.Mask<bool> GetEqualsMask(
+            this IFFKWRecordGetter item,
+            IFFKWRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IFFKWGetter item,
+            this IFFKWRecordGetter item,
             string? name = null,
-            FFKW.Mask<bool>? printMask = null)
+            FFKWRecord.Mask<bool>? printMask = null)
         {
-            return ((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).Print(
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IFFKWGetter item,
+            this IFFKWRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FFKW.Mask<bool>? printMask = null)
+            FFKWRecord.Mask<bool>? printMask = null)
         {
-            ((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).Print(
+            ((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -544,39 +544,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IFFKWGetter item,
-            IFFKWGetter rhs,
-            FFKW.TranslationMask? equalsMask = null)
+            this IFFKWRecordGetter item,
+            IFFKWRecordGetter rhs,
+            FFKWRecord.TranslationMask? equalsMask = null)
         {
-            return ((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).Equals(
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFFKWInternal lhs,
-            IFFKWGetter rhs,
-            out FFKW.ErrorMask errorMask,
-            FFKW.TranslationMask? copyMask = null)
+            this IFFKWRecordInternal lhs,
+            IFFKWRecordGetter rhs,
+            out FFKWRecord.ErrorMask errorMask,
+            FFKWRecord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FFKWSetterTranslationCommon)((IFFKWGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = FFKW.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FFKWRecord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFFKWInternal lhs,
-            IFFKWGetter rhs,
+            this IFFKWRecordInternal lhs,
+            IFFKWRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FFKWSetterTranslationCommon)((IFFKWGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -584,55 +584,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static FFKW DeepCopy(
-            this IFFKWGetter item,
-            FFKW.TranslationMask? copyMask = null)
+        public static FFKWRecord DeepCopy(
+            this IFFKWRecordGetter item,
+            FFKWRecord.TranslationMask? copyMask = null)
         {
-            return ((FFKWSetterTranslationCommon)((IFFKWGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static FFKW DeepCopy(
-            this IFFKWGetter item,
-            out FFKW.ErrorMask errorMask,
-            FFKW.TranslationMask? copyMask = null)
+        public static FFKWRecord DeepCopy(
+            this IFFKWRecordGetter item,
+            out FFKWRecord.ErrorMask errorMask,
+            FFKWRecord.TranslationMask? copyMask = null)
         {
-            return ((FFKWSetterTranslationCommon)((IFFKWGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static FFKW DeepCopy(
-            this IFFKWGetter item,
+        public static FFKWRecord DeepCopy(
+            this IFFKWRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((FFKWSetterTranslationCommon)((IFFKWGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static FFKW Duplicate(
-            this IFFKWGetter item,
+        public static FFKWRecord Duplicate(
+            this IFFKWRecordGetter item,
             FormKey formKey,
-            FFKW.TranslationMask? copyMask = null)
+            FFKWRecord.TranslationMask? copyMask = null)
         {
-            return ((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).Duplicate(
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static FFKW Duplicate(
-            this IFFKWGetter item,
+        public static FFKWRecord Duplicate(
+            this IFFKWRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).Duplicate(
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -642,11 +642,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFFKWInternal item,
+            this IFFKWRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((FFKWSetterCommon)((IFFKWGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((FFKWRecordSetterCommon)((IFFKWRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -662,7 +662,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum FFKW_FieldIndex
+    internal enum FFKWRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -676,9 +676,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class FFKW_Registration : ILoquiRegistration
+    internal partial class FFKWRecord_Registration : ILoquiRegistration
     {
-        public static readonly FFKW_Registration Instance = new FFKW_Registration();
+        public static readonly FFKWRecord_Registration Instance = new FFKWRecord_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -693,23 +693,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(FFKW.Mask<>);
+        public static readonly Type MaskType = typeof(FFKWRecord.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FFKW.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FFKWRecord.ErrorMask);
 
-        public static readonly Type ClassType = typeof(FFKW);
+        public static readonly Type ClassType = typeof(FFKWRecord);
 
-        public static readonly Type GetterType = typeof(IFFKWGetter);
+        public static readonly Type GetterType = typeof(IFFKWRecordGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFFKW);
+        public static readonly Type SetterType = typeof(IFFKWRecord);
 
-        public static readonly Type? InternalSetterType = typeof(IFFKWInternal);
+        public static readonly Type? InternalSetterType = typeof(IFFKWRecordInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.FFKW";
+        public const string FullName = "Mutagen.Bethesda.Starfield.FFKWRecord";
 
-        public const string Name = "FFKW";
+        public const string Name = "FFKWRecord";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.REFL);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(FFKWBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(FFKWRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -760,13 +760,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class FFKWSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class FFKWRecordSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly FFKWSetterCommon Instance = new FFKWSetterCommon();
+        public new static readonly FFKWRecordSetterCommon Instance = new FFKWRecordSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IFFKWInternal item)
+        public void Clear(IFFKWRecordInternal item)
         {
             ClearPartial();
             item.REFL = default;
@@ -775,16 +775,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IFFKWInternal)item);
+            Clear(item: (IFFKWRecordInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IFFKWInternal)item);
+            Clear(item: (IFFKWRecordInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IFFKW obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IFFKWRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -793,16 +793,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IFFKWInternal item,
+            IFFKWRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IFFKWInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IFFKWRecordInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: FFKWBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: FFKWBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: FFKWRecordBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: FFKWRecordBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (FFKW)item,
+                item: (FFKWRecord)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (FFKW)item,
+                item: (FFKWRecord)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -830,17 +830,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class FFKWCommon : StarfieldMajorRecordCommon
+    internal partial class FFKWRecordCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly FFKWCommon Instance = new FFKWCommon();
+        public new static readonly FFKWRecordCommon Instance = new FFKWRecordCommon();
 
-        public FFKW.Mask<bool> GetEqualsMask(
-            IFFKWGetter item,
-            IFFKWGetter rhs,
+        public FFKWRecord.Mask<bool> GetEqualsMask(
+            IFFKWRecordGetter item,
+            IFFKWRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FFKW.Mask<bool>(false);
-            ((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new FFKWRecord.Mask<bool>(false);
+            ((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -849,9 +849,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IFFKWGetter item,
-            IFFKWGetter rhs,
-            FFKW.Mask<bool> ret,
+            IFFKWRecordGetter item,
+            IFFKWRecordGetter rhs,
+            FFKWRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.REFL = MemorySliceExt.SequenceEqual(item.REFL, rhs.REFL);
@@ -859,9 +859,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IFFKWGetter item,
+            IFFKWRecordGetter item,
             string? name = null,
-            FFKW.Mask<bool>? printMask = null)
+            FFKWRecord.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -873,18 +873,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IFFKWGetter item,
+            IFFKWRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FFKW.Mask<bool>? printMask = null)
+            FFKWRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"FFKW =>");
+                sb.AppendLine($"FFKWRecord =>");
             }
             else
             {
-                sb.AppendLine($"{name} (FFKW) =>");
+                sb.AppendLine($"{name} (FFKWRecord) =>");
             }
             using (sb.Brace())
             {
@@ -896,9 +896,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IFFKWGetter item,
+            IFFKWRecordGetter item,
             StructuredStringBuilder sb,
-            FFKW.Mask<bool>? printMask = null)
+            FFKWRecord.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -911,41 +911,41 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static FFKW_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static FFKWRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new FFKW_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new FFKWRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (FFKW_FieldIndex)((int)index);
+                    return (FFKWRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -953,13 +953,13 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFFKWGetter? lhs,
-            IFFKWGetter? rhs,
+            IFFKWRecordGetter? lhs,
+            IFFKWRecordGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)FFKW_FieldIndex.REFL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FFKWRecord_FieldIndex.REFL) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.REFL, rhs.REFL)) return false;
             }
@@ -972,8 +972,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IFFKWGetter?)lhs,
-                rhs: rhs as IFFKWGetter,
+                lhs: (IFFKWRecordGetter?)lhs,
+                rhs: rhs as IFFKWRecordGetter,
                 equalsMask: equalsMask);
         }
         
@@ -983,12 +983,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IFFKWGetter?)lhs,
-                rhs: rhs as IFFKWGetter,
+                lhs: (IFFKWRecordGetter?)lhs,
+                rhs: rhs as IFFKWRecordGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IFFKWGetter item)
+        public virtual int GetHashCode(IFFKWRecordGetter item)
         {
             var hash = new HashCode();
             if (item.REFL is {} REFLItem)
@@ -1001,12 +1001,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IFFKWGetter)item);
+            return GetHashCode(item: (IFFKWRecordGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IFFKWGetter)item);
+            return GetHashCode(item: (IFFKWRecordGetter)item);
         }
         
         #endregion
@@ -1014,11 +1014,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return FFKW.GetNew();
+            return FFKWRecord.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFFKWGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFFKWRecordGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -1028,12 +1028,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public FFKW Duplicate(
-            IFFKWGetter item,
+        public FFKWRecord Duplicate(
+            IFFKWRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new FFKW(formKey);
+            var newRec = new FFKWRecord(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFFKWGetter)item,
+                item: (IFFKWRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1055,7 +1055,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFFKWGetter)item,
+                item: (IFFKWRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1065,14 +1065,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class FFKWSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class FFKWRecordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly FFKWSetterTranslationCommon Instance = new FFKWSetterTranslationCommon();
+        public new static readonly FFKWRecordSetterTranslationCommon Instance = new FFKWRecordSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IFFKWInternal item,
-            IFFKWGetter rhs,
+            IFFKWRecordInternal item,
+            IFFKWRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1086,8 +1086,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IFFKW item,
-            IFFKWGetter rhs,
+            IFFKWRecord item,
+            IFFKWRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)FFKW_FieldIndex.REFL) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FFKWRecord_FieldIndex.REFL) ?? true))
             {
                 if(rhs.REFL is {} REFLrhs)
                 {
@@ -1119,8 +1119,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFFKWInternal)item,
-                rhs: (IFFKWGetter)rhs,
+                item: (IFFKWRecordInternal)item,
+                rhs: (IFFKWRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1134,8 +1134,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFFKW)item,
-                rhs: (IFFKWGetter)rhs,
+                item: (IFFKWRecord)item,
+                rhs: (IFFKWRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1149,8 +1149,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFFKWInternal)item,
-                rhs: (IFFKWGetter)rhs,
+                item: (IFFKWRecordInternal)item,
+                rhs: (IFFKWRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1164,8 +1164,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IFFKW)item,
-                rhs: (IFFKWGetter)rhs,
+                item: (IFFKWRecord)item,
+                rhs: (IFFKWRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1173,12 +1173,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public FFKW DeepCopy(
-            IFFKWGetter item,
-            FFKW.TranslationMask? copyMask = null)
+        public FFKWRecord DeepCopy(
+            IFFKWRecordGetter item,
+            FFKWRecord.TranslationMask? copyMask = null)
         {
-            FFKW ret = (FFKW)((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).GetNew();
-            ((FFKWSetterTranslationCommon)((IFFKWGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FFKWRecord ret = (FFKWRecord)((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).GetNew();
+            ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1187,30 +1187,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public FFKW DeepCopy(
-            IFFKWGetter item,
-            out FFKW.ErrorMask errorMask,
-            FFKW.TranslationMask? copyMask = null)
+        public FFKWRecord DeepCopy(
+            IFFKWRecordGetter item,
+            out FFKWRecord.ErrorMask errorMask,
+            FFKWRecord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FFKW ret = (FFKW)((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).GetNew();
-            ((FFKWSetterTranslationCommon)((IFFKWGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FFKWRecord ret = (FFKWRecord)((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).GetNew();
+            ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = FFKW.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FFKWRecord.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public FFKW DeepCopy(
-            IFFKWGetter item,
+        public FFKWRecord DeepCopy(
+            IFFKWRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            FFKW ret = (FFKW)((FFKWCommon)((IFFKWGetter)item).CommonInstance()!).GetNew();
-            ((FFKWSetterTranslationCommon)((IFFKWGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FFKWRecord ret = (FFKWRecord)((FFKWRecordCommon)((IFFKWRecordGetter)item).CommonInstance()!).GetNew();
+            ((FFKWRecordSetterTranslationCommon)((IFFKWRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1226,21 +1226,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FFKW
+    public partial class FFKWRecord
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FFKW_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => FFKW_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FFKWRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FFKWRecord_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => FFKWCommon.Instance;
+        protected override object CommonInstance() => FFKWRecordCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return FFKWSetterCommon.Instance;
+            return FFKWRecordSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => FFKWSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => FFKWRecordSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1251,14 +1251,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FFKWBinaryWriteTranslation :
+    public partial class FFKWRecordBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly FFKWBinaryWriteTranslation Instance = new();
+        public new static readonly FFKWRecordBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IFFKWGetter item,
+            IFFKWRecordGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IFFKWGetter item,
+            IFFKWRecordGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IFFKWGetter)item,
+                item: (IFFKWRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IFFKWGetter)item,
+                item: (IFFKWRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1331,20 +1331,20 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IFFKWGetter)item,
+                item: (IFFKWRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class FFKWBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class FFKWRecordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly FFKWBinaryCreateTranslation Instance = new FFKWBinaryCreateTranslation();
+        public new static readonly FFKWRecordBinaryCreateTranslation Instance = new FFKWRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FFKW;
         public static ParseResult FillBinaryRecordTypes(
-            IFFKWInternal item,
+            IFFKWRecordInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1359,7 +1359,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.REFL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)FFKW_FieldIndex.REFL;
+                    return (int)FFKWRecord_FieldIndex.REFL;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1379,7 +1379,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class FFKWBinaryTranslationMixIn
+    public static class FFKWRecordBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1388,35 +1388,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class FFKWBinaryOverlay :
+    internal partial class FFKWRecordBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IFFKWGetter
+        IFFKWRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FFKW_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => FFKW_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FFKWRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => FFKWRecord_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => FFKWCommon.Instance;
+        protected override object CommonInstance() => FFKWRecordCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => FFKWSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => FFKWRecordSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => FFKWBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => FFKWRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FFKWBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FFKWRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IFFKW);
+        protected override Type LinkType => typeof(IFFKWRecord);
 
 
         #region REFL
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected FFKWBinaryOverlay(
+        protected FFKWRecordBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1439,7 +1439,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IFFKWGetter FFKWFactory(
+        public static IFFKWRecordGetter FFKWRecordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new FFKWBinaryOverlay(
+            var ret = new FFKWRecordBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1469,12 +1469,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IFFKWGetter FFKWFactory(
+        public static IFFKWRecordGetter FFKWRecordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return FFKWFactory(
+            return FFKWRecordFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.REFL:
                 {
                     _REFLLocation = (stream.Position - offset);
-                    return (int)FFKW_FieldIndex.REFL;
+                    return (int)FFKWRecord_FieldIndex.REFL;
                 }
                 default:
                     return base.FillRecordType(
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FFKWMixIn.Print(
+            FFKWRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1524,7 +1524,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<FFKW>.ToString(this);
+            return MajorRecordPrinter<FFKWRecord>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1534,16 +1534,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IFFKWGetter rhs) return false;
-            return ((FFKWCommon)((IFFKWGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFFKWRecordGetter rhs) return false;
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFFKWGetter? obj)
+        public bool Equals(IFFKWRecordGetter? obj)
         {
-            return ((FFKWCommon)((IFFKWGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FFKWRecordCommon)((IFFKWRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FFKWCommon)((IFFKWGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FFKWRecordCommon)((IFFKWRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

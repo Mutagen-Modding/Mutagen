@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AFFERecord" recordType="AFFE" objType="Record" baseClass="StarfieldMajorRecord" GUID="484ec00c-9926-41b1-b54e-fb0575337ee4" ID="708">
+    <Fields>
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <ByteArray name="NLDT" recordType="NLDT" unknown="true" />
+      <RefList name="NNAMs" refName="AFFESubrecord" unknown="true" />
+      <ByteArray name="ANAM" recordType="ANAM" unknown="true" />
+      <ByteArray name="ENAM" recordType="ENAM" unknown="true" />
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+      <ByteArray name="CNAM" recordType="CNAM" unknown="true" />
+      <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="AFFESubrecord" objType="Subrecord" GUID="1304f989-ec8b-4c45-990a-407fee758e34" ID="709">
+    <Fields>
+      <ByteArray name="NNAM" recordType="NNAM" unknown="true" />
+      <ByteArray name="RNAM" recordType="RNAM" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

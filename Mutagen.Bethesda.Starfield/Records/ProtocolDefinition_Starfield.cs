@@ -29,7 +29,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             GameSettingUInt_Registration.Instance,
             Keyword_Registration.Instance,
             AttractionRule_Registration.Instance,
-            FFKW_Registration.Instance,
+            FFKWRecord_Registration.Instance,
             BFCBRecord_Registration.Instance,
             ActionRecord_Registration.Instance,
             Transform_Registration.Instance,
@@ -58,7 +58,9 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             VendorValues_Registration.Instance,
             FormList_Registration.Instance,
             PlacedObject_Registration.Instance,
-            VoiceType_Registration.Instance
+            VoiceType_Registration.Instance,
+            AFFERecord_Registration.Instance,
+            AFFESubrecord_Registration.Instance
         );
     }
 }

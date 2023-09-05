@@ -3,6 +3,8 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 public partial class RecordTypeInts
 {
     public const int AACT = 0x54434141;
+    public const int AFFE = 0x45464641;
+    public const int ANAM = 0x4D414E41;
     public const int AORU = 0x55524F41;
     public const int AVIF = 0x46495641;
     public const int BFCB = 0x42434642;
@@ -46,6 +48,8 @@ public partial class RecordTypeInts
     public const int MNAM = 0x4D414E4D;
     public const int MODF = 0x46444F4D;
     public const int MODL = 0x4C444F4D;
+    public const int NLDT = 0x54444C4E;
+    public const int NNAM = 0x4D414E4E;
     public const int NPC_ = 0x5F43504E;
     public const int OBND = 0x444E424F;
     public const int ODTY = 0x5954444F;

@@ -59,7 +59,7 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
-    <None Update="Records\Major Records\FFKW.xml">
+    <None Update="Records\Major Records\FFKWRecord.xml">
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
@@ -150,8 +150,8 @@
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FFKW_Generated.cs">
-      <DependentUpon>FFKW.xml</DependentUpon>
+    <Compile Include="Records\Major Records\FFKWRecord_Generated.cs">
+      <DependentUpon>FFKWRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -334,5 +334,11 @@
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
+    <Compile Include="Records\Major Records\AFFERecord_Generated.cs">
+      <DependentUpon>AFFERecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AFFESubrecord_Generated.cs">
+      <DependentUpon>AFFERecord.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

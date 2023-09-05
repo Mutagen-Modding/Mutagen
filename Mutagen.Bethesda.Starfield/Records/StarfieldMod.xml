@@ -5,7 +5,7 @@
       <RefDirect name="ModHeader" refName="StarfieldModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
-      <Group name="FFKW" refName="FFKW" />
+      <Group name="FFKW" refName="FFKWRecord" />
       <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
       <Group name="Actions" refName="ActionRecord" />
       <Group name="Transforms" refName="Transform" />
@@ -14,6 +14,7 @@
       <Group name="DamageTypes" refName="DamageType" />
       <Group name="Classes" refName="Class" />
       <Group name="Factions" refName="Faction" />
+      <Group name="AFFE" refName="AFFERecord" />
       <Group name="Npcs" refName="Npc" />
       <Group name="Races" refName="Race" />
       <Group name="Weapons" refName="Weapon" />

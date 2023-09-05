@@ -5,6 +5,8 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 public partial class RecordTypes
 {
     public static readonly RecordType AACT = new(0x54434141);
+    public static readonly RecordType AFFE = new(0x45464641);
+    public static readonly RecordType ANAM = new(0x4D414E41);
     public static readonly RecordType AORU = new(0x55524F41);
     public static readonly RecordType AVIF = new(0x46495641);
     public static readonly RecordType BFCB = new(0x42434642);
@@ -48,6 +50,8 @@ public partial class RecordTypes
     public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType MODF = new(0x46444F4D);
     public static readonly RecordType MODL = new(0x4C444F4D);
+    public static readonly RecordType NLDT = new(0x54444C4E);
+    public static readonly RecordType NNAM = new(0x4D414E4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType OBND = new(0x444E424F);
     public static readonly RecordType ODTY = new(0x5954444F);
