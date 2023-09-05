@@ -35,7 +35,11 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Transform_Registration.Instance,
             ObjectBounds_Registration.Instance,
             TextureSet_Registration.Instance,
-            Global_Registration.Instance
+            Global_Registration.Instance,
+            DamageTypeItem_Registration.Instance,
+            ActorValueInformation_Registration.Instance,
+            DamageType_Registration.Instance,
+            Spell_Registration.Instance
         );
     }
 }

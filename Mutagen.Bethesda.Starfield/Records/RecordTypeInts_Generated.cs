@@ -4,6 +4,7 @@ public partial class RecordTypeInts
 {
     public const int AACT = 0x54434141;
     public const int AORU = 0x55524F41;
+    public const int AVIF = 0x46495641;
     public const int BFCB = 0x42434642;
     public const int BFCE = 0x45434642;
     public const int BNAM = 0x4D414E42;
@@ -11,6 +12,7 @@ public partial class RecordTypeInts
     public const int CNAM = 0x4D414E43;
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
+    public const int DMGT = 0x54474D44;
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
     public const int EDID = 0x44494445;
@@ -43,6 +45,7 @@ public partial class RecordTypeInts
     public const int RNAM = 0x4D414E52;
     public const int SCRN = 0x4E524353;
     public const int SNAM = 0x4D414E53;
+    public const int SPEL = 0x4C455053;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
     public const int TRNS = 0x534E5254;

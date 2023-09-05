@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DamageType" recordType="DMGT" objType="Record" baseClass="StarfieldMajorRecord" GUID="4c22d0a5-3826-440d-92b2-ffd9b3e78ae3" ID="686">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefList name="DamageTypes" refName="DamageTypeItem" />
+    </Fields>
+  </Object>
+  <Object name="DamageTypeItem" objType="Subrecord" recordType="DNAM" GUID="4f991913-62f5-4252-9102-b4f7002d5a38" ID="684">
+    <Fields>
+      <FormLink name="ActorValue" refName="ActorValueInformation" />
+      <FormLink name="Spell" refName="Spell" />
+    </Fields>
+  </Object>
+</Loqui>

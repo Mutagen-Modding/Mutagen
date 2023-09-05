@@ -11,6 +11,7 @@
       <Group name="Transforms" refName="Transform" />
       <Group name="TextureSets" refName="TextureSet" />
       <Group name="Globals" refName="Global" />
+      <Group name="DamageTypes" refName="DamageType" />
       <Group name="Npcs" refName="Npc" />
       <Group name="Races" refName="Race" />
       <Group name="Weapons" refName="Weapon" />

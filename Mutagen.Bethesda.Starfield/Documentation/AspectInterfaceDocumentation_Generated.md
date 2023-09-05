@@ -9,6 +9,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### INamed
 - ActionRecord
+- DamageType
 - Keyword
 ### IObjectBounded
 - TextureSet
@@ -16,6 +17,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Transform
 ## Concrete Classes to Interfaces
 ### ActionRecord
+- INamed
+### DamageType
 - INamed
 ### Keyword
 - IKeywordCommon

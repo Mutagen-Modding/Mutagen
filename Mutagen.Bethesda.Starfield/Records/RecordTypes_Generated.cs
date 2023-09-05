@@ -6,6 +6,7 @@ public partial class RecordTypes
 {
     public static readonly RecordType AACT = new(0x54434141);
     public static readonly RecordType AORU = new(0x55524F41);
+    public static readonly RecordType AVIF = new(0x46495641);
     public static readonly RecordType BFCB = new(0x42434642);
     public static readonly RecordType BFCE = new(0x45434642);
     public static readonly RecordType BNAM = new(0x4D414E42);
@@ -13,6 +14,7 @@ public partial class RecordTypes
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
+    public static readonly RecordType DMGT = new(0x54474D44);
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DODT = new(0x54444F44);
     public static readonly RecordType EDID = new(0x44494445);
@@ -45,6 +47,7 @@ public partial class RecordTypes
     public static readonly RecordType RNAM = new(0x4D414E52);
     public static readonly RecordType SCRN = new(0x4E524353);
     public static readonly RecordType SNAM = new(0x4D414E53);
+    public static readonly RecordType SPEL = new(0x4C455053);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TRNS = new(0x534E5254);
