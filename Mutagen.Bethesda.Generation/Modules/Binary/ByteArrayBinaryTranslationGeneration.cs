@@ -31,6 +31,7 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         Accessor converterAccessor)
     {
         var data = typeGen.GetFieldData();
+        
         using (var args = sb.Call(
                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
         {
@@ -48,6 +49,10 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
             if (data.OverflowRecordType.HasValue)
             {
                 args.Add($"overflowRecord: {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)}");
+            }
+            if (data.MarkerType.HasValue)
+            {
+                args.Add($"markerType: RecordTypes.{data.MarkerType.Value.Type}");
             }
         }
     }

@@ -3,6 +3,7 @@
   <Object name="BFCBRecord" objType="Subrecord" GUID="1bb731ad-a02f-45b0-aa19-05819773d468" ID="82">
     <Fields>
       <String name="BFCB" recordType="BFCB" unknown="true" />
+      <ByteArray name="FLCS" recordType="FLCS" unknown="true" />
       <ByteArray name="INTV" recordType="INTV" unknown="true" />
       <ByteArray name="FLTR" recordType="FLTR" unknown="true" />
       <ByteArray name="BFCE" recordType="BFCE" unknown="true" />

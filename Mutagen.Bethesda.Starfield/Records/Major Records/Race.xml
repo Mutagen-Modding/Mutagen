@@ -3,5 +3,6 @@
   <Object name="Race" recordType="RACE" objType="Record" baseClass="StarfieldMajorRecord" GUID="b8b4ae9e-e154-49e1-93c9-a4b103de73c3" ID="68">
     <Fields>
     </Fields>
+    <LinkInterface>IRelatable</LinkInterface>
   </Object>
 </Loqui>

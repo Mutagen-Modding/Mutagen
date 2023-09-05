@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class Race :
+    public partial class VoiceType :
         StarfieldMajorRecord,
-        IEquatable<IRaceGetter>,
-        ILoquiObjectSetter<Race>,
-        IRaceInternal
+        IEquatable<IVoiceTypeGetter>,
+        ILoquiObjectSetter<VoiceType>,
+        IVoiceTypeInternal
     {
         #region Ctor
-        protected Race()
+        protected VoiceType()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.Print(
+            VoiceTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Race.Mask<R>();
+                var ret = new VoiceType.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Race.Mask<bool>? printMask = null)
+            public string Print(VoiceType.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Race.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, VoiceType.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(VoiceType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                VoiceType_FieldIndex enu = (VoiceType_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,15 +294,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public Race(FormKey formKey)
+        public static readonly RecordType GrupRecordType = VoiceType_Registration.TriggeringRecordType;
+        public VoiceType(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private Race(
+        private VoiceType(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Race(
+        internal VoiceType(
             FormKey formKey,
             ushort formVersion)
         {
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Race(IStarfieldMod mod)
+        public VoiceType(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Race(IStarfieldMod mod, string editorID)
+        public VoiceType(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -333,10 +333,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Race>.ToString(this);
+            return MajorRecordPrinter<VoiceType>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(IVoiceType);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IVoiceTypeGetter rhs) return false;
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRaceGetter? obj)
+        public bool Equals(IVoiceTypeGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => VoiceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((VoiceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Race CreateFromBinary(
+        public new static VoiceType CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Race();
-            ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new VoiceType();
+            ((VoiceTypeSetterCommon)((IVoiceTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Race item,
+            out VoiceType item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -404,84 +404,84 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((RaceSetterCommon)((IRaceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((VoiceTypeSetterCommon)((IVoiceTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Race GetNew()
+        internal static new VoiceType GetNew()
         {
-            return new Race();
+            return new VoiceType();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IRace :
-        ILoquiObjectSetter<IRaceInternal>,
-        IRaceGetter,
-        IRelatable,
-        IStarfieldMajorRecordInternal
-    {
-    }
-
-    public partial interface IRaceInternal :
+    public partial interface IVoiceType :
+        ILoquiObjectSetter<IVoiceTypeInternal>,
         IStarfieldMajorRecordInternal,
-        IRace,
-        IRaceGetter
+        IVoiceTypeGetter,
+        IVoiceTypeOrList
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.RACE)]
-    public partial interface IRaceGetter :
+    public partial interface IVoiceTypeInternal :
+        IStarfieldMajorRecordInternal,
+        IVoiceType,
+        IVoiceTypeGetter
+    {
+    }
+
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.VTYP)]
+    public partial interface IVoiceTypeGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IRaceGetter>,
-        IMapsToGetter<IRaceGetter>,
-        IRelatableGetter
+        ILoquiObject<IVoiceTypeGetter>,
+        IMapsToGetter<IVoiceTypeGetter>,
+        IVoiceTypeOrListGetter
     {
-        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => VoiceType_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class RaceMixIn
+    public static partial class VoiceTypeMixIn
     {
-        public static void Clear(this IRaceInternal item)
+        public static void Clear(this IVoiceTypeInternal item)
         {
-            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((VoiceTypeSetterCommon)((IVoiceTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Race.Mask<bool> GetEqualsMask(
-            this IRaceGetter item,
-            IRaceGetter rhs,
+        public static VoiceType.Mask<bool> GetEqualsMask(
+            this IVoiceTypeGetter item,
+            IVoiceTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IRaceGetter item,
+            this IVoiceTypeGetter item,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            VoiceType.Mask<bool>? printMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IRaceGetter item,
+            this IVoiceTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            VoiceType.Mask<bool>? printMask = null)
         {
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
+            ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -489,39 +489,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IRaceGetter item,
-            IRaceGetter rhs,
-            Race.TranslationMask? equalsMask = null)
+            this IVoiceTypeGetter item,
+            IVoiceTypeGetter rhs,
+            VoiceType.TranslationMask? equalsMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IRaceInternal lhs,
-            IRaceGetter rhs,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+            this IVoiceTypeInternal lhs,
+            IVoiceTypeGetter rhs,
+            out VoiceType.ErrorMask errorMask,
+            VoiceType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VoiceType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IRaceInternal lhs,
-            IRaceGetter rhs,
+            this IVoiceTypeInternal lhs,
+            IVoiceTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -529,55 +529,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
-            Race.TranslationMask? copyMask = null)
+        public static VoiceType DeepCopy(
+            this IVoiceTypeGetter item,
+            VoiceType.TranslationMask? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+        public static VoiceType DeepCopy(
+            this IVoiceTypeGetter item,
+            out VoiceType.ErrorMask errorMask,
+            VoiceType.TranslationMask? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
+        public static VoiceType DeepCopy(
+            this IVoiceTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Race Duplicate(
-            this IRaceGetter item,
+        public static VoiceType Duplicate(
+            this IVoiceTypeGetter item,
             FormKey formKey,
-            Race.TranslationMask? copyMask = null)
+            VoiceType.TranslationMask? copyMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Race Duplicate(
-            this IRaceGetter item,
+        public static VoiceType Duplicate(
+            this IVoiceTypeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -587,11 +587,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IRaceInternal item,
+            this IVoiceTypeInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((VoiceTypeSetterCommon)((IVoiceTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Race_FieldIndex
+    internal enum VoiceType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -620,40 +620,40 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class Race_Registration : ILoquiRegistration
+    internal partial class VoiceType_Registration : ILoquiRegistration
     {
-        public static readonly Race_Registration Instance = new Race_Registration();
+        public static readonly VoiceType_Registration Instance = new VoiceType_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 68,
+            msgID: 707,
             version: 0);
 
-        public const string GUID = "b8b4ae9e-e154-49e1-93c9-a4b103de73c3";
+        public const string GUID = "7cbd9539-1680-4e7b-a3dc-ecf9d26440e8";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(Race.Mask<>);
+        public static readonly Type MaskType = typeof(VoiceType.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Race.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(VoiceType.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Race);
+        public static readonly Type ClassType = typeof(VoiceType);
 
-        public static readonly Type GetterType = typeof(IRaceGetter);
+        public static readonly Type GetterType = typeof(IVoiceTypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IRace);
+        public static readonly Type SetterType = typeof(IVoiceType);
 
-        public static readonly Type? InternalSetterType = typeof(IRaceInternal);
+        public static readonly Type? InternalSetterType = typeof(IVoiceTypeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Race";
+        public const string FullName = "Mutagen.Bethesda.Starfield.VoiceType";
 
-        public const string Name = "Race";
+        public const string Name = "VoiceType";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -661,14 +661,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.VTYP;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(RecordTypes.VTYP);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(VoiceTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -701,13 +701,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class RaceSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class VoiceTypeSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
+        public new static readonly VoiceTypeSetterCommon Instance = new VoiceTypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IRaceInternal item)
+        public void Clear(IVoiceTypeInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -715,16 +715,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IRaceInternal)item);
+            Clear(item: (IVoiceTypeInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IRaceInternal)item);
+            Clear(item: (IVoiceTypeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IRace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IVoiceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -733,16 +733,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IRaceInternal item,
+            IVoiceTypeInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IVoiceTypeInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: VoiceTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: VoiceTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Race)item,
+                item: (VoiceType)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Race)item,
+                item: (VoiceType)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -770,17 +770,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RaceCommon : StarfieldMajorRecordCommon
+    internal partial class VoiceTypeCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly RaceCommon Instance = new RaceCommon();
+        public new static readonly VoiceTypeCommon Instance = new VoiceTypeCommon();
 
-        public Race.Mask<bool> GetEqualsMask(
-            IRaceGetter item,
-            IRaceGetter rhs,
+        public VoiceType.Mask<bool> GetEqualsMask(
+            IVoiceTypeGetter item,
+            IVoiceTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Race.Mask<bool>(false);
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new VoiceType.Mask<bool>(false);
+            ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -789,18 +789,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IRaceGetter item,
-            IRaceGetter rhs,
-            Race.Mask<bool> ret,
+            IVoiceTypeGetter item,
+            IVoiceTypeGetter rhs,
+            VoiceType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IRaceGetter item,
+            IVoiceTypeGetter item,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            VoiceType.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -812,18 +812,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IRaceGetter item,
+            IVoiceTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            VoiceType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Race =>");
+                sb.AppendLine($"VoiceType =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Race) =>");
+                sb.AppendLine($"{name} (VoiceType) =>");
             }
             using (sb.Brace())
             {
@@ -835,9 +835,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IRaceGetter item,
+            IVoiceTypeGetter item,
             StructuredStringBuilder sb,
-            Race.Mask<bool>? printMask = null)
+            VoiceType.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -845,41 +845,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static Race_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static VoiceType_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new VoiceType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
+                    return (VoiceType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -887,8 +887,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRaceGetter? lhs,
-            IRaceGetter? rhs,
+            IVoiceTypeGetter? lhs,
+            IVoiceTypeGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -902,8 +902,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter,
+                lhs: (IVoiceTypeGetter?)lhs,
+                rhs: rhs as IVoiceTypeGetter,
                 equalsMask: equalsMask);
         }
         
@@ -913,12 +913,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter,
+                lhs: (IVoiceTypeGetter?)lhs,
+                rhs: rhs as IVoiceTypeGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IRaceGetter item)
+        public virtual int GetHashCode(IVoiceTypeGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -927,12 +927,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRaceGetter)item);
+            return GetHashCode(item: (IVoiceTypeGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRaceGetter)item);
+            return GetHashCode(item: (IVoiceTypeGetter)item);
         }
         
         #endregion
@@ -940,11 +940,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Race.GetNew();
+            return VoiceType.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IVoiceTypeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -954,12 +954,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public Race Duplicate(
-            IRaceGetter item,
+        public VoiceType Duplicate(
+            IVoiceTypeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Race(formKey);
+            var newRec = new VoiceType(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRaceGetter)item,
+                item: (IVoiceTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRaceGetter)item,
+                item: (IVoiceTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -991,14 +991,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RaceSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class VoiceTypeSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
+        public new static readonly VoiceTypeSetterTranslationCommon Instance = new VoiceTypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IRaceInternal item,
-            IRaceGetter rhs,
+            IVoiceTypeInternal item,
+            IVoiceTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1012,8 +1012,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IRace item,
-            IRaceGetter rhs,
+            IVoiceType item,
+            IVoiceTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1034,8 +1034,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRaceInternal)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IVoiceTypeInternal)item,
+                rhs: (IVoiceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1049,8 +1049,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRace)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IVoiceType)item,
+                rhs: (IVoiceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1064,8 +1064,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRaceInternal)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IVoiceTypeInternal)item,
+                rhs: (IVoiceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1079,8 +1079,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRace)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IVoiceType)item,
+                rhs: (IVoiceTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1088,12 +1088,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Race DeepCopy(
-            IRaceGetter item,
-            Race.TranslationMask? copyMask = null)
+        public VoiceType DeepCopy(
+            IVoiceTypeGetter item,
+            VoiceType.TranslationMask? copyMask = null)
         {
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            VoiceType ret = (VoiceType)((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).GetNew();
+            ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1102,30 +1102,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Race DeepCopy(
-            IRaceGetter item,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+        public VoiceType DeepCopy(
+            IVoiceTypeGetter item,
+            out VoiceType.ErrorMask errorMask,
+            VoiceType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            VoiceType ret = (VoiceType)((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).GetNew();
+            ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = VoiceType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Race DeepCopy(
-            IRaceGetter item,
+        public VoiceType DeepCopy(
+            IVoiceTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            VoiceType ret = (VoiceType)((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).GetNew();
+            ((VoiceTypeSetterTranslationCommon)((IVoiceTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1141,21 +1141,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Race
+    public partial class VoiceType
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => VoiceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VoiceType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RaceCommon.Instance;
+        protected override object CommonInstance() => VoiceTypeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return RaceSetterCommon.Instance;
+            return VoiceTypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => VoiceTypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1166,20 +1166,20 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class RaceBinaryWriteTranslation :
+    public partial class VoiceTypeBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RaceBinaryWriteTranslation Instance = new();
+        public new static readonly VoiceTypeBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IRaceGetter item,
+            IVoiceTypeGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RACE)))
+                record: translationParams.ConvertToCustom(RecordTypes.VTYP)))
             {
                 try
                 {
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (IVoiceTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (IVoiceTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1229,25 +1229,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (IVoiceTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class RaceBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class VoiceTypeBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
+        public new static readonly VoiceTypeBinaryCreateTranslation Instance = new VoiceTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.RACE;
+        public override RecordType RecordType => RecordTypes.VTYP;
     }
 
 }
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class RaceBinaryTranslationMixIn
+    public static class VoiceTypeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1256,35 +1256,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class RaceBinaryOverlay :
+    internal partial class VoiceTypeBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IRaceGetter
+        IVoiceTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => VoiceType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => VoiceType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RaceCommon.Instance;
+        protected override object CommonInstance() => VoiceTypeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => VoiceTypeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => VoiceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((VoiceTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(IVoiceType);
 
 
         partial void CustomFactoryEnd(
@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected RaceBinaryOverlay(
+        protected VoiceTypeBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1303,7 +1303,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IRaceGetter RaceFactory(
+        public static IVoiceTypeGetter VoiceTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new RaceBinaryOverlay(
+            var ret = new VoiceTypeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1333,12 +1333,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IRaceGetter RaceFactory(
+        public static IVoiceTypeGetter VoiceTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return RaceFactory(
+            return VoiceTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.Print(
+            VoiceTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1360,7 +1360,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Race>.ToString(this);
+            return MajorRecordPrinter<VoiceType>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1370,16 +1370,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IVoiceTypeGetter rhs) return false;
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRaceGetter? obj)
+        public bool Equals(IVoiceTypeGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

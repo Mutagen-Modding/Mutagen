@@ -1383,12 +1383,12 @@ public class PluginTranslationModule : BinaryTranslationModule
         if (data.MarkerType != null && data.RecordType != null)
         {
             // Skip marker 
-            sb.AppendLine($"{ReaderMemberName}.Position += {ReaderMemberName}.MetaData.SubConstants.HeaderLength + contentLength;");
+            sb.AppendLine($"{ReaderMemberName}.Position += {ReaderMemberName}.MetaData.Constants.SubConstants.HeaderLength + contentLength;");
             // read in target record type. 
-            sb.AppendLine($"var nextRec = {ReaderMemberName}.MetaData.GetSubrecord({ReaderMemberName});");
+            sb.AppendLine($"var nextRec = {ReaderMemberName}.GetSubrecord();");
             // Return if it's not there 
             sb.AppendLine($"if (nextRec.RecordType != {obj.RecordTypeHeaderName(data.RecordType.Value)}) throw new ArgumentException(\"Marker was read but not followed by expected subrecord.\");");
-            sb.AppendLine("contentLength = nextRec.RecordLength;");
+            sb.AppendLine("contentLength = nextRec.ContentLength;");
         }
 
         if (data.HasVersioning)

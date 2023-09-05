@@ -13,6 +13,7 @@
       <Group name="Globals" refName="Global" />
       <Group name="DamageTypes" refName="DamageType" />
       <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
       <Group name="Npcs" refName="Npc" />
       <Group name="Races" refName="Race" />
       <Group name="Weapons" refName="Weapon" />

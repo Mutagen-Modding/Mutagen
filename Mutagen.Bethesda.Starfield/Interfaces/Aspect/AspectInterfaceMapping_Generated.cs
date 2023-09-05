@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Starfield
                 ActionRecord_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                Faction_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
@@ -43,6 +44,7 @@ namespace Mutagen.Bethesda.Starfield
                 ActionRecord_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                Faction_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
@@ -50,6 +52,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                Faction_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
@@ -57,6 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                Faction_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };

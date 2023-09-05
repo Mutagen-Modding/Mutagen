@@ -5,6 +5,8 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
+### IAliasVoiceType
+- Faction
 ### IExplodeSpawn
 - TextureSet
 ### IIdleRelation
@@ -14,20 +16,50 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### ILocationRecord
 - LocationReferenceType
 ### IObjectId
+- Faction
 - TextureSet
+### IOwner
+- Faction
 ### IPlaceableObject
 - TextureSet
+### IPlaced
+- PlacedObject
+### IPlacedSimple
+- PlacedObject
+### IPlacedThing
+- PlacedObject
 ### IReferenceableObject
 - TextureSet
+### IRelatable
+- Faction
+- Race
+### IVoiceTypeOrList
+- FormList
+- VoiceType
 ## Concrete Classes to Interfaces
 ### ActionRecord
 - IIdleRelation
+### Faction
+- IAliasVoiceType
+- IObjectId
+- IOwner
+- IRelatable
+### FormList
+- IVoiceTypeOrList
 ### Keyword
 - IKeywordLinkedReference
 ### LocationReferenceType
 - ILocationRecord
+### PlacedObject
+- IPlaced
+- IPlacedSimple
+- IPlacedThing
+### Race
+- IRelatable
 ### TextureSet
 - IExplodeSpawn
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
+### VoiceType
+- IVoiceTypeOrList

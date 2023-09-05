@@ -59,6 +59,7 @@ public partial class RecordTypes
     public static readonly RecordType EXPL = new(0x4C505845);
     public static readonly RecordType EYES = new(0x53455945);
     public static readonly RecordType FACT = new(0x54434146);
+    public static readonly RecordType FFKW = new(0x574B4646);
     public static readonly RecordType FLOR = new(0x524F4C46);
     public static readonly RecordType FLST = new(0x54534C46);
     public static readonly RecordType FSTP = new(0x50545346);

@@ -1151,6 +1151,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.KYWD,
                 RecordTypes.BFCB,
+                RecordTypes.FLCS,
                 RecordTypes.INTV,
                 RecordTypes.FLTR,
                 RecordTypes.BFCE,
@@ -1995,6 +1996,7 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BFCB:
+                case RecordTypeInts.FLCS:
                 case RecordTypeInts.INTV:
                 case RecordTypeInts.FLTR:
                 case RecordTypeInts.BFCE:
@@ -2225,6 +2227,7 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BFCB:
+                case RecordTypeInts.FLCS:
                 case RecordTypeInts.INTV:
                 case RecordTypeInts.FLTR:
                 case RecordTypeInts.BFCE:

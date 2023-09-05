@@ -2,9 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Global" recordType="GLOB" baseClass="StarfieldMajorRecord" majorFlag="true" objType="Record" GUID="3eaff464-69f5-4cae-9bb3-47346d2047f8" ID="87">
     <Fields>
-      <ByteArray name="BFCB" recordType="BFCB" />
-      <ByteArray name="FLCS" recordType="FLCS" />
-      <ByteArray name="BFCE" recordType="BFCE" />
+      <RefDirect name="BFCB" refName="BFCBRecord" unknown="true" />
       <Float name="Data" recordType="FLTV" />
     </Fields>
   </Object>

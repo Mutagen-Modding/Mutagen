@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class Race :
+    public partial class PlacedObject :
         StarfieldMajorRecord,
-        IEquatable<IRaceGetter>,
-        ILoquiObjectSetter<Race>,
-        IRaceInternal
+        IEquatable<IPlacedObjectGetter>,
+        ILoquiObjectSetter<PlacedObject>,
+        IPlacedObjectInternal
     {
         #region Ctor
-        protected Race()
+        protected PlacedObject()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.Print(
+            PlacedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Race.Mask<R>();
+                var ret = new PlacedObject.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Race.Mask<bool>? printMask = null)
+            public string Print(PlacedObject.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Race.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedObject.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,15 +294,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public Race(FormKey formKey)
+        public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
+        public PlacedObject(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private Race(
+        private PlacedObject(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Race(
+        internal PlacedObject(
             FormKey formKey,
             ushort formVersion)
         {
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Race(IStarfieldMod mod)
+        public PlacedObject(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Race(IStarfieldMod mod, string editorID)
+        public PlacedObject(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -333,10 +333,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Race>.ToString(this);
+            return MajorRecordPrinter<PlacedObject>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(IPlacedObject);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlacedObjectGetter rhs) return false;
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRaceGetter? obj)
+        public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Race CreateFromBinary(
+        public new static PlacedObject CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Race();
-            ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PlacedObject();
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Race item,
+            out PlacedObject item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -404,84 +404,88 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((RaceSetterCommon)((IRaceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Race GetNew()
+        internal static new PlacedObject GetNew()
         {
-            return new Race();
+            return new PlacedObject();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IRace :
-        ILoquiObjectSetter<IRaceInternal>,
-        IRaceGetter,
-        IRelatable,
+    public partial interface IPlacedObject :
+        ILoquiObjectSetter<IPlacedObjectInternal>,
+        IPlaced,
+        IPlacedObjectGetter,
+        IPlacedSimple,
+        IPlacedThing,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface IRaceInternal :
+    public partial interface IPlacedObjectInternal :
         IStarfieldMajorRecordInternal,
-        IRace,
-        IRaceGetter
+        IPlacedObject,
+        IPlacedObjectGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.RACE)]
-    public partial interface IRaceGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.REFR)]
+    public partial interface IPlacedObjectGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IRaceGetter>,
-        IMapsToGetter<IRaceGetter>,
-        IRelatableGetter
+        ILoquiObject<IPlacedObjectGetter>,
+        IMapsToGetter<IPlacedObjectGetter>,
+        IPlacedGetter,
+        IPlacedSimpleGetter,
+        IPlacedThingGetter
     {
-        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class RaceMixIn
+    public static partial class PlacedObjectMixIn
     {
-        public static void Clear(this IRaceInternal item)
+        public static void Clear(this IPlacedObjectInternal item)
         {
-            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Race.Mask<bool> GetEqualsMask(
-            this IRaceGetter item,
-            IRaceGetter rhs,
+        public static PlacedObject.Mask<bool> GetEqualsMask(
+            this IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IRaceGetter item,
+            this IPlacedObjectGetter item,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IRaceGetter item,
+            this IPlacedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
+            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -489,39 +493,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IRaceGetter item,
-            IRaceGetter rhs,
-            Race.TranslationMask? equalsMask = null)
+            this IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
+            PlacedObject.TranslationMask? equalsMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IRaceInternal lhs,
-            IRaceGetter rhs,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+            this IPlacedObjectInternal lhs,
+            IPlacedObjectGetter rhs,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IRaceInternal lhs,
-            IRaceGetter rhs,
+            this IPlacedObjectInternal lhs,
+            IPlacedObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -529,55 +533,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
-            Race.TranslationMask? copyMask = null)
+        public static PlacedObject DeepCopy(
+            this IPlacedObjectGetter item,
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+        public static PlacedObject DeepCopy(
+            this IPlacedObjectGetter item,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
+        public static PlacedObject DeepCopy(
+            this IPlacedObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Race Duplicate(
-            this IRaceGetter item,
+        public static PlacedObject Duplicate(
+            this IPlacedObjectGetter item,
             FormKey formKey,
-            Race.TranslationMask? copyMask = null)
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Race Duplicate(
-            this IRaceGetter item,
+        public static PlacedObject Duplicate(
+            this IPlacedObjectGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -587,11 +591,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IRaceInternal item,
+            this IPlacedObjectInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -607,7 +611,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Race_FieldIndex
+    internal enum PlacedObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -620,40 +624,40 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class Race_Registration : ILoquiRegistration
+    internal partial class PlacedObject_Registration : ILoquiRegistration
     {
-        public static readonly Race_Registration Instance = new Race_Registration();
+        public static readonly PlacedObject_Registration Instance = new PlacedObject_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 68,
+            msgID: 706,
             version: 0);
 
-        public const string GUID = "b8b4ae9e-e154-49e1-93c9-a4b103de73c3";
+        public const string GUID = "3ec9c6c9-4759-4e6c-baf0-02b1d08bb45d";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(Race.Mask<>);
+        public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Race.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PlacedObject.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Race);
+        public static readonly Type ClassType = typeof(PlacedObject);
 
-        public static readonly Type GetterType = typeof(IRaceGetter);
+        public static readonly Type GetterType = typeof(IPlacedObjectGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IRace);
+        public static readonly Type SetterType = typeof(IPlacedObject);
 
-        public static readonly Type? InternalSetterType = typeof(IRaceInternal);
+        public static readonly Type? InternalSetterType = typeof(IPlacedObjectInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Race";
+        public const string FullName = "Mutagen.Bethesda.Starfield.PlacedObject";
 
-        public const string Name = "Race";
+        public const string Name = "PlacedObject";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -661,14 +665,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.REFR;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(RecordTypes.REFR);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -701,13 +705,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class RaceSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class PlacedObjectSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
+        public new static readonly PlacedObjectSetterCommon Instance = new PlacedObjectSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IRaceInternal item)
+        public void Clear(IPlacedObjectInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -715,16 +719,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IRaceInternal)item);
+            Clear(item: (IPlacedObjectInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IRaceInternal)item);
+            Clear(item: (IPlacedObjectInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IRace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -733,16 +737,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IRaceInternal item,
+            IPlacedObjectInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: PlacedObjectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PlacedObjectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -751,7 +755,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Race)item,
+                item: (PlacedObject)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -762,7 +766,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Race)item,
+                item: (PlacedObject)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -770,17 +774,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RaceCommon : StarfieldMajorRecordCommon
+    internal partial class PlacedObjectCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly RaceCommon Instance = new RaceCommon();
+        public new static readonly PlacedObjectCommon Instance = new PlacedObjectCommon();
 
-        public Race.Mask<bool> GetEqualsMask(
-            IRaceGetter item,
-            IRaceGetter rhs,
+        public PlacedObject.Mask<bool> GetEqualsMask(
+            IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Race.Mask<bool>(false);
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PlacedObject.Mask<bool>(false);
+            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -789,18 +793,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IRaceGetter item,
-            IRaceGetter rhs,
-            Race.Mask<bool> ret,
+            IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
+            PlacedObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IRaceGetter item,
+            IPlacedObjectGetter item,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -812,18 +816,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IRaceGetter item,
+            IPlacedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Race =>");
+                sb.AppendLine($"PlacedObject =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Race) =>");
+                sb.AppendLine($"{name} (PlacedObject) =>");
             }
             using (sb.Brace())
             {
@@ -835,9 +839,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IRaceGetter item,
+            IPlacedObjectGetter item,
             StructuredStringBuilder sb,
-            Race.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -845,41 +849,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static Race_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static PlacedObject_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new PlacedObject_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -887,8 +891,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRaceGetter? lhs,
-            IRaceGetter? rhs,
+            IPlacedObjectGetter? lhs,
+            IPlacedObjectGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -902,8 +906,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter,
+                lhs: (IPlacedObjectGetter?)lhs,
+                rhs: rhs as IPlacedObjectGetter,
                 equalsMask: equalsMask);
         }
         
@@ -913,12 +917,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter,
+                lhs: (IPlacedObjectGetter?)lhs,
+                rhs: rhs as IPlacedObjectGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IRaceGetter item)
+        public virtual int GetHashCode(IPlacedObjectGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -927,12 +931,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRaceGetter)item);
+            return GetHashCode(item: (IPlacedObjectGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRaceGetter)item);
+            return GetHashCode(item: (IPlacedObjectGetter)item);
         }
         
         #endregion
@@ -940,11 +944,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Race.GetNew();
+            return PlacedObject.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -954,12 +958,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public Race Duplicate(
-            IRaceGetter item,
+        public PlacedObject Duplicate(
+            IPlacedObjectGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Race(formKey);
+            var newRec = new PlacedObject(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -970,7 +974,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRaceGetter)item,
+                item: (IPlacedObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -981,7 +985,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRaceGetter)item,
+                item: (IPlacedObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -991,14 +995,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RaceSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class PlacedObjectSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
+        public new static readonly PlacedObjectSetterTranslationCommon Instance = new PlacedObjectSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IRaceInternal item,
-            IRaceGetter rhs,
+            IPlacedObjectInternal item,
+            IPlacedObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1012,8 +1016,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IRace item,
-            IRaceGetter rhs,
+            IPlacedObject item,
+            IPlacedObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1034,8 +1038,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRaceInternal)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IPlacedObjectInternal)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1049,8 +1053,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRace)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IPlacedObject)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1064,8 +1068,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRaceInternal)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IPlacedObjectInternal)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1079,8 +1083,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRace)item,
-                rhs: (IRaceGetter)rhs,
+                item: (IPlacedObject)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1088,12 +1092,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Race DeepCopy(
-            IRaceGetter item,
-            Race.TranslationMask? copyMask = null)
+        public PlacedObject DeepCopy(
+            IPlacedObjectGetter item,
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1102,30 +1106,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Race DeepCopy(
-            IRaceGetter item,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+        public PlacedObject DeepCopy(
+            IPlacedObjectGetter item,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Race DeepCopy(
-            IRaceGetter item,
+        public PlacedObject DeepCopy(
+            IPlacedObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1141,21 +1145,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Race
+    public partial class PlacedObject
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RaceCommon.Instance;
+        protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return RaceSetterCommon.Instance;
+            return PlacedObjectSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlacedObjectSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1166,20 +1170,20 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class RaceBinaryWriteTranslation :
+    public partial class PlacedObjectBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RaceBinaryWriteTranslation Instance = new();
+        public new static readonly PlacedObjectBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IRaceGetter item,
+            IPlacedObjectGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RACE)))
+                record: translationParams.ConvertToCustom(RecordTypes.REFR)))
             {
                 try
                 {
@@ -1207,7 +1211,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (IPlacedObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1218,7 +1222,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (IPlacedObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1229,25 +1233,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (IPlacedObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class RaceBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class PlacedObjectBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
+        public new static readonly PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.RACE;
+        public override RecordType RecordType => RecordTypes.REFR;
     }
 
 }
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class RaceBinaryTranslationMixIn
+    public static class PlacedObjectBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1256,35 +1260,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class RaceBinaryOverlay :
+    internal partial class PlacedObjectBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IRaceGetter
+        IPlacedObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RaceCommon.Instance;
+        protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlacedObjectSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(IPlacedObject);
 
 
         partial void CustomFactoryEnd(
@@ -1293,7 +1297,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected RaceBinaryOverlay(
+        protected PlacedObjectBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1303,7 +1307,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IRaceGetter RaceFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1315,7 +1319,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new RaceBinaryOverlay(
+            var ret = new PlacedObjectBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1333,12 +1337,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IRaceGetter RaceFactory(
+        public static IPlacedObjectGetter PlacedObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return RaceFactory(
+            return PlacedObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1350,7 +1354,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.Print(
+            PlacedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1360,7 +1364,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Race>.ToString(this);
+            return MajorRecordPrinter<PlacedObject>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1370,16 +1374,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlacedObjectGetter rhs) return false;
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRaceGetter? obj)
+        public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

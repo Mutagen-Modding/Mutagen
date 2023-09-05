@@ -8,18 +8,18 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [Faction, TextureSet]
+    /// Implemented by: [Faction]
     /// </summary>
-    public partial interface IObjectId :
-        IObjectIdGetter,
+    public partial interface IOwner :
+        IOwnerGetter,
         IStarfieldMajorRecordInternal
     {
     }
 
     /// <summary>
-    /// Implemented by: [Faction, TextureSet]
+    /// Implemented by: [Faction]
     /// </summary>
-    public partial interface IObjectIdGetter : IStarfieldMajorRecordGetter
+    public partial interface IOwnerGetter : IStarfieldMajorRecordGetter
     {
     }
 }

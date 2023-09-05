@@ -24,6 +24,34 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             ActionRecord_Registration.Instance,
         });
         dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
+        dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Faction_Registration.Instance,
+        });
+        dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+        dict[typeof(IObjectId)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Faction_Registration.Instance,
+            TextureSet_Registration.Instance,
+        });
+        dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)] with { Setter = false };
+        dict[typeof(IRelatable)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Faction_Registration.Instance,
+            Race_Registration.Instance,
+        });
+        dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
+        dict[typeof(IAliasVoiceType)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Faction_Registration.Instance,
+        });
+        dict[typeof(IAliasVoiceTypeGetter)] = dict[typeof(IAliasVoiceType)] with { Setter = false };
+        dict[typeof(IVoiceTypeOrList)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            FormList_Registration.Instance,
+            VoiceType_Registration.Instance,
+        });
+        dict[typeof(IVoiceTypeOrListGetter)] = dict[typeof(IVoiceTypeOrList)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,
@@ -34,11 +62,21 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             LocationReferenceType_Registration.Instance,
         });
         dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
-        dict[typeof(IObjectId)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
-            TextureSet_Registration.Instance,
+            PlacedObject_Registration.Instance,
         });
-        dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)] with { Setter = false };
+        dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
+        dict[typeof(IPlacedSimple)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedObject_Registration.Instance,
+        });
+        dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
+        dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedObject_Registration.Instance,
+        });
+        dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)] with { Setter = false };
         dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             TextureSet_Registration.Instance,

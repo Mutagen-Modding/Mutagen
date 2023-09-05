@@ -57,6 +57,7 @@ public partial class RecordTypeInts
     public const int EXPL = 0x4C505845;
     public const int EYES = 0x53455945;
     public const int FACT = 0x54434146;
+    public const int FFKW = 0x574B4646;
     public const int FLOR = 0x524F4C46;
     public const int FLST = 0x54534C46;
     public const int FSTP = 0x50545346;

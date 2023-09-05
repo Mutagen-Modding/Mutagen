@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class Race :
+    public partial class Cell :
         StarfieldMajorRecord,
-        IEquatable<IRaceGetter>,
-        ILoquiObjectSetter<Race>,
-        IRaceInternal
+        ICellInternal,
+        IEquatable<ICellGetter>,
+        ILoquiObjectSetter<Cell>
     {
         #region Ctor
-        protected Race()
+        protected Cell()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.Print(
+            CellMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Race.Mask<R>();
+                var ret = new Cell.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Race.Mask<bool>? printMask = null)
+            public string Print(Cell.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Race.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Cell.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Race_FieldIndex enu = (Race_FieldIndex)index;
+                Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,15 +294,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public Race(FormKey formKey)
+        public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
+        public Cell(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private Race(
+        private Cell(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Race(
+        internal Cell(
             FormKey formKey,
             ushort formVersion)
         {
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Race(IStarfieldMod mod)
+        public Cell(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Race(IStarfieldMod mod, string editorID)
+        public Cell(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -333,10 +333,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Race>.ToString(this);
+            return MajorRecordPrinter<Cell>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(ICell);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ICellGetter rhs) return false;
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRaceGetter? obj)
+        public bool Equals(ICellGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Race CreateFromBinary(
+        public new static Cell CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Race();
-            ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Cell();
+            ((CellSetterCommon)((ICellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Race item,
+            out Cell item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -404,84 +404,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((RaceSetterCommon)((IRaceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((CellSetterCommon)((ICellGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Race GetNew()
+        internal static new Cell GetNew()
         {
-            return new Race();
+            return new Cell();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IRace :
-        ILoquiObjectSetter<IRaceInternal>,
-        IRaceGetter,
-        IRelatable,
+    public partial interface ICell :
+        ICellGetter,
+        ILoquiObjectSetter<ICellInternal>,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface IRaceInternal :
+    public partial interface ICellInternal :
         IStarfieldMajorRecordInternal,
-        IRace,
-        IRaceGetter
+        ICell,
+        ICellGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.RACE)]
-    public partial interface IRaceGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.CELL)]
+    public partial interface ICellGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IRaceGetter>,
-        IMapsToGetter<IRaceGetter>,
-        IRelatableGetter
+        ILoquiObject<ICellGetter>,
+        IMapsToGetter<ICellGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class RaceMixIn
+    public static partial class CellMixIn
     {
-        public static void Clear(this IRaceInternal item)
+        public static void Clear(this ICellInternal item)
         {
-            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Race.Mask<bool> GetEqualsMask(
-            this IRaceGetter item,
-            IRaceGetter rhs,
+        public static Cell.Mask<bool> GetEqualsMask(
+            this ICellGetter item,
+            ICellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IRaceGetter item,
+            this ICellGetter item,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IRaceGetter item,
+            this ICellGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
+            ((CellCommon)((ICellGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -489,39 +487,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IRaceGetter item,
-            IRaceGetter rhs,
-            Race.TranslationMask? equalsMask = null)
+            this ICellGetter item,
+            ICellGetter rhs,
+            Cell.TranslationMask? equalsMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IRaceInternal lhs,
-            IRaceGetter rhs,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+            this ICellInternal lhs,
+            ICellGetter rhs,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IRaceInternal lhs,
-            IRaceGetter rhs,
+            this ICellInternal lhs,
+            ICellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CellSetterTranslationCommon)((ICellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -529,55 +527,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
-            Race.TranslationMask? copyMask = null)
+        public static Cell DeepCopy(
+            this ICellGetter item,
+            Cell.TranslationMask? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+        public static Cell DeepCopy(
+            this ICellGetter item,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Race DeepCopy(
-            this IRaceGetter item,
+        public static Cell DeepCopy(
+            this ICellGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CellSetterTranslationCommon)((ICellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Race Duplicate(
-            this IRaceGetter item,
+        public static Cell Duplicate(
+            this ICellGetter item,
             FormKey formKey,
-            Race.TranslationMask? copyMask = null)
+            Cell.TranslationMask? copyMask = null)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Race Duplicate(
-            this IRaceGetter item,
+        public static Cell Duplicate(
+            this ICellGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
+            return ((CellCommon)((ICellGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -587,11 +585,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IRaceInternal item,
+            this ICellInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((CellSetterCommon)((ICellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -607,7 +605,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Race_FieldIndex
+    internal enum Cell_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -620,40 +618,40 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class Race_Registration : ILoquiRegistration
+    internal partial class Cell_Registration : ILoquiRegistration
     {
-        public static readonly Race_Registration Instance = new Race_Registration();
+        public static readonly Cell_Registration Instance = new Cell_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 68,
+            msgID: 701,
             version: 0);
 
-        public const string GUID = "b8b4ae9e-e154-49e1-93c9-a4b103de73c3";
+        public const string GUID = "8a0653c8-5e37-4f7e-ac0d-222753cfb346";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(Race.Mask<>);
+        public static readonly Type MaskType = typeof(Cell.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Race.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Cell.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Race);
+        public static readonly Type ClassType = typeof(Cell);
 
-        public static readonly Type GetterType = typeof(IRaceGetter);
+        public static readonly Type GetterType = typeof(ICellGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IRace);
+        public static readonly Type SetterType = typeof(ICell);
 
-        public static readonly Type? InternalSetterType = typeof(IRaceInternal);
+        public static readonly Type? InternalSetterType = typeof(ICellInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Race";
+        public const string FullName = "Mutagen.Bethesda.Starfield.Cell";
 
-        public const string Name = "Race";
+        public const string Name = "Cell";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -661,14 +659,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CELL;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.RACE);
+            var all = RecordCollection.Factory(RecordTypes.CELL);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -701,13 +699,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class RaceSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class CellSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
+        public new static readonly CellSetterCommon Instance = new CellSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IRaceInternal item)
+        public void Clear(ICellInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -715,16 +713,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IRaceInternal)item);
+            Clear(item: (ICellInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IRaceInternal)item);
+            Clear(item: (ICellInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IRace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -733,16 +731,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IRaceInternal item,
+            ICellInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ICellInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: CellBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CellBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -751,7 +749,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Race)item,
+                item: (Cell)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -762,7 +760,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Race)item,
+                item: (Cell)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -770,17 +768,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RaceCommon : StarfieldMajorRecordCommon
+    internal partial class CellCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly RaceCommon Instance = new RaceCommon();
+        public new static readonly CellCommon Instance = new CellCommon();
 
-        public Race.Mask<bool> GetEqualsMask(
-            IRaceGetter item,
-            IRaceGetter rhs,
+        public Cell.Mask<bool> GetEqualsMask(
+            ICellGetter item,
+            ICellGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Race.Mask<bool>(false);
-            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Cell.Mask<bool>(false);
+            ((CellCommon)((ICellGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -789,18 +787,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IRaceGetter item,
-            IRaceGetter rhs,
-            Race.Mask<bool> ret,
+            ICellGetter item,
+            ICellGetter rhs,
+            Cell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IRaceGetter item,
+            ICellGetter item,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -812,18 +810,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IRaceGetter item,
+            ICellGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Race.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Race =>");
+                sb.AppendLine($"Cell =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Race) =>");
+                sb.AppendLine($"{name} (Cell) =>");
             }
             using (sb.Brace())
             {
@@ -835,9 +833,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IRaceGetter item,
+            ICellGetter item,
             StructuredStringBuilder sb,
-            Race.Mask<bool>? printMask = null)
+            Cell.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -845,41 +843,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static Race_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static Cell_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Cell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
+                    return (Cell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -887,8 +885,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IRaceGetter? lhs,
-            IRaceGetter? rhs,
+            ICellGetter? lhs,
+            ICellGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -902,8 +900,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter,
+                lhs: (ICellGetter?)lhs,
+                rhs: rhs as ICellGetter,
                 equalsMask: equalsMask);
         }
         
@@ -913,12 +911,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter,
+                lhs: (ICellGetter?)lhs,
+                rhs: rhs as ICellGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IRaceGetter item)
+        public virtual int GetHashCode(ICellGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -927,12 +925,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRaceGetter)item);
+            return GetHashCode(item: (ICellGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IRaceGetter)item);
+            return GetHashCode(item: (ICellGetter)item);
         }
         
         #endregion
@@ -940,11 +938,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Race.GetNew();
+            return Cell.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -954,12 +952,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public Race Duplicate(
-            IRaceGetter item,
+        public Cell Duplicate(
+            ICellGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Race(formKey);
+            var newRec = new Cell(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -970,7 +968,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRaceGetter)item,
+                item: (ICellGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -981,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRaceGetter)item,
+                item: (ICellGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -991,14 +989,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class RaceSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class CellSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
+        public new static readonly CellSetterTranslationCommon Instance = new CellSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IRaceInternal item,
-            IRaceGetter rhs,
+            ICellInternal item,
+            ICellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1012,8 +1010,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IRace item,
-            IRaceGetter rhs,
+            ICell item,
+            ICellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1034,8 +1032,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRaceInternal)item,
-                rhs: (IRaceGetter)rhs,
+                item: (ICellInternal)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1049,8 +1047,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRace)item,
-                rhs: (IRaceGetter)rhs,
+                item: (ICell)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1064,8 +1062,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRaceInternal)item,
-                rhs: (IRaceGetter)rhs,
+                item: (ICellInternal)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1079,8 +1077,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IRace)item,
-                rhs: (IRaceGetter)rhs,
+                item: (ICell)item,
+                rhs: (ICellGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1088,12 +1086,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Race DeepCopy(
-            IRaceGetter item,
-            Race.TranslationMask? copyMask = null)
+        public Cell DeepCopy(
+            ICellGetter item,
+            Cell.TranslationMask? copyMask = null)
         {
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
+            ((CellSetterTranslationCommon)((ICellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1102,30 +1100,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Race DeepCopy(
-            IRaceGetter item,
-            out Race.ErrorMask errorMask,
-            Race.TranslationMask? copyMask = null)
+        public Cell DeepCopy(
+            ICellGetter item,
+            out Cell.ErrorMask errorMask,
+            Cell.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
+            ((CellSetterTranslationCommon)((ICellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Cell.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Race DeepCopy(
-            IRaceGetter item,
+        public Cell DeepCopy(
+            ICellGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
-            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Cell ret = (Cell)((CellCommon)((ICellGetter)item).CommonInstance()!).GetNew();
+            ((CellSetterTranslationCommon)((ICellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1141,21 +1139,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Race
+    public partial class Cell
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RaceCommon.Instance;
+        protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return RaceSetterCommon.Instance;
+            return CellSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1166,20 +1164,20 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class RaceBinaryWriteTranslation :
+    public partial class CellBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly RaceBinaryWriteTranslation Instance = new();
+        public new static readonly CellBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IRaceGetter item,
+            ICellGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RACE)))
+                record: translationParams.ConvertToCustom(RecordTypes.CELL)))
             {
                 try
                 {
@@ -1207,7 +1205,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (ICellGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1218,7 +1216,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (ICellGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1229,25 +1227,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IRaceGetter)item,
+                item: (ICellGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class RaceBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class CellBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
+        public new static readonly CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.RACE;
+        public override RecordType RecordType => RecordTypes.CELL;
     }
 
 }
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class RaceBinaryTranslationMixIn
+    public static class CellBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1256,35 +1254,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class RaceBinaryOverlay :
+    internal partial class CellBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IRaceGetter
+        ICellGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Cell_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => RaceCommon.Instance;
+        protected override object CommonInstance() => CellCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CellSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IRace);
+        protected override Type LinkType => typeof(ICell);
 
 
         partial void CustomFactoryEnd(
@@ -1293,7 +1291,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected RaceBinaryOverlay(
+        protected CellBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1303,7 +1301,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IRaceGetter RaceFactory(
+        public static ICellGetter CellFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1315,7 +1313,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new RaceBinaryOverlay(
+            var ret = new CellBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1333,12 +1331,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IRaceGetter RaceFactory(
+        public static ICellGetter CellFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return RaceFactory(
+            return CellFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1350,7 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            RaceMixIn.Print(
+            CellMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1360,7 +1358,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Race>.ToString(this);
+            return MajorRecordPrinter<Cell>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1370,16 +1368,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ICellGetter rhs) return false;
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IRaceGetter? obj)
+        public bool Equals(ICellGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

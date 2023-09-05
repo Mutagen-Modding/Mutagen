@@ -55,36 +55,14 @@ namespace Mutagen.Bethesda.Starfield
 
         #region BFCB
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _BFCB;
-        public MemorySlice<Byte>? BFCB
+        private BFCBRecord? _BFCB;
+        public BFCBRecord? BFCB
         {
-            get => this._BFCB;
-            set => this._BFCB = value;
+            get => _BFCB;
+            set => _BFCB = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IGlobalGetter.BFCB => this.BFCB;
-        #endregion
-        #region FLCS
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLCS;
-        public MemorySlice<Byte>? FLCS
-        {
-            get => this._FLCS;
-            set => this._FLCS = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IGlobalGetter.FLCS => this.FLCS;
-        #endregion
-        #region BFCE
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _BFCE;
-        public MemorySlice<Byte>? BFCE
-        {
-            get => this._BFCE;
-            set => this._BFCE = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IGlobalGetter.BFCE => this.BFCE;
+        IBFCBRecordGetter? IGlobalGetter.BFCB => this.BFCB;
         #endregion
         #region Data
         public Single? Data { get; set; }
@@ -116,9 +94,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.BFCB = initialValue;
-                this.FLCS = initialValue;
-                this.BFCE = initialValue;
+                this.BFCB = new MaskItem<TItem, BFCBRecord.Mask<TItem>?>(initialValue, new BFCBRecord.Mask<TItem>(initialValue));
                 this.Data = initialValue;
             }
 
@@ -131,8 +107,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem BFCB,
-                TItem FLCS,
-                TItem BFCE,
                 TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -143,9 +117,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.BFCB = BFCB;
-                this.FLCS = FLCS;
-                this.BFCE = BFCE;
+                this.BFCB = new MaskItem<TItem, BFCBRecord.Mask<TItem>?>(BFCB, new BFCBRecord.Mask<TItem>(BFCB));
                 this.Data = Data;
             }
 
@@ -158,9 +130,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem BFCB;
-            public TItem FLCS;
-            public TItem BFCE;
+            public MaskItem<TItem, BFCBRecord.Mask<TItem>?>? BFCB { get; set; }
             public TItem Data;
             #endregion
 
@@ -176,8 +146,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.BFCB, rhs.BFCB)) return false;
-                if (!object.Equals(this.FLCS, rhs.FLCS)) return false;
-                if (!object.Equals(this.BFCE, rhs.BFCE)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
@@ -185,8 +153,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.BFCB);
-                hash.Add(this.FLCS);
-                hash.Add(this.BFCE);
                 hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -198,9 +164,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.BFCB)) return false;
-                if (!eval(this.FLCS)) return false;
-                if (!eval(this.BFCE)) return false;
+                if (BFCB != null)
+                {
+                    if (!eval(this.BFCB.Overall)) return false;
+                    if (this.BFCB.Specific != null && !this.BFCB.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Data)) return false;
                 return true;
             }
@@ -210,9 +178,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.BFCB)) return true;
-                if (eval(this.FLCS)) return true;
-                if (eval(this.BFCE)) return true;
+                if (BFCB != null)
+                {
+                    if (eval(this.BFCB.Overall)) return true;
+                    if (this.BFCB.Specific != null && this.BFCB.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Data)) return true;
                 return false;
             }
@@ -229,9 +199,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.BFCB = eval(this.BFCB);
-                obj.FLCS = eval(this.FLCS);
-                obj.BFCE = eval(this.BFCE);
+                obj.BFCB = this.BFCB == null ? null : new MaskItem<R, BFCBRecord.Mask<R>?>(eval(this.BFCB.Overall), this.BFCB.Specific?.Translate(eval));
                 obj.Data = eval(this.Data);
             }
             #endregion
@@ -251,17 +219,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Global.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.BFCB ?? true)
+                    if (printMask?.BFCB?.Overall ?? true)
                     {
-                        sb.AppendItem(BFCB, "BFCB");
-                    }
-                    if (printMask?.FLCS ?? true)
-                    {
-                        sb.AppendItem(FLCS, "FLCS");
-                    }
-                    if (printMask?.BFCE ?? true)
-                    {
-                        sb.AppendItem(BFCE, "BFCE");
+                        BFCB?.Print(sb);
                     }
                     if (printMask?.Data ?? true)
                     {
@@ -278,9 +238,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? BFCB;
-            public Exception? FLCS;
-            public Exception? BFCE;
+            public MaskItem<Exception?, BFCBRecord.ErrorMask?>? BFCB;
             public Exception? Data;
             #endregion
 
@@ -292,10 +250,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case Global_FieldIndex.BFCB:
                         return BFCB;
-                    case Global_FieldIndex.FLCS:
-                        return FLCS;
-                    case Global_FieldIndex.BFCE:
-                        return BFCE;
                     case Global_FieldIndex.Data:
                         return Data;
                     default:
@@ -309,13 +263,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case Global_FieldIndex.BFCB:
-                        this.BFCB = ex;
-                        break;
-                    case Global_FieldIndex.FLCS:
-                        this.FLCS = ex;
-                        break;
-                    case Global_FieldIndex.BFCE:
-                        this.BFCE = ex;
+                        this.BFCB = new MaskItem<Exception?, BFCBRecord.ErrorMask?>(ex, null);
                         break;
                     case Global_FieldIndex.Data:
                         this.Data = ex;
@@ -332,13 +280,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case Global_FieldIndex.BFCB:
-                        this.BFCB = (Exception?)obj;
-                        break;
-                    case Global_FieldIndex.FLCS:
-                        this.FLCS = (Exception?)obj;
-                        break;
-                    case Global_FieldIndex.BFCE:
-                        this.BFCE = (Exception?)obj;
+                        this.BFCB = (MaskItem<Exception?, BFCBRecord.ErrorMask?>?)obj;
                         break;
                     case Global_FieldIndex.Data:
                         this.Data = (Exception?)obj;
@@ -353,8 +295,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (BFCB != null) return true;
-                if (FLCS != null) return true;
-                if (BFCE != null) return true;
                 if (Data != null) return true;
                 return false;
             }
@@ -382,15 +322,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(BFCB, "BFCB");
-                }
-                {
-                    sb.AppendItem(FLCS, "FLCS");
-                }
-                {
-                    sb.AppendItem(BFCE, "BFCE");
-                }
+                BFCB?.Print(sb);
                 {
                     sb.AppendItem(Data, "Data");
                 }
@@ -402,9 +334,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.BFCB = this.BFCB.Combine(rhs.BFCB);
-                ret.FLCS = this.FLCS.Combine(rhs.FLCS);
-                ret.BFCE = this.BFCE.Combine(rhs.BFCE);
+                ret.BFCB = this.BFCB.Combine(rhs.BFCB, (l, r) => l.Combine(r));
                 ret.Data = this.Data.Combine(rhs.Data);
                 return ret;
             }
@@ -428,9 +358,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool BFCB;
-            public bool FLCS;
-            public bool BFCE;
+            public BFCBRecord.TranslationMask? BFCB;
             public bool Data;
             #endregion
 
@@ -440,9 +368,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.BFCB = defaultOn;
-                this.FLCS = defaultOn;
-                this.BFCE = defaultOn;
                 this.Data = defaultOn;
             }
 
@@ -451,9 +376,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((BFCB, null));
-                ret.Add((FLCS, null));
-                ret.Add((BFCE, null));
+                ret.Add((BFCB != null ? BFCB.OnOverall : DefaultOn, BFCB?.GetCrystal()));
                 ret.Add((Data, null));
             }
 
@@ -598,9 +521,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IGlobalInternal>,
         IStarfieldMajorRecordInternal
     {
-        new MemorySlice<Byte>? BFCB { get; set; }
-        new MemorySlice<Byte>? FLCS { get; set; }
-        new MemorySlice<Byte>? BFCE { get; set; }
+        new BFCBRecord? BFCB { get; set; }
         new Single? Data { get; set; }
         #region Mutagen
         new Global.MajorFlag MajorFlags { get; set; }
@@ -623,9 +544,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IGlobalGetter>
     {
         static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? BFCB { get; }
-        ReadOnlyMemorySlice<Byte>? FLCS { get; }
-        ReadOnlyMemorySlice<Byte>? BFCE { get; }
+        IBFCBRecordGetter? BFCB { get; }
         Single? Data { get; }
 
         #region Mutagen
@@ -808,9 +727,7 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         BFCB = 7,
-        FLCS = 8,
-        BFCE = 9,
-        Data = 10,
+        Data = 8,
     }
     #endregion
 
@@ -828,9 +745,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "3eaff464-69f5-4cae-9bb3-47346d2047f8";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Global.Mask<>);
 
@@ -865,6 +782,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.GLOB,
                 RecordTypes.BFCB,
                 RecordTypes.FLCS,
+                RecordTypes.INTV,
+                RecordTypes.FLTR,
                 RecordTypes.BFCE,
                 RecordTypes.FLTV);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
@@ -911,9 +830,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGlobalInternal item)
         {
             ClearPartial();
-            item.BFCB = default;
-            item.FLCS = default;
-            item.BFCE = default;
+            item.BFCB = null;
             item.Data = default;
             base.Clear(item);
         }
@@ -999,9 +916,11 @@ namespace Mutagen.Bethesda.Starfield
             Global.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.BFCB = MemorySliceExt.SequenceEqual(item.BFCB, rhs.BFCB);
-            ret.FLCS = MemorySliceExt.SequenceEqual(item.FLCS, rhs.FLCS);
-            ret.BFCE = MemorySliceExt.SequenceEqual(item.BFCE, rhs.BFCE);
+            ret.BFCB = EqualsMaskHelper.EqualsHelper(
+                item.BFCB,
+                rhs.BFCB,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Data = item.Data.EqualsWithin(rhs.Data);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1052,20 +971,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.BFCB ?? true)
+            if ((printMask?.BFCB?.Overall ?? true)
                 && item.BFCB is {} BFCBItem)
             {
-                sb.AppendLine($"BFCB => {SpanExt.ToHexString(BFCBItem)}");
-            }
-            if ((printMask?.FLCS ?? true)
-                && item.FLCS is {} FLCSItem)
-            {
-                sb.AppendLine($"FLCS => {SpanExt.ToHexString(FLCSItem)}");
-            }
-            if ((printMask?.BFCE ?? true)
-                && item.BFCE is {} BFCEItem)
-            {
-                sb.AppendLine($"BFCE => {SpanExt.ToHexString(BFCEItem)}");
+                BFCBItem?.Print(sb, "BFCB");
             }
             if ((printMask?.Data ?? true)
                 && item.Data is {} DataItem)
@@ -1124,15 +1033,11 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Global_FieldIndex.BFCB) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.BFCB, rhs.BFCB)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Global_FieldIndex.FLCS) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLCS, rhs.FLCS)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Global_FieldIndex.BFCE) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.BFCE, rhs.BFCE)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.BFCB, rhs.BFCB, out var lhsBFCB, out var rhsBFCB, out var isBFCBEqual))
+                {
+                    if (!((BFCBRecordCommon)((IBFCBRecordGetter)lhsBFCB).CommonInstance()!).Equals(lhsBFCB, rhsBFCB, equalsMask?.GetSubCrystal((int)Global_FieldIndex.BFCB))) return false;
+                }
+                else if (!isBFCBEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Global_FieldIndex.Data) ?? true))
             {
@@ -1166,17 +1071,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IGlobalGetter item)
         {
             var hash = new HashCode();
-            if (item.BFCB is {} BFCBItem)
+            if (item.BFCB is {} BFCBitem)
             {
-                hash.Add(BFCBItem);
-            }
-            if (item.FLCS is {} FLCSItem)
-            {
-                hash.Add(FLCSItem);
-            }
-            if (item.BFCE is {} BFCEItem)
-            {
-                hash.Add(BFCEItem);
+                hash.Add(BFCBitem);
             }
             if (item.Data is {} Dataitem)
             {
@@ -1287,35 +1184,28 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Global_FieldIndex.BFCB) ?? true))
             {
-                if(rhs.BFCB is {} BFCBrhs)
+                errorMask?.PushIndex((int)Global_FieldIndex.BFCB);
+                try
                 {
-                    item.BFCB = BFCBrhs.ToArray();
+                    if(rhs.BFCB is {} rhsBFCB)
+                    {
+                        item.BFCB = rhsBFCB.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Global_FieldIndex.BFCB));
+                    }
+                    else
+                    {
+                        item.BFCB = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.BFCB = default;
+                    errorMask.ReportException(ex);
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Global_FieldIndex.FLCS) ?? true))
-            {
-                if(rhs.FLCS is {} FLCSrhs)
+                finally
                 {
-                    item.FLCS = FLCSrhs.ToArray();
-                }
-                else
-                {
-                    item.FLCS = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Global_FieldIndex.BFCE) ?? true))
-            {
-                if(rhs.BFCE is {} BFCErhs)
-                {
-                    item.BFCE = BFCErhs.ToArray();
-                }
-                else
-                {
-                    item.BFCE = default;
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Global_FieldIndex.Data) ?? true))
@@ -1479,18 +1369,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.BFCB,
-                header: translationParams.ConvertToCustom(RecordTypes.BFCB));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLCS,
-                header: translationParams.ConvertToCustom(RecordTypes.FLCS));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.BFCE,
-                header: translationParams.ConvertToCustom(RecordTypes.BFCE));
+            if (item.BFCB is {} BFCBItem)
+            {
+                ((BFCBRecordBinaryWriteTranslation)((IBinaryItem)BFCBItem).BinaryWriteTranslator).Write(
+                    item: BFCBItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Data,
@@ -1581,22 +1466,15 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BFCB:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BFCB = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Global_FieldIndex.BFCB;
-                }
                 case RecordTypeInts.FLCS:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLCS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Global_FieldIndex.FLCS;
-                }
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.FLTR:
                 case RecordTypeInts.BFCE:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BFCE = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Global_FieldIndex.BFCE;
+                    item.BFCB = Mutagen.Bethesda.Starfield.BFCBRecord.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Global_FieldIndex.BFCB;
                 }
                 case RecordTypeInts.FLTV:
                 {
@@ -1663,18 +1541,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public Global.MajorFlag MajorFlags => (Global.MajorFlag)this.MajorRecordFlagsRaw;
 
-        #region BFCB
-        private int? _BFCBLocation;
-        public ReadOnlyMemorySlice<Byte>? BFCB => _BFCBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BFCBLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region FLCS
-        private int? _FLCSLocation;
-        public ReadOnlyMemorySlice<Byte>? FLCS => _FLCSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLCSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region BFCE
-        private int? _BFCELocation;
-        public ReadOnlyMemorySlice<Byte>? BFCE => _BFCELocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BFCELocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IBFCBRecordGetter? BFCB { get; private set; }
         #region Data
         private int? _DataLocation;
         public Single? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
@@ -1749,19 +1616,16 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BFCB:
-                {
-                    _BFCBLocation = (stream.Position - offset);
-                    return (int)Global_FieldIndex.BFCB;
-                }
                 case RecordTypeInts.FLCS:
-                {
-                    _FLCSLocation = (stream.Position - offset);
-                    return (int)Global_FieldIndex.FLCS;
-                }
+                case RecordTypeInts.INTV:
+                case RecordTypeInts.FLTR:
                 case RecordTypeInts.BFCE:
                 {
-                    _BFCELocation = (stream.Position - offset);
-                    return (int)Global_FieldIndex.BFCE;
+                    this.BFCB = BFCBRecordBinaryOverlay.BFCBRecordFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Global_FieldIndex.BFCB;
                 }
                 case RecordTypeInts.FLTV:
                 {

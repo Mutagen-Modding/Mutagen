@@ -87,10 +87,16 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
+    <None Update="Records\Common Subrecords\LocationTargetRadius.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
+    <Compile Include="Enums\CombatReaction.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -99,6 +105,33 @@
     <Compile Include="Interfaces\Aspect\IObjectBounded.cs" />
     <Compile Include="Interfaces\Aspect\IPositionRotation.cs" />
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Records\Common Subrecords\ALocationTarget_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationCell_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationFallback_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationKeyword_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationObjectId_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationObjectType_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTargetRadius_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTarget_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Model_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
@@ -113,6 +146,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AttractionRule_Generated.cs">
       <DependentUpon>AttractionRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Faction.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\FFKW_Generated.cs">
       <DependentUpon>FFKW.xml</DependentUpon>
@@ -267,5 +303,36 @@
     <Compile Include="Records\Major Records\CurveTable_Generated.cs">
       <DependentUpon>CurveTable.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Relation_Generated.cs">
+      <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Cell_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Faction_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CrimeValues_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\VendorValues_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FormList_Generated.cs">
+      <DependentUpon>FormList.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObject_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
+    <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
+    <Compile Include="Interfaces\Link\IAliasVoiceType_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlacedSimple_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPlacedThing_Generated.cs" />
+    <Compile Include="Records\Major Records\VoiceType_Generated.cs">
+      <DependentUpon>VoiceType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedObject" recordType="REFR" baseClass="StarfieldMajorRecord" objType="Record" GUID="3ec9c6c9-4759-4e6c-baf0-02b1d08bb45d" ID="706">
+    <Fields>
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+    <LinkInterface>IPlacedSimple</LinkInterface>
+    <LinkInterface>IPlacedThing</LinkInterface>
+  </Object>
+</Loqui>
