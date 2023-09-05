@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectProperty" objType="Subrecord" GUID="0beb0841-2461-40b8-8588-3cacf0811883" ID="52">
+  <Object name="ObjectProperty" objType="Subrecord" GUID="99518193-5a21-406f-92ee-03ba18ec55f1" ID="688">
     <Fields>
       <FormLink name="ActorValue" refName="ActorValueInformation" />
       <Float name="Value" />
+      <FormLink name="CurveTable" refName="CurveTable">
+        <Versioning formVersion="152" action="Add" />
+      </FormLink>
     </Fields>
   </Object>
 </Loqui>

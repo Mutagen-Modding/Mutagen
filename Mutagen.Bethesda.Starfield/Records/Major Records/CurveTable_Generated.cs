@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ActorValueInformation :
+    public partial class CurveTable :
         StarfieldMajorRecord,
-        IActorValueInformationInternal,
-        IEquatable<IActorValueInformationGetter>,
-        ILoquiObjectSetter<ActorValueInformation>
+        ICurveTableInternal,
+        IEquatable<ICurveTableGetter>,
+        ILoquiObjectSetter<CurveTable>
     {
         #region Ctor
-        protected ActorValueInformation()
+        protected CurveTable()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueInformationMixIn.Print(
+            CurveTableMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ActorValueInformation.Mask<R>();
+                var ret = new CurveTable.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ActorValueInformation.Mask<bool>? printMask = null)
+            public string Print(CurveTable.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ActorValueInformation.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, CurveTable.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(CurveTable.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
+                CurveTable_FieldIndex enu = (CurveTable_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
+                CurveTable_FieldIndex enu = (CurveTable_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
+                CurveTable_FieldIndex enu = (CurveTable_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,15 +294,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ActorValueInformation_Registration.TriggeringRecordType;
-        public ActorValueInformation(FormKey formKey)
+        public static readonly RecordType GrupRecordType = CurveTable_Registration.TriggeringRecordType;
+        public CurveTable(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private ActorValueInformation(
+        private CurveTable(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal ActorValueInformation(
+        internal CurveTable(
             FormKey formKey,
             ushort formVersion)
         {
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public ActorValueInformation(IStarfieldMod mod)
+        public CurveTable(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ActorValueInformation(IStarfieldMod mod, string editorID)
+        public CurveTable(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -333,10 +333,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ActorValueInformation>.ToString(this);
+            return MajorRecordPrinter<CurveTable>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IActorValueInformation);
+        protected override Type LinkType => typeof(ICurveTable);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ICurveTableGetter rhs) return false;
+            return ((CurveTableCommon)((ICurveTableGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IActorValueInformationGetter? obj)
+        public bool Equals(ICurveTableGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((CurveTableCommon)((ICurveTableGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CurveTableCommon)((ICurveTableGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CurveTableBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ActorValueInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CurveTableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static ActorValueInformation CreateFromBinary(
+        public new static CurveTable CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ActorValueInformation();
-            ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new CurveTable();
+            ((CurveTableSetterCommon)((ICurveTableGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ActorValueInformation item,
+            out CurveTable item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -404,82 +404,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)this).CommonSetterInstance()!).Clear(this);
+            ((CurveTableSetterCommon)((ICurveTableGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ActorValueInformation GetNew()
+        internal static new CurveTable GetNew()
         {
-            return new ActorValueInformation();
+            return new CurveTable();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IActorValueInformation :
-        IActorValueInformationGetter,
-        ILoquiObjectSetter<IActorValueInformationInternal>,
+    public partial interface ICurveTable :
+        ICurveTableGetter,
+        ILoquiObjectSetter<ICurveTableInternal>,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface IActorValueInformationInternal :
+    public partial interface ICurveTableInternal :
         IStarfieldMajorRecordInternal,
-        IActorValueInformation,
-        IActorValueInformationGetter
+        ICurveTable,
+        ICurveTableGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.AVIF)]
-    public partial interface IActorValueInformationGetter :
+    public partial interface ICurveTableGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IActorValueInformationGetter>,
-        IMapsToGetter<IActorValueInformationGetter>
+        ILoquiObject<ICurveTableGetter>,
+        IMapsToGetter<ICurveTableGetter>
     {
-        static new ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => CurveTable_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ActorValueInformationMixIn
+    public static partial class CurveTableMixIn
     {
-        public static void Clear(this IActorValueInformationInternal item)
+        public static void Clear(this ICurveTableInternal item)
         {
-            ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((CurveTableSetterCommon)((ICurveTableGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ActorValueInformation.Mask<bool> GetEqualsMask(
-            this IActorValueInformationGetter item,
-            IActorValueInformationGetter rhs,
+        public static CurveTable.Mask<bool> GetEqualsMask(
+            this ICurveTableGetter item,
+            ICurveTableGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IActorValueInformationGetter item,
+            this ICurveTableGetter item,
             string? name = null,
-            ActorValueInformation.Mask<bool>? printMask = null)
+            CurveTable.Mask<bool>? printMask = null)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Print(
+            return ((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IActorValueInformationGetter item,
+            this ICurveTableGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ActorValueInformation.Mask<bool>? printMask = null)
+            CurveTable.Mask<bool>? printMask = null)
         {
-            ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Print(
+            ((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -487,39 +487,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IActorValueInformationGetter item,
-            IActorValueInformationGetter rhs,
-            ActorValueInformation.TranslationMask? equalsMask = null)
+            this ICurveTableGetter item,
+            ICurveTableGetter rhs,
+            CurveTable.TranslationMask? equalsMask = null)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Equals(
+            return ((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IActorValueInformationInternal lhs,
-            IActorValueInformationGetter rhs,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? copyMask = null)
+            this ICurveTableInternal lhs,
+            ICurveTableGetter rhs,
+            out CurveTable.ErrorMask errorMask,
+            CurveTable.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CurveTableSetterTranslationCommon)((ICurveTableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ActorValueInformation.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CurveTable.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IActorValueInformationInternal lhs,
-            IActorValueInformationGetter rhs,
+            this ICurveTableInternal lhs,
+            ICurveTableGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((CurveTableSetterTranslationCommon)((ICurveTableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -527,55 +527,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ActorValueInformation DeepCopy(
-            this IActorValueInformationGetter item,
-            ActorValueInformation.TranslationMask? copyMask = null)
+        public static CurveTable DeepCopy(
+            this ICurveTableGetter item,
+            CurveTable.TranslationMask? copyMask = null)
         {
-            return ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CurveTableSetterTranslationCommon)((ICurveTableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ActorValueInformation DeepCopy(
-            this IActorValueInformationGetter item,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? copyMask = null)
+        public static CurveTable DeepCopy(
+            this ICurveTableGetter item,
+            out CurveTable.ErrorMask errorMask,
+            CurveTable.TranslationMask? copyMask = null)
         {
-            return ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CurveTableSetterTranslationCommon)((ICurveTableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ActorValueInformation DeepCopy(
-            this IActorValueInformationGetter item,
+        public static CurveTable DeepCopy(
+            this ICurveTableGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((CurveTableSetterTranslationCommon)((ICurveTableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ActorValueInformation Duplicate(
-            this IActorValueInformationGetter item,
+        public static CurveTable Duplicate(
+            this ICurveTableGetter item,
             FormKey formKey,
-            ActorValueInformation.TranslationMask? copyMask = null)
+            CurveTable.TranslationMask? copyMask = null)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Duplicate(
+            return ((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static ActorValueInformation Duplicate(
-            this IActorValueInformationGetter item,
+        public static CurveTable Duplicate(
+            this ICurveTableGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Duplicate(
+            return ((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -585,11 +585,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IActorValueInformationInternal item,
+            this ICurveTableInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ActorValueInformationSetterCommon)((IActorValueInformationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((CurveTableSetterCommon)((ICurveTableGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ActorValueInformation_FieldIndex
+    internal enum CurveTable_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -618,40 +618,40 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class ActorValueInformation_Registration : ILoquiRegistration
+    internal partial class CurveTable_Registration : ILoquiRegistration
     {
-        public static readonly ActorValueInformation_Registration Instance = new ActorValueInformation_Registration();
+        public static readonly CurveTable_Registration Instance = new CurveTable_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 689,
+            msgID: 691,
             version: 0);
 
-        public const string GUID = "e13fc97c-ddd6-464d-b2d0-8cb44f617052";
+        public const string GUID = "2ca4d147-8de9-44e2-a9e3-ae5221c2ce47";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(ActorValueInformation.Mask<>);
+        public static readonly Type MaskType = typeof(CurveTable.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ActorValueInformation.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(CurveTable.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ActorValueInformation);
+        public static readonly Type ClassType = typeof(CurveTable);
 
-        public static readonly Type GetterType = typeof(IActorValueInformationGetter);
+        public static readonly Type GetterType = typeof(ICurveTableGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IActorValueInformation);
+        public static readonly Type SetterType = typeof(ICurveTable);
 
-        public static readonly Type? InternalSetterType = typeof(IActorValueInformationInternal);
+        public static readonly Type? InternalSetterType = typeof(ICurveTableInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ActorValueInformation";
+        public const string FullName = "Mutagen.Bethesda.Starfield.CurveTable";
 
-        public const string Name = "ActorValueInformation";
+        public const string Name = "CurveTable";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.AVIF);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ActorValueInformationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(CurveTableBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -699,13 +699,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ActorValueInformationSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class CurveTableSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly ActorValueInformationSetterCommon Instance = new ActorValueInformationSetterCommon();
+        public new static readonly CurveTableSetterCommon Instance = new CurveTableSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IActorValueInformationInternal item)
+        public void Clear(ICurveTableInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -713,16 +713,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IActorValueInformationInternal)item);
+            Clear(item: (ICurveTableInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IActorValueInformationInternal)item);
+            Clear(item: (ICurveTableInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IActorValueInformation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ICurveTable obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -731,16 +731,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IActorValueInformationInternal item,
+            ICurveTableInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IActorValueInformationInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ICurveTableInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ActorValueInformationBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ActorValueInformationBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: CurveTableBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: CurveTableBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -749,7 +749,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (ActorValueInformation)item,
+                item: (CurveTable)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -760,7 +760,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (ActorValueInformation)item,
+                item: (CurveTable)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -768,17 +768,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ActorValueInformationCommon : StarfieldMajorRecordCommon
+    internal partial class CurveTableCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly ActorValueInformationCommon Instance = new ActorValueInformationCommon();
+        public new static readonly CurveTableCommon Instance = new CurveTableCommon();
 
-        public ActorValueInformation.Mask<bool> GetEqualsMask(
-            IActorValueInformationGetter item,
-            IActorValueInformationGetter rhs,
+        public CurveTable.Mask<bool> GetEqualsMask(
+            ICurveTableGetter item,
+            ICurveTableGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ActorValueInformation.Mask<bool>(false);
-            ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new CurveTable.Mask<bool>(false);
+            ((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -787,18 +787,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IActorValueInformationGetter item,
-            IActorValueInformationGetter rhs,
-            ActorValueInformation.Mask<bool> ret,
+            ICurveTableGetter item,
+            ICurveTableGetter rhs,
+            CurveTable.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IActorValueInformationGetter item,
+            ICurveTableGetter item,
             string? name = null,
-            ActorValueInformation.Mask<bool>? printMask = null)
+            CurveTable.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -810,18 +810,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IActorValueInformationGetter item,
+            ICurveTableGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ActorValueInformation.Mask<bool>? printMask = null)
+            CurveTable.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ActorValueInformation =>");
+                sb.AppendLine($"CurveTable =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ActorValueInformation) =>");
+                sb.AppendLine($"{name} (CurveTable) =>");
             }
             using (sb.Brace())
             {
@@ -833,9 +833,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IActorValueInformationGetter item,
+            ICurveTableGetter item,
             StructuredStringBuilder sb,
-            ActorValueInformation.Mask<bool>? printMask = null)
+            CurveTable.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -843,41 +843,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static ActorValueInformation_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static CurveTable_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new ActorValueInformation_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new CurveTable_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ActorValueInformation_FieldIndex)((int)index);
+                    return (CurveTable_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -885,8 +885,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IActorValueInformationGetter? lhs,
-            IActorValueInformationGetter? rhs,
+            ICurveTableGetter? lhs,
+            ICurveTableGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -900,8 +900,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IActorValueInformationGetter?)lhs,
-                rhs: rhs as IActorValueInformationGetter,
+                lhs: (ICurveTableGetter?)lhs,
+                rhs: rhs as ICurveTableGetter,
                 equalsMask: equalsMask);
         }
         
@@ -911,12 +911,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IActorValueInformationGetter?)lhs,
-                rhs: rhs as IActorValueInformationGetter,
+                lhs: (ICurveTableGetter?)lhs,
+                rhs: rhs as ICurveTableGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IActorValueInformationGetter item)
+        public virtual int GetHashCode(ICurveTableGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -925,12 +925,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IActorValueInformationGetter)item);
+            return GetHashCode(item: (ICurveTableGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IActorValueInformationGetter)item);
+            return GetHashCode(item: (ICurveTableGetter)item);
         }
         
         #endregion
@@ -938,11 +938,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return ActorValueInformation.GetNew();
+            return CurveTable.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValueInformationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICurveTableGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -952,12 +952,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public ActorValueInformation Duplicate(
-            IActorValueInformationGetter item,
+        public CurveTable Duplicate(
+            ICurveTableGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ActorValueInformation(formKey);
+            var newRec = new CurveTable(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IActorValueInformationGetter)item,
+                item: (ICurveTableGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IActorValueInformationGetter)item,
+                item: (ICurveTableGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -989,14 +989,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ActorValueInformationSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class CurveTableSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly ActorValueInformationSetterTranslationCommon Instance = new ActorValueInformationSetterTranslationCommon();
+        public new static readonly CurveTableSetterTranslationCommon Instance = new CurveTableSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IActorValueInformationInternal item,
-            IActorValueInformationGetter rhs,
+            ICurveTableInternal item,
+            ICurveTableGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1010,8 +1010,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IActorValueInformation item,
-            IActorValueInformationGetter rhs,
+            ICurveTable item,
+            ICurveTableGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1032,8 +1032,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IActorValueInformationInternal)item,
-                rhs: (IActorValueInformationGetter)rhs,
+                item: (ICurveTableInternal)item,
+                rhs: (ICurveTableGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IActorValueInformation)item,
-                rhs: (IActorValueInformationGetter)rhs,
+                item: (ICurveTable)item,
+                rhs: (ICurveTableGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1062,8 +1062,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IActorValueInformationInternal)item,
-                rhs: (IActorValueInformationGetter)rhs,
+                item: (ICurveTableInternal)item,
+                rhs: (ICurveTableGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1077,8 +1077,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IActorValueInformation)item,
-                rhs: (IActorValueInformationGetter)rhs,
+                item: (ICurveTable)item,
+                rhs: (ICurveTableGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1086,12 +1086,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public ActorValueInformation DeepCopy(
-            IActorValueInformationGetter item,
-            ActorValueInformation.TranslationMask? copyMask = null)
+        public CurveTable DeepCopy(
+            ICurveTableGetter item,
+            CurveTable.TranslationMask? copyMask = null)
         {
-            ActorValueInformation ret = (ActorValueInformation)((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).GetNew();
-            ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CurveTable ret = (CurveTable)((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).GetNew();
+            ((CurveTableSetterTranslationCommon)((ICurveTableGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1100,30 +1100,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ActorValueInformation DeepCopy(
-            IActorValueInformationGetter item,
-            out ActorValueInformation.ErrorMask errorMask,
-            ActorValueInformation.TranslationMask? copyMask = null)
+        public CurveTable DeepCopy(
+            ICurveTableGetter item,
+            out CurveTable.ErrorMask errorMask,
+            CurveTable.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ActorValueInformation ret = (ActorValueInformation)((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).GetNew();
-            ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CurveTable ret = (CurveTable)((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).GetNew();
+            ((CurveTableSetterTranslationCommon)((ICurveTableGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ActorValueInformation.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = CurveTable.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ActorValueInformation DeepCopy(
-            IActorValueInformationGetter item,
+        public CurveTable DeepCopy(
+            ICurveTableGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ActorValueInformation ret = (ActorValueInformation)((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).GetNew();
-            ((ActorValueInformationSetterTranslationCommon)((IActorValueInformationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            CurveTable ret = (CurveTable)((CurveTableCommon)((ICurveTableGetter)item).CommonInstance()!).GetNew();
+            ((CurveTableSetterTranslationCommon)((ICurveTableGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1139,21 +1139,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ActorValueInformation
+    public partial class CurveTable
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CurveTable_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CurveTable_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ActorValueInformationCommon.Instance;
+        protected override object CommonInstance() => CurveTableCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ActorValueInformationSetterCommon.Instance;
+            return CurveTableSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ActorValueInformationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CurveTableSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1164,15 +1164,15 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ActorValueInformationBinaryWriteTranslation :
+    public partial class CurveTableBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ActorValueInformationBinaryWriteTranslation Instance = new();
+        public new static readonly CurveTableBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IActorValueInformationGetter item,
+            ICurveTableGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IActorValueInformationGetter)item,
+                item: (ICurveTableGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1216,7 +1216,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IActorValueInformationGetter)item,
+                item: (ICurveTableGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1227,16 +1227,16 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IActorValueInformationGetter)item,
+                item: (ICurveTableGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ActorValueInformationBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class CurveTableBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly ActorValueInformationBinaryCreateTranslation Instance = new ActorValueInformationBinaryCreateTranslation();
+        public new static readonly CurveTableBinaryCreateTranslation Instance = new CurveTableBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AVIF;
     }
@@ -1245,7 +1245,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ActorValueInformationBinaryTranslationMixIn
+    public static class CurveTableBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1254,35 +1254,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ActorValueInformationBinaryOverlay :
+    internal partial class CurveTableBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IActorValueInformationGetter
+        ICurveTableGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ActorValueInformation_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => CurveTable_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => CurveTable_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ActorValueInformationCommon.Instance;
+        protected override object CommonInstance() => CurveTableCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ActorValueInformationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => CurveTableSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ActorValueInformationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => CurveTableBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ActorValueInformationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((CurveTableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IActorValueInformation);
+        protected override Type LinkType => typeof(ICurveTable);
 
 
         partial void CustomFactoryEnd(
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected ActorValueInformationBinaryOverlay(
+        protected CurveTableBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IActorValueInformationGetter ActorValueInformationFactory(
+        public static ICurveTableGetter CurveTableFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ActorValueInformationBinaryOverlay(
+            var ret = new CurveTableBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1331,12 +1331,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IActorValueInformationGetter ActorValueInformationFactory(
+        public static ICurveTableGetter CurveTableFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ActorValueInformationFactory(
+            return CurveTableFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueInformationMixIn.Print(
+            CurveTableMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ActorValueInformation>.ToString(this);
+            return MajorRecordPrinter<CurveTable>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1368,16 +1368,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ICurveTableGetter rhs) return false;
+            return ((CurveTableCommon)((ICurveTableGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IActorValueInformationGetter? obj)
+        public bool Equals(ICurveTableGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((CurveTableCommon)((ICurveTableGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((CurveTableCommon)((ICurveTableGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

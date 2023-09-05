@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CurveTable" recordType="AVIF" baseClass="StarfieldMajorRecord" objType="Record" GUID="2ca4d147-8de9-44e2-a9e3-ae5221c2ce47" ID="691">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

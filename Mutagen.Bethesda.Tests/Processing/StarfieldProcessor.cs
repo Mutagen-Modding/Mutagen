@@ -48,6 +48,7 @@ public class StarfieldProcessor : Processor
                     new StringsAlignmentCustom("GMST", GameSettingStringHandler),
                     new RecordType[] { "KYWD", "FULL" },
                     new RecordType[] { "DMGT", "FULL" },
+                    new RecordType[] { "CLAS", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

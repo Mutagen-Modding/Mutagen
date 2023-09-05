@@ -9,6 +9,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### INamed
 - ActionRecord
+- Class
 - DamageType
 - Keyword
 ### IObjectBounded
@@ -17,6 +18,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Transform
 ## Concrete Classes to Interfaces
 ### ActionRecord
+- INamed
+### Class
 - INamed
 ### DamageType
 - INamed

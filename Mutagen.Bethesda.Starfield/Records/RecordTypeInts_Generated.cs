@@ -9,9 +9,11 @@ public partial class RecordTypeInts
     public const int BFCE = 0x45434642;
     public const int BNAM = 0x4D414E42;
     public const int CHGL = 0x4C474843;
+    public const int CLAS = 0x53414C43;
     public const int CNAM = 0x4D414E43;
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
+    public const int DESC = 0x43534544;
     public const int DMGT = 0x54474D44;
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
@@ -40,6 +42,7 @@ public partial class RecordTypeInts
     public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
     public const int ONAM = 0x4D414E4F;
+    public const int PRPS = 0x53505250;
     public const int RACE = 0x45434152;
     public const int REFL = 0x4C464552;
     public const int RNAM = 0x4D414E52;

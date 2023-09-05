@@ -11,9 +11,11 @@ public partial class RecordTypes
     public static readonly RecordType BFCE = new(0x45434642);
     public static readonly RecordType BNAM = new(0x4D414E42);
     public static readonly RecordType CHGL = new(0x4C474843);
+    public static readonly RecordType CLAS = new(0x53414C43);
     public static readonly RecordType CNAM = new(0x4D414E43);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DELE = new(0x454C4544);
+    public static readonly RecordType DESC = new(0x43534544);
     public static readonly RecordType DMGT = new(0x54474D44);
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DODT = new(0x54444F44);
@@ -42,6 +44,7 @@ public partial class RecordTypes
     public static readonly RecordType ODTY = new(0x5954444F);
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
+    public static readonly RecordType PRPS = new(0x53505250);
     public static readonly RecordType RACE = new(0x45434152);
     public static readonly RecordType REFL = new(0x4C464552);
     public static readonly RecordType RNAM = new(0x4D414E52);
