@@ -71,7 +71,9 @@ public class MainVM : ViewModel
     public ObservableCollectionExtended<PassthroughGroupVM> Groups { get; } = new();
 
     public ObservableCollectionExtended<RecordTypeVm> SkippedRecordTypes { get; } = new();
+    public ObservableCollectionExtended<RecordTypeVm> InterestingRecordTypes { get; } = new();
     public ICommand AddSkipCommand { get; }
+    public ICommand AddIncludeCommand { get; }
 
     [Reactive] 
     public string SkipInput { get; set; } = string.Empty;
@@ -157,6 +159,15 @@ public class MainVM : ViewModel
             },
             this.WhenAnyValue(x => x.SkipInput)
                 .Select(x => x.Length == 4));
+
+        AddIncludeCommand = ReactiveCommand.Create(
+            () =>
+            {
+                InterestingRecordTypes.Add(new RecordTypeVm(this, new RecordType(SkipInput)));
+                SkipInput = string.Empty;
+            },
+            this.WhenAnyValue(x => x.SkipInput)
+                .Select(x => x.Length == 4));
     }
 
     public override void Dispose()
@@ -214,6 +225,8 @@ public class MainVM : ViewModel
         TrimmingEnabled = settings.PassthroughSettings.Trimming.Enabled;
         this.SkippedRecordTypes.Clear();
         this.SkippedRecordTypes.SetTo(settings.PassthroughSettings.Trimming.TypesToTrim.Select(x => new RecordTypeVm(this, x)));
+        this.InterestingRecordTypes.Clear();
+        this.InterestingRecordTypes.SetTo(settings.PassthroughSettings.Trimming.TypesToInclude.Select(x => new RecordTypeVm(this, x)));
 
         this.Groups.Clear();
         this.Groups.AddRange(settings.TargetGroups
@@ -287,6 +300,7 @@ public class MainVM : ViewModel
             .ToList();
         settings.PassthroughSettings.Trimming.Enabled = TrimmingEnabled;
         settings.PassthroughSettings.Trimming.TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList();
+        settings.PassthroughSettings.Trimming.TypesToInclude = InterestingRecordTypes.Select(x => x.RecordType.Type).ToList();
 
         settings.DataFolderLocations.Oblivion = DataFolders.Get(GameRelease.Oblivion).DataFolder.TargetPath;
         settings.DataFolderLocations.Skyrim = DataFolders.Get(GameRelease.SkyrimLE).DataFolder.TargetPath;
@@ -318,6 +332,7 @@ public class MainVM : ViewModel
             Trimming = new TrimmingSettings()
             {
                 TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList(),
+                TypesToInclude = InterestingRecordTypes.Select(x => x.RecordType.Type).ToList(),
                 Enabled = TrimmingEnabled
             }
         };

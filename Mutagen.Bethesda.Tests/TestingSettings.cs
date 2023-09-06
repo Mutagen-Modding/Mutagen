@@ -120,6 +120,7 @@ public record TrimmingSettings
 {
     public bool Enabled { get; set; }= true;
     public List<string> TypesToTrim { get; set; } = new();
+    public List<string> TypesToInclude { get; set; } = new();
 }
 
 public record TargetGroup

@@ -195,6 +195,7 @@ public abstract class PassthroughTest
                         streamCreator: () => new MutagenBinaryReadStream(FilePath, GameRelease),
                         outputStream: outStream,
                         interest: new RecordInterest(
+                            interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
                             uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
                 }
                 catch (Exception)
