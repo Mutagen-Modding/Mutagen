@@ -74,7 +74,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding RecordType}" Margin="4,4,8,4" />
-                        <Button Command="{Binding DeleteCommand}">
+                        <Button Command="{Binding DeleteSkippedCommand}">
                             <icon:PackIconMaterial
                                 Width="10"
                                 Height="10"
@@ -92,7 +92,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding RecordType}" Margin="4,4,8,4" />
-                        <Button Command="{Binding DeleteCommand}">
+                        <Button Command="{Binding DeleteIncludedCommand}">
                             <icon:PackIconMaterial
                                 Width="10"
                                 Height="10"
