@@ -3034,11 +3034,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CRHR:
                 {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
                     _HERDLocation = (stream.Position - offset);
                     return (int)Faction_FieldIndex.HERD;
                 }
                 case RecordTypeInts.CRGP:
                 {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
                     _GRPHLocation = (stream.Position - offset);
                     return (int)Faction_FieldIndex.GRPH;
                 }
