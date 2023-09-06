@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 
 namespace Mutagen.Bethesda.Tests;
@@ -216,19 +217,21 @@ public class SkyrimPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
+    protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
         return SkyrimModBinaryOverlay.SkyrimModFactory(
             new ModPath(ModKey, FilePath.Path),
-            GameRelease.ToSkyrimRelease());
+            GameRelease.ToSkyrimRelease(),
+            stringsParam: stringsParams);
     }
 
-    protected override async Task<IMod> ImportBinary(FilePath path)
+    protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
         return SkyrimMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
             GameRelease.ToSkyrimRelease(),
-            parallel: Settings.ParallelProcessingSteps);
+            parallel: Settings.ParallelProcessingSteps,
+            stringsParam: stringsParams);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

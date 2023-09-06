@@ -60,6 +60,11 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         {
             stringsFolderPath = Path.Combine(dataPath.Path, "Strings");
         }
+
+        if (instructions?.BsaFolderOverride != null)
+        {
+            dataPath = instructions.BsaFolderOverride.Value;
+        }
         return new StringsFolderLookupOverlay(new Lazy<DictionaryBundle>(
                 isThreadSafe: true,
                 valueFactory: () =>

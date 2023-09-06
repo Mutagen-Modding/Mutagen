@@ -12,6 +12,11 @@ public sealed class StringsReadParameters
     /// If specified, normal string folder path locations will be ignored in favor of the path provided.
     /// </summary>
     public DirectoryPath? StringsFolderOverride { get; set; }
+    
+    /// <summary>
+    /// If specified, normal bsa folder path locations will be ignored in favor of the path provided.
+    /// </summary>
+    public DirectoryPath? BsaFolderOverride { get; set; }
 
     /// <summary>
     /// How to order BSAs when searching for strings.<br/>

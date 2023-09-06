@@ -41,8 +41,15 @@ public abstract class PassthroughTest
     public ModPath OrderedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Ordered"));
     public ModPath ProcessedPath(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Processed"));
     public ModKey ModKey => FilePath.ModKey;
+    public DirectoryPath SourceDataFolder => FilePath.Path.Directory!.Value;
     public abstract GameRelease GameRelease { get; }
     public readonly GameConstants Meta;
+
+    public StringsReadParameters StringsParams => new StringsReadParameters()
+    {
+        StringsFolderOverride = Path.Combine(SourceDataFolder, "Strings"),
+        BsaFolderOverride = Path.Combine(SourceDataFolder),
+    };
     protected abstract Processor? ProcessorFactory();
     
     public static DirectoryPath GetTestFolderPath(string nickname) => Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{nickname}");
@@ -217,8 +224,8 @@ public abstract class PassthroughTest
         return trimmedPath;
     }
 
-    protected abstract Task<IMod> ImportBinary(FilePath path);
-    protected abstract Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path);
+    protected abstract Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams);
+    protected abstract Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams);
     protected abstract Task<IMod> ImportCopyIn(FilePath file);
 
     public Test BinaryPassthroughTest()
@@ -247,7 +254,7 @@ public abstract class PassthroughTest
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
-                    var mod = await ImportBinary(trimmedPath.Path);
+                    var mod = await ImportBinary(trimmedPath.Path, StringsParams);
                     doStrings = mod.UsingLocalization;
 
                     foreach (var record in mod.EnumerateMajorRecords())
@@ -280,7 +287,7 @@ public abstract class PassthroughTest
                     toDo: async (o) =>
                     {
                         o.OnNext(FilePath.ToString());
-                        var mod = await ImportBinary(trimmedPath.Path);
+                        var mod = await ImportBinary(trimmedPath.Path, StringsParams);
                         doStrings = mod.UsingLocalization;
 
                         foreach (var record in mod.EnumerateMajorRecords())
@@ -338,7 +345,7 @@ public abstract class PassthroughTest
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
-                    using (var wrapper = await ImportBinaryOverlay(trimmedPath))
+                    using (var wrapper = await ImportBinaryOverlay(trimmedPath, StringsParams))
                     {
                         doStrings = wrapper.UsingLocalization;
                         var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
@@ -410,7 +417,7 @@ public abstract class PassthroughTest
     {
         return TestBattery.RunTest("Test Import", GameRelease, Target, async (output) =>
         {
-            await ImportBinary(FilePath.Path);
+            await ImportBinary(FilePath.Path, StringsParams);
         });
     }
 
@@ -418,7 +425,7 @@ public abstract class PassthroughTest
     {
         return TestBattery.RunTest("Equals", GameRelease, Target, async (output) =>
         {
-            var mod = await ImportBinaryOverlay(FilePath.Path);
+            var mod = await ImportBinaryOverlay(FilePath.Path, StringsParams);
             var eqMask = mod.GetEqualsMask(mod);
             if (!eqMask.All(b => b))
             {

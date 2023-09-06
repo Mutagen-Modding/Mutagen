@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 
 namespace Mutagen.Bethesda.Tests;
@@ -17,17 +18,19 @@ public class StarfieldPassthroughTest : PassthroughTest
         GameRelease = GameRelease.Starfield;
     }
 
-    protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
+    protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
         return StarfieldModBinaryOverlay.StarfieldModFactory(
-            new ModPath(ModKey, path));
+            new ModPath(ModKey, path),
+            stringsParams);
     }
 
-    protected override async Task<IMod> ImportBinary(FilePath path)
+    protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
         return StarfieldMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
-            parallel: Settings.ParallelProcessingSteps);
+            parallel: Settings.ParallelProcessingSteps,
+            stringsParam: stringsParams);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)

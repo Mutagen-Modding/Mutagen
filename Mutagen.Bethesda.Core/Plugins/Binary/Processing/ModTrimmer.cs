@@ -23,23 +23,8 @@ public static class ModTrimmer
         
         using var writer = new BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
-        var fileLocs = RecordLocator.GetLocations(
-            inputStream,
-            interest: interest);
-        
-        // Import until first listed grup
-        inputStream.Position = 0;
-        if (!fileLocs.GrupLocations.TryGetInDirection(
-                inputStream.Position,
-                higher: true,
-                result: out var nextRec))
-        {
-            return;
-        }
-        
-        var recordLocation = fileLocs.ListedRecords.Keys[nextRec.Key];
-        var noRecordLength = recordLocation - inputStream.Position - inputStream.MetaData.Constants.GroupConstants.HeaderLength;
-        inputStream.WriteTo(outputStream, (int)noRecordLength);
+        var modHeader = inputStream.ReadModHeaderFrame();
+        writer.Write(modHeader.HeaderAndContentData);
         
         while (!inputStream.Complete)
         {
