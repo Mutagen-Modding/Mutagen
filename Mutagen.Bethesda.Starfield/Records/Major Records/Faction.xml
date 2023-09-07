@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Faction" recordType="FACT" objType="Record" baseClass="StarfieldMajorRecord" GUID="3795ee1a-0f0d-42a8-8196-853a8730d6e5" ID="702">
     <Fields>
-      <RefDirect name="BFCB" refName="BFCBRecord" unknown="true" />
+      <RefDirect name="Components" refName="Component"/>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />
       <FormLink name="Keyword" recordType="DNAM" refName="Keyword" />

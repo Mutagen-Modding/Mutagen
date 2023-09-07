@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="HeadPart" recordType="HDPT" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" GUID="f30f8406-8abc-4a00-87a5-2a4bf6af53ee" ID="710">
     <Fields>
-      <RefDirect name="BFCB" refName="BFCBRecord" unknown="true" />
+      <RefDirect name="Components" refName="Component"/>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <FormLink name="FLLD" refName="Static" recordType="FLLD" />

@@ -265,8 +265,8 @@
     <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
-    <Compile Include="Records\Common Subrecords\BFCBRecord_Generated.cs">
-      <DependentUpon>BFCBRecord.xml</DependentUpon>
+    <Compile Include="Records\Common Subrecords\Component_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
     <Compile Include="Records\Major Records\Transform_Generated.cs">

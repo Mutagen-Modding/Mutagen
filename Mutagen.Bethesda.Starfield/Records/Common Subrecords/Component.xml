@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="BFCBRecord" objType="Subrecord" GUID="1bb731ad-a02f-45b0-aa19-05819773d468" ID="82">
+  <Object name="Component" objType="Subrecord" GUID="1bb731ad-a02f-45b0-aa19-05819773d468" ID="82">
     <Fields>
-      <String name="BFCB" recordType="BFCB" unknown="true" />
+      <String name="ComponentType" recordType="BFCB" />
       <ByteArray name="FLCS" recordType="FLCS" unknown="true" />
       <ByteArray name="INTV" recordType="INTV" unknown="true" />
       <ByteArray name="FLTR" recordType="FLTR" unknown="true" />

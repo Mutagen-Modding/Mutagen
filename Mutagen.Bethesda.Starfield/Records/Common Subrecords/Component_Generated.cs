@@ -36,23 +36,23 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BFCBRecord :
-        IBFCBRecord,
-        IEquatable<IBFCBRecordGetter>,
-        ILoquiObjectSetter<BFCBRecord>
+    public partial class Component :
+        IComponent,
+        IEquatable<IComponentGetter>,
+        ILoquiObjectSetter<Component>
     {
         #region Ctor
-        public BFCBRecord()
+        public Component()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region BFCB
-        public String? BFCB { get; set; }
+        #region ComponentType
+        public String? ComponentType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IBFCBRecordGetter.BFCB => this.BFCB;
+        String? IComponentGetter.ComponentType => this.ComponentType;
         #endregion
         #region FLCS
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._FLCS = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBFCBRecordGetter.FLCS => this.FLCS;
+        ReadOnlyMemorySlice<Byte>? IComponentGetter.FLCS => this.FLCS;
         #endregion
         #region INTV
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._INTV = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBFCBRecordGetter.INTV => this.INTV;
+        ReadOnlyMemorySlice<Byte>? IComponentGetter.INTV => this.INTV;
         #endregion
         #region FLTR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._FLTR = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBFCBRecordGetter.FLTR => this.FLTR;
+        ReadOnlyMemorySlice<Byte>? IComponentGetter.FLTR => this.FLTR;
         #endregion
         #region BFCE
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._BFCE = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBFCBRecordGetter.BFCE => this.BFCE;
+        ReadOnlyMemorySlice<Byte>? IComponentGetter.BFCE => this.BFCE;
         #endregion
 
         #region To String
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BFCBRecordMixIn.Print(
+            ComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -116,16 +116,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBFCBRecordGetter rhs) return false;
-            return ((BFCBRecordCommon)((IBFCBRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IComponentGetter rhs) return false;
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBFCBRecordGetter? obj)
+        public bool Equals(IComponentGetter? obj)
         {
-            return ((BFCBRecordCommon)((IBFCBRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BFCBRecordCommon)((IBFCBRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.BFCB = initialValue;
+                this.ComponentType = initialValue;
                 this.FLCS = initialValue;
                 this.INTV = initialValue;
                 this.FLTR = initialValue;
@@ -145,13 +145,13 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             public Mask(
-                TItem BFCB,
+                TItem ComponentType,
                 TItem FLCS,
                 TItem INTV,
                 TItem FLTR,
                 TItem BFCE)
             {
-                this.BFCB = BFCB;
+                this.ComponentType = ComponentType;
                 this.FLCS = FLCS;
                 this.INTV = INTV;
                 this.FLTR = FLTR;
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem BFCB;
+            public TItem ComponentType;
             public TItem FLCS;
             public TItem INTV;
             public TItem FLTR;
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.BFCB, rhs.BFCB)) return false;
+                if (!object.Equals(this.ComponentType, rhs.ComponentType)) return false;
                 if (!object.Equals(this.FLCS, rhs.FLCS)) return false;
                 if (!object.Equals(this.INTV, rhs.INTV)) return false;
                 if (!object.Equals(this.FLTR, rhs.FLTR)) return false;
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.BFCB);
+                hash.Add(this.ComponentType);
                 hash.Add(this.FLCS);
                 hash.Add(this.INTV);
                 hash.Add(this.FLTR);
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.BFCB)) return false;
+                if (!eval(this.ComponentType)) return false;
                 if (!eval(this.FLCS)) return false;
                 if (!eval(this.INTV)) return false;
                 if (!eval(this.FLTR)) return false;
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.BFCB)) return true;
+                if (eval(this.ComponentType)) return true;
                 if (eval(this.FLCS)) return true;
                 if (eval(this.INTV)) return true;
                 if (eval(this.FLTR)) return true;
@@ -231,14 +231,14 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BFCBRecord.Mask<R>();
+                var ret = new Component.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.BFCB = eval(this.BFCB);
+                obj.ComponentType = eval(this.ComponentType);
                 obj.FLCS = eval(this.FLCS);
                 obj.INTV = eval(this.INTV);
                 obj.FLTR = eval(this.FLTR);
@@ -249,21 +249,21 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BFCBRecord.Mask<bool>? printMask = null)
+            public string Print(Component.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BFCBRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Component.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BFCBRecord.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(Component.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.BFCB ?? true)
+                    if (printMask?.ComponentType ?? true)
                     {
-                        sb.AppendItem(BFCB, "BFCB");
+                        sb.AppendItem(ComponentType, "ComponentType");
                     }
                     if (printMask?.FLCS ?? true)
                     {
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? BFCB;
+            public Exception? ComponentType;
             public Exception? FLCS;
             public Exception? INTV;
             public Exception? FLTR;
@@ -315,18 +315,18 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BFCBRecord_FieldIndex enu = (BFCBRecord_FieldIndex)index;
+                Component_FieldIndex enu = (Component_FieldIndex)index;
                 switch (enu)
                 {
-                    case BFCBRecord_FieldIndex.BFCB:
-                        return BFCB;
-                    case BFCBRecord_FieldIndex.FLCS:
+                    case Component_FieldIndex.ComponentType:
+                        return ComponentType;
+                    case Component_FieldIndex.FLCS:
                         return FLCS;
-                    case BFCBRecord_FieldIndex.INTV:
+                    case Component_FieldIndex.INTV:
                         return INTV;
-                    case BFCBRecord_FieldIndex.FLTR:
+                    case Component_FieldIndex.FLTR:
                         return FLTR;
-                    case BFCBRecord_FieldIndex.BFCE:
+                    case Component_FieldIndex.BFCE:
                         return BFCE;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -335,22 +335,22 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                BFCBRecord_FieldIndex enu = (BFCBRecord_FieldIndex)index;
+                Component_FieldIndex enu = (Component_FieldIndex)index;
                 switch (enu)
                 {
-                    case BFCBRecord_FieldIndex.BFCB:
-                        this.BFCB = ex;
+                    case Component_FieldIndex.ComponentType:
+                        this.ComponentType = ex;
                         break;
-                    case BFCBRecord_FieldIndex.FLCS:
+                    case Component_FieldIndex.FLCS:
                         this.FLCS = ex;
                         break;
-                    case BFCBRecord_FieldIndex.INTV:
+                    case Component_FieldIndex.INTV:
                         this.INTV = ex;
                         break;
-                    case BFCBRecord_FieldIndex.FLTR:
+                    case Component_FieldIndex.FLTR:
                         this.FLTR = ex;
                         break;
-                    case BFCBRecord_FieldIndex.BFCE:
+                    case Component_FieldIndex.BFCE:
                         this.BFCE = ex;
                         break;
                     default:
@@ -360,22 +360,22 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                BFCBRecord_FieldIndex enu = (BFCBRecord_FieldIndex)index;
+                Component_FieldIndex enu = (Component_FieldIndex)index;
                 switch (enu)
                 {
-                    case BFCBRecord_FieldIndex.BFCB:
-                        this.BFCB = (Exception?)obj;
+                    case Component_FieldIndex.ComponentType:
+                        this.ComponentType = (Exception?)obj;
                         break;
-                    case BFCBRecord_FieldIndex.FLCS:
+                    case Component_FieldIndex.FLCS:
                         this.FLCS = (Exception?)obj;
                         break;
-                    case BFCBRecord_FieldIndex.INTV:
+                    case Component_FieldIndex.INTV:
                         this.INTV = (Exception?)obj;
                         break;
-                    case BFCBRecord_FieldIndex.FLTR:
+                    case Component_FieldIndex.FLTR:
                         this.FLTR = (Exception?)obj;
                         break;
-                    case BFCBRecord_FieldIndex.BFCE:
+                    case Component_FieldIndex.BFCE:
                         this.BFCE = (Exception?)obj;
                         break;
                     default:
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (BFCB != null) return true;
+                if (ComponentType != null) return true;
                 if (FLCS != null) return true;
                 if (INTV != null) return true;
                 if (FLTR != null) return true;
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(BFCB, "BFCB");
+                    sb.AppendItem(ComponentType, "ComponentType");
                 }
                 {
                     sb.AppendItem(FLCS, "FLCS");
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.BFCB = this.BFCB.Combine(rhs.BFCB);
+                ret.ComponentType = this.ComponentType.Combine(rhs.ComponentType);
                 ret.FLCS = this.FLCS.Combine(rhs.FLCS);
                 ret.INTV = this.INTV.Combine(rhs.INTV);
                 ret.FLTR = this.FLTR.Combine(rhs.FLTR);
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool BFCB;
+            public bool ComponentType;
             public bool FLCS;
             public bool INTV;
             public bool FLTR;
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.BFCB = defaultOn;
+                this.ComponentType = defaultOn;
                 this.FLCS = defaultOn;
                 this.INTV = defaultOn;
                 this.FLTR = defaultOn;
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((BFCB, null));
+                ret.Add((ComponentType, null));
                 ret.Add((FLCS, null));
                 ret.Add((INTV, null));
                 ret.Add((FLTR, null));
@@ -518,25 +518,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BFCBRecordBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ComponentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BFCBRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static BFCBRecord CreateFromBinary(
+        public static Component CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BFCBRecord();
-            ((BFCBRecordSetterCommon)((IBFCBRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Component();
+            ((ComponentSetterCommon)((IComponentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BFCBRecord item,
+            out Component item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -562,33 +562,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BFCBRecordSetterCommon)((IBFCBRecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ComponentSetterCommon)((IComponentGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BFCBRecord GetNew()
+        internal static Component GetNew()
         {
-            return new BFCBRecord();
+            return new Component();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBFCBRecord :
-        IBFCBRecordGetter,
-        ILoquiObjectSetter<IBFCBRecord>
+    public partial interface IComponent :
+        IComponentGetter,
+        ILoquiObjectSetter<IComponent>
     {
-        new String? BFCB { get; set; }
+        new String? ComponentType { get; set; }
         new MemorySlice<Byte>? FLCS { get; set; }
         new MemorySlice<Byte>? INTV { get; set; }
         new MemorySlice<Byte>? FLTR { get; set; }
         new MemorySlice<Byte>? BFCE { get; set; }
     }
 
-    public partial interface IBFCBRecordGetter :
+    public partial interface IComponentGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IBFCBRecordGetter>
+        ILoquiObject<IComponentGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -596,8 +596,8 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => BFCBRecord_Registration.Instance;
-        String? BFCB { get; }
+        static ILoquiRegistration StaticRegistration => Component_Registration.Instance;
+        String? ComponentType { get; }
         ReadOnlyMemorySlice<Byte>? FLCS { get; }
         ReadOnlyMemorySlice<Byte>? INTV { get; }
         ReadOnlyMemorySlice<Byte>? FLTR { get; }
@@ -608,42 +608,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class BFCBRecordMixIn
+    public static partial class ComponentMixIn
     {
-        public static void Clear(this IBFCBRecord item)
+        public static void Clear(this IComponent item)
         {
-            ((BFCBRecordSetterCommon)((IBFCBRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ComponentSetterCommon)((IComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BFCBRecord.Mask<bool> GetEqualsMask(
-            this IBFCBRecordGetter item,
-            IBFCBRecordGetter rhs,
+        public static Component.Mask<bool> GetEqualsMask(
+            this IComponentGetter item,
+            IComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ComponentCommon)((IComponentGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBFCBRecordGetter item,
+            this IComponentGetter item,
             string? name = null,
-            BFCBRecord.Mask<bool>? printMask = null)
+            Component.Mask<bool>? printMask = null)
         {
-            return ((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).Print(
+            return ((ComponentCommon)((IComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBFCBRecordGetter item,
+            this IComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BFCBRecord.Mask<bool>? printMask = null)
+            Component.Mask<bool>? printMask = null)
         {
-            ((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).Print(
+            ((ComponentCommon)((IComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -651,21 +651,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBFCBRecordGetter item,
-            IBFCBRecordGetter rhs,
-            BFCBRecord.TranslationMask? equalsMask = null)
+            this IComponentGetter item,
+            IComponentGetter rhs,
+            Component.TranslationMask? equalsMask = null)
         {
-            return ((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).Equals(
+            return ((ComponentCommon)((IComponentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBFCBRecord lhs,
-            IBFCBRecordGetter rhs)
+            this IComponent lhs,
+            IComponentGetter rhs)
         {
-            ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ComponentSetterTranslationCommon)((IComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -674,11 +674,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBFCBRecord lhs,
-            IBFCBRecordGetter rhs,
-            BFCBRecord.TranslationMask? copyMask = null)
+            this IComponent lhs,
+            IComponentGetter rhs,
+            Component.TranslationMask? copyMask = null)
         {
-            ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ComponentSetterTranslationCommon)((IComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -687,28 +687,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBFCBRecord lhs,
-            IBFCBRecordGetter rhs,
-            out BFCBRecord.ErrorMask errorMask,
-            BFCBRecord.TranslationMask? copyMask = null)
+            this IComponent lhs,
+            IComponentGetter rhs,
+            out Component.ErrorMask errorMask,
+            Component.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ComponentSetterTranslationCommon)((IComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BFCBRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Component.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBFCBRecord lhs,
-            IBFCBRecordGetter rhs,
+            this IComponent lhs,
+            IComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ComponentSetterTranslationCommon)((IComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -716,32 +716,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BFCBRecord DeepCopy(
-            this IBFCBRecordGetter item,
-            BFCBRecord.TranslationMask? copyMask = null)
+        public static Component DeepCopy(
+            this IComponentGetter item,
+            Component.TranslationMask? copyMask = null)
         {
-            return ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ComponentSetterTranslationCommon)((IComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BFCBRecord DeepCopy(
-            this IBFCBRecordGetter item,
-            out BFCBRecord.ErrorMask errorMask,
-            BFCBRecord.TranslationMask? copyMask = null)
+        public static Component DeepCopy(
+            this IComponentGetter item,
+            out Component.ErrorMask errorMask,
+            Component.TranslationMask? copyMask = null)
         {
-            return ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ComponentSetterTranslationCommon)((IComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BFCBRecord DeepCopy(
-            this IBFCBRecordGetter item,
+        public static Component DeepCopy(
+            this IComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ComponentSetterTranslationCommon)((IComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -749,11 +749,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBFCBRecord item,
+            this IComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BFCBRecordSetterCommon)((IBFCBRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ComponentSetterCommon)((IComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -769,9 +769,9 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BFCBRecord_FieldIndex
+    internal enum Component_FieldIndex
     {
-        BFCB = 0,
+        ComponentType = 0,
         FLCS = 1,
         INTV = 2,
         FLTR = 3,
@@ -780,9 +780,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class BFCBRecord_Registration : ILoquiRegistration
+    internal partial class Component_Registration : ILoquiRegistration
     {
-        public static readonly BFCBRecord_Registration Instance = new BFCBRecord_Registration();
+        public static readonly Component_Registration Instance = new Component_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -797,23 +797,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(BFCBRecord.Mask<>);
+        public static readonly Type MaskType = typeof(Component.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BFCBRecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Component.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BFCBRecord);
+        public static readonly Type ClassType = typeof(Component);
 
-        public static readonly Type GetterType = typeof(IBFCBRecordGetter);
+        public static readonly Type GetterType = typeof(IComponentGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBFCBRecord);
+        public static readonly Type SetterType = typeof(IComponent);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BFCBRecord";
+        public const string FullName = "Mutagen.Bethesda.Starfield.Component";
 
-        public const string Name = "BFCBRecord";
+        public const string Name = "Component";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCE);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(BFCBRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ComponentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -865,16 +865,16 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BFCBRecordSetterCommon
+    internal partial class ComponentSetterCommon
     {
-        public static readonly BFCBRecordSetterCommon Instance = new BFCBRecordSetterCommon();
+        public static readonly ComponentSetterCommon Instance = new ComponentSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBFCBRecord item)
+        public void Clear(IComponent item)
         {
             ClearPartial();
-            item.BFCB = default;
+            item.ComponentType = default;
             item.FLCS = default;
             item.INTV = default;
             item.FLTR = default;
@@ -882,7 +882,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public void RemapLinks(IBFCBRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBFCBRecord item,
+            IComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -898,23 +898,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: BFCBRecordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: ComponentBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class BFCBRecordCommon
+    internal partial class ComponentCommon
     {
-        public static readonly BFCBRecordCommon Instance = new BFCBRecordCommon();
+        public static readonly ComponentCommon Instance = new ComponentCommon();
 
-        public BFCBRecord.Mask<bool> GetEqualsMask(
-            IBFCBRecordGetter item,
-            IBFCBRecordGetter rhs,
+        public Component.Mask<bool> GetEqualsMask(
+            IComponentGetter item,
+            IComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BFCBRecord.Mask<bool>(false);
-            ((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Component.Mask<bool>(false);
+            ((ComponentCommon)((IComponentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -923,12 +923,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBFCBRecordGetter item,
-            IBFCBRecordGetter rhs,
-            BFCBRecord.Mask<bool> ret,
+            IComponentGetter item,
+            IComponentGetter rhs,
+            Component.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.BFCB = string.Equals(item.BFCB, rhs.BFCB);
+            ret.ComponentType = string.Equals(item.ComponentType, rhs.ComponentType);
             ret.FLCS = MemorySliceExt.SequenceEqual(item.FLCS, rhs.FLCS);
             ret.INTV = MemorySliceExt.SequenceEqual(item.INTV, rhs.INTV);
             ret.FLTR = MemorySliceExt.SequenceEqual(item.FLTR, rhs.FLTR);
@@ -936,9 +936,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IBFCBRecordGetter item,
+            IComponentGetter item,
             string? name = null,
-            BFCBRecord.Mask<bool>? printMask = null)
+            Component.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -950,18 +950,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBFCBRecordGetter item,
+            IComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BFCBRecord.Mask<bool>? printMask = null)
+            Component.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BFCBRecord =>");
+                sb.AppendLine($"Component =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BFCBRecord) =>");
+                sb.AppendLine($"{name} (Component) =>");
             }
             using (sb.Brace())
             {
@@ -973,14 +973,14 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBFCBRecordGetter item,
+            IComponentGetter item,
             StructuredStringBuilder sb,
-            BFCBRecord.Mask<bool>? printMask = null)
+            Component.Mask<bool>? printMask = null)
         {
-            if ((printMask?.BFCB ?? true)
-                && item.BFCB is {} BFCBItem)
+            if ((printMask?.ComponentType ?? true)
+                && item.ComponentType is {} ComponentTypeItem)
             {
-                sb.AppendItem(BFCBItem, "BFCB");
+                sb.AppendItem(ComponentTypeItem, "ComponentType");
             }
             if ((printMask?.FLCS ?? true)
                 && item.FLCS is {} FLCSItem)
@@ -1006,40 +1006,40 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBFCBRecordGetter? lhs,
-            IBFCBRecordGetter? rhs,
+            IComponentGetter? lhs,
+            IComponentGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.BFCB) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Component_FieldIndex.ComponentType) ?? true))
             {
-                if (!string.Equals(lhs.BFCB, rhs.BFCB)) return false;
+                if (!string.Equals(lhs.ComponentType, rhs.ComponentType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.FLCS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Component_FieldIndex.FLCS) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FLCS, rhs.FLCS)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.INTV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Component_FieldIndex.INTV) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.INTV, rhs.INTV)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.FLTR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Component_FieldIndex.FLTR) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FLTR, rhs.FLTR)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.BFCE) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Component_FieldIndex.BFCE) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.BFCE, rhs.BFCE)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IBFCBRecordGetter item)
+        public virtual int GetHashCode(IComponentGetter item)
         {
             var hash = new HashCode();
-            if (item.BFCB is {} BFCBitem)
+            if (item.ComponentType is {} ComponentTypeitem)
             {
-                hash.Add(BFCBitem);
+                hash.Add(ComponentTypeitem);
             }
             if (item.FLCS is {} FLCSItem)
             {
@@ -1065,11 +1065,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return BFCBRecord.GetNew();
+            return Component.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBFCBRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IComponentGetter obj)
         {
             yield break;
         }
@@ -1077,23 +1077,23 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BFCBRecordSetterTranslationCommon
+    internal partial class ComponentSetterTranslationCommon
     {
-        public static readonly BFCBRecordSetterTranslationCommon Instance = new BFCBRecordSetterTranslationCommon();
+        public static readonly ComponentSetterTranslationCommon Instance = new ComponentSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBFCBRecord item,
-            IBFCBRecordGetter rhs,
+            IComponent item,
+            IComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.BFCB) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.ComponentType) ?? true))
             {
-                item.BFCB = rhs.BFCB;
+                item.ComponentType = rhs.ComponentType;
             }
-            if ((copyMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.FLCS) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.FLCS) ?? true))
             {
                 if(rhs.FLCS is {} FLCSrhs)
                 {
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.FLCS = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.INTV) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.INTV) ?? true))
             {
                 if(rhs.INTV is {} INTVrhs)
                 {
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.INTV = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.FLTR) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.FLTR) ?? true))
             {
                 if(rhs.FLTR is {} FLTRrhs)
                 {
@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.FLTR = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)BFCBRecord_FieldIndex.BFCE) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Component_FieldIndex.BFCE) ?? true))
             {
                 if(rhs.BFCE is {} BFCErhs)
                 {
@@ -1141,12 +1141,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public BFCBRecord DeepCopy(
-            IBFCBRecordGetter item,
-            BFCBRecord.TranslationMask? copyMask = null)
+        public Component DeepCopy(
+            IComponentGetter item,
+            Component.TranslationMask? copyMask = null)
         {
-            BFCBRecord ret = (BFCBRecord)((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).GetNew();
-            ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Component ret = (Component)((ComponentCommon)((IComponentGetter)item).CommonInstance()!).GetNew();
+            ((ComponentSetterTranslationCommon)((IComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1155,30 +1155,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BFCBRecord DeepCopy(
-            IBFCBRecordGetter item,
-            out BFCBRecord.ErrorMask errorMask,
-            BFCBRecord.TranslationMask? copyMask = null)
+        public Component DeepCopy(
+            IComponentGetter item,
+            out Component.ErrorMask errorMask,
+            Component.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BFCBRecord ret = (BFCBRecord)((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).GetNew();
-            ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Component ret = (Component)((ComponentCommon)((IComponentGetter)item).CommonInstance()!).GetNew();
+            ((ComponentSetterTranslationCommon)((IComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BFCBRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Component.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BFCBRecord DeepCopy(
-            IBFCBRecordGetter item,
+        public Component DeepCopy(
+            IComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BFCBRecord ret = (BFCBRecord)((BFCBRecordCommon)((IBFCBRecordGetter)item).CommonInstance()!).GetNew();
-            ((BFCBRecordSetterTranslationCommon)((IBFCBRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Component ret = (Component)((ComponentCommon)((IComponentGetter)item).CommonInstance()!).GetNew();
+            ((ComponentSetterTranslationCommon)((IComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1194,27 +1194,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BFCBRecord
+    public partial class Component
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BFCBRecord_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BFCBRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Component_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Component_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BFCBRecordCommon.Instance;
+        protected object CommonInstance() => ComponentCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BFCBRecordSetterCommon.Instance;
+            return ComponentSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BFCBRecordSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ComponentSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBFCBRecordGetter.CommonInstance() => this.CommonInstance();
+        object IComponentGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBFCBRecordGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IComponentGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBFCBRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IComponentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1225,18 +1225,18 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BFCBRecordBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ComponentBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BFCBRecordBinaryWriteTranslation Instance = new();
+        public static readonly ComponentBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IBFCBRecordGetter item,
+            IComponentGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BFCB,
+                item: item.ComponentType,
                 header: translationParams.ConvertToCustom(RecordTypes.BFCB),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IBFCBRecordGetter item,
+            IComponentGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1274,19 +1274,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBFCBRecordGetter)item,
+                item: (IComponentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BFCBRecordBinaryCreateTranslation
+    internal partial class ComponentBinaryCreateTranslation
     {
-        public static readonly BFCBRecordBinaryCreateTranslation Instance = new BFCBRecordBinaryCreateTranslation();
+        public static readonly ComponentBinaryCreateTranslation Instance = new ComponentBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IBFCBRecord item,
+            IComponent item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1299,40 +1299,40 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.BFCB:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.BFCB, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.ComponentType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BFCB = StringBinaryTranslation.Instance.Parse(
+                    item.ComponentType = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)BFCBRecord_FieldIndex.BFCB;
+                    return (int)Component_FieldIndex.ComponentType;
                 }
                 case RecordTypeInts.FLCS:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.FLCS, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.FLCS, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FLCS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)BFCBRecord_FieldIndex.FLCS;
+                    return (int)Component_FieldIndex.FLCS;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.INTV, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.INTV, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INTV = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)BFCBRecord_FieldIndex.INTV;
+                    return (int)Component_FieldIndex.INTV;
                 }
                 case RecordTypeInts.FLTR:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.FLTR, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.FLTR, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FLTR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)BFCBRecord_FieldIndex.FLTR;
+                    return (int)Component_FieldIndex.FLTR;
                 }
                 case RecordTypeInts.BFCE:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.BFCE, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.BFCE, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BFCE = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)BFCBRecord_FieldIndex.BFCE;
+                    return (int)Component_FieldIndex.BFCE;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1345,14 +1345,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BFCBRecordBinaryTranslationMixIn
+    public static class ComponentBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBFCBRecordGetter item,
+            this IComponentGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BFCBRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ComponentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1365,46 +1365,46 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BFCBRecordBinaryOverlay :
+    internal partial class ComponentBinaryOverlay :
         PluginBinaryOverlay,
-        IBFCBRecordGetter
+        IComponentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BFCBRecord_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BFCBRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Component_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Component_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BFCBRecordCommon.Instance;
+        protected object CommonInstance() => ComponentCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BFCBRecordSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ComponentSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBFCBRecordGetter.CommonInstance() => this.CommonInstance();
+        object IComponentGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBFCBRecordGetter.CommonSetterInstance() => null;
+        object? IComponentGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBFCBRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IComponentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BFCBRecordBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ComponentBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BFCBRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region BFCB
-        private int? _BFCBLocation;
-        public String? BFCB => _BFCBLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BFCBLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ComponentType
+        private int? _ComponentTypeLocation;
+        public String? ComponentType => _ComponentTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ComponentTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region FLCS
         private int? _FLCSLocation;
@@ -1428,7 +1428,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected BFCBRecordBinaryOverlay(
+        protected ComponentBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1438,7 +1438,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBFCBRecordGetter BFCBRecordFactory(
+        public static IComponentGetter ComponentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1450,7 +1450,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new BFCBRecordBinaryOverlay(
+            var ret = new ComponentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1462,12 +1462,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBFCBRecordGetter BFCBRecordFactory(
+        public static IComponentGetter ComponentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BFCBRecordFactory(
+            return ComponentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1487,33 +1487,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.BFCB:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.BFCB, translationParams)) return ParseResult.Stop;
-                    _BFCBLocation = (stream.Position - offset);
-                    return (int)BFCBRecord_FieldIndex.BFCB;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.ComponentType, translationParams)) return ParseResult.Stop;
+                    _ComponentTypeLocation = (stream.Position - offset);
+                    return (int)Component_FieldIndex.ComponentType;
                 }
                 case RecordTypeInts.FLCS:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.FLCS, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.FLCS, translationParams)) return ParseResult.Stop;
                     _FLCSLocation = (stream.Position - offset);
-                    return (int)BFCBRecord_FieldIndex.FLCS;
+                    return (int)Component_FieldIndex.FLCS;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.INTV, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.INTV, translationParams)) return ParseResult.Stop;
                     _INTVLocation = (stream.Position - offset);
-                    return (int)BFCBRecord_FieldIndex.INTV;
+                    return (int)Component_FieldIndex.INTV;
                 }
                 case RecordTypeInts.FLTR:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.FLTR, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.FLTR, translationParams)) return ParseResult.Stop;
                     _FLTRLocation = (stream.Position - offset);
-                    return (int)BFCBRecord_FieldIndex.FLTR;
+                    return (int)Component_FieldIndex.FLTR;
                 }
                 case RecordTypeInts.BFCE:
                 {
-                    if (lastParsed.ShortCircuit((int)BFCBRecord_FieldIndex.BFCE, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Component_FieldIndex.BFCE, translationParams)) return ParseResult.Stop;
                     _BFCELocation = (stream.Position - offset);
-                    return (int)BFCBRecord_FieldIndex.BFCE;
+                    return (int)Component_FieldIndex.BFCE;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BFCBRecordMixIn.Print(
+            ComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1536,16 +1536,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBFCBRecordGetter rhs) return false;
-            return ((BFCBRecordCommon)((IBFCBRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IComponentGetter rhs) return false;
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBFCBRecordGetter? obj)
+        public bool Equals(IComponentGetter? obj)
         {
-            return ((BFCBRecordCommon)((IBFCBRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BFCBRecordCommon)((IBFCBRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

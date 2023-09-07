@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Keyword" recordType="KYWD" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" GUID="d8cd5433-f6e7-4487-8706-3ef3547903da" ID="79">
     <Fields>
-      <RefList name="BFCBs" refName="BFCBRecord" unknown="true" />
+      <RefList name="Components" refName="Component" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <String name="Notes" recordType="DNAM" />
       <Enum name="Type" enumName="Keyword.TypeEnum" byteLength="4" recordType="TNAM" />

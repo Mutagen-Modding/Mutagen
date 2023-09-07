@@ -30,7 +30,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Keyword_Registration.Instance,
             AttractionRule_Registration.Instance,
             FFKWRecord_Registration.Instance,
-            BFCBRecord_Registration.Instance,
+            Component_Registration.Instance,
             ActionRecord_Registration.Instance,
             Transform_Registration.Instance,
             ObjectBounds_Registration.Instance,
