@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AOPFRecord" recordType="AOPF" objType="Record" baseClass="StarfieldMajorRecord" GUID="4b18189c-08fe-4e77-834d-7c65bb46b488" ID="710">
+    <Fields>
+      <ByteArray name="OBND" recordType="OBND" unknown="true" />
+      <ByteArray name="ODTY" recordType="ODTY" unknown="true" />
+      <ByteArray name="OBSV" recordType="OBSV" unknown="true" />
+      <ByteArray name="OCCV" recordType="OCCV" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

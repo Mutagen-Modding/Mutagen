@@ -5,6 +5,7 @@ public partial class RecordTypeInts
     public const int AACT = 0x54434141;
     public const int AFFE = 0x45464641;
     public const int ANAM = 0x4D414E41;
+    public const int AOPF = 0x46504F41;
     public const int AORU = 0x55524F41;
     public const int AVIF = 0x46495641;
     public const int BFCB = 0x42434642;
@@ -52,6 +53,8 @@ public partial class RecordTypeInts
     public const int NNAM = 0x4D414E4E;
     public const int NPC_ = 0x5F43504E;
     public const int OBND = 0x444E424F;
+    public const int OBSV = 0x5653424F;
+    public const int OCCV = 0x5643434F;
     public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
     public const int ONAM = 0x4D414E4F;
