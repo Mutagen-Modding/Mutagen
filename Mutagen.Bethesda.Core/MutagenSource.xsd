@@ -211,6 +211,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="unknown" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether field is unknown or not
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -703,6 +710,14 @@
   </xs:complexType>
 
   <xs:complexType name="NFormLinkOrAlias" >
+    <xs:complexContent>
+      <xs:extension base="NFormLink">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NFormLinkOrIndex" >
     <xs:complexContent>
       <xs:extension base="NFormLink">
         <xs:attribute name="name" type="xs:string" use="required" />
