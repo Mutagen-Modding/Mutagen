@@ -355,5 +355,8 @@
     <Compile Include="Records\Major Records\ActorReaction_Generated.cs">
       <DependentUpon>AffinityEvent.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\SeasonalIngredientProduction_Generated.cs">
+      <DependentUpon>SeasonalIngredientProduction.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

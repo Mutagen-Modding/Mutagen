@@ -66,6 +66,7 @@ public partial class RecordTypes
     public static readonly RecordType ODTY = new(0x5954444F);
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
+    public static readonly RecordType PFPC = new(0x43504650);
     public static readonly RecordType PLVD = new(0x44564C50);
     public static readonly RecordType PNAM = new(0x4D414E50);
     public static readonly RecordType PRIS = new(0x53495250);

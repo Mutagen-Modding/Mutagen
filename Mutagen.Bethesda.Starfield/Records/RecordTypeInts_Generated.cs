@@ -64,6 +64,7 @@ public partial class RecordTypeInts
     public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
     public const int ONAM = 0x4D414E4F;
+    public const int PFPC = 0x43504650;
     public const int PLVD = 0x44564C50;
     public const int PNAM = 0x4D414E50;
     public const int PRIS = 0x53495250;
