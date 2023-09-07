@@ -6,12 +6,14 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeywordCommon
 - Keyword
 ### IModeled
+- HeadPart
 - Weapon
 ### INamed
 - ActionRecord
 - Class
 - DamageType
 - Faction
+- HeadPart
 - Keyword
 ### IObjectBounded
 - TextureSet
@@ -25,6 +27,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### DamageType
 - INamed
 ### Faction
+- INamed
+### HeadPart
+- IModeled
 - INamed
 ### Keyword
 - IKeywordCommon

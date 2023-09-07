@@ -32,6 +32,7 @@ public partial class RecordTypes
     public static readonly RecordType FACT = new(0x54434146);
     public static readonly RecordType FFKW = new(0x574B4646);
     public static readonly RecordType FLCS = new(0x53434C46);
+    public static readonly RecordType FLLD = new(0x444C4C46);
     public static readonly RecordType FLST = new(0x54534C46);
     public static readonly RecordType FLTR = new(0x52544C46);
     public static readonly RecordType FLTV = new(0x56544C46);
@@ -41,8 +42,10 @@ public partial class RecordTypes
     public static readonly RecordType GMST = new(0x54534D47);
     public static readonly RecordType GRPH = new(0x48505247);
     public static readonly RecordType GRUP = new(0x50555247);
+    public static readonly RecordType HDPT = new(0x54504448);
     public static readonly RecordType HEDR = new(0x52444548);
     public static readonly RecordType HERD = new(0x44524548);
+    public static readonly RecordType HNAM = new(0x4D414E48);
     public static readonly RecordType INCC = new(0x43434E49);
     public static readonly RecordType INTV = new(0x56544E49);
     public static readonly RecordType KYWD = new(0x4457594B);
@@ -51,6 +54,9 @@ public partial class RecordTypes
     public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType MODF = new(0x46444F4D);
     public static readonly RecordType MODL = new(0x4C444F4D);
+    public static readonly RecordType MRPH = new(0x4850524D);
+    public static readonly RecordType NAM2 = new(0x324D414E);
+    public static readonly RecordType NAM3 = new(0x334D414E);
     public static readonly RecordType NLDT = new(0x54444C4E);
     public static readonly RecordType NNAM = new(0x4D414E4E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
@@ -61,6 +67,7 @@ public partial class RecordTypes
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType ONAM = new(0x4D414E4F);
     public static readonly RecordType PLVD = new(0x44564C50);
+    public static readonly RecordType PNAM = new(0x4D414E50);
     public static readonly RecordType PRIS = new(0x53495250);
     public static readonly RecordType PRPS = new(0x53505250);
     public static readonly RecordType RACE = new(0x45434152);
@@ -70,6 +77,7 @@ public partial class RecordTypes
     public static readonly RecordType SCRN = new(0x4E524353);
     public static readonly RecordType SNAM = new(0x4D414E53);
     public static readonly RecordType SPEL = new(0x4C455053);
+    public static readonly RecordType STAT = new(0x54415453);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TRNS = new(0x534E5254);

@@ -192,6 +192,9 @@
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\HeadPart.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
@@ -339,6 +342,15 @@
     </Compile>
     <Compile Include="Records\Major Records\AFFESubrecord_Generated.cs">
       <DependentUpon>AFFERecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HeadPart_Generated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MRPHRecord_Generated.cs">
+      <DependentUpon>MRPHRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Static_Generated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AOPFRecord_Generated.cs">
       <DependentUpon>AOPFRecord.xml</DependentUpon>

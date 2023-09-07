@@ -73,6 +73,7 @@ namespace Mutagen.Bethesda.Starfield
             _Classes_Object = new StarfieldGroup<Class>(this);
             _Factions_Object = new StarfieldGroup<Faction>(this);
             _AFFE_Object = new StarfieldGroup<AFFERecord>(this);
+            _HeadParts_Object = new StarfieldGroup<HeadPart>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
             CustomCtor();
         }
@@ -170,6 +171,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAFFERecordGetter> IStarfieldModGetter.AFFE => _AFFE_Object;
         #endregion
+        #region HeadParts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<HeadPart> _HeadParts_Object;
+        public StarfieldGroup<HeadPart> HeadParts => _HeadParts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IHeadPartGetter> IStarfieldModGetter.HeadParts => _HeadParts_Object;
+        #endregion
         #region AOPF
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AOPFRecord> _AOPF_Object;
@@ -229,6 +237,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Classes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Factions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AFFE = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.HeadParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
@@ -246,6 +255,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Classes,
                 TItem Factions,
                 TItem AFFE,
+                TItem HeadParts,
                 TItem AOPF)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
@@ -261,6 +271,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Classes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Classes, new StarfieldGroup.Mask<TItem>(Classes));
                 this.Factions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Factions, new StarfieldGroup.Mask<TItem>(Factions));
                 this.AFFE = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AFFE, new StarfieldGroup.Mask<TItem>(AFFE));
+                this.HeadParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(HeadParts, new StarfieldGroup.Mask<TItem>(HeadParts));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AOPF, new StarfieldGroup.Mask<TItem>(AOPF));
             }
 
@@ -286,6 +297,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Classes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Factions { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AFFE { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? HeadParts { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AOPF { get; set; }
             #endregion
 
@@ -312,6 +324,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Classes, rhs.Classes)) return false;
                 if (!object.Equals(this.Factions, rhs.Factions)) return false;
                 if (!object.Equals(this.AFFE, rhs.AFFE)) return false;
+                if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
                 if (!object.Equals(this.AOPF, rhs.AOPF)) return false;
                 return true;
             }
@@ -331,6 +344,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Classes);
                 hash.Add(this.Factions);
                 hash.Add(this.AFFE);
+                hash.Add(this.HeadParts);
                 hash.Add(this.AOPF);
                 return hash.ToHashCode();
             }
@@ -404,6 +418,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.AFFE.Overall)) return false;
                     if (this.AFFE.Specific != null && !this.AFFE.Specific.All(eval)) return false;
+                }
+                if (HeadParts != null)
+                {
+                    if (!eval(this.HeadParts.Overall)) return false;
+                    if (this.HeadParts.Specific != null && !this.HeadParts.Specific.All(eval)) return false;
                 }
                 if (AOPF != null)
                 {
@@ -482,6 +501,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AFFE.Overall)) return true;
                     if (this.AFFE.Specific != null && this.AFFE.Specific.Any(eval)) return true;
                 }
+                if (HeadParts != null)
+                {
+                    if (eval(this.HeadParts.Overall)) return true;
+                    if (this.HeadParts.Specific != null && this.HeadParts.Specific.Any(eval)) return true;
+                }
                 if (AOPF != null)
                 {
                     if (eval(this.AOPF.Overall)) return true;
@@ -514,6 +538,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Classes = this.Classes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
                 obj.Factions = this.Factions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
                 obj.AFFE = this.AFFE == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AFFE.Overall), this.AFFE.Specific?.Translate(eval));
+                obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
                 obj.AOPF = this.AOPF == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AOPF.Overall), this.AOPF.Specific?.Translate(eval));
             }
             #endregion
@@ -585,6 +610,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AFFE?.Print(sb);
                     }
+                    if (printMask?.HeadParts?.Overall ?? true)
+                    {
+                        HeadParts?.Print(sb);
+                    }
                     if (printMask?.AOPF?.Overall ?? true)
                     {
                         AOPF?.Print(sb);
@@ -626,6 +655,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Class.ErrorMask>?>? Classes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Faction.ErrorMask>?>? Factions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AFFERecord.ErrorMask>?>? AFFE;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>? AOPF;
             #endregion
 
@@ -661,6 +691,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Factions;
                     case StarfieldMod_FieldIndex.AFFE:
                         return AFFE;
+                    case StarfieldMod_FieldIndex.HeadParts:
+                        return HeadParts;
                     case StarfieldMod_FieldIndex.AOPF:
                         return AOPF;
                     default:
@@ -711,6 +743,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.AFFE:
                         this.AFFE = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AFFERecord.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.HeadParts:
+                        this.HeadParts = new MaskItem<Exception?, StarfieldGroup.ErrorMask<HeadPart.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AOPF:
                         this.AOPF = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>(ex, null);
@@ -764,6 +799,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AFFE:
                         this.AFFE = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AFFERecord.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.HeadParts:
+                        this.HeadParts = (MaskItem<Exception?, StarfieldGroup.ErrorMask<HeadPart.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AOPF:
                         this.AOPF = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>?)obj;
                         break;
@@ -788,6 +826,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Classes != null) return true;
                 if (Factions != null) return true;
                 if (AFFE != null) return true;
+                if (HeadParts != null) return true;
                 if (AOPF != null) return true;
                 return false;
             }
@@ -827,6 +866,7 @@ namespace Mutagen.Bethesda.Starfield
                 Classes?.Print(sb);
                 Factions?.Print(sb);
                 AFFE?.Print(sb);
+                HeadParts?.Print(sb);
                 AOPF?.Print(sb);
             }
             #endregion
@@ -849,6 +889,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
                 ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
                 ret.AFFE = this.AFFE.Combine(rhs.AFFE, (l, r) => l.Combine(r));
+                ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
                 ret.AOPF = this.AOPF.Combine(rhs.AOPF, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -886,6 +927,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Class.TranslationMask>? Classes;
             public StarfieldGroup.TranslationMask<Faction.TranslationMask>? Factions;
             public StarfieldGroup.TranslationMask<AFFERecord.TranslationMask>? AFFE;
+            public StarfieldGroup.TranslationMask<HeadPart.TranslationMask>? HeadParts;
             public StarfieldGroup.TranslationMask<AOPFRecord.TranslationMask>? AOPF;
             #endregion
 
@@ -924,6 +966,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
                 ret.Add((Factions != null ? Factions.OnOverall : DefaultOn, Factions?.GetCrystal()));
                 ret.Add((AFFE != null ? AFFE.OnOverall : DefaultOn, AFFE?.GetCrystal()));
+                ret.Add((HeadParts != null ? HeadParts.OnOverall : DefaultOn, HeadParts?.GetCrystal()));
                 ret.Add((AOPF != null ? AOPF.OnOverall : DefaultOn, AOPF?.GetCrystal()));
             }
 
@@ -980,6 +1023,7 @@ namespace Mutagen.Bethesda.Starfield
             _Classes_Object = new StarfieldGroup<Class>(this);
             _Factions_Object = new StarfieldGroup<Faction>(this);
             _AFFE_Object = new StarfieldGroup<AFFERecord>(this);
+            _HeadParts_Object = new StarfieldGroup<HeadPart>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
             CustomCtor();
         }
@@ -1035,6 +1079,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.AFFE.RecordCache.Set(rhsMod.AFFE.RecordCache.Items);
             }
+            if (mask?.HeadParts ?? true)
+            {
+                this.HeadParts.RecordCache.Set(rhsMod.HeadParts.RecordCache.Items);
+            }
             if (mask?.AOPF ?? true)
             {
                 this.AOPF.RecordCache.Set(rhsMod.AOPF.RecordCache.Items);
@@ -1061,6 +1109,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
             count += AFFE.RecordCache.Count > 0 ? 1 : default(uint);
+            count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
             count += AOPF.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
@@ -1330,6 +1379,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Class> Classes { get; }
         new StarfieldGroup<Faction> Factions { get; }
         new StarfieldGroup<AFFERecord> AFFE { get; }
+        new StarfieldGroup<HeadPart> HeadParts { get; }
         new StarfieldGroup<AOPFRecord> AOPF { get; }
     }
 
@@ -1363,6 +1413,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IClassGetter> Classes { get; }
         IStarfieldGroupGetter<IFactionGetter> Factions { get; }
         IStarfieldGroupGetter<IAFFERecordGetter> AFFE { get; }
+        IStarfieldGroupGetter<IHeadPartGetter> HeadParts { get; }
         IStarfieldGroupGetter<IAOPFRecordGetter> AOPF { get; }
 
     }
@@ -1947,7 +1998,8 @@ namespace Mutagen.Bethesda.Starfield
         Classes = 10,
         Factions = 11,
         AFFE = 12,
-        AOPF = 13,
+        HeadParts = 13,
+        AOPF = 14,
     }
     #endregion
 
@@ -1965,9 +2017,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2048,6 +2100,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Classes.Clear();
             item.Factions.Clear();
             item.AFFE.Clear();
+            item.HeadParts.Clear();
             item.AOPF.Clear();
         }
         
@@ -2059,6 +2112,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.DamageTypes.RemapLinks(mapping);
             obj.Classes.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
+            obj.HeadParts.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -2105,6 +2159,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Classes.Remove(keys);
             obj.Factions.Remove(keys);
             obj.AFFE.Remove(keys);
+            obj.HeadParts.Remove(keys);
             obj.AOPF.Remove(keys);
         }
         
@@ -2241,6 +2296,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    obj.HeadParts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "AOPFRecord":
                 case "IAOPFRecordGetter":
                 case "IAOPFRecord":
@@ -2304,6 +2367,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IStarfieldMod obj)
         {
+            {
+                foreach (var item in obj.HeadParts.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2319,6 +2388,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             RemapInferredAssetLinks(obj, mapping, queryCategories);
+            obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2376,6 +2446,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
             ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
             ret.AFFE = MaskItemExt.Factory(item.AFFE.GetEqualsMask(rhs.AFFE, include), include);
+            ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
             ret.AOPF = MaskItemExt.Factory(item.AOPF.GetEqualsMask(rhs.AOPF, include), include);
         }
         
@@ -2472,6 +2543,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.AFFE?.Overall ?? true)
             {
                 item.AFFE?.Print(sb, "AFFE");
+            }
+            if (printMask?.HeadParts?.Overall ?? true)
+            {
+                item.HeadParts?.Print(sb, "HeadParts");
             }
             if (printMask?.AOPF?.Overall ?? true)
             {
@@ -2590,6 +2665,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAFFEEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.HeadParts) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.HeadParts, rhs.HeadParts, out var lhsHeadParts, out var rhsHeadParts, out var isHeadPartsEqual))
+                {
+                    if (!object.Equals(lhsHeadParts, rhsHeadParts)) return false;
+                }
+                else if (!isHeadPartsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AOPF) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AOPF, rhs.AOPF, out var lhsAOPF, out var rhsAOPF, out var isAOPFEqual))
@@ -2617,6 +2700,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Classes);
             hash.Add(item.Factions);
             hash.Add(item.AFFE);
+            hash.Add(item.HeadParts);
             hash.Add(item.AOPF);
             return hash.ToHashCode();
         }
@@ -2696,6 +2780,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAFFERecord":
                 case "IAFFERecordInternal":
                     return obj.AFFE;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    return obj.HeadParts;
                 case "AOPFRecord":
                 case "IAOPFRecordGetter":
                 case "IAOPFRecord":
@@ -2726,7 +2815,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[13];
+            Stream[] outputStreams = new Stream[14];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -2740,7 +2829,8 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Classes, 9, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Factions, 10, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AFFE, 11, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AOPF, 12, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, 12, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AOPF, 13, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2805,6 +2895,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.HeadParts.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -2855,6 +2949,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.AFFE.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.HeadParts.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3005,6 +3103,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AOPFRecord":
                 case "IAOPFRecordGetter":
                 case "IAOPFRecord":
@@ -3143,6 +3250,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.AFFE,
                 groupGetter: (m) => m.AFFE))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, HeadPart, IHeadPartGetter>(
+                srcGroup: obj.HeadParts,
+                type: typeof(IHeadPartGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.HeadParts,
+                groupGetter: (m) => m.HeadParts))
             {
                 yield return item;
             }
@@ -3354,6 +3470,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, HeadPart, IHeadPartGetter>(
+                        srcGroup: obj.HeadParts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.HeadParts,
+                        groupGetter: (m) => m.HeadParts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AOPFRecord":
                 case "IAOPFRecordGetter":
                 case "IAOPFRecord":
@@ -3401,6 +3531,13 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var additional in GetInferredAssetLinks(obj, assetType))
                 {
                     yield return additional;
+                }
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.HeadParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
                 }
             }
             yield break;
@@ -3681,6 +3818,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.HeadParts) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.HeadParts);
+                try
+                {
+                    item.HeadParts.DeepCopyIn(
+                        rhs: rhs.HeadParts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.HeadParts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AOPF) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AOPF);
@@ -3803,6 +3960,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Classes;
         public bool Factions;
         public bool AFFE;
+        public bool HeadParts;
         public bool AOPF;
         public GroupMask()
         {
@@ -3821,6 +3979,7 @@ namespace Mutagen.Bethesda.Starfield
             Classes = defaultValue;
             Factions = defaultValue;
             AFFE = defaultValue;
+            HeadParts = defaultValue;
             AOPF = defaultValue;
         }
     }
@@ -3981,6 +4140,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AFFEItem).BinaryWriteTranslator).Write<IAFFERecordGetter>(
                         item: AFFEItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.HeadParts ?? true)
+            {
+                var HeadPartsItem = item.HeadParts;
+                if (HeadPartsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
+                        item: HeadPartsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4223,6 +4393,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.AFFE;
+                }
+                case RecordTypeInts.HDPT:
+                {
+                    if (importMask?.HeadParts ?? true)
+                    {
+                        item.HeadParts.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.AOPF:
                 {
@@ -4468,6 +4652,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAFFERecordGetter>? _AFFE => _AFFELocations != null ? StarfieldGroupBinaryOverlay<IAFFERecordGetter>.StarfieldGroupFactory(_stream, _AFFELocations, _package) : default;
         public IStarfieldGroupGetter<IAFFERecordGetter> AFFE => _AFFE ?? new StarfieldGroup<AFFERecord>(this);
         #endregion
+        #region HeadParts
+        private List<RangeInt64>? _HeadPartsLocations;
+        private IStarfieldGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? StarfieldGroupBinaryOverlay<IHeadPartGetter>.StarfieldGroupFactory(_stream, _HeadPartsLocations, _package) : default;
+        public IStarfieldGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new StarfieldGroup<HeadPart>(this);
+        #endregion
         #region AOPF
         private List<RangeInt64>? _AOPFLocations;
         private IStarfieldGroupGetter<IAOPFRecordGetter>? _AOPF => _AOPFLocations != null ? StarfieldGroupBinaryOverlay<IAOPFRecordGetter>.StarfieldGroupFactory(_stream, _AOPFLocations, _package) : default;
@@ -4632,6 +4821,12 @@ namespace Mutagen.Bethesda.Starfield
                     _AFFELocations ??= new();
                     _AFFELocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AFFE;
+                }
+                case RecordTypeInts.HDPT:
+                {
+                    _HeadPartsLocations ??= new();
+                    _HeadPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.AOPF:
                 {

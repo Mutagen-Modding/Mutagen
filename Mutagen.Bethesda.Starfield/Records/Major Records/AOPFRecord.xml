@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AOPFRecord" recordType="AOPF" objType="Record" baseClass="StarfieldMajorRecord" GUID="4b18189c-08fe-4e77-834d-7c65bb46b488" ID="710">
+  <Object name="AOPFRecord" recordType="AOPF" objType="Record" baseClass="StarfieldMajorRecord" GUID="3449796e-3bd5-4912-952e-08c0f2cd5ca6" ID="713">
     <Fields>
       <ByteArray name="OBND" recordType="OBND" unknown="true" />
       <ByteArray name="ODTY" recordType="ODTY" unknown="true" />

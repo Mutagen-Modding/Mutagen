@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                HeadPart_Registration.Instance,
                 Weapon_Registration.Instance,
             });
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
@@ -36,6 +37,7 @@ namespace Mutagen.Bethesda.Starfield
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 Faction_Registration.Instance,
+                HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
@@ -45,6 +47,7 @@ namespace Mutagen.Bethesda.Starfield
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 Faction_Registration.Instance,
+                HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
@@ -53,6 +56,7 @@ namespace Mutagen.Bethesda.Starfield
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 Faction_Registration.Instance,
+                HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
@@ -61,6 +65,7 @@ namespace Mutagen.Bethesda.Starfield
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 Faction_Registration.Instance,
+                HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };

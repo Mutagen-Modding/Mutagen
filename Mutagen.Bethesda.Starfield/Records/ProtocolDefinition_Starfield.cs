@@ -61,6 +61,9 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             VoiceType_Registration.Instance,
             AFFERecord_Registration.Instance,
             AFFESubrecord_Registration.Instance,
+            HeadPart_Registration.Instance,
+            MRPHRecord_Registration.Instance,
+            Static_Registration.Instance,
             AOPFRecord_Registration.Instance
         );
     }

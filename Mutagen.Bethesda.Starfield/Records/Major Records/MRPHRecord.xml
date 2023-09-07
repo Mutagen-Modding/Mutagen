@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MRPHRecord" recordType="MRPH" objType="Record" baseClass="StarfieldMajorRecord" GUID="ee562fe8-4299-4cb1-b683-29d29a838c37" ID="711">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

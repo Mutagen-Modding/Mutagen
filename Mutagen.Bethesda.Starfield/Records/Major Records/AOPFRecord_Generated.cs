@@ -816,10 +816,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 710,
+            msgID: 713,
             version: 0);
 
-        public const string GUID = "4b18189c-08fe-4e77-834d-7c65bb46b488";
+        public const string GUID = "3449796e-3bd5-4912-952e-08c0f2cd5ca6";
 
         public const ushort AdditionalFieldCount = 4;
 

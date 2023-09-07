@@ -30,6 +30,7 @@ public partial class RecordTypeInts
     public const int FACT = 0x54434146;
     public const int FFKW = 0x574B4646;
     public const int FLCS = 0x53434C46;
+    public const int FLLD = 0x444C4C46;
     public const int FLST = 0x54534C46;
     public const int FLTR = 0x52544C46;
     public const int FLTV = 0x56544C46;
@@ -39,8 +40,10 @@ public partial class RecordTypeInts
     public const int GMST = 0x54534D47;
     public const int GRPH = 0x48505247;
     public const int GRUP = 0x50555247;
+    public const int HDPT = 0x54504448;
     public const int HEDR = 0x52444548;
     public const int HERD = 0x44524548;
+    public const int HNAM = 0x4D414E48;
     public const int INCC = 0x43434E49;
     public const int INTV = 0x56544E49;
     public const int KYWD = 0x4457594B;
@@ -49,6 +52,9 @@ public partial class RecordTypeInts
     public const int MNAM = 0x4D414E4D;
     public const int MODF = 0x46444F4D;
     public const int MODL = 0x4C444F4D;
+    public const int MRPH = 0x4850524D;
+    public const int NAM2 = 0x324D414E;
+    public const int NAM3 = 0x334D414E;
     public const int NLDT = 0x54444C4E;
     public const int NNAM = 0x4D414E4E;
     public const int NPC_ = 0x5F43504E;
@@ -59,6 +65,7 @@ public partial class RecordTypeInts
     public const int OFST = 0x5453464F;
     public const int ONAM = 0x4D414E4F;
     public const int PLVD = 0x44564C50;
+    public const int PNAM = 0x4D414E50;
     public const int PRIS = 0x53495250;
     public const int PRPS = 0x53505250;
     public const int RACE = 0x45434152;
@@ -68,6 +75,7 @@ public partial class RecordTypeInts
     public const int SCRN = 0x4E524353;
     public const int SNAM = 0x4D414E53;
     public const int SPEL = 0x4C455053;
+    public const int STAT = 0x54415453;
     public const int TES4 = 0x34534554;
     public const int TNAM = 0x4D414E54;
     public const int TRNS = 0x534E5254;
