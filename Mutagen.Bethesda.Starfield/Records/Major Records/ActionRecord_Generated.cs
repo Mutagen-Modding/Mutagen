@@ -9,7 +9,6 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -81,24 +80,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IActionRecordGetter.FNAM => this.FNAM;
         #endregion
-        #region Name
-        /// <summary>
-        /// Aspects: INamed, INamedRequired
-        /// </summary>
-        public String? Name { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActionRecordGetter.Name => this.Name;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-        #endregion
-        #endregion
 
         #region To String
 
@@ -128,7 +109,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Notes = initialValue;
                 this.Type = initialValue;
                 this.FNAM = initialValue;
-                this.Name = initialValue;
             }
 
             public Mask(
@@ -142,8 +122,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Color,
                 TItem Notes,
                 TItem Type,
-                TItem FNAM,
-                TItem Name)
+                TItem FNAM)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -157,7 +136,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Notes = Notes;
                 this.Type = Type;
                 this.FNAM = FNAM;
-                this.Name = Name;
             }
 
             #pragma warning disable CS8618
@@ -173,7 +151,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Notes;
             public TItem Type;
             public TItem FNAM;
-            public TItem Name;
             #endregion
 
             #region Equals
@@ -191,7 +168,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Notes, rhs.Notes)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -201,7 +177,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Notes);
                 hash.Add(this.Type);
                 hash.Add(this.FNAM);
-                hash.Add(this.Name);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -216,7 +191,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Notes)) return false;
                 if (!eval(this.Type)) return false;
                 if (!eval(this.FNAM)) return false;
-                if (!eval(this.Name)) return false;
                 return true;
             }
             #endregion
@@ -229,7 +203,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Notes)) return true;
                 if (eval(this.Type)) return true;
                 if (eval(this.FNAM)) return true;
-                if (eval(this.Name)) return true;
                 return false;
             }
             #endregion
@@ -249,7 +222,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Notes = eval(this.Notes);
                 obj.Type = eval(this.Type);
                 obj.FNAM = eval(this.FNAM);
-                obj.Name = eval(this.Name);
             }
             #endregion
 
@@ -284,10 +256,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FNAM, "FNAM");
                     }
-                    if (printMask?.Name ?? true)
-                    {
-                        sb.AppendItem(Name, "Name");
-                    }
                 }
             }
             #endregion
@@ -303,7 +271,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Notes;
             public Exception? Type;
             public Exception? FNAM;
-            public Exception? Name;
             #endregion
 
             #region IErrorMask
@@ -320,8 +287,6 @@ namespace Mutagen.Bethesda.Starfield
                         return Type;
                     case ActionRecord_FieldIndex.FNAM:
                         return FNAM;
-                    case ActionRecord_FieldIndex.Name:
-                        return Name;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,9 +308,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ActionRecord_FieldIndex.FNAM:
                         this.FNAM = ex;
-                        break;
-                    case ActionRecord_FieldIndex.Name:
-                        this.Name = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -370,9 +332,6 @@ namespace Mutagen.Bethesda.Starfield
                     case ActionRecord_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
                         break;
-                    case ActionRecord_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -386,7 +345,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Notes != null) return true;
                 if (Type != null) return true;
                 if (FNAM != null) return true;
-                if (Name != null) return true;
                 return false;
             }
             #endregion
@@ -425,9 +383,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(FNAM, "FNAM");
                 }
-                {
-                    sb.AppendItem(Name, "Name");
-                }
             }
             #endregion
 
@@ -440,7 +395,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Notes = this.Notes.Combine(rhs.Notes);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.Name = this.Name.Combine(rhs.Name);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -467,7 +421,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool Notes;
             public bool Type;
             public bool FNAM;
-            public bool Name;
             #endregion
 
             #region Ctors
@@ -480,7 +433,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Notes = defaultOn;
                 this.Type = defaultOn;
                 this.FNAM = defaultOn;
-                this.Name = defaultOn;
             }
 
             #endregion
@@ -492,7 +444,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Notes, null));
                 ret.Add((Type, null));
                 ret.Add((FNAM, null));
-                ret.Add((Name, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -635,18 +586,12 @@ namespace Mutagen.Bethesda.Starfield
         IActionRecordGetter,
         IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>,
-        INamed,
-        INamedRequired,
         IStarfieldMajorRecordInternal
     {
         new Color? Color { get; set; }
         new String? Notes { get; set; }
         new ActionRecord.TypeEnum? Type { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
-        /// <summary>
-        /// Aspects: INamed, INamedRequired
-        /// </summary>
-        new String? Name { get; set; }
         #region Mutagen
         new ActionRecord.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -666,21 +611,13 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IIdleRelationGetter,
         ILoquiObject<IActionRecordGetter>,
-        IMapsToGetter<IActionRecordGetter>,
-        INamedGetter,
-        INamedRequiredGetter
+        IMapsToGetter<IActionRecordGetter>
     {
         static new ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         Color? Color { get; }
         String? Notes { get; }
         ActionRecord.TypeEnum? Type { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
-        #region Name
-        /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
-        /// </summary>
-        String? Name { get; }
-        #endregion
 
         #region Mutagen
         ActionRecord.MajorFlag MajorFlags { get; }
@@ -865,7 +802,6 @@ namespace Mutagen.Bethesda.Starfield
         Notes = 8,
         Type = 9,
         FNAM = 10,
-        Name = 11,
     }
     #endregion
 
@@ -883,9 +819,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "96323f32-87b3-4c95-9798-36cb1523038b";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(ActionRecord.Mask<>);
 
@@ -921,8 +857,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CNAM,
                 RecordTypes.DNAM,
                 RecordTypes.TNAM,
-                RecordTypes.FNAM,
-                RecordTypes.FULL);
+                RecordTypes.FNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ActionRecordBinaryWriteTranslation);
@@ -971,7 +906,6 @@ namespace Mutagen.Bethesda.Starfield
             item.Notes = default;
             item.Type = default;
             item.FNAM = default;
-            item.Name = default;
             base.Clear(item);
         }
         
@@ -1060,7 +994,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.Notes = string.Equals(item.Notes, rhs.Notes);
             ret.Type = item.Type == rhs.Type;
             ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
-            ret.Name = string.Equals(item.Name, rhs.Name);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1130,11 +1063,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
-            if ((printMask?.Name ?? true)
-                && item.Name is {} NameItem)
-            {
-                sb.AppendItem(NameItem, "Name");
-            }
         }
         
         public static ActionRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -1201,10 +1129,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.Name) ?? true))
-            {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            }
             return true;
         }
         
@@ -1248,10 +1172,6 @@ namespace Mutagen.Bethesda.Starfield
             if (item.FNAM is {} FNAMItem)
             {
                 hash.Add(FNAMItem);
-            }
-            if (item.Name is {} Nameitem)
-            {
-                hash.Add(Nameitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1378,10 +1298,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.FNAM = default;
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.Name) ?? true))
-            {
-                item.Name = rhs.Name;
             }
         }
         
@@ -1558,11 +1474,6 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.FNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Name,
-                header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -1676,14 +1587,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ActionRecord_FieldIndex.FNAM;
                 }
-                case RecordTypeInts.FULL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ActionRecord_FieldIndex.Name;
-                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1758,14 +1661,6 @@ namespace Mutagen.Bethesda.Starfield
         #region FNAM
         private int? _FNAMLocation;
         public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region Name
-        private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        #endregion
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1855,11 +1750,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _FNAMLocation = (stream.Position - offset);
                     return (int)ActionRecord_FieldIndex.FNAM;
-                }
-                case RecordTypeInts.FULL:
-                {
-                    _NameLocation = (stream.Position - offset);
-                    return (int)ActionRecord_FieldIndex.Name;
                 }
                 default:
                     return base.FillRecordType(

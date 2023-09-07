@@ -9,7 +9,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Weapon
 ### INamed
-- ActionRecord
 - Class
 - DamageType
 - Faction
@@ -20,8 +19,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IPositionRotation
 - Transform
 ## Concrete Classes to Interfaces
-### ActionRecord
-- INamed
 ### Class
 - INamed
 ### DamageType

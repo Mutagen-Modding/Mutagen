@@ -33,7 +33,6 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
             dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                ActionRecord_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 Faction_Registration.Instance,
@@ -43,7 +42,6 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                ActionRecord_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 Faction_Registration.Instance,
