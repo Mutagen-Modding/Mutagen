@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -53,27 +54,30 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region OBND
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _OBND;
-        public MemorySlice<Byte>? OBND
+        IObjectBoundsGetter IAOPFRecordGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
         {
-            get => this._OBND;
-            set => this._OBND = value;
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAOPFRecordGetter.OBND => this.OBND;
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
         #endregion
         #region ODTY
+        public Single? ODTY { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ODTY;
-        public MemorySlice<Byte>? ODTY
-        {
-            get => this._ODTY;
-            set => this._ODTY = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAOPFRecordGetter.ODTY => this.ODTY;
+        Single? IAOPFRecordGetter.ODTY => this.ODTY;
         #endregion
         #region OBSV
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -122,7 +126,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.OBND = initialValue;
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
                 this.OBSV = initialValue;
                 this.OCCV = initialValue;
@@ -136,7 +140,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem OBND,
+                TItem ObjectBounds,
                 TItem ODTY,
                 TItem OBSV,
                 TItem OCCV)
@@ -149,7 +153,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.OBND = OBND;
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
                 this.OBSV = OBSV;
                 this.OCCV = OCCV;
@@ -164,7 +168,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem OBND;
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
             public TItem OBSV;
             public TItem OCCV;
@@ -181,7 +185,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.OBND, rhs.OBND)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
                 if (!object.Equals(this.OBSV, rhs.OBSV)) return false;
                 if (!object.Equals(this.OCCV, rhs.OCCV)) return false;
@@ -190,7 +194,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.OBND);
+                hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
                 hash.Add(this.OBSV);
                 hash.Add(this.OCCV);
@@ -204,7 +208,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.OBND)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
                 if (!eval(this.ODTY)) return false;
                 if (!eval(this.OBSV)) return false;
                 if (!eval(this.OCCV)) return false;
@@ -216,7 +224,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.OBND)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
                 if (eval(this.ODTY)) return true;
                 if (eval(this.OBSV)) return true;
                 if (eval(this.OCCV)) return true;
@@ -235,7 +247,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.OBND = eval(this.OBND);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
                 obj.OBSV = eval(this.OBSV);
                 obj.OCCV = eval(this.OCCV);
@@ -257,9 +269,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AOPFRecord.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.OBND ?? true)
+                    if (printMask?.ObjectBounds?.Overall ?? true)
                     {
-                        sb.AppendItem(OBND, "OBND");
+                        ObjectBounds?.Print(sb);
                     }
                     if (printMask?.ODTY ?? true)
                     {
@@ -284,7 +296,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? OBND;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
             public Exception? OBSV;
             public Exception? OCCV;
@@ -296,8 +308,8 @@ namespace Mutagen.Bethesda.Starfield
                 AOPFRecord_FieldIndex enu = (AOPFRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case AOPFRecord_FieldIndex.OBND:
-                        return OBND;
+                    case AOPFRecord_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
                     case AOPFRecord_FieldIndex.ODTY:
                         return ODTY;
                     case AOPFRecord_FieldIndex.OBSV:
@@ -314,8 +326,8 @@ namespace Mutagen.Bethesda.Starfield
                 AOPFRecord_FieldIndex enu = (AOPFRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case AOPFRecord_FieldIndex.OBND:
-                        this.OBND = ex;
+                    case AOPFRecord_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
                     case AOPFRecord_FieldIndex.ODTY:
                         this.ODTY = ex;
@@ -337,8 +349,8 @@ namespace Mutagen.Bethesda.Starfield
                 AOPFRecord_FieldIndex enu = (AOPFRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case AOPFRecord_FieldIndex.OBND:
-                        this.OBND = (Exception?)obj;
+                    case AOPFRecord_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
                     case AOPFRecord_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
@@ -358,7 +370,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (OBND != null) return true;
+                if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
                 if (OBSV != null) return true;
                 if (OCCV != null) return true;
@@ -388,9 +400,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(OBND, "OBND");
-                }
+                ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(ODTY, "ODTY");
                 }
@@ -408,7 +418,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.OBND = this.OBND.Combine(rhs.OBND);
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
                 ret.OBSV = this.OBSV.Combine(rhs.OBSV);
                 ret.OCCV = this.OCCV.Combine(rhs.OCCV);
@@ -434,7 +444,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool OBND;
+            public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
             public bool OBSV;
             public bool OCCV;
@@ -446,7 +456,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.OBND = defaultOn;
                 this.ODTY = defaultOn;
                 this.OBSV = defaultOn;
                 this.OCCV = defaultOn;
@@ -457,7 +466,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((OBND, null));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
                 ret.Add((OBSV, null));
                 ret.Add((OCCV, null));
@@ -597,10 +606,14 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAOPFRecord :
         IAOPFRecordGetter,
         ILoquiObjectSetter<IAOPFRecordInternal>,
+        IObjectBounded,
         IStarfieldMajorRecordInternal
     {
-        new MemorySlice<Byte>? OBND { get; set; }
-        new MemorySlice<Byte>? ODTY { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
         new MemorySlice<Byte>? OBSV { get; set; }
         new MemorySlice<Byte>? OCCV { get; set; }
     }
@@ -617,11 +630,17 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IAOPFRecordGetter>,
-        IMapsToGetter<IAOPFRecordGetter>
+        IMapsToGetter<IAOPFRecordGetter>,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => AOPFRecord_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? OBND { get; }
-        ReadOnlyMemorySlice<Byte>? ODTY { get; }
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
         ReadOnlyMemorySlice<Byte>? OBSV { get; }
         ReadOnlyMemorySlice<Byte>? OCCV { get; }
 
@@ -800,7 +819,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        OBND = 7,
+        ObjectBounds = 7,
         ODTY = 8,
         OBSV = 9,
         OCCV = 10,
@@ -904,7 +923,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAOPFRecordInternal item)
         {
             ClearPartial();
-            item.OBND = default;
+            item.ObjectBounds.Clear();
             item.ODTY = default;
             item.OBSV = default;
             item.OCCV = default;
@@ -992,8 +1011,8 @@ namespace Mutagen.Bethesda.Starfield
             AOPFRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.OBND = MemorySliceExt.SequenceEqual(item.OBND, rhs.OBND);
-            ret.ODTY = MemorySliceExt.SequenceEqual(item.ODTY, rhs.ODTY);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
             ret.OBSV = MemorySliceExt.SequenceEqual(item.OBSV, rhs.OBSV);
             ret.OCCV = MemorySliceExt.SequenceEqual(item.OCCV, rhs.OCCV);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1045,15 +1064,14 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.OBND ?? true)
-                && item.OBND is {} OBNDItem)
+            if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                sb.AppendLine($"OBND => {SpanExt.ToHexString(OBNDItem)}");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.ODTY ?? true)
                 && item.ODTY is {} ODTYItem)
             {
-                sb.AppendLine($"ODTY => {SpanExt.ToHexString(ODTYItem)}");
+                sb.AppendItem(ODTYItem, "ODTY");
             }
             if ((printMask?.OBSV ?? true)
                 && item.OBSV is {} OBSVItem)
@@ -1115,13 +1133,17 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OBND) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ObjectBounds) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.OBND, rhs.OBND)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)AOPFRecord_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ODTY) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.ODTY, rhs.ODTY)) return false;
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OBSV) ?? true))
             {
@@ -1159,13 +1181,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAOPFRecordGetter item)
         {
             var hash = new HashCode();
-            if (item.OBND is {} OBNDItem)
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
             {
-                hash.Add(OBNDItem);
-            }
-            if (item.ODTY is {} ODTYItem)
-            {
-                hash.Add(ODTYItem);
+                hash.Add(ODTYitem);
             }
             if (item.OBSV is {} OBSVItem)
             {
@@ -1278,27 +1297,31 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OBND) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ObjectBounds) ?? true))
             {
-                if(rhs.OBND is {} OBNDrhs)
+                errorMask?.PushIndex((int)AOPFRecord_FieldIndex.ObjectBounds);
+                try
                 {
-                    item.OBND = OBNDrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)AOPFRecord_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.OBND = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ODTY) ?? true))
             {
-                if(rhs.ODTY is {} ODTYrhs)
-                {
-                    item.ODTY = ODTYrhs.ToArray();
-                }
-                else
-                {
-                    item.ODTY = default;
-                }
+                item.ODTY = rhs.ODTY;
             }
             if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OBSV) ?? true))
             {
@@ -1479,11 +1502,12 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
                 writer: writer,
-                item: item.OBND,
-                header: translationParams.ConvertToCustom(RecordTypes.OBND));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
@@ -1582,14 +1606,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.OBND:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OBND = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AOPFRecord_FieldIndex.OBND;
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)AOPFRecord_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODTY = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)AOPFRecord_FieldIndex.ODTY;
                 }
                 case RecordTypeInts.OBSV:
@@ -1662,13 +1685,14 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAOPFRecord);
 
 
-        #region OBND
-        private int? _OBNDLocation;
-        public ReadOnlyMemorySlice<Byte>? OBND => _OBNDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OBNDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region ODTY
         private int? _ODTYLocation;
-        public ReadOnlyMemorySlice<Byte>? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region OBSV
         private int? _OBSVLocation;
@@ -1749,8 +1773,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.OBND:
                 {
-                    _OBNDLocation = (stream.Position - offset);
-                    return (int)AOPFRecord_FieldIndex.OBND;
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)AOPFRecord_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.ODTY:
                 {
