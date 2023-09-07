@@ -10,10 +10,12 @@ public partial class RecordTypes
     public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ADDN = new(0x4E444441);
     public static readonly RecordType AECH = new(0x48434541);
+    public static readonly RecordType AFFE = new(0x45464641);
     public static readonly RecordType ALCH = new(0x48434C41);
     public static readonly RecordType AMDL = new(0x4C444D41);
     public static readonly RecordType AMMO = new(0x4F4D4D41);
     public static readonly RecordType ANIO = new(0x4F494E41);
+    public static readonly RecordType AOPF = new(0x46504F41);
     public static readonly RecordType AORU = new(0x55524F41);
     public static readonly RecordType APPA = new(0x41505041);
     public static readonly RecordType ARMA = new(0x414D5241);
@@ -105,6 +107,7 @@ public partial class RecordTypes
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MISC = new(0x4353494D);
     public static readonly RecordType MOVT = new(0x54564F4D);
+    public static readonly RecordType MRPH = new(0x4850524D);
     public static readonly RecordType MSTT = new(0x5454534D);
     public static readonly RecordType MSWP = new(0x5057534D);
     public static readonly RecordType MUSC = new(0x4353554D);

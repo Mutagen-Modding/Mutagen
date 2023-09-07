@@ -8,10 +8,12 @@ public partial class RecordTypeInts
     public const int ACTI = 0x49544341;
     public const int ADDN = 0x4E444441;
     public const int AECH = 0x48434541;
+    public const int AFFE = 0x45464641;
     public const int ALCH = 0x48434C41;
     public const int AMDL = 0x4C444D41;
     public const int AMMO = 0x4F4D4D41;
     public const int ANIO = 0x4F494E41;
+    public const int AOPF = 0x46504F41;
     public const int AORU = 0x55524F41;
     public const int APPA = 0x41505041;
     public const int ARMA = 0x414D5241;
@@ -103,6 +105,7 @@ public partial class RecordTypeInts
     public const int MGEF = 0x4645474D;
     public const int MISC = 0x4353494D;
     public const int MOVT = 0x54564F4D;
+    public const int MRPH = 0x4850524D;
     public const int MSTT = 0x5454534D;
     public const int MSWP = 0x5057534D;
     public const int MUSC = 0x4353554D;

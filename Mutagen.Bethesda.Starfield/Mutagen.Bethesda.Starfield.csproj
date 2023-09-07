@@ -340,9 +340,6 @@
     <Compile Include="Records\Major Records\AffinityEvent_Generated.cs">
       <DependentUpon>AffinityEvent.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AFFESubrecord_Generated.cs">
-      <DependentUpon>AffinityEvent.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\HeadPart_Generated.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
     </Compile>
