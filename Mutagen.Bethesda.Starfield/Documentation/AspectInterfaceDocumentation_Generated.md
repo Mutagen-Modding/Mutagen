@@ -15,10 +15,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Keyword
 ### IObjectBounded
+- AOPFRecord
 - TextureSet
 ### IPositionRotation
 - Transform
 ## Concrete Classes to Interfaces
+### AOPFRecord
+- IObjectBounded
 ### Class
 - INamed
 ### DamageType
