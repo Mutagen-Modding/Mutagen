@@ -340,5 +340,8 @@
     <Compile Include="Records\Major Records\AFFESubrecord_Generated.cs">
       <DependentUpon>AFFERecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AOPFRecord_Generated.cs">
+      <DependentUpon>AOPFRecord.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@
       <Group name="Classes" refName="Class" />
       <Group name="Factions" refName="Faction" />
       <Group name="AFFE" refName="AFFERecord" />
+      <Group name="AOPF" refName="AOPFRecord" />
 <!--      <Group name="Npcs" refName="Npc" />-->
 <!--      <Group name="Races" refName="Race" />-->
 <!--      <Group name="Weapons" refName="Weapon" />-->
