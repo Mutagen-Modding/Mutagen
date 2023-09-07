@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -39,14 +40,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class AFFERecord :
+    public partial class AffinityEvent :
         StarfieldMajorRecord,
-        IAFFERecordInternal,
-        IEquatable<IAFFERecordGetter>,
-        ILoquiObjectSetter<AFFERecord>
+        IAffinityEventInternal,
+        IEquatable<IAffinityEventGetter>,
+        ILoquiObjectSetter<AffinityEvent>
     {
         #region Ctor
-        protected AFFERecord()
+        protected AffinityEvent()
         {
             CustomCtor();
         }
@@ -55,94 +56,83 @@ namespace Mutagen.Bethesda.Starfield
 
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FNAM;
-        public MemorySlice<Byte>? FNAM
+        private MemorySlice<Byte> _FNAM = new byte[0];
+        public MemorySlice<Byte> FNAM
         {
-            get => this._FNAM;
+            get => _FNAM;
             set => this._FNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAFFERecordGetter.FNAM => this.FNAM;
+        ReadOnlyMemorySlice<Byte> IAffinityEventGetter.FNAM => this.FNAM;
         #endregion
         #region NLDT
+        public String? NLDT { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _NLDT;
-        public MemorySlice<Byte>? NLDT
-        {
-            get => this._NLDT;
-            set => this._NLDT = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAFFERecordGetter.NLDT => this.NLDT;
+        String? IAffinityEventGetter.NLDT => this.NLDT;
         #endregion
-        #region NNAMs
+        #region ActorReactions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AFFESubrecord> _NNAMs = new ExtendedList<AFFESubrecord>();
-        public ExtendedList<AFFESubrecord> NNAMs
+        private ExtendedList<ActorReaction> _ActorReactions = new ExtendedList<ActorReaction>();
+        public ExtendedList<ActorReaction> ActorReactions
         {
-            get => this._NNAMs;
-            init => this._NNAMs = value;
+            get => this._ActorReactions;
+            init => this._ActorReactions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAFFESubrecordGetter> IAFFERecordGetter.NNAMs => _NNAMs;
+        IReadOnlyList<IActorReactionGetter> IAffinityEventGetter.ActorReactions => _ActorReactions;
         #endregion
 
         #endregion
-        #region ANAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ANAM;
-        public MemorySlice<Byte>? ANAM
+        #region ActorValue
+        private readonly IFormLink<IActorValueInformationGetter> _ActorValue = new FormLink<IActorValueInformationGetter>();
+        public IFormLink<IActorValueInformationGetter> ActorValue
         {
-            get => this._ANAM;
-            set => this._ANAM = value;
+            get => _ActorValue;
+            set => _ActorValue.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAFFERecordGetter.ANAM => this.ANAM;
+        IFormLinkGetter<IActorValueInformationGetter> IAffinityEventGetter.ActorValue => this.ActorValue;
         #endregion
-        #region ENAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ENAM;
-        public MemorySlice<Byte>? ENAM
+        #region Size
+        private readonly IFormLink<IGlobalGetter> _Size = new FormLink<IGlobalGetter>();
+        public IFormLink<IGlobalGetter> Size
         {
-            get => this._ENAM;
-            set => this._ENAM = value;
+            get => _Size;
+            set => _Size.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAFFERecordGetter.ENAM => this.ENAM;
+        IFormLinkGetter<IGlobalGetter> IAffinityEventGetter.Size => this.Size;
         #endregion
-        #region DNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DNAM;
-        public MemorySlice<Byte>? DNAM
+        #region Distance
+        private readonly IFormLinkNullable<IGlobalGetter> _Distance = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> Distance
         {
-            get => this._DNAM;
-            set => this._DNAM = value;
+            get => _Distance;
+            set => _Distance.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAFFERecordGetter.DNAM => this.DNAM;
+        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.Distance => this.Distance;
         #endregion
-        #region CNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CNAM;
-        public MemorySlice<Byte>? CNAM
+        #region Cooldown
+        private readonly IFormLinkNullable<IGlobalGetter> _Cooldown = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> Cooldown
         {
-            get => this._CNAM;
-            set => this._CNAM = value;
+            get => _Cooldown;
+            set => _Cooldown.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAFFERecordGetter.CNAM => this.CNAM;
+        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.Cooldown => this.Cooldown;
         #endregion
-        #region BNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _BNAM;
-        public MemorySlice<Byte>? BNAM
+        #region Faction
+        private readonly IFormLinkNullable<IFactionGetter> _Faction = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> Faction
         {
-            get => this._BNAM;
-            set => this._BNAM = value;
+            get => _Faction;
+            set => _Faction.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAFFERecordGetter.BNAM => this.BNAM;
+        IFormLinkNullableGetter<IFactionGetter> IAffinityEventGetter.Faction => this.Faction;
         #endregion
 
         #region To String
@@ -151,7 +141,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AFFERecordMixIn.Print(
+            AffinityEventMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -171,12 +161,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.FNAM = initialValue;
                 this.NLDT = initialValue;
-                this.NNAMs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AFFESubrecord.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AFFESubrecord.Mask<TItem>?>>());
-                this.ANAM = initialValue;
-                this.ENAM = initialValue;
-                this.DNAM = initialValue;
-                this.CNAM = initialValue;
-                this.BNAM = initialValue;
+                this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
+                this.ActorValue = initialValue;
+                this.Size = initialValue;
+                this.Distance = initialValue;
+                this.Cooldown = initialValue;
+                this.Faction = initialValue;
             }
 
             public Mask(
@@ -189,12 +179,12 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem FNAM,
                 TItem NLDT,
-                TItem NNAMs,
-                TItem ANAM,
-                TItem ENAM,
-                TItem DNAM,
-                TItem CNAM,
-                TItem BNAM)
+                TItem ActorReactions,
+                TItem ActorValue,
+                TItem Size,
+                TItem Distance,
+                TItem Cooldown,
+                TItem Faction)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -206,12 +196,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.FNAM = FNAM;
                 this.NLDT = NLDT;
-                this.NNAMs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AFFESubrecord.Mask<TItem>?>>?>(NNAMs, Enumerable.Empty<MaskItemIndexed<TItem, AFFESubrecord.Mask<TItem>?>>());
-                this.ANAM = ANAM;
-                this.ENAM = ENAM;
-                this.DNAM = DNAM;
-                this.CNAM = CNAM;
-                this.BNAM = BNAM;
+                this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(ActorReactions, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
+                this.ActorValue = ActorValue;
+                this.Size = Size;
+                this.Distance = Distance;
+                this.Cooldown = Cooldown;
+                this.Faction = Faction;
             }
 
             #pragma warning disable CS8618
@@ -225,12 +215,12 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem FNAM;
             public TItem NLDT;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AFFESubrecord.Mask<TItem>?>>?>? NNAMs;
-            public TItem ANAM;
-            public TItem ENAM;
-            public TItem DNAM;
-            public TItem CNAM;
-            public TItem BNAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>? ActorReactions;
+            public TItem ActorValue;
+            public TItem Size;
+            public TItem Distance;
+            public TItem Cooldown;
+            public TItem Faction;
             #endregion
 
             #region Equals
@@ -246,12 +236,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
                 if (!object.Equals(this.NLDT, rhs.NLDT)) return false;
-                if (!object.Equals(this.NNAMs, rhs.NNAMs)) return false;
-                if (!object.Equals(this.ANAM, rhs.ANAM)) return false;
-                if (!object.Equals(this.ENAM, rhs.ENAM)) return false;
-                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
-                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
-                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(this.ActorReactions, rhs.ActorReactions)) return false;
+                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
+                if (!object.Equals(this.Size, rhs.Size)) return false;
+                if (!object.Equals(this.Distance, rhs.Distance)) return false;
+                if (!object.Equals(this.Cooldown, rhs.Cooldown)) return false;
+                if (!object.Equals(this.Faction, rhs.Faction)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -259,12 +249,12 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.FNAM);
                 hash.Add(this.NLDT);
-                hash.Add(this.NNAMs);
-                hash.Add(this.ANAM);
-                hash.Add(this.ENAM);
-                hash.Add(this.DNAM);
-                hash.Add(this.CNAM);
-                hash.Add(this.BNAM);
+                hash.Add(this.ActorReactions);
+                hash.Add(this.ActorValue);
+                hash.Add(this.Size);
+                hash.Add(this.Distance);
+                hash.Add(this.Cooldown);
+                hash.Add(this.Faction);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -277,23 +267,23 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.All(eval)) return false;
                 if (!eval(this.FNAM)) return false;
                 if (!eval(this.NLDT)) return false;
-                if (this.NNAMs != null)
+                if (this.ActorReactions != null)
                 {
-                    if (!eval(this.NNAMs.Overall)) return false;
-                    if (this.NNAMs.Specific != null)
+                    if (!eval(this.ActorReactions.Overall)) return false;
+                    if (this.ActorReactions.Specific != null)
                     {
-                        foreach (var item in this.NNAMs.Specific)
+                        foreach (var item in this.ActorReactions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (!eval(this.ANAM)) return false;
-                if (!eval(this.ENAM)) return false;
-                if (!eval(this.DNAM)) return false;
-                if (!eval(this.CNAM)) return false;
-                if (!eval(this.BNAM)) return false;
+                if (!eval(this.ActorValue)) return false;
+                if (!eval(this.Size)) return false;
+                if (!eval(this.Distance)) return false;
+                if (!eval(this.Cooldown)) return false;
+                if (!eval(this.Faction)) return false;
                 return true;
             }
             #endregion
@@ -304,23 +294,23 @@ namespace Mutagen.Bethesda.Starfield
                 if (base.Any(eval)) return true;
                 if (eval(this.FNAM)) return true;
                 if (eval(this.NLDT)) return true;
-                if (this.NNAMs != null)
+                if (this.ActorReactions != null)
                 {
-                    if (eval(this.NNAMs.Overall)) return true;
-                    if (this.NNAMs.Specific != null)
+                    if (eval(this.ActorReactions.Overall)) return true;
+                    if (this.ActorReactions.Specific != null)
                     {
-                        foreach (var item in this.NNAMs.Specific)
+                        foreach (var item in this.ActorReactions.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (eval(this.ANAM)) return true;
-                if (eval(this.ENAM)) return true;
-                if (eval(this.DNAM)) return true;
-                if (eval(this.CNAM)) return true;
-                if (eval(this.BNAM)) return true;
+                if (eval(this.ActorValue)) return true;
+                if (eval(this.Size)) return true;
+                if (eval(this.Distance)) return true;
+                if (eval(this.Cooldown)) return true;
+                if (eval(this.Faction)) return true;
                 return false;
             }
             #endregion
@@ -328,7 +318,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new AFFERecord.Mask<R>();
+                var ret = new AffinityEvent.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -338,42 +328,42 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.FNAM = eval(this.FNAM);
                 obj.NLDT = eval(this.NLDT);
-                if (NNAMs != null)
+                if (ActorReactions != null)
                 {
-                    obj.NNAMs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AFFESubrecord.Mask<R>?>>?>(eval(this.NNAMs.Overall), Enumerable.Empty<MaskItemIndexed<R, AFFESubrecord.Mask<R>?>>());
-                    if (NNAMs.Specific != null)
+                    obj.ActorReactions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorReaction.Mask<R>?>>?>(eval(this.ActorReactions.Overall), Enumerable.Empty<MaskItemIndexed<R, ActorReaction.Mask<R>?>>());
+                    if (ActorReactions.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, AFFESubrecord.Mask<R>?>>();
-                        obj.NNAMs.Specific = l;
-                        foreach (var item in NNAMs.Specific)
+                        var l = new List<MaskItemIndexed<R, ActorReaction.Mask<R>?>>();
+                        obj.ActorReactions.Specific = l;
+                        foreach (var item in ActorReactions.Specific)
                         {
-                            MaskItemIndexed<R, AFFESubrecord.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AFFESubrecord.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ActorReaction.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ActorReaction.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                obj.ANAM = eval(this.ANAM);
-                obj.ENAM = eval(this.ENAM);
-                obj.DNAM = eval(this.DNAM);
-                obj.CNAM = eval(this.CNAM);
-                obj.BNAM = eval(this.BNAM);
+                obj.ActorValue = eval(this.ActorValue);
+                obj.Size = eval(this.Size);
+                obj.Distance = eval(this.Distance);
+                obj.Cooldown = eval(this.Cooldown);
+                obj.Faction = eval(this.Faction);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(AFFERecord.Mask<bool>? printMask = null)
+            public string Print(AffinityEvent.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, AFFERecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AffinityEvent.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(AFFERecord.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(AffinityEvent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.FNAM ?? true)
@@ -384,16 +374,16 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(NLDT, "NLDT");
                     }
-                    if ((printMask?.NNAMs?.Overall ?? true)
-                        && NNAMs is {} NNAMsItem)
+                    if ((printMask?.ActorReactions?.Overall ?? true)
+                        && ActorReactions is {} ActorReactionsItem)
                     {
-                        sb.AppendLine("NNAMs =>");
+                        sb.AppendLine("ActorReactions =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(NNAMsItem.Overall);
-                            if (NNAMsItem.Specific != null)
+                            sb.AppendItem(ActorReactionsItem.Overall);
+                            if (ActorReactionsItem.Specific != null)
                             {
-                                foreach (var subItem in NNAMsItem.Specific)
+                                foreach (var subItem in ActorReactionsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -403,25 +393,25 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.ANAM ?? true)
+                    if (printMask?.ActorValue ?? true)
                     {
-                        sb.AppendItem(ANAM, "ANAM");
+                        sb.AppendItem(ActorValue, "ActorValue");
                     }
-                    if (printMask?.ENAM ?? true)
+                    if (printMask?.Size ?? true)
                     {
-                        sb.AppendItem(ENAM, "ENAM");
+                        sb.AppendItem(Size, "Size");
                     }
-                    if (printMask?.DNAM ?? true)
+                    if (printMask?.Distance ?? true)
                     {
-                        sb.AppendItem(DNAM, "DNAM");
+                        sb.AppendItem(Distance, "Distance");
                     }
-                    if (printMask?.CNAM ?? true)
+                    if (printMask?.Cooldown ?? true)
                     {
-                        sb.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(Cooldown, "Cooldown");
                     }
-                    if (printMask?.BNAM ?? true)
+                    if (printMask?.Faction ?? true)
                     {
-                        sb.AppendItem(BNAM, "BNAM");
+                        sb.AppendItem(Faction, "Faction");
                     }
                 }
             }
@@ -436,36 +426,36 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public Exception? FNAM;
             public Exception? NLDT;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AFFESubrecord.ErrorMask?>>?>? NNAMs;
-            public Exception? ANAM;
-            public Exception? ENAM;
-            public Exception? DNAM;
-            public Exception? CNAM;
-            public Exception? BNAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>? ActorReactions;
+            public Exception? ActorValue;
+            public Exception? Size;
+            public Exception? Distance;
+            public Exception? Cooldown;
+            public Exception? Faction;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                AFFERecord_FieldIndex enu = (AFFERecord_FieldIndex)index;
+                AffinityEvent_FieldIndex enu = (AffinityEvent_FieldIndex)index;
                 switch (enu)
                 {
-                    case AFFERecord_FieldIndex.FNAM:
+                    case AffinityEvent_FieldIndex.FNAM:
                         return FNAM;
-                    case AFFERecord_FieldIndex.NLDT:
+                    case AffinityEvent_FieldIndex.NLDT:
                         return NLDT;
-                    case AFFERecord_FieldIndex.NNAMs:
-                        return NNAMs;
-                    case AFFERecord_FieldIndex.ANAM:
-                        return ANAM;
-                    case AFFERecord_FieldIndex.ENAM:
-                        return ENAM;
-                    case AFFERecord_FieldIndex.DNAM:
-                        return DNAM;
-                    case AFFERecord_FieldIndex.CNAM:
-                        return CNAM;
-                    case AFFERecord_FieldIndex.BNAM:
-                        return BNAM;
+                    case AffinityEvent_FieldIndex.ActorReactions:
+                        return ActorReactions;
+                    case AffinityEvent_FieldIndex.ActorValue:
+                        return ActorValue;
+                    case AffinityEvent_FieldIndex.Size:
+                        return Size;
+                    case AffinityEvent_FieldIndex.Distance:
+                        return Distance;
+                    case AffinityEvent_FieldIndex.Cooldown:
+                        return Cooldown;
+                    case AffinityEvent_FieldIndex.Faction:
+                        return Faction;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -473,32 +463,32 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                AFFERecord_FieldIndex enu = (AFFERecord_FieldIndex)index;
+                AffinityEvent_FieldIndex enu = (AffinityEvent_FieldIndex)index;
                 switch (enu)
                 {
-                    case AFFERecord_FieldIndex.FNAM:
+                    case AffinityEvent_FieldIndex.FNAM:
                         this.FNAM = ex;
                         break;
-                    case AFFERecord_FieldIndex.NLDT:
+                    case AffinityEvent_FieldIndex.NLDT:
                         this.NLDT = ex;
                         break;
-                    case AFFERecord_FieldIndex.NNAMs:
-                        this.NNAMs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AFFESubrecord.ErrorMask?>>?>(ex, null);
+                    case AffinityEvent_FieldIndex.ActorReactions:
+                        this.ActorReactions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>(ex, null);
                         break;
-                    case AFFERecord_FieldIndex.ANAM:
-                        this.ANAM = ex;
+                    case AffinityEvent_FieldIndex.ActorValue:
+                        this.ActorValue = ex;
                         break;
-                    case AFFERecord_FieldIndex.ENAM:
-                        this.ENAM = ex;
+                    case AffinityEvent_FieldIndex.Size:
+                        this.Size = ex;
                         break;
-                    case AFFERecord_FieldIndex.DNAM:
-                        this.DNAM = ex;
+                    case AffinityEvent_FieldIndex.Distance:
+                        this.Distance = ex;
                         break;
-                    case AFFERecord_FieldIndex.CNAM:
-                        this.CNAM = ex;
+                    case AffinityEvent_FieldIndex.Cooldown:
+                        this.Cooldown = ex;
                         break;
-                    case AFFERecord_FieldIndex.BNAM:
-                        this.BNAM = ex;
+                    case AffinityEvent_FieldIndex.Faction:
+                        this.Faction = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -508,32 +498,32 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                AFFERecord_FieldIndex enu = (AFFERecord_FieldIndex)index;
+                AffinityEvent_FieldIndex enu = (AffinityEvent_FieldIndex)index;
                 switch (enu)
                 {
-                    case AFFERecord_FieldIndex.FNAM:
+                    case AffinityEvent_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
                         break;
-                    case AFFERecord_FieldIndex.NLDT:
+                    case AffinityEvent_FieldIndex.NLDT:
                         this.NLDT = (Exception?)obj;
                         break;
-                    case AFFERecord_FieldIndex.NNAMs:
-                        this.NNAMs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AFFESubrecord.ErrorMask?>>?>)obj;
+                    case AffinityEvent_FieldIndex.ActorReactions:
+                        this.ActorReactions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>)obj;
                         break;
-                    case AFFERecord_FieldIndex.ANAM:
-                        this.ANAM = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.ActorValue:
+                        this.ActorValue = (Exception?)obj;
                         break;
-                    case AFFERecord_FieldIndex.ENAM:
-                        this.ENAM = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.Size:
+                        this.Size = (Exception?)obj;
                         break;
-                    case AFFERecord_FieldIndex.DNAM:
-                        this.DNAM = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.Distance:
+                        this.Distance = (Exception?)obj;
                         break;
-                    case AFFERecord_FieldIndex.CNAM:
-                        this.CNAM = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.Cooldown:
+                        this.Cooldown = (Exception?)obj;
                         break;
-                    case AFFERecord_FieldIndex.BNAM:
-                        this.BNAM = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.Faction:
+                        this.Faction = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -546,12 +536,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (FNAM != null) return true;
                 if (NLDT != null) return true;
-                if (NNAMs != null) return true;
-                if (ANAM != null) return true;
-                if (ENAM != null) return true;
-                if (DNAM != null) return true;
-                if (CNAM != null) return true;
-                if (BNAM != null) return true;
+                if (ActorReactions != null) return true;
+                if (ActorValue != null) return true;
+                if (Size != null) return true;
+                if (Distance != null) return true;
+                if (Cooldown != null) return true;
+                if (Faction != null) return true;
                 return false;
             }
             #endregion
@@ -584,15 +574,15 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(NLDT, "NLDT");
                 }
-                if (NNAMs is {} NNAMsItem)
+                if (ActorReactions is {} ActorReactionsItem)
                 {
-                    sb.AppendLine("NNAMs =>");
+                    sb.AppendLine("ActorReactions =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(NNAMsItem.Overall);
-                        if (NNAMsItem.Specific != null)
+                        sb.AppendItem(ActorReactionsItem.Overall);
+                        if (ActorReactionsItem.Specific != null)
                         {
-                            foreach (var subItem in NNAMsItem.Specific)
+                            foreach (var subItem in ActorReactionsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -603,19 +593,19 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(ANAM, "ANAM");
+                    sb.AppendItem(ActorValue, "ActorValue");
                 }
                 {
-                    sb.AppendItem(ENAM, "ENAM");
+                    sb.AppendItem(Size, "Size");
                 }
                 {
-                    sb.AppendItem(DNAM, "DNAM");
+                    sb.AppendItem(Distance, "Distance");
                 }
                 {
-                    sb.AppendItem(CNAM, "CNAM");
+                    sb.AppendItem(Cooldown, "Cooldown");
                 }
                 {
-                    sb.AppendItem(BNAM, "BNAM");
+                    sb.AppendItem(Faction, "Faction");
                 }
             }
             #endregion
@@ -627,12 +617,12 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
                 ret.NLDT = this.NLDT.Combine(rhs.NLDT);
-                ret.NNAMs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AFFESubrecord.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NNAMs?.Overall, rhs.NNAMs?.Overall), Noggog.ExceptionExt.Combine(this.NNAMs?.Specific, rhs.NNAMs?.Specific));
-                ret.ANAM = this.ANAM.Combine(rhs.ANAM);
-                ret.ENAM = this.ENAM.Combine(rhs.ENAM);
-                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
-                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
-                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
+                ret.ActorReactions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorReactions?.Overall, rhs.ActorReactions?.Overall), Noggog.ExceptionExt.Combine(this.ActorReactions?.Specific, rhs.ActorReactions?.Specific));
+                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
+                ret.Size = this.Size.Combine(rhs.Size);
+                ret.Distance = this.Distance.Combine(rhs.Distance);
+                ret.Cooldown = this.Cooldown.Combine(rhs.Cooldown);
+                ret.Faction = this.Faction.Combine(rhs.Faction);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -657,12 +647,12 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public bool FNAM;
             public bool NLDT;
-            public AFFESubrecord.TranslationMask? NNAMs;
-            public bool ANAM;
-            public bool ENAM;
-            public bool DNAM;
-            public bool CNAM;
-            public bool BNAM;
+            public ActorReaction.TranslationMask? ActorReactions;
+            public bool ActorValue;
+            public bool Size;
+            public bool Distance;
+            public bool Cooldown;
+            public bool Faction;
             #endregion
 
             #region Ctors
@@ -673,11 +663,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.FNAM = defaultOn;
                 this.NLDT = defaultOn;
-                this.ANAM = defaultOn;
-                this.ENAM = defaultOn;
-                this.DNAM = defaultOn;
-                this.CNAM = defaultOn;
-                this.BNAM = defaultOn;
+                this.ActorValue = defaultOn;
+                this.Size = defaultOn;
+                this.Distance = defaultOn;
+                this.Cooldown = defaultOn;
+                this.Faction = defaultOn;
             }
 
             #endregion
@@ -687,12 +677,12 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((FNAM, null));
                 ret.Add((NLDT, null));
-                ret.Add((NNAMs == null ? DefaultOn : !NNAMs.GetCrystal().CopyNothing, NNAMs?.GetCrystal()));
-                ret.Add((ANAM, null));
-                ret.Add((ENAM, null));
-                ret.Add((DNAM, null));
-                ret.Add((CNAM, null));
-                ret.Add((BNAM, null));
+                ret.Add((ActorReactions == null ? DefaultOn : !ActorReactions.GetCrystal().CopyNothing, ActorReactions?.GetCrystal()));
+                ret.Add((ActorValue, null));
+                ret.Add((Size, null));
+                ret.Add((Distance, null));
+                ret.Add((Cooldown, null));
+                ret.Add((Faction, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -704,15 +694,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = AFFERecord_Registration.TriggeringRecordType;
-        public AFFERecord(FormKey formKey)
+        public static readonly RecordType GrupRecordType = AffinityEvent_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AffinityEventCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AffinityEventSetterCommon.Instance.RemapLinks(this, mapping);
+        public AffinityEvent(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private AFFERecord(
+        private AffinityEvent(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -721,7 +713,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal AFFERecord(
+        internal AffinityEvent(
             FormKey formKey,
             ushort formVersion)
         {
@@ -730,12 +722,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public AFFERecord(IStarfieldMod mod)
+        public AffinityEvent(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AFFERecord(IStarfieldMod mod, string editorID)
+        public AffinityEvent(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -743,10 +735,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<AFFERecord>.ToString(this);
+            return MajorRecordPrinter<AffinityEvent>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IAFFERecord);
+        protected override Type LinkType => typeof(IAffinityEvent);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -755,16 +747,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAFFERecordGetter rhs) return false;
-            return ((AFFERecordCommon)((IAFFERecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IAffinityEventGetter rhs) return false;
+            return ((AffinityEventCommon)((IAffinityEventGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAFFERecordGetter? obj)
+        public bool Equals(IAffinityEventGetter? obj)
         {
-            return ((AFFERecordCommon)((IAFFERecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((AffinityEventCommon)((IAffinityEventGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AFFERecordCommon)((IAFFERecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AffinityEventCommon)((IAffinityEventGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -772,23 +764,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AFFERecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AffinityEventBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AFFERecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AffinityEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static AFFERecord CreateFromBinary(
+        public new static AffinityEvent CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new AFFERecord();
-            ((AFFERecordSetterCommon)((IAFFERecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new AffinityEvent();
+            ((AffinityEventSetterCommon)((IAffinityEventGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -799,7 +791,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out AFFERecord item,
+            out AffinityEvent item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -814,98 +806,100 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((AFFERecordSetterCommon)((IAFFERecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AffinityEventSetterCommon)((IAffinityEventGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new AFFERecord GetNew()
+        internal static new AffinityEvent GetNew()
         {
-            return new AFFERecord();
+            return new AffinityEvent();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAFFERecord :
-        IAFFERecordGetter,
-        ILoquiObjectSetter<IAFFERecordInternal>,
+    public partial interface IAffinityEvent :
+        IAffinityEventGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IAffinityEventInternal>,
         IStarfieldMajorRecordInternal
     {
-        new MemorySlice<Byte>? FNAM { get; set; }
-        new MemorySlice<Byte>? NLDT { get; set; }
-        new ExtendedList<AFFESubrecord> NNAMs { get; }
-        new MemorySlice<Byte>? ANAM { get; set; }
-        new MemorySlice<Byte>? ENAM { get; set; }
-        new MemorySlice<Byte>? DNAM { get; set; }
-        new MemorySlice<Byte>? CNAM { get; set; }
-        new MemorySlice<Byte>? BNAM { get; set; }
+        new MemorySlice<Byte> FNAM { get; set; }
+        new String? NLDT { get; set; }
+        new ExtendedList<ActorReaction> ActorReactions { get; }
+        new IFormLink<IActorValueInformationGetter> ActorValue { get; set; }
+        new IFormLink<IGlobalGetter> Size { get; set; }
+        new IFormLinkNullable<IGlobalGetter> Distance { get; set; }
+        new IFormLinkNullable<IGlobalGetter> Cooldown { get; set; }
+        new IFormLinkNullable<IFactionGetter> Faction { get; set; }
     }
 
-    public partial interface IAFFERecordInternal :
+    public partial interface IAffinityEventInternal :
         IStarfieldMajorRecordInternal,
-        IAFFERecord,
-        IAFFERecordGetter
+        IAffinityEvent,
+        IAffinityEventGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.AFFE)]
-    public partial interface IAFFERecordGetter :
+    public partial interface IAffinityEventGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IAFFERecordGetter>,
-        IMapsToGetter<IAFFERecordGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IAffinityEventGetter>,
+        IMapsToGetter<IAffinityEventGetter>
     {
-        static new ILoquiRegistration StaticRegistration => AFFERecord_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? FNAM { get; }
-        ReadOnlyMemorySlice<Byte>? NLDT { get; }
-        IReadOnlyList<IAFFESubrecordGetter> NNAMs { get; }
-        ReadOnlyMemorySlice<Byte>? ANAM { get; }
-        ReadOnlyMemorySlice<Byte>? ENAM { get; }
-        ReadOnlyMemorySlice<Byte>? DNAM { get; }
-        ReadOnlyMemorySlice<Byte>? CNAM { get; }
-        ReadOnlyMemorySlice<Byte>? BNAM { get; }
+        static new ILoquiRegistration StaticRegistration => AffinityEvent_Registration.Instance;
+        ReadOnlyMemorySlice<Byte> FNAM { get; }
+        String? NLDT { get; }
+        IReadOnlyList<IActorReactionGetter> ActorReactions { get; }
+        IFormLinkGetter<IActorValueInformationGetter> ActorValue { get; }
+        IFormLinkGetter<IGlobalGetter> Size { get; }
+        IFormLinkNullableGetter<IGlobalGetter> Distance { get; }
+        IFormLinkNullableGetter<IGlobalGetter> Cooldown { get; }
+        IFormLinkNullableGetter<IFactionGetter> Faction { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AFFERecordMixIn
+    public static partial class AffinityEventMixIn
     {
-        public static void Clear(this IAFFERecordInternal item)
+        public static void Clear(this IAffinityEventInternal item)
         {
-            ((AFFERecordSetterCommon)((IAFFERecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AffinityEventSetterCommon)((IAffinityEventGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AFFERecord.Mask<bool> GetEqualsMask(
-            this IAFFERecordGetter item,
-            IAFFERecordGetter rhs,
+        public static AffinityEvent.Mask<bool> GetEqualsMask(
+            this IAffinityEventGetter item,
+            IAffinityEventGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IAFFERecordGetter item,
+            this IAffinityEventGetter item,
             string? name = null,
-            AFFERecord.Mask<bool>? printMask = null)
+            AffinityEvent.Mask<bool>? printMask = null)
         {
-            return ((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).Print(
+            return ((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IAFFERecordGetter item,
+            this IAffinityEventGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AFFERecord.Mask<bool>? printMask = null)
+            AffinityEvent.Mask<bool>? printMask = null)
         {
-            ((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).Print(
+            ((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -913,39 +907,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IAFFERecordGetter item,
-            IAFFERecordGetter rhs,
-            AFFERecord.TranslationMask? equalsMask = null)
+            this IAffinityEventGetter item,
+            IAffinityEventGetter rhs,
+            AffinityEvent.TranslationMask? equalsMask = null)
         {
-            return ((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).Equals(
+            return ((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IAFFERecordInternal lhs,
-            IAFFERecordGetter rhs,
-            out AFFERecord.ErrorMask errorMask,
-            AFFERecord.TranslationMask? copyMask = null)
+            this IAffinityEventInternal lhs,
+            IAffinityEventGetter rhs,
+            out AffinityEvent.ErrorMask errorMask,
+            AffinityEvent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = AFFERecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AffinityEvent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAFFERecordInternal lhs,
-            IAFFERecordGetter rhs,
+            this IAffinityEventInternal lhs,
+            IAffinityEventGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -953,55 +947,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static AFFERecord DeepCopy(
-            this IAFFERecordGetter item,
-            AFFERecord.TranslationMask? copyMask = null)
+        public static AffinityEvent DeepCopy(
+            this IAffinityEventGetter item,
+            AffinityEvent.TranslationMask? copyMask = null)
         {
-            return ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static AFFERecord DeepCopy(
-            this IAFFERecordGetter item,
-            out AFFERecord.ErrorMask errorMask,
-            AFFERecord.TranslationMask? copyMask = null)
+        public static AffinityEvent DeepCopy(
+            this IAffinityEventGetter item,
+            out AffinityEvent.ErrorMask errorMask,
+            AffinityEvent.TranslationMask? copyMask = null)
         {
-            return ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static AFFERecord DeepCopy(
-            this IAFFERecordGetter item,
+        public static AffinityEvent DeepCopy(
+            this IAffinityEventGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static AFFERecord Duplicate(
-            this IAFFERecordGetter item,
+        public static AffinityEvent Duplicate(
+            this IAffinityEventGetter item,
             FormKey formKey,
-            AFFERecord.TranslationMask? copyMask = null)
+            AffinityEvent.TranslationMask? copyMask = null)
         {
-            return ((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).Duplicate(
+            return ((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static AFFERecord Duplicate(
-            this IAFFERecordGetter item,
+        public static AffinityEvent Duplicate(
+            this IAffinityEventGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).Duplicate(
+            return ((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -1011,11 +1005,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IAFFERecordInternal item,
+            this IAffinityEventInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((AFFERecordSetterCommon)((IAFFERecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AffinityEventSetterCommon)((IAffinityEventGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -1031,7 +1025,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum AFFERecord_FieldIndex
+    internal enum AffinityEvent_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1042,19 +1036,19 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         FNAM = 7,
         NLDT = 8,
-        NNAMs = 9,
-        ANAM = 10,
-        ENAM = 11,
-        DNAM = 12,
-        CNAM = 13,
-        BNAM = 14,
+        ActorReactions = 9,
+        ActorValue = 10,
+        Size = 11,
+        Distance = 12,
+        Cooldown = 13,
+        Faction = 14,
     }
     #endregion
 
     #region Registration
-    internal partial class AFFERecord_Registration : ILoquiRegistration
+    internal partial class AffinityEvent_Registration : ILoquiRegistration
     {
-        public static readonly AFFERecord_Registration Instance = new AFFERecord_Registration();
+        public static readonly AffinityEvent_Registration Instance = new AffinityEvent_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -1069,23 +1063,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 15;
 
-        public static readonly Type MaskType = typeof(AFFERecord.Mask<>);
+        public static readonly Type MaskType = typeof(AffinityEvent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AFFERecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AffinityEvent.ErrorMask);
 
-        public static readonly Type ClassType = typeof(AFFERecord);
+        public static readonly Type ClassType = typeof(AffinityEvent);
 
-        public static readonly Type GetterType = typeof(IAFFERecordGetter);
+        public static readonly Type GetterType = typeof(IAffinityEventGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAFFERecord);
+        public static readonly Type SetterType = typeof(IAffinityEvent);
 
-        public static readonly Type? InternalSetterType = typeof(IAFFERecordInternal);
+        public static readonly Type? InternalSetterType = typeof(IAffinityEventInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.AFFERecord";
+        public const string FullName = "Mutagen.Bethesda.Starfield.AffinityEvent";
 
-        public const string Name = "AFFERecord";
+        public const string Name = "AffinityEvent";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -1111,7 +1105,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(AFFERecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AffinityEventBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1144,56 +1138,62 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class AFFERecordSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class AffinityEventSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly AFFERecordSetterCommon Instance = new AFFERecordSetterCommon();
+        public new static readonly AffinityEventSetterCommon Instance = new AffinityEventSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IAFFERecordInternal item)
+        public void Clear(IAffinityEventInternal item)
         {
             ClearPartial();
-            item.FNAM = default;
+            item.FNAM = Array.Empty<byte>();
             item.NLDT = default;
-            item.NNAMs.Clear();
-            item.ANAM = default;
-            item.ENAM = default;
-            item.DNAM = default;
-            item.CNAM = default;
-            item.BNAM = default;
+            item.ActorReactions.Clear();
+            item.ActorValue.Clear();
+            item.Size.Clear();
+            item.Distance.Clear();
+            item.Cooldown.Clear();
+            item.Faction.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IAFFERecordInternal)item);
+            Clear(item: (IAffinityEventInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IAFFERecordInternal)item);
+            Clear(item: (IAffinityEventInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IAFFERecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IAffinityEvent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.ActorReactions.RemapLinks(mapping);
+            obj.ActorValue.Relink(mapping);
+            obj.Size.Relink(mapping);
+            obj.Distance.Relink(mapping);
+            obj.Cooldown.Relink(mapping);
+            obj.Faction.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAFFERecordInternal item,
+            IAffinityEventInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IAFFERecordInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IAffinityEventInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: AFFERecordBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: AFFERecordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: AffinityEventBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AffinityEventBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1202,7 +1202,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (AFFERecord)item,
+                item: (AffinityEvent)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (AFFERecord)item,
+                item: (AffinityEvent)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1221,17 +1221,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class AFFERecordCommon : StarfieldMajorRecordCommon
+    internal partial class AffinityEventCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly AFFERecordCommon Instance = new AFFERecordCommon();
+        public new static readonly AffinityEventCommon Instance = new AffinityEventCommon();
 
-        public AFFERecord.Mask<bool> GetEqualsMask(
-            IAFFERecordGetter item,
-            IAFFERecordGetter rhs,
+        public AffinityEvent.Mask<bool> GetEqualsMask(
+            IAffinityEventGetter item,
+            IAffinityEventGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AFFERecord.Mask<bool>(false);
-            ((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AffinityEvent.Mask<bool>(false);
+            ((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1240,29 +1240,29 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IAFFERecordGetter item,
-            IAFFERecordGetter rhs,
-            AFFERecord.Mask<bool> ret,
+            IAffinityEventGetter item,
+            IAffinityEventGetter rhs,
+            AffinityEvent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
-            ret.NLDT = MemorySliceExt.SequenceEqual(item.NLDT, rhs.NLDT);
-            ret.NNAMs = item.NNAMs.CollectionEqualsHelper(
-                rhs.NNAMs,
+            ret.FNAM = MemoryExtensions.SequenceEqual(item.FNAM.Span, rhs.FNAM.Span);
+            ret.NLDT = string.Equals(item.NLDT, rhs.NLDT);
+            ret.ActorReactions = item.ActorReactions.CollectionEqualsHelper(
+                rhs.ActorReactions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ANAM = MemorySliceExt.SequenceEqual(item.ANAM, rhs.ANAM);
-            ret.ENAM = MemorySliceExt.SequenceEqual(item.ENAM, rhs.ENAM);
-            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
-            ret.CNAM = MemorySliceExt.SequenceEqual(item.CNAM, rhs.CNAM);
-            ret.BNAM = MemorySliceExt.SequenceEqual(item.BNAM, rhs.BNAM);
+            ret.ActorValue = item.ActorValue.Equals(rhs.ActorValue);
+            ret.Size = item.Size.Equals(rhs.Size);
+            ret.Distance = item.Distance.Equals(rhs.Distance);
+            ret.Cooldown = item.Cooldown.Equals(rhs.Cooldown);
+            ret.Faction = item.Faction.Equals(rhs.Faction);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IAFFERecordGetter item,
+            IAffinityEventGetter item,
             string? name = null,
-            AFFERecord.Mask<bool>? printMask = null)
+            AffinityEvent.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1274,18 +1274,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IAFFERecordGetter item,
+            IAffinityEventGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AFFERecord.Mask<bool>? printMask = null)
+            AffinityEvent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"AFFERecord =>");
+                sb.AppendLine($"AffinityEvent =>");
             }
             else
             {
-                sb.AppendLine($"{name} (AFFERecord) =>");
+                sb.AppendLine($"{name} (AffinityEvent) =>");
             }
             using (sb.Brace())
             {
@@ -1297,30 +1297,29 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IAFFERecordGetter item,
+            IAffinityEventGetter item,
             StructuredStringBuilder sb,
-            AFFERecord.Mask<bool>? printMask = null)
+            AffinityEvent.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.FNAM ?? true)
-                && item.FNAM is {} FNAMItem)
+            if (printMask?.FNAM ?? true)
             {
-                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                sb.AppendLine($"FNAM => {SpanExt.ToHexString(item.FNAM)}");
             }
             if ((printMask?.NLDT ?? true)
                 && item.NLDT is {} NLDTItem)
             {
-                sb.AppendLine($"NLDT => {SpanExt.ToHexString(NLDTItem)}");
+                sb.AppendItem(NLDTItem, "NLDT");
             }
-            if (printMask?.NNAMs?.Overall ?? true)
+            if (printMask?.ActorReactions?.Overall ?? true)
             {
-                sb.AppendLine("NNAMs =>");
+                sb.AppendLine("ActorReactions =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.NNAMs)
+                    foreach (var subItem in item.ActorReactions)
                     {
                         using (sb.Brace())
                         {
@@ -1329,68 +1328,63 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.ANAM ?? true)
-                && item.ANAM is {} ANAMItem)
+            if (printMask?.ActorValue ?? true)
             {
-                sb.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
+                sb.AppendItem(item.ActorValue.FormKey, "ActorValue");
             }
-            if ((printMask?.ENAM ?? true)
-                && item.ENAM is {} ENAMItem)
+            if (printMask?.Size ?? true)
             {
-                sb.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
+                sb.AppendItem(item.Size.FormKey, "Size");
             }
-            if ((printMask?.DNAM ?? true)
-                && item.DNAM is {} DNAMItem)
+            if (printMask?.Distance ?? true)
             {
-                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+                sb.AppendItem(item.Distance.FormKeyNullable, "Distance");
             }
-            if ((printMask?.CNAM ?? true)
-                && item.CNAM is {} CNAMItem)
+            if (printMask?.Cooldown ?? true)
             {
-                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
+                sb.AppendItem(item.Cooldown.FormKeyNullable, "Cooldown");
             }
-            if ((printMask?.BNAM ?? true)
-                && item.BNAM is {} BNAMItem)
+            if (printMask?.Faction ?? true)
             {
-                sb.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
+                sb.AppendItem(item.Faction.FormKeyNullable, "Faction");
             }
         }
         
-        public static AFFERecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static AffinityEvent_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new AFFERecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new AffinityEvent_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (AFFERecord_FieldIndex)((int)index);
+                    return (AffinityEvent_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1398,43 +1392,43 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAFFERecordGetter? lhs,
-            IAFFERecordGetter? rhs,
+            IAffinityEventGetter? lhs,
+            IAffinityEventGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.FNAM) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.FNAM.Span, rhs.FNAM.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.NLDT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.NLDT) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.NLDT, rhs.NLDT)) return false;
+                if (!string.Equals(lhs.NLDT, rhs.NLDT)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.NNAMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorReactions) ?? true))
             {
-                if (!lhs.NNAMs.SequenceEqual(rhs.NNAMs, (l, r) => ((AFFESubrecordCommon)((IAFFESubrecordGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AFFERecord_FieldIndex.NNAMs)))) return false;
+                if (!lhs.ActorReactions.SequenceEqual(rhs.ActorReactions, (l, r) => ((ActorReactionCommon)((IActorReactionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AffinityEvent_FieldIndex.ActorReactions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.ANAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorValue) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.ANAM, rhs.ANAM)) return false;
+                if (!lhs.ActorValue.Equals(rhs.ActorValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.ENAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Size) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.ENAM, rhs.ENAM)) return false;
+                if (!lhs.Size.Equals(rhs.Size)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.DNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Distance) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
+                if (!lhs.Distance.Equals(rhs.Distance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.CNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Cooldown) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
+                if (!lhs.Cooldown.Equals(rhs.Cooldown)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.BNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Faction) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.BNAM, rhs.BNAM)) return false;
+                if (!lhs.Faction.Equals(rhs.Faction)) return false;
             }
             return true;
         }
@@ -1445,8 +1439,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IAFFERecordGetter?)lhs,
-                rhs: rhs as IAFFERecordGetter,
+                lhs: (IAffinityEventGetter?)lhs,
+                rhs: rhs as IAffinityEventGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1456,55 +1450,37 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IAFFERecordGetter?)lhs,
-                rhs: rhs as IAFFERecordGetter,
+                lhs: (IAffinityEventGetter?)lhs,
+                rhs: rhs as IAffinityEventGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IAFFERecordGetter item)
+        public virtual int GetHashCode(IAffinityEventGetter item)
         {
             var hash = new HashCode();
-            if (item.FNAM is {} FNAMItem)
+            hash.Add(item.FNAM);
+            if (item.NLDT is {} NLDTitem)
             {
-                hash.Add(FNAMItem);
+                hash.Add(NLDTitem);
             }
-            if (item.NLDT is {} NLDTItem)
-            {
-                hash.Add(NLDTItem);
-            }
-            hash.Add(item.NNAMs);
-            if (item.ANAM is {} ANAMItem)
-            {
-                hash.Add(ANAMItem);
-            }
-            if (item.ENAM is {} ENAMItem)
-            {
-                hash.Add(ENAMItem);
-            }
-            if (item.DNAM is {} DNAMItem)
-            {
-                hash.Add(DNAMItem);
-            }
-            if (item.CNAM is {} CNAMItem)
-            {
-                hash.Add(CNAMItem);
-            }
-            if (item.BNAM is {} BNAMItem)
-            {
-                hash.Add(BNAMItem);
-            }
+            hash.Add(item.ActorReactions);
+            hash.Add(item.ActorValue);
+            hash.Add(item.Size);
+            hash.Add(item.Distance);
+            hash.Add(item.Cooldown);
+            hash.Add(item.Faction);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAFFERecordGetter)item);
+            return GetHashCode(item: (IAffinityEventGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAFFERecordGetter)item);
+            return GetHashCode(item: (IAffinityEventGetter)item);
         }
         
         #endregion
@@ -1512,26 +1488,44 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return AFFERecord.GetNew();
+            return AffinityEvent.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAFFERecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAffinityEventGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
+            foreach (var item in obj.ActorReactions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield return FormLinkInformation.Factory(obj.ActorValue);
+            yield return FormLinkInformation.Factory(obj.Size);
+            if (FormLinkInformation.TryFactory(obj.Distance, out var DistanceInfo))
+            {
+                yield return DistanceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Cooldown, out var CooldownInfo))
+            {
+                yield return CooldownInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Faction, out var FactionInfo))
+            {
+                yield return FactionInfo;
+            }
             yield break;
         }
         
         #region Duplicate
-        public AFFERecord Duplicate(
-            IAFFERecordGetter item,
+        public AffinityEvent Duplicate(
+            IAffinityEventGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new AFFERecord(formKey);
+            var newRec = new AffinityEvent(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1542,7 +1536,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAFFERecordGetter)item,
+                item: (IAffinityEventGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1553,7 +1547,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAFFERecordGetter)item,
+                item: (IAffinityEventGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1563,14 +1557,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class AFFERecordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class AffinityEventSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly AFFERecordSetterTranslationCommon Instance = new AFFERecordSetterTranslationCommon();
+        public new static readonly AffinityEventSetterTranslationCommon Instance = new AffinityEventSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IAFFERecordInternal item,
-            IAFFERecordGetter rhs,
+            IAffinityEventInternal item,
+            IAffinityEventGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1584,8 +1578,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IAFFERecord item,
-            IAFFERecordGetter rhs,
+            IAffinityEvent item,
+            IAffinityEventGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1596,35 +1590,21 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.FNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.FNAM) ?? true))
             {
-                if(rhs.FNAM is {} FNAMrhs)
-                {
-                    item.FNAM = FNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.FNAM = default;
-                }
+                item.FNAM = rhs.FNAM.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.NLDT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.NLDT) ?? true))
             {
-                if(rhs.NLDT is {} NLDTrhs)
-                {
-                    item.NLDT = NLDTrhs.ToArray();
-                }
-                else
-                {
-                    item.NLDT = default;
-                }
+                item.NLDT = rhs.NLDT;
             }
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.NNAMs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorReactions) ?? true))
             {
-                errorMask?.PushIndex((int)AFFERecord_FieldIndex.NNAMs);
+                errorMask?.PushIndex((int)AffinityEvent_FieldIndex.ActorReactions);
                 try
                 {
-                    item.NNAMs.SetTo(
-                        rhs.NNAMs
+                    item.ActorReactions.SetTo(
+                        rhs.ActorReactions
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1642,60 +1622,25 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.ANAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorValue) ?? true))
             {
-                if(rhs.ANAM is {} ANAMrhs)
-                {
-                    item.ANAM = ANAMrhs.ToArray();
-                }
-                else
-                {
-                    item.ANAM = default;
-                }
+                item.ActorValue.SetTo(rhs.ActorValue.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.ENAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Size) ?? true))
             {
-                if(rhs.ENAM is {} ENAMrhs)
-                {
-                    item.ENAM = ENAMrhs.ToArray();
-                }
-                else
-                {
-                    item.ENAM = default;
-                }
+                item.Size.SetTo(rhs.Size.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.DNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Distance) ?? true))
             {
-                if(rhs.DNAM is {} DNAMrhs)
-                {
-                    item.DNAM = DNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.DNAM = default;
-                }
+                item.Distance.SetTo(rhs.Distance.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.CNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Cooldown) ?? true))
             {
-                if(rhs.CNAM is {} CNAMrhs)
-                {
-                    item.CNAM = CNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.CNAM = default;
-                }
+                item.Cooldown.SetTo(rhs.Cooldown.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AFFERecord_FieldIndex.BNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Faction) ?? true))
             {
-                if(rhs.BNAM is {} BNAMrhs)
-                {
-                    item.BNAM = BNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.BNAM = default;
-                }
+                item.Faction.SetTo(rhs.Faction.FormKeyNullable);
             }
         }
         
@@ -1707,8 +1652,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAFFERecordInternal)item,
-                rhs: (IAFFERecordGetter)rhs,
+                item: (IAffinityEventInternal)item,
+                rhs: (IAffinityEventGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1722,8 +1667,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAFFERecord)item,
-                rhs: (IAFFERecordGetter)rhs,
+                item: (IAffinityEvent)item,
+                rhs: (IAffinityEventGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1737,8 +1682,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAFFERecordInternal)item,
-                rhs: (IAFFERecordGetter)rhs,
+                item: (IAffinityEventInternal)item,
+                rhs: (IAffinityEventGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1752,8 +1697,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAFFERecord)item,
-                rhs: (IAFFERecordGetter)rhs,
+                item: (IAffinityEvent)item,
+                rhs: (IAffinityEventGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1761,12 +1706,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public AFFERecord DeepCopy(
-            IAFFERecordGetter item,
-            AFFERecord.TranslationMask? copyMask = null)
+        public AffinityEvent DeepCopy(
+            IAffinityEventGetter item,
+            AffinityEvent.TranslationMask? copyMask = null)
         {
-            AFFERecord ret = (AFFERecord)((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).GetNew();
-            ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AffinityEvent ret = (AffinityEvent)((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).GetNew();
+            ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1775,30 +1720,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public AFFERecord DeepCopy(
-            IAFFERecordGetter item,
-            out AFFERecord.ErrorMask errorMask,
-            AFFERecord.TranslationMask? copyMask = null)
+        public AffinityEvent DeepCopy(
+            IAffinityEventGetter item,
+            out AffinityEvent.ErrorMask errorMask,
+            AffinityEvent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AFFERecord ret = (AFFERecord)((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).GetNew();
-            ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AffinityEvent ret = (AffinityEvent)((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).GetNew();
+            ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = AFFERecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AffinityEvent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public AFFERecord DeepCopy(
-            IAFFERecordGetter item,
+        public AffinityEvent DeepCopy(
+            IAffinityEventGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            AFFERecord ret = (AFFERecord)((AFFERecordCommon)((IAFFERecordGetter)item).CommonInstance()!).GetNew();
-            ((AFFERecordSetterTranslationCommon)((IAFFERecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AffinityEvent ret = (AffinityEvent)((AffinityEventCommon)((IAffinityEventGetter)item).CommonInstance()!).GetNew();
+            ((AffinityEventSetterTranslationCommon)((IAffinityEventGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1814,21 +1759,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AFFERecord
+    public partial class AffinityEvent
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AFFERecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => AFFERecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AffinityEvent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AffinityEvent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AFFERecordCommon.Instance;
+        protected override object CommonInstance() => AffinityEventCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return AFFERecordSetterCommon.Instance;
+            return AffinityEventSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AFFERecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AffinityEventSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1839,14 +1784,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AFFERecordBinaryWriteTranslation :
+    public partial class AffinityEventBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AFFERecordBinaryWriteTranslation Instance = new();
+        public new static readonly AffinityEventBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IAFFERecordGetter item,
+            IAffinityEventGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1858,46 +1803,47 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.FNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NLDT,
-                header: translationParams.ConvertToCustom(RecordTypes.NLDT));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAFFESubrecordGetter>.Instance.Write(
+                header: translationParams.ConvertToCustom(RecordTypes.NLDT),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActorReactionGetter>.Instance.Write(
                 writer: writer,
-                items: item.NNAMs,
-                transl: (MutagenWriter subWriter, IAFFESubrecordGetter subItem, TypedWriteParams conv) =>
+                items: item.ActorReactions,
+                transl: (MutagenWriter subWriter, IActorReactionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((AFFESubrecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((ActorReactionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ANAM,
+                item: item.ActorValue,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ENAM,
+                item: item.Size,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.DNAM,
+                item: item.Distance,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CNAM,
+                item: item.Cooldown,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BNAM,
+                item: item.Faction,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
         }
 
         public void Write(
             MutagenWriter writer,
-            IAFFERecordGetter item,
+            IAffinityEventGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1932,7 +1878,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IAFFERecordGetter)item,
+                item: (IAffinityEventGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1943,7 +1889,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IAFFERecordGetter)item,
+                item: (IAffinityEventGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1954,20 +1900,20 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IAFFERecordGetter)item,
+                item: (IAffinityEventGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class AFFERecordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class AffinityEventBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly AFFERecordBinaryCreateTranslation Instance = new AFFERecordBinaryCreateTranslation();
+        public new static readonly AffinityEventBinaryCreateTranslation Instance = new AffinityEventBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AFFE;
         public static ParseResult FillBinaryRecordTypes(
-            IAFFERecordInternal item,
+            IAffinityEventInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1982,54 +1928,56 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AFFERecord_FieldIndex.FNAM;
+                    return (int)AffinityEvent_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.NLDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NLDT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AFFERecord_FieldIndex.NLDT;
+                    item.NLDT = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)AffinityEvent_FieldIndex.NLDT;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.RNAM:
                 {
-                    item.NNAMs.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AFFESubrecord>.Instance.Parse(
+                    item.ActorReactions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorReaction>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: AFFESubrecord_Registration.TriggerSpecs,
+                            triggeringRecord: ActorReaction_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: AFFESubrecord.TryCreateFromBinary));
-                    return (int)AFFERecord_FieldIndex.NNAMs;
+                            transl: ActorReaction.TryCreateFromBinary));
+                    return (int)AffinityEvent_FieldIndex.ActorReactions;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ANAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AFFERecord_FieldIndex.ANAM;
+                    item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ENAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AFFERecord_FieldIndex.ENAM;
+                    item.Size.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.Size;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AFFERecord_FieldIndex.DNAM;
+                    item.Distance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.Distance;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AFFERecord_FieldIndex.CNAM;
+                    item.Cooldown.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.Cooldown;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AFFERecord_FieldIndex.BNAM;
+                    item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.Faction;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2049,7 +1997,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class AFFERecordBinaryTranslationMixIn
+    public static class AffinityEventBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2058,65 +2006,66 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class AFFERecordBinaryOverlay :
+    internal partial class AffinityEventBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IAFFERecordGetter
+        IAffinityEventGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AFFERecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => AFFERecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AffinityEvent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AffinityEvent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AFFERecordCommon.Instance;
+        protected override object CommonInstance() => AffinityEventCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AFFERecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AffinityEventSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AffinityEventCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AFFERecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AffinityEventBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AFFERecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AffinityEventBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAFFERecord);
+        protected override Type LinkType => typeof(IAffinityEvent);
 
 
         #region FNAM
         private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public ReadOnlyMemorySlice<Byte> FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         #region NLDT
         private int? _NLDTLocation;
-        public ReadOnlyMemorySlice<Byte>? NLDT => _NLDTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NLDTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public String? NLDT => _NLDTLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NLDTLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IAFFESubrecordGetter> NNAMs { get; private set; } = Array.Empty<IAFFESubrecordGetter>();
-        #region ANAM
-        private int? _ANAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ANAM => _ANAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = Array.Empty<IActorReactionGetter>();
+        #region ActorValue
+        private int? _ActorValueLocation;
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => _ActorValueLocation.HasValue ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueLocation.Value, _package.MetaData.Constants)))) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
-        #region ENAM
-        private int? _ENAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Size
+        private int? _SizeLocation;
+        public IFormLinkGetter<IGlobalGetter> Size => _SizeLocation.HasValue ? new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SizeLocation.Value, _package.MetaData.Constants)))) : FormLink<IGlobalGetter>.Null;
         #endregion
-        #region DNAM
-        private int? _DNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Distance
+        private int? _DistanceLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> Distance => _DistanceLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DistanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
-        #region CNAM
-        private int? _CNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Cooldown
+        private int? _CooldownLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> Cooldown => _CooldownLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CooldownLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
-        #region BNAM
-        private int? _BNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Faction
+        private int? _FactionLocation;
+        public IFormLinkNullableGetter<IFactionGetter> Faction => _FactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2124,7 +2073,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected AFFERecordBinaryOverlay(
+        protected AffinityEventBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2134,7 +2083,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IAFFERecordGetter AFFERecordFactory(
+        public static IAffinityEventGetter AffinityEventFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -2146,7 +2095,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new AFFERecordBinaryOverlay(
+            var ret = new AffinityEventBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -2164,12 +2113,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IAFFERecordGetter AFFERecordFactory(
+        public static IAffinityEventGetter AffinityEventFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return AFFERecordFactory(
+            return AffinityEventFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -2190,47 +2139,47 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
-                    return (int)AFFERecord_FieldIndex.FNAM;
+                    return (int)AffinityEvent_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.NLDT:
                 {
                     _NLDTLocation = (stream.Position - offset);
-                    return (int)AFFERecord_FieldIndex.NLDT;
+                    return (int)AffinityEvent_FieldIndex.NLDT;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.RNAM:
                 {
-                    this.NNAMs = this.ParseRepeatedTypelessSubrecord<IAFFESubrecordGetter>(
+                    this.ActorReactions = this.ParseRepeatedTypelessSubrecord<IActorReactionGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: AFFESubrecord_Registration.TriggerSpecs,
-                        factory: AFFESubrecordBinaryOverlay.AFFESubrecordFactory);
-                    return (int)AFFERecord_FieldIndex.NNAMs;
+                        trigger: ActorReaction_Registration.TriggerSpecs,
+                        factory: ActorReactionBinaryOverlay.ActorReactionFactory);
+                    return (int)AffinityEvent_FieldIndex.ActorReactions;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _ANAMLocation = (stream.Position - offset);
-                    return (int)AFFERecord_FieldIndex.ANAM;
+                    _ActorValueLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _ENAMLocation = (stream.Position - offset);
-                    return (int)AFFERecord_FieldIndex.ENAM;
+                    _SizeLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.Size;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset);
-                    return (int)AFFERecord_FieldIndex.DNAM;
+                    _DistanceLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.Distance;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset);
-                    return (int)AFFERecord_FieldIndex.CNAM;
+                    _CooldownLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.Cooldown;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BNAMLocation = (stream.Position - offset);
-                    return (int)AFFERecord_FieldIndex.BNAM;
+                    _FactionLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.Faction;
                 }
                 default:
                     return base.FillRecordType(
@@ -2249,7 +2198,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AFFERecordMixIn.Print(
+            AffinityEventMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -2259,7 +2208,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<AFFERecord>.ToString(this);
+            return MajorRecordPrinter<AffinityEvent>.ToString(this);
         }
 
         #region Equals and Hash
@@ -2269,16 +2218,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAFFERecordGetter rhs) return false;
-            return ((AFFERecordCommon)((IAFFERecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IAffinityEventGetter rhs) return false;
+            return ((AffinityEventCommon)((IAffinityEventGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAFFERecordGetter? obj)
+        public bool Equals(IAffinityEventGetter? obj)
         {
-            return ((AFFERecordCommon)((IAFFERecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((AffinityEventCommon)((IAffinityEventGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AFFERecordCommon)((IAFFERecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AffinityEventCommon)((IAffinityEventGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

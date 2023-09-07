@@ -14,7 +14,7 @@
       <Group name="DamageTypes" refName="DamageType" />
       <Group name="Classes" refName="Class" />
       <Group name="Factions" refName="Faction" />
-      <Group name="AFFE" refName="AFFERecord" />
+      <Group name="AffinityEvents" refName="AffinityEvent" />
       <Group name="HeadParts" refName="HeadPart" />
       <Group name="AOPF" refName="AOPFRecord" />
     </Fields>

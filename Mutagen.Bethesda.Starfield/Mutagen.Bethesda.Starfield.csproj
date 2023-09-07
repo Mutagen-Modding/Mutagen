@@ -337,11 +337,11 @@
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
-    <Compile Include="Records\Major Records\AFFERecord_Generated.cs">
-      <DependentUpon>AFFERecord.xml</DependentUpon>
+    <Compile Include="Records\Major Records\AffinityEvent_Generated.cs">
+      <DependentUpon>AffinityEvent.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AFFESubrecord_Generated.cs">
-      <DependentUpon>AFFERecord.xml</DependentUpon>
+      <DependentUpon>AffinityEvent.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\HeadPart_Generated.cs">
       <DependentUpon>HeadPart.xml</DependentUpon>
@@ -354,6 +354,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AOPFRecord_Generated.cs">
       <DependentUpon>AOPFRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorReaction_Generated.cs">
+      <DependentUpon>AffinityEvent.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

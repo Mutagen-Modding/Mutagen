@@ -56,27 +56,27 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
-        /// Scope a load order query to AFFERecord
+        /// Scope a load order query to AffinityEvent
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on AFFERecord</returns>
-        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAFFERecord, IAFFERecordGetter> AFFERecord(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        /// <returns>A typed object to do further queries on AffinityEvent</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAffinityEvent, IAffinityEventGetter> AffinityEvent(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAFFERecord, IAFFERecordGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IAFFERecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAFFERecord, IAFFERecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAffinityEvent, IAffinityEventGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IAffinityEventGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAffinityEvent, IAffinityEventGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to AFFERecord
+        /// Scope a load order query to AffinityEvent
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on AFFERecord</returns>
-        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAFFERecord, IAFFERecordGetter> AFFERecord(this IEnumerable<IStarfieldModGetter> mods)
+        /// <returns>A typed object to do further queries on AffinityEvent</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAffinityEvent, IAffinityEventGetter> AffinityEvent(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAFFERecord, IAFFERecordGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IAFFERecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAFFERecord, IAFFERecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAffinityEvent, IAffinityEventGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IAffinityEventGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAffinityEvent, IAffinityEventGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

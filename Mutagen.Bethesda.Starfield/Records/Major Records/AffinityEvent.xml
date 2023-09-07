@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AffinityEvent" recordType="AFFE" objType="Record" baseClass="StarfieldMajorRecord" GUID="484ec00c-9926-41b1-b54e-fb0575337ee4" ID="708">
+    <Fields>
+      <ByteArray name="FNAM" recordType="FNAM" unknown="true" nullable="false" />
+      <String name="NLDT" recordType="NLDT" />
+      <RefList name="ActorReactions" refName="ActorReaction" />
+      <FormLink name="ActorValue" recordType="ANAM" refName="ActorValueInformation" nullable="False" />
+      <FormLink name="Size" recordType="ENAM" refName="Global" nullable="False" />
+      <FormLink name="Distance" recordType="DNAM" refName="Global" />
+      <FormLink name="Cooldown" recordType="CNAM" refName="Global" />
+      <FormLink name="Faction" recordType="BNAM" refName="Faction" />
+    </Fields>
+  </Object>
+  <Object name="ActorReaction" objType="Subrecord" GUID="1304f989-ec8b-4c45-990a-407fee758e34" ID="709">
+    <Fields>
+      <FormLink name="Actor" recordType="NNAM" refName="Npc" />
+      <FormLink name="Reaction" recordType="RNAM" refName="Global" />
+    </Fields>
+  </Object>
+</Loqui>
