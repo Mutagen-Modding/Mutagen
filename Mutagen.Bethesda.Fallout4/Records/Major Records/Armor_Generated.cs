@@ -4626,7 +4626,7 @@ namespace Mutagen.Bethesda.Fallout4
                     _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IArmorModelGetter>(
                         package: _package,
                         stream: stream,
-                        creator: (s, p, r) => ArmorModelBinaryOverlay.ArmorModelFactory(s, p, r),
+                        creator: static (s, p, r) => ArmorModelBinaryOverlay.ArmorModelFactory(s, p, r),
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: Armor_Registration.WorldModelMaleConverter);
                     return (int)Armor_FieldIndex.WorldModel;

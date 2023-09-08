@@ -3592,7 +3592,7 @@ namespace Mutagen.Bethesda.Oblivion
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
                         translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }

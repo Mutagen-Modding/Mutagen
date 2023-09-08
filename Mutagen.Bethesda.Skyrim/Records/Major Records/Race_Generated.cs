@@ -8810,7 +8810,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
+                        creator: static (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
                         translationParams: Race_Registration.SkeletalModelConverter);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
@@ -8881,7 +8881,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
+                        creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
                         translationParams: translationParams);
                     return (int)Race_FieldIndex.BodyData;
                 }
@@ -8922,7 +8922,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         translationParams: translationParams);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
@@ -9045,7 +9045,7 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         marker: RecordTypes.NAM0,
                         stream: stream,
-                        creator: (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
+                        creator: static (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
                     return (int)Race_FieldIndex.HeadData;
                 }

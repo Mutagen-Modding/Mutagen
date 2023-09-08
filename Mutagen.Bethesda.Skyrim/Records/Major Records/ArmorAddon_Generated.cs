@@ -2993,7 +2993,7 @@ namespace Mutagen.Bethesda.Skyrim
                     _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
                         package: _package,
                         stream: stream,
-                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter);
                     return (int)ArmorAddon_FieldIndex.WorldModel;
@@ -3004,7 +3004,7 @@ namespace Mutagen.Bethesda.Skyrim
                     _FirstPersonModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
                         package: _package,
                         stream: stream,
-                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
@@ -3017,7 +3017,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.NAM0,
                         female: RecordTypes.NAM1,
                         stream: stream,
-                        creator: (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        creator: static (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
                         fallback: FormLinkNullable<TextureSet>.Null);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
@@ -3029,7 +3029,7 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.NAM2,
                         female: RecordTypes.NAM3,
                         stream: stream,
-                        creator: (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        creator: static (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
                         fallback: FormLinkNullable<FormList>.Null);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }

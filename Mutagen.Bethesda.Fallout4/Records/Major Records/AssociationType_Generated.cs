@@ -1684,7 +1684,7 @@ namespace Mutagen.Bethesda.Fallout4
                         male: RecordTypes.MPRT,
                         female: RecordTypes.FPRT,
                         stream: stream,
-                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
                     return (int)AssociationType_FieldIndex.ParentTitle;
                 }
                 case RecordTypeInts.MCHT:
@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Fallout4
                         male: RecordTypes.MCHT,
                         female: RecordTypes.FCHT,
                         stream: stream,
-                        creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
                     return (int)AssociationType_FieldIndex.Title;
                 }
                 case RecordTypeInts.DATA:

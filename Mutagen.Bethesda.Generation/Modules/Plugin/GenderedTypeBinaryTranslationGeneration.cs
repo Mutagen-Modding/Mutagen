@@ -419,7 +419,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         if (gendered.SubTypeGeneration is LoquiType loqui)
                         {
                             args.AddPassArg("stream");
-                            args.Add($"creator: (s, p, r) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(s, p, r)");
+                            args.Add($"creator: static (s, p, r) => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(s, p, r)");
                             var subData = loqui.GetFieldData();
                             if (subData?.RecordTypeConverter != null
                                 && subData.RecordTypeConverter.FromConversions.Count > 0)
@@ -437,7 +437,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         {
                             args.AddPassArg("stream");
                             this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subGen);
-                            args.Add($"creator: (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})", "p")}");
+                            args.Add($"creator: static (m, p) => {subGen.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(m, p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})", "p")}");
                         }
                         if (gendered.FemaleConversions != null)
                         {
