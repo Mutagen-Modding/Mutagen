@@ -74,7 +74,8 @@ partial class AObjectModificationBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryDataParseCustom(
         MutagenFrame frame,
-        IAObjectModificationInternal item)
+        IAObjectModificationInternal item,
+        PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.DATA);
         var includeCount = frame.ReadInt32();

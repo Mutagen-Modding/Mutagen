@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Oblivion;
 
 partial class LeveledItemBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
+    public static partial ParseResult FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item, PreviousParse lastParsed)
     {
         var rec = HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var length);
         if (length != 1)

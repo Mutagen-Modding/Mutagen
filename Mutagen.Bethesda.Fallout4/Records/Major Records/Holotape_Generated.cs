@@ -2445,7 +2445,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return HolotapeBinaryCreateTranslation.FillBinaryTypeParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2462,7 +2463,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return HolotapeBinaryCreateTranslation.FillBinaryDataParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -2483,11 +2485,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryTypeParseCustom(
             MutagenFrame frame,
-            IHolotapeInternal item);
+            IHolotapeInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryDataParseCustom(
             MutagenFrame frame,
-            IHolotapeInternal item);
+            IHolotapeInternal item,
+            PreviousParse lastParsed);
 
     }
 

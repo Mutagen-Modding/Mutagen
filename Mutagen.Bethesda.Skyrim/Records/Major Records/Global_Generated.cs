@@ -1283,7 +1283,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1299,7 +1300,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryTypeCharCustom(
             MutagenFrame frame,
-            IGlobalInternal item);
+            IGlobalInternal item,
+            PreviousParse lastParsed);
 
     }
 

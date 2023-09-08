@@ -3249,7 +3249,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3275,7 +3276,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
@@ -3320,11 +3322,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryNextAliasIDCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
     }
 

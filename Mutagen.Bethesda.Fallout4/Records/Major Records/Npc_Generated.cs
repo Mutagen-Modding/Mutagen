@@ -9565,7 +9565,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return NpcBinaryCreateTranslation.FillBinaryMorphParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.TETI:
                 {
@@ -9636,7 +9637,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryMorphParsingCustom(
             MutagenFrame frame,
-            INpcInternal item);
+            INpcInternal item,
+            PreviousParse lastParsed);
 
     }
 

@@ -207,7 +207,7 @@ partial class DialogTopicBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
+    public static partial ParseResult FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
     {
         // Skip counter
         frame.ReadSubrecord();

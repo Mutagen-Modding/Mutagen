@@ -6699,7 +6699,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XMBP:
                 {
@@ -7014,7 +7015,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryBoundDataCustom(
             MutagenFrame frame,
-            IPlacedObjectInternal item);
+            IPlacedObjectInternal item,
+            PreviousParse lastParsed);
 
     }
 

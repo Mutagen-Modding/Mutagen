@@ -69,7 +69,7 @@ partial class WeatherBinaryCreateTranslation
             BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated));
     }
 
-    public static partial ParseResult FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
+    public static partial ParseResult FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
     {
         FillBinaryCloudAlphas(frame, item.Clouds);
         return null;
@@ -90,7 +90,7 @@ partial class WeatherBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item)
+    public static partial ParseResult FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
     {
         FillBinaryCloudColors(frame, item.Clouds);
         return null;
@@ -127,7 +127,7 @@ partial class WeatherBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
+    public static partial ParseResult FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
     {
         FillBinaryCloudXSpeeds(frame, item.Clouds);
         return null;
@@ -142,7 +142,7 @@ partial class WeatherBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item)
+    public static partial ParseResult FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
     {
         FillBinaryDisabledCloudLayers(frame, item.Clouds);
         return null;

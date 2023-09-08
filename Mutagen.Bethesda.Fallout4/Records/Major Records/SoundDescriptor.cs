@@ -25,7 +25,7 @@ partial class SoundDescriptorBinaryCreateTranslation
         AutoWeapon = 0xED157AE3 
     }
     
-    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, ISoundDescriptorInternal item)
+    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, ISoundDescriptorInternal item, PreviousParse lastParsed)
     {
         if (item.Data == null)
         {

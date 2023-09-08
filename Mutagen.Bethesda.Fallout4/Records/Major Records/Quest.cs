@@ -78,7 +78,7 @@ partial class QuestBinaryCreateTranslation
         ConditionBinaryCreateTranslation.FillConditionsList(item.DialogConditions, frame);
     }
 
-    public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         var nextHeader = frame.ReadSubrecord(RecordTypes.NEXT);
         if (nextHeader.Content.Length != 0)
@@ -99,7 +99,7 @@ partial class QuestBinaryCreateTranslation
         RecordTypes.ALMI,
     };
 
-    public static partial ParseResult FillBinaryAliasParseCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial ParseResult FillBinaryAliasParseCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         frame = frame.SpawnAll();
         frame.TryReadSubrecord(RecordTypes.ANAM, out _);

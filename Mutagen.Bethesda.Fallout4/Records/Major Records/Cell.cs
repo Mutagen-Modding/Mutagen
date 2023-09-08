@@ -44,7 +44,7 @@ public partial class Cell
 
 partial class CellBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryCombinedMeshLogicCustom(MutagenFrame frame, ICellInternal item)
+    public static partial ParseResult FillBinaryCombinedMeshLogicCustom(MutagenFrame frame, ICellInternal item, PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.XCRI);
         var meshCount = frame.ReadUInt32();

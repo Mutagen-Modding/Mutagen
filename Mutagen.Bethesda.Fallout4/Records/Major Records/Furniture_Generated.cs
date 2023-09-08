@@ -4619,7 +4619,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WBDT:
                 {
@@ -4731,7 +4732,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryFlags2Custom(
             MutagenFrame frame,
-            IFurnitureInternal item);
+            IFurnitureInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryEnabledEntryPointsCustom(
             MutagenFrame frame,

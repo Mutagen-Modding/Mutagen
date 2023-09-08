@@ -8125,13 +8125,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PHWT:
                 {
                     return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WKMV:
                 {
@@ -8222,11 +8224,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
     }
 

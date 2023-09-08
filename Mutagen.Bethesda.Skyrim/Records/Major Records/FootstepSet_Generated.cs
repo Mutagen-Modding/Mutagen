@@ -2140,7 +2140,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2156,7 +2157,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryCountCustom(
             MutagenFrame frame,
-            IFootstepSetInternal item);
+            IFootstepSetInternal item,
+            PreviousParse lastParsed);
 
     }
 

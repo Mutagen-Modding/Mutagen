@@ -4638,7 +4638,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return WaterBinaryCreateTranslation.FillBinaryNoiseTextureParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4658,7 +4659,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryNoiseTextureParsingCustom(
             MutagenFrame frame,
-            IWaterInternal item);
+            IWaterInternal item,
+            PreviousParse lastParsed);
 
     }
 

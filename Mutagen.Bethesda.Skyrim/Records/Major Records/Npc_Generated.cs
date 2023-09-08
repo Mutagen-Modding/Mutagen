@@ -6075,7 +6075,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return NpcBinaryCreateTranslation.FillBinaryDataMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -6229,7 +6230,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryDataMarkerCustom(
             MutagenFrame frame,
-            INpcInternal item);
+            INpcInternal item,
+            PreviousParse lastParsed);
 
     }
 

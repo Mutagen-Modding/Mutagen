@@ -2262,7 +2262,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2278,7 +2279,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
-            IRegionInternal item);
+            IRegionInternal item,
+            PreviousParse lastParsed);
 
     }
 

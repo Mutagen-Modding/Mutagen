@@ -97,7 +97,7 @@ partial class ImageSpaceBinaryCreateTranslation
     {
     }
 
-    public static partial ParseResult FillBinaryENAMParsingCustom(MutagenFrame frame, IImageSpaceInternal item)
+    public static partial ParseResult FillBinaryENAMParsingCustom(MutagenFrame frame, IImageSpaceInternal item, PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.ENAM);
         item.HdrEyeAdaptSpeed = frame.ReadFloat();

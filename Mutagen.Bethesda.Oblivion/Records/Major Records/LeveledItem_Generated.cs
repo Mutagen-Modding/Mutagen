@@ -1613,7 +1613,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return LeveledItemBinaryCreateTranslation.FillBinaryVestigialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1629,7 +1630,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial ParseResult FillBinaryVestigialCustom(
             MutagenFrame frame,
-            ILeveledItemInternal item);
+            ILeveledItemInternal item,
+            PreviousParse lastParsed);
 
     }
 

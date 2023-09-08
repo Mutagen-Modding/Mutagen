@@ -1243,7 +1243,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1259,7 +1260,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial ParseResult FillBinaryTypeCharCustom(
             MutagenFrame frame,
-            IGlobalInternal item);
+            IGlobalInternal item,
+            PreviousParse lastParsed);
 
     }
 

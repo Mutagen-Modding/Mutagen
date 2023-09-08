@@ -7583,19 +7583,22 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PNAM:
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryCloudColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.JNAM:
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryCloudAlphasCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -7794,7 +7797,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -7909,19 +7913,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryCloudColorsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryCloudAlphasCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryDisabledCloudLayersCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(
             MutagenFrame frame,

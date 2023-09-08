@@ -59,7 +59,8 @@ partial class StaticBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryDistantLodParsingCustom(
         MutagenFrame frame,
-        IStaticInternal item)
+        IStaticInternal item, 
+        PreviousParse lastParsed)
     {
         var amount = StaticBinaryCreateTranslation.ReadHeader(frame);
         if (amount == 0) return (int)Static_FieldIndex.DistantLods;

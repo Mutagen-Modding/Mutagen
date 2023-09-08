@@ -3826,7 +3826,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return APlacedTrapBinaryCreateTranslation.FillBinaryTrapFormCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XEZN:
                 {
@@ -4022,7 +4023,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryTrapFormCustom(
             MutagenFrame frame,
-            IAPlacedTrapInternal item);
+            IAPlacedTrapInternal item,
+            PreviousParse lastParsed);
 
     }
 

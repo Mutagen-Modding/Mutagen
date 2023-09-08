@@ -20,7 +20,7 @@ public partial class Holotape
 
 partial class HolotapeBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryTypeParseCustom(MutagenFrame frame, IHolotapeInternal item)
+    public static partial ParseResult FillBinaryTypeParseCustom(MutagenFrame frame, IHolotapeInternal item, PreviousParse lastParsed)
     {
         var sub = frame.ReadSubrecordHeader(RecordTypes.DNAM);
         var type = EnumBinaryTranslation<Holotape.Types, MutagenFrame, MutagenWriter>.Instance.Parse(frame, 1);
@@ -46,7 +46,7 @@ partial class HolotapeBinaryCreateTranslation
         return (int)Holotape_FieldIndex.PickUpSound;
     }
 
-    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, IHolotapeInternal item)
+    public static partial ParseResult FillBinaryDataParseCustom(MutagenFrame frame, IHolotapeInternal item, PreviousParse lastParsed)
     {
         var sub = frame.ReadSubrecordHeader();
         switch (sub.RecordTypeInt)

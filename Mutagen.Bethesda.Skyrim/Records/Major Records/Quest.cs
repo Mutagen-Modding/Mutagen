@@ -75,7 +75,7 @@ partial class QuestBinaryCreateTranslation
         ConditionBinaryCreateTranslation.FillConditionsList(item.DialogConditions, frame);
     }
 
-    public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         var nextHeader = frame.ReadSubrecord();
         if (nextHeader.RecordType != RecordTypes.NEXT
@@ -87,7 +87,7 @@ partial class QuestBinaryCreateTranslation
         return null;
     }
 
-    public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial ParseResult FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         // Skip
         frame.ReadSubrecord();

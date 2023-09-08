@@ -2925,7 +2925,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return AObjectModificationBinaryCreateTranslation.FillBinaryDataParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2981,7 +2982,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryDataParseCustom(
             MutagenFrame frame,
-            IAObjectModificationInternal item);
+            IAObjectModificationInternal item,
+            PreviousParse lastParsed);
 
     }
 

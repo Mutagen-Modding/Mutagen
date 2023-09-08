@@ -27,7 +27,7 @@ public partial class IdleMarker
 
 partial class IdleMarkerBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item)
+    public static partial ParseResult FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item, PreviousParse lastParsed)
     {
         // Skip. Don't care
         frame.ReadSubrecord();

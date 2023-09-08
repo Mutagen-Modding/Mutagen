@@ -4877,7 +4877,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -4907,7 +4908,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return QuestBinaryCreateTranslation.FillBinaryAliasParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -4959,11 +4961,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryAliasParseCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
     }
 

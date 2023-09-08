@@ -169,7 +169,7 @@ partial class PlacedObjectBinaryCreateTranslation
     public const byte HasImageSpaceFlag = 0x40;
     public const byte HasLightingTemplateFlag = 0x80;
 
-    public static partial ParseResult FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item)
+    public static partial ParseResult FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item, PreviousParse lastParsed)
     {
         var header = frame.ReadSubrecord();
         if (header.Content.Length != 4)

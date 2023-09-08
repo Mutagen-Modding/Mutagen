@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Skyrim;
 
 partial class FootstepSetBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryCountCustom(MutagenFrame frame, IFootstepSetInternal item)
+    public static partial ParseResult FillBinaryCountCustom(MutagenFrame frame, IFootstepSetInternal item, PreviousParse lastParsed)
     {
         var counts = GetListCounts(frame);
 

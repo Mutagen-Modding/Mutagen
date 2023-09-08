@@ -19,7 +19,7 @@ public partial class Region
 
 partial class RegionBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, PreviousParse lastParsed)
     {
         var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out _);
         while (rdat.Equals(RecordTypes.RDAT))

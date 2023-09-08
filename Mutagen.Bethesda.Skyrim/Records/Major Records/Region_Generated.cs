@@ -2402,7 +2402,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return RegionBinaryCreateTranslation.FillBinaryRegionAreaLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2418,7 +2419,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
-            IRegionInternal item);
+            IRegionInternal item,
+            PreviousParse lastParsed);
 
     }
 

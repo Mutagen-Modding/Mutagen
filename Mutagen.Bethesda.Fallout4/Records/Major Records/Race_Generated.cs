@@ -9037,13 +9037,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesListingParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PHWT:
                 {
                     return RaceBinaryCreateTranslation.FillBinaryFaceFxPhonemesRawParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WKMV:
                 {
@@ -9165,7 +9167,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return RaceBinaryCreateTranslation.FillBinaryBoneDataParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -9197,11 +9200,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryMorphValuesCustom(
             MutagenFrame frame,
@@ -9209,7 +9214,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryBoneDataParseCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
     }
 

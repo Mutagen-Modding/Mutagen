@@ -41,8 +41,9 @@ partial class WaterBinaryCreateTranslation
     }
 
     public static partial ParseResult FillBinaryNoiseTextureParsingCustom(
-            MutagenFrame frame,
-        IWaterInternal item)
+        MutagenFrame frame,
+        IWaterInternal item,
+        PreviousParse lastParsed)
     {
         var subRecord = frame.ReadSubrecord();
         switch (subRecord.RecordTypeInt)

@@ -2818,7 +2818,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return StaticBinaryCreateTranslation.FillBinaryDistantLodParsingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -2839,7 +2840,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryDistantLodParsingCustom(
             MutagenFrame frame,
-            IStaticInternal item);
+            IStaticInternal item,
+            PreviousParse lastParsed);
 
     }
 

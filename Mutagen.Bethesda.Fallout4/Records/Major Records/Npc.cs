@@ -154,7 +154,8 @@ partial class NpcBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryMorphParsingCustom(
         MutagenFrame frame,
-        INpcInternal item)
+        INpcInternal item, 
+        PreviousParse lastParsed)
     {
         var subrec = frame.ReadSubrecordHeader();
         switch (subrec.RecordTypeInt)

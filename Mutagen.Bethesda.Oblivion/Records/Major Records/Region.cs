@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Oblivion;
 
 partial class RegionBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+    public static partial ParseResult FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item, PreviousParse lastParsed)
     {
         var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
         while (rdat.Equals(RecordTypes.RDAT))

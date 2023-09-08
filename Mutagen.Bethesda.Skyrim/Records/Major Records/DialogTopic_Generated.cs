@@ -2827,7 +2827,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2843,7 +2844,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryResponseCountCustom(
             MutagenFrame frame,
-            IDialogTopicInternal item);
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
 
         public static partial void CustomBinaryEndImport(
             MutagenFrame frame,

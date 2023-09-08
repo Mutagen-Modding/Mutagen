@@ -2971,7 +2971,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return FurnitureBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WBDT:
                 {
@@ -2988,7 +2989,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.FNPR:
                 {
@@ -3028,11 +3030,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial ParseResult FillBinaryFlags2Custom(
             MutagenFrame frame,
-            IFurnitureInternal item);
+            IFurnitureInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryDisabledMarkersCustom(
             MutagenFrame frame,
-            IFurnitureInternal item);
+            IFurnitureInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryMarkersCustom(
             MutagenFrame frame,

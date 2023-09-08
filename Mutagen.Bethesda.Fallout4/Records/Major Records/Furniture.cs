@@ -101,7 +101,7 @@ partial class FurnitureBinaryCreateTranslation
         item.Flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }
 
-    public static partial ParseResult FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial ParseResult FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         // Clear out old stuff
         // This assumes flags will be parsed first.  Might need to be upgraded to not need that assumption

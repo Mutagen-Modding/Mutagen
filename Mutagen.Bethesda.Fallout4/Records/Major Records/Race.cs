@@ -139,9 +139,9 @@ partial class RaceBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+    public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-    public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+    public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
     public static partial void FillBinaryMorphValuesCustom(MutagenFrame frame, IRaceInternal item)
     {
@@ -155,7 +155,7 @@ partial class RaceBinaryCreateTranslation
         frame.ReadSubrecord(RecordTypes.MLSI);
     }
 
-    public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         var genderFrame = frame.ReadSubrecord(RecordTypes.BSMP);
                 

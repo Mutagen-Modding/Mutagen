@@ -2807,7 +2807,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return ArmorAddonBinaryCreateTranslation.FillBinaryBoneDataParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2827,7 +2828,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryBoneDataParseCustom(
             MutagenFrame frame,
-            IArmorAddonInternal item);
+            IArmorAddonInternal item,
+            PreviousParse lastParsed);
 
     }
 

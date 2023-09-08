@@ -1277,7 +1277,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return Fallout4MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1293,7 +1294,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial ParseResult FillBinaryTypeCharCustom(
             MutagenFrame frame,
-            IGlobalInternal item);
+            IGlobalInternal item,
+            PreviousParse lastParsed);
 
     }
 
