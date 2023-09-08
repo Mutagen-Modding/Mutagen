@@ -214,13 +214,13 @@ partial class HolotapeBinaryOverlay
         }
     }
 
-    public partial ParseResult TypeParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult TypeParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         _dataTypeLocation = (stream.Position - offset);
         return (int)Holotape_FieldIndex.Data;
     }
 
-    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         _dataContentLocation = (stream.Position - offset);
         return (int)Holotape_FieldIndex.PickUpSound;

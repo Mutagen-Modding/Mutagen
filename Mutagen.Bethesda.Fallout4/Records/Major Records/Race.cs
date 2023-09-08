@@ -212,7 +212,7 @@ partial class RaceBinaryOverlay
     {
     }
 
-    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var genderFrame = stream.ReadSubrecord(RecordTypes.BSMP);
         _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
@@ -254,13 +254,13 @@ partial class RaceBinaryOverlay
         BipedObjects = dict.Covariant<BipedObject, BipedObjectData, IBipedObjectDataGetter>();
     }
 
-    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        FaceFxPhonemesRawParsingCustomParse(stream, offset);
+        FaceFxPhonemesRawParsingCustomParse(stream, offset, lastParsed);
         return null;
     }
 
-    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         if (_faceFxPhonemesLoc == null)
         {

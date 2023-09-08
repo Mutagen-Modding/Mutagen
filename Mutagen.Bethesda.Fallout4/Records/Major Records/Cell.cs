@@ -408,7 +408,7 @@ partial class CellBinaryOverlay
 
     public IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; private set; } = Array.Empty<ICellCombinedMeshReferenceGetter>();
 
-    public partial ParseResult CombinedMeshLogicCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult CombinedMeshLogicCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.ReadSubrecordHeader(RecordTypes.XCRI);
         var meshCount = stream.ReadUInt32();

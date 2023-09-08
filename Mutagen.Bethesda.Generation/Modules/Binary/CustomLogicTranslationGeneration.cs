@@ -256,7 +256,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             args.Add($"{nameof(OverlayStream)} stream");
             args.Add($"int offset");
-            if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+            if (fieldData.HasTrigger)
             {
                 args.Add($"{nameof(PreviousParse)} lastParsed");
             }
@@ -278,7 +278,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             args.Add("stream");
             args.Add("offset");
-            if (returningParseValue && objGen.GetObjectType() == ObjectType.Subrecord)
+            if (fieldData.HasTrigger) 
             {
                 args.AddPassArg("lastParsed");
             }

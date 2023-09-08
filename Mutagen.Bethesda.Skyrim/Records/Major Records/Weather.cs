@@ -418,7 +418,7 @@ partial class WeatherBinaryOverlay
             _clouds);
     }
 
-    public partial ParseResult CloudXSpeedsCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult CloudXSpeedsCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         WeatherBinaryCreateTranslation.FillBinaryCloudXSpeeds(
             new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
@@ -426,7 +426,7 @@ partial class WeatherBinaryOverlay
         return null;
     }
 
-    public partial ParseResult CloudAlphasCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult CloudAlphasCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         WeatherBinaryCreateTranslation.FillBinaryCloudAlphas(
             new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
@@ -434,7 +434,7 @@ partial class WeatherBinaryOverlay
         return null;
     }
 
-    public partial ParseResult CloudColorsCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult CloudColorsCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         WeatherBinaryCreateTranslation.FillBinaryCloudColors(
             new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
@@ -442,7 +442,7 @@ partial class WeatherBinaryOverlay
         return null;
     }
 
-    public partial ParseResult DisabledCloudLayersCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DisabledCloudLayersCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         WeatherBinaryCreateTranslation.FillBinaryDisabledCloudLayers(
             new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),

@@ -135,7 +135,7 @@ partial class QuestBinaryOverlay
         DialogConditions = ConditionBinaryOverlay.ConstructBinaryOverlayList(stream, _package);
     }
 
-    public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult UnusedConditionsLogicCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var nextHeader = stream.ReadSubrecord();
         if (nextHeader.RecordType != RecordTypes.NEXT
@@ -148,7 +148,7 @@ partial class QuestBinaryOverlay
         return null;
     }
 
-    public partial ParseResult NextAliasIDCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult NextAliasIDCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.ReadSubrecord();
         return null;

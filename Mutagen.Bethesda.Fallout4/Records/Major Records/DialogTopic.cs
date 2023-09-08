@@ -301,7 +301,7 @@ partial class DialogTopicBinaryOverlay
         }
     }
 
-    public partial ParseResult InfoCountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult InfoCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         stream.ReadSubrecord(RecordTypes.TIFC);
         return (int)DialogTopic_FieldIndex.SubtypeName;

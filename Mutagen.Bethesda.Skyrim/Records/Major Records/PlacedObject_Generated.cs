@@ -7094,7 +7094,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region BoundData
         public partial ParseResult BoundDataCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region IsMultiBoundPrimitive
         private int? _IsMultiBoundPrimitiveLocation;
@@ -7396,7 +7397,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return BoundDataCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XMBP:
                 {

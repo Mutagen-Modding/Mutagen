@@ -2959,7 +2959,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region ResponseCount
         public partial ParseResult ResponseCountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3073,7 +3074,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return ResponseCountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

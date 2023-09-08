@@ -2976,7 +2976,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region InfoCount
         public partial ParseResult InfoCountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3095,7 +3096,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return InfoCountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

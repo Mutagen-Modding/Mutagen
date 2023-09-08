@@ -5075,14 +5075,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region UnusedConditionsLogic
         public partial ParseResult UnusedConditionsLogicCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
         public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
         #region AliasParse
         public partial ParseResult AliasParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -5238,7 +5240,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return UnusedConditionsLogicCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -5266,7 +5269,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return AliasParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NNAM:
                 {

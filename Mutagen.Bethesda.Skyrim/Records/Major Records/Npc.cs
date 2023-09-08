@@ -76,7 +76,7 @@ partial class NpcBinaryWriteTranslation
 
 partial class NpcBinaryOverlay
 {
-    public partial ParseResult DataMarkerCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DataMarkerCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         // Skip marker
         stream.ReadSubrecord();

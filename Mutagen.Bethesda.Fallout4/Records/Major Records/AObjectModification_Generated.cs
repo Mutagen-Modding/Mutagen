@@ -3051,7 +3051,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region DataParse
         public partial ParseResult DataParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? TargetOmodKeywords { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; private set; }
@@ -3121,7 +3122,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return DataParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.MNAM:
                 {

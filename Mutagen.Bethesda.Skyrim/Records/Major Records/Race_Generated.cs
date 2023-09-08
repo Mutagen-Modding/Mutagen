@@ -8628,12 +8628,14 @@ namespace Mutagen.Bethesda.Skyrim
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region FaceFxPhonemesRawParsing
         public partial ParseResult FaceFxPhonemesRawParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region BaseMovementDefaultWalk
         private int? _BaseMovementDefaultWalkLocation;
@@ -8995,13 +8997,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return FaceFxPhonemesListingParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PHWT:
                 {
                     return FaceFxPhonemesRawParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WKMV:
                 {

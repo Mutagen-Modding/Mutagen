@@ -81,7 +81,7 @@ partial class IdleMarkerBinaryWriteTranslation
 
 partial class IdleMarkerBinaryOverlay
 {
-    public partial ParseResult AnimationCountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult AnimationCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         // Skip. Don't care
         stream.ReadSubrecord();

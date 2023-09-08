@@ -2065,7 +2065,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region AnimationCount
         public partial ParseResult AnimationCountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region IdleTimer
         private int? _IdleTimerLocation;
@@ -2163,7 +2164,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return AnimationCountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.IDLT:
                 {

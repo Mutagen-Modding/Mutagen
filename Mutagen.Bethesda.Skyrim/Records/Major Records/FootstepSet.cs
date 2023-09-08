@@ -106,7 +106,7 @@ partial class FootstepSetBinaryOverlay
 
     public IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; private set; } = Array.Empty<IFormLinkGetter<IFootstepGetter>>();
 
-    public partial ParseResult CountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult CountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         int[] counts = FootstepSetBinaryCreateTranslation.GetListCounts(stream);
 

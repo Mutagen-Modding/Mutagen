@@ -109,7 +109,7 @@ partial class APlacedTrapBinaryWriteTranslation
 
 partial class APlacedTrapBinaryOverlay
 {
-    public partial ParseResult TrapFormCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult TrapFormCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var subRec = stream.ReadSubrecord();
         if (subRec.Content.Length != 4)

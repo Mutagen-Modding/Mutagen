@@ -3444,14 +3444,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region UnusedConditionsLogic
         public partial ParseResult UnusedConditionsLogicCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
         public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
         #region NextAliasID
         public partial ParseResult NextAliasIDCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = Array.Empty<IQuestAliasGetter>();
         #region Description
@@ -3585,7 +3587,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return UnusedConditionsLogicCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3609,7 +3612,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return NextAliasIDCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:

@@ -2953,7 +2953,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region DistantLodParsing
         public partial ParseResult DistantLodParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3101,7 +3102,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return DistantLodParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XXXX:
                 {

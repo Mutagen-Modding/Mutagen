@@ -202,7 +202,7 @@ partial class ImageSpaceBinaryOverlay
         return sky;
     }
 
-    public partial ParseResult ENAMParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult ENAMParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         throw new NotImplementedException();
     }

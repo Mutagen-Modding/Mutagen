@@ -2864,7 +2864,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region ENAMParsing
         public partial ParseResult ENAMParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         private RangeInt32? _HNAMLocation;
         #region HdrEyeAdaptSpeed
@@ -3028,7 +3029,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return ENAMParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.HNAM:
                 {

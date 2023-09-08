@@ -120,7 +120,8 @@ partial class WaterBinaryOverlay
 
     public partial ParseResult NoiseTextureParsingCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset, 
+        PreviousParse lastParsed)
     {
         var rec = stream.ReadSubrecord();
         switch (rec.RecordTypeInt)

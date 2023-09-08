@@ -3143,7 +3143,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags2
         public partial ParseResult Flags2CustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region WorkbenchData
         private RangeInt32? _WorkbenchDataLocation;
@@ -3156,7 +3157,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region DisabledMarkers
         public partial ParseResult DisabledMarkersCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region Markers
         partial void MarkersCustomParse(
@@ -3312,7 +3314,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return Flags2CustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WBDT:
                 {
@@ -3328,7 +3331,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return DisabledMarkersCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.FNPR:
                 {

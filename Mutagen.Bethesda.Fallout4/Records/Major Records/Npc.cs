@@ -294,7 +294,7 @@ partial class NpcBinaryOverlay
         }
     }
 
-    public partial ParseResult MorphParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult MorphParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var subRec = stream.GetSubrecordHeader();
         switch (subRec.RecordTypeInt)

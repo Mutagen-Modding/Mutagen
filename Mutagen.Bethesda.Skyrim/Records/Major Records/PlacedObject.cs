@@ -262,7 +262,7 @@ partial class PlacedObjectBinaryOverlay
     int? _imageSpaceLoc;
     public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceGetter>.Null;
 
-    public partial ParseResult BoundDataCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult BoundDataCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         _boundDataLoc = stream.Position - offset;
         var header = stream.ReadSubrecord();

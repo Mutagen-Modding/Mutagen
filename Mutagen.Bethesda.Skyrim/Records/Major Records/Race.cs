@@ -159,13 +159,13 @@ partial class RaceBinaryOverlay
         PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.NAME);
     }
 
-    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        FaceFxPhonemesRawParsingCustomParse(stream, offset);
+        FaceFxPhonemesRawParsingCustomParse(stream, offset, lastParsed);
         return null;
     }
 
-    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         if (_faceFxPhonemesLoc == null)
         {

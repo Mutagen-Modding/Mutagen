@@ -10017,7 +10017,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region MorphParsing
         public partial ParseResult MorphParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<INpcFaceTintingLayerGetter> FaceTintingLayers { get; private set; } = Array.Empty<INpcFaceTintingLayerGetter>();
         public INpcBodyMorphRegionValuesGetter? BodyMorphRegionValues { get; private set; }
@@ -10526,7 +10527,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return MorphParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.TETI:
                 {

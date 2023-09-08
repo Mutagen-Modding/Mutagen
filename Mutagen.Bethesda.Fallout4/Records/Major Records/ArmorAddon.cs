@@ -99,7 +99,7 @@ internal partial class ArmorAddonBinaryOverlay
     private GenderedItem<IReadOnlyList<IBoneGetter>?>? _boneData;
     public IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData => _boneData ?? new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);
 
-    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult BoneDataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var genderFrame = stream.ReadSubrecord(RecordTypes.BSMP);
         _boneData ??= new GenderedItem<IReadOnlyList<IBoneGetter>?>(null, null);

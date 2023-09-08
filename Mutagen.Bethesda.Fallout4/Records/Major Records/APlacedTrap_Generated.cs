@@ -4081,7 +4081,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region TrapForm
         public partial ParseResult TrapFormCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region EncounterZone
         private int? _EncounterZoneLocation;
@@ -4219,7 +4220,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return TrapFormCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XEZN:
                 {

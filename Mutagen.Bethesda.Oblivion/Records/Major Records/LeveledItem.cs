@@ -64,7 +64,7 @@ partial class LeveledItemBinaryOverlay
         _FlagsLocation = (ushort)(stream.Position - offset);
     }
 
-    public partial ParseResult VestigialCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult VestigialCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         var subMeta = stream.ReadSubrecordHeader();
         if (subMeta.ContentLength != 1)

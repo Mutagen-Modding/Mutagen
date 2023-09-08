@@ -2307,7 +2307,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region AnimationCount
         public partial ParseResult AnimationCountCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region IdleTimer
         private int? _IdleTimerLocation;
@@ -2422,7 +2423,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return AnimationCountCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.IDLT:
                 {

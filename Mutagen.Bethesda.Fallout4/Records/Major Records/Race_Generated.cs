@@ -9646,12 +9646,14 @@ namespace Mutagen.Bethesda.Fallout4
         #region FaceFxPhonemesListingParsing
         public partial ParseResult FaceFxPhonemesListingParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region FaceFxPhonemesRawParsing
         public partial ParseResult FaceFxPhonemesRawParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region BaseMovementDefault
         private int? _BaseMovementDefaultLocation;
@@ -9721,7 +9723,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region BoneDataParse
         public partial ParseResult BoneDataParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -10047,13 +10050,15 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return FaceFxPhonemesListingParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PHWT:
                 {
                     return FaceFxPhonemesRawParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WKMV:
                 {
@@ -10161,7 +10166,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return BoneDataParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

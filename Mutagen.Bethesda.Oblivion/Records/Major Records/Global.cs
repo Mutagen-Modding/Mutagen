@@ -98,7 +98,7 @@ abstract partial class GlobalBinaryOverlay
         }
     }
 
-    public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult TypeCharCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         return null;
     }

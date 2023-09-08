@@ -2579,7 +2579,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region TypeParse
         public partial ParseResult TypeParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         private RangeInt32? _DATALocation;
         #region Value
@@ -2595,7 +2596,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region DataParse
         public partial ParseResult DataParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2725,7 +2727,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return TypeParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2737,7 +2740,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return DataParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.XXXX:
                 {

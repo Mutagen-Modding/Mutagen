@@ -364,7 +364,7 @@ partial class FurnitureBinaryOverlay
         _flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
     }
 
-    public partial ParseResult Flags2CustomParse(OverlayStream stream, int offset)
+    public partial ParseResult Flags2CustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         this._flags = FurnitureBinaryCreateTranslation.FillBinaryFlags2(
             stream,
@@ -373,7 +373,7 @@ partial class FurnitureBinaryOverlay
         return null;
     }
 
-    public partial ParseResult DisabledMarkersCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DisabledMarkersCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkers(
             stream,

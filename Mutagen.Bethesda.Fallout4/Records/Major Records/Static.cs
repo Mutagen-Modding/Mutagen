@@ -40,7 +40,8 @@ partial class StaticBinaryOverlay
 
     public partial ParseResult DistantLodParsingCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset,
+        PreviousParse lastParsed)
     {
         var amount = StaticBinaryCreateTranslation.ReadHeader(stream);
         if (amount == 0) return (int)Static_FieldIndex.DistantLods;

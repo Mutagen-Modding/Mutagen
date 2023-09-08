@@ -159,7 +159,8 @@ partial class RegionBinaryOverlay
 
     public partial ParseResult RegionAreaLogicCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset,
+        PreviousParse lastParsed)
     {
         var rdat = stream.GetSubrecordHeader();
         while (rdat.RecordType.Equals(RecordTypes.RDAT))

@@ -102,7 +102,7 @@ partial class SoundDescriptorBinaryOverlay
 
     public partial IASoundDescriptorGetter? GetDataCustom() => _descriptor;
 
-    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult DataParseCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         if (_descriptor == null)
         {

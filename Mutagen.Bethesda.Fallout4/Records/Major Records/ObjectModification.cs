@@ -258,7 +258,8 @@ partial class AObjectModificationBinaryOverlay
 
     public partial ParseResult DataParseCustomParse(
         OverlayStream stream,
-        int offset)
+        int offset,
+        PreviousParse lastParsed)
     {
         _dataBytes = HeaderTranslation.ExtractSubrecordMemory(_recordData, stream.Position - offset, _package.MetaData.Constants);
         var includeCount = BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes);

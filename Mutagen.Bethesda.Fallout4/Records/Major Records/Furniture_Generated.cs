@@ -4864,7 +4864,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags2
         public partial ParseResult Flags2CustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         private RangeInt32? _WBDTLocation;
         public Furniture.WBDTDataType WBDTDataTypeState { get; private set; }
@@ -5128,7 +5129,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return Flags2CustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.WBDT:
                 {

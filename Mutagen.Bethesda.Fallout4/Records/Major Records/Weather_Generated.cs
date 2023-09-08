@@ -8019,17 +8019,20 @@ namespace Mutagen.Bethesda.Fallout4
         #region CloudXSpeeds
         public partial ParseResult CloudXSpeedsCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region CloudColors
         public partial ParseResult CloudColorsCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region CloudAlphas
         public partial ParseResult CloudAlphasCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         private RangeInt32? _NAM0Location;
         public Weather.NAM0DataType NAM0DataTypeState { get; private set; }
@@ -8333,7 +8336,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region DisabledCloudLayers
         public partial ParseResult DisabledCloudLayersCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = Array.Empty<IWeatherSoundGetter>();
         public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
@@ -8511,19 +8515,22 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return CloudXSpeedsCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.PNAM:
                 {
                     return CloudColorsCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.JNAM:
                 {
                     return CloudAlphasCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -8572,7 +8579,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return DisabledCloudLayersCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {

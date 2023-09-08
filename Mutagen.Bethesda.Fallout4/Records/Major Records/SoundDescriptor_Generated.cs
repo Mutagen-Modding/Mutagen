@@ -2693,7 +2693,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region DataParse
         public partial ParseResult DataParseCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISoundDescriptorGetter>> Descriptors { get; private set; } = Array.Empty<IFormLinkGetter<ISoundDescriptorGetter>>();
         public IReadOnlyList<ISoundRateOfFireGetter>? RatesOfFire { get; private set; }
@@ -2832,7 +2833,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return DataParseCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.DNAM:
                 {

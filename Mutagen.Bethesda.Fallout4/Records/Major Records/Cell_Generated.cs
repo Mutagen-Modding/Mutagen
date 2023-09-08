@@ -6646,7 +6646,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region CombinedMeshLogic
         public partial ParseResult CombinedMeshLogicCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6897,7 +6898,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return CombinedMeshLogicCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(

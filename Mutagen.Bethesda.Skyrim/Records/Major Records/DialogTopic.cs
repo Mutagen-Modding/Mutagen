@@ -310,7 +310,7 @@ partial class DialogTopicBinaryOverlay
         }
     }
 
-    public partial ParseResult ResponseCountCustomParse(OverlayStream stream, int offset)
+    public partial ParseResult ResponseCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         return null;
     }

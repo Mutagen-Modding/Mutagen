@@ -6381,7 +6381,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region DataMarker
         public partial ParseResult DataMarkerCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
@@ -6721,7 +6722,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     return DataMarkerCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.DNAM:
                 {

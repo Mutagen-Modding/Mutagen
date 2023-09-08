@@ -4957,7 +4957,8 @@ namespace Mutagen.Bethesda.Fallout4
         #region NoiseTextureParsing
         public partial ParseResult NoiseTextureParsingCustomParse(
             OverlayStream stream,
-            int offset);
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5104,7 +5105,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return NoiseTextureParsingCustomParse(
                         stream,
-                        offset);
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(
