@@ -3466,7 +3466,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     ArmorBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Armor_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.DEST:
@@ -3598,7 +3599,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryBodyTemplateCustom(
             MutagenFrame frame,
-            IArmorInternal item);
+            IArmorInternal item,
+            PreviousParse lastParsed);
 
     }
 

@@ -1465,7 +1465,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     GlobalBoolBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)GlobalBool_FieldIndex.Data;
                 }
                 default:
@@ -1482,7 +1483,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IGlobalBoolInternal item);
+            IGlobalBoolInternal item,
+            PreviousParse lastParsed);
 
     }
 

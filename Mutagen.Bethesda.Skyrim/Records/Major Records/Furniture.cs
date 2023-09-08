@@ -66,7 +66,7 @@ partial class FurnitureBinaryCreateTranslation
         FNMK,
     };
 
-    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         var subFrame = frame.ReadSubrecord();
         // Read flags like normal
@@ -193,7 +193,7 @@ partial class FurnitureBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryMarkersCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         FillBinaryMarkers(frame, (i) => GetNthMarker(item, i));
     }

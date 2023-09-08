@@ -21,12 +21,12 @@ public partial class PackageIdles
 
 partial class PackageIdlesBinaryCreateTranslation
 {
-    public static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item)
+    public static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item, PreviousParse lastParsed)
     {
-        FillBinaryAnimationsCustom(frame, item);
+        FillBinaryAnimationsCustom(frame, item, lastParsed);
     }
 
-    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item)
+    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item, PreviousParse lastParsed)
     {
         byte? count = null;
         for (int i = 0; i < 3; i++)

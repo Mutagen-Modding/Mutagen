@@ -2129,7 +2129,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     SkyrimModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
@@ -2167,7 +2168,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            ISkyrimModHeader item);
+            ISkyrimModHeader item,
+            PreviousParse lastParsed);
 
     }
 

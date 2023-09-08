@@ -4814,7 +4814,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     MagicEffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)MagicEffect_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.XXXX:
@@ -4848,7 +4849,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
-            IMagicEffectInternal item);
+            IMagicEffectInternal item,
+            PreviousParse lastParsed);
 
     }
 

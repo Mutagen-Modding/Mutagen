@@ -1707,7 +1707,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     OblivionModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)OblivionModHeader_FieldIndex.MasterReferences;
                 }
                 default:
@@ -1718,7 +1719,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            IOblivionModHeader item);
+            IOblivionModHeader item,
+            PreviousParse lastParsed);
 
     }
 

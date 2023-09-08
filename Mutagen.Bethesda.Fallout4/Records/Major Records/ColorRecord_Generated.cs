@@ -1756,14 +1756,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ColorRecordBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ColorRecord_FieldIndex.Data;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     ColorRecordBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ColorRecord_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
@@ -1790,11 +1792,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IColorRecordInternal item);
+            IColorRecordInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
-            IColorRecordInternal item);
+            IColorRecordInternal item,
+            PreviousParse lastParsed);
 
     }
 

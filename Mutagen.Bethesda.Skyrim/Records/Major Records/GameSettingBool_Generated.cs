@@ -1471,7 +1471,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     GameSettingBoolBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)GameSettingBool_FieldIndex.Data;
                 }
                 default:
@@ -1488,7 +1489,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IGameSettingBoolInternal item);
+            IGameSettingBoolInternal item,
+            PreviousParse lastParsed);
 
     }
 

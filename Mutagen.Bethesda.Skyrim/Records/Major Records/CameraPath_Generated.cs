@@ -1976,7 +1976,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     CameraPathBinaryCreateTranslation.FillBinaryZoomCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
@@ -2002,7 +2003,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryZoomCustom(
             MutagenFrame frame,
-            ICameraPathInternal item);
+            ICameraPathInternal item,
+            PreviousParse lastParsed);
 
     }
 

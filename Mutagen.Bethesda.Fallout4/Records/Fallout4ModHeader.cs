@@ -50,7 +50,7 @@ public partial interface IFallout4ModHeader : IModHeaderCommon
 
 partial class Fallout4ModHeaderBinaryCreateTranslation
 {
-    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IFallout4ModHeader item)
+    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IFallout4ModHeader item, PreviousParse lastParsed)
     {
         item.MasterReferences.SetTo(
             ListBinaryTranslation<MasterReference>.Instance.Parse(

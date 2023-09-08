@@ -20,7 +20,7 @@ public partial class Subgraph
     
 partial class SubgraphBinaryCreateTranslation
 {
-    public static partial void FillBinaryRoleCustom(MutagenFrame frame, ISubgraph item)
+    public static partial void FillBinaryRoleCustom(MutagenFrame frame, ISubgraph item, PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.SRAF);
         item.Role = (SubgraphRole)frame.ReadUInt16();

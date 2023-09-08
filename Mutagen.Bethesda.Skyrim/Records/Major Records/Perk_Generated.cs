@@ -2552,7 +2552,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PerkBinaryCreateTranslation.FillBinaryEffectsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Perk_FieldIndex.Effects;
                 }
                 case RecordTypeInts.XXXX:
@@ -2574,7 +2575,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryEffectsCustom(
             MutagenFrame frame,
-            IPerkInternal item);
+            IPerkInternal item,
+            PreviousParse lastParsed);
 
     }
 

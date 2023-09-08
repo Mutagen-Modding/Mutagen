@@ -48,7 +48,7 @@ public partial interface IOblivionModHeader : IModHeaderCommon
 
 partial class OblivionModHeaderBinaryCreateTranslation
 {
-    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item)
+    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item, PreviousParse lastParsed)
     {
         item.MasterReferences.SetTo(
             ListBinaryTranslation<MasterReference>.Instance.Parse(

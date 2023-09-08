@@ -87,7 +87,7 @@ partial class RaceBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         for (int i = 0; i < NumBipedObjectNames; i++)
         {
@@ -116,7 +116,7 @@ partial class RaceBinaryCreateTranslation
         item.Flags |= ((Race.Flag)flags2);
     }
 
-    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
     }

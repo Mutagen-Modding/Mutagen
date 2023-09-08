@@ -7576,7 +7576,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Weather_FieldIndex.Clouds;
                 }
                 case RecordTypeInts.QNAM:
@@ -7855,7 +7856,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.MODL:
@@ -7909,7 +7911,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryCloudsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
@@ -7933,7 +7936,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
     }
 

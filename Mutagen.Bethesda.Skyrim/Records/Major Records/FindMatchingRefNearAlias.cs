@@ -16,7 +16,7 @@ public partial class FindMatchingRefNearAlias
 
 partial class FindMatchingRefNearAliasBinaryCreateTranslation
 {
-    public static partial void FillBinaryAliasIDCustom(MutagenFrame frame, IFindMatchingRefNearAlias item)
+    public static partial void FillBinaryAliasIDCustom(MutagenFrame frame, IFindMatchingRefNearAlias item, PreviousParse lastParsed)
     {
         var subrecord = frame.ReadSubrecord();
         item.AliasID = checked((short)BinaryPrimitives.ReadInt32LittleEndian(subrecord.Content));

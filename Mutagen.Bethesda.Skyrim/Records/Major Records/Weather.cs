@@ -113,7 +113,7 @@ partial class WeatherBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryCloudsCustom(MutagenFrame frame, IWeatherInternal item)
+    public static partial void FillBinaryCloudsCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
     {
         FillBinaryCloudYSpeeds(frame, item.Clouds);
     }
@@ -161,7 +161,7 @@ partial class WeatherBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(MutagenFrame frame, IWeatherInternal item)
+    public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
     {
         item.DirectionalAmbientLightingColors = GetBinaryDirectionalAmbientLightingColors(frame);
     }

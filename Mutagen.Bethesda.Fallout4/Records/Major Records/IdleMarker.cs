@@ -49,7 +49,7 @@ partial class IdleMarkerBinaryCreateTranslation
         return ret;
     }
 
-    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IIdleMarkerInternal item)
+    public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IIdleMarkerInternal item, PreviousParse lastParsed)
     {
         item.Animations = ParseAnimations(frame);
     }

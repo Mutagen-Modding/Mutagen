@@ -43,7 +43,7 @@ public partial class MagicEffect
 
 partial class MagicEffectBinaryCreateTranslation
 {
-    public static partial void FillBinaryConditionsCustom(MutagenFrame frame, IMagicEffectInternal item)
+    public static partial void FillBinaryConditionsCustom(MutagenFrame frame, IMagicEffectInternal item, PreviousParse lastParsed)
     {
         ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
     }

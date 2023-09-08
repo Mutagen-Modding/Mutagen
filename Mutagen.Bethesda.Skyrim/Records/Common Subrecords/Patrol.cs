@@ -19,7 +19,7 @@ partial class PatrolBinaryCreateTranslation
         return lastParsed;
     }
 
-    public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPatrol item)
+    public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPatrol item, PreviousParse lastParsed)
     {
         item.Topics.SetTo(ATopicReferenceBinaryCreateTranslation.Factory(frame));
     }

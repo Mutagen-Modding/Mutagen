@@ -3242,7 +3242,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     QuestBinaryCreateTranslation.FillBinaryDialogConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Quest_FieldIndex.DialogConditions;
                 }
                 case RecordTypeInts.NEXT:
@@ -3318,7 +3319,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryDialogConditionsCustom(
             MutagenFrame frame,
-            IQuestInternal item);
+            IQuestInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
             MutagenFrame frame,

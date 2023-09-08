@@ -1852,7 +1852,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     WaterBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Water_FieldIndex.Data;
                 }
                 case RecordTypeInts.GNAM:
@@ -1874,7 +1875,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IWaterInternal item);
+            IWaterInternal item,
+            PreviousParse lastParsed);
 
     }
 

@@ -45,7 +45,8 @@ partial class SceneActionBinaryCreateTranslation
 {
     public static partial void FillBinaryTypeCustom(
         MutagenFrame frame,
-        ISceneAction item)
+        ISceneAction item, 
+        PreviousParse lastParsed)
     {
         var rec = frame.ReadSubrecord(RecordTypes.ANAM);
         var type = rec.AsUInt16();

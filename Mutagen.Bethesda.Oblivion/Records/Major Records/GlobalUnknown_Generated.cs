@@ -1496,7 +1496,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     GlobalUnknownBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)GlobalUnknown_FieldIndex.TypeChar;
                 }
                 case RecordTypeInts.FLTV:
@@ -1519,7 +1520,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
-            IGlobalUnknownInternal item);
+            IGlobalUnknownInternal item,
+            PreviousParse lastParsed);
 
     }
 

@@ -94,7 +94,7 @@ partial class FurnitureBinaryCreateTranslation
     public const uint UpperFlagsMask = 0xFFC0_0000;
     public const uint NumSlots = 22;
 
-    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         var subFrame = frame.ReadSubrecord();
         // Read flags like normal
@@ -154,7 +154,7 @@ partial class FurnitureBinaryCreateTranslation
         return marker;
     }
 
-    public static partial void FillBinaryEnabledEntryPointsCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryEnabledEntryPointsCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         item.EnabledEntryPoints = ParseBinaryEnabledEntryPointsCustom(frame);
     }
@@ -177,7 +177,7 @@ partial class FurnitureBinaryCreateTranslation
         return (Furniture.EntryPointType)BinaryPrimitives.ReadInt16LittleEndian(name0.Content.Slice(2));
     }
 
-    public static partial void FillBinaryMarkerParametersCustom(MutagenFrame frame, IFurnitureInternal item)
+    public static partial void FillBinaryMarkerParametersCustom(MutagenFrame frame, IFurnitureInternal item, PreviousParse lastParsed)
     {
         FillBinaryMarkers(frame, (i) => GetNthMarker(item, i));
     }

@@ -1449,7 +1449,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     RoadBinaryCreateTranslation.FillBinaryPointsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Road_FieldIndex.Points;
                 }
                 default:
@@ -1466,7 +1467,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryPointsCustom(
             MutagenFrame frame,
-            IRoadInternal item);
+            IRoadInternal item,
+            PreviousParse lastParsed);
 
     }
 

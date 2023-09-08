@@ -9,12 +9,12 @@ namespace Mutagen.Bethesda.Skyrim;
 
 partial class ScenePhaseBinaryCreateTranslation
 {
-    public static partial void FillBinaryStartConditionsCustom(MutagenFrame frame, IScenePhase item)
+    public static partial void FillBinaryStartConditionsCustom(MutagenFrame frame, IScenePhase item, PreviousParse lastParsed)
     {
         ConditionBinaryCreateTranslation.FillConditionsList(item.StartConditions, frame);
     }
 
-    public static partial void FillBinaryCompletionConditionsCustom(MutagenFrame frame, IScenePhase item)
+    public static partial void FillBinaryCompletionConditionsCustom(MutagenFrame frame, IScenePhase item, PreviousParse lastParsed)
     {
         frame.ReadSubrecord();
         ConditionBinaryCreateTranslation.FillConditionsList(item.CompletionConditions, frame);

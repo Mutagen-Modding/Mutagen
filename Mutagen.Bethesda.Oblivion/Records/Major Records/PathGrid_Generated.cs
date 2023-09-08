@@ -1885,7 +1885,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PathGrid_FieldIndex.PointToPointConnections;
                 }
                 case RecordTypeInts.PGRI:
@@ -1922,7 +1923,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryPointToPointConnectionsCustom(
             MutagenFrame frame,
-            IPathGridInternal item);
+            IPathGridInternal item,
+            PreviousParse lastParsed);
 
     }
 

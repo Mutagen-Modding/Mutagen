@@ -19,7 +19,7 @@ public partial class GlobalUnknown
 
 partial class GlobalUnknownBinaryCreateTranslation
 {
-    public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalUnknownInternal item)
+    public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalUnknownInternal item, PreviousParse lastParsed)
     {
         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
         item.TypeChar = frame.ReadChar();

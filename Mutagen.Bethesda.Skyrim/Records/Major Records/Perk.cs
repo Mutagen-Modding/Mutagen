@@ -334,7 +334,7 @@ partial class PerkBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
+    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item, PreviousParse lastParsed)
     {
         item.Effects.SetTo(ParseEffects(frame.Reader));
     }

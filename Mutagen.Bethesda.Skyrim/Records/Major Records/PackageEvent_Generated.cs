@@ -1609,7 +1609,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PackageEventBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PackageEvent_FieldIndex.Topics;
                 }
                 default:
@@ -1619,7 +1620,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
-            IPackageEvent item);
+            IPackageEvent item,
+            PreviousParse lastParsed);
 
     }
 

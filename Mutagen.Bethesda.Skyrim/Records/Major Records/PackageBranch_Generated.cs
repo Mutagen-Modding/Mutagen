@@ -2013,7 +2013,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PackageBranchBinaryCreateTranslation.FillBinaryFlagsOverrideCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PackageBranch_FieldIndex.FlagsOverride;
                 }
                 case RecordTypeInts.PFOR:
@@ -2032,7 +2033,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryFlagsOverrideCustom(
             MutagenFrame frame,
-            IPackageBranch item);
+            IPackageBranch item,
+            PreviousParse lastParsed);
 
     }
 

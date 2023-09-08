@@ -1461,7 +1461,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     AudioEffectChainBinaryCreateTranslation.FillBinaryEffectsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)AudioEffectChain_FieldIndex.Effects;
                 }
                 default:
@@ -1478,7 +1479,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryEffectsCustom(
             MutagenFrame frame,
-            IAudioEffectChainInternal item);
+            IAudioEffectChainInternal item,
+            PreviousParse lastParsed);
 
     }
 

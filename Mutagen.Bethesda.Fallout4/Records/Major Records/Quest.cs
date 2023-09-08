@@ -73,7 +73,7 @@ partial class Quest
 
 partial class QuestBinaryCreateTranslation
 {
-    public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item)
+    public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item, PreviousParse lastParsed)
     {
         ConditionBinaryCreateTranslation.FillConditionsList(item.DialogConditions, frame);
     }

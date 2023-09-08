@@ -18,7 +18,7 @@ public partial class PackageBranch
 
 partial class PackageBranchBinaryCreateTranslation
 {
-    public static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item)
+    public static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item, PreviousParse lastParsed)
     {
         item.FlagsOverride = PackageFlagsOverride.CreateFromBinary(frame);
         if (frame.Reader.TryGetSubrecordHeader(RecordTypes.PFO2, out var rec))

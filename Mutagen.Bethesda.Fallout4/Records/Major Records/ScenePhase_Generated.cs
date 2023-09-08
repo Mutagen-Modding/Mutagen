@@ -1675,14 +1675,16 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     ScenePhaseBinaryCreateTranslation.FillBinaryStartConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ScenePhase_FieldIndex.StartConditions;
                 }
                 case RecordTypeInts.NEXT:
                 {
                     ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ScenePhase_FieldIndex.CompletionConditions;
                 }
                 case RecordTypeInts.WNAM:
@@ -1711,11 +1713,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryStartConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryCompletionConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
     }
 

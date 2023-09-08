@@ -4317,7 +4317,8 @@ namespace Mutagen.Bethesda.Fallout4
                         if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                         SceneActionBinaryCreateTranslation.FillBinaryTypeCustom(
                             frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                            item: item);
+                            item: item,
+                            lastParsed: lastParsed);
                         return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Unused)
@@ -4333,7 +4334,8 @@ namespace Mutagen.Bethesda.Fallout4
                                 if (lastParsed.ShortCircuit((int)SceneAction_FieldIndex.Type, translationParams)) return ParseResult.Stop;
                                 SceneActionBinaryCreateTranslation.FillBinaryTypeCustom(
                                     frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                                    item: item);
+                                    item: item,
+                                    lastParsed: lastParsed);
                                 return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
                             case 1:
                                 frame.ReadSubrecord();
@@ -4720,7 +4722,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryTypeCustom(
             MutagenFrame frame,
-            ISceneAction item);
+            ISceneAction item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryHTIDParsingCustom(
             MutagenFrame frame,

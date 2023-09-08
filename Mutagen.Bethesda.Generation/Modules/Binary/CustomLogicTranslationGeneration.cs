@@ -98,7 +98,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
             {
                 args.Add($"{nameof(MutagenFrame)} frame");
                 args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                if (returningParseResult)
+                if (fieldData.HasTrigger)
                 {
                     args.Add($"{nameof(PreviousParse)} lastParsed");
                 }
@@ -170,7 +170,7 @@ public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
         {
             args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
             args.AddPassArg("item");
-            if (returningParseValue)
+            if (data.HasTrigger)
             {
                 args.AddPassArg("lastParsed");
             }

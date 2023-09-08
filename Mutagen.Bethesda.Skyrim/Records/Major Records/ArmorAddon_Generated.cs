@@ -2661,7 +2661,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     ArmorAddonBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
@@ -2770,7 +2771,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryBodyTemplateCustom(
             MutagenFrame frame,
-            IArmorAddonInternal item);
+            IArmorAddonInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryWeightSliderEnabledCustom(
             MutagenFrame frame,

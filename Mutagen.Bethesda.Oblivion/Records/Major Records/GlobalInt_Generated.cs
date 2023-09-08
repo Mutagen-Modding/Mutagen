@@ -1440,7 +1440,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     GlobalIntBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)GlobalInt_FieldIndex.Data;
                 }
                 default:
@@ -1457,7 +1458,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IGlobalIntInternal item);
+            IGlobalIntInternal item,
+            PreviousParse lastParsed);
 
     }
 

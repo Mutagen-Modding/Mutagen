@@ -2394,7 +2394,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     Fallout4ModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Fallout4ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
@@ -2448,7 +2449,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            IFallout4ModHeader item);
+            IFallout4ModHeader item,
+            PreviousParse lastParsed);
 
     }
 

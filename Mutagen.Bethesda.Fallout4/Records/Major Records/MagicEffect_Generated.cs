@@ -4800,7 +4800,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     MagicEffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)MagicEffect_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.XXXX:
@@ -4830,7 +4831,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
-            IMagicEffectInternal item);
+            IMagicEffectInternal item,
+            PreviousParse lastParsed);
 
     }
 

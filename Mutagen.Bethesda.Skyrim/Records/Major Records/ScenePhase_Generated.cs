@@ -1720,7 +1720,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     ScenePhaseBinaryCreateTranslation.FillBinaryStartConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)ScenePhase_FieldIndex.StartConditions;
                 }
                 case RecordTypeInts.NEXT:
@@ -1730,7 +1731,8 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
                             frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                            item: item);
+                            item: item,
+                            lastParsed: lastParsed);
                         return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)ScenePhase_FieldIndex.Unused)
@@ -1748,7 +1750,8 @@ namespace Mutagen.Bethesda.Skyrim
                             case 0:
                                 ScenePhaseBinaryCreateTranslation.FillBinaryCompletionConditionsCustom(
                                     frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                                    item: item);
+                                    item: item,
+                                    lastParsed: lastParsed);
                                 return new ParseResult((int)ScenePhase_FieldIndex.CompletionConditions, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
@@ -1785,11 +1788,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryStartConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryCompletionConditionsCustom(
             MutagenFrame frame,
-            IScenePhase item);
+            IScenePhase item,
+            PreviousParse lastParsed);
 
     }
 

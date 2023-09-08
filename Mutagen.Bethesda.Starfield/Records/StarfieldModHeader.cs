@@ -50,7 +50,7 @@ public partial interface IStarfieldModHeader : IModHeaderCommon
 
 partial class StarfieldModHeaderBinaryCreateTranslation
 {
-    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IStarfieldModHeader item)
+    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IStarfieldModHeader item, PreviousParse lastParsed)
     {
         item.MasterReferences.SetTo(
             ListBinaryTranslation<MasterReference>.Instance.Parse(

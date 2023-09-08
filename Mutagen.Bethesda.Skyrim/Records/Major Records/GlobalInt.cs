@@ -30,7 +30,7 @@ public partial class GlobalInt
 
 partial class GlobalIntBinaryCreateTranslation
 {
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
+    public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item, PreviousParse lastParsed)
     {
     }
 }

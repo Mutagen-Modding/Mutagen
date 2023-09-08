@@ -7805,7 +7805,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     RaceBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.KSIZ:
@@ -8084,7 +8085,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     RaceBinaryCreateTranslation.FillBinaryBipedObjectNamesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Race_FieldIndex.BipedObjectNames;
                 }
                 case RecordTypeInts.MTYP:
@@ -8208,7 +8210,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryBodyTemplateCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
@@ -8220,7 +8223,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryBipedObjectNamesCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,

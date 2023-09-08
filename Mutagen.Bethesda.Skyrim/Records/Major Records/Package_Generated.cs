@@ -3753,14 +3753,16 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PackageBinaryCreateTranslation.FillBinaryPackageTemplateCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Package_FieldIndex.PackageTemplate;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     PackageBinaryCreateTranslation.FillBinaryXnamMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Package_FieldIndex.XnamMarker;
                 }
                 case RecordTypeInts.POBA:
@@ -3806,11 +3808,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryPackageTemplateCustom(
             MutagenFrame frame,
-            IPackageInternal item);
+            IPackageInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryXnamMarkerCustom(
             MutagenFrame frame,
-            IPackageInternal item);
+            IPackageInternal item,
+            PreviousParse lastParsed);
 
     }
 

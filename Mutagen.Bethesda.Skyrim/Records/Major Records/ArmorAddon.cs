@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Collections;
 using Mutagen.Bethesda.Plugins.Assets;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Noggog.StructuredStrings;
 
@@ -152,7 +153,7 @@ partial class ArmorAddonBinaryCreateTranslation
         item.WeightSliderEnabled = new ArmorAddonWeightSliderContainer(frame.ReadUInt8(), frame.ReadUInt8());
     }
 
-    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorAddonInternal item)
+    public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorAddonInternal item, PreviousParse lastParsed)
     {
         item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
     }

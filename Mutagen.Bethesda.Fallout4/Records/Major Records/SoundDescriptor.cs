@@ -38,7 +38,7 @@ partial class SoundDescriptorBinaryCreateTranslation
         return null;
     }
 
-    public static partial void FillBinaryDataCustom(MutagenFrame frame, ISoundDescriptorInternal item)
+    public static partial void FillBinaryDataCustom(MutagenFrame frame, ISoundDescriptorInternal item, PreviousParse lastParsed)
     {
         var cnam = frame.ReadSubrecord(RecordTypes.CNAM);
         var type = (DescriptorType)cnam.AsUInt32();

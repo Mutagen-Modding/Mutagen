@@ -1691,7 +1691,8 @@ namespace Mutagen.Bethesda.Fallout4
                     if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     SubgraphBinaryCreateTranslation.FillBinaryRoleCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Subgraph_FieldIndex.Role;
                 }
                 default:
@@ -1701,7 +1702,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryRoleCustom(
             MutagenFrame frame,
-            ISubgraph item);
+            ISubgraph item,
+            PreviousParse lastParsed);
 
     }
 

@@ -2469,7 +2469,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     StarfieldModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)StarfieldModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
@@ -2529,7 +2530,8 @@ namespace Mutagen.Bethesda.Starfield
 
         public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            IStarfieldModHeader item);
+            IStarfieldModHeader item,
+            PreviousParse lastParsed);
 
     }
 

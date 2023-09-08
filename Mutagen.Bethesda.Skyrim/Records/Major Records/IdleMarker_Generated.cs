@@ -1971,7 +1971,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     IdleMarkerBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)IdleMarker_FieldIndex.Animations;
                 }
                 case RecordTypeInts.MODL:
@@ -2000,7 +2001,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
-            IIdleMarkerInternal item);
+            IIdleMarkerInternal item,
+            PreviousParse lastParsed);
 
     }
 

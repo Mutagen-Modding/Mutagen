@@ -1358,7 +1358,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Patrol_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TNAM:
@@ -1379,7 +1380,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
-            IPatrol item);
+            IPatrol item,
+            PreviousParse lastParsed);
 
     }
 

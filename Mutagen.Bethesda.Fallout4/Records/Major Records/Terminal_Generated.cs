@@ -3729,7 +3729,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     TerminalBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Terminal_FieldIndex.Flags;
                 }
                 case RecordTypeInts.WBDT:
@@ -3750,7 +3751,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     TerminalBinaryCreateTranslation.FillBinaryMarkerParametersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Terminal_FieldIndex.MarkerParameters;
                 }
                 case RecordTypeInts.BSIZ:
@@ -3802,11 +3804,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
-            ITerminalInternal item);
+            ITerminalInternal item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryMarkerParametersCustom(
             MutagenFrame frame,
-            ITerminalInternal item);
+            ITerminalInternal item,
+            PreviousParse lastParsed);
 
     }
 

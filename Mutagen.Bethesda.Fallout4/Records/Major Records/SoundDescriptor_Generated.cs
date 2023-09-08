@@ -2513,7 +2513,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     SoundDescriptorBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)SoundDescriptor_FieldIndex.Data;
                 }
                 case RecordTypeInts.GNAM:
@@ -2604,7 +2605,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            ISoundDescriptorInternal item);
+            ISoundDescriptorInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryDataParseCustom(
             MutagenFrame frame,

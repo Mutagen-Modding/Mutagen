@@ -1342,7 +1342,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryTimerSettingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
                 case RecordTypeInts.IDLC:
@@ -1350,7 +1351,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PackageIdles_FieldIndex.Animations;
                 }
                 case RecordTypeInts.IDLB:
@@ -1366,11 +1368,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryTimerSettingCustom(
             MutagenFrame frame,
-            IPackageIdles item);
+            IPackageIdles item,
+            PreviousParse lastParsed);
 
         public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
-            IPackageIdles item);
+            IPackageIdles item,
+            PreviousParse lastParsed);
 
     }
 

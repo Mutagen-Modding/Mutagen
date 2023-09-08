@@ -19,7 +19,7 @@ public partial class PlacedObject
 
 partial class PlacedObjectBinaryCreateTranslation
 {
-    public static partial void FillBinaryOpenByDefaultCustom(MutagenFrame frame, IPlacedObjectInternal item)
+    public static partial void FillBinaryOpenByDefaultCustom(MutagenFrame frame, IPlacedObjectInternal item, PreviousParse lastParsed)
     {
         item.OpenByDefault = true;
         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;

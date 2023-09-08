@@ -1,3 +1,4 @@
+using System;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -9,7 +10,9 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System.Buffers.Binary;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -344,7 +347,7 @@ partial class PerkBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
+    public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item, PreviousParse lastParsed)
     {
         item.Effects.SetTo(ParseEffects(frame.Reader));
     }

@@ -1471,7 +1471,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     GlobalShortBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)GlobalShort_FieldIndex.Data;
                 }
                 default:
@@ -1488,7 +1489,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
-            IGlobalShortInternal item);
+            IGlobalShortInternal item,
+            PreviousParse lastParsed);
 
     }
 

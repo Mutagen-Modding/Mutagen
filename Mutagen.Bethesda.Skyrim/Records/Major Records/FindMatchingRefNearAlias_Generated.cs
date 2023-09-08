@@ -1076,7 +1076,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (lastParsed.ShortCircuit((int)FindMatchingRefNearAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     FindMatchingRefNearAliasBinaryCreateTranslation.FillBinaryAliasIDCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)FindMatchingRefNearAlias_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.ALNT:
@@ -1095,7 +1096,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryAliasIDCustom(
             MutagenFrame frame,
-            IFindMatchingRefNearAlias item);
+            IFindMatchingRefNearAlias item,
+            PreviousParse lastParsed);
 
     }
 

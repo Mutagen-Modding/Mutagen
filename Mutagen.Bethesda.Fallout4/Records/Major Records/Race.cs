@@ -99,7 +99,7 @@ partial class RaceBinaryCreateTranslation
         }
     }
 
-    public static partial void FillBinaryBipedObjectsCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryBipedObjectsCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         FillBinaryBipedObjectsDictionary(frame, item.FormVersion, item.BipedObjects);
     }
@@ -143,7 +143,7 @@ partial class RaceBinaryCreateTranslation
 
     public static partial ParseResult FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-    public static partial void FillBinaryMorphValuesCustom(MutagenFrame frame, IRaceInternal item)
+    public static partial void FillBinaryMorphValuesCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
     {
         item.MorphValues.SetTo(
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MorphValue>.Instance.Parse(

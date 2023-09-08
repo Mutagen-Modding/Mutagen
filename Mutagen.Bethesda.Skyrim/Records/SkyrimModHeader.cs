@@ -50,7 +50,7 @@ public partial interface ISkyrimModHeader : IModHeaderCommon
 
 partial class SkyrimModHeaderBinaryCreateTranslation
 {
-    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item)
+    public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item, PreviousParse lastParsed)
     {
         item.MasterReferences.SetTo(
             ListBinaryTranslation<MasterReference>.Instance.Parse(

@@ -8994,7 +8994,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     RaceBinaryCreateTranslation.FillBinaryBipedObjectsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Race_FieldIndex.BipedObjects;
                 }
                 case RecordTypeInts.MTYP:
@@ -9138,7 +9139,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     RaceBinaryCreateTranslation.FillBinaryMorphValuesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Race_FieldIndex.MorphValues;
                 }
                 case RecordTypeInts.HNAM:
@@ -9196,7 +9198,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryBipedObjectsCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,
@@ -9210,7 +9213,8 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static partial void FillBinaryMorphValuesCustom(
             MutagenFrame frame,
-            IRaceInternal item);
+            IRaceInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryBoneDataParseCustom(
             MutagenFrame frame,

@@ -49,7 +49,8 @@ partial class MaterialSwapBinaryCreateTranslation
 
     public static partial void FillBinaryTreeFolderCustom(
         MutagenFrame frame,
-        IMaterialSwapInternal item)
+        IMaterialSwapInternal item,
+        PreviousParse lastParsed)
     {
         var header = frame.ReadSubrecordHeader();
         item.TreeFolder = StringBinaryTranslation.Instance.Parse(
@@ -57,7 +58,7 @@ partial class MaterialSwapBinaryCreateTranslation
             stringBinaryType: StringBinaryType.NullTerminate);
     }
 
-    public static partial void FillBinarySubstitutionsCustom(MutagenFrame frame, IMaterialSwapInternal item)
+    public static partial void FillBinarySubstitutionsCustom(MutagenFrame frame, IMaterialSwapInternal item, PreviousParse lastParsed)
     {
         item.Substitutions.SetTo(
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MaterialSubstitution>.Instance.Parse(

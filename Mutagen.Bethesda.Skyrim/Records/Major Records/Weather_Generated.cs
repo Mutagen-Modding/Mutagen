@@ -6269,7 +6269,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     WeatherBinaryCreateTranslation.FillBinaryCloudsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Weather_FieldIndex.Clouds;
                 }
                 case RecordTypeInts.QNAM:
@@ -6480,7 +6481,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.NAM2:
@@ -6529,7 +6531,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryCloudsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
@@ -6553,7 +6556,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(
             MutagenFrame frame,
-            IWeatherInternal item);
+            IWeatherInternal item,
+            PreviousParse lastParsed);
 
     }
 

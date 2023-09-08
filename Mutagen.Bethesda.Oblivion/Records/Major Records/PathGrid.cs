@@ -13,7 +13,7 @@ partial class PathGridBinaryCreateTranslation
 {
     public const int POINT_LEN = 16;
 
-    public static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
+    public static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item, PreviousParse lastParsed)
     {
         FillBinaryPointToPointConnections(frame, item);
     }

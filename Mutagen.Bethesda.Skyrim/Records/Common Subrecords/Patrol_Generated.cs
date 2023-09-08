@@ -1452,7 +1452,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)Patrol_FieldIndex.Topics;
                 }
                 default:
@@ -1467,7 +1468,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
-            IPatrol item);
+            IPatrol item,
+            PreviousParse lastParsed);
 
     }
 

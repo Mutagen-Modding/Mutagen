@@ -29,7 +29,8 @@ partial class ColorRecordBinaryCreateTranslation
 
     public static partial void FillBinaryDataCustom(
         MutagenFrame frame,
-        IColorRecordInternal item)
+        IColorRecordInternal item,
+        PreviousParse lastParsed)
     {
         var cnam = frame.ReadSubrecord(RecordTypes.CNAM, readSafe: true);
         var pos = frame.Position;
@@ -54,7 +55,7 @@ partial class ColorRecordBinaryCreateTranslation
         frame.Position = pos;
     }
 
-    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IColorRecordInternal item)
+    public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IColorRecordInternal item, PreviousParse lastParsed)
     {
         var fnam = frame.ReadSubrecord(RecordTypes.FNAM);
         var val = fnam.AsInt32();

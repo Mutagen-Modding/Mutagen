@@ -3246,7 +3246,8 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     PlacedObjectBinaryCreateTranslation.FillBinaryOpenByDefaultCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)PlacedObject_FieldIndex.OpenByDefault;
                 }
                 case RecordTypeInts.XRGD:
@@ -3287,7 +3288,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static partial void FillBinaryOpenByDefaultCustom(
             MutagenFrame frame,
-            IPlacedObjectInternal item);
+            IPlacedObjectInternal item,
+            PreviousParse lastParsed);
 
     }
 
