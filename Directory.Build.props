@@ -32,6 +32,7 @@
     <PropertyGroup>
       <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) == ''">.1-zdev</DevLabel>
       <DevLabel Condition="$(GitCommits) != '0' And $(VersionSuffix) != ''">.1-$(VersionSuffix)</DevLabel>
+        <DevLabel Condition="$(GitCommits) == '0' And $(GitSemVerDashLabel) != ''">$(GitSemVerDashLabel)</DevLabel>
       <AssemblyDevLabel Condition="$(GitCommits) != '0'">.1</AssemblyDevLabel>
       <AssemblyVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</AssemblyVersion>
       <FileVersion>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(GitBaseVersionPatch)$(AssemblyDevLabel)</FileVersion>
