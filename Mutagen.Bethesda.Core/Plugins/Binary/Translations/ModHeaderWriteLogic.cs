@@ -17,7 +17,7 @@ public sealed class ModHeaderWriteLogic
     private readonly ModKey _modKey;
     private readonly Dictionary<ModKey, FormKey> _modKeys = new();
     private uint _numRecords;
-    private uint _nextFormID;
+    private uint? _nextFormID;
     private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
 
@@ -28,7 +28,6 @@ public sealed class ModHeaderWriteLogic
     {
         _params = param ?? BinaryWriteParameters.Default;
         _modKey = mod.ModKey;
-        _nextFormID = modHeader.MinimumCustomFormID;
     }
 
     public static void WriteHeader(
@@ -111,7 +110,7 @@ public sealed class ModHeaderWriteLogic
         }
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {
-            modHeader.NextFormID = _nextFormID + 1;
+            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : modHeader.MinimumCustomFormID;
         }
         if (Enums.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.LightMaster)
             && _uniqueRecordsFromMod > Constants.LightMasterLimit)
