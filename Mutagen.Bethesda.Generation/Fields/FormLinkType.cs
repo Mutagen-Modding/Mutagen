@@ -23,6 +23,7 @@ public class FormLinkType : ClassType
     public FormIDTypeEnum FormIDType;
     public override bool IsEnumerable => false;
     public override bool CanBeNullable(bool getter) => false;
+    public string GenericString => LoquiType.TypeNameInternal(getter: true, internalInterface: true);
 
     public virtual string ClassTypeStringPrefix => this.FormIDType switch
     {
@@ -43,14 +44,14 @@ public class FormLinkType : ClassType
 
     public override string TypeName(bool getter, bool needsCovariance = false)
     {
-        return $"I{DirectNonGenericTypeName()}{(needsCovariance || getter ? "Getter" : null)}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+        return $"I{DirectNonGenericTypeName()}{(needsCovariance || getter ? "Getter" : null)}<{GenericString}>";
     }
 
     public override Type Type(bool getter) => typeof(FormID);
 
     public string DirectTypeName(bool getter, bool internalInterface = false)
     {
-        return $"{DirectNonGenericTypeName()}<{LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>";
+        return $"{DirectNonGenericTypeName()}<{GenericString}>";
     }
 
     public string DirectNonGenericTypeName()

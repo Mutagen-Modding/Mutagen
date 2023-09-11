@@ -2531,7 +2531,7 @@ namespace Mutagen.Bethesda.Fallout4
                             translationParams: conv);
                     }
                 });
-            GenderedItemBinaryTranslation.Write(
+            GenderedItemBinaryTranslation.Write<ITextureSetGetter>(
                 writer: writer,
                 item: item.SkinTexture,
                 maleMarker: RecordTypes.NAM0,
@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         item: subItem);
                 });
-            GenderedItemBinaryTranslation.Write(
+            GenderedItemBinaryTranslation.Write<IFormListGetter>(
                 writer: writer,
                 item: item.TextureSwapList,
                 maleMarker: RecordTypes.NAM2,

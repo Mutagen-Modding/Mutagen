@@ -2505,7 +2505,7 @@ namespace Mutagen.Bethesda.Skyrim
                             translationParams: conv);
                     }
                 });
-            GenderedItemBinaryTranslation.Write(
+            GenderedItemBinaryTranslation.Write<ITextureSetGetter>(
                 writer: writer,
                 item: item.SkinTexture,
                 maleMarker: RecordTypes.NAM0,
@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer: subWriter,
                         item: subItem);
                 });
-            GenderedItemBinaryTranslation.Write(
+            GenderedItemBinaryTranslation.Write<IFormListGetter>(
                 writer: writer,
                 item: item.TextureSwapList,
                 maleMarker: RecordTypes.NAM2,

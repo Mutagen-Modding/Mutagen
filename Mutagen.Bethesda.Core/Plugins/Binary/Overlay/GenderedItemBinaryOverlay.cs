@@ -137,7 +137,8 @@ internal static class GenderedItemBinaryOverlay
         RecordType male,
         RecordType female,
         Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams, T> creator,
-        TypedParseParams translationParams = default)
+        TypedParseParams maleRecordConverter = default,
+        TypedParseParams femaleRecordConverter = default)
         where T : class
     {
         var initialPos = stream.Position;
@@ -150,7 +151,7 @@ internal static class GenderedItemBinaryOverlay
             if (recType == male)
             {
                 var startPos = stream.Position;
-                maleObj = creator(stream, package, translationParams);
+                maleObj = creator(stream, package, maleRecordConverter);
                 if (startPos == stream.Position)
                 {
                     maleObj = null;
@@ -159,7 +160,7 @@ internal static class GenderedItemBinaryOverlay
             else if (recType == female)
             {
                 var startPos = stream.Position;
-                femaleObj = creator(stream, package, translationParams);
+                femaleObj = creator(stream, package, femaleRecordConverter);
                 if (startPos == stream.Position)
                 {
                     femaleObj = null;
@@ -176,6 +177,25 @@ internal static class GenderedItemBinaryOverlay
             throw new ArgumentException("Expected things to be read.");
         }
         return new GenderedItem<T?>(maleObj, femaleObj);
+    }
+
+    internal static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
+        OverlayStream stream,
+        BinaryOverlayFactoryPackage package,
+        RecordType male,
+        RecordType female,
+        Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams, T> creator,
+        TypedParseParams translationParams)
+        where T : class
+    {
+        return FactorySkipMarkersPreRead<T>(
+            stream,
+            package,
+            male,
+            female,
+            creator,
+            maleRecordConverter: translationParams,
+            femaleRecordConverter: translationParams);
     }
 
     internal static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(

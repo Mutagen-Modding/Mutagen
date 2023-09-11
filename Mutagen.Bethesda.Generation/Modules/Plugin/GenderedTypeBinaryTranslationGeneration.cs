@@ -182,8 +182,11 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
         }
+
+        var generics = gendered.SubTypeGeneration is FormLinkType linkType && linkType.Nullable ? $"<{linkType.GenericString}>" : string.Empty;
+        
         using (var args = sb.Call(
-                   $"GenderedItemBinaryTranslation.Write{(gendered.MarkerPerGender ? "MarkerPerItem" : null)}"))
+                   $"GenderedItemBinaryTranslation.Write{(gendered.MarkerPerGender ? "MarkerPerItem" : null)}{generics}"))
         {
             args.Add($"writer: {writerAccessor}");
             args.Add($"item: {itemAccessor}");

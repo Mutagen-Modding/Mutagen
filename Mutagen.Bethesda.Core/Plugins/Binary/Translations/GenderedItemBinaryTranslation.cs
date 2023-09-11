@@ -187,15 +187,17 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem>(male, female);
     }
 
+
     public static GenderedItem<TItem?> Parse<TItem>(
         MutagenFrame frame,
         RecordType maleMarker,
         RecordType femaleMarker,
         BinaryMasterParseDelegate<TItem> transl,
-        TypedParseParams translationParams = default)
+        TypedParseParams maleRecordConverter = default,
+        TypedParseParams femaleRecordConverter = default)
         where TItem : class
     {
-        translationParams = translationParams.ShortCircuit();
+        femaleRecordConverter = femaleRecordConverter.ShortCircuit();
         TItem? male = default, female = default;
         for (int i = 0; i < 2; i++)
         {
@@ -205,7 +207,7 @@ internal sealed class GenderedItemBinaryTranslation
             if (type == maleMarker)
             {
                 frame.Position += subHeader.TotalLength;
-                if (!transl(frame, out male, translationParams))
+                if (!transl(frame, out male, maleRecordConverter))
                 {
                     male = null;
                 }
@@ -213,7 +215,7 @@ internal sealed class GenderedItemBinaryTranslation
             else if (type == femaleMarker)
             {
                 frame.Position += subHeader.TotalLength;
-                if (!transl(frame, out female, translationParams))
+                if (!transl(frame, out female, femaleRecordConverter))
                 {
                     female = null;
                 }
@@ -224,6 +226,19 @@ internal sealed class GenderedItemBinaryTranslation
             }
         }
         return new GenderedItem<TItem?>(male, female);
+    }
+
+    public static GenderedItem<TItem?> Parse<TItem>(
+        MutagenFrame frame,
+        RecordType maleMarker,
+        RecordType femaleMarker,
+        BinaryMasterParseDelegate<TItem> transl,
+        TypedParseParams translationParams)
+        where TItem : class
+    {
+        return Parse<TItem>(frame, maleMarker, femaleMarker,
+            transl, maleRecordConverter: translationParams,
+            femaleRecordConverter: translationParams);
     }
 
     public static GenderedItem<TItem?> Parse<TItem>(
@@ -416,7 +431,8 @@ internal sealed class GenderedItemBinaryTranslation
         RecordType femaleMarker,
         BinaryMasterWriteDelegate<T> transl,
         bool markerWrap = true,
-        RecordTypeConverter? recordTypeConverter = null)
+        RecordTypeConverter? maleRecordConverter = null,
+        RecordTypeConverter? femaleRecordConverter = null)
     {
         if (item == null) return;
         try
@@ -426,12 +442,12 @@ internal sealed class GenderedItemBinaryTranslation
             {
                 if (markerWrap)
                 {
-                    transl(writer, male, recordTypeConverter);
+                    transl(writer, male, maleRecordConverter);
                 }
             }
             if (!markerWrap)
             {
-                transl(writer, male, recordTypeConverter);
+                transl(writer, male, maleRecordConverter);
             }
         }
         catch (Exception ex)
@@ -445,18 +461,31 @@ internal sealed class GenderedItemBinaryTranslation
             {
                 if (markerWrap)
                 {
-                    transl(writer, female, recordTypeConverter);
+                    transl(writer, female, femaleRecordConverter);
                 }
             }
             if (!markerWrap)
             {
-                transl(writer, female, recordTypeConverter);
+                transl(writer, female, femaleRecordConverter);
             }
         }
         catch (Exception ex)
         {
             throw SubrecordException.Enrich(ex, femaleMarker);
         }
+    }
+
+    public static void Write<T>(
+        MutagenWriter writer,
+        IGenderedItemGetter<T>? item,
+        RecordType maleMarker,
+        RecordType femaleMarker,
+        BinaryMasterWriteDelegate<T> transl,
+        RecordTypeConverter? recordTypeConverter,
+        bool markerWrap = true)
+    {
+        Write<T>(writer, item, maleMarker, femaleMarker, transl, markerWrap,
+            maleRecordConverter: recordTypeConverter, femaleRecordConverter: recordTypeConverter);
     }
 
     public static void Write<TMajor>(
