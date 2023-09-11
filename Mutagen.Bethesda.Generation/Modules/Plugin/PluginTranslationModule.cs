@@ -800,6 +800,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         var fieldData = field.GetFieldData();
                         if (fieldData.HasTrigger) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                        if (fieldData.Binary == BinaryGenerationType.CustomWrite) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (!field.Enabled) continue;
                         if (!TryGetTypeGeneration(field.GetType(), out var generator))
@@ -868,6 +869,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         var fieldData = field.Field.GetFieldData();
                         if (!fieldData.GenerationTypes.Any()) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                        if (fieldData.Binary == BinaryGenerationType.CustomWrite) continue;
                         if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (!TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
@@ -1339,6 +1341,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             case BinaryGenerationType.Normal:
                 break;
             case BinaryGenerationType.NoGeneration:
+            case BinaryGenerationType.CustomWrite:
                 return;
             case BinaryGenerationType.Custom:
                 CustomLogic.GenerateFill(
@@ -1544,6 +1547,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         if (!fieldData.HasTrigger
                             || !fieldData.GenerationTypes.Any()) continue;
                         if (fieldData.BinaryOverlayFallback == BinaryGenerationType.NoGeneration) continue;
+                        if (fieldData.Binary == BinaryGenerationType.CustomWrite) continue;
                         if (field.Field.Derivative && fieldData.BinaryOverlayFallback != BinaryGenerationType.Custom) continue;
                         if (!TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
@@ -2281,6 +2285,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     switch (data.BinaryOverlayFallback)
                     {
                         case BinaryGenerationType.NoGeneration:
+                        case BinaryGenerationType.CustomWrite:
                             continue;
                         default:
                             break;
@@ -2803,6 +2808,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         sb.AppendLine($"ret.Custom{lengths.Field.Name}EndPos();");
                         break;
                     case BinaryGenerationType.NoGeneration:
+                    case BinaryGenerationType.CustomWrite:
                         break;
                     case BinaryGenerationType.Normal:
                         await typeGen.GenerateWrapperUnknownLengthParse(
@@ -3351,6 +3357,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         case BinaryGenerationType.NoGeneration:
                             continue;
                         case BinaryGenerationType.Custom:
+                        case BinaryGenerationType.CustomWrite:
                             CustomLogic.GenerateWrite(
                                 sb: sb,
                                 obj: obj,
@@ -3396,6 +3403,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             case BinaryGenerationType.NoGeneration:
                                                 continue;
                                             case BinaryGenerationType.Custom:
+                                            case BinaryGenerationType.CustomWrite:
                                                 using (var args = sb.Call(
                                                            $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
                                                 {

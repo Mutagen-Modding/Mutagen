@@ -15,7 +15,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+        <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>

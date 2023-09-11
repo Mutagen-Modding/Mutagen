@@ -16,6 +16,7 @@ public enum BinaryGenerationType
     Normal,
     NoGeneration,
     Custom,
+    CustomWrite, 
 }
 
 public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslationGeneration>
@@ -134,7 +135,12 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
     {
         foreach (var field in obj.IterateFields(nonIntegrated: true))
         {
-            if (field.GetFieldData().Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
+            if (field.GetFieldData().Binary != BinaryGenerationType.Custom 
+                && field.GetFieldData().Binary != BinaryGenerationType.CustomWrite 
+                && !(field is CustomLogic)) 
+            { 
+                continue; 
+            } 
             CustomLogicTranslationGeneration.GenerateWritePartialMethods(
                 sb: sb,
                 obj: obj,
@@ -363,6 +369,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
             var fieldData = field.GetFieldData();
             if (fieldData.HasTrigger) continue;
             if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+            if (fieldData.Binary == BinaryGenerationType.CustomWrite) continue; 
             if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
             if (!field.Enabled) continue;
             if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
@@ -430,6 +437,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                 case BinaryGenerationType.NoGeneration:
                     continue;
                 case BinaryGenerationType.Custom:
+                case BinaryGenerationType.CustomWrite: 
                     CustomLogic.GenerateWrite(
                         sb: sb,
                         obj: obj,
@@ -580,6 +588,7 @@ public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslat
                     yield return lengths;
                     break;
                 case BinaryGenerationType.NoGeneration:
+                case BinaryGenerationType.CustomWrite: 
                     yield return lengths;
                     break;
                 default:

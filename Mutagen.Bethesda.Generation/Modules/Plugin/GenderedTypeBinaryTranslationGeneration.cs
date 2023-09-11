@@ -264,6 +264,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             case BinaryGenerationType.Normal:
                 break;
             case BinaryGenerationType.NoGeneration:
+            case BinaryGenerationType.CustomWrite:
                 return;
             case BinaryGenerationType.Custom:
                 await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
