@@ -93,8 +93,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\StarfieldAnimationTextAssetType.cs" />
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
+    <Compile Include="Assets\StarfieldRigAssetType.cs" />
+    <Compile Include="Enums\BipedObject.cs" />
     <Compile Include="Enums\CombatReaction.cs" />
+    <Compile Include="Enums\EquipType.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
@@ -107,6 +111,9 @@
     <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Records\Common Subrecords\ALocationTarget_Generated.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AttackData.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationCell_Generated.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
@@ -135,9 +142,6 @@
     <Compile Include="Records\Common Subrecords\Model_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\SimpleModel_Generated.cs">
-      <DependentUpon>Model.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
@@ -146,6 +150,12 @@
     </Compile>
     <Compile Include="Records\Major Records\AttractionRule_Generated.cs">
       <DependentUpon>AttractionRule.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BipedObjectData.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyData.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
@@ -206,6 +216,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Npc_Generated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Race.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Race_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -358,5 +371,75 @@
     <Compile Include="Records\Common Subrecords\SeasonalIngredientProduction_Generated.cs">
       <DependentUpon>SeasonalIngredientProduction.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Attack_Generated.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AttackData_Generated.cs">
+      <DependentUpon>Attack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AimAssistPose_Generated.cs">
+      <DependentUpon>AimAssistPose.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Armor_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyPartData_Generated.cs">
+      <DependentUpon>BodyPartData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EquipType_Generated.cs">
+      <DependentUpon>EquipType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ImpactDataSet_Generated.cs">
+      <DependentUpon>ImpactDataSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialType_Generated.cs">
+      <DependentUpon>MaterialType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MovementType_Generated.cs">
+      <DependentUpon>MovementType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MovementDataOverride_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MovementData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MovementDirectionData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MovementRotationData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EquipmentSlot_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SkeletalModel_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BipedObjectData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HeadData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NeckFatAdjustmentsScale_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MorphGroup_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceMorph_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceMorphItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FDSIRecord_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
   </ItemGroup>
 </Project>

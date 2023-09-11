@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimAssistPose" recordType="AAPD" objType="Record" baseClass="StarfieldMajorRecord" GUID="16324065-b611-4243-ade7-9ee83860edb4" ID="730">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

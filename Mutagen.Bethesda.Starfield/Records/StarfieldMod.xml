@@ -16,6 +16,7 @@
       <Group name="Factions" refName="Faction" />
       <Group name="AffinityEvents" refName="AffinityEvent" />
       <Group name="HeadParts" refName="HeadPart" />
+      <Group name="Races" refName="Race" />
       <Group name="AOPF" refName="AOPFRecord" />
     </Fields>
   </Object>

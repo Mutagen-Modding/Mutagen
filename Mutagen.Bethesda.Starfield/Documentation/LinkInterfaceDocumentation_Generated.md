@@ -33,6 +33,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IRelatable
 - Faction
 - Race
+### ISpellRecord
+- Spell
 ### IVoiceTypeOrList
 - FormList
 - VoiceType
@@ -56,6 +58,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlacedThing
 ### Race
 - IRelatable
+### Spell
+- ISpellRecord
 ### TextureSet
 - IExplodeSpawn
 - IObjectId

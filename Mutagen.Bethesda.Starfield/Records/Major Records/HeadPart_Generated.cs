@@ -1351,6 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.ANAM,
                 RecordTypes.FLLD,
                 RecordTypes.DATA,
                 RecordTypes.PNAM,
@@ -2415,6 +2416,13 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadPart_FieldIndex.Model;
                 }
+                case RecordTypeInts.ANAM:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.SkeletalModel.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)HeadPart_FieldIndex.Model;
+                }
                 case RecordTypeInts.FLLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2677,6 +2685,14 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)HeadPart_FieldIndex.Model;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    this.Model = SkeletalModelBinaryOverlay.SkeletalModelFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());

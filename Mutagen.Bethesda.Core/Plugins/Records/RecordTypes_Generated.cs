@@ -5,6 +5,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals;
 public partial class RecordTypes
 {
     public static readonly RecordType AACT = new(0x54434141);
+    public static readonly RecordType AAPD = new(0x44504141);
     public static readonly RecordType ACHR = new(0x52484341);
     public static readonly RecordType ACRE = new(0x45524341);
     public static readonly RecordType ACTI = new(0x49544341);

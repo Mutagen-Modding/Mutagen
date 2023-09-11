@@ -25,6 +25,11 @@ namespace Mutagen.Bethesda.Starfield
                 Keyword_Registration.Instance,
             });
             dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)] with { Setter = false };
+            dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Race_Registration.Instance,
+            });
+            dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 HeadPart_Registration.Instance,
@@ -35,36 +40,47 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                MorphGroup_Registration.Instance,
+                Race_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                BipedObjectData_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                MorphGroup_Registration.Instance,
+                Race_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                Race_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
+                FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                Race_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

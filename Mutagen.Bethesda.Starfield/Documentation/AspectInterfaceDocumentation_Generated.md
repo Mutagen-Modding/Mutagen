@@ -5,15 +5,21 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IKeywordCommon
 - Keyword
+### IKeyworded
+- Race
 ### IModeled
 - HeadPart
 - Weapon
 ### INamed
+- BipedObjectData
 - Class
 - DamageType
+- FaceMorphItem
 - Faction
 - HeadPart
 - Keyword
+- MorphGroup
+- Race
 ### IObjectBounded
 - AOPFRecord
 - TextureSet
@@ -22,9 +28,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Concrete Classes to Interfaces
 ### AOPFRecord
 - IObjectBounded
+### BipedObjectData
+- INamed
 ### Class
 - INamed
 ### DamageType
+- INamed
+### FaceMorphItem
 - INamed
 ### Faction
 - INamed
@@ -33,6 +43,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Keyword
 - IKeywordCommon
+- INamed
+### MorphGroup
+- INamed
+### Race
+- IKeyworded
 - INamed
 ### TextureSet
 - IObjectBounded

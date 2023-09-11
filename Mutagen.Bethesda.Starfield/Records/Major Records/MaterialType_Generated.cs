@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class Spell :
+    public partial class MaterialType :
         StarfieldMajorRecord,
-        IEquatable<ISpellGetter>,
-        ILoquiObjectSetter<Spell>,
-        ISpellInternal
+        IEquatable<IMaterialTypeGetter>,
+        ILoquiObjectSetter<MaterialType>,
+        IMaterialTypeInternal
     {
         #region Ctor
-        protected Spell()
+        protected MaterialType()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SpellMixIn.Print(
+            MaterialTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Spell.Mask<R>();
+                var ret = new MaterialType.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Spell.Mask<bool>? printMask = null)
+            public string Print(MaterialType.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Spell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MaterialType.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Spell.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(MaterialType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                MaterialType_FieldIndex enu = (MaterialType_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,15 +294,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Spell_Registration.TriggeringRecordType;
-        public Spell(FormKey formKey)
+        public static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
+        public MaterialType(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private Spell(
+        private MaterialType(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Spell(
+        internal MaterialType(
             FormKey formKey,
             ushort formVersion)
         {
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Spell(IStarfieldMod mod)
+        public MaterialType(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Spell(IStarfieldMod mod, string editorID)
+        public MaterialType(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -333,10 +333,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Spell>.ToString(this);
+            return MajorRecordPrinter<MaterialType>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(ISpell);
+        protected override Type LinkType => typeof(IMaterialType);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMaterialTypeGetter rhs) return false;
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISpellGetter? obj)
+        public bool Equals(IMaterialTypeGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MaterialTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Spell CreateFromBinary(
+        public new static MaterialType CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Spell();
-            ((SpellSetterCommon)((ISpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MaterialType();
+            ((MaterialTypeSetterCommon)((IMaterialTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Spell item,
+            out MaterialType item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -404,84 +404,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((SpellSetterCommon)((ISpellGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MaterialTypeSetterCommon)((IMaterialTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Spell GetNew()
+        internal static new MaterialType GetNew()
         {
-            return new Spell();
+            return new MaterialType();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ISpell :
-        ILoquiObjectSetter<ISpellInternal>,
-        ISpellGetter,
-        ISpellRecord,
+    public partial interface IMaterialType :
+        ILoquiObjectSetter<IMaterialTypeInternal>,
+        IMaterialTypeGetter,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface ISpellInternal :
+    public partial interface IMaterialTypeInternal :
         IStarfieldMajorRecordInternal,
-        ISpell,
-        ISpellGetter
+        IMaterialType,
+        IMaterialTypeGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SPEL)]
-    public partial interface ISpellGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.MATT)]
+    public partial interface IMaterialTypeGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ISpellGetter>,
-        IMapsToGetter<ISpellGetter>,
-        ISpellRecordGetter
+        ILoquiObject<IMaterialTypeGetter>,
+        IMapsToGetter<IMaterialTypeGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class SpellMixIn
+    public static partial class MaterialTypeMixIn
     {
-        public static void Clear(this ISpellInternal item)
+        public static void Clear(this IMaterialTypeInternal item)
         {
-            ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MaterialTypeSetterCommon)((IMaterialTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Spell.Mask<bool> GetEqualsMask(
-            this ISpellGetter item,
-            ISpellGetter rhs,
+        public static MaterialType.Mask<bool> GetEqualsMask(
+            this IMaterialTypeGetter item,
+            IMaterialTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ISpellGetter item,
+            this IMaterialTypeGetter item,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            MaterialType.Mask<bool>? printMask = null)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Print(
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ISpellGetter item,
+            this IMaterialTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            MaterialType.Mask<bool>? printMask = null)
         {
-            ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Print(
+            ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -489,39 +487,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ISpellGetter item,
-            ISpellGetter rhs,
-            Spell.TranslationMask? equalsMask = null)
+            this IMaterialTypeGetter item,
+            IMaterialTypeGetter rhs,
+            MaterialType.TranslationMask? equalsMask = null)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Equals(
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ISpellInternal lhs,
-            ISpellGetter rhs,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+            this IMaterialTypeInternal lhs,
+            IMaterialTypeGetter rhs,
+            out MaterialType.ErrorMask errorMask,
+            MaterialType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MaterialType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISpellInternal lhs,
-            ISpellGetter rhs,
+            this IMaterialTypeInternal lhs,
+            IMaterialTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -529,55 +527,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
-            Spell.TranslationMask? copyMask = null)
+        public static MaterialType DeepCopy(
+            this IMaterialTypeGetter item,
+            MaterialType.TranslationMask? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+        public static MaterialType DeepCopy(
+            this IMaterialTypeGetter item,
+            out MaterialType.ErrorMask errorMask,
+            MaterialType.TranslationMask? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
+        public static MaterialType DeepCopy(
+            this IMaterialTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Spell Duplicate(
-            this ISpellGetter item,
+        public static MaterialType Duplicate(
+            this IMaterialTypeGetter item,
             FormKey formKey,
-            Spell.TranslationMask? copyMask = null)
+            MaterialType.TranslationMask? copyMask = null)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Duplicate(
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Spell Duplicate(
-            this ISpellGetter item,
+        public static MaterialType Duplicate(
+            this IMaterialTypeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Duplicate(
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -587,11 +585,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISpellInternal item,
+            this IMaterialTypeInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MaterialTypeSetterCommon)((IMaterialTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -607,7 +605,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Spell_FieldIndex
+    internal enum MaterialType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -620,40 +618,40 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class Spell_Registration : ILoquiRegistration
+    internal partial class MaterialType_Registration : ILoquiRegistration
     {
-        public static readonly Spell_Registration Instance = new Spell_Registration();
+        public static readonly MaterialType_Registration Instance = new MaterialType_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 728,
+            msgID: 719,
             version: 0);
 
-        public const string GUID = "5d39eaf2-eb8f-4e3c-9145-8f4e58c12453";
+        public const string GUID = "05817646-95d2-42fc-94d1-4f88ae89236c";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(Spell.Mask<>);
+        public static readonly Type MaskType = typeof(MaterialType.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Spell.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MaterialType.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Spell);
+        public static readonly Type ClassType = typeof(MaterialType);
 
-        public static readonly Type GetterType = typeof(ISpellGetter);
+        public static readonly Type GetterType = typeof(IMaterialTypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISpell);
+        public static readonly Type SetterType = typeof(IMaterialType);
 
-        public static readonly Type? InternalSetterType = typeof(ISpellInternal);
+        public static readonly Type? InternalSetterType = typeof(IMaterialTypeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Spell";
+        public const string FullName = "Mutagen.Bethesda.Starfield.MaterialType";
 
-        public const string Name = "Spell";
+        public const string Name = "MaterialType";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -661,14 +659,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.SPEL;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MATT;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SPEL);
+            var all = RecordCollection.Factory(RecordTypes.MATT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MaterialTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -701,13 +699,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class SpellSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class MaterialTypeSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly SpellSetterCommon Instance = new SpellSetterCommon();
+        public new static readonly MaterialTypeSetterCommon Instance = new MaterialTypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ISpellInternal item)
+        public void Clear(IMaterialTypeInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -715,16 +713,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (ISpellInternal)item);
+            Clear(item: (IMaterialTypeInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISpellInternal)item);
+            Clear(item: (IMaterialTypeInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ISpell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMaterialType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -733,16 +731,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISpellInternal item,
+            IMaterialTypeInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<ISpellInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IMaterialTypeInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SpellBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: SpellBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: MaterialTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MaterialTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -751,7 +749,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Spell)item,
+                item: (MaterialType)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -762,7 +760,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Spell)item,
+                item: (MaterialType)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -770,17 +768,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class SpellCommon : StarfieldMajorRecordCommon
+    internal partial class MaterialTypeCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly SpellCommon Instance = new SpellCommon();
+        public new static readonly MaterialTypeCommon Instance = new MaterialTypeCommon();
 
-        public Spell.Mask<bool> GetEqualsMask(
-            ISpellGetter item,
-            ISpellGetter rhs,
+        public MaterialType.Mask<bool> GetEqualsMask(
+            IMaterialTypeGetter item,
+            IMaterialTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Spell.Mask<bool>(false);
-            ((SpellCommon)((ISpellGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MaterialType.Mask<bool>(false);
+            ((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -789,18 +787,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ISpellGetter item,
-            ISpellGetter rhs,
-            Spell.Mask<bool> ret,
+            IMaterialTypeGetter item,
+            IMaterialTypeGetter rhs,
+            MaterialType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            ISpellGetter item,
+            IMaterialTypeGetter item,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            MaterialType.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -812,18 +810,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ISpellGetter item,
+            IMaterialTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            MaterialType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Spell =>");
+                sb.AppendLine($"MaterialType =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Spell) =>");
+                sb.AppendLine($"{name} (MaterialType) =>");
             }
             using (sb.Brace())
             {
@@ -835,9 +833,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ISpellGetter item,
+            IMaterialTypeGetter item,
             StructuredStringBuilder sb,
-            Spell.Mask<bool>? printMask = null)
+            MaterialType.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -845,41 +843,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static Spell_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static MaterialType_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Spell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new MaterialType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
+                    return (MaterialType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -887,8 +885,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISpellGetter? lhs,
-            ISpellGetter? rhs,
+            IMaterialTypeGetter? lhs,
+            IMaterialTypeGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -902,8 +900,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter,
+                lhs: (IMaterialTypeGetter?)lhs,
+                rhs: rhs as IMaterialTypeGetter,
                 equalsMask: equalsMask);
         }
         
@@ -913,12 +911,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter,
+                lhs: (IMaterialTypeGetter?)lhs,
+                rhs: rhs as IMaterialTypeGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(ISpellGetter item)
+        public virtual int GetHashCode(IMaterialTypeGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -927,12 +925,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISpellGetter)item);
+            return GetHashCode(item: (IMaterialTypeGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISpellGetter)item);
+            return GetHashCode(item: (IMaterialTypeGetter)item);
         }
         
         #endregion
@@ -940,11 +938,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Spell.GetNew();
+            return MaterialType.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISpellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMaterialTypeGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -954,12 +952,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public Spell Duplicate(
-            ISpellGetter item,
+        public MaterialType Duplicate(
+            IMaterialTypeGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Spell(formKey);
+            var newRec = new MaterialType(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -970,7 +968,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpellGetter)item,
+                item: (IMaterialTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -981,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpellGetter)item,
+                item: (IMaterialTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -991,14 +989,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class SpellSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class MaterialTypeSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly SpellSetterTranslationCommon Instance = new SpellSetterTranslationCommon();
+        public new static readonly MaterialTypeSetterTranslationCommon Instance = new MaterialTypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ISpellInternal item,
-            ISpellGetter rhs,
+            IMaterialTypeInternal item,
+            IMaterialTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1012,8 +1010,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            ISpell item,
-            ISpellGetter rhs,
+            IMaterialType item,
+            IMaterialTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1034,8 +1032,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IMaterialTypeInternal)item,
+                rhs: (IMaterialTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1049,8 +1047,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IMaterialType)item,
+                rhs: (IMaterialTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1064,8 +1062,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IMaterialTypeInternal)item,
+                rhs: (IMaterialTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1079,8 +1077,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IMaterialType)item,
+                rhs: (IMaterialTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1088,12 +1086,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Spell DeepCopy(
-            ISpellGetter item,
-            Spell.TranslationMask? copyMask = null)
+        public MaterialType DeepCopy(
+            IMaterialTypeGetter item,
+            MaterialType.TranslationMask? copyMask = null)
         {
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
-            ((SpellSetterTranslationCommon)((ISpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MaterialType ret = (MaterialType)((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).GetNew();
+            ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1102,30 +1100,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Spell DeepCopy(
-            ISpellGetter item,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+        public MaterialType DeepCopy(
+            IMaterialTypeGetter item,
+            out MaterialType.ErrorMask errorMask,
+            MaterialType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
-            ((SpellSetterTranslationCommon)((ISpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MaterialType ret = (MaterialType)((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).GetNew();
+            ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MaterialType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Spell DeepCopy(
-            ISpellGetter item,
+        public MaterialType DeepCopy(
+            IMaterialTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
-            ((SpellSetterTranslationCommon)((ISpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MaterialType ret = (MaterialType)((MaterialTypeCommon)((IMaterialTypeGetter)item).CommonInstance()!).GetNew();
+            ((MaterialTypeSetterTranslationCommon)((IMaterialTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1141,21 +1139,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Spell
+    public partial class MaterialType
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MaterialType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SpellCommon.Instance;
+        protected override object CommonInstance() => MaterialTypeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return SpellSetterCommon.Instance;
+            return MaterialTypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MaterialTypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1166,20 +1164,20 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SpellBinaryWriteTranslation :
+    public partial class MaterialTypeBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SpellBinaryWriteTranslation Instance = new();
+        public new static readonly MaterialTypeBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            ISpellGetter item,
+            IMaterialTypeGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SPEL)))
+                record: translationParams.ConvertToCustom(RecordTypes.MATT)))
             {
                 try
                 {
@@ -1207,7 +1205,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IMaterialTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1218,7 +1216,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IMaterialTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1229,25 +1227,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IMaterialTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class SpellBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class MaterialTypeBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
+        public new static readonly MaterialTypeBinaryCreateTranslation Instance = new MaterialTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.SPEL;
+        public override RecordType RecordType => RecordTypes.MATT;
     }
 
 }
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class SpellBinaryTranslationMixIn
+    public static class MaterialTypeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1256,35 +1254,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class SpellBinaryOverlay :
+    internal partial class MaterialTypeBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        ISpellGetter
+        IMaterialTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MaterialType_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MaterialType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SpellCommon.Instance;
+        protected override object CommonInstance() => MaterialTypeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MaterialTypeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MaterialTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISpell);
+        protected override Type LinkType => typeof(IMaterialType);
 
 
         partial void CustomFactoryEnd(
@@ -1293,7 +1291,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected SpellBinaryOverlay(
+        protected MaterialTypeBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1303,7 +1301,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ISpellGetter SpellFactory(
+        public static IMaterialTypeGetter MaterialTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1315,7 +1313,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new SpellBinaryOverlay(
+            var ret = new MaterialTypeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1333,12 +1331,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ISpellGetter SpellFactory(
+        public static IMaterialTypeGetter MaterialTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return SpellFactory(
+            return MaterialTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1350,7 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SpellMixIn.Print(
+            MaterialTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1360,7 +1358,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Spell>.ToString(this);
+            return MajorRecordPrinter<MaterialType>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1370,16 +1368,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMaterialTypeGetter rhs) return false;
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISpellGetter? obj)
+        public bool Equals(IMaterialTypeGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MaterialTypeCommon)((IMaterialTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -77,6 +77,11 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             PlacedObject_Registration.Instance,
         });
         dict[typeof(IPlacedThingGetter)] = dict[typeof(IPlacedThing)] with { Setter = false };
+        dict[typeof(ISpellRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Spell_Registration.Instance,
+        });
+        dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
         dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             TextureSet_Registration.Instance,

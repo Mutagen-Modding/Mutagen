@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AffinityEvent, AOPFRecord, AttractionRule, Cell, Class, CurveTable, DamageType, Faction, FFKWRecord, FormList, GameSetting, Global, HeadPart, Keyword, LocationReferenceType, MRPHRecord, Npc, PlacedObject, Race, Spell, Static, TextureSet, Transform, VoiceType, Weapon]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AffinityEvent, AimAssistPose, AOPFRecord, Armor, AttractionRule, BodyPartData, Cell, Class, CurveTable, DamageType, EquipType, Faction, FFKWRecord, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LocationReferenceType, MaterialType, MovementType, MRPHRecord, Npc, PlacedObject, Race, Spell, Static, TextureSet, Transform, VoiceType, Weapon]
     /// </summary>
     public abstract partial class StarfieldMajorRecord :
         MajorRecord,
@@ -503,7 +503,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AffinityEvent, AOPFRecord, AttractionRule, Cell, Class, CurveTable, DamageType, Faction, FFKWRecord, FormList, GameSetting, Global, HeadPart, Keyword, LocationReferenceType, MRPHRecord, Npc, PlacedObject, Race, Spell, Static, TextureSet, Transform, VoiceType, Weapon]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AffinityEvent, AimAssistPose, AOPFRecord, Armor, AttractionRule, BodyPartData, Cell, Class, CurveTable, DamageType, EquipType, Faction, FFKWRecord, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LocationReferenceType, MaterialType, MovementType, MRPHRecord, Npc, PlacedObject, Race, Spell, Static, TextureSet, Transform, VoiceType, Weapon]
     /// </summary>
     public partial interface IStarfieldMajorRecord :
         IAssetLinkContainer,
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AffinityEvent, AOPFRecord, AttractionRule, Cell, Class, CurveTable, DamageType, Faction, FFKWRecord, FormList, GameSetting, Global, HeadPart, Keyword, LocationReferenceType, MRPHRecord, Npc, PlacedObject, Race, Spell, Static, TextureSet, Transform, VoiceType, Weapon]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AffinityEvent, AimAssistPose, AOPFRecord, Armor, AttractionRule, BodyPartData, Cell, Class, CurveTable, DamageType, EquipType, Faction, FFKWRecord, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LocationReferenceType, MaterialType, MovementType, MRPHRecord, Npc, PlacedObject, Race, Spell, Static, TextureSet, Transform, VoiceType, Weapon]
     /// </summary>
     public partial interface IStarfieldMajorRecordGetter :
         IMajorRecordGetter,

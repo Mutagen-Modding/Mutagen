@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class Spell :
+    public partial class ImpactDataSet :
         StarfieldMajorRecord,
-        IEquatable<ISpellGetter>,
-        ILoquiObjectSetter<Spell>,
-        ISpellInternal
+        IEquatable<IImpactDataSetGetter>,
+        IImpactDataSetInternal,
+        ILoquiObjectSetter<ImpactDataSet>
     {
         #region Ctor
-        protected Spell()
+        protected ImpactDataSet()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SpellMixIn.Print(
+            ImpactDataSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Spell.Mask<R>();
+                var ret = new ImpactDataSet.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Spell.Mask<bool>? printMask = null)
+            public string Print(ImpactDataSet.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Spell.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ImpactDataSet.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Spell.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ImpactDataSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,15 +294,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Spell_Registration.TriggeringRecordType;
-        public Spell(FormKey formKey)
+        public static readonly RecordType GrupRecordType = ImpactDataSet_Registration.TriggeringRecordType;
+        public ImpactDataSet(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private Spell(
+        private ImpactDataSet(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal Spell(
+        internal ImpactDataSet(
             FormKey formKey,
             ushort formVersion)
         {
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public Spell(IStarfieldMod mod)
+        public ImpactDataSet(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Spell(IStarfieldMod mod, string editorID)
+        public ImpactDataSet(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -333,10 +333,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Spell>.ToString(this);
+            return MajorRecordPrinter<ImpactDataSet>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(ISpell);
+        protected override Type LinkType => typeof(IImpactDataSet);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IImpactDataSetGetter rhs) return false;
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISpellGetter? obj)
+        public bool Equals(IImpactDataSetGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ImpactDataSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ImpactDataSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Spell CreateFromBinary(
+        public new static ImpactDataSet CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Spell();
-            ((SpellSetterCommon)((ISpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ImpactDataSet();
+            ((ImpactDataSetSetterCommon)((IImpactDataSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Spell item,
+            out ImpactDataSet item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -404,84 +404,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((SpellSetterCommon)((ISpellGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ImpactDataSetSetterCommon)((IImpactDataSetGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Spell GetNew()
+        internal static new ImpactDataSet GetNew()
         {
-            return new Spell();
+            return new ImpactDataSet();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ISpell :
-        ILoquiObjectSetter<ISpellInternal>,
-        ISpellGetter,
-        ISpellRecord,
+    public partial interface IImpactDataSet :
+        IImpactDataSetGetter,
+        ILoquiObjectSetter<IImpactDataSetInternal>,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface ISpellInternal :
+    public partial interface IImpactDataSetInternal :
         IStarfieldMajorRecordInternal,
-        ISpell,
-        ISpellGetter
+        IImpactDataSet,
+        IImpactDataSetGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.SPEL)]
-    public partial interface ISpellGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.IPDS)]
+    public partial interface IImpactDataSetGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<ISpellGetter>,
-        IMapsToGetter<ISpellGetter>,
-        ISpellRecordGetter
+        ILoquiObject<IImpactDataSetGetter>,
+        IMapsToGetter<IImpactDataSetGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class SpellMixIn
+    public static partial class ImpactDataSetMixIn
     {
-        public static void Clear(this ISpellInternal item)
+        public static void Clear(this IImpactDataSetInternal item)
         {
-            ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ImpactDataSetSetterCommon)((IImpactDataSetGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Spell.Mask<bool> GetEqualsMask(
-            this ISpellGetter item,
-            ISpellGetter rhs,
+        public static ImpactDataSet.Mask<bool> GetEqualsMask(
+            this IImpactDataSetGetter item,
+            IImpactDataSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ISpellGetter item,
+            this IImpactDataSetGetter item,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            ImpactDataSet.Mask<bool>? printMask = null)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Print(
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ISpellGetter item,
+            this IImpactDataSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            ImpactDataSet.Mask<bool>? printMask = null)
         {
-            ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Print(
+            ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -489,39 +487,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ISpellGetter item,
-            ISpellGetter rhs,
-            Spell.TranslationMask? equalsMask = null)
+            this IImpactDataSetGetter item,
+            IImpactDataSetGetter rhs,
+            ImpactDataSet.TranslationMask? equalsMask = null)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Equals(
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ISpellInternal lhs,
-            ISpellGetter rhs,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+            this IImpactDataSetInternal lhs,
+            IImpactDataSetGetter rhs,
+            out ImpactDataSet.ErrorMask errorMask,
+            ImpactDataSet.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ImpactDataSet.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISpellInternal lhs,
-            ISpellGetter rhs,
+            this IImpactDataSetInternal lhs,
+            IImpactDataSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -529,55 +527,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
-            Spell.TranslationMask? copyMask = null)
+        public static ImpactDataSet DeepCopy(
+            this IImpactDataSetGetter item,
+            ImpactDataSet.TranslationMask? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+        public static ImpactDataSet DeepCopy(
+            this IImpactDataSetGetter item,
+            out ImpactDataSet.ErrorMask errorMask,
+            ImpactDataSet.TranslationMask? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
+        public static ImpactDataSet DeepCopy(
+            this IImpactDataSetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Spell Duplicate(
-            this ISpellGetter item,
+        public static ImpactDataSet Duplicate(
+            this IImpactDataSetGetter item,
             FormKey formKey,
-            Spell.TranslationMask? copyMask = null)
+            ImpactDataSet.TranslationMask? copyMask = null)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Duplicate(
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Spell Duplicate(
-            this ISpellGetter item,
+        public static ImpactDataSet Duplicate(
+            this IImpactDataSetGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Duplicate(
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -587,11 +585,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISpellInternal item,
+            this IImpactDataSetInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ImpactDataSetSetterCommon)((IImpactDataSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -607,7 +605,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum Spell_FieldIndex
+    internal enum ImpactDataSet_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -620,40 +618,40 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class Spell_Registration : ILoquiRegistration
+    internal partial class ImpactDataSet_Registration : ILoquiRegistration
     {
-        public static readonly Spell_Registration Instance = new Spell_Registration();
+        public static readonly ImpactDataSet_Registration Instance = new ImpactDataSet_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 728,
+            msgID: 718,
             version: 0);
 
-        public const string GUID = "5d39eaf2-eb8f-4e3c-9145-8f4e58c12453";
+        public const string GUID = "7f948bfd-a280-4ea3-84c5-16e53233bbbd";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(Spell.Mask<>);
+        public static readonly Type MaskType = typeof(ImpactDataSet.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Spell.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ImpactDataSet.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Spell);
+        public static readonly Type ClassType = typeof(ImpactDataSet);
 
-        public static readonly Type GetterType = typeof(ISpellGetter);
+        public static readonly Type GetterType = typeof(IImpactDataSetGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISpell);
+        public static readonly Type SetterType = typeof(IImpactDataSet);
 
-        public static readonly Type? InternalSetterType = typeof(ISpellInternal);
+        public static readonly Type? InternalSetterType = typeof(IImpactDataSetInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.Spell";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ImpactDataSet";
 
-        public const string Name = "Spell";
+        public const string Name = "ImpactDataSet";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -661,14 +659,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.SPEL;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.IPDS;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SPEL);
+            var all = RecordCollection.Factory(RecordTypes.IPDS);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ImpactDataSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -701,13 +699,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class SpellSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class ImpactDataSetSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly SpellSetterCommon Instance = new SpellSetterCommon();
+        public new static readonly ImpactDataSetSetterCommon Instance = new ImpactDataSetSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ISpellInternal item)
+        public void Clear(IImpactDataSetInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -715,16 +713,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (ISpellInternal)item);
+            Clear(item: (IImpactDataSetInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISpellInternal)item);
+            Clear(item: (IImpactDataSetInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(ISpell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IImpactDataSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -733,16 +731,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISpellInternal item,
+            IImpactDataSetInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<ISpellInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IImpactDataSetInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: SpellBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: SpellBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ImpactDataSetBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ImpactDataSetBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -751,7 +749,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Spell)item,
+                item: (ImpactDataSet)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -762,7 +760,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Spell)item,
+                item: (ImpactDataSet)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -770,17 +768,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class SpellCommon : StarfieldMajorRecordCommon
+    internal partial class ImpactDataSetCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly SpellCommon Instance = new SpellCommon();
+        public new static readonly ImpactDataSetCommon Instance = new ImpactDataSetCommon();
 
-        public Spell.Mask<bool> GetEqualsMask(
-            ISpellGetter item,
-            ISpellGetter rhs,
+        public ImpactDataSet.Mask<bool> GetEqualsMask(
+            IImpactDataSetGetter item,
+            IImpactDataSetGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Spell.Mask<bool>(false);
-            ((SpellCommon)((ISpellGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ImpactDataSet.Mask<bool>(false);
+            ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -789,18 +787,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ISpellGetter item,
-            ISpellGetter rhs,
-            Spell.Mask<bool> ret,
+            IImpactDataSetGetter item,
+            IImpactDataSetGetter rhs,
+            ImpactDataSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            ISpellGetter item,
+            IImpactDataSetGetter item,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            ImpactDataSet.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -812,18 +810,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ISpellGetter item,
+            IImpactDataSetGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            ImpactDataSet.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Spell =>");
+                sb.AppendLine($"ImpactDataSet =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Spell) =>");
+                sb.AppendLine($"{name} (ImpactDataSet) =>");
             }
             using (sb.Brace())
             {
@@ -835,9 +833,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ISpellGetter item,
+            IImpactDataSetGetter item,
             StructuredStringBuilder sb,
-            Spell.Mask<bool>? printMask = null)
+            ImpactDataSet.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -845,41 +843,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static Spell_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static ImpactDataSet_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Spell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ImpactDataSet_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
+                    return (ImpactDataSet_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -887,8 +885,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISpellGetter? lhs,
-            ISpellGetter? rhs,
+            IImpactDataSetGetter? lhs,
+            IImpactDataSetGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -902,8 +900,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter,
+                lhs: (IImpactDataSetGetter?)lhs,
+                rhs: rhs as IImpactDataSetGetter,
                 equalsMask: equalsMask);
         }
         
@@ -913,12 +911,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter,
+                lhs: (IImpactDataSetGetter?)lhs,
+                rhs: rhs as IImpactDataSetGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(ISpellGetter item)
+        public virtual int GetHashCode(IImpactDataSetGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -927,12 +925,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISpellGetter)item);
+            return GetHashCode(item: (IImpactDataSetGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISpellGetter)item);
+            return GetHashCode(item: (IImpactDataSetGetter)item);
         }
         
         #endregion
@@ -940,11 +938,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return Spell.GetNew();
+            return ImpactDataSet.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISpellGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IImpactDataSetGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -954,12 +952,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public Spell Duplicate(
-            ISpellGetter item,
+        public ImpactDataSet Duplicate(
+            IImpactDataSetGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Spell(formKey);
+            var newRec = new ImpactDataSet(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -970,7 +968,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpellGetter)item,
+                item: (IImpactDataSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -981,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpellGetter)item,
+                item: (IImpactDataSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -991,14 +989,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class SpellSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class ImpactDataSetSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly SpellSetterTranslationCommon Instance = new SpellSetterTranslationCommon();
+        public new static readonly ImpactDataSetSetterTranslationCommon Instance = new ImpactDataSetSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ISpellInternal item,
-            ISpellGetter rhs,
+            IImpactDataSetInternal item,
+            IImpactDataSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1012,8 +1010,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            ISpell item,
-            ISpellGetter rhs,
+            IImpactDataSet item,
+            IImpactDataSetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1034,8 +1032,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IImpactDataSetInternal)item,
+                rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1049,8 +1047,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IImpactDataSet)item,
+                rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1064,8 +1062,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IImpactDataSetInternal)item,
+                rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1079,8 +1077,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IImpactDataSet)item,
+                rhs: (IImpactDataSetGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1088,12 +1086,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public Spell DeepCopy(
-            ISpellGetter item,
-            Spell.TranslationMask? copyMask = null)
+        public ImpactDataSet DeepCopy(
+            IImpactDataSetGetter item,
+            ImpactDataSet.TranslationMask? copyMask = null)
         {
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
-            ((SpellSetterTranslationCommon)((ISpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ImpactDataSet ret = (ImpactDataSet)((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).GetNew();
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1102,30 +1100,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public Spell DeepCopy(
-            ISpellGetter item,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+        public ImpactDataSet DeepCopy(
+            IImpactDataSetGetter item,
+            out ImpactDataSet.ErrorMask errorMask,
+            ImpactDataSet.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
-            ((SpellSetterTranslationCommon)((ISpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ImpactDataSet ret = (ImpactDataSet)((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).GetNew();
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ImpactDataSet.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Spell DeepCopy(
-            ISpellGetter item,
+        public ImpactDataSet DeepCopy(
+            IImpactDataSetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
-            ((SpellSetterTranslationCommon)((ISpellGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ImpactDataSet ret = (ImpactDataSet)((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).GetNew();
+            ((ImpactDataSetSetterTranslationCommon)((IImpactDataSetGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1141,21 +1139,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class Spell
+    public partial class ImpactDataSet
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SpellCommon.Instance;
+        protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return SpellSetterCommon.Instance;
+            return ImpactDataSetSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ImpactDataSetSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1166,20 +1164,20 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SpellBinaryWriteTranslation :
+    public partial class ImpactDataSetBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly SpellBinaryWriteTranslation Instance = new();
+        public new static readonly ImpactDataSetBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            ISpellGetter item,
+            IImpactDataSetGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.SPEL)))
+                record: translationParams.ConvertToCustom(RecordTypes.IPDS)))
             {
                 try
                 {
@@ -1207,7 +1205,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IImpactDataSetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1218,7 +1216,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IImpactDataSetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1229,25 +1227,25 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IImpactDataSetGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class SpellBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class ImpactDataSetBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
+        public new static readonly ImpactDataSetBinaryCreateTranslation Instance = new ImpactDataSetBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.SPEL;
+        public override RecordType RecordType => RecordTypes.IPDS;
     }
 
 }
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class SpellBinaryTranslationMixIn
+    public static class ImpactDataSetBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1256,35 +1254,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class SpellBinaryOverlay :
+    internal partial class ImpactDataSetBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        ISpellGetter
+        IImpactDataSetGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ImpactDataSet_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SpellCommon.Instance;
+        protected override object CommonInstance() => ImpactDataSetCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ImpactDataSetSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ImpactDataSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ImpactDataSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(ISpell);
+        protected override Type LinkType => typeof(IImpactDataSet);
 
 
         partial void CustomFactoryEnd(
@@ -1293,7 +1291,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected SpellBinaryOverlay(
+        protected ImpactDataSetBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1303,7 +1301,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ISpellGetter SpellFactory(
+        public static IImpactDataSetGetter ImpactDataSetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1315,7 +1313,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new SpellBinaryOverlay(
+            var ret = new ImpactDataSetBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1333,12 +1331,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ISpellGetter SpellFactory(
+        public static IImpactDataSetGetter ImpactDataSetFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return SpellFactory(
+            return ImpactDataSetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1350,7 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SpellMixIn.Print(
+            ImpactDataSetMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1360,7 +1358,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Spell>.ToString(this);
+            return MajorRecordPrinter<ImpactDataSet>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1370,16 +1368,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IImpactDataSetGetter rhs) return false;
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISpellGetter? obj)
+        public bool Equals(IImpactDataSetGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

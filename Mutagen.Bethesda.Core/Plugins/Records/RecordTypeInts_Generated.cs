@@ -3,6 +3,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals;
 public partial class RecordTypeInts
 {
     public const int AACT = 0x54434141;
+    public const int AAPD = 0x44504141;
     public const int ACHR = 0x52484341;
     public const int ACRE = 0x45524341;
     public const int ACTI = 0x49544341;

@@ -7,10 +7,8 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -21,7 +19,6 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Starfield.Assets;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -40,34 +37,42 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [Model]
-    /// </summary>
-    public partial class SimpleModel :
-        IEquatable<ISimpleModelGetter>,
-        ILoquiObjectSetter<SimpleModel>,
-        ISimpleModel
+    public partial class EquipmentSlot :
+        IEquatable<IEquipmentSlotGetter>,
+        IEquipmentSlot,
+        ILoquiObjectSetter<EquipmentSlot>
     {
         #region Ctor
-        public SimpleModel()
+        public EquipmentSlot()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region File
-        public AssetLink<StarfieldModelAssetType> File { get; set; } = new AssetLink<StarfieldModelAssetType>();
-        AssetLinkGetter<StarfieldModelAssetType> ISimpleModelGetter.File => this.File;
+        #region Slot
+        private readonly IFormLinkNullable<IEquipTypeGetter> _Slot = new FormLinkNullable<IEquipTypeGetter>();
+        public IFormLinkNullable<IEquipTypeGetter> Slot
+        {
+            get => _Slot;
+            set => _Slot.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEquipTypeGetter> IEquipmentSlotGetter.Slot => this.Slot;
+        #endregion
+        #region Node
+        public String? Node { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IEquipmentSlotGetter.Node => this.Node;
         #endregion
 
         #region To String
 
-        public virtual void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.Print(
+            EquipmentSlotMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -78,16 +83,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISimpleModelGetter rhs) return false;
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IEquipmentSlotGetter rhs) return false;
+            return ((EquipmentSlotCommon)((IEquipmentSlotGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISimpleModelGetter? obj)
+        public bool Equals(IEquipmentSlotGetter? obj)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((EquipmentSlotCommon)((IEquipmentSlotGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((EquipmentSlotCommon)((IEquipmentSlotGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -97,9 +102,18 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem File)
+            public Mask(TItem initialValue)
             {
-                this.File = File;
+                this.Slot = initialValue;
+                this.Node = initialValue;
+            }
+
+            public Mask(
+                TItem Slot,
+                TItem Node)
+            {
+                this.Slot = Slot;
+                this.Node = Node;
             }
 
             #pragma warning disable CS8618
@@ -111,7 +125,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem File;
+            public TItem Slot;
+            public TItem Node;
             #endregion
 
             #region Equals
@@ -124,30 +139,34 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.File, rhs.File)) return false;
+                if (!object.Equals(this.Slot, rhs.Slot)) return false;
+                if (!object.Equals(this.Node, rhs.Node)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.File);
+                hash.Add(this.Slot);
+                hash.Add(this.Node);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public virtual bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.File)) return false;
+                if (!eval(this.Slot)) return false;
+                if (!eval(this.Node)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public virtual bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.File)) return true;
+                if (eval(this.Slot)) return true;
+                if (eval(this.Node)) return true;
                 return false;
             }
             #endregion
@@ -155,35 +174,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new SimpleModel.Mask<R>();
+                var ret = new EquipmentSlot.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.File = eval(this.File);
+                obj.Slot = eval(this.Slot);
+                obj.Node = eval(this.Node);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(SimpleModel.Mask<bool>? printMask = null)
+            public string Print(EquipmentSlot.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, SimpleModel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EquipmentSlot.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(SimpleModel.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(EquipmentSlot.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.File ?? true)
+                    if (printMask?.Slot ?? true)
                     {
-                        sb.AppendItem(File, "File");
+                        sb.AppendItem(Slot, "Slot");
+                    }
+                    if (printMask?.Node ?? true)
+                    {
+                        sb.AppendItem(Node, "Node");
                     }
                 }
             }
@@ -209,52 +233,62 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? File;
+            public Exception? Slot;
+            public Exception? Node;
             #endregion
 
             #region IErrorMask
-            public virtual object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
-                SimpleModel_FieldIndex enu = (SimpleModel_FieldIndex)index;
+                EquipmentSlot_FieldIndex enu = (EquipmentSlot_FieldIndex)index;
                 switch (enu)
                 {
-                    case SimpleModel_FieldIndex.File:
-                        return File;
+                    case EquipmentSlot_FieldIndex.Slot:
+                        return Slot;
+                    case EquipmentSlot_FieldIndex.Node:
+                        return Node;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
-                SimpleModel_FieldIndex enu = (SimpleModel_FieldIndex)index;
+                EquipmentSlot_FieldIndex enu = (EquipmentSlot_FieldIndex)index;
                 switch (enu)
                 {
-                    case SimpleModel_FieldIndex.File:
-                        this.File = ex;
+                    case EquipmentSlot_FieldIndex.Slot:
+                        this.Slot = ex;
+                        break;
+                    case EquipmentSlot_FieldIndex.Node:
+                        this.Node = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
-                SimpleModel_FieldIndex enu = (SimpleModel_FieldIndex)index;
+                EquipmentSlot_FieldIndex enu = (EquipmentSlot_FieldIndex)index;
                 switch (enu)
                 {
-                    case SimpleModel_FieldIndex.File:
-                        this.File = (Exception?)obj;
+                    case EquipmentSlot_FieldIndex.Slot:
+                        this.Slot = (Exception?)obj;
+                        break;
+                    case EquipmentSlot_FieldIndex.Node:
+                        this.Node = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (File != null) return true;
+                if (Slot != null) return true;
+                if (Node != null) return true;
                 return false;
             }
             #endregion
@@ -262,7 +296,7 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public virtual void Print(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -278,10 +312,13 @@ namespace Mutagen.Bethesda.Starfield
                     PrintFillInternal(sb);
                 }
             }
-            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(File, "File");
+                    sb.AppendItem(Slot, "Slot");
+                }
+                {
+                    sb.AppendItem(Node, "Node");
                 }
             }
             #endregion
@@ -291,7 +328,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.File = this.File.Combine(rhs.File);
+                ret.Slot = this.Slot.Combine(rhs.Slot);
+                ret.Node = this.Node.Combine(rhs.Node);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -315,7 +353,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool File;
+            public bool Slot;
+            public bool Node;
             #endregion
 
             #region Ctors
@@ -325,7 +364,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.File = defaultOn;
+                this.Slot = defaultOn;
+                this.Node = defaultOn;
             }
 
             #endregion
@@ -339,9 +379,10 @@ namespace Mutagen.Bethesda.Starfield
                 return _crystal;
             }
 
-            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((File, null));
+                ret.Add((Slot, null));
+                ret.Add((Node, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -353,33 +394,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SimpleModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SimpleModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SimpleModelSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EquipmentSlotCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipmentSlotSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => EquipmentSlotBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EquipmentSlotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static SimpleModel CreateFromBinary(
+        public static EquipmentSlot CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new SimpleModel();
-            ((SimpleModelSetterCommon)((ISimpleModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new EquipmentSlot();
+            ((EquipmentSlotSetterCommon)((IEquipmentSlotGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -390,7 +429,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out SimpleModel item,
+            out EquipmentSlot item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -405,37 +444,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((SimpleModelSetterCommon)((ISimpleModelGetter)this).CommonSetterInstance()!).Clear(this);
+            ((EquipmentSlotSetterCommon)((IEquipmentSlotGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static SimpleModel GetNew()
+        internal static EquipmentSlot GetNew()
         {
-            return new SimpleModel();
+            return new EquipmentSlot();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [Model]
-    /// </summary>
-    public partial interface ISimpleModel :
-        IAssetLinkContainer,
-        ILoquiObjectSetter<ISimpleModel>,
-        ISimpleModelGetter
+    public partial interface IEquipmentSlot :
+        IEquipmentSlotGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IEquipmentSlot>
     {
-        new AssetLink<StarfieldModelAssetType> File { get; set; }
+        new IFormLinkNullable<IEquipTypeGetter> Slot { get; set; }
+        new String? Node { get; set; }
     }
 
-    /// <summary>
-    /// Implemented by: [Model]
-    /// </summary>
-    public partial interface ISimpleModelGetter :
+    public partial interface IEquipmentSlotGetter :
         ILoquiObject,
-        IAssetLinkContainerGetter,
         IBinaryItem,
-        ILoquiObject<ISimpleModelGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IEquipmentSlotGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -443,50 +477,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
-        AssetLinkGetter<StarfieldModelAssetType> File { get; }
+        static ILoquiRegistration StaticRegistration => EquipmentSlot_Registration.Instance;
+        IFormLinkNullableGetter<IEquipTypeGetter> Slot { get; }
+        String? Node { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class SimpleModelMixIn
+    public static partial class EquipmentSlotMixIn
     {
-        public static void Clear(this ISimpleModel item)
+        public static void Clear(this IEquipmentSlot item)
         {
-            ((SimpleModelSetterCommon)((ISimpleModelGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((EquipmentSlotSetterCommon)((IEquipmentSlotGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SimpleModel.Mask<bool> GetEqualsMask(
-            this ISimpleModelGetter item,
-            ISimpleModelGetter rhs,
+        public static EquipmentSlot.Mask<bool> GetEqualsMask(
+            this IEquipmentSlotGetter item,
+            IEquipmentSlotGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ISimpleModelGetter item,
+            this IEquipmentSlotGetter item,
             string? name = null,
-            SimpleModel.Mask<bool>? printMask = null)
+            EquipmentSlot.Mask<bool>? printMask = null)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
+            return ((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ISimpleModelGetter item,
+            this IEquipmentSlotGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            SimpleModel.Mask<bool>? printMask = null)
+            EquipmentSlot.Mask<bool>? printMask = null)
         {
-            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Print(
+            ((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -494,21 +529,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ISimpleModelGetter item,
-            ISimpleModelGetter rhs,
-            SimpleModel.TranslationMask? equalsMask = null)
+            this IEquipmentSlotGetter item,
+            IEquipmentSlotGetter rhs,
+            EquipmentSlot.TranslationMask? equalsMask = null)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Equals(
+            return ((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ISimpleModel lhs,
-            ISimpleModelGetter rhs)
+            this IEquipmentSlot lhs,
+            IEquipmentSlotGetter rhs)
         {
-            ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -517,11 +552,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ISimpleModel lhs,
-            ISimpleModelGetter rhs,
-            SimpleModel.TranslationMask? copyMask = null)
+            this IEquipmentSlot lhs,
+            IEquipmentSlotGetter rhs,
+            EquipmentSlot.TranslationMask? copyMask = null)
         {
-            ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -530,28 +565,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ISimpleModel lhs,
-            ISimpleModelGetter rhs,
-            out SimpleModel.ErrorMask errorMask,
-            SimpleModel.TranslationMask? copyMask = null)
+            this IEquipmentSlot lhs,
+            IEquipmentSlotGetter rhs,
+            out EquipmentSlot.ErrorMask errorMask,
+            EquipmentSlot.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = SimpleModel.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EquipmentSlot.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISimpleModel lhs,
-            ISimpleModelGetter rhs,
+            this IEquipmentSlot lhs,
+            IEquipmentSlotGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -559,32 +594,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static SimpleModel DeepCopy(
-            this ISimpleModelGetter item,
-            SimpleModel.TranslationMask? copyMask = null)
+        public static EquipmentSlot DeepCopy(
+            this IEquipmentSlotGetter item,
+            EquipmentSlot.TranslationMask? copyMask = null)
         {
-            return ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static SimpleModel DeepCopy(
-            this ISimpleModelGetter item,
-            out SimpleModel.ErrorMask errorMask,
-            SimpleModel.TranslationMask? copyMask = null)
+        public static EquipmentSlot DeepCopy(
+            this IEquipmentSlotGetter item,
+            out EquipmentSlot.ErrorMask errorMask,
+            EquipmentSlot.TranslationMask? copyMask = null)
         {
-            return ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static SimpleModel DeepCopy(
-            this ISimpleModelGetter item,
+        public static EquipmentSlot DeepCopy(
+            this IEquipmentSlotGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -592,11 +627,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISimpleModel item,
+            this IEquipmentSlot item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((SimpleModelSetterCommon)((ISimpleModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((EquipmentSlotSetterCommon)((IEquipmentSlotGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -612,47 +647,48 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum SimpleModel_FieldIndex
+    internal enum EquipmentSlot_FieldIndex
     {
-        File = 0,
+        Slot = 0,
+        Node = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class SimpleModel_Registration : ILoquiRegistration
+    internal partial class EquipmentSlot_Registration : ILoquiRegistration
     {
-        public static readonly SimpleModel_Registration Instance = new SimpleModel_Registration();
+        public static readonly EquipmentSlot_Registration Instance = new EquipmentSlot_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 70,
+            msgID: 727,
             version: 0);
 
-        public const string GUID = "4cd9cae6-96f3-483f-9f1f-730cf7bcb016";
+        public const string GUID = "3f40e9c0-42e7-41ca-98d9-d24e628fa282";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(SimpleModel.Mask<>);
+        public static readonly Type MaskType = typeof(EquipmentSlot.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SimpleModel.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(EquipmentSlot.ErrorMask);
 
-        public static readonly Type ClassType = typeof(SimpleModel);
+        public static readonly Type ClassType = typeof(EquipmentSlot);
 
-        public static readonly Type GetterType = typeof(ISimpleModelGetter);
+        public static readonly Type GetterType = typeof(IEquipmentSlotGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISimpleModel);
+        public static readonly Type SetterType = typeof(IEquipmentSlot);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.SimpleModel";
+        public const string FullName = "Mutagen.Bethesda.Starfield.EquipmentSlot";
 
-        public const string Name = "SimpleModel";
+        public const string Name = "EquipmentSlot";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -660,14 +696,15 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.MODL;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.MODL);
+            var all = RecordCollection.Factory(
+                RecordTypes.QNAM,
+                RecordTypes.ZNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(SimpleModelBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(EquipmentSlotBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -700,46 +737,30 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class SimpleModelSetterCommon
+    internal partial class EquipmentSlotSetterCommon
     {
-        public static readonly SimpleModelSetterCommon Instance = new SimpleModelSetterCommon();
+        public static readonly EquipmentSlotSetterCommon Instance = new EquipmentSlotSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISimpleModel item)
+        public void Clear(IEquipmentSlot item)
         {
             ClearPartial();
-            item.File.SetToNull();
+            item.Slot.Clear();
+            item.Node = default;
         }
         
         #region Mutagen
-        public void RemapLinks(ISimpleModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IEquipmentSlot obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-        }
-        
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISimpleModel obj)
-        {
-            yield return obj.File;
-            yield break;
-        }
-        
-        public void RemapAssetLinks(
-            ISimpleModel obj,
-            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
-            AssetLinkQuery queryCategories)
-        {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
-            {
-                obj.File.Relink(mapping);
-            }
+            obj.Slot.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISimpleModel item,
+            IEquipmentSlot item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -747,23 +768,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: SimpleModelBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: EquipmentSlotBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class SimpleModelCommon
+    internal partial class EquipmentSlotCommon
     {
-        public static readonly SimpleModelCommon Instance = new SimpleModelCommon();
+        public static readonly EquipmentSlotCommon Instance = new EquipmentSlotCommon();
 
-        public SimpleModel.Mask<bool> GetEqualsMask(
-            ISimpleModelGetter item,
-            ISimpleModelGetter rhs,
+        public EquipmentSlot.Mask<bool> GetEqualsMask(
+            IEquipmentSlotGetter item,
+            IEquipmentSlotGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SimpleModel.Mask<bool>(false);
-            ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new EquipmentSlot.Mask<bool>(false);
+            ((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -772,18 +793,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ISimpleModelGetter item,
-            ISimpleModelGetter rhs,
-            SimpleModel.Mask<bool> ret,
+            IEquipmentSlotGetter item,
+            IEquipmentSlotGetter rhs,
+            EquipmentSlot.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.File = object.Equals(item.File, rhs.File);
+            ret.Slot = item.Slot.Equals(rhs.Slot);
+            ret.Node = string.Equals(item.Node, rhs.Node);
         }
         
         public string Print(
-            ISimpleModelGetter item,
+            IEquipmentSlotGetter item,
             string? name = null,
-            SimpleModel.Mask<bool>? printMask = null)
+            EquipmentSlot.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -795,18 +817,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ISimpleModelGetter item,
+            IEquipmentSlotGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            SimpleModel.Mask<bool>? printMask = null)
+            EquipmentSlot.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"SimpleModel =>");
+                sb.AppendLine($"EquipmentSlot =>");
             }
             else
             {
-                sb.AppendLine($"{name} (SimpleModel) =>");
+                sb.AppendLine($"{name} (EquipmentSlot) =>");
             }
             using (sb.Brace())
             {
@@ -818,56 +840,64 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ISimpleModelGetter item,
+            IEquipmentSlotGetter item,
             StructuredStringBuilder sb,
-            SimpleModel.Mask<bool>? printMask = null)
+            EquipmentSlot.Mask<bool>? printMask = null)
         {
-            if (printMask?.File ?? true)
+            if (printMask?.Slot ?? true)
             {
-                sb.AppendItem(item.File, "File");
+                sb.AppendItem(item.Slot.FormKeyNullable, "Slot");
+            }
+            if ((printMask?.Node ?? true)
+                && item.Node is {} NodeItem)
+            {
+                sb.AppendItem(NodeItem, "Node");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISimpleModelGetter? lhs,
-            ISimpleModelGetter? rhs,
+            IEquipmentSlotGetter? lhs,
+            IEquipmentSlotGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.File) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EquipmentSlot_FieldIndex.Slot) ?? true))
             {
-                if (!object.Equals(lhs.File, rhs.File)) return false;
+                if (!lhs.Slot.Equals(rhs.Slot)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EquipmentSlot_FieldIndex.Node) ?? true))
+            {
+                if (!string.Equals(lhs.Node, rhs.Node)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ISimpleModelGetter item)
+        public virtual int GetHashCode(IEquipmentSlotGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.File);
+            hash.Add(item.Slot);
+            if (item.Node is {} Nodeitem)
+            {
+                hash.Add(Nodeitem);
+            }
             return hash.ToHashCode();
         }
         
         #endregion
         
         
-        public virtual object GetNew()
+        public object GetNew()
         {
-            return SimpleModel.GetNew();
+            return EquipmentSlot.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISimpleModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEquipmentSlotGetter obj)
         {
-            yield break;
-        }
-        
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISimpleModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
-        {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (FormLinkInformation.TryFactory(obj.Slot, out var SlotInfo))
             {
-                yield return obj.File;
+                yield return SlotInfo;
             }
             yield break;
         }
@@ -875,29 +905,36 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class SimpleModelSetterTranslationCommon
+    internal partial class EquipmentSlotSetterTranslationCommon
     {
-        public static readonly SimpleModelSetterTranslationCommon Instance = new SimpleModelSetterTranslationCommon();
+        public static readonly EquipmentSlotSetterTranslationCommon Instance = new EquipmentSlotSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            ISimpleModel item,
-            ISimpleModelGetter rhs,
+        public void DeepCopyIn(
+            IEquipmentSlot item,
+            IEquipmentSlotGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            item.File.RawPath = rhs.File.RawPath;
+            if ((copyMask?.GetShouldTranslate((int)EquipmentSlot_FieldIndex.Slot) ?? true))
+            {
+                item.Slot.SetTo(rhs.Slot.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)EquipmentSlot_FieldIndex.Node) ?? true))
+            {
+                item.Node = rhs.Node;
+            }
         }
         
         #endregion
         
-        public SimpleModel DeepCopy(
-            ISimpleModelGetter item,
-            SimpleModel.TranslationMask? copyMask = null)
+        public EquipmentSlot DeepCopy(
+            IEquipmentSlotGetter item,
+            EquipmentSlot.TranslationMask? copyMask = null)
         {
-            SimpleModel ret = (SimpleModel)((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).GetNew();
-            ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EquipmentSlot ret = (EquipmentSlot)((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).GetNew();
+            ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -906,30 +943,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public SimpleModel DeepCopy(
-            ISimpleModelGetter item,
-            out SimpleModel.ErrorMask errorMask,
-            SimpleModel.TranslationMask? copyMask = null)
+        public EquipmentSlot DeepCopy(
+            IEquipmentSlotGetter item,
+            out EquipmentSlot.ErrorMask errorMask,
+            EquipmentSlot.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SimpleModel ret = (SimpleModel)((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).GetNew();
-            ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EquipmentSlot ret = (EquipmentSlot)((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).GetNew();
+            ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = SimpleModel.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EquipmentSlot.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public SimpleModel DeepCopy(
-            ISimpleModelGetter item,
+        public EquipmentSlot DeepCopy(
+            IEquipmentSlotGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            SimpleModel ret = (SimpleModel)((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).GetNew();
-            ((SimpleModelSetterTranslationCommon)((ISimpleModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EquipmentSlot ret = (EquipmentSlot)((EquipmentSlotCommon)((IEquipmentSlotGetter)item).CommonInstance()!).GetNew();
+            ((EquipmentSlotSetterTranslationCommon)((IEquipmentSlotGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -945,27 +982,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SimpleModel
+    public partial class EquipmentSlot
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => EquipmentSlot_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EquipmentSlot_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => SimpleModelCommon.Instance;
+        protected object CommonInstance() => EquipmentSlotCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
-            return SimpleModelSetterCommon.Instance;
+            return EquipmentSlotSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => SimpleModelSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EquipmentSlotSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ISimpleModelGetter.CommonInstance() => this.CommonInstance();
+        object IEquipmentSlotGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ISimpleModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IEquipmentSlotGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ISimpleModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IEquipmentSlotGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -976,25 +1013,29 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SimpleModelBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class EquipmentSlotBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SimpleModelBinaryWriteTranslation Instance = new();
+        public static readonly EquipmentSlotBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            ISimpleModelGetter item,
+            IEquipmentSlotGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.File.RawPath,
-                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                item: item.Slot,
+                header: translationParams.ConvertToCustom(RecordTypes.QNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Node,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
-            ISimpleModelGetter item,
+            IEquipmentSlotGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1003,25 +1044,25 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ISimpleModelGetter)item,
+                item: (IEquipmentSlotGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class SimpleModelBinaryCreateTranslation
+    internal partial class EquipmentSlotBinaryCreateTranslation
     {
-        public static readonly SimpleModelBinaryCreateTranslation Instance = new SimpleModelBinaryCreateTranslation();
+        public static readonly EquipmentSlotBinaryCreateTranslation Instance = new EquipmentSlotBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            ISimpleModel item,
+            IEquipmentSlot item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1032,14 +1073,21 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.MODL:
+                case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Slot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File.RawPath = StringBinaryTranslation.Instance.Parse(
+                    item.Slot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)EquipmentSlot_FieldIndex.Slot;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Node, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Node = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)SimpleModel_FieldIndex.File;
+                    return (int)EquipmentSlot_FieldIndex.Node;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1052,14 +1100,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class SimpleModelBinaryTranslationMixIn
+    public static class EquipmentSlotBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ISimpleModelGetter item,
+            this IEquipmentSlotGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SimpleModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((EquipmentSlotBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1072,47 +1120,51 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class SimpleModelBinaryOverlay :
+    internal partial class EquipmentSlotBinaryOverlay :
         PluginBinaryOverlay,
-        ISimpleModelGetter
+        IEquipmentSlotGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SimpleModel_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => EquipmentSlot_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EquipmentSlot_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => SimpleModelCommon.Instance;
+        protected object CommonInstance() => EquipmentSlotCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => SimpleModelSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EquipmentSlotSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ISimpleModelGetter.CommonInstance() => this.CommonInstance();
+        object IEquipmentSlotGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ISimpleModelGetter.CommonSetterInstance() => null;
+        object? IEquipmentSlotGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ISimpleModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IEquipmentSlotGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EquipmentSlotCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => EquipmentSlotBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SimpleModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EquipmentSlotBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region File
-        private int? _FileLocation;
-        public AssetLinkGetter<StarfieldModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<StarfieldModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<StarfieldModelAssetType>.Null;
+        #region Slot
+        private int? _SlotLocation;
+        public IFormLinkNullableGetter<IEquipTypeGetter> Slot => _SlotLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        #endregion
+        #region Node
+        private int? _NodeLocation;
+        public String? Node => _NodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NodeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1120,7 +1172,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected SimpleModelBinaryOverlay(
+        protected EquipmentSlotBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1130,7 +1182,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ISimpleModelGetter SimpleModelFactory(
+        public static IEquipmentSlotGetter EquipmentSlotFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1142,7 +1194,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new SimpleModelBinaryOverlay(
+            var ret = new EquipmentSlotBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1154,18 +1206,18 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ISimpleModelGetter SimpleModelFactory(
+        public static IEquipmentSlotGetter EquipmentSlotFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return SimpleModelFactory(
+            return EquipmentSlotFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
         }
 
-        public virtual ParseResult FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1177,11 +1229,17 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.MODL:
+                case RecordTypeInts.QNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
-                    _FileLocation = (stream.Position - offset);
-                    return (int)SimpleModel_FieldIndex.File;
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Slot, translationParams)) return ParseResult.Stop;
+                    _SlotLocation = (stream.Position - offset);
+                    return (int)EquipmentSlot_FieldIndex.Slot;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Node, translationParams)) return ParseResult.Stop;
+                    _NodeLocation = (stream.Position - offset);
+                    return (int)EquipmentSlot_FieldIndex.Node;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1189,11 +1247,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region To String
 
-        public virtual void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SimpleModelMixIn.Print(
+            EquipmentSlotMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1204,16 +1262,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISimpleModelGetter rhs) return false;
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IEquipmentSlotGetter rhs) return false;
+            return ((EquipmentSlotCommon)((IEquipmentSlotGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISimpleModelGetter? obj)
+        public bool Equals(IEquipmentSlotGetter? obj)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((EquipmentSlotCommon)((IEquipmentSlotGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((EquipmentSlotCommon)((IEquipmentSlotGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

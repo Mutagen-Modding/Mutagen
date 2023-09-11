@@ -756,7 +756,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.WEAP);
             var all = RecordCollection.Factory(
                 RecordTypes.WEAP,
-                RecordTypes.MODL);
+                RecordTypes.MODL,
+                RecordTypes.ANAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
@@ -1465,6 +1466,13 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weapon_FieldIndex.Model;
                 }
+                case RecordTypeInts.ANAM:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.SkeletalModel.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Weapon_FieldIndex.Model;
+                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1597,6 +1605,14 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Weapon_FieldIndex.Model;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    this.Model = SkeletalModelBinaryOverlay.SkeletalModelFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());

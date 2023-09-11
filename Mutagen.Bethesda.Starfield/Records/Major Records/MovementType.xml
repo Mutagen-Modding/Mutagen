@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovementType" recordType="MOVT" objType="Record" baseClass="StarfieldMajorRecord" GUID="db609aa3-e6e9-4186-b159-7a304787d884" ID="720">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>
