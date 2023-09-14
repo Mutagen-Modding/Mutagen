@@ -3501,7 +3501,6 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.VoiceTypes,
                 header: translationParams.ConvertToCustom(RecordTypes.VTCK));
-            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public static partial void WriteBinaryIDParseCustom(
@@ -3529,6 +3528,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public void Write(

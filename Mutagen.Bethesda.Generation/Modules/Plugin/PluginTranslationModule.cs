@@ -3157,7 +3157,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.AddPassArg($"translationParams");
                             }
                         }
-
                         if (isMajor)
                         {
                             sb.AppendLine(
@@ -3178,6 +3177,20 @@ public class PluginTranslationModule : BinaryTranslationModule
                             }
                         }
                     }
+
+                    var endMarkers = obj.BaseClassTrail().And(obj)
+                        .Where(x => x.GetObjectData().EndMarkerType.HasValue)
+                        .ToArray();
+                    if (endMarkers.Length > 1)
+                    {
+                        throw new ArgumentException("Cannot have two end markers");
+                    }
+
+                    if (endMarkers.Length == 1)
+                    {
+                        sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(endMarkers[0].GetObjectData().EndMarkerType!.Value)})) {{ }} // End Marker");
+                    }
+
                 }
             }
             if (isMajor)
@@ -3528,11 +3541,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                             await generate();
                         }
                     }
-                }
-
-                if (data.EndMarkerType.HasValue)
-                {
-                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }} // End Marker");
                 }
             }
             sb.AppendLine();

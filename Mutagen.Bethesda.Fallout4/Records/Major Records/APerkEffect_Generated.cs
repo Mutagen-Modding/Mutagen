@@ -1163,7 +1163,6 @@ namespace Mutagen.Bethesda.Fallout4
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PRKE)))
             {
             }
-            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public virtual void Write(
@@ -1175,6 +1174,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public virtual void Write(

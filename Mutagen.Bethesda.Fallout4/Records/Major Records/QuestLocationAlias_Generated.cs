@@ -1851,7 +1851,6 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.ClosestToAlias,
                 header: translationParams.ConvertToCustom(RecordTypes.ALCC));
-            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public void Write(
@@ -1866,6 +1865,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public override void Write(

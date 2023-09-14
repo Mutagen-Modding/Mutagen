@@ -3793,7 +3793,6 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.VoiceTypes,
                 header: translationParams.ConvertToCustom(RecordTypes.VTCK));
-            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public void Write(
@@ -3808,6 +3807,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { } // End Marker
         }
 
         public override void Write(

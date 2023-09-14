@@ -1234,7 +1234,6 @@ namespace Mutagen.Bethesda.Fallout4
                     writer: writer,
                     translationParams: translationParams.With(DestructionStage_Registration.ModelConverter));
             }
-            using (HeaderExport.Subrecord(writer, RecordTypes.DSTF)) { } // End Marker
         }
 
         public void Write(
@@ -1246,6 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.DSTF)) { } // End Marker
         }
 
         public void Write(

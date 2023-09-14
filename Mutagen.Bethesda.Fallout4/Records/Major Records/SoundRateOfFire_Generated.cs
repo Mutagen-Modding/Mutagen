@@ -1024,7 +1024,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item.File,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.Subrecord(writer, RecordTypes.ITME)) { } // End Marker
         }
 
         public void Write(
@@ -1036,6 +1035,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.ITME)) { } // End Marker
         }
 
         public void Write(
