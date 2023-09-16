@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ResearchProject" recordType="RSPJ" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="ResearchProject" recordType="RSPJ" objType="Record" baseClass="StarfieldMajorRecord" GUID="c73443a1-e690-45fa-ab8b-ea3bd5c4d77e" ID="846">
     <Fields>
     </Fields>
   </Object>

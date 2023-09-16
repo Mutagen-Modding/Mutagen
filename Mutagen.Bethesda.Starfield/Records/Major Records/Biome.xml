@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Biome" recordType="BIOM" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Biome" recordType="BIOM" objType="Record" baseClass="StarfieldMajorRecord" GUID="301b81b0-6637-4122-8d1f-2e86de6f8644" ID="753">
     <Fields>
     </Fields>
   </Object>

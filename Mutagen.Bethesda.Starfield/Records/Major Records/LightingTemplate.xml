@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LightingTemplate" recordType="LGTM" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="LightingTemplate" recordType="LGTM" objType="Record" baseClass="StarfieldMajorRecord" GUID="5a290d13-21c5-4a9f-a46f-c42178b565a0" ID="813">
     <Fields>
     </Fields>
   </Object>

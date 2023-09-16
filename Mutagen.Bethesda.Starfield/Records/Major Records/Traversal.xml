@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Traversal" recordType="TRAV" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Traversal" recordType="TRAV" objType="Record" baseClass="StarfieldMajorRecord" GUID="2f31c967-6764-4c54-9eba-e8ec1d10fdc3" ID="869">
     <Fields>
     </Fields>
   </Object>

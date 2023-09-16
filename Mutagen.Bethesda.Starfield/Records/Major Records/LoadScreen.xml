@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LoadScreen" recordType="LSCR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="LoadScreen" recordType="LSCR" objType="Record" baseClass="StarfieldMajorRecord" GUID="965d3978-8832-4579-bbdf-e397ef2269c3" ID="814">
     <Fields>
     </Fields>
   </Object>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogBranch" recordType="DLBR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="DialogBranch" recordType="DLBR" objType="Record" baseClass="StarfieldMajorRecord" GUID="d7b62f80-f6f3-45f4-b137-d7e84af48eac" ID="773">
     <Fields>
     </Fields>
   </Object>

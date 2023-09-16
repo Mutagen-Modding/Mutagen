@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="StarfieldMajorRecord" GUID="32f9124e-527b-40b5-a8fa-200718ca047c" ID="770">
     <Fields>
     </Fields>
   </Object>

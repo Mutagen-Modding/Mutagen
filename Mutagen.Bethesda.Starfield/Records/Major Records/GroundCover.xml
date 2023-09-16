@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GroundCover" recordType="GCVR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="GroundCover" recordType="GCVR" objType="Record" baseClass="StarfieldMajorRecord" GUID="d955cd71-3fc8-4175-ac50-28286d3139b7" ID="792">
     <Fields>
     </Fields>
   </Object>

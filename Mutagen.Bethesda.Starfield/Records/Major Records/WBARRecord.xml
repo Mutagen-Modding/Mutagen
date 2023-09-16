@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="WBARRecord" recordType="WBAR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="WBARRecord" recordType="WBAR" objType="Record" baseClass="StarfieldMajorRecord" GUID="00771dd9-1a90-4eae-8e6e-7fee04becd18" ID="872">
     <Fields>
     </Fields>
   </Object>

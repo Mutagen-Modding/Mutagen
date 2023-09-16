@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Location" recordType="LCTN" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Location" recordType="LCTN" objType="Record" baseClass="StarfieldMajorRecord" GUID="dcca74d1-e55e-4e19-907a-c6c078be267a" ID="815">
     <Fields>
     </Fields>
   </Object>

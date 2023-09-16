@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="StarfieldMajorRecord" GUID="074d4552-7301-479e-8b85-9637dade6c1e" ID="763">
     <Fields>
     </Fields>
   </Object>

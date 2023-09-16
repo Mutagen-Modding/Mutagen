@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Layer" recordType="LAYR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Layer" recordType="LAYR" objType="Record" baseClass="StarfieldMajorRecord" GUID="6b20309b-c624-47f7-b3e0-29f9cb07a4af" ID="803">
     <Fields>
     </Fields>
   </Object>

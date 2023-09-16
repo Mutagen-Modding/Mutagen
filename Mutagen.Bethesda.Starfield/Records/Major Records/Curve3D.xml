@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Curve3D" recordType="CUR3" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Curve3D" recordType="CUR3" objType="Record" baseClass="StarfieldMajorRecord" GUID="3dd8dce1-5439-4653-89b6-c369da2cb0f7" ID="769">
     <Fields>
     </Fields>
   </Object>

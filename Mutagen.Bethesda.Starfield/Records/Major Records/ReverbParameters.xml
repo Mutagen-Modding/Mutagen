@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ReverbParameters" recordType="REVB" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="ReverbParameters" recordType="REVB" objType="Record" baseClass="StarfieldMajorRecord" GUID="08059a22-9ec3-4d87-b7b2-a2e78a631905" ID="849">
     <Fields>
     </Fields>
   </Object>

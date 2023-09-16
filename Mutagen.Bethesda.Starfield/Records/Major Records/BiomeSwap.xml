@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="BiomeSwap" recordType="OSWP" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="BiomeSwap" recordType="OSWP" objType="Record" baseClass="StarfieldMajorRecord" GUID="20f84e54-61fe-42da-9e33-a44332dbf062" ID="755">
     <Fields>
     </Fields>
   </Object>

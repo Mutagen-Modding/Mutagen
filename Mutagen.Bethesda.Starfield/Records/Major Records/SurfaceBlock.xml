@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SurfaceBlock" recordType="SFBK" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="SurfaceBlock" recordType="SFBK" objType="Record" baseClass="StarfieldMajorRecord" GUID="80716422-c42c-4c79-bc2c-0241bb39d553" ID="861">
     <Fields>
     </Fields>
   </Object>

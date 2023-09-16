@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="StarfieldMajorRecord" GUID="621e431a-cad8-4d4a-a6d6-1bc03fb1a750" ID="738">
     <Fields>
     </Fields>
   </Object>

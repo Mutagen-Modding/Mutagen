@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ReferenceGroup" recordType="RFGP" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="ReferenceGroup" recordType="RFGP" objType="Record" baseClass="StarfieldMajorRecord" GUID="b3c28101-f76d-4342-a6ec-820e7e5d21e5" ID="844">
     <Fields>
     </Fields>
   </Object>

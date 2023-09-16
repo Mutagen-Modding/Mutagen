@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CameraShot" recordType="CAMS" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="CameraShot" recordType="CAMS" objType="Record" baseClass="StarfieldMajorRecord" GUID="8446f075-a1a8-4155-9666-d769894deaf7" ID="759">
     <Fields>
     </Fields>
   </Object>

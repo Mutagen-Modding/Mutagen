@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Water" recordType="WATR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Water" recordType="WATR" objType="Record" baseClass="StarfieldMajorRecord" GUID="01c1b88b-cb51-4a2a-a3c8-5dbc851166f3" ID="871">
     <Fields>
     </Fields>
   </Object>

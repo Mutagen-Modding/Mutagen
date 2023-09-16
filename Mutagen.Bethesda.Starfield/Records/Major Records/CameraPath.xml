@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CameraPath" recordType="CPTH" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="CameraPath" recordType="CPTH" objType="Record" baseClass="StarfieldMajorRecord" GUID="2d926f41-f2ef-44c7-b7af-640785f90b8c" ID="758">
     <Fields>
     </Fields>
   </Object>

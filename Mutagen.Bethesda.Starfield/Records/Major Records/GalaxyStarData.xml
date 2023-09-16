@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GalaxyStarData" recordType="STDT" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="GalaxyStarData" recordType="STDT" objType="Record" baseClass="StarfieldMajorRecord" GUID="90cb971e-25cc-4cad-9742-cb7300c7c2f6" ID="787">
     <Fields>
     </Fields>
   </Object>

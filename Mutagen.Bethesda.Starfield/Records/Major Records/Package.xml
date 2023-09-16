@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Package" recordType="PACK" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Package" recordType="PACK" objType="Record" baseClass="StarfieldMajorRecord" GUID="4c55c9ab-3280-422c-9489-42a378f32bc1" ID="831">
     <Fields>
     </Fields>
   </Object>

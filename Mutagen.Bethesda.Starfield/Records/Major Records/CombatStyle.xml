@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="StarfieldMajorRecord" GUID="78b1a36e-f356-4d27-bda9-89bae1cd61fa" ID="765">
     <Fields>
     </Fields>
   </Object>

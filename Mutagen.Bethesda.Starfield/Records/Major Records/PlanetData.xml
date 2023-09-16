@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlanetData" recordType="PNDT" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="PlanetData" recordType="PNDT" objType="Record" baseClass="StarfieldMajorRecord" GUID="be7dc52c-17ff-4031-bcb6-24d91bd7aa78" ID="840">
     <Fields>
     </Fields>
   </Object>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ForceData" recordType="FORC" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="ForceData" recordType="FORC" objType="Record" baseClass="StarfieldMajorRecord" GUID="72f25293-475c-4651-a60d-7d18bb0aa820" ID="784">
     <Fields>
     </Fields>
   </Object>

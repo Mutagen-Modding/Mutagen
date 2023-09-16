@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedNpc" recordType="ACHR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="PlacedNpc" recordType="ACHR" objType="Record" baseClass="StarfieldMajorRecord" GUID="1272fabc-1c6f-4f11-b9bc-be91a7c6c0af" ID="836">
     <Fields>
     </Fields>
   </Object>

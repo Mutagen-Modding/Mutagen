@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="StarfieldMajorRecord" GUID="1b8ee252-072b-4824-b425-a98ffe907cbf" ID="793">
     <Fields>
     </Fields>
   </Object>

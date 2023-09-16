@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Zoom" recordType="ZOOM" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Zoom" recordType="ZOOM" objType="Record" baseClass="StarfieldMajorRecord" GUID="0e5dd3c1-45bb-4f87-847e-5b4e94934ff2" ID="878">
     <Fields>
     </Fields>
   </Object>

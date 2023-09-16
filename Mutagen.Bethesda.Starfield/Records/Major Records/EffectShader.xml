@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="StarfieldMajorRecord" GUID="4f4a5ef6-9329-4d0b-9427-a72f4aa8c61d" ID="778">
     <Fields>
     </Fields>
   </Object>

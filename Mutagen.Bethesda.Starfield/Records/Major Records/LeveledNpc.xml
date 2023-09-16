@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledNpc" recordType="LVLN" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="LeveledNpc" recordType="LVLN" objType="Record" baseClass="StarfieldMajorRecord" GUID="6747895d-55f4-4301-8122-100c03364bb8" ID="809">
     <Fields>
     </Fields>
   </Object>

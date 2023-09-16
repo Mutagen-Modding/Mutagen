@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LayeredMaterialSwap" recordType="LMSW" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="LayeredMaterialSwap" recordType="LMSW" objType="Record" baseClass="StarfieldMajorRecord" GUID="4e27f28e-1188-4c55-975d-4b316881533f" ID="804">
     <Fields>
     </Fields>
   </Object>

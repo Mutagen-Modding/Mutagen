@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="WeatherSettings" recordType="WTHS" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="WeatherSettings" recordType="WTHS" objType="Record" baseClass="StarfieldMajorRecord" GUID="e44ee3b7-9918-4d7c-be84-7bff56645292" ID="874">
     <Fields>
     </Fields>
   </Object>
