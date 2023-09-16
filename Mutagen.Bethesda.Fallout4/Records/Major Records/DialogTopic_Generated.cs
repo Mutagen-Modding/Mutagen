@@ -93,7 +93,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Priority
-        public Single Priority { get; set; } = default;
+        public static readonly Single PriorityDefault = 50;
+        public Single Priority { get; set; } = PriorityDefault;
         #endregion
         #region Branch
         private readonly IFormLinkNullable<IDialogBranchGetter> _Branch = new FormLinkNullable<IDialogBranchGetter>();
@@ -1599,7 +1600,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Name = default;
-            item.Priority = default;
+            item.Priority = DialogTopic.PriorityDefault;
             item.Branch.Clear();
             item.Quest.Clear();
             item.Keyword.Clear();
@@ -2619,9 +2620,7 @@ namespace Mutagen.Bethesda.Fallout4
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Priority,
-                header: translationParams.ConvertToCustom(RecordTypes.PNAM),
-                divisor: 50f,
-                multiplier: null);
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Branch,
@@ -2789,10 +2788,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        multiplier: 50f,
-                        divisor: null);
+                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
@@ -2939,7 +2935,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Priority
         private int? _PriorityLocation;
-        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants).Float() * 50f : default;
+        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Branch
         private int? _BranchLocation;
