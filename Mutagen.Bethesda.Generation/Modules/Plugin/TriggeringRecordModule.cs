@@ -381,7 +381,7 @@ public class TriggeringRecordModule : GenerationModule
         MutagenFieldData data)
     {
         if (field is LoquiType loqui
-            && !(field is FormLinkType))
+            && field is not FormLinkType)
         {
             if (field.GetFieldData().Circular) return;
             IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());

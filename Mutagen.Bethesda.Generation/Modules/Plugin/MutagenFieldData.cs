@@ -47,7 +47,7 @@ public class MutagenFieldData
                 this.TriggeringRecordTypes,
                 this.SourceTypeGeneration);
         }
-        if (!(this.SourceTypeGeneration is LoquiType loqui)) yield break;
+        if (this.SourceTypeGeneration is not LoquiType loqui) yield break;
         foreach (var subType in this.SubLoquiTypes
                      .SelectMany(x => x.Value.Select(l => new KeyValuePair<RecordType, ObjectGeneration>(x.Key, l)))
                      .GroupBy((g) => g.Value))
