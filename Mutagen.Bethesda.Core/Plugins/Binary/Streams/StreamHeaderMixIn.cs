@@ -1647,6 +1647,29 @@ public static class StreamHeaderMixIn
     }
 
     /// <summary>
+    /// Retrieves a SubrecordFrame struct from the stream, without progressing its position.
+    /// </summary>
+    /// <param name="stream">Source stream</param>
+    /// <param name="targetType">RecordType to require for a successful query</param>
+    /// <param name="readSafe">
+    /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+    /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+    /// If true, extra data copies may occur depending on the underling stream type.
+    /// </param>
+    /// <returns>A SubrecordFrame struct</returns>
+    public static SubrecordFrame GetSubrecord<TStream>(this TStream stream, RecordType targetType, bool readSafe = true)
+        where TStream : IMutagenReadStream
+    {
+        var meta = GetSubrecordHeader(stream, stream.MetaData.Constants, readSafe: readSafe, offset: 0);
+        if (meta.RecordType != targetType)
+        {
+            throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
+        }
+
+        return SubrecordFrame.FactoryNoTrim(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
+    }
+
+    /// <summary>
     /// Attempts to retrieve a SubrecordFrame struct from the stream, without progressing its position.
     /// </summary>
     /// <param name="stream">Source stream</param>
