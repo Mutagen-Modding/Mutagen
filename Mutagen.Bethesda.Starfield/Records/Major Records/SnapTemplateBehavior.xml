@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SnapTemplateBehavior" recordType="STBH" objType="Record" baseClass="StarfieldMajorRecord" GUID="4bc1402d-40fe-44ea-ab0f-4365021f16d8" ID="854">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

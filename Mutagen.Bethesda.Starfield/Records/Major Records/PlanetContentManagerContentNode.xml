@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlanetContentManagerContentNode" recordType="PCCN" objType="Record" baseClass="StarfieldMajorRecord" GUID="61b54e19-6d6b-4806-866c-8e8f9f71e06b" ID="838">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

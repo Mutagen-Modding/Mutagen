@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TerminalMenu" recordType="TMLM" objType="Record" baseClass="StarfieldMajorRecord" GUID="173064aa-1d45-474a-9bab-3a7e9c6a7f73" ID="867">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

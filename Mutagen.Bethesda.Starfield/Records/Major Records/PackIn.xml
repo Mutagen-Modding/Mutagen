@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PackIn" recordType="PKIN" objType="Record" baseClass="StarfieldMajorRecord" GUID="8bc17823-c60e-4a8e-b521-58977089d30f" ID="832">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="StarfieldMajorRecord" GUID="58367a32-c9ee-4534-8569-250c6df0d64a" ID="774">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

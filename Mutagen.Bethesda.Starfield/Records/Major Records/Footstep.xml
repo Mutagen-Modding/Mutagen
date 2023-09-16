@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Footstep" recordType="FSTP" objType="Record" baseClass="StarfieldMajorRecord" GUID="4d85daca-0f70-4588-9f64-c35da5eb12e4" ID="782">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

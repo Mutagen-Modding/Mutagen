@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimOpticalSightMarker" recordType="AOPS" objType="Record" baseClass="StarfieldMajorRecord" GUID="039a5dab-f3f3-4a02-9db7-7e077fcc2b70" ID="744">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

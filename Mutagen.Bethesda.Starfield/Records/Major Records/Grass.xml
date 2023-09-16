@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Grass" recordType="GRAS" objType="Record" baseClass="StarfieldMajorRecord" GUID="a5b0f2c5-2c20-43a7-bed5-77ce88765bbf" ID="791">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

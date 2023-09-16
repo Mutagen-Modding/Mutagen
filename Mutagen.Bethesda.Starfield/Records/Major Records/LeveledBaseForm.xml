@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledBaseForm" recordType="LVLB" objType="Record" baseClass="StarfieldMajorRecord" GUID="ad17f6ca-c305-4efa-a611-54d2217e9c12" ID="807">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

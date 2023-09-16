@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AddonNode" recordType="ADDN" objType="Record" baseClass="StarfieldMajorRecord" GUID="bbfd86d7-bf07-481a-89b4-188d1e370c56" ID="741">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SurfacePatternConfig" recordType="SFPC" objType="Record" baseClass="StarfieldMajorRecord" GUID="be207efd-f4a6-4a0e-8e7a-dd95bb02c923" ID="863">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

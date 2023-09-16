@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="IdleMarker" recordType="IDLM" objType="Record" baseClass="StarfieldMajorRecord" GUID="f2189646-d60a-4838-8a82-1468508703b8" ID="795">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

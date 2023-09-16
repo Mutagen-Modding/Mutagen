@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Atmosphere" recordType="ATMO" objType="Record" baseClass="StarfieldMajorRecord" GUID="5a45fd17-8266-4696-a360-098c172fa0f9" ID="751">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

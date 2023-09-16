@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="StarfieldMajorRecord" GUID="1a614fe7-1b84-49b5-946b-bd4154ac2275" ID="842">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Outfit" recordType="OTFT" objType="Record" baseClass="StarfieldMajorRecord" GUID="2ad6a617-fef2-4ab5-ac39-67c9062205f3" ID="830">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

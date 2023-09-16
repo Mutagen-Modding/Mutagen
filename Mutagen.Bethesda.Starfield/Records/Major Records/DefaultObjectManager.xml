@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DefaultObjectManager" recordType="DOBJ" objType="Record" baseClass="StarfieldMajorRecord" GUID="ac9aeb86-e398-4dcb-b674-7ebbda00d8c3" ID="772">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

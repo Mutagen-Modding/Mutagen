@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FogVolume" recordType="FOGV" objType="Record" baseClass="StarfieldMajorRecord" GUID="97208fa1-85e7-435a-8090-633dde0483e5" ID="781">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

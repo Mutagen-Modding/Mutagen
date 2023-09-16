@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PhotoModeFeature" recordType="PMFT" objType="Record" baseClass="StarfieldMajorRecord" GUID="71728ba0-d0bb-4ac7-9e59-52c9a31ea2ea" ID="835">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

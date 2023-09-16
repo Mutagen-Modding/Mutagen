@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MeleeAimAssistModel" recordType="MAAM" objType="Record" baseClass="StarfieldMajorRecord" GUID="6b23ddd0-d668-43ad-b910-e4fe77adfc5c" ID="818">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

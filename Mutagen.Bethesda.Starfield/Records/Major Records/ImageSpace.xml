@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImageSpace" recordType="IMGS" objType="Record" baseClass="StarfieldMajorRecord" GUID="b4529735-23ec-47b9-b584-93e4a14f6590" ID="796">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

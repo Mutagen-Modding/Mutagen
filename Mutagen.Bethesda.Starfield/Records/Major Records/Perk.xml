@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Perk" recordType="PERK" objType="Record" baseClass="StarfieldMajorRecord" GUID="e156cb7a-7320-4ade-844a-9b77e64090d3" ID="834">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

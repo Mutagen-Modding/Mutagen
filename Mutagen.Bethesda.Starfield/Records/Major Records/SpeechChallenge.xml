@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SpeechChallenge" recordType="SPCH" objType="Record" baseClass="StarfieldMajorRecord" GUID="189e3159-910a-4a4a-abf9-00967ea3a77b" ID="859">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

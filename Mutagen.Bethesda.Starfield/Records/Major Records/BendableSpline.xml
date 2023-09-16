@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BendableSpline" recordType="BNDS" objType="Record" baseClass="StarfieldMajorRecord" GUID="4ab72c25-8dce-4190-aaf9-21eb40415e8e" ID="752">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

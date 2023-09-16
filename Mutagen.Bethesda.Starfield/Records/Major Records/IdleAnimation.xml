@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="IdleAnimation" recordType="IDLE" objType="Record" baseClass="StarfieldMajorRecord" GUID="1e920258-a057-4af1-9c01-0f12636777ab" ID="794">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ProjectedDecal" recordType="PDCL" objType="Record" baseClass="StarfieldMajorRecord" GUID="c2ff7097-ebaf-4c81-8cfe-0e6967b95772" ID="841">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

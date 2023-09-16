@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="StarfieldMajorRecord" GUID="6d508127-13e0-4953-90fa-8884f3028f9d" ID="816">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

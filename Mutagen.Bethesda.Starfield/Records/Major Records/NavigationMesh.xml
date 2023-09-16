@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMesh" recordType="NAVM" objType="Record" baseClass="StarfieldMajorRecord" GUID="e8574b0e-ff5a-4a72-9882-c425a7972ce9" ID="824">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

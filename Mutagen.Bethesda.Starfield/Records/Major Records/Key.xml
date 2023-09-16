@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Key" recordType="KEYM" objType="Record" baseClass="StarfieldMajorRecord" GUID="1a26651b-19fe-4e4d-85a7-53eeb364d109" ID="801">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

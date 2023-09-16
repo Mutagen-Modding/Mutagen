@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Climate" recordType="CLMT" objType="Record" baseClass="StarfieldMajorRecord" GUID="5a0020db-f3ff-4168-90e8-a3dbba627810" ID="761">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

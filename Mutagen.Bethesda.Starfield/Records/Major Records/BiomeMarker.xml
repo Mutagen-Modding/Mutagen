@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BiomeMarker" recordType="BMMO" objType="Record" baseClass="StarfieldMajorRecord" GUID="82926306-6571-43cd-b09f-b7bb66acf8f8" ID="754">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

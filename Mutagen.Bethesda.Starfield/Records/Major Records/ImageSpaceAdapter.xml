@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImageSpaceAdapter" recordType="IMAD" objType="Record" baseClass="StarfieldMajorRecord" GUID="e9c8613a-0da1-4f1b-ac16-6d75398803cd" ID="797">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

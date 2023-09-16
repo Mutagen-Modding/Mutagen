@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectEffect" recordType="ENCH" objType="Record" baseClass="StarfieldMajorRecord" GUID="df110625-a32f-4689-8e7a-aa47362787ef" ID="827">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

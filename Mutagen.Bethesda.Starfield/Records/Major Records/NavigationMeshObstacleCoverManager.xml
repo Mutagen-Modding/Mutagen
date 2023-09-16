@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMeshObstacleCoverManager" recordType="NOCM" objType="Record" baseClass="StarfieldMajorRecord" GUID="d0a4d3ce-4403-467a-a3fa-c2ef1bb0e15b" ID="826">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

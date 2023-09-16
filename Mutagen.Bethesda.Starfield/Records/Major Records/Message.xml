@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Message" recordType="MESG" objType="Record" baseClass="StarfieldMajorRecord" GUID="247fce25-e738-462f-9189-6103b28740e6" ID="819">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

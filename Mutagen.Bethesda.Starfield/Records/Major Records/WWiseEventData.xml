@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="WWiseEventData" recordType="WWED" objType="Record" baseClass="StarfieldMajorRecord" GUID="f854ea4e-7bdd-40b4-a1e6-e56d7774e614" ID="876">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

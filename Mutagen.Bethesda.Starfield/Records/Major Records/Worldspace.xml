@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Worldspace" recordType="WRLD" objType="Record" baseClass="StarfieldMajorRecord" GUID="3a613e18-7dce-471c-8ede-578e1580581a" ID="875">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

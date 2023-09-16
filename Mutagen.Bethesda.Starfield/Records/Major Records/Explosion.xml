@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="StarfieldMajorRecord" GUID="2a03b049-6422-48bb-8272-00005fd36f52" ID="779">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

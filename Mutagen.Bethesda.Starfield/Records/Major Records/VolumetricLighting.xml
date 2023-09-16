@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VolumetricLighting" recordType="VOLI" objType="Record" baseClass="StarfieldMajorRecord" GUID="5ba5e39a-352d-481f-a420-b0a89af79751" ID="870">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

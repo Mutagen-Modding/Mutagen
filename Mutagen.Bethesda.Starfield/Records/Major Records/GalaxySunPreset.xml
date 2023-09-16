@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="GalaxySunPreset" recordType="SUNP" objType="Record" baseClass="StarfieldMajorRecord" GUID="9a860875-64ae-4ea5-916d-d2867a329448" ID="788">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

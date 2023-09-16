@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ShaderParticleGeometry" recordType="SPGD" objType="Record" baseClass="StarfieldMajorRecord" GUID="c7d2a40c-9d9c-44c8-83ce-8ce91cf158ae" ID="852">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

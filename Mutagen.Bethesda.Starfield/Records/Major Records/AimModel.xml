@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AimModel" recordType="AMDL" objType="Record" baseClass="StarfieldMajorRecord" GUID="1d6eecdb-104b-4c27-9075-fb67e565eefb" ID="743">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>
