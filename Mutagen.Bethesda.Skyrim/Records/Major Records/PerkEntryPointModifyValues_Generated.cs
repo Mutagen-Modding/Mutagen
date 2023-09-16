@@ -1203,6 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { } // End Marker
         }
 
         public override void Write(
