@@ -290,18 +290,15 @@ public class Fallout4Processor : Processor
     }
 
     public void GameSettingStringHandler(
-        IMutagenReadStream stream,
-        MajorRecordHeader major,
+        long loc,
+        MajorRecordFrame major,
         List<StringEntry> processedStrings,
         IStringsLookup overlay)
     {
-        stream.Position -= major.HeaderLength;
-        var majorRec = stream.GetMajorRecord();
-        if (!majorRec.TryFindSubrecord("EDID", out var edidRec)) throw new ArgumentException();
+        if (!major.TryFindSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
-        if (!majorRec.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
-        stream.Position += dataRec.Location;
-        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
+        if (!major.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
+        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, dataRec);
     }
 
     private void ProcessRegions(
@@ -1194,42 +1191,32 @@ public class Fallout4Processor : Processor
     }
 
     public void PerkStringHandler(
-        IMutagenReadStream stream,
-        MajorRecordHeader major,
+        long loc,
+        MajorRecordFrame major,
         List<StringEntry> processedStrings,
         IStringsLookup overlay)
     {
-        var majorCompletePos = stream.Position + major.ContentLength;
-        long? lastepft = null;
-        while (stream.Position < majorCompletePos)
+        SubrecordPinFrame? lastepft = null; 
+        foreach (var sub in major.EnumerateSubrecords())
         {
-            var sub = stream.GetSubrecordHeader();
             switch (sub.RecordTypeInt)
             {
                 case RecordTypeInts.FULL:
                 case RecordTypeInts.EPF2:
-                    AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
+                    AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
                     break;
                 case RecordTypeInts.EPFT:
-                    lastepft = stream.Position;
+                    lastepft = sub; 
                     break;
                 case RecordTypeInts.EPFD:
-                    var pos = stream.Position;
-                    stream.Position = lastepft.Value;
-                    var epftFrame = stream.ReadSubrecord();
-                    if (epftFrame.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
+                    if (lastepft!.Value.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
                     {
-                        stream.Position = pos;
-                        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
+                        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
                     }
-
-                    stream.Position = pos;
                     break;
                 default:
                     break;
             }
-
-            stream.Position += sub.TotalLength;
         }
     }
 

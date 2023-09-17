@@ -670,7 +670,7 @@ public abstract class Processor
 
     public abstract class AStringsAlignment
     {
-        public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, List<StringEntry> processedStrings, IStringsLookup overlay);
+        public delegate void Handle(long loc, MajorRecordFrame major, List<StringEntry> processedStrings, IStringsLookup overlay);
 
         public RecordType MajorType;
 
@@ -685,24 +685,19 @@ public abstract class Processor
         }
 
         public static void ProcessStringLink(
-            IMutagenReadStream stream,
+            long loc,
             List<StringEntry> processedStrings,
             IStringsLookup overlay,
-            MajorRecordHeader majorRecordHeader)
+            MajorRecordFrame majorRecordHeader,
+            SubrecordPinFrame sub)
         {
-            var loc = stream.Position;
-            var sub = stream.ReadSubrecordHeader();
-            if (sub.ContentLength != 4)
-            {
-                throw new ArgumentException();
-            }
-            var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
+            var curIndex = sub.AsUInt32();
             if (!overlay.TryLookup(curIndex, out var str))
             {
                 processedStrings.Add(
                     new StringEntry(
                         OrigIndex: curIndex, 
-                        FileLocation: loc + sub.HeaderLength, 
+                        FileLocation: loc + sub.Location + sub.HeaderLength, 
                         Fill: false, 
                         IsInDeletedRecord: majorRecordHeader.IsDeleted));
             }
@@ -711,11 +706,10 @@ public abstract class Processor
                 processedStrings.Add(
                     new StringEntry(
                         OrigIndex: curIndex, 
-                        FileLocation: loc + sub.HeaderLength, 
+                        FileLocation: loc + sub.Location + sub.HeaderLength, 
                         Fill: true,
                         IsInDeletedRecord: majorRecordHeader.IsDeleted));
             }
-            stream.Position -= sub.HeaderLength;
         }
     }
 
@@ -742,20 +736,17 @@ public abstract class Processor
         public override Handle Handler => Align;
 
         private void Align(
-            IMutagenReadStream stream,
-            MajorRecordHeader major,
+            long loc,
+            MajorRecordFrame major,
             List<StringEntry> processedStrings,
             IStringsLookup overlay)
         {
-            var majorCompletePos = stream.Position + major.ContentLength;
-            while (stream.Position < majorCompletePos)
+            foreach (var sub in major.EnumerateSubrecords())
             {
-                var sub = stream.GetSubrecordHeader();
                 if (StringTypes.Contains(sub.RecordType))
                 {
-                    ProcessStringLink(stream, processedStrings, overlay, major);
+                    ProcessStringLink(loc, processedStrings, overlay, major, sub);
                 }
-                stream.Position += sub.TotalLength;
             }
         }
     }
@@ -876,12 +867,12 @@ public abstract class Processor
         foreach (var rec in locs.ListedRecords)
         {
             stream.Position = rec.Key;
-            var major = stream.ReadMajorRecordHeader();
+            var major = stream.GetMajorRecord();
             if (!dict.TryGetValue(major.RecordType, out var instructions))
             {
                 continue;
             }
-            instructions.Handler(stream, major, ret, overlay.Value);
+            instructions.Handler(stream.Position, major, ret, overlay.Value);
         }
 
         return ret;

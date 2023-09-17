@@ -52,6 +52,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "FACT", "FULL" },
                     new RecordType[] { "HDPT", "FULL" },
                     new RecordType[] { "RACE", "FULL" },
+                    new RecordType[] { "PNDT", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
@@ -67,18 +68,15 @@ public class StarfieldProcessor : Processor
     }
     
     public void GameSettingStringHandler(
-        IMutagenReadStream stream,
-        MajorRecordHeader major,
+        long loc,
+        MajorRecordFrame major,
         List<StringEntry> processedStrings,
         IStringsLookup overlay)
     {
-        stream.Position -= major.HeaderLength;
-        var majorRec = stream.GetMajorRecord();
-        if (!majorRec.TryFindSubrecord("EDID", out var edidRec)) throw new ArgumentException();
+        if (!major.TryFindSubrecord("EDID", out var edidRec)) throw new ArgumentException();
         if (edidRec.Content[0] != (byte)'s') return;
-        if (!majorRec.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
-        stream.Position += dataRec.Location;
-        AStringsAlignment.ProcessStringLink(stream, processedStrings, overlay, major);
+        if (!major.TryFindSubrecord("DATA", out var dataRec)) throw new ArgumentException();
+        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, dataRec);
     }
 
     private void ProcessGameSettings(
