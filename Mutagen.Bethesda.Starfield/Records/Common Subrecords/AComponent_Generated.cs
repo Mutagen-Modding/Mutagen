@@ -600,13 +600,15 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BFCB;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.BFCB);
+            var triggers = RecordCollection.Factory(
+                RecordTypes.BFCB,
+                RecordTypes.XMPM);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
+                RecordTypes.XMPM,
                 RecordTypes.BFCE);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });

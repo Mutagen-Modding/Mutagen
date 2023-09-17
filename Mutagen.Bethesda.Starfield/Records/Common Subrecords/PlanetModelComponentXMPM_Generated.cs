@@ -791,12 +791,15 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BFCB;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.XMPM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.BFCB);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.XMPM);
+            var all = RecordCollection.Factory(
+                RecordTypes.XMPM,
+                RecordTypes.BFCB);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlanetModelComponentXMPMBinaryWriteTranslation);
         #region Interface
@@ -864,6 +867,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1279,14 +1283,21 @@ namespace Mutagen.Bethesda.Starfield
             IPlanetModelComponentXMPMGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
-            WriteRecordTypes(
-                item: item,
+            using (HeaderExport.Subrecord(
                 writer: writer,
-                translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, RecordTypes.BFCE)) { } // End Marker
+                record: translationParams.ConvertToCustom(RecordTypes.XMPM),
+                overflowRecord: translationParams.OverflowRecordType,
+                out var writerToUse))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writerToUse);
+                WriteRecordTypes(
+                    item: item,
+                    writer: writerToUse,
+                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.BFCE)) { } // End Marker
+            }
         }
 
         public override void Write(
@@ -1439,7 +1450,7 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordRecordMemory(
+            stream = ExtractSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
@@ -1449,9 +1460,13 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlanetModelComponentXMPMBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.FillTypelessSubrecordTypes(
+            ret.CustomFactoryEnd(
                 stream: stream,
-                finalPos: stream.Length,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);

@@ -32,6 +32,9 @@
   </Object>
   <Object name="KeywordFormComponent" objType="Subrecord" baseClass="AComponent" GUID="2a979c6c-5762-419f-9f2b-bb2fc2ea7d97" ID="885">
     <Fields>
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
     </Fields>
   </Object>
   <Object name="ObjectWindowFilterComponent" objType="Subrecord" baseClass="AComponent" GUID="145174a7-709a-4cff-b466-b179ec233304" ID="886">
@@ -74,7 +77,7 @@
       <String name="RingId" recordType="XLMS" />
     </Fields>
   </Object>
-  <Object name="PlanetModelComponentXMPM" objType="Subrecord" baseClass="AComponent" GUID="b154265a-1bd3-47bd-9928-e2b35f67e514" ID="899">
+  <Object name="PlanetModelComponentXMPM" objType="Subrecord" recordType="XMPM" baseClass="AComponent" GUID="b154265a-1bd3-47bd-9928-e2b35f67e514" ID="899">
     <Fields>
       <List name="UnknownStrings" counterLength="2">
         <String binaryType="PrependLengthUShort" />

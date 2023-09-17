@@ -6,6 +6,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeywordCommon
 - Keyword
 ### IKeyworded
+- KeywordFormComponent
 - Race
 ### IModeled
 - HeadPart
@@ -52,6 +53,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Keyword
 - IKeywordCommon
 - INamed
+### KeywordFormComponent
+- IKeyworded
 ### MorphGroup
 - INamed
 ### Planet

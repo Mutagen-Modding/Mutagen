@@ -1543,6 +1543,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.FACT,
                 RecordTypes.BFCB,
+                RecordTypes.XMPM,
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
                 RecordTypes.XNAM,

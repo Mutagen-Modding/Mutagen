@@ -304,6 +304,7 @@ public partial class RecordTypes
     public static readonly RecordType XALG = new(0x474C4158);
     public static readonly RecordType XFLG = new(0x474C4658);
     public static readonly RecordType XLMS = new(0x534D4C58);
+    public static readonly RecordType XMPM = new(0x4D504D58);
     public static readonly RecordType XMSP = new(0x50534D58);
     public static readonly RecordType XNAM = new(0x4D414E58);
     public static readonly RecordType XXXX = new(0x58585858);

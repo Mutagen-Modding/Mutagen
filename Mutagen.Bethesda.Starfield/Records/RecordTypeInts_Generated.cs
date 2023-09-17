@@ -302,6 +302,7 @@ public partial class RecordTypeInts
     public const int XALG = 0x474C4158;
     public const int XFLG = 0x474C4658;
     public const int XLMS = 0x534D4C58;
+    public const int XMPM = 0x4D504D58;
     public const int XMSP = 0x50534D58;
     public const int XNAM = 0x4D414E58;
     public const int XXXX = 0x58585858;

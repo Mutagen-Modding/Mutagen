@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)] with { Setter = false };
             dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                KeywordFormComponent_Registration.Instance,
                 Race_Registration.Instance,
             });
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };

@@ -831,6 +831,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.MODL,
                 RecordTypes.FLLD,
+                RecordTypes.XMPM,
                 RecordTypes.MCQP,
                 RecordTypes.XMSP,
                 RecordTypes.XLMS);
@@ -1470,7 +1471,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PlanetModelComponent_FieldIndex.FLLD;
                 }
-                case RecordTypeInts.BFCB:
+                case RecordTypeInts.XMPM:
                 {
                     item.XMPM = Mutagen.Bethesda.Starfield.PlanetModelComponentXMPM.CreateFromBinary(
                         frame: frame,
@@ -1566,7 +1567,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FLLDLocation;
         public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IPlanetModelComponentXMPMGetter? XMPM { get; private set; }
+        #region XMPM
+        private RangeInt32? _XMPMLocation;
+        public IPlanetModelComponentXMPMGetter? XMPM => _XMPMLocation.HasValue ? PlanetModelComponentXMPMBinaryOverlay.PlanetModelComponentXMPMFactory(_recordData.Slice(_XMPMLocation!.Value.Min), _package) : default;
+        #endregion
         #region RingModel
         private int? _RingModelLocation;
         public String? RingModel => _RingModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RingModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1652,12 +1656,9 @@ namespace Mutagen.Bethesda.Starfield
                     _FLLDLocation = (stream.Position - offset);
                     return (int)PlanetModelComponent_FieldIndex.FLLD;
                 }
-                case RecordTypeInts.BFCB:
+                case RecordTypeInts.XMPM:
                 {
-                    this.XMPM = PlanetModelComponentXMPMBinaryOverlay.PlanetModelComponentXMPMFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
+                    _XMPMLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlanetModelComponent_FieldIndex.XMPM;
                 }
                 case RecordTypeInts.MCQP:
