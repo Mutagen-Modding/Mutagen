@@ -109,6 +109,9 @@
     <Compile Include="Interfaces\Aspect\IObjectBounded.cs" />
     <Compile Include="Interfaces\Aspect\IPositionRotation.cs" />
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Records\Common Subrecords\AComponent.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ALocationTarget_Generated.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
@@ -217,6 +220,9 @@
     <Compile Include="Records\Major Records\Npc_Generated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Planet.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -278,9 +284,6 @@
     <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
-    <Compile Include="Records\Common Subrecords\Component_Generated.cs">
-      <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
     <Compile Include="Records\Major Records\Transform_Generated.cs">
       <DependentUpon>Transform.xml</DependentUpon>
@@ -747,9 +750,6 @@
     <Compile Include="Records\Major Records\PlanetContentManagerTree_Generated.cs">
       <DependentUpon>PlanetContentManagerTree.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlanetData_Generated.cs">
-      <DependentUpon>PlanetData.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ProjectedDecal_Generated.cs">
       <DependentUpon>ProjectedDecal.xml</DependentUpon>
     </Compile>
@@ -863,6 +863,78 @@
     </Compile>
     <Compile Include="Records\Major Records\Zoom_Generated.cs">
       <DependentUpon>Zoom.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Activity_Generated.cs">
+      <DependentUpon>Activity.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ProgressionEvaluatorArgument_Generated.cs">
+      <DependentUpon>Activity.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AnimationGraphComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AttachParentArrayComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ActivityTrackerComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScannableComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\KeywordFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectWindowFilterComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ContactShadowComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ContactShadowComponentItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Planet_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetBiome_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetFlora_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetFNAM_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetIds_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetDetails_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetINAM_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\FullNameComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ModelComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\PlanetModelComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\PlanetModelComponentXMPM_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\PlanetModelComponentXMPMSubItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

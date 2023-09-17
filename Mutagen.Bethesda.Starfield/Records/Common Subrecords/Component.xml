@@ -1,12 +1,98 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Component" objType="Subrecord" GUID="1bb731ad-a02f-45b0-aa19-05819773d468" ID="82">
+  <Object name="AComponent" objType="Subrecord" endMarkerType="BFCE" abstract="true" abstractSplitter="true" GUID="1bb731ad-a02f-45b0-aa19-05819773d468" ID="82">
     <Fields>
-      <String name="ComponentType" recordType="BFCB" />
-      <ByteArray name="FLCS" recordType="FLCS" unknown="true" />
+      <CustomLogic name="BFCBString" recordType="BFCB" />
+    </Fields>
+  </Object>
+  <Object name="AnimationGraphComponent" objType="Subrecord" baseClass="AComponent" GUID="d9978f04-e304-4c69-8dfd-9a69053f24be" ID="881">
+    <Fields>
+      <String name="ANAM" recordType="ANAM" nullable="true" />
+      <String name="BNAM" recordType="BNAM" nullable="true" />
+      <String name="CNAM" recordType="CNAM" nullable="true" />
+      <String name="DNAM" recordType="DNAM" nullable="true" />
+      <String name="ENAM" recordType="ENAM" nullable="true" />
+    </Fields>
+  </Object>
+  <Object name="AttachParentArrayComponent" objType="Subrecord" baseClass="AComponent" GUID="7b49bcb8-5a20-497b-8673-45cf0796c555" ID="882">
+    <Fields>
+      <List name="Slots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ActivityTrackerComponent" objType="Subrecord" baseClass="AComponent" GUID="7a152963-119c-4288-87b1-ddafc8dddfed" ID="883">
+    <Fields>
+      <RefList name="Activities" refName="Activity" counterRecType="ATCP" />
+    </Fields>
+  </Object>
+  <Object name="ScannableComponent" objType="Subrecord" baseClass="AComponent" GUID="6d1d1351-273d-40c8-a904-b0e267afdeff" ID="884">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="KeywordFormComponent" objType="Subrecord" baseClass="AComponent" GUID="2a979c6c-5762-419f-9f2b-bb2fc2ea7d97" ID="885">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="ObjectWindowFilterComponent" objType="Subrecord" baseClass="AComponent" GUID="145174a7-709a-4cff-b466-b179ec233304" ID="886">
+    <Fields>
       <ByteArray name="INTV" recordType="INTV" unknown="true" />
-      <ByteArray name="FLTR" recordType="FLTR" unknown="true" />
-      <ByteArray name="BFCE" recordType="BFCE" unknown="true" />
+      <String name="FLTR" recordType="FLTR" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ContactShadowComponent" objType="Subrecord" baseClass="AComponent" GUID="dae2687a-e9f0-496f-90d0-bbfa6bb76271" ID="887">
+    <Fields>
+      <RefList name="Items" refName="ContactShadowComponentItem" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ContactShadowComponentItem" objType="Subrecord" recordType="FLCS" GUID="0ecb1fb5-6ac4-4341-b077-96f3b60f1f36" ID="888">
+    <Fields>
+      <Float name="Unknown1" unknown="true" />
+      <Float name="Unknown2" unknown="true" />
+      <Float name="Unknown3" unknown="true" />
+      <Float name="Unknown4" unknown="true" />
+      <Float name="Unknown5" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="FullNameComponent" objType="Subrecord" baseClass="AComponent" GUID="b5f2af68-cc82-4130-9fc0-a73bc669dd03" ID="896">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="ModelComponent" objType="Subrecord" baseClass="AComponent" GUID="6372d610-75e7-4bff-b19f-58e63cfc80a7" ID="897">
+    <Fields>
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PlanetModelComponent" objType="Subrecord" baseClass="AComponent" GUID="d85582e4-2483-48f6-8435-3bcbfd652a1a" ID="898">
+    <Fields>
+      <AssetLink name="File" recordType="MODL" nullable="False" assetType="StarfieldModel" />
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <RefDirect name="XMPM" refName="PlanetModelComponentXMPM" />
+      <String name="RingModel" recordType="MCQP" />
+      <String name="RingMaterial" recordType="XMSP" />
+      <String name="RingId" recordType="XLMS" />
+    </Fields>
+  </Object>
+  <Object name="PlanetModelComponentXMPM" objType="Subrecord" baseClass="AComponent" GUID="b154265a-1bd3-47bd-9928-e2b35f67e514" ID="899">
+    <Fields>
+      <List name="UnknownStrings" counterLength="2">
+        <String binaryType="PrependLengthUShort" />
+      </List>
+      <RefList name="UnknownSubItems" counterLength="2" refName="PlanetModelComponentXMPMSubItem" />
+    </Fields>
+  </Object>
+  <Object name="PlanetModelComponentXMPMSubItem" objType="Subrecord" baseClass="AComponent" GUID="94032746-87ff-4b9f-b961-9a30df6f32af" ID="900">
+    <Fields>
+      <String name="Unknown1" binaryType="PrependLengthUShort" />
+      <Int32 name="Unknown2" />
+      <String name="Unknown3" binaryType="NullTerminate" />
+      <Int32 name="Unknown4" />
+    </Fields>
+  </Object>
+  <Object name="HoudiniDataComponent" objType="Subrecord" baseClass="AComponent" GUID="78f915ec-3649-4e8a-ab14-7b4fe09e6c00" ID="901">
+    <Fields>
+      <ByteArray name="PCCC" recordType="PCCC" unknown="true" />
     </Fields>
   </Object>
 </Loqui>

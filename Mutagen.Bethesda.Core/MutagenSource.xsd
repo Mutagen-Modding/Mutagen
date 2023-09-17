@@ -123,6 +123,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="abstractSplitter" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether there is a custom splitting factory from this abstract class
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -471,6 +478,13 @@
             <xs:annotation>
               <xs:documentation>
                 Number of bytes for the counter
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="expectedLengthLength" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to export the expected length before the content, and with what byte size
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

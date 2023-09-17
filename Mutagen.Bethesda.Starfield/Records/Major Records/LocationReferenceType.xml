@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="StarfieldMajorRecord" GUID="c5ecd244-8303-4cd2-8eb5-007a988a3842" ID="33">
     <Fields>
-      <RefList name="Components" refName="Component" />
+      <RefList name="Components" refName="AComponent" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <ByteArray name="TNAM" recordType="TNAM" unknown="true" />
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />

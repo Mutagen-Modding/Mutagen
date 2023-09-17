@@ -18,6 +18,7 @@
       <Group name="HeadParts" refName="HeadPart" />
       <Group name="Races" refName="Race" />
       <Group name="AOPF" refName="AOPFRecord" />
+      <Group name="Planets" refName="Planet" />
     </Fields>
   </Object>
 </Loqui>

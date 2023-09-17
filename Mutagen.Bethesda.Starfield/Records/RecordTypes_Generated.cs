@@ -20,10 +20,15 @@ public partial class RecordTypes
     public static readonly RecordType AOPF = new(0x46504F41);
     public static readonly RecordType AOPS = new(0x53504F41);
     public static readonly RecordType AORU = new(0x55524F41);
+    public static readonly RecordType APPR = new(0x52505041);
     public static readonly RecordType ARMA = new(0x414D5241);
     public static readonly RecordType ARMO = new(0x4F4D5241);
     public static readonly RecordType ARTO = new(0x4F545241);
     public static readonly RecordType ASPC = new(0x43505341);
+    public static readonly RecordType ATAF = new(0x46415441);
+    public static readonly RecordType ATAN = new(0x4E415441);
+    public static readonly RecordType ATAV = new(0x56415441);
+    public static readonly RecordType ATCP = new(0x50435441);
     public static readonly RecordType ATKD = new(0x444B5441);
     public static readonly RecordType ATKE = new(0x454B5441);
     public static readonly RecordType ATKS = new(0x534B5441);
@@ -32,6 +37,8 @@ public partial class RecordTypes
     public static readonly RecordType ATMO = new(0x4F4D5441);
     public static readonly RecordType AVIF = new(0x46495641);
     public static readonly RecordType AVMD = new(0x444D5641);
+    public static readonly RecordType BDED = new(0x44454442);
+    public static readonly RecordType BDST = new(0x54534442);
     public static readonly RecordType BFCB = new(0x42434642);
     public static readonly RecordType BFCE = new(0x45434642);
     public static readonly RecordType BIOM = new(0x4D4F4942);
@@ -67,6 +74,7 @@ public partial class RecordTypes
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DEBR = new(0x52424544);
     public static readonly RecordType DELE = new(0x454C4544);
+    public static readonly RecordType DENS = new(0x534E4544);
     public static readonly RecordType DESC = new(0x43534544);
     public static readonly RecordType DFOB = new(0x424F4644);
     public static readonly RecordType DIAL = new(0x4C414944);
@@ -125,6 +133,7 @@ public partial class RecordTypes
     public static readonly RecordType IDLM = new(0x4D4C4449);
     public static readonly RecordType IMAD = new(0x44414D49);
     public static readonly RecordType IMGS = new(0x53474D49);
+    public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INCC = new(0x43434E49);
     public static readonly RecordType INDX = new(0x58444E49);
     public static readonly RecordType INFO = new(0x4F464E49);
@@ -134,6 +143,7 @@ public partial class RecordTypes
     public static readonly RecordType IPDS = new(0x53445049);
     public static readonly RecordType IRES = new(0x53455249);
     public static readonly RecordType KEYM = new(0x4D59454B);
+    public static readonly RecordType KNAM = new(0x4D414E4B);
     public static readonly RecordType KSIZ = new(0x5A49534B);
     public static readonly RecordType KSSM = new(0x4D53534B);
     public static readonly RecordType KWDA = new(0x4144574B);
@@ -156,6 +166,7 @@ public partial class RecordTypes
     public static readonly RecordType MAAM = new(0x4D41414D);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MATT = new(0x5454414D);
+    public static readonly RecordType MCQP = new(0x5051434D);
     public static readonly RecordType MESG = new(0x4753454D);
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MISC = new(0x4353494D);
@@ -198,16 +209,19 @@ public partial class RecordTypes
     public static readonly RecordType OVIS = new(0x5349564F);
     public static readonly RecordType PACK = new(0x4B434150);
     public static readonly RecordType PCBN = new(0x4E424350);
+    public static readonly RecordType PCCC = new(0x43434350);
     public static readonly RecordType PCCN = new(0x4E434350);
     public static readonly RecordType PCMT = new(0x544D4350);
     public static readonly RecordType PDCL = new(0x4C434450);
     public static readonly RecordType PERK = new(0x4B524550);
     public static readonly RecordType PFPC = new(0x43504650);
+    public static readonly RecordType PHLA = new(0x414C4850);
     public static readonly RecordType PKIN = new(0x4E494B50);
     public static readonly RecordType PLVD = new(0x44564C50);
     public static readonly RecordType PMFT = new(0x54464D50);
     public static readonly RecordType PNAM = new(0x4D414E50);
     public static readonly RecordType PNDT = new(0x54444E50);
+    public static readonly RecordType PPBD = new(0x44425050);
     public static readonly RecordType PRIS = new(0x53495250);
     public static readonly RecordType PROJ = new(0x4A4F5250);
     public static readonly RecordType PRPS = new(0x53505250);
@@ -225,6 +239,7 @@ public partial class RecordTypes
     public static readonly RecordType RNAM = new(0x4D414E52);
     public static readonly RecordType RPRF = new(0x46525052);
     public static readonly RecordType RPRM = new(0x4D525052);
+    public static readonly RecordType RSCS = new(0x53435352);
     public static readonly RecordType RSGD = new(0x44475352);
     public static readonly RecordType RSPJ = new(0x4A505352);
     public static readonly RecordType SCEN = new(0x4E454353);
@@ -250,6 +265,7 @@ public partial class RecordTypes
     public static readonly RecordType STMP = new(0x504D5453);
     public static readonly RecordType STND = new(0x444E5453);
     public static readonly RecordType SUNP = new(0x504E5553);
+    public static readonly RecordType TEMP = new(0x504D4554);
     public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TMLM = new(0x4D4C4D54);
@@ -287,6 +303,8 @@ public partial class RecordTypes
     public static readonly RecordType WWED = new(0x44455757);
     public static readonly RecordType XALG = new(0x474C4158);
     public static readonly RecordType XFLG = new(0x474C4658);
+    public static readonly RecordType XLMS = new(0x534D4C58);
+    public static readonly RecordType XMSP = new(0x50534D58);
     public static readonly RecordType XNAM = new(0x4D414E58);
     public static readonly RecordType XXXX = new(0x58585858);
     public static readonly RecordType ZNAM = new(0x4D414E5A);

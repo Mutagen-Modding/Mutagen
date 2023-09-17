@@ -91,6 +91,10 @@ public class TriggeringRecordModule : GenerationModule
             var markerTypeRec = new RecordType(endMarker.Value);
             data.EndMarkerType = markerTypeRec;
         }
+        if (obj.Node.TryGetAttribute<bool>("abstractSplitter", out var abstractSplitter))
+        {
+            data.AbstractSplitter = abstractSplitter;
+        }
         return base.PreLoad(obj);
     }
 
@@ -570,7 +574,7 @@ public class TriggeringRecordModule : GenerationModule
     
     private async Task AddLoquiSubTypes(LoquiType loqui)
     {
-        if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null) return;
+        if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null || loqui.TargetObjectGeneration.GetObjectData().AbstractSplitter) return;
         var inheritingObjs = await loqui.TargetObjectGeneration.InheritingObjects();
         await loqui.AddAsSubLoquiType(inheritingObjs);
     }

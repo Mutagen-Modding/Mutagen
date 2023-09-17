@@ -11,14 +11,18 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Weapon
 ### INamed
+- Activity
 - BipedObjectData
 - Class
 - DamageType
 - FaceMorphItem
 - Faction
+- FullNameComponent
 - HeadPart
 - Keyword
 - MorphGroup
+- Planet
+- ProgressionEvaluatorArgument
 - Race
 ### IObjectBounded
 - AOPFRecord
@@ -26,6 +30,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IPositionRotation
 - Transform
 ## Concrete Classes to Interfaces
+### Activity
+- INamed
 ### AOPFRecord
 - IObjectBounded
 ### BipedObjectData
@@ -38,6 +44,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Faction
 - INamed
+### FullNameComponent
+- INamed
 ### HeadPart
 - IModeled
 - INamed
@@ -45,6 +53,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeywordCommon
 - INamed
 ### MorphGroup
+- INamed
+### Planet
+- INamed
+### ProgressionEvaluatorArgument
 - INamed
 ### Race
 - IKeyworded

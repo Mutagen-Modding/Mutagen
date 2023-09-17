@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Activity" objType="Subrecord" baseClass="AComponent" GUID="0f7323e4-76df-4bb0-97d6-17f28253543e" ID="879">
+    <Fields>
+      <String name="ATAN" recordType="ATAN" unknown="true" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <RefList name="ProgressionEvalutor" refName="ProgressionEvaluatorArgument" />
+      <String name="ANAM" recordType="ANAM" nullable="false" unknown="true" />
+      <String name="Configuration" recordType="ATAV" nullable="false" />
+      <ByteArray name="ATAF" recordType="ATAF" nullable="false" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ProgressionEvaluatorArgument" objType="Subrecord" GUID="260fd12f-8501-4c05-83b8-3804e24be772" ID="880">
+    <Fields>
+      <String name="Name" recordType="DNAM" />
+      <!-- Conditions -->
+    </Fields>
+  </Object>
+</Loqui>

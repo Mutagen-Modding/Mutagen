@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Planet" recordType="PNDT" objType="Record" baseClass="StarfieldMajorRecord" GUID="d477eabe-5c10-471d-ae2e-f0d37ad9056b" ID="889">
+    <Fields>
+      <RefList name="Components" refName="AComponent" />
+      <ByteArray name="CNAM" recordType="CNAM" unknown="true" />
+      <RefList name="Biomes" refName="PlanetBiome" />
+      <FormLink name="SurfaceTree" refName="SurfaceTree" recordType="FNAM" />
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
+      <Marker name="BDST" recordType="BDST" unknown="true" />
+      <String name="Name" recordType="ANAM" />
+      <Enum name="BodyType" enumName="Planet.BodyTypeEnum" recordType="CNAM" byteLength="1" />
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+      <ByteArray name="ENAM" recordType="ENAM" unknown="true" />
+      <RefDirect name="FNAM" refName="PlanetFNAM" unknown="true" />
+      <RefDirect name="IDs" refName="PlanetIds" />
+      <RefDirect name="Details" refName="PlanetDetails" />
+      <RefDirect name="INAM" refName="PlanetINAM" unknown="true" />
+      <ByteArray name="KNAM" recordType="KNAM" unknown="true" />
+      <ByteArray name="NNAM" recordType="NNAM" unknown="true" />
+      <Marker name="BDED" recordType="BDED" />
+      <Float name="Temperature" recordType="TEMP" />
+      <Float name="Density" recordType="DENS" />
+      <Float name="PerihelionAngleDegrees" recordType="PHLA" />
+      <ByteArray name="RSCS" recordType="RSCS" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PlanetBiome" objType="Subrecord" recordType="PPBD" GUID="5c1dd80a-e790-460e-b6f9-2b2e9ca547d3" ID="890">
+    <Fields>
+      <FormLink name="Biome" refName="Biome" />
+      <Float name="Percentage" />
+      <Int32 name="Unknown2" unknown="true" />
+      <FormLink name="ResourceGenOverride" refName="StarfieldMajorRecord" unknown="true" />
+      <List name="Fauna" counterLength="4">
+        <FormLink refName="Npc" />
+      </List>
+      <Int32 name="Unknown3" unknown="true" />
+      <RefList name="Flora" counterLength="4" expectedLengthLength="4" refName="PlanetFlora" />
+    </Fields>
+  </Object>
+  <Object name="PlanetFlora" objType="Subrecord" GUID="b0ddbb8e-ab2c-4990-af55-dc356da42e0b" ID="891">
+    <Fields>
+      <FormLink name="Model" refName="Flora" />
+      <FormLink name="Resource" refName="MiscItem" />
+      <UInt8 name="Frequency" />
+    </Fields>
+  </Object>
+  <Object name="PlanetFNAM" objType="Subrecord" recordType="FNAM" GUID="d9795e01-cfdd-4fbc-a3a5-e232b43a6450" ID="892">
+    <Fields>
+      <Int32 name="Unknown1" unknown="true" />
+      <Float name="SpawnInProjectionOffset" />
+      <!-- Need to double check scaling -->
+      <Int32 name="MassComparedToEarth" />
+      <Float name="RadiusInKilometers" />
+      <Float name="Gravity" />
+      <Int32 name="Unknown2" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PlanetIds" objType="Subrecord" recordType="GNAM" GUID="476cbd7e-240e-43dd-968f-dd393bd4142a" ID="893">
+    <Fields>
+      <UInt32 name="StarId" />
+      <UInt32 name="PrimaryPlanetId" />
+      <UInt32 name="PlanetId" />
+    </Fields>
+  </Object>
+  <Object name="PlanetDetails" objType="Subrecord" recordType="HNAM" GUID="f9d3e472-fb6f-419b-bd6f-c83729f06c14" ID="894">
+    <Fields>
+      <Int32 name="Unknown1" unknown="true" />
+      <String name="SpectralClass" binaryType="PrependLength" />
+      <String name="CatalogueId" binaryType="PrependLength" />
+      <String name="Life" binaryType="PrependLength" />
+      <String name="Magnetosphere" binaryType="PrependLength" />
+      <String name="MassInKg" binaryType="PrependLength" />
+      <String name="Type" binaryType="PrependLength" />
+      <String name="SettledStar" binaryType="PrependLength" />
+      <String name="Special" binaryType="PrependLength" />
+      <Double name="Perihelion" />
+      <Double name="Stardust" />
+      <Float name="Density" />
+      <Float name="Heat" />
+      <Float name="Hydro" />
+      <Float name="InnerHz" />
+      <Float name="OuterHz" />
+      <Float name="PerihelionAngle" />
+      <Int32 name="Unknown2" unknown="true" />
+      <Float name="StartAngleInDegrees" />
+      <Float name="YearLengthInDays" />
+      <UInt32 name="Asteroids" />
+      <Bool name="Geostationary" byteLength="4" />
+      <Int32 name="Unknown3" unknown="true" />
+      <Bool name="Rings" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PlanetINAM" objType="Subrecord" recordType="INAM" GUID="c025f0cc-ad03-4aca-bde2-b774a49fa001" ID="895">
+    <Fields>
+      <UInt32 name="AtmosHandle" />
+      <Int32 name="Unknown1" />
+    </Fields>
+  </Object>
+</Loqui>

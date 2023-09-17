@@ -3032,6 +3032,30 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
+        /// Scope a load order query to Planet
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on Planet</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanet, IPlanetGetter> Planet(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanet, IPlanetGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IPlanetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IPlanet, IPlanetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to Planet
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on Planet</returns>
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanet, IPlanetGetter> Planet(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanet, IPlanetGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IPlanetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IPlanet, IPlanetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to PlanetContentManagerBranchNode
         /// </summary>
         /// <param name="listings">ModListings to query</param>
@@ -3101,30 +3125,6 @@ namespace Mutagen.Bethesda.Starfield
             return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanetContentManagerTree, IPlanetContentManagerTreeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPlanetContentManagerTreeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IPlanetContentManagerTree, IPlanetContentManagerTreeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to PlanetData
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on PlanetData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanetData, IPlanetDataGetter> PlanetData(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanetData, IPlanetDataGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IPlanetDataGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IPlanetData, IPlanetDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to PlanetData
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on PlanetData</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanetData, IPlanetDataGetter> PlanetData(this IEnumerable<IStarfieldModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IPlanetData, IPlanetDataGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IPlanetDataGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IPlanetData, IPlanetDataGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

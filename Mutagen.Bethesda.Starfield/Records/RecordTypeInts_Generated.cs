@@ -18,10 +18,15 @@ public partial class RecordTypeInts
     public const int AOPF = 0x46504F41;
     public const int AOPS = 0x53504F41;
     public const int AORU = 0x55524F41;
+    public const int APPR = 0x52505041;
     public const int ARMA = 0x414D5241;
     public const int ARMO = 0x4F4D5241;
     public const int ARTO = 0x4F545241;
     public const int ASPC = 0x43505341;
+    public const int ATAF = 0x46415441;
+    public const int ATAN = 0x4E415441;
+    public const int ATAV = 0x56415441;
+    public const int ATCP = 0x50435441;
     public const int ATKD = 0x444B5441;
     public const int ATKE = 0x454B5441;
     public const int ATKS = 0x534B5441;
@@ -30,6 +35,8 @@ public partial class RecordTypeInts
     public const int ATMO = 0x4F4D5441;
     public const int AVIF = 0x46495641;
     public const int AVMD = 0x444D5641;
+    public const int BDED = 0x44454442;
+    public const int BDST = 0x54534442;
     public const int BFCB = 0x42434642;
     public const int BFCE = 0x45434642;
     public const int BIOM = 0x4D4F4942;
@@ -65,6 +72,7 @@ public partial class RecordTypeInts
     public const int DATA = 0x41544144;
     public const int DEBR = 0x52424544;
     public const int DELE = 0x454C4544;
+    public const int DENS = 0x534E4544;
     public const int DESC = 0x43534544;
     public const int DFOB = 0x424F4644;
     public const int DIAL = 0x4C414944;
@@ -123,6 +131,7 @@ public partial class RecordTypeInts
     public const int IDLM = 0x4D4C4449;
     public const int IMAD = 0x44414D49;
     public const int IMGS = 0x53474D49;
+    public const int INAM = 0x4D414E49;
     public const int INCC = 0x43434E49;
     public const int INDX = 0x58444E49;
     public const int INFO = 0x4F464E49;
@@ -132,6 +141,7 @@ public partial class RecordTypeInts
     public const int IPDS = 0x53445049;
     public const int IRES = 0x53455249;
     public const int KEYM = 0x4D59454B;
+    public const int KNAM = 0x4D414E4B;
     public const int KSIZ = 0x5A49534B;
     public const int KSSM = 0x4D53534B;
     public const int KWDA = 0x4144574B;
@@ -154,6 +164,7 @@ public partial class RecordTypeInts
     public const int MAAM = 0x4D41414D;
     public const int MAST = 0x5453414D;
     public const int MATT = 0x5454414D;
+    public const int MCQP = 0x5051434D;
     public const int MESG = 0x4753454D;
     public const int MGEF = 0x4645474D;
     public const int MISC = 0x4353494D;
@@ -196,16 +207,19 @@ public partial class RecordTypeInts
     public const int OVIS = 0x5349564F;
     public const int PACK = 0x4B434150;
     public const int PCBN = 0x4E424350;
+    public const int PCCC = 0x43434350;
     public const int PCCN = 0x4E434350;
     public const int PCMT = 0x544D4350;
     public const int PDCL = 0x4C434450;
     public const int PERK = 0x4B524550;
     public const int PFPC = 0x43504650;
+    public const int PHLA = 0x414C4850;
     public const int PKIN = 0x4E494B50;
     public const int PLVD = 0x44564C50;
     public const int PMFT = 0x54464D50;
     public const int PNAM = 0x4D414E50;
     public const int PNDT = 0x54444E50;
+    public const int PPBD = 0x44425050;
     public const int PRIS = 0x53495250;
     public const int PROJ = 0x4A4F5250;
     public const int PRPS = 0x53505250;
@@ -223,6 +237,7 @@ public partial class RecordTypeInts
     public const int RNAM = 0x4D414E52;
     public const int RPRF = 0x46525052;
     public const int RPRM = 0x4D525052;
+    public const int RSCS = 0x53435352;
     public const int RSGD = 0x44475352;
     public const int RSPJ = 0x4A505352;
     public const int SCEN = 0x4E454353;
@@ -248,6 +263,7 @@ public partial class RecordTypeInts
     public const int STMP = 0x504D5453;
     public const int STND = 0x444E5453;
     public const int SUNP = 0x504E5553;
+    public const int TEMP = 0x504D4554;
     public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
     public const int TMLM = 0x4D4C4D54;
@@ -285,6 +301,8 @@ public partial class RecordTypeInts
     public const int WWED = 0x44455757;
     public const int XALG = 0x474C4158;
     public const int XFLG = 0x474C4658;
+    public const int XLMS = 0x534D4C58;
+    public const int XMSP = 0x50534D58;
     public const int XNAM = 0x4D414E58;
     public const int XXXX = 0x58585858;
     public const int ZNAM = 0x4D414E5A;

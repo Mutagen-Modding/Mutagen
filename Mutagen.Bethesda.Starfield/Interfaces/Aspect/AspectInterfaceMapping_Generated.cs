@@ -38,35 +38,45 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
             dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activity_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
+                FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
                 MorphGroup_Registration.Instance,
+                Planet_Registration.Instance,
+                ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activity_Registration.Instance,
                 BipedObjectData_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
+                FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
                 MorphGroup_Registration.Instance,
+                Planet_Registration.Instance,
+                ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activity_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
+                FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
                 Race_Registration.Instance,
@@ -74,10 +84,12 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activity_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphItem_Registration.Instance,
                 Faction_Registration.Instance,
+                FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
                 Race_Registration.Instance,

@@ -65,6 +65,7 @@ public class MutagenObjData
     public bool HasInferredAssets;
 
     public bool HasResolvedAssets;
+    public bool AbstractSplitter;
 
     public MutagenObjData(ObjectGeneration objGen)
     {

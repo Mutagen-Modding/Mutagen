@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -56,15 +59,15 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Component> _Components = new ExtendedList<Component>();
-        public ExtendedList<Component> Components
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
         {
             get => this._Components;
             init => this._Components = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IComponentGetter> ILocationReferenceTypeGetter.Components => _Components;
+        IReadOnlyList<IAComponentGetter> ILocationReferenceTypeGetter.Components => _Components;
         #endregion
 
         #endregion
@@ -120,7 +123,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Component.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Component.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Color = initialValue;
                 this.TNAM = initialValue;
                 this.FNAM = initialValue;
@@ -147,7 +150,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Component.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, Component.Mask<TItem>?>>());
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Color = Color;
                 this.TNAM = TNAM;
                 this.FNAM = FNAM;
@@ -162,7 +165,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Component.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Color;
             public TItem TNAM;
             public TItem FNAM;
@@ -257,14 +260,14 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Components != null)
                 {
-                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Component.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, Component.Mask<R>?>>());
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
                     if (Components.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, Component.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
                         obj.Components.Specific = l;
                         foreach (var item in Components.Specific)
                         {
-                            MaskItemIndexed<R, Component.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Component.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -333,7 +336,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Component.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Color;
             public Exception? TNAM;
             public Exception? FNAM;
@@ -364,7 +367,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case LocationReferenceType_FieldIndex.Components:
-                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Component.ErrorMask?>>?>(ex, null);
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
                     case LocationReferenceType_FieldIndex.Color:
                         this.Color = ex;
@@ -387,7 +390,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case LocationReferenceType_FieldIndex.Components:
-                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Component.ErrorMask?>>?>)obj;
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
                     case LocationReferenceType_FieldIndex.Color:
                         this.Color = (Exception?)obj;
@@ -472,7 +475,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Component.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Color = this.Color.Combine(rhs.Color);
                 ret.TNAM = this.TNAM.Combine(rhs.TNAM);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
@@ -498,7 +501,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public Component.TranslationMask? Components;
+            public AComponent.TranslationMask? Components;
             public bool Color;
             public bool TNAM;
             public bool FNAM;
@@ -536,6 +539,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LocationReferenceType_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceTypeCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationReferenceTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public LocationReferenceType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -579,6 +584,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILocationReferenceType);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LocationReferenceTypeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LocationReferenceTypeSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LocationReferenceTypeSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LocationReferenceTypeSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -658,12 +667,14 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILocationReferenceType :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILocationRecord,
         ILocationReferenceTypeGetter,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>,
         IStarfieldMajorRecordInternal
     {
-        new ExtendedList<Component> Components { get; }
+        new ExtendedList<AComponent> Components { get; }
         new Color? Color { get; set; }
         new MemorySlice<Byte>? TNAM { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -679,13 +690,15 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.LCRT)]
     public partial interface ILocationReferenceTypeGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILocationRecordGetter,
         ILoquiObject<ILocationReferenceTypeGetter>,
         IMapsToGetter<ILocationReferenceTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => LocationReferenceType_Registration.Instance;
-        IReadOnlyList<IComponentGetter> Components { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
         Color? Color { get; }
         ReadOnlyMemorySlice<Byte>? TNAM { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
@@ -922,9 +935,6 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.LCRT,
                 RecordTypes.BFCB,
-                RecordTypes.FLCS,
-                RecordTypes.INTV,
-                RecordTypes.FLTR,
                 RecordTypes.BFCE,
                 RecordTypes.CNAM,
                 RecordTypes.TNAM,
@@ -994,6 +1004,31 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILocationReferenceType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILocationReferenceType obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILocationReferenceType obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -1198,7 +1233,7 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Components) ?? true))
             {
-                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((ComponentCommon)((IComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LocationReferenceType_FieldIndex.Components)))) return false;
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LocationReferenceType_FieldIndex.Components)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LocationReferenceType_FieldIndex.Color) ?? true))
             {
@@ -1281,6 +1316,28 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILocationReferenceTypeGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1563,13 +1620,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IComponentGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
-                transl: (MutagenWriter subWriter, IComponentGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((ComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1672,17 +1729,13 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BFCB:
-                case RecordTypeInts.FLCS:
-                case RecordTypeInts.INTV:
-                case RecordTypeInts.FLTR:
-                case RecordTypeInts.BFCE:
                 {
                     item.Components.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Component>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: Component_Registration.TriggerSpecs,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: Component.TryCreateFromBinary));
+                            transl: AComponent.TryCreateFromBinary));
                     return (int)LocationReferenceType_FieldIndex.Components;
                 }
                 case RecordTypeInts.CNAM:
@@ -1747,6 +1800,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceTypeCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LocationReferenceTypeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LocationReferenceTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1761,7 +1816,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILocationReferenceType);
 
 
-        public IReadOnlyList<IComponentGetter> Components { get; private set; } = Array.Empty<IComponentGetter>();
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Color
         private int? _ColorLocation;
         public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
@@ -1844,16 +1899,12 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BFCB:
-                case RecordTypeInts.FLCS:
-                case RecordTypeInts.INTV:
-                case RecordTypeInts.FLTR:
-                case RecordTypeInts.BFCE:
                 {
-                    this.Components = this.ParseRepeatedTypelessSubrecord<IComponentGetter>(
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: Component_Registration.TriggerSpecs,
-                        factory: ComponentBinaryOverlay.ComponentFactory);
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
                     return (int)LocationReferenceType_FieldIndex.Components;
                 }
                 case RecordTypeInts.CNAM:

@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Starfield
             _HeadParts_Object = new StarfieldGroup<HeadPart>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
+            _Planets_Object = new StarfieldGroup<Planet>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -193,6 +194,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAOPFRecordGetter> IStarfieldModGetter.AOPF => _AOPF_Object;
         #endregion
+        #region Planets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Planet> _Planets_Object;
+        public StarfieldGroup<Planet> Planets => _Planets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IPlanetGetter> IStarfieldModGetter.Planets => _Planets_Object;
+        #endregion
 
         #region To String
 
@@ -248,6 +256,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.HeadParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -266,7 +275,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AffinityEvents,
                 TItem HeadParts,
                 TItem Races,
-                TItem AOPF)
+                TItem AOPF,
+                TItem Planets)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -284,6 +294,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.HeadParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(HeadParts, new StarfieldGroup.Mask<TItem>(HeadParts));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AOPF, new StarfieldGroup.Mask<TItem>(AOPF));
+                this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
             }
 
             #pragma warning disable CS8618
@@ -311,6 +322,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? HeadParts { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AOPF { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
             #endregion
 
             #region Equals
@@ -339,6 +351,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.AOPF, rhs.AOPF)) return false;
+                if (!object.Equals(this.Planets, rhs.Planets)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -360,6 +373,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.HeadParts);
                 hash.Add(this.Races);
                 hash.Add(this.AOPF);
+                hash.Add(this.Planets);
                 return hash.ToHashCode();
             }
 
@@ -448,6 +462,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.AOPF.Overall)) return false;
                     if (this.AOPF.Specific != null && !this.AOPF.Specific.All(eval)) return false;
                 }
+                if (Planets != null)
+                {
+                    if (!eval(this.Planets.Overall)) return false;
+                    if (this.Planets.Specific != null && !this.Planets.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -535,6 +554,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AOPF.Overall)) return true;
                     if (this.AOPF.Specific != null && this.AOPF.Specific.Any(eval)) return true;
                 }
+                if (Planets != null)
+                {
+                    if (eval(this.Planets.Overall)) return true;
+                    if (this.Planets.Specific != null && this.Planets.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -565,6 +589,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.AOPF = this.AOPF == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AOPF.Overall), this.AOPF.Specific?.Translate(eval));
+                obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
             }
             #endregion
 
@@ -647,6 +672,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AOPF?.Print(sb);
                     }
+                    if (printMask?.Planets?.Overall ?? true)
+                    {
+                        Planets?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -687,6 +716,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>? AOPF;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
             #endregion
 
             #region IErrorMask
@@ -727,6 +757,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Races;
                     case StarfieldMod_FieldIndex.AOPF:
                         return AOPF;
+                    case StarfieldMod_FieldIndex.Planets:
+                        return Planets;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -784,6 +816,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.AOPF:
                         this.AOPF = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Planets:
+                        this.Planets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -843,6 +878,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AOPF:
                         this.AOPF = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Planets:
+                        this.Planets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -867,6 +905,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (HeadParts != null) return true;
                 if (Races != null) return true;
                 if (AOPF != null) return true;
+                if (Planets != null) return true;
                 return false;
             }
             #endregion
@@ -908,6 +947,7 @@ namespace Mutagen.Bethesda.Starfield
                 HeadParts?.Print(sb);
                 Races?.Print(sb);
                 AOPF?.Print(sb);
+                Planets?.Print(sb);
             }
             #endregion
 
@@ -932,6 +972,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.AOPF = this.AOPF.Combine(rhs.AOPF, (l, r) => l.Combine(r));
+                ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -971,6 +1012,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<HeadPart.TranslationMask>? HeadParts;
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
             public StarfieldGroup.TranslationMask<AOPFRecord.TranslationMask>? AOPF;
+            public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
             #endregion
 
             #region Ctors
@@ -1011,6 +1053,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((HeadParts != null ? HeadParts.OnOverall : DefaultOn, HeadParts?.GetCrystal()));
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((AOPF != null ? AOPF.OnOverall : DefaultOn, AOPF?.GetCrystal()));
+                ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1069,6 +1112,7 @@ namespace Mutagen.Bethesda.Starfield
             _HeadParts_Object = new StarfieldGroup<HeadPart>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
+            _Planets_Object = new StarfieldGroup<Planet>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1135,6 +1179,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.AOPF.RecordCache.Set(rhsMod.AOPF.RecordCache.Items);
             }
+            if (mask?.Planets ?? true)
+            {
+                this.Planets.RecordCache.Set(rhsMod.Planets.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1160,6 +1208,7 @@ namespace Mutagen.Bethesda.Starfield
             count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += AOPF.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1431,6 +1480,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<HeadPart> HeadParts { get; }
         new StarfieldGroup<Race> Races { get; }
         new StarfieldGroup<AOPFRecord> AOPF { get; }
+        new StarfieldGroup<Planet> Planets { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -1466,6 +1516,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IHeadPartGetter> HeadParts { get; }
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
         IStarfieldGroupGetter<IAOPFRecordGetter> AOPF { get; }
+        IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
 
     }
 
@@ -2052,6 +2103,7 @@ namespace Mutagen.Bethesda.Starfield
         HeadParts = 13,
         Races = 14,
         AOPF = 15,
+        Planets = 16,
     }
     #endregion
 
@@ -2069,9 +2121,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2155,6 +2207,7 @@ namespace Mutagen.Bethesda.Starfield
             item.HeadParts.Clear();
             item.Races.Clear();
             item.AOPF.Clear();
+            item.Planets.Clear();
         }
         
         #region Mutagen
@@ -2162,12 +2215,15 @@ namespace Mutagen.Bethesda.Starfield
         {
             obj.ModHeader.RemapLinks(mapping);
             obj.Keywords.RemapLinks(mapping);
+            obj.LocationReferenceTypes.RemapLinks(mapping);
+            obj.Globals.RemapLinks(mapping);
             obj.DamageTypes.RemapLinks(mapping);
             obj.Classes.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
             obj.AffinityEvents.RemapLinks(mapping);
             obj.HeadParts.RemapLinks(mapping);
             obj.Races.RemapLinks(mapping);
+            obj.Planets.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -2217,6 +2273,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.HeadParts.Remove(keys);
             obj.Races.Remove(keys);
             obj.AOPF.Remove(keys);
+            obj.Planets.Remove(keys);
         }
         
         public void Remove(
@@ -2376,6 +2433,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "Planet":
+                case "IPlanetGetter":
+                case "IPlanet":
+                case "IPlanetInternal":
+                    obj.Planets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -2432,14 +2497,50 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IStarfieldMod obj)
         {
+            if (obj.Keywords is IAssetLinkContainer KeywordslinkCont)
             {
-                foreach (var item in obj.HeadParts.EnumerateListedAssetLinks())
+                foreach (var item in KeywordslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationReferenceTypes is IAssetLinkContainer LocationReferenceTypeslinkCont)
+            {
+                foreach (var item in LocationReferenceTypeslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Globals is IAssetLinkContainer GlobalslinkCont)
+            {
+                foreach (var item in GlobalslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Factions is IAssetLinkContainer FactionslinkCont)
+            {
+                foreach (var item in FactionslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.HeadParts is IAssetLinkContainer HeadPartslinkCont)
+            {
+                foreach (var item in HeadPartslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
             }
             {
                 foreach (var item in obj.Races.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Planets is IAssetLinkContainer PlanetslinkCont)
+            {
+                foreach (var item in PlanetslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -2459,8 +2560,13 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             RemapInferredAssetLinks(obj, mapping, queryCategories);
+            obj.Keywords.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LocationReferenceTypes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Globals.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Factions.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Races.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2521,6 +2627,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.AOPF = MaskItemExt.Factory(item.AOPF.GetEqualsMask(rhs.AOPF, include), include);
+            ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
         }
         
         public string Print(
@@ -2628,6 +2735,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.AOPF?.Overall ?? true)
             {
                 item.AOPF?.Print(sb, "AOPF");
+            }
+            if (printMask?.Planets?.Overall ?? true)
+            {
+                item.Planets?.Print(sb, "Planets");
             }
         }
         
@@ -2766,6 +2877,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAOPFEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Planets, rhs.Planets, out var lhsPlanets, out var rhsPlanets, out var isPlanetsEqual))
+                {
+                    if (!object.Equals(lhsPlanets, rhsPlanets)) return false;
+                }
+                else if (!isPlanetsEqual) return false;
+            }
             return true;
         }
         
@@ -2788,6 +2907,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.HeadParts);
             hash.Add(item.Races);
             hash.Add(item.AOPF);
+            hash.Add(item.Planets);
             return hash.ToHashCode();
         }
         
@@ -2881,6 +3001,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAOPFRecord":
                 case "IAOPFRecordInternal":
                     return obj.AOPF;
+                case "Planet":
+                case "IPlanetGetter":
+                case "IPlanet":
+                case "IPlanetInternal":
+                    return obj.Planets;
                 default:
                     return null;
             }
@@ -2906,7 +3031,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[15];
+            Stream[] outputStreams = new Stream[16];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -2923,6 +3048,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.HeadParts, 12, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Races, 13, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AOPF, 14, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 15, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2975,6 +3101,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.LocationReferenceTypes is IFormLinkContainerGetter LocationReferenceTypeslinkCont)
+            {
+                foreach (var item in LocationReferenceTypeslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Globals is IFormLinkContainerGetter GlobalslinkCont)
+            {
+                foreach (var item in GlobalslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             foreach (var item in obj.DamageTypes.EnumerateFormLinks())
             {
                 yield return item;
@@ -2996,6 +3136,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Races.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Planets.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -3061,6 +3205,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.AOPF.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Planets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3234,6 +3382,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Planet":
+                case "IPlanetGetter":
+                case "IPlanet":
+                case "IPlanetInternal":
+                    foreach (var item in obj.Planets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
                     {
@@ -3390,6 +3547,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.AOPF,
                 groupGetter: (m) => m.AOPF))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Planet, IPlanetGetter>(
+                srcGroup: obj.Planets,
+                type: typeof(IPlanetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Planets,
+                groupGetter: (m) => m.Planets))
             {
                 yield return item;
             }
@@ -3634,6 +3800,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Planet":
+                case "IPlanetGetter":
+                case "IPlanet":
+                case "IPlanetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Planet, IPlanetGetter>(
+                        srcGroup: obj.Planets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Planets,
+                        groupGetter: (m) => m.Planets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IStarfieldModGetter, IStarfieldMod, IStarfieldModGetter>(
                         GameCategory.Starfield,
@@ -3671,13 +3851,51 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in obj.HeadParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                if (obj.Keywords is IAssetLinkContainerGetter KeywordslinkCont)
                 {
-                    yield return item;
+                    foreach (var item in KeywordslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.LocationReferenceTypes is IAssetLinkContainerGetter LocationReferenceTypeslinkCont)
+                {
+                    foreach (var item in LocationReferenceTypeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Globals is IAssetLinkContainerGetter GlobalslinkCont)
+                {
+                    foreach (var item in GlobalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Factions is IAssetLinkContainerGetter FactionslinkCont)
+                {
+                    foreach (var item in FactionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.HeadParts is IAssetLinkContainerGetter HeadPartslinkCont)
+                {
+                    foreach (var item in HeadPartslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
                 foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
+                }
+                if (obj.Planets is IAssetLinkContainerGetter PlanetslinkCont)
+                {
+                    foreach (var item in PlanetslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;
@@ -4018,6 +4236,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Planets);
+                try
+                {
+                    item.Planets.DeepCopyIn(
+                        rhs: rhs.Planets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Planets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -4123,6 +4361,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool HeadParts;
         public bool Races;
         public bool AOPF;
+        public bool Planets;
         public GroupMask()
         {
         }
@@ -4143,6 +4382,7 @@ namespace Mutagen.Bethesda.Starfield
             HeadParts = defaultValue;
             Races = defaultValue;
             AOPF = defaultValue;
+            Planets = defaultValue;
         }
     }
 
@@ -4335,6 +4575,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AOPFItem).BinaryWriteTranslator).Write<IAOPFRecordGetter>(
                         item: AOPFItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Planets ?? true)
+            {
+                var PlanetsItem = item.Planets;
+                if (PlanetsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PlanetsItem).BinaryWriteTranslator).Write<IPlanetGetter>(
+                        item: PlanetsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4609,6 +4860,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.AOPF;
                 }
+                case RecordTypeInts.PNDT:
+                {
+                    if (importMask?.Planets ?? true)
+                    {
+                        item.Planets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Planets;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -4854,6 +5119,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAOPFRecordGetter>? _AOPF => _AOPFLocations != null ? StarfieldGroupBinaryOverlay<IAOPFRecordGetter>.StarfieldGroupFactory(_stream, _AOPFLocations, _package) : default;
         public IStarfieldGroupGetter<IAOPFRecordGetter> AOPF => _AOPF ?? new StarfieldGroup<AOPFRecord>(this);
         #endregion
+        #region Planets
+        private List<RangeInt64>? _PlanetsLocations;
+        private IStarfieldGroupGetter<IPlanetGetter>? _Planets => _PlanetsLocations != null ? StarfieldGroupBinaryOverlay<IPlanetGetter>.StarfieldGroupFactory(_stream, _PlanetsLocations, _package) : default;
+        public IStarfieldGroupGetter<IPlanetGetter> Planets => _Planets ?? new StarfieldGroup<Planet>(this);
+        #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -5031,6 +5301,12 @@ namespace Mutagen.Bethesda.Starfield
                     _AOPFLocations ??= new();
                     _AOPFLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AOPF;
+                }
+                case RecordTypeInts.PNDT:
+                {
+                    _PlanetsLocations ??= new();
+                    _PlanetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Planets;
                 }
                 default:
                     return default(int?);

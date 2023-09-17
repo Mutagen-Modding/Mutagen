@@ -1113,10 +1113,6 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                 {
                     sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{readStr} * {subExpLen.Value} + {len};");
                 }
-                else if (objGen.Fields.Last() != typeGen)
-                {
-                    throw new NotImplementedException();
-                }
             }
                 break;
             case ListBinaryType.Frame:
