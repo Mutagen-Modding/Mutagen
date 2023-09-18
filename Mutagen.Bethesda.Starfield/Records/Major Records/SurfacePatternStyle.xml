@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SurfacePatternStyle" recordType="PTST" objType="Record" baseClass="StarfieldMajorRecord" GUID="e04f4efb-70a8-4f91-b6e8-2238385c4f6a" ID="864">
-    <Fields>
-    </Fields>
-  </Object>
+  <Object name="SurfacePatternStyle" recordType="PTST" objType="Record" baseClass="StarfieldMajorRecord" GUID="e04f4efb-70a8-4f91-b6e8-2238385c4f6a" ID="864" />
 </Loqui>
