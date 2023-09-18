@@ -19,14 +19,15 @@ public sealed class StringBinaryTranslation
         return Parse(
             reader: reader,
             parseWhole: true,
-            item: out item);
+            item: out item,
+            binaryType: StringBinaryType.NullTerminate);
     }
 
     public bool Parse<TReader>(
         TReader reader,
         bool parseWhole,
         out string item,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
         where TReader : IMutagenReadStream
     {
         item = Parse(reader, parseWhole: parseWhole, stringBinaryType: binaryType, encoding: reader.MetaData.Encodings.NonTranslated);
@@ -35,18 +36,18 @@ public sealed class StringBinaryTranslation
 
     public string Parse<TReader>(
         TReader reader,
-        bool parseWhole = true,
-        StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
+        StringBinaryType stringBinaryType,
+        bool parseWhole = true)
         where TReader : IMutagenReadStream
     {
-        return Parse(reader, reader.MetaData.Encodings.NonTranslated, parseWhole, stringBinaryType);
+        return Parse(reader, reader.MetaData.Encodings.NonTranslated, stringBinaryType, parseWhole);
     }
 
     public string Parse<TReader>(
         TReader reader,
         IMutagenEncoding encoding,
-        bool parseWhole = true,
-        StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
+        StringBinaryType stringBinaryType,
+        bool parseWhole)
         where TReader : IMutagenReadStream
     {
         switch (stringBinaryType)
@@ -103,7 +104,7 @@ public sealed class StringBinaryTranslation
         }
         else
         {
-            return Parse(reader, reader.MetaData.Encodings.NonLocalized, parseWhole, stringBinaryType);
+            return Parse(reader, reader.MetaData.Encodings.NonLocalized, stringBinaryType, parseWhole);
         }
     }
 
@@ -112,7 +113,7 @@ public sealed class StringBinaryTranslation
         StringsSource source,
         StringBinaryType binaryType,
         out TranslatedString item,
-        bool parseWhole = true)
+        bool parseWhole)
     {
         item = Parse(reader, source, binaryType, parseWhole);
         return true;
@@ -188,7 +189,7 @@ public sealed class StringBinaryTranslation
         MutagenWriter writer,
         string item,
         RecordType header,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
     {
         try
         {
@@ -210,7 +211,7 @@ public sealed class StringBinaryTranslation
         MutagenWriter writer,
         string? item,
         RecordType header,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
     {
         if (item == null) return;
         try
@@ -318,7 +319,7 @@ public sealed class StringBinaryTranslation
     public void WriteNullable(
         MutagenWriter writer,
         string? item,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
     {
         if (item == null) return;
         writer.Write(

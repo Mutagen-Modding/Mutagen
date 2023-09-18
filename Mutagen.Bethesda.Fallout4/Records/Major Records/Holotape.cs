@@ -76,7 +76,7 @@ partial class HolotapeBinaryCreateTranslation
                 switch (item.Data)
                 {
                     case HolotapeProgram prog:
-                        prog.File = StringBinaryTranslation.Instance.Parse(frame);
+                        prog.File = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate);
                         break;
                     case HolotapeSound _:
                     case HolotapeVoice _:

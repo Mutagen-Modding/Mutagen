@@ -92,15 +92,15 @@ partial class WaterBinaryWriteTranslation
     {
         if (item.NoiseLayerOne.Texture is { } oneTexture)
         {
-            StringBinaryTranslation.Instance.Write(writer, oneTexture, RecordTypes.NAM2);
+            StringBinaryTranslation.Instance.Write(writer, oneTexture, RecordTypes.NAM2, StringBinaryType.NullTerminate);
         }
         if (item.NoiseLayerTwo.Texture is { } twoTexture)
         {
-            StringBinaryTranslation.Instance.Write(writer, twoTexture, RecordTypes.NAM3);
+            StringBinaryTranslation.Instance.Write(writer, twoTexture, RecordTypes.NAM3, StringBinaryType.NullTerminate);
         }
         if (item.NoiseLayerThree.Texture is { } threeTexture)
         {
-            StringBinaryTranslation.Instance.Write(writer, threeTexture, RecordTypes.NAM4);
+            StringBinaryTranslation.Instance.Write(writer, threeTexture, RecordTypes.NAM4, StringBinaryType.NullTerminate);
         }
     }
 }

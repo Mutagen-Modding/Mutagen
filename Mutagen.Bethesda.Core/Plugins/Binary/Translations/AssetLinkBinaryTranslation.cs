@@ -11,19 +11,19 @@ public class AssetLinkBinaryTranslation
 
     public AssetLink<TAssetType> Parse<TAssetType>(
         MutagenFrame reader,
-        bool parseWhole = true,
-        StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
+        StringBinaryType stringBinaryType,
+        bool parseWhole = true)
         where TAssetType : class, IAssetType
     {
         return new AssetLink<TAssetType>(
-            StringBinaryTranslation.Instance.Parse(reader, parseWhole, stringBinaryType));
+            StringBinaryTranslation.Instance.Parse(reader, stringBinaryType, parseWhole));
     }
 
     public bool Parse<TAssetType>(
         MutagenFrame reader,
         bool parseWhole,
         [MaybeNullWhen(false)] out IAssetLink<TAssetType> item,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
         where TAssetType : class, IAssetType
     {
         if (StringBinaryTranslation.Instance.Parse(reader, parseWhole, out var str, binaryType))

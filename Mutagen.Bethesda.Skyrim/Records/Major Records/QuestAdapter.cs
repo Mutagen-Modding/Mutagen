@@ -102,7 +102,10 @@ partial class QuestAdapterBinaryOverlay
         // Skip unknown
         frame.Position += 1;
         var count = frame.ReadUInt16();
-        _filename = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, encoding: _package.MetaData.Encodings.NonTranslated);
+        _filename = StringBinaryTranslation.Instance.Parse(
+            frame, stringBinaryType: StringBinaryType.PrependLengthUShort,
+            encoding: _package.MetaData.Encodings.NonTranslated,
+            parseWhole: true);
         Fragments = 
             ListBinaryTranslation<QuestScriptFragment>.Instance.Parse(
                     frame,

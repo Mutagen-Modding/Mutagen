@@ -22,7 +22,8 @@ partial class PackageScriptFragmentsBinaryCreateTranslation
         item.FileName = StringBinaryTranslation.Instance.Parse(
             reader: frame,
             stringBinaryType: StringBinaryType.PrependLengthUShort,
-            encoding: frame.MetaData.Encodings.NonTranslated);
+            encoding: frame.MetaData.Encodings.NonTranslated,
+            parseWhole: true);
         if (flag.HasFlag(Flag.OnBegin))
         {
             item.OnBegin = ScriptFragment.CreateFromBinary(frame);
