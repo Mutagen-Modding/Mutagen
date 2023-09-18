@@ -936,5 +936,6 @@
     <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
   </ItemGroup>
 </Project>

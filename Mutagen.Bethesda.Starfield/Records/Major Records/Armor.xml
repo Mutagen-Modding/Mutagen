@@ -3,5 +3,6 @@
   <Object name="Armor" recordType="ARMO" objType="Record" baseClass="StarfieldMajorRecord" GUID="d511d67c-51d7-4191-b6bd-5dad9d61c85f" ID="715">
     <Fields>
     </Fields>
+    <LinkInterface>IOutfitTarget</LinkInterface>
   </Object>
 </Loqui>

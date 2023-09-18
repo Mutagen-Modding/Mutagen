@@ -18,6 +18,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IObjectId
 - Faction
 - TextureSet
+### IOutfitTarget
+- Armor
+- LeveledItem
 ### IOwner
 - Faction
 ### IPlaceableObject
@@ -41,6 +44,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ## Concrete Classes to Interfaces
 ### ActionRecord
 - IIdleRelation
+### Armor
+- IOutfitTarget
 ### Faction
 - IAliasVoiceType
 - IObjectId
@@ -50,6 +55,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IVoiceTypeOrList
 ### Keyword
 - IKeywordLinkedReference
+### LeveledItem
+- IOutfitTarget
 ### LocationReferenceType
 - ILocationRecord
 ### PlacedObject

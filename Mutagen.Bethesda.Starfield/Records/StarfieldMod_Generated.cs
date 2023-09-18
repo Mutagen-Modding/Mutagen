@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Starfield
             _Races_Object = new StarfieldGroup<Race>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
+            _Outfit_Object = new StarfieldGroup<Outfit>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -201,6 +202,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IPlanetGetter> IStarfieldModGetter.Planets => _Planets_Object;
         #endregion
+        #region Outfit
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Outfit> _Outfit_Object;
+        public StarfieldGroup<Outfit> Outfit => _Outfit_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IOutfitGetter> IStarfieldModGetter.Outfit => _Outfit_Object;
+        #endregion
 
         #region To String
 
@@ -257,6 +265,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Outfit = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -276,7 +285,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem HeadParts,
                 TItem Races,
                 TItem AOPF,
-                TItem Planets)
+                TItem Planets,
+                TItem Outfit)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -295,6 +305,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AOPF, new StarfieldGroup.Mask<TItem>(AOPF));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
+                this.Outfit = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Outfit, new StarfieldGroup.Mask<TItem>(Outfit));
             }
 
             #pragma warning disable CS8618
@@ -323,6 +334,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AOPF { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Outfit { get; set; }
             #endregion
 
             #region Equals
@@ -352,6 +364,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.AOPF, rhs.AOPF)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
+                if (!object.Equals(this.Outfit, rhs.Outfit)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -374,6 +387,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Races);
                 hash.Add(this.AOPF);
                 hash.Add(this.Planets);
+                hash.Add(this.Outfit);
                 return hash.ToHashCode();
             }
 
@@ -467,6 +481,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Planets.Overall)) return false;
                     if (this.Planets.Specific != null && !this.Planets.Specific.All(eval)) return false;
                 }
+                if (Outfit != null)
+                {
+                    if (!eval(this.Outfit.Overall)) return false;
+                    if (this.Outfit.Specific != null && !this.Outfit.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -559,6 +578,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Planets.Overall)) return true;
                     if (this.Planets.Specific != null && this.Planets.Specific.Any(eval)) return true;
                 }
+                if (Outfit != null)
+                {
+                    if (eval(this.Outfit.Overall)) return true;
+                    if (this.Outfit.Specific != null && this.Outfit.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -590,6 +614,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.AOPF = this.AOPF == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AOPF.Overall), this.AOPF.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
+                obj.Outfit = this.Outfit == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Outfit.Overall), this.Outfit.Specific?.Translate(eval));
             }
             #endregion
 
@@ -676,6 +701,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Planets?.Print(sb);
                     }
+                    if (printMask?.Outfit?.Overall ?? true)
+                    {
+                        Outfit?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -717,6 +746,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>? AOPF;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>? Outfit;
             #endregion
 
             #region IErrorMask
@@ -759,6 +789,8 @@ namespace Mutagen.Bethesda.Starfield
                         return AOPF;
                     case StarfieldMod_FieldIndex.Planets:
                         return Planets;
+                    case StarfieldMod_FieldIndex.Outfit:
+                        return Outfit;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -819,6 +851,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Outfit:
+                        this.Outfit = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -881,6 +916,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Outfit:
+                        this.Outfit = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -906,6 +944,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Races != null) return true;
                 if (AOPF != null) return true;
                 if (Planets != null) return true;
+                if (Outfit != null) return true;
                 return false;
             }
             #endregion
@@ -948,6 +987,7 @@ namespace Mutagen.Bethesda.Starfield
                 Races?.Print(sb);
                 AOPF?.Print(sb);
                 Planets?.Print(sb);
+                Outfit?.Print(sb);
             }
             #endregion
 
@@ -973,6 +1013,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.AOPF = this.AOPF.Combine(rhs.AOPF, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
+                ret.Outfit = this.Outfit.Combine(rhs.Outfit, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1013,6 +1054,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
             public StarfieldGroup.TranslationMask<AOPFRecord.TranslationMask>? AOPF;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
+            public StarfieldGroup.TranslationMask<Outfit.TranslationMask>? Outfit;
             #endregion
 
             #region Ctors
@@ -1054,6 +1096,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((AOPF != null ? AOPF.OnOverall : DefaultOn, AOPF?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
+                ret.Add((Outfit != null ? Outfit.OnOverall : DefaultOn, Outfit?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1113,6 +1156,7 @@ namespace Mutagen.Bethesda.Starfield
             _Races_Object = new StarfieldGroup<Race>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
+            _Outfit_Object = new StarfieldGroup<Outfit>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1183,6 +1227,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Planets.RecordCache.Set(rhsMod.Planets.RecordCache.Items);
             }
+            if (mask?.Outfit ?? true)
+            {
+                this.Outfit.RecordCache.Set(rhsMod.Outfit.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1209,6 +1257,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += AOPF.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Outfit.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1481,6 +1530,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Race> Races { get; }
         new StarfieldGroup<AOPFRecord> AOPF { get; }
         new StarfieldGroup<Planet> Planets { get; }
+        new StarfieldGroup<Outfit> Outfit { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -1517,6 +1567,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
         IStarfieldGroupGetter<IAOPFRecordGetter> AOPF { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
+        IStarfieldGroupGetter<IOutfitGetter> Outfit { get; }
 
     }
 
@@ -2104,6 +2155,7 @@ namespace Mutagen.Bethesda.Starfield
         Races = 14,
         AOPF = 15,
         Planets = 16,
+        Outfit = 17,
     }
     #endregion
 
@@ -2121,9 +2173,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2208,6 +2260,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Races.Clear();
             item.AOPF.Clear();
             item.Planets.Clear();
+            item.Outfit.Clear();
         }
         
         #region Mutagen
@@ -2224,6 +2277,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.HeadParts.RemapLinks(mapping);
             obj.Races.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
+            obj.Outfit.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -2274,6 +2328,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Races.Remove(keys);
             obj.AOPF.Remove(keys);
             obj.Planets.Remove(keys);
+            obj.Outfit.Remove(keys);
         }
         
         public void Remove(
@@ -2438,6 +2493,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlanet":
                 case "IPlanetInternal":
                     obj.Planets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    obj.Outfit.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -2628,6 +2691,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.AOPF = MaskItemExt.Factory(item.AOPF.GetEqualsMask(rhs.AOPF, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
+            ret.Outfit = MaskItemExt.Factory(item.Outfit.GetEqualsMask(rhs.Outfit, include), include);
         }
         
         public string Print(
@@ -2739,6 +2803,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Planets?.Overall ?? true)
             {
                 item.Planets?.Print(sb, "Planets");
+            }
+            if (printMask?.Outfit?.Overall ?? true)
+            {
+                item.Outfit?.Print(sb, "Outfit");
             }
         }
         
@@ -2885,6 +2953,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isPlanetsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Outfit) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Outfit, rhs.Outfit, out var lhsOutfit, out var rhsOutfit, out var isOutfitEqual))
+                {
+                    if (!object.Equals(lhsOutfit, rhsOutfit)) return false;
+                }
+                else if (!isOutfitEqual) return false;
+            }
             return true;
         }
         
@@ -2908,6 +2984,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Races);
             hash.Add(item.AOPF);
             hash.Add(item.Planets);
+            hash.Add(item.Outfit);
             return hash.ToHashCode();
         }
         
@@ -3006,6 +3083,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlanet":
                 case "IPlanetInternal":
                     return obj.Planets;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    return obj.Outfit;
                 default:
                     return null;
             }
@@ -3031,7 +3113,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[16];
+            Stream[] outputStreams = new Stream[17];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -3049,6 +3131,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Races, 13, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AOPF, 14, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Planets, 15, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfit, 16, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -3143,6 +3226,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.Outfit.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -3209,6 +3296,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Planets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Outfit.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3391,6 +3482,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    foreach (var item in obj.Outfit.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
                     {
@@ -3556,6 +3656,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Planets,
                 groupGetter: (m) => m.Planets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Outfit, IOutfitGetter>(
+                srcGroup: obj.Outfit,
+                type: typeof(IOutfitGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Outfit,
+                groupGetter: (m) => m.Outfit))
             {
                 yield return item;
             }
@@ -3810,6 +3919,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Planets,
                         groupGetter: (m) => m.Planets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Outfit":
+                case "IOutfitGetter":
+                case "IOutfit":
+                case "IOutfitInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Outfit, IOutfitGetter>(
+                        srcGroup: obj.Outfit,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Outfit,
+                        groupGetter: (m) => m.Outfit))
                     {
                         yield return item;
                     }
@@ -4256,6 +4379,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Outfit) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Outfit);
+                try
+                {
+                    item.Outfit.DeepCopyIn(
+                        rhs: rhs.Outfit,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Outfit));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -4362,6 +4505,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Races;
         public bool AOPF;
         public bool Planets;
+        public bool Outfit;
         public GroupMask()
         {
         }
@@ -4383,6 +4527,7 @@ namespace Mutagen.Bethesda.Starfield
             Races = defaultValue;
             AOPF = defaultValue;
             Planets = defaultValue;
+            Outfit = defaultValue;
         }
     }
 
@@ -4586,6 +4731,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PlanetsItem).BinaryWriteTranslator).Write<IPlanetGetter>(
                         item: PlanetsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Outfit ?? true)
+            {
+                var OutfitItem = item.Outfit;
+                if (OutfitItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)OutfitItem).BinaryWriteTranslator).Write<IOutfitGetter>(
+                        item: OutfitItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4874,6 +5030,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Planets;
                 }
+                case RecordTypeInts.OTFT:
+                {
+                    if (importMask?.Outfit ?? true)
+                    {
+                        item.Outfit.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Outfit;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -5124,6 +5294,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IPlanetGetter>? _Planets => _PlanetsLocations != null ? StarfieldGroupBinaryOverlay<IPlanetGetter>.StarfieldGroupFactory(_stream, _PlanetsLocations, _package) : default;
         public IStarfieldGroupGetter<IPlanetGetter> Planets => _Planets ?? new StarfieldGroup<Planet>(this);
         #endregion
+        #region Outfit
+        private List<RangeInt64>? _OutfitLocations;
+        private IStarfieldGroupGetter<IOutfitGetter>? _Outfit => _OutfitLocations != null ? StarfieldGroupBinaryOverlay<IOutfitGetter>.StarfieldGroupFactory(_stream, _OutfitLocations, _package) : default;
+        public IStarfieldGroupGetter<IOutfitGetter> Outfit => _Outfit ?? new StarfieldGroup<Outfit>(this);
+        #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -5307,6 +5482,12 @@ namespace Mutagen.Bethesda.Starfield
                     _PlanetsLocations ??= new();
                     _PlanetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Planets;
+                }
+                case RecordTypeInts.OTFT:
+                {
+                    _OutfitLocations ??= new();
+                    _OutfitLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Outfit;
                 }
                 default:
                     return default(int?);

@@ -2844,9 +2844,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Outfit</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter> Outfit(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter> Outfit(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IOutfitGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2856,9 +2856,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Outfit</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter> Outfit(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter> Outfit(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IOutfitGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IOutfit, IOutfitGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -4256,6 +4256,30 @@ namespace Mutagen.Bethesda.Starfield
             return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IIdleRelation, IIdleRelationGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IIdleRelation, IIdleRelationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IOutfitTarget
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IOutfitTarget</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfitTarget, IOutfitTargetGetter> IOutfitTarget(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfitTarget, IOutfitTargetGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IOutfitTargetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IOutfitTarget, IOutfitTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IOutfitTarget
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IOutfitTarget</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfitTarget, IOutfitTargetGetter> IOutfitTarget(this IEnumerable<IStarfieldModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IOutfitTarget, IOutfitTargetGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IOutfitTargetGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IOutfitTarget, IOutfitTargetGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
