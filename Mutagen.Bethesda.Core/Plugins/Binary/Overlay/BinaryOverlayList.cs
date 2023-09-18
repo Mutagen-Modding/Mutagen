@@ -378,6 +378,8 @@ internal abstract class BinaryOverlayList
         var count = countLength switch
         {
             4 => BinaryPrimitives.ReadUInt32LittleEndian(mem),
+            2 => BinaryPrimitives.ReadUInt16LittleEndian(mem),
+            1 => mem[0],
             _ => throw new NotImplementedException(),
         };
         int[] locs = new int[count];
