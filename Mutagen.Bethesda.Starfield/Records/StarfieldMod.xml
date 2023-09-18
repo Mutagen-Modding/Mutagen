@@ -20,6 +20,7 @@
       <Group name="AudioOcclusionPrimitives" refName="AudioOcclusionPrimitive" />
       <Group name="Planets" refName="Planet" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
+      <Group name="Debris" refName="Debris" />
     </Fields>
   </Object>
 </Loqui>

@@ -78,6 +78,7 @@ namespace Mutagen.Bethesda.Starfield
             _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
+            _Debris_Object = new StarfieldGroup<Debris>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -209,6 +210,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> IStarfieldModGetter.SurfacePatternStyles => _SurfacePatternStyles_Object;
         #endregion
+        #region Debris
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Debris> _Debris_Object;
+        public StarfieldGroup<Debris> Debris => _Debris_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IDebrisGetter> IStarfieldModGetter.Debris => _Debris_Object;
+        #endregion
 
         #region To String
 
@@ -266,6 +274,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -286,7 +295,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Races,
                 TItem AudioOcclusionPrimitives,
                 TItem Planets,
-                TItem SurfacePatternStyles)
+                TItem SurfacePatternStyles,
+                TItem Debris)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -306,6 +316,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AudioOcclusionPrimitives, new StarfieldGroup.Mask<TItem>(AudioOcclusionPrimitives));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
+                this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
             }
 
             #pragma warning disable CS8618
@@ -335,6 +346,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AudioOcclusionPrimitives { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
             #endregion
 
             #region Equals
@@ -365,6 +377,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.AudioOcclusionPrimitives, rhs.AudioOcclusionPrimitives)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
+                if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -388,6 +401,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.AudioOcclusionPrimitives);
                 hash.Add(this.Planets);
                 hash.Add(this.SurfacePatternStyles);
+                hash.Add(this.Debris);
                 return hash.ToHashCode();
             }
 
@@ -486,6 +500,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.SurfacePatternStyles.Overall)) return false;
                     if (this.SurfacePatternStyles.Specific != null && !this.SurfacePatternStyles.Specific.All(eval)) return false;
                 }
+                if (Debris != null)
+                {
+                    if (!eval(this.Debris.Overall)) return false;
+                    if (this.Debris.Specific != null && !this.Debris.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -583,6 +602,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.SurfacePatternStyles.Overall)) return true;
                     if (this.SurfacePatternStyles.Specific != null && this.SurfacePatternStyles.Specific.Any(eval)) return true;
                 }
+                if (Debris != null)
+                {
+                    if (eval(this.Debris.Overall)) return true;
+                    if (this.Debris.Specific != null && this.Debris.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -615,6 +639,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AudioOcclusionPrimitives.Overall), this.AudioOcclusionPrimitives.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
+                obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
             }
             #endregion
 
@@ -705,6 +730,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         SurfacePatternStyles?.Print(sb);
                     }
+                    if (printMask?.Debris?.Overall ?? true)
+                    {
+                        Debris?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -747,6 +776,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>? AudioOcclusionPrimitives;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
             #endregion
 
             #region IErrorMask
@@ -791,6 +821,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Planets;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         return SurfacePatternStyles;
+                    case StarfieldMod_FieldIndex.Debris:
+                        return Debris;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -854,6 +886,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         this.SurfacePatternStyles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Debris:
+                        this.Debris = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -919,6 +954,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
                         this.SurfacePatternStyles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Debris:
+                        this.Debris = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -945,6 +983,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (AudioOcclusionPrimitives != null) return true;
                 if (Planets != null) return true;
                 if (SurfacePatternStyles != null) return true;
+                if (Debris != null) return true;
                 return false;
             }
             #endregion
@@ -988,6 +1027,7 @@ namespace Mutagen.Bethesda.Starfield
                 AudioOcclusionPrimitives?.Print(sb);
                 Planets?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
+                Debris?.Print(sb);
             }
             #endregion
 
@@ -1014,6 +1054,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives.Combine(rhs.AudioOcclusionPrimitives, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
+                ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1055,6 +1096,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<AudioOcclusionPrimitive.TranslationMask>? AudioOcclusionPrimitives;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
+            public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
             #endregion
 
             #region Ctors
@@ -1097,6 +1139,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((AudioOcclusionPrimitives != null ? AudioOcclusionPrimitives.OnOverall : DefaultOn, AudioOcclusionPrimitives?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
+                ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1157,6 +1200,7 @@ namespace Mutagen.Bethesda.Starfield
             _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
+            _Debris_Object = new StarfieldGroup<Debris>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1231,6 +1275,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.SurfacePatternStyles.RecordCache.Set(rhsMod.SurfacePatternStyles.RecordCache.Items);
             }
+            if (mask?.Debris ?? true)
+            {
+                this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1258,6 +1306,7 @@ namespace Mutagen.Bethesda.Starfield
             count += AudioOcclusionPrimitives.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1531,6 +1580,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<AudioOcclusionPrimitive> AudioOcclusionPrimitives { get; }
         new StarfieldGroup<Planet> Planets { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
+        new StarfieldGroup<Debris> Debris { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -1568,6 +1618,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> AudioOcclusionPrimitives { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
+        IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
 
     }
 
@@ -2156,6 +2207,7 @@ namespace Mutagen.Bethesda.Starfield
         AudioOcclusionPrimitives = 15,
         Planets = 16,
         SurfacePatternStyles = 17,
+        Debris = 18,
     }
     #endregion
 
@@ -2173,9 +2225,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2261,6 +2313,7 @@ namespace Mutagen.Bethesda.Starfield
             item.AudioOcclusionPrimitives.Clear();
             item.Planets.Clear();
             item.SurfacePatternStyles.Clear();
+            item.Debris.Clear();
         }
         
         #region Mutagen
@@ -2328,6 +2381,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AudioOcclusionPrimitives.Remove(keys);
             obj.Planets.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
+            obj.Debris.Remove(keys);
         }
         
         public void Remove(
@@ -2503,6 +2557,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    obj.Debris.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -2607,6 +2669,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.Debris.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2629,6 +2697,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Races.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2691,6 +2760,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.AudioOcclusionPrimitives = MaskItemExt.Factory(item.AudioOcclusionPrimitives.GetEqualsMask(rhs.AudioOcclusionPrimitives, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
+            ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
         }
         
         public string Print(
@@ -2806,6 +2876,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SurfacePatternStyles?.Overall ?? true)
             {
                 item.SurfacePatternStyles?.Print(sb, "SurfacePatternStyles");
+            }
+            if (printMask?.Debris?.Overall ?? true)
+            {
+                item.Debris?.Print(sb, "Debris");
             }
         }
         
@@ -2960,6 +3034,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isSurfacePatternStylesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Debris, rhs.Debris, out var lhsDebris, out var rhsDebris, out var isDebrisEqual))
+                {
+                    if (!object.Equals(lhsDebris, rhsDebris)) return false;
+                }
+                else if (!isDebrisEqual) return false;
+            }
             return true;
         }
         
@@ -2984,6 +3066,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.AudioOcclusionPrimitives);
             hash.Add(item.Planets);
             hash.Add(item.SurfacePatternStyles);
+            hash.Add(item.Debris);
             return hash.ToHashCode();
         }
         
@@ -3087,6 +3170,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISurfacePatternStyle":
                 case "ISurfacePatternStyleInternal":
                     return obj.SurfacePatternStyles;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    return obj.Debris;
                 default:
                     return null;
             }
@@ -3112,7 +3200,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[17];
+            Stream[] outputStreams = new Stream[18];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -3131,6 +3219,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.AudioOcclusionPrimitives, 14, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Planets, 15, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 16, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 17, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -3295,6 +3384,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SurfacePatternStyles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3486,6 +3579,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
                     {
@@ -3660,6 +3762,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.SurfacePatternStyles,
                 groupGetter: (m) => m.SurfacePatternStyles))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Debris, IDebrisGetter>(
+                srcGroup: obj.Debris,
+                type: typeof(IDebrisGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Debris,
+                groupGetter: (m) => m.Debris))
             {
                 yield return item;
             }
@@ -3932,6 +4043,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Debris":
+                case "IDebrisGetter":
+                case "IDebris":
+                case "IDebrisInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Debris, IDebrisGetter>(
+                        srcGroup: obj.Debris,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Debris,
+                        groupGetter: (m) => m.Debris))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IStarfieldModGetter, IStarfieldMod, IStarfieldModGetter>(
                         GameCategory.Starfield,
@@ -4014,6 +4139,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         yield return item;
                     }
+                }
+                foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
                 }
             }
             yield break;
@@ -4394,6 +4523,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Debris) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Debris);
+                try
+                {
+                    item.Debris.DeepCopyIn(
+                        rhs: rhs.Debris,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Debris));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -4501,6 +4650,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool AudioOcclusionPrimitives;
         public bool Planets;
         public bool SurfacePatternStyles;
+        public bool Debris;
         public GroupMask()
         {
         }
@@ -4523,6 +4673,7 @@ namespace Mutagen.Bethesda.Starfield
             AudioOcclusionPrimitives = defaultValue;
             Planets = defaultValue;
             SurfacePatternStyles = defaultValue;
+            Debris = defaultValue;
         }
     }
 
@@ -4737,6 +4888,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SurfacePatternStylesItem).BinaryWriteTranslator).Write<ISurfacePatternStyleGetter>(
                         item: SurfacePatternStylesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Debris ?? true)
+            {
+                var DebrisItem = item.Debris;
+                if (DebrisItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
+                        item: DebrisItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -5039,6 +5201,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.SurfacePatternStyles;
                 }
+                case RecordTypeInts.DEBR:
+                {
+                    if (importMask?.Debris ?? true)
+                    {
+                        item.Debris.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Debris;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -5294,6 +5470,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ISurfacePatternStyleGetter>? _SurfacePatternStyles => _SurfacePatternStylesLocations != null ? StarfieldGroupBinaryOverlay<ISurfacePatternStyleGetter>.StarfieldGroupFactory(_stream, _SurfacePatternStylesLocations, _package) : default;
         public IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles => _SurfacePatternStyles ?? new StarfieldGroup<SurfacePatternStyle>(this);
         #endregion
+        #region Debris
+        private List<RangeInt64>? _DebrisLocations;
+        private IStarfieldGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? StarfieldGroupBinaryOverlay<IDebrisGetter>.StarfieldGroupFactory(_stream, _DebrisLocations, _package) : default;
+        public IStarfieldGroupGetter<IDebrisGetter> Debris => _Debris ?? new StarfieldGroup<Debris>(this);
+        #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -5483,6 +5664,12 @@ namespace Mutagen.Bethesda.Starfield
                     _SurfacePatternStylesLocations ??= new();
                     _SurfacePatternStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.SurfacePatternStyles;
+                }
+                case RecordTypeInts.DEBR:
+                {
+                    _DebrisLocations ??= new();
+                    _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Debris;
                 }
                 default:
                     return default(int?);

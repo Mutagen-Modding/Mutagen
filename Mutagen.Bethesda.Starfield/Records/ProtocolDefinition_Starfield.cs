@@ -250,7 +250,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             PlanetModelComponent_Registration.Instance,
             PlanetModelComponentXMPM_Registration.Instance,
             PlanetModelComponentXMPMSubItem_Registration.Instance,
-            HoudiniDataComponent_Registration.Instance
+            HoudiniDataComponent_Registration.Instance,
+            DebrisModel_Registration.Instance
         );
     }
 }
