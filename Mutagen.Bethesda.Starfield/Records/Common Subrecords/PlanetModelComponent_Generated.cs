@@ -1473,9 +1473,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XMPM:
                 {
-                    item.XMPM = Mutagen.Bethesda.Starfield.PlanetModelComponentXMPM.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
+                    item.XMPM = Mutagen.Bethesda.Starfield.PlanetModelComponentXMPM.CreateFromBinary(frame: frame);
                     return (int)PlanetModelComponent_FieldIndex.XMPM;
                 }
                 case RecordTypeInts.MCQP:

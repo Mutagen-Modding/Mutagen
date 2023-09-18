@@ -64,6 +64,7 @@
   </Object>
   <Object name="ModelComponent" objType="Subrecord" baseClass="AComponent" GUID="6372d610-75e7-4bff-b19f-58e63cfc80a7" ID="897">
     <Fields>
+      <AssetLink name="File" recordType="MODL" assetType="StarfieldModel" />
       <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
     </Fields>
   </Object>
@@ -77,7 +78,7 @@
       <String name="RingId" recordType="XLMS" />
     </Fields>
   </Object>
-  <Object name="PlanetModelComponentXMPM" objType="Subrecord" recordType="XMPM" baseClass="AComponent" GUID="b154265a-1bd3-47bd-9928-e2b35f67e514" ID="899">
+  <Object name="PlanetModelComponentXMPM" objType="Subrecord" recordType="XMPM" GUID="b154265a-1bd3-47bd-9928-e2b35f67e514" ID="899">
     <Fields>
       <List name="UnknownStrings" counterLength="2">
         <String binaryType="PrependLengthUShort" />
@@ -85,7 +86,7 @@
       <RefList name="UnknownSubItems" counterLength="2" refName="PlanetModelComponentXMPMSubItem" />
     </Fields>
   </Object>
-  <Object name="PlanetModelComponentXMPMSubItem" objType="Subrecord" baseClass="AComponent" GUID="94032746-87ff-4b9f-b961-9a30df6f32af" ID="900">
+  <Object name="PlanetModelComponentXMPMSubItem" objType="Subrecord" GUID="94032746-87ff-4b9f-b961-9a30df6f32af" ID="900">
     <Fields>
       <String name="Unknown1" binaryType="PrependLengthUShort" />
       <Int32 name="Unknown2" />
@@ -95,7 +96,7 @@
   </Object>
   <Object name="HoudiniDataComponent" objType="Subrecord" baseClass="AComponent" GUID="78f915ec-3649-4e8a-ab14-7b4fe09e6c00" ID="901">
     <Fields>
-      <ByteArray name="PCCC" recordType="PCCC" unknown="true" />
+      <ByteArray name="PCCC" recordType="PCCC" unknown="true" overflowRecordType="XXXX" />
     </Fields>
   </Object>
 </Loqui>

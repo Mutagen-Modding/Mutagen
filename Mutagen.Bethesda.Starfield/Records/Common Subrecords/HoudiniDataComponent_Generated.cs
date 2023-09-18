@@ -609,7 +609,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
-                RecordTypes.PCCC);
+                RecordTypes.PCCC,
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HoudiniDataComponentBinaryWriteTranslation);
@@ -996,7 +997,8 @@ namespace Mutagen.Bethesda.Starfield
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.PCCC,
-                header: translationParams.ConvertToCustom(RecordTypes.PCCC));
+                header: translationParams.ConvertToCustom(RecordTypes.PCCC),
+                overflowRecord: RecordTypes.XXXX);
         }
 
         public void Write(
@@ -1057,6 +1059,11 @@ namespace Mutagen.Bethesda.Starfield
                     item.PCCC = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)HoudiniDataComponent_FieldIndex.PCCC;
                 }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1115,7 +1122,12 @@ namespace Mutagen.Bethesda.Starfield
 
         #region PCCC
         private int? _PCCCLocation;
-        public ReadOnlyMemorySlice<Byte>? PCCC => _PCCCLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PCCCLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private int? _PCCCLengthOverride;
+        public ReadOnlyMemorySlice<Byte>? PCCC => PluginUtilityTranslation.ReadByteArrayWithOverflow(
+            _recordData,
+            _package.MetaData.Constants,
+            _PCCCLocation,
+            _PCCCLengthOverride);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1183,7 +1195,17 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PCCC:
                 {
                     _PCCCLocation = (stream.Position - offset);
+                    _PCCCLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
                     return (int)HoudiniDataComponent_FieldIndex.PCCC;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

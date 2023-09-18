@@ -21,7 +21,7 @@
       <Marker name="BDED" recordType="BDED" />
       <Float name="Temperature" recordType="TEMP" />
       <Float name="Density" recordType="DENS" />
-      <Float name="PerihelionAngleDegrees" recordType="PHLA" />
+      <Float name="PerihelionAngleDegrees" recordType="PHLA" />gg
       <ByteArray name="RSCS" recordType="RSCS" unknown="true" />
     </Fields>
   </Object>
@@ -36,6 +36,7 @@
       </List>
       <Int32 name="Unknown3" unknown="true" />
       <RefList name="Flora" counterLength="4" expectedLengthLength="4" refName="PlanetFlora" />
+      <ByteArray name="Unknown4" unknown="true" />
     </Fields>
   </Object>
   <Object name="PlanetFlora" objType="Subrecord" GUID="b0ddbb8e-ab2c-4990-af55-dc356da42e0b" ID="891">
@@ -95,6 +96,8 @@
     <Fields>
       <UInt32 name="AtmosHandle" />
       <Int32 name="Unknown1" />
+      <Int32 name="Unknown2" />
+      <Int32 name="Unknown3" />
     </Fields>
   </Object>
 </Loqui>

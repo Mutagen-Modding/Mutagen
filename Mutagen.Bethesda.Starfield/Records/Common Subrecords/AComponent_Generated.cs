@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, PlanetModelComponentXMPM, PlanetModelComponentXMPMSubItem, HoudiniDataComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent]
     /// </summary>
     public abstract partial class AComponent :
         IAComponent,
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, PlanetModelComponentXMPM, PlanetModelComponentXMPMSubItem, HoudiniDataComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent]
     /// </summary>
     public partial interface IAComponent :
         IAComponentGetter,
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, PlanetModelComponentXMPM, PlanetModelComponentXMPMSubItem, HoudiniDataComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent]
     /// </summary>
     public partial interface IAComponentGetter :
         ILoquiObject,
@@ -600,15 +600,13 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.BFCB;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.BFCB,
-                RecordTypes.XMPM);
+            var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
-                RecordTypes.XMPM,
                 RecordTypes.BFCE);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
