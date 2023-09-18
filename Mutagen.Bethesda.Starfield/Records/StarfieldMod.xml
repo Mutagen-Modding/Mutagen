@@ -19,6 +19,7 @@
       <Group name="Races" refName="Race" />
       <Group name="AOPF" refName="AOPFRecord" />
       <Group name="Planets" refName="Planet" />
+      <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
     </Fields>
   </Object>
 </Loqui>

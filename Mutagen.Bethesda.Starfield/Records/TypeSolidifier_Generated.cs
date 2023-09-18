@@ -3780,9 +3780,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SurfacePatternStyle</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter> SurfacePatternStyle(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter> SurfacePatternStyle(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISurfacePatternStyleGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3792,9 +3792,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SurfacePatternStyle</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter> SurfacePatternStyle(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter> SurfacePatternStyle(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISurfacePatternStyleGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISurfacePatternStyle, ISurfacePatternStyleGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

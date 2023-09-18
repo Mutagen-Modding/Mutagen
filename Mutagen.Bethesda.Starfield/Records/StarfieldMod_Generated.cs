@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Starfield
             _Races_Object = new StarfieldGroup<Race>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
+            _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -201,6 +202,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IPlanetGetter> IStarfieldModGetter.Planets => _Planets_Object;
         #endregion
+        #region SurfacePatternStyles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<SurfacePatternStyle> _SurfacePatternStyles_Object;
+        public StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles => _SurfacePatternStyles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ISurfacePatternStyleGetter> IStarfieldModGetter.SurfacePatternStyles => _SurfacePatternStyles_Object;
+        #endregion
 
         #region To String
 
@@ -257,6 +265,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -276,7 +285,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem HeadParts,
                 TItem Races,
                 TItem AOPF,
-                TItem Planets)
+                TItem Planets,
+                TItem SurfacePatternStyles)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -295,6 +305,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
                 this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AOPF, new StarfieldGroup.Mask<TItem>(AOPF));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
+                this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
             }
 
             #pragma warning disable CS8618
@@ -323,6 +334,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AOPF { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             #endregion
 
             #region Equals
@@ -352,6 +364,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.AOPF, rhs.AOPF)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
+                if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -374,6 +387,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Races);
                 hash.Add(this.AOPF);
                 hash.Add(this.Planets);
+                hash.Add(this.SurfacePatternStyles);
                 return hash.ToHashCode();
             }
 
@@ -467,6 +481,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Planets.Overall)) return false;
                     if (this.Planets.Specific != null && !this.Planets.Specific.All(eval)) return false;
                 }
+                if (SurfacePatternStyles != null)
+                {
+                    if (!eval(this.SurfacePatternStyles.Overall)) return false;
+                    if (this.SurfacePatternStyles.Specific != null && !this.SurfacePatternStyles.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -559,6 +578,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Planets.Overall)) return true;
                     if (this.Planets.Specific != null && this.Planets.Specific.Any(eval)) return true;
                 }
+                if (SurfacePatternStyles != null)
+                {
+                    if (eval(this.SurfacePatternStyles.Overall)) return true;
+                    if (this.SurfacePatternStyles.Specific != null && this.SurfacePatternStyles.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -590,6 +614,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.AOPF = this.AOPF == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AOPF.Overall), this.AOPF.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
+                obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
             }
             #endregion
 
@@ -676,6 +701,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Planets?.Print(sb);
                     }
+                    if (printMask?.SurfacePatternStyles?.Overall ?? true)
+                    {
+                        SurfacePatternStyles?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -717,6 +746,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>? AOPF;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             #endregion
 
             #region IErrorMask
@@ -759,6 +789,8 @@ namespace Mutagen.Bethesda.Starfield
                         return AOPF;
                     case StarfieldMod_FieldIndex.Planets:
                         return Planets;
+                    case StarfieldMod_FieldIndex.SurfacePatternStyles:
+                        return SurfacePatternStyles;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -819,6 +851,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.SurfacePatternStyles:
+                        this.SurfacePatternStyles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -881,6 +916,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.SurfacePatternStyles:
+                        this.SurfacePatternStyles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -906,6 +944,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Races != null) return true;
                 if (AOPF != null) return true;
                 if (Planets != null) return true;
+                if (SurfacePatternStyles != null) return true;
                 return false;
             }
             #endregion
@@ -948,6 +987,7 @@ namespace Mutagen.Bethesda.Starfield
                 Races?.Print(sb);
                 AOPF?.Print(sb);
                 Planets?.Print(sb);
+                SurfacePatternStyles?.Print(sb);
             }
             #endregion
 
@@ -973,6 +1013,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.AOPF = this.AOPF.Combine(rhs.AOPF, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
+                ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1013,6 +1054,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
             public StarfieldGroup.TranslationMask<AOPFRecord.TranslationMask>? AOPF;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
+            public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             #endregion
 
             #region Ctors
@@ -1054,6 +1096,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((AOPF != null ? AOPF.OnOverall : DefaultOn, AOPF?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
+                ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1113,6 +1156,7 @@ namespace Mutagen.Bethesda.Starfield
             _Races_Object = new StarfieldGroup<Race>(this);
             _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
+            _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1183,6 +1227,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Planets.RecordCache.Set(rhsMod.Planets.RecordCache.Items);
             }
+            if (mask?.SurfacePatternStyles ?? true)
+            {
+                this.SurfacePatternStyles.RecordCache.Set(rhsMod.SurfacePatternStyles.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1209,6 +1257,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += AOPF.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1481,6 +1530,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Race> Races { get; }
         new StarfieldGroup<AOPFRecord> AOPF { get; }
         new StarfieldGroup<Planet> Planets { get; }
+        new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -1517,6 +1567,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
         IStarfieldGroupGetter<IAOPFRecordGetter> AOPF { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
+        IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
 
     }
 
@@ -2104,6 +2155,7 @@ namespace Mutagen.Bethesda.Starfield
         Races = 14,
         AOPF = 15,
         Planets = 16,
+        SurfacePatternStyles = 17,
     }
     #endregion
 
@@ -2121,9 +2173,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2208,6 +2260,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Races.Clear();
             item.AOPF.Clear();
             item.Planets.Clear();
+            item.SurfacePatternStyles.Clear();
         }
         
         #region Mutagen
@@ -2274,6 +2327,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Races.Remove(keys);
             obj.AOPF.Remove(keys);
             obj.Planets.Remove(keys);
+            obj.SurfacePatternStyles.Remove(keys);
         }
         
         public void Remove(
@@ -2438,6 +2492,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlanet":
                 case "IPlanetInternal":
                     obj.Planets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "SurfacePatternStyle":
+                case "ISurfacePatternStyleGetter":
+                case "ISurfacePatternStyle":
+                case "ISurfacePatternStyleInternal":
+                    obj.SurfacePatternStyles.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -2628,6 +2690,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.AOPF = MaskItemExt.Factory(item.AOPF.GetEqualsMask(rhs.AOPF, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
+            ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
         }
         
         public string Print(
@@ -2739,6 +2802,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Planets?.Overall ?? true)
             {
                 item.Planets?.Print(sb, "Planets");
+            }
+            if (printMask?.SurfacePatternStyles?.Overall ?? true)
+            {
+                item.SurfacePatternStyles?.Print(sb, "SurfacePatternStyles");
             }
         }
         
@@ -2885,6 +2952,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isPlanetsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfacePatternStyles) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SurfacePatternStyles, rhs.SurfacePatternStyles, out var lhsSurfacePatternStyles, out var rhsSurfacePatternStyles, out var isSurfacePatternStylesEqual))
+                {
+                    if (!object.Equals(lhsSurfacePatternStyles, rhsSurfacePatternStyles)) return false;
+                }
+                else if (!isSurfacePatternStylesEqual) return false;
+            }
             return true;
         }
         
@@ -2908,6 +2983,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Races);
             hash.Add(item.AOPF);
             hash.Add(item.Planets);
+            hash.Add(item.SurfacePatternStyles);
             return hash.ToHashCode();
         }
         
@@ -3006,6 +3082,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPlanet":
                 case "IPlanetInternal":
                     return obj.Planets;
+                case "SurfacePatternStyle":
+                case "ISurfacePatternStyleGetter":
+                case "ISurfacePatternStyle":
+                case "ISurfacePatternStyleInternal":
+                    return obj.SurfacePatternStyles;
                 default:
                     return null;
             }
@@ -3031,7 +3112,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[16];
+            Stream[] outputStreams = new Stream[17];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -3049,6 +3130,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Races, 13, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AOPF, 14, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Planets, 15, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 16, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -3209,6 +3291,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Planets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SurfacePatternStyles.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3391,6 +3477,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "SurfacePatternStyle":
+                case "ISurfacePatternStyleGetter":
+                case "ISurfacePatternStyle":
+                case "ISurfacePatternStyleInternal":
+                    foreach (var item in obj.SurfacePatternStyles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
                     {
@@ -3556,6 +3651,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Planets,
                 groupGetter: (m) => m.Planets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SurfacePatternStyle, ISurfacePatternStyleGetter>(
+                srcGroup: obj.SurfacePatternStyles,
+                type: typeof(ISurfacePatternStyleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SurfacePatternStyles,
+                groupGetter: (m) => m.SurfacePatternStyles))
             {
                 yield return item;
             }
@@ -3810,6 +3914,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Planets,
                         groupGetter: (m) => m.Planets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SurfacePatternStyle":
+                case "ISurfacePatternStyleGetter":
+                case "ISurfacePatternStyle":
+                case "ISurfacePatternStyleInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SurfacePatternStyle, ISurfacePatternStyleGetter>(
+                        srcGroup: obj.SurfacePatternStyles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SurfacePatternStyles,
+                        groupGetter: (m) => m.SurfacePatternStyles))
                     {
                         yield return item;
                     }
@@ -4256,6 +4374,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SurfacePatternStyles) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SurfacePatternStyles);
+                try
+                {
+                    item.SurfacePatternStyles.DeepCopyIn(
+                        rhs: rhs.SurfacePatternStyles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.SurfacePatternStyles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -4362,6 +4500,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Races;
         public bool AOPF;
         public bool Planets;
+        public bool SurfacePatternStyles;
         public GroupMask()
         {
         }
@@ -4383,6 +4522,7 @@ namespace Mutagen.Bethesda.Starfield
             Races = defaultValue;
             AOPF = defaultValue;
             Planets = defaultValue;
+            SurfacePatternStyles = defaultValue;
         }
     }
 
@@ -4586,6 +4726,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PlanetsItem).BinaryWriteTranslator).Write<IPlanetGetter>(
                         item: PlanetsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SurfacePatternStyles ?? true)
+            {
+                var SurfacePatternStylesItem = item.SurfacePatternStyles;
+                if (SurfacePatternStylesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SurfacePatternStylesItem).BinaryWriteTranslator).Write<ISurfacePatternStyleGetter>(
+                        item: SurfacePatternStylesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4874,6 +5025,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Planets;
                 }
+                case RecordTypeInts.PTST:
+                {
+                    if (importMask?.SurfacePatternStyles ?? true)
+                    {
+                        item.SurfacePatternStyles.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.SurfacePatternStyles;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -5124,6 +5289,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IPlanetGetter>? _Planets => _PlanetsLocations != null ? StarfieldGroupBinaryOverlay<IPlanetGetter>.StarfieldGroupFactory(_stream, _PlanetsLocations, _package) : default;
         public IStarfieldGroupGetter<IPlanetGetter> Planets => _Planets ?? new StarfieldGroup<Planet>(this);
         #endregion
+        #region SurfacePatternStyles
+        private List<RangeInt64>? _SurfacePatternStylesLocations;
+        private IStarfieldGroupGetter<ISurfacePatternStyleGetter>? _SurfacePatternStyles => _SurfacePatternStylesLocations != null ? StarfieldGroupBinaryOverlay<ISurfacePatternStyleGetter>.StarfieldGroupFactory(_stream, _SurfacePatternStylesLocations, _package) : default;
+        public IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles => _SurfacePatternStyles ?? new StarfieldGroup<SurfacePatternStyle>(this);
+        #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -5307,6 +5477,12 @@ namespace Mutagen.Bethesda.Starfield
                     _PlanetsLocations ??= new();
                     _PlanetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Planets;
+                }
+                case RecordTypeInts.PTST:
+                {
+                    _SurfacePatternStylesLocations ??= new();
+                    _SurfacePatternStylesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.SurfacePatternStyles;
                 }
                 default:
                     return default(int?);
