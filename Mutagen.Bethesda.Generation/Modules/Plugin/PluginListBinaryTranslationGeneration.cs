@@ -25,6 +25,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     public const string AllowNoCounter = "AllowNoCounter";
     public const string EndMarker = "EndMarker";
     public const string Additive = "Additive";
+    public const string ExpectedLengthLength = "ExpectedLengthLength";
 
     public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
     {
@@ -32,6 +33,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
         listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
         listType.CustomData[CounterByteLength] = node.GetAttribute("counterLength", default(byte));
+        listType.CustomData[ExpectedLengthLength] = node.GetAttribute("expectedLengthLength", default(byte?));
         listType.CustomData[NullIfCounterZero] = node.GetAttribute("nullIfCounterZero", false);
         listType.CustomData[AllowNoCounter] = node.GetAttribute("allowNoCounter", true);
         listType.CustomData[EndMarker] = node.GetAttribute("endMarker", null);
@@ -192,6 +194,16 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         default:
                             throw new NotImplementedException();
                     }
+                    if (list.CustomData.TryGetValue(ExpectedLengthLength, out var expLenLenObj)
+                                             && expLenLenObj is byte expLenLen)
+                    {
+                        if (loqui == null)
+                        {
+                            throw new NotImplementedException();
+                        }
+                        args.Add($"expectedLengthLength: {expLenLen}");
+                        args.Add($"expectedLength: {await subTransl.ExpectedLength(loqui.TargetObjectGeneration, list.SubTypeGeneration) ?? throw new NotImplementedException()}");
+                    }
                     break;
                 case ListBinaryType.Frame:
                     break;
@@ -270,6 +282,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     {
         var list = typeGen as ListType;
         var data = list.GetFieldData();
+        var loqui = list.SubTypeGeneration as LoquiType;
         var subData = list.SubTypeGeneration.GetFieldData();
         if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
         {
@@ -297,6 +310,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                          && (bool)t;
 
         bool needsRecordConv = list.SubTypeGeneration.NeedsRecordConverter();
+
+        var expectedLen = loqui == null ? default(int?) : await subTransl.ExpectedLength(loqui.TargetObjectGeneration, list.SubTypeGeneration);
 
         bool recordPerItem = false;
         if (listBinaryType == ListBinaryType.CounterRecord
@@ -332,7 +347,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                             {
                                 args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                             }
-                            if (list.SubTypeGeneration is LoquiType loqui
+                            if (loqui != null
                                 && !loqui.TargetObjectGeneration.Abstract
                                 && loqui.TargetObjectGeneration.GetObjectData().TriggeringSource == null)
                             {
@@ -401,6 +416,16 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                     break;
                                 default:
                                     throw new NotImplementedException();
+                            }
+                            if (list.CustomData.TryGetValue(ExpectedLengthLength, out var expLenLenObj)
+                                && expLenLenObj is byte expLenLen)
+                            {
+                                if (loqui == null)
+                                {
+                                    throw new NotImplementedException();
+                                }
+                                args.Add($"expectedLengthLength: {expLenLen}");
+                                args.Add($"expectedLength: {expectedLen ?? throw new NotImplementedException()}");
                             }
                             args.Add($"reader: {Module.ReaderMemberName}");
                             break;
