@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(FaunaEndingPos, 0x4));
         #region Flora
-        public IReadOnlyList<IPlanetFloraGetter> Flora => BinaryOverlayList.FactoryByCountLength<IPlanetFloraGetter>(_structData.Slice(FaunaEndingPos + 0x4), _package, 9, countLength: 4, (s, p) => PlanetFloraBinaryOverlay.PlanetFloraFactory(s, p));
+        public IReadOnlyList<IPlanetFloraGetter> Flora => BinaryOverlayList.FactoryByCountLength<IPlanetFloraGetter>(_structData.Slice(FaunaEndingPos + 0x4), _package, 9, countLength: 4, expectedLengthLength: 4, (s, p) => PlanetFloraBinaryOverlay.PlanetFloraFactory(s, p));
         protected int FloraEndingPos;
         #endregion
         #region Unknown4
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: memoryPair,
                 package: package);
             ret.FaunaEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 4 + 4;
-            ret.FloraEndingPos = ret.FaunaEndingPos + 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FaunaEndingPos + 0x4)) * 9 + 4;
+            ret.FloraEndingPos = ret.FaunaEndingPos + 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FaunaEndingPos + 0x4)) * 9 + 4 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

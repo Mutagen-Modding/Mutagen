@@ -351,6 +351,23 @@ internal abstract class BinaryOverlayList
         byte countLength,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
+        return FactoryByCountLength<T>(
+            mem,
+            package,
+            itemLength: itemLength,
+            countLength: countLength,
+            expectedLengthLength: 0,
+            getter: getter);
+    }
+
+    public static IReadOnlyList<T> FactoryByCountLength<T>(
+        ReadOnlyMemorySlice<byte> mem,
+        BinaryOverlayFactoryPackage package,
+        int itemLength,
+        byte countLength,
+        byte expectedLengthLength,
+        PluginBinaryOverlay.SpanFactory<T> getter)
+    {
         var count = countLength switch
         {
             1 => mem[0],
@@ -363,7 +380,7 @@ internal abstract class BinaryOverlayList
             throw new ArgumentException("Item count and expected size did not match.");
         }
         return new BinaryOverlayListByStartIndex<T>(
-            mem.Slice(countLength, checked((int)(count * itemLength))),
+            mem.Slice(countLength + expectedLengthLength, checked((int)(count * itemLength))),
             package,
             getter,
             itemLength);
