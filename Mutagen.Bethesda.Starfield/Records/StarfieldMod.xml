@@ -20,6 +20,7 @@
       <Group name="AOPF" refName="AOPFRecord" />
       <Group name="Planets" refName="Planet" />
       <Group name="Outfit" refName="Outfit" />
+      <Group name="LandscapeTexture" refName="LandscapeTexture" />
     </Fields>
   </Object>
 </Loqui>

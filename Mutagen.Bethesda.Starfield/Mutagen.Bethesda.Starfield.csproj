@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldAnimationTextAssetType.cs" />
+    <Compile Include="Assets\StarfieldMaterialAssetType.cs" />
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
     <Compile Include="Assets\StarfieldRigAssetType.cs" />
     <Compile Include="Enums\BipedObject.cs" />

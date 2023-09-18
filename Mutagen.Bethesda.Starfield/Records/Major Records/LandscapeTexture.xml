@@ -2,6 +2,15 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LandscapeTexture" recordType="LTEX" objType="Record" baseClass="StarfieldMajorRecord" GUID="78ef5402-1391-4ad3-bab4-8d62efab1c65" ID="802">
     <Fields>
+      <AssetLink name="MaterialPath" recordType="BNAM" assetType="StarfieldMaterial" nullable="True" />
+      <FormLink name="MaterialType" recordType="MNAM" refName="MaterialType" nullable="False" />
+      <Data recordType="HNAM">
+        <Fields>
+          <UInt8 name="HavokFriction" />
+          <UInt8 name="HavokRestitution" />
+        </Fields>
+      </Data>
+      <Float name="UnknownQNAM" recordType="QNAM" unknown="True" />
     </Fields>
   </Object>
 </Loqui>
