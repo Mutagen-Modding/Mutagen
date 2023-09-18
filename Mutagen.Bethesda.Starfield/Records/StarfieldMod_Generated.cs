@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Starfield
             _AffinityEvents_Object = new StarfieldGroup<AffinityEvent>(this);
             _HeadParts_Object = new StarfieldGroup<HeadPart>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
-            _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
+            _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             CustomCtor();
@@ -188,12 +188,12 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IRaceGetter> IStarfieldModGetter.Races => _Races_Object;
         #endregion
-        #region AOPF
+        #region AudioOcclusionPrimitives
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<AOPFRecord> _AOPF_Object;
-        public StarfieldGroup<AOPFRecord> AOPF => _AOPF_Object;
+        private StarfieldGroup<AudioOcclusionPrimitive> _AudioOcclusionPrimitives_Object;
+        public StarfieldGroup<AudioOcclusionPrimitive> AudioOcclusionPrimitives => _AudioOcclusionPrimitives_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IAOPFRecordGetter> IStarfieldModGetter.AOPF => _AOPF_Object;
+        IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> IStarfieldModGetter.AudioOcclusionPrimitives => _AudioOcclusionPrimitives_Object;
         #endregion
         #region Planets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AffinityEvents = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.HeadParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AffinityEvents,
                 TItem HeadParts,
                 TItem Races,
-                TItem AOPF,
+                TItem AudioOcclusionPrimitives,
                 TItem Planets,
                 TItem SurfacePatternStyles)
             {
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AffinityEvents = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AffinityEvents, new StarfieldGroup.Mask<TItem>(AffinityEvents));
                 this.HeadParts = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(HeadParts, new StarfieldGroup.Mask<TItem>(HeadParts));
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
-                this.AOPF = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AOPF, new StarfieldGroup.Mask<TItem>(AOPF));
+                this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AudioOcclusionPrimitives, new StarfieldGroup.Mask<TItem>(AudioOcclusionPrimitives));
                 this.Planets = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Planets, new StarfieldGroup.Mask<TItem>(Planets));
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
             }
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AffinityEvents { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? HeadParts { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AOPF { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AudioOcclusionPrimitives { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Planets { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             #endregion
@@ -362,7 +362,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.AffinityEvents, rhs.AffinityEvents)) return false;
                 if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
                 if (!object.Equals(this.Races, rhs.Races)) return false;
-                if (!object.Equals(this.AOPF, rhs.AOPF)) return false;
+                if (!object.Equals(this.AudioOcclusionPrimitives, rhs.AudioOcclusionPrimitives)) return false;
                 if (!object.Equals(this.Planets, rhs.Planets)) return false;
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 return true;
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.AffinityEvents);
                 hash.Add(this.HeadParts);
                 hash.Add(this.Races);
-                hash.Add(this.AOPF);
+                hash.Add(this.AudioOcclusionPrimitives);
                 hash.Add(this.Planets);
                 hash.Add(this.SurfacePatternStyles);
                 return hash.ToHashCode();
@@ -471,10 +471,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Races.Overall)) return false;
                     if (this.Races.Specific != null && !this.Races.Specific.All(eval)) return false;
                 }
-                if (AOPF != null)
+                if (AudioOcclusionPrimitives != null)
                 {
-                    if (!eval(this.AOPF.Overall)) return false;
-                    if (this.AOPF.Specific != null && !this.AOPF.Specific.All(eval)) return false;
+                    if (!eval(this.AudioOcclusionPrimitives.Overall)) return false;
+                    if (this.AudioOcclusionPrimitives.Specific != null && !this.AudioOcclusionPrimitives.Specific.All(eval)) return false;
                 }
                 if (Planets != null)
                 {
@@ -568,10 +568,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Races.Overall)) return true;
                     if (this.Races.Specific != null && this.Races.Specific.Any(eval)) return true;
                 }
-                if (AOPF != null)
+                if (AudioOcclusionPrimitives != null)
                 {
-                    if (eval(this.AOPF.Overall)) return true;
-                    if (this.AOPF.Specific != null && this.AOPF.Specific.Any(eval)) return true;
+                    if (eval(this.AudioOcclusionPrimitives.Overall)) return true;
+                    if (this.AudioOcclusionPrimitives.Specific != null && this.AudioOcclusionPrimitives.Specific.Any(eval)) return true;
                 }
                 if (Planets != null)
                 {
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AffinityEvents = this.AffinityEvents == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AffinityEvents.Overall), this.AffinityEvents.Specific?.Translate(eval));
                 obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
-                obj.AOPF = this.AOPF == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AOPF.Overall), this.AOPF.Specific?.Translate(eval));
+                obj.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AudioOcclusionPrimitives.Overall), this.AudioOcclusionPrimitives.Specific?.Translate(eval));
                 obj.Planets = this.Planets == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Planets.Overall), this.Planets.Specific?.Translate(eval));
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
             }
@@ -693,9 +693,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Races?.Print(sb);
                     }
-                    if (printMask?.AOPF?.Overall ?? true)
+                    if (printMask?.AudioOcclusionPrimitives?.Overall ?? true)
                     {
-                        AOPF?.Print(sb);
+                        AudioOcclusionPrimitives?.Print(sb);
                     }
                     if (printMask?.Planets?.Overall ?? true)
                     {
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AffinityEvent.ErrorMask>?>? AffinityEvents;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>? AOPF;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>? AudioOcclusionPrimitives;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>? Planets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             #endregion
@@ -785,8 +785,8 @@ namespace Mutagen.Bethesda.Starfield
                         return HeadParts;
                     case StarfieldMod_FieldIndex.Races:
                         return Races;
-                    case StarfieldMod_FieldIndex.AOPF:
-                        return AOPF;
+                    case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
+                        return AudioOcclusionPrimitives;
                     case StarfieldMod_FieldIndex.Planets:
                         return Planets;
                     case StarfieldMod_FieldIndex.SurfacePatternStyles:
@@ -846,8 +846,8 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Races:
                         this.Races = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>(ex, null);
                         break;
-                    case StarfieldMod_FieldIndex.AOPF:
-                        this.AOPF = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>(ex, null);
+                    case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
+                        this.AudioOcclusionPrimitives = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>(ex, null);
@@ -910,8 +910,8 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Races:
                         this.Races = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>?)obj;
                         break;
-                    case StarfieldMod_FieldIndex.AOPF:
-                        this.AOPF = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AOPFRecord.ErrorMask>?>?)obj;
+                    case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
+                        this.AudioOcclusionPrimitives = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.Planets:
                         this.Planets = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Planet.ErrorMask>?>?)obj;
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (AffinityEvents != null) return true;
                 if (HeadParts != null) return true;
                 if (Races != null) return true;
-                if (AOPF != null) return true;
+                if (AudioOcclusionPrimitives != null) return true;
                 if (Planets != null) return true;
                 if (SurfacePatternStyles != null) return true;
                 return false;
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Starfield
                 AffinityEvents?.Print(sb);
                 HeadParts?.Print(sb);
                 Races?.Print(sb);
-                AOPF?.Print(sb);
+                AudioOcclusionPrimitives?.Print(sb);
                 Planets?.Print(sb);
                 SurfacePatternStyles?.Print(sb);
             }
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.AffinityEvents = this.AffinityEvents.Combine(rhs.AffinityEvents, (l, r) => l.Combine(r));
                 ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
-                ret.AOPF = this.AOPF.Combine(rhs.AOPF, (l, r) => l.Combine(r));
+                ret.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives.Combine(rhs.AudioOcclusionPrimitives, (l, r) => l.Combine(r));
                 ret.Planets = this.Planets.Combine(rhs.Planets, (l, r) => l.Combine(r));
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 return ret;
@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<AffinityEvent.TranslationMask>? AffinityEvents;
             public StarfieldGroup.TranslationMask<HeadPart.TranslationMask>? HeadParts;
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
-            public StarfieldGroup.TranslationMask<AOPFRecord.TranslationMask>? AOPF;
+            public StarfieldGroup.TranslationMask<AudioOcclusionPrimitive.TranslationMask>? AudioOcclusionPrimitives;
             public StarfieldGroup.TranslationMask<Planet.TranslationMask>? Planets;
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             #endregion
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((AffinityEvents != null ? AffinityEvents.OnOverall : DefaultOn, AffinityEvents?.GetCrystal()));
                 ret.Add((HeadParts != null ? HeadParts.OnOverall : DefaultOn, HeadParts?.GetCrystal()));
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
-                ret.Add((AOPF != null ? AOPF.OnOverall : DefaultOn, AOPF?.GetCrystal()));
+                ret.Add((AudioOcclusionPrimitives != null ? AudioOcclusionPrimitives.OnOverall : DefaultOn, AudioOcclusionPrimitives?.GetCrystal()));
                 ret.Add((Planets != null ? Planets.OnOverall : DefaultOn, Planets?.GetCrystal()));
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
             }
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Starfield
             _AffinityEvents_Object = new StarfieldGroup<AffinityEvent>(this);
             _HeadParts_Object = new StarfieldGroup<HeadPart>(this);
             _Races_Object = new StarfieldGroup<Race>(this);
-            _AOPF_Object = new StarfieldGroup<AOPFRecord>(this);
+            _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
             _Planets_Object = new StarfieldGroup<Planet>(this);
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             CustomCtor();
@@ -1219,9 +1219,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Races.RecordCache.Set(rhsMod.Races.RecordCache.Items);
             }
-            if (mask?.AOPF ?? true)
+            if (mask?.AudioOcclusionPrimitives ?? true)
             {
-                this.AOPF.RecordCache.Set(rhsMod.AOPF.RecordCache.Items);
+                this.AudioOcclusionPrimitives.RecordCache.Set(rhsMod.AudioOcclusionPrimitives.RecordCache.Items);
             }
             if (mask?.Planets ?? true)
             {
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Starfield
             count += AffinityEvents.RecordCache.Count > 0 ? 1 : default(uint);
             count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AOPF.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AudioOcclusionPrimitives.RecordCache.Count > 0 ? 1 : default(uint);
             count += Planets.RecordCache.Count > 0 ? 1 : default(uint);
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<AffinityEvent> AffinityEvents { get; }
         new StarfieldGroup<HeadPart> HeadParts { get; }
         new StarfieldGroup<Race> Races { get; }
-        new StarfieldGroup<AOPFRecord> AOPF { get; }
+        new StarfieldGroup<AudioOcclusionPrimitive> AudioOcclusionPrimitives { get; }
         new StarfieldGroup<Planet> Planets { get; }
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
     }
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IAffinityEventGetter> AffinityEvents { get; }
         IStarfieldGroupGetter<IHeadPartGetter> HeadParts { get; }
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
-        IStarfieldGroupGetter<IAOPFRecordGetter> AOPF { get; }
+        IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> AudioOcclusionPrimitives { get; }
         IStarfieldGroupGetter<IPlanetGetter> Planets { get; }
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
 
@@ -2153,7 +2153,7 @@ namespace Mutagen.Bethesda.Starfield
         AffinityEvents = 12,
         HeadParts = 13,
         Races = 14,
-        AOPF = 15,
+        AudioOcclusionPrimitives = 15,
         Planets = 16,
         SurfacePatternStyles = 17,
     }
@@ -2258,7 +2258,7 @@ namespace Mutagen.Bethesda.Starfield
             item.AffinityEvents.Clear();
             item.HeadParts.Clear();
             item.Races.Clear();
-            item.AOPF.Clear();
+            item.AudioOcclusionPrimitives.Clear();
             item.Planets.Clear();
             item.SurfacePatternStyles.Clear();
         }
@@ -2325,7 +2325,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AffinityEvents.Remove(keys);
             obj.HeadParts.Remove(keys);
             obj.Races.Remove(keys);
-            obj.AOPF.Remove(keys);
+            obj.AudioOcclusionPrimitives.Remove(keys);
             obj.Planets.Remove(keys);
             obj.SurfacePatternStyles.Remove(keys);
         }
@@ -2479,11 +2479,11 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
-                case "AOPFRecord":
-                case "IAOPFRecordGetter":
-                case "IAOPFRecord":
-                case "IAOPFRecordInternal":
-                    obj.AOPF.Remove(
+                case "AudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveGetter":
+                case "IAudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveInternal":
+                    obj.AudioOcclusionPrimitives.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -2688,7 +2688,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.AffinityEvents = MaskItemExt.Factory(item.AffinityEvents.GetEqualsMask(rhs.AffinityEvents, include), include);
             ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
-            ret.AOPF = MaskItemExt.Factory(item.AOPF.GetEqualsMask(rhs.AOPF, include), include);
+            ret.AudioOcclusionPrimitives = MaskItemExt.Factory(item.AudioOcclusionPrimitives.GetEqualsMask(rhs.AudioOcclusionPrimitives, include), include);
             ret.Planets = MaskItemExt.Factory(item.Planets.GetEqualsMask(rhs.Planets, include), include);
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
         }
@@ -2795,9 +2795,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Races?.Print(sb, "Races");
             }
-            if (printMask?.AOPF?.Overall ?? true)
+            if (printMask?.AudioOcclusionPrimitives?.Overall ?? true)
             {
-                item.AOPF?.Print(sb, "AOPF");
+                item.AudioOcclusionPrimitives?.Print(sb, "AudioOcclusionPrimitives");
             }
             if (printMask?.Planets?.Overall ?? true)
             {
@@ -2936,13 +2936,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isRacesEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AOPF) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.AOPF, rhs.AOPF, out var lhsAOPF, out var rhsAOPF, out var isAOPFEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.AudioOcclusionPrimitives, rhs.AudioOcclusionPrimitives, out var lhsAudioOcclusionPrimitives, out var rhsAudioOcclusionPrimitives, out var isAudioOcclusionPrimitivesEqual))
                 {
-                    if (!object.Equals(lhsAOPF, rhsAOPF)) return false;
+                    if (!object.Equals(lhsAudioOcclusionPrimitives, rhsAudioOcclusionPrimitives)) return false;
                 }
-                else if (!isAOPFEqual) return false;
+                else if (!isAudioOcclusionPrimitivesEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Planets) ?? true))
             {
@@ -2981,7 +2981,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.AffinityEvents);
             hash.Add(item.HeadParts);
             hash.Add(item.Races);
-            hash.Add(item.AOPF);
+            hash.Add(item.AudioOcclusionPrimitives);
             hash.Add(item.Planets);
             hash.Add(item.SurfacePatternStyles);
             return hash.ToHashCode();
@@ -3072,11 +3072,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IRace":
                 case "IRaceInternal":
                     return obj.Races;
-                case "AOPFRecord":
-                case "IAOPFRecordGetter":
-                case "IAOPFRecord":
-                case "IAOPFRecordInternal":
-                    return obj.AOPF;
+                case "AudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveGetter":
+                case "IAudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveInternal":
+                    return obj.AudioOcclusionPrimitives;
                 case "Planet":
                 case "IPlanetGetter":
                 case "IPlanet":
@@ -3128,7 +3128,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.AffinityEvents, 11, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.HeadParts, 12, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Races, 13, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AOPF, 14, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AudioOcclusionPrimitives, 14, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Planets, 15, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 16, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
@@ -3286,7 +3286,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.AOPF.EnumerateMajorRecords())
+            foreach (var item in obj.AudioOcclusionPrimitives.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3459,11 +3459,11 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "AOPFRecord":
-                case "IAOPFRecordGetter":
-                case "IAOPFRecord":
-                case "IAOPFRecordInternal":
-                    foreach (var item in obj.AOPF.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "AudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveGetter":
+                case "IAudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveInternal":
+                    foreach (var item in obj.AudioOcclusionPrimitives.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -3636,12 +3636,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AOPFRecord, IAOPFRecordGetter>(
-                srcGroup: obj.AOPF,
-                type: typeof(IAOPFRecordGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AudioOcclusionPrimitive, IAudioOcclusionPrimitiveGetter>(
+                srcGroup: obj.AudioOcclusionPrimitives,
+                type: typeof(IAudioOcclusionPrimitiveGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.AOPF,
-                groupGetter: (m) => m.AOPF))
+                group: (m) => m.AudioOcclusionPrimitives,
+                groupGetter: (m) => m.AudioOcclusionPrimitives))
             {
                 yield return item;
             }
@@ -3890,16 +3890,16 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "AOPFRecord":
-                case "IAOPFRecordGetter":
-                case "IAOPFRecord":
-                case "IAOPFRecordInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AOPFRecord, IAOPFRecordGetter>(
-                        srcGroup: obj.AOPF,
+                case "AudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveGetter":
+                case "IAudioOcclusionPrimitive":
+                case "IAudioOcclusionPrimitiveInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AudioOcclusionPrimitive, IAudioOcclusionPrimitiveGetter>(
+                        srcGroup: obj.AudioOcclusionPrimitives,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.AOPF,
-                        groupGetter: (m) => m.AOPF))
+                        group: (m) => m.AudioOcclusionPrimitives,
+                        groupGetter: (m) => m.AudioOcclusionPrimitives))
                     {
                         yield return item;
                     }
@@ -4334,15 +4334,15 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AOPF) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives) ?? true))
             {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AOPF);
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives);
                 try
                 {
-                    item.AOPF.DeepCopyIn(
-                        rhs: rhs.AOPF,
+                    item.AudioOcclusionPrimitives.DeepCopyIn(
+                        rhs: rhs.AudioOcclusionPrimitives,
                         errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AOPF));
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -4498,7 +4498,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool AffinityEvents;
         public bool HeadParts;
         public bool Races;
-        public bool AOPF;
+        public bool AudioOcclusionPrimitives;
         public bool Planets;
         public bool SurfacePatternStyles;
         public GroupMask()
@@ -4520,7 +4520,7 @@ namespace Mutagen.Bethesda.Starfield
             AffinityEvents = defaultValue;
             HeadParts = defaultValue;
             Races = defaultValue;
-            AOPF = defaultValue;
+            AudioOcclusionPrimitives = defaultValue;
             Planets = defaultValue;
             SurfacePatternStyles = defaultValue;
         }
@@ -4708,13 +4708,13 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
-            if (importMask?.AOPF ?? true)
+            if (importMask?.AudioOcclusionPrimitives ?? true)
             {
-                var AOPFItem = item.AOPF;
-                if (AOPFItem.RecordCache.Count > 0)
+                var AudioOcclusionPrimitivesItem = item.AudioOcclusionPrimitives;
+                if (AudioOcclusionPrimitivesItem.RecordCache.Count > 0)
                 {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AOPFItem).BinaryWriteTranslator).Write<IAOPFRecordGetter>(
-                        item: AOPFItem,
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AudioOcclusionPrimitivesItem).BinaryWriteTranslator).Write<IAudioOcclusionPrimitiveGetter>(
+                        item: AudioOcclusionPrimitivesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4999,9 +4999,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.AOPF:
                 {
-                    if (importMask?.AOPF ?? true)
+                    if (importMask?.AudioOcclusionPrimitives ?? true)
                     {
-                        item.AOPF.CopyInFromBinary(
+                        item.AudioOcclusionPrimitives.CopyInFromBinary(
                             frame: frame,
                             translationParams: null);
                     }
@@ -5009,7 +5009,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         frame.Position += contentLength;
                     }
-                    return (int)StarfieldMod_FieldIndex.AOPF;
+                    return (int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives;
                 }
                 case RecordTypeInts.PNDT:
                 {
@@ -5279,10 +5279,10 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? StarfieldGroupBinaryOverlay<IRaceGetter>.StarfieldGroupFactory(_stream, _RacesLocations, _package) : default;
         public IStarfieldGroupGetter<IRaceGetter> Races => _Races ?? new StarfieldGroup<Race>(this);
         #endregion
-        #region AOPF
-        private List<RangeInt64>? _AOPFLocations;
-        private IStarfieldGroupGetter<IAOPFRecordGetter>? _AOPF => _AOPFLocations != null ? StarfieldGroupBinaryOverlay<IAOPFRecordGetter>.StarfieldGroupFactory(_stream, _AOPFLocations, _package) : default;
-        public IStarfieldGroupGetter<IAOPFRecordGetter> AOPF => _AOPF ?? new StarfieldGroup<AOPFRecord>(this);
+        #region AudioOcclusionPrimitives
+        private List<RangeInt64>? _AudioOcclusionPrimitivesLocations;
+        private IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter>? _AudioOcclusionPrimitives => _AudioOcclusionPrimitivesLocations != null ? StarfieldGroupBinaryOverlay<IAudioOcclusionPrimitiveGetter>.StarfieldGroupFactory(_stream, _AudioOcclusionPrimitivesLocations, _package) : default;
+        public IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> AudioOcclusionPrimitives => _AudioOcclusionPrimitives ?? new StarfieldGroup<AudioOcclusionPrimitive>(this);
         #endregion
         #region Planets
         private List<RangeInt64>? _PlanetsLocations;
@@ -5468,9 +5468,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.AOPF:
                 {
-                    _AOPFLocations ??= new();
-                    _AOPFLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.AOPF;
+                    _AudioOcclusionPrimitivesLocations ??= new();
+                    _AudioOcclusionPrimitivesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives;
                 }
                 case RecordTypeInts.PNDT:
                 {

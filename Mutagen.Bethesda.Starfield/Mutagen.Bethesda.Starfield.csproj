@@ -365,8 +365,8 @@
     <Compile Include="Records\Major Records\Static_Generated.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AOPFRecord_Generated.cs">
-      <DependentUpon>AOPFRecord.xml</DependentUpon>
+    <Compile Include="Records\Major Records\AudioOcclusionPrimitive_Generated.cs">
+      <DependentUpon>AudioOcclusionPrimitive.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ActorReaction_Generated.cs">
       <DependentUpon>AffinityEvent.xml</DependentUpon>

@@ -63,7 +63,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             HeadPart_Registration.Instance,
             MRPHRecord_Registration.Instance,
             Static_Registration.Instance,
-            AOPFRecord_Registration.Instance,
+            AudioOcclusionPrimitive_Registration.Instance,
             SeasonalIngredientProduction_Registration.Instance,
             Armor_Registration.Instance,
             BodyPartData_Registration.Instance,

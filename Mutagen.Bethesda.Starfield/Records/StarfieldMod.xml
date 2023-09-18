@@ -17,7 +17,7 @@
       <Group name="AffinityEvents" refName="AffinityEvent" />
       <Group name="HeadParts" refName="HeadPart" />
       <Group name="Races" refName="Race" />
-      <Group name="AOPF" refName="AOPFRecord" />
+      <Group name="AudioOcclusionPrimitives" refName="AudioOcclusionPrimitive" />
       <Group name="Planets" refName="Planet" />
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
     </Fields>
