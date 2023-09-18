@@ -335,4 +335,41 @@ public sealed class StringBinaryTranslation
         }
         writer.Write(item, binaryType: StringBinaryType.NullTerminate, encoding: writer.MetaData.Encodings.NonTranslated);
     }
+
+    public int ExtractManyUInt16PrependedStringsLength(int countLength, ReadOnlySpan<byte> data)
+    {
+        uint amount;
+        switch (countLength)
+        {
+            case 1:
+                amount = data[0];
+                data = data.Slice(1);
+                break;
+            case 2:
+                amount = BinaryPrimitives.ReadUInt16LittleEndian(data);
+                data = data.Slice(2);
+                break;
+            case 4:
+                amount = BinaryPrimitives.ReadUInt32LittleEndian(data);
+                data = data.Slice(4);
+                break;
+            default:
+                throw new ArgumentException();
+        }
+
+        int ret = 0;
+        for (uint i = 0; i < amount; i++)
+        {
+            var len = ExtractUInt16PrependedStringsLength(data);
+            ret += len;
+            data = data.Slice(len);
+        }
+
+        return ret;
+    }
+
+    public int ExtractUInt16PrependedStringsLength(ReadOnlySpan<byte> data)
+    {
+        return 2 + BinaryPrimitives.ReadUInt16LittleEndian(data);
+    }
 }

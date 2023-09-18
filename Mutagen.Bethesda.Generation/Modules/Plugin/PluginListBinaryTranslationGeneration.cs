@@ -1116,27 +1116,40 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
             case ListBinaryType.PrependCount:
             {
                 var len = (byte)list.CustomData[CounterByteLength];
-                var accessorData = $"ret.{dataAccessor}";
-                string readStr;
-                switch (len)
-                {
-                    case 0:
-                        return;
-                    case 1:
-                        readStr = $"{accessorData}[{passedLengthAccessor ?? "0"}]";
-                        break;
-                    case 2:
-                        readStr = $"BinaryPrimitives.ReadUInt16LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
-                        break;
-                    case 4:
-                        readStr = $"BinaryPrimitives.ReadInt32LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
                 if (subExpLen.HasValue)
                 {
+                    var accessorData = $"ret.{dataAccessor}";
+                    string readStr;
+                    switch (len)
+                    {
+                        case 0:
+                            return;
+                        case 1:
+                            readStr = $"{accessorData}[{passedLengthAccessor ?? "0"}]";
+                            break;
+                        case 2:
+                            readStr = $"BinaryPrimitives.ReadUInt16LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
+                            break;
+                        case 4:
+                            readStr = $"BinaryPrimitives.ReadInt32LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
                     sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{readStr} * {subExpLen.Value} + {len};");
+                }
+                else if (list.SubTypeGeneration is StringType strType && strType.BinaryType == StringBinaryType.PrependLengthUShort)
+                {
+                    var accessorData = $"ret.{dataAccessor}";
+                    if (passedLengthAccessor != null)
+                    {
+                        accessorData += $".Slice({passedLengthAccessor})";
+                    }
+                    sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}StringBinaryTranslation.Instance.ExtractManyUInt16PrependedStringsLength({len}, {accessorData}) + {len};");
+                }
+                else if (objGen.Fields.Last() != typeGen)
+                {
+                    throw new NotImplementedException();
                 }
             }
                 break;

@@ -1396,6 +1396,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new PlanetModelComponentXMPMBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            ret.UnknownStringsEndingPos = StringBinaryTranslation.Instance.ExtractManyUInt16PrependedStringsLength(2, ret._structData) + 2;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

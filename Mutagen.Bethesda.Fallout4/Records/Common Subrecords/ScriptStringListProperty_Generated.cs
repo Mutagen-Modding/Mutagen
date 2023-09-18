@@ -1237,6 +1237,7 @@ namespace Mutagen.Bethesda.Fallout4
             var ret = new ScriptStringListPropertyBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            ret.DataEndingPos = StringBinaryTranslation.Instance.ExtractManyUInt16PrependedStringsLength(4, ret._structData) + 4;
             stream.Position += ret.DataEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

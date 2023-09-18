@@ -450,7 +450,9 @@ internal abstract class BinaryOverlayList
         byte countLength,
         PluginBinaryOverlay.Factory<T> getter)
     {
-        return FactoryByLazyParse(mem.Slice(countLength), package, getter);
+        // Don't care about count, at the moment
+        var contentMem = mem.Slice(countLength);
+        return FactoryByLazyParse(contentMem, package, getter);
     }
 
     private class BinaryOverlayListByLocationArray<T> : IReadOnlyList<T>
