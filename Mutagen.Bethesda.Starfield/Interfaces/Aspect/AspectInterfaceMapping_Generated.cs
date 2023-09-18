@@ -56,6 +56,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activity_Registration.Instance,
+                ActorValueModulation_Registration.Instance,
                 BipedObjectData_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,

@@ -90,7 +90,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             FDSIRecord_Registration.Instance,
             AcousticSpace_Registration.Instance,
             Activator_Registration.Instance,
-            ActorValueModulations_Registration.Instance,
+            ActorValueModulation_Registration.Instance,
             AddonNode_Registration.Instance,
             AimAssistModelData_Registration.Instance,
             AimModel_Registration.Instance,
@@ -251,7 +251,10 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             PlanetModelComponentXMPM_Registration.Instance,
             PlanetModelComponentXMPMSubItem_Registration.Instance,
             HoudiniDataComponent_Registration.Instance,
-            DebrisModel_Registration.Instance
+            DebrisModel_Registration.Instance,
+            ActorValueModulationSubrecord_Registration.Instance,
+            SkinFormComponent_Registration.Instance,
+            BodyPartInfoComponent_Registration.Instance
         );
     }
 }

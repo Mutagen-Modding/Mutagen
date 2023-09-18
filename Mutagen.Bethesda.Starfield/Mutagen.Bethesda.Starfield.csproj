@@ -450,8 +450,8 @@
     <Compile Include="Records\Major Records\Activator_Generated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulations_Generated.cs">
-      <DependentUpon>ActorValueModulations.xml</DependentUpon>
+    <Compile Include="Records\Major Records\ActorValueModulation_Generated.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AddonNode_Generated.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
@@ -941,6 +941,18 @@
     </Compile>
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulationSubrecord_Generated.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulation.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SkinFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BodyPartInfoComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

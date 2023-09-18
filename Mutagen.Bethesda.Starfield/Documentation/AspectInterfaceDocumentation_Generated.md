@@ -13,6 +13,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### INamed
 - Activity
+- ActorValueModulation
 - BipedObjectData
 - Class
 - DamageType
@@ -32,6 +33,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Transform
 ## Concrete Classes to Interfaces
 ### Activity
+- INamed
+### ActorValueModulation
 - INamed
 ### AudioOcclusionPrimitive
 - IObjectBounded

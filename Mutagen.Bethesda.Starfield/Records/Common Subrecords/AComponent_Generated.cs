@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent]
     /// </summary>
     public abstract partial class AComponent :
         IAComponent,
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent]
     /// </summary>
     public partial interface IAComponent :
         IAComponentGetter,
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent]
     /// </summary>
     public partial interface IAComponentGetter :
         ILoquiObject,

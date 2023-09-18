@@ -142,6 +142,7 @@ public partial class RecordTypes
     public static readonly RecordType IPCT = new(0x54435049);
     public static readonly RecordType IPDS = new(0x53445049);
     public static readonly RecordType IRES = new(0x53455249);
+    public static readonly RecordType ITMC = new(0x434D5449);
     public static readonly RecordType KEYM = new(0x4D59454B);
     public static readonly RecordType KNAM = new(0x4D414E4B);
     public static readonly RecordType KSIZ = new(0x5A49534B);
@@ -156,6 +157,7 @@ public partial class RecordTypes
     public static readonly RecordType LGTM = new(0x4D54474C);
     public static readonly RecordType LIGH = new(0x4847494C);
     public static readonly RecordType LMSW = new(0x57534D4C);
+    public static readonly RecordType LNAM = new(0x4D414E4C);
     public static readonly RecordType LSCR = new(0x5243534C);
     public static readonly RecordType LTEX = new(0x5845544C);
     public static readonly RecordType LVLB = new(0x424C564C);
@@ -309,6 +311,7 @@ public partial class RecordTypes
     public static readonly RecordType XMSP = new(0x50534D58);
     public static readonly RecordType XNAM = new(0x4D414E58);
     public static readonly RecordType XXXX = new(0x58585858);
+    public static readonly RecordType YNAM = new(0x4D414E59);
     public static readonly RecordType ZNAM = new(0x4D414E5A);
     public static readonly RecordType ZOOM = new(0x4D4F4F5A);
 }
