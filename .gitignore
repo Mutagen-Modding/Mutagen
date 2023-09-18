@@ -294,3 +294,4 @@ GenerationLines.txt
 *.bak
 
 Mutagen.Bethesda.Starfield/Mutagen.Bethesda.Starfield.xml
+.vscode
