@@ -2430,9 +2430,7 @@ namespace Mutagen.Bethesda.Skyrim
                             {
                                 return AssetLinkBinaryTranslation.Instance.Parse<SkyrimSoundAssetType>(
                                     r,
-                                    item: out listSubItem,
-                                    parseWhole: true,
-                                    binaryType: StringBinaryType.NullTerminate);
+                                    item: out listSubItem);
                             }));
                     return (int)SoundDescriptor_FieldIndex.SoundFiles;
                 }

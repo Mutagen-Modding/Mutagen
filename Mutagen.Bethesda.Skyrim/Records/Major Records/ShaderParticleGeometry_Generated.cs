@@ -2182,9 +2182,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticleTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.ParticleTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
                 default:

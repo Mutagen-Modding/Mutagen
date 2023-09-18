@@ -2212,9 +2212,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MOD2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CameraPath = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.CameraPath = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.CameraPath;
                 }
                 default:

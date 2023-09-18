@@ -1116,9 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse<SkyrimDeformedModelAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse<SkyrimDeformedModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Part_FieldIndex.FileName;
                 }
                 default:

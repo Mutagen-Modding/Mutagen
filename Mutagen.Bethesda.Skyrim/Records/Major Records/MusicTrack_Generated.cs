@@ -2331,17 +2331,13 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TrackFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimMusicAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.TrackFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimMusicAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FinaleFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimMusicAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.FinaleFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimMusicAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:

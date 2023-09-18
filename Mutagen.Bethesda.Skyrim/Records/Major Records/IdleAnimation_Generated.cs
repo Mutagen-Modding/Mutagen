@@ -2099,9 +2099,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Filename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimBehaviorAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.Filename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimBehaviorAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:

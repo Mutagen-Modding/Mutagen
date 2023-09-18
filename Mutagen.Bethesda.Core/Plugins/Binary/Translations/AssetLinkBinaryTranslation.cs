@@ -10,23 +10,19 @@ public class AssetLinkBinaryTranslation
     public static readonly AssetLinkBinaryTranslation Instance = new();
 
     public AssetLink<TAssetType> Parse<TAssetType>(
-        MutagenFrame reader,
-        StringBinaryType stringBinaryType,
-        bool parseWhole = true)
+        MutagenFrame reader)
         where TAssetType : class, IAssetType
     {
         return new AssetLink<TAssetType>(
-            StringBinaryTranslation.Instance.Parse(reader, stringBinaryType, parseWhole));
+            StringBinaryTranslation.Instance.Parse(reader, StringBinaryType.NullTerminate, parseWhole: true));
     }
 
     public bool Parse<TAssetType>(
         MutagenFrame reader,
-        bool parseWhole,
-        [MaybeNullWhen(false)] out IAssetLink<TAssetType> item,
-        StringBinaryType binaryType)
+        [MaybeNullWhen(false)] out IAssetLink<TAssetType> item)
         where TAssetType : class, IAssetType
     {
-        if (StringBinaryTranslation.Instance.Parse(reader, parseWhole, out var str, binaryType))
+        if (StringBinaryTranslation.Instance.Parse(reader, parseWhole: true, out var str, StringBinaryType.NullTerminate))
         {
             item = new AssetLink<TAssetType>(str);
             return true;

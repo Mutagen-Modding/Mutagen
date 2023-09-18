@@ -3004,9 +3004,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XMRK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModelFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.ModelFilename = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Furniture_FieldIndex.ModelFilename;
                 }
                 case RecordTypeInts.XXXX:

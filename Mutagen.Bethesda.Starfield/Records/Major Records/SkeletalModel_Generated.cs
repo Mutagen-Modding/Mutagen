@@ -1251,17 +1251,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Rig = AssetLinkBinaryTranslation.Instance.Parse<StarfieldRigAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.Rig = AssetLinkBinaryTranslation.Instance.Parse<StarfieldRigAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)SkeletalModel_FieldIndex.Rig;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationText = AssetLinkBinaryTranslation.Instance.Parse<StarfieldAnimationTextAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.AnimationText = AssetLinkBinaryTranslation.Instance.Parse<StarfieldAnimationTextAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)SkeletalModel_FieldIndex.AnimationText;
                 }
                 case RecordTypeInts.DNAM:

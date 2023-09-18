@@ -1176,9 +1176,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File = AssetLinkBinaryTranslation.Instance.Parse<StarfieldModelAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.File = AssetLinkBinaryTranslation.Instance.Parse<StarfieldModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)ModelComponent_FieldIndex.File;
                 }
                 case RecordTypeInts.FLLD:
