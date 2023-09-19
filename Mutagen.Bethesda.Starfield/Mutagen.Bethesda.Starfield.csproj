@@ -365,8 +365,8 @@
     <Compile Include="Records\Major Records\Static_Generated.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AOPFRecord_Generated.cs">
-      <DependentUpon>AOPFRecord.xml</DependentUpon>
+    <Compile Include="Records\Major Records\AudioOcclusionPrimitive_Generated.cs">
+      <DependentUpon>AudioOcclusionPrimitive.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ActorReaction_Generated.cs">
       <DependentUpon>AffinityEvent.xml</DependentUpon>
@@ -450,8 +450,8 @@
     <Compile Include="Records\Major Records\Activator_Generated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulations_Generated.cs">
-      <DependentUpon>ActorValueModulations.xml</DependentUpon>
+    <Compile Include="Records\Major Records\ActorValueModulation_Generated.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AddonNode_Generated.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
@@ -934,6 +934,24 @@
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DebrisModel_Generated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DebrisModel.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulationEntry_Generated.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulation.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SkinFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BodyPartInfoComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>

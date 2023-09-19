@@ -140,6 +140,7 @@ public partial class RecordTypeInts
     public const int IPCT = 0x54435049;
     public const int IPDS = 0x53445049;
     public const int IRES = 0x53455249;
+    public const int ITMC = 0x434D5449;
     public const int KEYM = 0x4D59454B;
     public const int KNAM = 0x4D414E4B;
     public const int KSIZ = 0x5A49534B;
@@ -154,6 +155,7 @@ public partial class RecordTypeInts
     public const int LGTM = 0x4D54474C;
     public const int LIGH = 0x4847494C;
     public const int LMSW = 0x57534D4C;
+    public const int LNAM = 0x4D414E4C;
     public const int LSCR = 0x5243534C;
     public const int LTEX = 0x5845544C;
     public const int LVLB = 0x424C564C;
@@ -170,6 +172,7 @@ public partial class RecordTypeInts
     public const int MISC = 0x4353494D;
     public const int MNAM = 0x4D414E4D;
     public const int MODL = 0x4C444F4D;
+    public const int MODT = 0x54444F4D;
     public const int MOLM = 0x4D4C4F4D;
     public const int MOVT = 0x54564F4D;
     public const int MPGM = 0x4D47504D;
@@ -306,6 +309,7 @@ public partial class RecordTypeInts
     public const int XMSP = 0x50534D58;
     public const int XNAM = 0x4D414E58;
     public const int XXXX = 0x58585858;
+    public const int YNAM = 0x4D414E59;
     public const int ZNAM = 0x4D414E5A;
     public const int ZOOM = 0x4D4F4F5A;
 }

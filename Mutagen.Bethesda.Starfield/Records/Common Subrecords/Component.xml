@@ -99,4 +99,10 @@
       <ByteArray name="PCCC" recordType="PCCC" unknown="true" overflowRecordType="XXXX" />
     </Fields>
   </Object>
+  <Object name="SkinFormComponent" objType="Subrecord" baseClass="AComponent" GUID="6cf25dc8-c22c-4ab6-b2ba-eefea0a670fe" ID="904" />
+  <Object name="BodyPartInfoComponent" objType="Subrecord" baseClass="AComponent" GUID="2aa1ef5d-466e-4dca-97ce-4efb8782b1e8" ID="905">
+    <Fields>
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>

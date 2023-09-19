@@ -56,6 +56,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activity_Registration.Instance,
+                ActorValueModulation_Registration.Instance,
                 BipedObjectData_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
@@ -98,7 +99,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
-                AOPFRecord_Registration.Instance,
+                AudioOcclusionPrimitive_Registration.Instance,
                 TextureSet_Registration.Instance,
             });
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };

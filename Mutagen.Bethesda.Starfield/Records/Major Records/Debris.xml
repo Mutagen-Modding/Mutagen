@@ -2,6 +2,19 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Debris" recordType="DEBR" objType="Record" baseClass="StarfieldMajorRecord" GUID="32f9124e-527b-40b5-a8fa-200718ca047c" ID="770">
     <Fields>
+      <RefList name="Models" refName="DebrisModel" />
+    </Fields>
+  </Object>
+  <Object name="DebrisModel" objType="Subrecord" GUID="1135d2a6-9241-42d7-a689-3ac8efe03b0b" ID="902">
+    <Fields>
+      <Data>
+        <Fields>
+          <UInt8 name="Percentage" />
+          <AssetLink name="ModelFilename" binaryType="NullTerminate" assetType="StarfieldModel" />
+          <Enum name="Flags" enumName="DebrisModel.Flag" byteLength="1" />
+        </Fields>
+      </Data>
+      <ByteArray name="TextureFileHashes" recordType="MODT" />
     </Fields>
   </Object>
 </Loqui>
