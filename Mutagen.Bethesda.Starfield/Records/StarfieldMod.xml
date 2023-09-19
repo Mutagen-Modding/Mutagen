@@ -21,6 +21,7 @@
       <Group name="Planets" refName="Planet" />
       <Group name="Outfit" refName="Outfit" />
       <Group name="LandscapeTexture" refName="LandscapeTexture" />
+      <Group name="AnimatedObject" refName="AnimatedObject" />
     </Fields>
   </Object>
 </Loqui>

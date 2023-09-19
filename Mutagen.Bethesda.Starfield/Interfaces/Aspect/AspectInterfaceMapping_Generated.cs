@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                AnimatedObject_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Weapon_Registration.Instance,
             });

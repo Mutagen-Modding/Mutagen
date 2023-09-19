@@ -8,6 +8,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeyworded
 - Race
 ### IModeled
+- AnimatedObject
 - HeadPart
 - Weapon
 ### INamed
@@ -32,6 +33,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Concrete Classes to Interfaces
 ### Activity
 - INamed
+### AnimatedObject
+- IModeled
 ### AOPFRecord
 - IObjectBounded
 ### BipedObjectData

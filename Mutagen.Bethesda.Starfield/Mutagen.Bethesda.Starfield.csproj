@@ -152,6 +152,9 @@
     <Compile Include="Records\Major Records\ActionRecord_Generated.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AnimatedObject.cs">
+      <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AttractionRule_Generated.cs">
       <DependentUpon>AttractionRule.xml</DependentUpon>
     </Compile>
@@ -938,5 +941,8 @@
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\EffectSequenceComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
