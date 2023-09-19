@@ -11,7 +11,6 @@
         <Fields>
           <UInt8 name="Percentage" />
           <AssetLink name="ModelFilename" binaryType="NullTerminate" assetType="StarfieldModel" />
-          <Break />
           <Enum name="Flags" enumName="DebrisModel.Flag" byteLength="1" />
         </Fields>
       </Data>

@@ -61,17 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         AssetLinkGetter<StarfieldModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DebrisModel.Flag _Flags;
-        public DebrisModel.Flag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._Flags = value;
-            }
-        }
+        public DebrisModel.Flag Flags { get; set; } = default;
         #endregion
         #region TextureFileHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -83,9 +73,6 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IDebrisModelGetter.TextureFileHashes => this.TextureFileHashes;
-        #endregion
-        #region DATADataTypeState
-        public DebrisModel.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -130,21 +117,18 @@ namespace Mutagen.Bethesda.Starfield
                 this.ModelFilename = initialValue;
                 this.Flags = initialValue;
                 this.TextureFileHashes = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
                 TItem Percentage,
                 TItem ModelFilename,
                 TItem Flags,
-                TItem TextureFileHashes,
-                TItem DATADataTypeState)
+                TItem TextureFileHashes)
             {
                 this.Percentage = Percentage;
                 this.ModelFilename = ModelFilename;
                 this.Flags = Flags;
                 this.TextureFileHashes = TextureFileHashes;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -160,7 +144,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem ModelFilename;
             public TItem Flags;
             public TItem TextureFileHashes;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -177,7 +160,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ModelFilename, rhs.ModelFilename)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.TextureFileHashes, rhs.TextureFileHashes)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -187,7 +169,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ModelFilename);
                 hash.Add(this.Flags);
                 hash.Add(this.TextureFileHashes);
-                hash.Add(this.DATADataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -200,7 +181,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.ModelFilename)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.TextureFileHashes)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -212,7 +192,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.ModelFilename)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.TextureFileHashes)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -231,7 +210,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ModelFilename = eval(this.ModelFilename);
                 obj.Flags = eval(this.Flags);
                 obj.TextureFileHashes = eval(this.TextureFileHashes);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -266,10 +244,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(TextureFileHashes, "TextureFileHashes");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -298,7 +272,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? ModelFilename;
             public Exception? Flags;
             public Exception? TextureFileHashes;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -315,8 +288,6 @@ namespace Mutagen.Bethesda.Starfield
                         return Flags;
                     case DebrisModel_FieldIndex.TextureFileHashes:
                         return TextureFileHashes;
-                    case DebrisModel_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -338,9 +309,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case DebrisModel_FieldIndex.TextureFileHashes:
                         this.TextureFileHashes = ex;
-                        break;
-                    case DebrisModel_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -364,9 +332,6 @@ namespace Mutagen.Bethesda.Starfield
                     case DebrisModel_FieldIndex.TextureFileHashes:
                         this.TextureFileHashes = (Exception?)obj;
                         break;
-                    case DebrisModel_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -379,7 +344,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (ModelFilename != null) return true;
                 if (Flags != null) return true;
                 if (TextureFileHashes != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -417,9 +381,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(TextureFileHashes, "TextureFileHashes");
                 }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -432,7 +393,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ModelFilename = this.ModelFilename.Combine(rhs.ModelFilename);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.TextureFileHashes = this.TextureFileHashes.Combine(rhs.TextureFileHashes);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -460,7 +420,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool ModelFilename;
             public bool Flags;
             public bool TextureFileHashes;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -474,7 +433,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.ModelFilename = defaultOn;
                 this.Flags = defaultOn;
                 this.TextureFileHashes = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -494,7 +452,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ModelFilename, null));
                 ret.Add((Flags, null));
                 ret.Add((TextureFileHashes, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -506,11 +463,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        [Flags]
-        public enum DATADataType
-        {
-            Break0 = 1
-        }
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DebrisModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DebrisModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DebrisModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -584,7 +536,6 @@ namespace Mutagen.Bethesda.Starfield
         new AssetLink<StarfieldModelAssetType> ModelFilename { get; set; }
         new DebrisModel.Flag Flags { get; set; }
         new MemorySlice<Byte>? TextureFileHashes { get; set; }
-        new DebrisModel.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IDebrisModelGetter :
@@ -604,7 +555,6 @@ namespace Mutagen.Bethesda.Starfield
         AssetLinkGetter<StarfieldModelAssetType> ModelFilename { get; }
         DebrisModel.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
-        DebrisModel.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -778,7 +728,6 @@ namespace Mutagen.Bethesda.Starfield
         ModelFilename = 1,
         Flags = 2,
         TextureFileHashes = 3,
-        DATADataTypeState = 4,
     }
     #endregion
 
@@ -796,9 +745,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "1135d2a6-9241-42d7-a689-3ac8efe03b0b";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(DebrisModel.Mask<>);
 
@@ -880,7 +829,6 @@ namespace Mutagen.Bethesda.Starfield
             item.ModelFilename.SetToNull();
             item.Flags = default;
             item.TextureFileHashes = default;
-            item.DATADataTypeState = default;
         }
         
         #region Mutagen
@@ -918,7 +866,6 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DebrisModelBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: DebrisModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -953,7 +900,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.ModelFilename = object.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
             ret.TextureFileHashes = MemorySliceExt.SequenceEqual(item.TextureFileHashes, rhs.TextureFileHashes);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
         }
         
         public string Print(
@@ -1015,10 +961,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"TextureFileHashes => {SpanExt.ToHexString(TextureFileHashesItem)}");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         #region Equals and Hash
@@ -1044,10 +986,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
             return true;
         }
         
@@ -1061,7 +999,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(TextureFileHashesItem);
             }
-            hash.Add(item.DATADataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1122,10 +1059,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.TextureFileHashes = default;
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1219,12 +1152,6 @@ namespace Mutagen.Bethesda.Starfield
     {
         public static readonly DebrisModelBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IDebrisModelGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IDebrisModelGetter item,
             MutagenWriter writer,
@@ -1237,13 +1164,10 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     item: item.ModelFilename.RawPath,
                     binaryType: StringBinaryType.NullTerminate);
-                if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
-                {
-                    EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 1);
-                }
+                EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
             }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1256,9 +1180,6 @@ namespace Mutagen.Bethesda.Starfield
             IDebrisModelGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1281,12 +1202,6 @@ namespace Mutagen.Bethesda.Starfield
     internal partial class DebrisModelBinaryCreateTranslation
     {
         public static readonly DebrisModelBinaryCreateTranslation Instance = new DebrisModelBinaryCreateTranslation();
-
-        public static void FillBinaryStructs(
-            IDebrisModel item,
-            MutagenFrame frame)
-        {
-        }
 
         public static ParseResult FillBinaryRecordTypes(
             IDebrisModel item,
@@ -1311,11 +1226,6 @@ namespace Mutagen.Bethesda.Starfield
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
-                        return (int)DebrisModel_FieldIndex.ModelFilename;
-                    }
                     if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
@@ -1398,7 +1308,6 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         private RangeInt32? _DATALocation;
-        public DebrisModel.DATADataType DATADataTypeState { get; private set; }
         #region Percentage
         private int _PercentageLocation => _DATALocation!.Value.Min;
         private bool _Percentage_IsSet => _DATALocation.HasValue;
@@ -1410,7 +1319,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int _FlagsLocation => ModelFilenameEndingPos;
-        private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0);
+        private bool _Flags_IsSet => _DATALocation.HasValue;
         public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
         #region TextureFileHashes
@@ -1486,11 +1395,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= ModelFilenameEndingPos)
-                    {
-                        this.DATADataTypeState |= DebrisModel.DATADataType.Break0;
-                    }
                     return (int)DebrisModel_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODT:

@@ -942,7 +942,7 @@
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulationSubrecord_Generated.cs">
+    <Compile Include="Records\Major Records\ActorValueModulationEntry_Generated.cs">
       <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ActorValueModulation.cs">

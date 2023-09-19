@@ -85,27 +85,24 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
-        #region ITMC
-        public UInt32 ITMC { get; set; } = default;
-        #endregion
-        #region ActorValueModulationSubrecords
+        #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ActorValueModulationSubrecord> _ActorValueModulationSubrecords = new ExtendedList<ActorValueModulationSubrecord>();
-        public ExtendedList<ActorValueModulationSubrecord> ActorValueModulationSubrecords
+        private ExtendedList<ActorValueModulationEntry>? _Entries;
+        public ExtendedList<ActorValueModulationEntry>? Entries
         {
-            get => this._ActorValueModulationSubrecords;
-            init => this._ActorValueModulationSubrecords = value;
+            get => this._Entries;
+            set => this._Entries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IActorValueModulationSubrecordGetter> IActorValueModulationGetter.ActorValueModulationSubrecords => _ActorValueModulationSubrecords;
+        IReadOnlyList<IActorValueModulationEntryGetter>? IActorValueModulationGetter.Entries => _Entries;
         #endregion
 
         #endregion
-        #region MODT
-        public UInt32? MODT { get; set; }
+        #region TextureType
+        public ActorValueModulation.TextureTypeEnum? TextureType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IActorValueModulationGetter.MODT => this.MODT;
+        ActorValueModulation.TextureTypeEnum? IActorValueModulationGetter.TextureType => this.TextureType;
         #endregion
 
         #region To String
@@ -136,9 +133,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Type = initialValue;
                 this.YNAM = initialValue;
                 this.Name = initialValue;
-                this.ITMC = initialValue;
-                this.ActorValueModulationSubrecords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValueModulationSubrecord.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActorValueModulationSubrecord.Mask<TItem>?>>());
-                this.MODT = initialValue;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValueModulationEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActorValueModulationEntry.Mask<TItem>?>>());
+                this.TextureType = initialValue;
             }
 
             public Mask(
@@ -153,9 +149,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Type,
                 TItem YNAM,
                 TItem Name,
-                TItem ITMC,
-                TItem ActorValueModulationSubrecords,
-                TItem MODT)
+                TItem Entries,
+                TItem TextureType)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -169,9 +164,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Type = Type;
                 this.YNAM = YNAM;
                 this.Name = Name;
-                this.ITMC = ITMC;
-                this.ActorValueModulationSubrecords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValueModulationSubrecord.Mask<TItem>?>>?>(ActorValueModulationSubrecords, Enumerable.Empty<MaskItemIndexed<TItem, ActorValueModulationSubrecord.Mask<TItem>?>>());
-                this.MODT = MODT;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValueModulationEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, ActorValueModulationEntry.Mask<TItem>?>>());
+                this.TextureType = TextureType;
             }
 
             #pragma warning disable CS8618
@@ -187,9 +181,8 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Type;
             public TItem YNAM;
             public TItem Name;
-            public TItem ITMC;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValueModulationSubrecord.Mask<TItem>?>>?>? ActorValueModulationSubrecords;
-            public TItem MODT;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorValueModulationEntry.Mask<TItem>?>>?>? Entries;
+            public TItem TextureType;
             #endregion
 
             #region Equals
@@ -207,9 +200,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.YNAM, rhs.YNAM)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.ITMC, rhs.ITMC)) return false;
-                if (!object.Equals(this.ActorValueModulationSubrecords, rhs.ActorValueModulationSubrecords)) return false;
-                if (!object.Equals(this.MODT, rhs.MODT)) return false;
+                if (!object.Equals(this.Entries, rhs.Entries)) return false;
+                if (!object.Equals(this.TextureType, rhs.TextureType)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -219,9 +211,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Type);
                 hash.Add(this.YNAM);
                 hash.Add(this.Name);
-                hash.Add(this.ITMC);
-                hash.Add(this.ActorValueModulationSubrecords);
-                hash.Add(this.MODT);
+                hash.Add(this.Entries);
+                hash.Add(this.TextureType);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -247,20 +238,19 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Type)) return false;
                 if (!eval(this.YNAM)) return false;
                 if (!eval(this.Name)) return false;
-                if (!eval(this.ITMC)) return false;
-                if (this.ActorValueModulationSubrecords != null)
+                if (this.Entries != null)
                 {
-                    if (!eval(this.ActorValueModulationSubrecords.Overall)) return false;
-                    if (this.ActorValueModulationSubrecords.Specific != null)
+                    if (!eval(this.Entries.Overall)) return false;
+                    if (this.Entries.Specific != null)
                     {
-                        foreach (var item in this.ActorValueModulationSubrecords.Specific)
+                        foreach (var item in this.Entries.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (!eval(this.MODT)) return false;
+                if (!eval(this.TextureType)) return false;
                 return true;
             }
             #endregion
@@ -284,20 +274,19 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Type)) return true;
                 if (eval(this.YNAM)) return true;
                 if (eval(this.Name)) return true;
-                if (eval(this.ITMC)) return true;
-                if (this.ActorValueModulationSubrecords != null)
+                if (this.Entries != null)
                 {
-                    if (eval(this.ActorValueModulationSubrecords.Overall)) return true;
-                    if (this.ActorValueModulationSubrecords.Specific != null)
+                    if (eval(this.Entries.Overall)) return true;
+                    if (this.Entries.Specific != null)
                     {
-                        foreach (var item in this.ActorValueModulationSubrecords.Specific)
+                        foreach (var item in this.Entries.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (eval(this.MODT)) return true;
+                if (eval(this.TextureType)) return true;
                 return false;
             }
             #endregion
@@ -331,23 +320,22 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Type = eval(this.Type);
                 obj.YNAM = eval(this.YNAM);
                 obj.Name = eval(this.Name);
-                obj.ITMC = eval(this.ITMC);
-                if (ActorValueModulationSubrecords != null)
+                if (Entries != null)
                 {
-                    obj.ActorValueModulationSubrecords = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorValueModulationSubrecord.Mask<R>?>>?>(eval(this.ActorValueModulationSubrecords.Overall), Enumerable.Empty<MaskItemIndexed<R, ActorValueModulationSubrecord.Mask<R>?>>());
-                    if (ActorValueModulationSubrecords.Specific != null)
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorValueModulationEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, ActorValueModulationEntry.Mask<R>?>>());
+                    if (Entries.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, ActorValueModulationSubrecord.Mask<R>?>>();
-                        obj.ActorValueModulationSubrecords.Specific = l;
-                        foreach (var item in ActorValueModulationSubrecords.Specific)
+                        var l = new List<MaskItemIndexed<R, ActorValueModulationEntry.Mask<R>?>>();
+                        obj.Entries.Specific = l;
+                        foreach (var item in Entries.Specific)
                         {
-                            MaskItemIndexed<R, ActorValueModulationSubrecord.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ActorValueModulationSubrecord.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, ActorValueModulationEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ActorValueModulationEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                obj.MODT = eval(this.MODT);
+                obj.TextureType = eval(this.TextureType);
             }
             #endregion
 
@@ -397,20 +385,16 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.ITMC ?? true)
+                    if ((printMask?.Entries?.Overall ?? true)
+                        && Entries is {} EntriesItem)
                     {
-                        sb.AppendItem(ITMC, "ITMC");
-                    }
-                    if ((printMask?.ActorValueModulationSubrecords?.Overall ?? true)
-                        && ActorValueModulationSubrecords is {} ActorValueModulationSubrecordsItem)
-                    {
-                        sb.AppendLine("ActorValueModulationSubrecords =>");
+                        sb.AppendLine("Entries =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ActorValueModulationSubrecordsItem.Overall);
-                            if (ActorValueModulationSubrecordsItem.Specific != null)
+                            sb.AppendItem(EntriesItem.Overall);
+                            if (EntriesItem.Specific != null)
                             {
-                                foreach (var subItem in ActorValueModulationSubrecordsItem.Specific)
+                                foreach (var subItem in EntriesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -420,9 +404,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.MODT ?? true)
+                    if (printMask?.TextureType ?? true)
                     {
-                        sb.AppendItem(MODT, "MODT");
+                        sb.AppendItem(TextureType, "TextureType");
                     }
                 }
             }
@@ -439,9 +423,8 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Type;
             public Exception? YNAM;
             public Exception? Name;
-            public Exception? ITMC;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationSubrecord.ErrorMask?>>?>? ActorValueModulationSubrecords;
-            public Exception? MODT;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationEntry.ErrorMask?>>?>? Entries;
+            public Exception? TextureType;
             #endregion
 
             #region IErrorMask
@@ -458,12 +441,10 @@ namespace Mutagen.Bethesda.Starfield
                         return YNAM;
                     case ActorValueModulation_FieldIndex.Name:
                         return Name;
-                    case ActorValueModulation_FieldIndex.ITMC:
-                        return ITMC;
-                    case ActorValueModulation_FieldIndex.ActorValueModulationSubrecords:
-                        return ActorValueModulationSubrecords;
-                    case ActorValueModulation_FieldIndex.MODT:
-                        return MODT;
+                    case ActorValueModulation_FieldIndex.Entries:
+                        return Entries;
+                    case ActorValueModulation_FieldIndex.TextureType:
+                        return TextureType;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -486,14 +467,11 @@ namespace Mutagen.Bethesda.Starfield
                     case ActorValueModulation_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case ActorValueModulation_FieldIndex.ITMC:
-                        this.ITMC = ex;
+                    case ActorValueModulation_FieldIndex.Entries:
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationEntry.ErrorMask?>>?>(ex, null);
                         break;
-                    case ActorValueModulation_FieldIndex.ActorValueModulationSubrecords:
-                        this.ActorValueModulationSubrecords = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationSubrecord.ErrorMask?>>?>(ex, null);
-                        break;
-                    case ActorValueModulation_FieldIndex.MODT:
-                        this.MODT = ex;
+                    case ActorValueModulation_FieldIndex.TextureType:
+                        this.TextureType = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -518,14 +496,11 @@ namespace Mutagen.Bethesda.Starfield
                     case ActorValueModulation_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case ActorValueModulation_FieldIndex.ITMC:
-                        this.ITMC = (Exception?)obj;
+                    case ActorValueModulation_FieldIndex.Entries:
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationEntry.ErrorMask?>>?>)obj;
                         break;
-                    case ActorValueModulation_FieldIndex.ActorValueModulationSubrecords:
-                        this.ActorValueModulationSubrecords = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationSubrecord.ErrorMask?>>?>)obj;
-                        break;
-                    case ActorValueModulation_FieldIndex.MODT:
-                        this.MODT = (Exception?)obj;
+                    case ActorValueModulation_FieldIndex.TextureType:
+                        this.TextureType = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -540,9 +515,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (Type != null) return true;
                 if (YNAM != null) return true;
                 if (Name != null) return true;
-                if (ITMC != null) return true;
-                if (ActorValueModulationSubrecords != null) return true;
-                if (MODT != null) return true;
+                if (Entries != null) return true;
+                if (TextureType != null) return true;
                 return false;
             }
             #endregion
@@ -596,18 +570,15 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Name, "Name");
                 }
+                if (Entries is {} EntriesItem)
                 {
-                    sb.AppendItem(ITMC, "ITMC");
-                }
-                if (ActorValueModulationSubrecords is {} ActorValueModulationSubrecordsItem)
-                {
-                    sb.AppendLine("ActorValueModulationSubrecords =>");
+                    sb.AppendLine("Entries =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ActorValueModulationSubrecordsItem.Overall);
-                        if (ActorValueModulationSubrecordsItem.Specific != null)
+                        sb.AppendItem(EntriesItem.Overall);
+                        if (EntriesItem.Specific != null)
                         {
-                            foreach (var subItem in ActorValueModulationSubrecordsItem.Specific)
+                            foreach (var subItem in EntriesItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -618,7 +589,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(MODT, "MODT");
+                    sb.AppendItem(TextureType, "TextureType");
                 }
             }
             #endregion
@@ -632,9 +603,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.YNAM = this.YNAM.Combine(rhs.YNAM);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.ITMC = this.ITMC.Combine(rhs.ITMC);
-                ret.ActorValueModulationSubrecords = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationSubrecord.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorValueModulationSubrecords?.Overall, rhs.ActorValueModulationSubrecords?.Overall), Noggog.ExceptionExt.Combine(this.ActorValueModulationSubrecords?.Specific, rhs.ActorValueModulationSubrecords?.Specific));
-                ret.MODT = this.MODT.Combine(rhs.MODT);
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorValueModulationEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.TextureType = this.TextureType.Combine(rhs.TextureType);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -661,9 +631,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool Type;
             public bool YNAM;
             public bool Name;
-            public bool ITMC;
-            public ActorValueModulationSubrecord.TranslationMask? ActorValueModulationSubrecords;
-            public bool MODT;
+            public ActorValueModulationEntry.TranslationMask? Entries;
+            public bool TextureType;
             #endregion
 
             #region Ctors
@@ -675,8 +644,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Type = defaultOn;
                 this.YNAM = defaultOn;
                 this.Name = defaultOn;
-                this.ITMC = defaultOn;
-                this.MODT = defaultOn;
+                this.TextureType = defaultOn;
             }
 
             #endregion
@@ -688,9 +656,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Type, null));
                 ret.Add((YNAM, null));
                 ret.Add((Name, null));
-                ret.Add((ITMC, null));
-                ret.Add((ActorValueModulationSubrecords == null ? DefaultOn : !ActorValueModulationSubrecords.GetCrystal().CopyNothing, ActorValueModulationSubrecords?.GetCrystal()));
-                ret.Add((MODT, null));
+                ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
+                ret.Add((TextureType, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -845,9 +812,8 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamedRequired
         /// </summary>
         new String Name { get; set; }
-        new UInt32 ITMC { get; set; }
-        new ExtendedList<ActorValueModulationSubrecord> ActorValueModulationSubrecords { get; }
-        new UInt32? MODT { get; set; }
+        new ExtendedList<ActorValueModulationEntry>? Entries { get; set; }
+        new ActorValueModulation.TextureTypeEnum? TextureType { get; set; }
     }
 
     public partial interface IActorValueModulationInternal :
@@ -877,9 +843,8 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         String Name { get; }
         #endregion
-        UInt32 ITMC { get; }
-        IReadOnlyList<IActorValueModulationSubrecordGetter> ActorValueModulationSubrecords { get; }
-        UInt32? MODT { get; }
+        IReadOnlyList<IActorValueModulationEntryGetter>? Entries { get; }
+        ActorValueModulation.TextureTypeEnum? TextureType { get; }
 
     }
 
@@ -1060,9 +1025,8 @@ namespace Mutagen.Bethesda.Starfield
         Type = 8,
         YNAM = 9,
         Name = 10,
-        ITMC = 11,
-        ActorValueModulationSubrecords = 12,
-        MODT = 13,
+        Entries = 11,
+        TextureType = 12,
     }
     #endregion
 
@@ -1080,9 +1044,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "15904907-62a1-4cb0-859a-00c52c7cacdc";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(ActorValueModulation.Mask<>);
 
@@ -1120,8 +1084,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MNAM,
                 RecordTypes.YNAM,
                 RecordTypes.TNAM,
-                RecordTypes.ITMC,
                 RecordTypes.LNAM,
+                RecordTypes.ITMC,
                 RecordTypes.VNAM,
                 RecordTypes.NNAM,
                 RecordTypes.MODT);
@@ -1173,9 +1137,8 @@ namespace Mutagen.Bethesda.Starfield
             item.Type = default;
             item.YNAM = default;
             item.Name = string.Empty;
-            item.ITMC = default;
-            item.ActorValueModulationSubrecords.Clear();
-            item.MODT = default;
+            item.Entries = null;
+            item.TextureType = default;
             base.Clear(item);
         }
         
@@ -1292,12 +1255,11 @@ namespace Mutagen.Bethesda.Starfield
             ret.Type = item.Type == rhs.Type;
             ret.YNAM = string.Equals(item.YNAM, rhs.YNAM);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.ITMC = item.ITMC == rhs.ITMC;
-            ret.ActorValueModulationSubrecords = item.ActorValueModulationSubrecords.CollectionEqualsHelper(
-                rhs.ActorValueModulationSubrecords,
+            ret.Entries = item.Entries.CollectionEqualsHelper(
+                rhs.Entries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.MODT = item.MODT == rhs.MODT;
+            ret.TextureType = item.TextureType == rhs.TextureType;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1374,16 +1336,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Name, "Name");
             }
-            if (printMask?.ITMC ?? true)
+            if ((printMask?.Entries?.Overall ?? true)
+                && item.Entries is {} EntriesItem)
             {
-                sb.AppendItem(item.ITMC, "ITMC");
-            }
-            if (printMask?.ActorValueModulationSubrecords?.Overall ?? true)
-            {
-                sb.AppendLine("ActorValueModulationSubrecords =>");
+                sb.AppendLine("Entries =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.ActorValueModulationSubrecords)
+                    foreach (var subItem in EntriesItem)
                     {
                         using (sb.Brace())
                         {
@@ -1392,10 +1351,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.MODT ?? true)
-                && item.MODT is {} MODTItem)
+            if ((printMask?.TextureType ?? true)
+                && item.TextureType is {} TextureTypeItem)
             {
-                sb.AppendItem(MODTItem, "MODT");
+                sb.AppendItem(TextureTypeItem, "TextureType");
             }
         }
         
@@ -1463,17 +1422,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.ITMC) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.Entries) ?? true))
             {
-                if (lhs.ITMC != rhs.ITMC) return false;
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ActorValueModulation_FieldIndex.Entries)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.ActorValueModulationSubrecords) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.TextureType) ?? true))
             {
-                if (!lhs.ActorValueModulationSubrecords.SequenceEqual(rhs.ActorValueModulationSubrecords, (l, r) => ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ActorValueModulation_FieldIndex.ActorValueModulationSubrecords)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.MODT) ?? true))
-            {
-                if (lhs.MODT != rhs.MODT) return false;
+                if (lhs.TextureType != rhs.TextureType) return false;
             }
             return true;
         }
@@ -1510,11 +1465,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(YNAMitem);
             }
             hash.Add(item.Name);
-            hash.Add(item.ITMC);
-            hash.Add(item.ActorValueModulationSubrecords);
-            if (item.MODT is {} MODTitem)
+            hash.Add(item.Entries);
+            if (item.TextureType is {} TextureTypeitem)
             {
-                hash.Add(MODTitem);
+                hash.Add(TextureTypeitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1677,23 +1631,27 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.ITMC) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.Entries) ?? true))
             {
-                item.ITMC = rhs.ITMC;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.ActorValueModulationSubrecords) ?? true))
-            {
-                errorMask?.PushIndex((int)ActorValueModulation_FieldIndex.ActorValueModulationSubrecords);
+                errorMask?.PushIndex((int)ActorValueModulation_FieldIndex.Entries);
                 try
                 {
-                    item.ActorValueModulationSubrecords.SetTo(
-                        rhs.ActorValueModulationSubrecords
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.Entries != null))
+                    {
+                        item.Entries = 
+                            rhs.Entries
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ActorValueModulationEntry>();
+                    }
+                    else
+                    {
+                        item.Entries = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1705,9 +1663,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.MODT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueModulation_FieldIndex.TextureType) ?? true))
             {
-                item.MODT = rhs.MODT;
+                item.TextureType = rhs.TextureType;
             }
         }
         
@@ -1892,24 +1850,23 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActorValueModulationEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
-                item: item.ITMC,
-                header: translationParams.ConvertToCustom(RecordTypes.ITMC));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActorValueModulationSubrecordGetter>.Instance.Write(
-                writer: writer,
-                items: item.ActorValueModulationSubrecords,
-                transl: (MutagenWriter subWriter, IActorValueModulationSubrecordGetter subItem, TypedWriteParams conv) =>
+                items: item.Entries,
+                counterType: RecordTypes.ITMC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IActorValueModulationEntryGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((ActorValueModulationSubrecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((ActorValueModulationEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.MODT,
+            EnumBinaryTranslation<ActorValueModulation.TextureTypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.TextureType,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.MODT));
         }
 
@@ -2030,27 +1987,27 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ActorValueModulation_FieldIndex.Name;
                 }
+                case RecordTypeInts.LNAM:
                 case RecordTypeInts.ITMC:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ITMC = frame.ReadUInt32();
-                    return (int)ActorValueModulation_FieldIndex.ITMC;
-                }
-                case RecordTypeInts.LNAM:
-                {
-                    item.ActorValueModulationSubrecords.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValueModulationSubrecord>.Instance.Parse(
+                    item.Entries = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValueModulationEntry>.Instance.ParsePerItem(
                             reader: frame,
-                            triggeringRecord: ActorValueModulationSubrecord_Registration.TriggerSpecs,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.ITMC,
+                            triggeringRecord: ActorValueModulationEntry_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: ActorValueModulationSubrecord.TryCreateFromBinary));
-                    return (int)ActorValueModulation_FieldIndex.ActorValueModulationSubrecords;
+                            transl: ActorValueModulationEntry.TryCreateFromBinary)
+                        .CastExtendedList<ActorValueModulationEntry>();
+                    return (int)ActorValueModulation_FieldIndex.Entries;
                 }
                 case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MODT = frame.ReadUInt32();
-                    return (int)ActorValueModulation_FieldIndex.MODT;
+                    item.TextureType = EnumBinaryTranslation<ActorValueModulation.TextureTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ActorValueModulation_FieldIndex.TextureType;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2125,14 +2082,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _NameLocation;
         public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        #region ITMC
-        private int? _ITMCLocation;
-        public UInt32 ITMC => _ITMCLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ITMCLocation.Value, _package.MetaData.Constants)) : default;
-        #endregion
-        public IReadOnlyList<IActorValueModulationSubrecordGetter> ActorValueModulationSubrecords { get; private set; } = Array.Empty<IActorValueModulationSubrecordGetter>();
-        #region MODT
-        private int? _MODTLocation;
-        public UInt32? MODT => _MODTLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MODTLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public IReadOnlyList<IActorValueModulationEntryGetter>? Entries { get; private set; }
+        #region TextureType
+        private int? _TextureTypeLocation;
+        public ActorValueModulation.TextureTypeEnum? TextureType => _TextureTypeLocation.HasValue ? (ActorValueModulation.TextureTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureTypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueModulation.TextureTypeEnum?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2227,24 +2180,24 @@ namespace Mutagen.Bethesda.Starfield
                     _NameLocation = (stream.Position - offset);
                     return (int)ActorValueModulation_FieldIndex.Name;
                 }
+                case RecordTypeInts.LNAM:
                 case RecordTypeInts.ITMC:
                 {
-                    _ITMCLocation = (stream.Position - offset);
-                    return (int)ActorValueModulation_FieldIndex.ITMC;
-                }
-                case RecordTypeInts.LNAM:
-                {
-                    this.ActorValueModulationSubrecords = this.ParseRepeatedTypelessSubrecord<IActorValueModulationSubrecordGetter>(
+                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<IActorValueModulationEntryGetter>(
                         stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: ActorValueModulationEntry_Registration.TriggerSpecs,
+                        countType: RecordTypes.ITMC,
                         translationParams: translationParams,
-                        trigger: ActorValueModulationSubrecord_Registration.TriggerSpecs,
-                        factory: ActorValueModulationSubrecordBinaryOverlay.ActorValueModulationSubrecordFactory);
-                    return (int)ActorValueModulation_FieldIndex.ActorValueModulationSubrecords;
+                        getter: (s, p, recConv) => ActorValueModulationEntryBinaryOverlay.ActorValueModulationEntryFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)ActorValueModulation_FieldIndex.Entries;
                 }
                 case RecordTypeInts.MODT:
                 {
-                    _MODTLocation = (stream.Position - offset);
-                    return (int)ActorValueModulation_FieldIndex.MODT;
+                    _TextureTypeLocation = (stream.Position - offset);
+                    return (int)ActorValueModulation_FieldIndex.TextureType;
                 }
                 default:
                     return base.FillRecordType(

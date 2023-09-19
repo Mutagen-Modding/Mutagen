@@ -252,7 +252,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             PlanetModelComponentXMPMSubItem_Registration.Instance,
             HoudiniDataComponent_Registration.Instance,
             DebrisModel_Registration.Instance,
-            ActorValueModulationSubrecord_Registration.Instance,
+            ActorValueModulationEntry_Registration.Instance,
             SkinFormComponent_Registration.Instance,
             BodyPartInfoComponent_Registration.Instance
         );

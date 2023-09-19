@@ -28,6 +28,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -36,13 +37,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ActorValueModulationSubrecord :
-        IActorValueModulationSubrecord,
-        IEquatable<IActorValueModulationSubrecordGetter>,
-        ILoquiObjectSetter<ActorValueModulationSubrecord>
+    public partial class ActorValueModulationEntry :
+        IActorValueModulationEntry,
+        IEquatable<IActorValueModulationEntryGetter>,
+        ILoquiObjectSetter<ActorValueModulationEntry>
     {
         #region Ctor
-        public ActorValueModulationSubrecord()
+        public ActorValueModulationEntry()
         {
             CustomCtor();
         }
@@ -55,18 +56,12 @@ namespace Mutagen.Bethesda.Starfield
         #region VNAM
         public String? VNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActorValueModulationSubrecordGetter.VNAM => this.VNAM;
+        String? IActorValueModulationEntryGetter.VNAM => this.VNAM;
         #endregion
         #region Color
+        public Color? Color { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Color;
-        public MemorySlice<Byte>? Color
-        {
-            get => this._Color;
-            set => this._Color = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IActorValueModulationSubrecordGetter.Color => this.Color;
+        Color? IActorValueModulationEntryGetter.Color => this.Color;
         #endregion
 
         #region To String
@@ -75,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueModulationSubrecordMixIn.Print(
+            ActorValueModulationEntryMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -86,16 +81,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IActorValueModulationSubrecordGetter rhs) return false;
-            return ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IActorValueModulationEntryGetter rhs) return false;
+            return ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IActorValueModulationSubrecordGetter? obj)
+        public bool Equals(IActorValueModulationEntryGetter? obj)
         {
-            return ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -185,7 +180,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ActorValueModulationSubrecord.Mask<R>();
+                var ret = new ActorValueModulationEntry.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -201,16 +196,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ActorValueModulationSubrecord.Mask<bool>? printMask = null)
+            public string Print(ActorValueModulationEntry.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ActorValueModulationSubrecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ActorValueModulationEntry.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ActorValueModulationSubrecord.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ActorValueModulationEntry.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.LNAM ?? true)
@@ -257,14 +252,14 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ActorValueModulationSubrecord_FieldIndex enu = (ActorValueModulationSubrecord_FieldIndex)index;
+                ActorValueModulationEntry_FieldIndex enu = (ActorValueModulationEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueModulationSubrecord_FieldIndex.LNAM:
+                    case ActorValueModulationEntry_FieldIndex.LNAM:
                         return LNAM;
-                    case ActorValueModulationSubrecord_FieldIndex.VNAM:
+                    case ActorValueModulationEntry_FieldIndex.VNAM:
                         return VNAM;
-                    case ActorValueModulationSubrecord_FieldIndex.Color:
+                    case ActorValueModulationEntry_FieldIndex.Color:
                         return Color;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -273,16 +268,16 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ActorValueModulationSubrecord_FieldIndex enu = (ActorValueModulationSubrecord_FieldIndex)index;
+                ActorValueModulationEntry_FieldIndex enu = (ActorValueModulationEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueModulationSubrecord_FieldIndex.LNAM:
+                    case ActorValueModulationEntry_FieldIndex.LNAM:
                         this.LNAM = ex;
                         break;
-                    case ActorValueModulationSubrecord_FieldIndex.VNAM:
+                    case ActorValueModulationEntry_FieldIndex.VNAM:
                         this.VNAM = ex;
                         break;
-                    case ActorValueModulationSubrecord_FieldIndex.Color:
+                    case ActorValueModulationEntry_FieldIndex.Color:
                         this.Color = ex;
                         break;
                     default:
@@ -292,16 +287,16 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ActorValueModulationSubrecord_FieldIndex enu = (ActorValueModulationSubrecord_FieldIndex)index;
+                ActorValueModulationEntry_FieldIndex enu = (ActorValueModulationEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueModulationSubrecord_FieldIndex.LNAM:
+                    case ActorValueModulationEntry_FieldIndex.LNAM:
                         this.LNAM = (Exception?)obj;
                         break;
-                    case ActorValueModulationSubrecord_FieldIndex.VNAM:
+                    case ActorValueModulationEntry_FieldIndex.VNAM:
                         this.VNAM = (Exception?)obj;
                         break;
-                    case ActorValueModulationSubrecord_FieldIndex.Color:
+                    case ActorValueModulationEntry_FieldIndex.Color:
                         this.Color = (Exception?)obj;
                         break;
                     default:
@@ -428,25 +423,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ActorValueModulationSubrecordBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ActorValueModulationEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ActorValueModulationSubrecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ActorValueModulationEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ActorValueModulationSubrecord CreateFromBinary(
+        public static ActorValueModulationEntry CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ActorValueModulationSubrecord();
-            ((ActorValueModulationSubrecordSetterCommon)((IActorValueModulationSubrecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ActorValueModulationEntry();
+            ((ActorValueModulationEntrySetterCommon)((IActorValueModulationEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -457,7 +452,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ActorValueModulationSubrecord item,
+            out ActorValueModulationEntry item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -472,31 +467,31 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ActorValueModulationSubrecordSetterCommon)((IActorValueModulationSubrecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ActorValueModulationEntrySetterCommon)((IActorValueModulationEntryGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ActorValueModulationSubrecord GetNew()
+        internal static ActorValueModulationEntry GetNew()
         {
-            return new ActorValueModulationSubrecord();
+            return new ActorValueModulationEntry();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IActorValueModulationSubrecord :
-        IActorValueModulationSubrecordGetter,
-        ILoquiObjectSetter<IActorValueModulationSubrecord>
+    public partial interface IActorValueModulationEntry :
+        IActorValueModulationEntryGetter,
+        ILoquiObjectSetter<IActorValueModulationEntry>
     {
         new String LNAM { get; set; }
         new String? VNAM { get; set; }
-        new MemorySlice<Byte>? Color { get; set; }
+        new Color? Color { get; set; }
     }
 
-    public partial interface IActorValueModulationSubrecordGetter :
+    public partial interface IActorValueModulationEntryGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IActorValueModulationSubrecordGetter>
+        ILoquiObject<IActorValueModulationEntryGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -504,52 +499,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ActorValueModulationSubrecord_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ActorValueModulationEntry_Registration.Instance;
         String LNAM { get; }
         String? VNAM { get; }
-        ReadOnlyMemorySlice<Byte>? Color { get; }
+        Color? Color { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ActorValueModulationSubrecordMixIn
+    public static partial class ActorValueModulationEntryMixIn
     {
-        public static void Clear(this IActorValueModulationSubrecord item)
+        public static void Clear(this IActorValueModulationEntry item)
         {
-            ((ActorValueModulationSubrecordSetterCommon)((IActorValueModulationSubrecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ActorValueModulationEntrySetterCommon)((IActorValueModulationEntryGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ActorValueModulationSubrecord.Mask<bool> GetEqualsMask(
-            this IActorValueModulationSubrecordGetter item,
-            IActorValueModulationSubrecordGetter rhs,
+        public static ActorValueModulationEntry.Mask<bool> GetEqualsMask(
+            this IActorValueModulationEntryGetter item,
+            IActorValueModulationEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IActorValueModulationSubrecordGetter item,
+            this IActorValueModulationEntryGetter item,
             string? name = null,
-            ActorValueModulationSubrecord.Mask<bool>? printMask = null)
+            ActorValueModulationEntry.Mask<bool>? printMask = null)
         {
-            return ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).Print(
+            return ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IActorValueModulationSubrecordGetter item,
+            this IActorValueModulationEntryGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ActorValueModulationSubrecord.Mask<bool>? printMask = null)
+            ActorValueModulationEntry.Mask<bool>? printMask = null)
         {
-            ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).Print(
+            ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -557,21 +552,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IActorValueModulationSubrecordGetter item,
-            IActorValueModulationSubrecordGetter rhs,
-            ActorValueModulationSubrecord.TranslationMask? equalsMask = null)
+            this IActorValueModulationEntryGetter item,
+            IActorValueModulationEntryGetter rhs,
+            ActorValueModulationEntry.TranslationMask? equalsMask = null)
         {
-            return ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).Equals(
+            return ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IActorValueModulationSubrecord lhs,
-            IActorValueModulationSubrecordGetter rhs)
+            this IActorValueModulationEntry lhs,
+            IActorValueModulationEntryGetter rhs)
         {
-            ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -580,11 +575,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IActorValueModulationSubrecord lhs,
-            IActorValueModulationSubrecordGetter rhs,
-            ActorValueModulationSubrecord.TranslationMask? copyMask = null)
+            this IActorValueModulationEntry lhs,
+            IActorValueModulationEntryGetter rhs,
+            ActorValueModulationEntry.TranslationMask? copyMask = null)
         {
-            ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -593,28 +588,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IActorValueModulationSubrecord lhs,
-            IActorValueModulationSubrecordGetter rhs,
-            out ActorValueModulationSubrecord.ErrorMask errorMask,
-            ActorValueModulationSubrecord.TranslationMask? copyMask = null)
+            this IActorValueModulationEntry lhs,
+            IActorValueModulationEntryGetter rhs,
+            out ActorValueModulationEntry.ErrorMask errorMask,
+            ActorValueModulationEntry.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ActorValueModulationSubrecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ActorValueModulationEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IActorValueModulationSubrecord lhs,
-            IActorValueModulationSubrecordGetter rhs,
+            this IActorValueModulationEntry lhs,
+            IActorValueModulationEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -622,32 +617,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ActorValueModulationSubrecord DeepCopy(
-            this IActorValueModulationSubrecordGetter item,
-            ActorValueModulationSubrecord.TranslationMask? copyMask = null)
+        public static ActorValueModulationEntry DeepCopy(
+            this IActorValueModulationEntryGetter item,
+            ActorValueModulationEntry.TranslationMask? copyMask = null)
         {
-            return ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ActorValueModulationSubrecord DeepCopy(
-            this IActorValueModulationSubrecordGetter item,
-            out ActorValueModulationSubrecord.ErrorMask errorMask,
-            ActorValueModulationSubrecord.TranslationMask? copyMask = null)
+        public static ActorValueModulationEntry DeepCopy(
+            this IActorValueModulationEntryGetter item,
+            out ActorValueModulationEntry.ErrorMask errorMask,
+            ActorValueModulationEntry.TranslationMask? copyMask = null)
         {
-            return ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ActorValueModulationSubrecord DeepCopy(
-            this IActorValueModulationSubrecordGetter item,
+        public static ActorValueModulationEntry DeepCopy(
+            this IActorValueModulationEntryGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -655,11 +650,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IActorValueModulationSubrecord item,
+            this IActorValueModulationEntry item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ActorValueModulationSubrecordSetterCommon)((IActorValueModulationSubrecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ActorValueModulationEntrySetterCommon)((IActorValueModulationEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -675,7 +670,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ActorValueModulationSubrecord_FieldIndex
+    internal enum ActorValueModulationEntry_FieldIndex
     {
         LNAM = 0,
         VNAM = 1,
@@ -684,9 +679,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class ActorValueModulationSubrecord_Registration : ILoquiRegistration
+    internal partial class ActorValueModulationEntry_Registration : ILoquiRegistration
     {
-        public static readonly ActorValueModulationSubrecord_Registration Instance = new ActorValueModulationSubrecord_Registration();
+        public static readonly ActorValueModulationEntry_Registration Instance = new ActorValueModulationEntry_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -701,23 +696,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ActorValueModulationSubrecord.Mask<>);
+        public static readonly Type MaskType = typeof(ActorValueModulationEntry.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ActorValueModulationSubrecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ActorValueModulationEntry.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ActorValueModulationSubrecord);
+        public static readonly Type ClassType = typeof(ActorValueModulationEntry);
 
-        public static readonly Type GetterType = typeof(IActorValueModulationSubrecordGetter);
+        public static readonly Type GetterType = typeof(IActorValueModulationEntryGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IActorValueModulationSubrecord);
+        public static readonly Type SetterType = typeof(IActorValueModulationEntry);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ActorValueModulationSubrecord";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ActorValueModulationEntry";
 
-        public const string Name = "ActorValueModulationSubrecord";
+        public const string Name = "ActorValueModulationEntry";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -736,7 +731,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ActorValueModulationSubrecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ActorValueModulationEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -769,13 +764,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ActorValueModulationSubrecordSetterCommon
+    internal partial class ActorValueModulationEntrySetterCommon
     {
-        public static readonly ActorValueModulationSubrecordSetterCommon Instance = new ActorValueModulationSubrecordSetterCommon();
+        public static readonly ActorValueModulationEntrySetterCommon Instance = new ActorValueModulationEntrySetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IActorValueModulationSubrecord item)
+        public void Clear(IActorValueModulationEntry item)
         {
             ClearPartial();
             item.LNAM = string.Empty;
@@ -784,7 +779,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public void RemapLinks(IActorValueModulationSubrecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IActorValueModulationEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -792,7 +787,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IActorValueModulationSubrecord item,
+            IActorValueModulationEntry item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -800,23 +795,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: ActorValueModulationSubrecordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: ActorValueModulationEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class ActorValueModulationSubrecordCommon
+    internal partial class ActorValueModulationEntryCommon
     {
-        public static readonly ActorValueModulationSubrecordCommon Instance = new ActorValueModulationSubrecordCommon();
+        public static readonly ActorValueModulationEntryCommon Instance = new ActorValueModulationEntryCommon();
 
-        public ActorValueModulationSubrecord.Mask<bool> GetEqualsMask(
-            IActorValueModulationSubrecordGetter item,
-            IActorValueModulationSubrecordGetter rhs,
+        public ActorValueModulationEntry.Mask<bool> GetEqualsMask(
+            IActorValueModulationEntryGetter item,
+            IActorValueModulationEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ActorValueModulationSubrecord.Mask<bool>(false);
-            ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ActorValueModulationEntry.Mask<bool>(false);
+            ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -825,20 +820,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IActorValueModulationSubrecordGetter item,
-            IActorValueModulationSubrecordGetter rhs,
-            ActorValueModulationSubrecord.Mask<bool> ret,
+            IActorValueModulationEntryGetter item,
+            IActorValueModulationEntryGetter rhs,
+            ActorValueModulationEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.LNAM = string.Equals(item.LNAM, rhs.LNAM);
             ret.VNAM = string.Equals(item.VNAM, rhs.VNAM);
-            ret.Color = MemorySliceExt.SequenceEqual(item.Color, rhs.Color);
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
         }
         
         public string Print(
-            IActorValueModulationSubrecordGetter item,
+            IActorValueModulationEntryGetter item,
             string? name = null,
-            ActorValueModulationSubrecord.Mask<bool>? printMask = null)
+            ActorValueModulationEntry.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -850,18 +845,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IActorValueModulationSubrecordGetter item,
+            IActorValueModulationEntryGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ActorValueModulationSubrecord.Mask<bool>? printMask = null)
+            ActorValueModulationEntry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ActorValueModulationSubrecord =>");
+                sb.AppendLine($"ActorValueModulationEntry =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ActorValueModulationSubrecord) =>");
+                sb.AppendLine($"{name} (ActorValueModulationEntry) =>");
             }
             using (sb.Brace())
             {
@@ -873,9 +868,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IActorValueModulationSubrecordGetter item,
+            IActorValueModulationEntryGetter item,
             StructuredStringBuilder sb,
-            ActorValueModulationSubrecord.Mask<bool>? printMask = null)
+            ActorValueModulationEntry.Mask<bool>? printMask = null)
         {
             if (printMask?.LNAM ?? true)
             {
@@ -889,33 +884,33 @@ namespace Mutagen.Bethesda.Starfield
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
             {
-                sb.AppendLine($"Color => {SpanExt.ToHexString(ColorItem)}");
+                sb.AppendItem(ColorItem, "Color");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IActorValueModulationSubrecordGetter? lhs,
-            IActorValueModulationSubrecordGetter? rhs,
+            IActorValueModulationEntryGetter? lhs,
+            IActorValueModulationEntryGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationSubrecord_FieldIndex.LNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.LNAM) ?? true))
             {
                 if (!string.Equals(lhs.LNAM, rhs.LNAM)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationSubrecord_FieldIndex.VNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.VNAM) ?? true))
             {
                 if (!string.Equals(lhs.VNAM, rhs.VNAM)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationSubrecord_FieldIndex.Color) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Color) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.Color, rhs.Color)) return false;
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IActorValueModulationSubrecordGetter item)
+        public virtual int GetHashCode(IActorValueModulationEntryGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.LNAM);
@@ -923,9 +918,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(VNAMitem);
             }
-            if (item.Color is {} ColorItem)
+            if (item.Color is {} Coloritem)
             {
-                hash.Add(ColorItem);
+                hash.Add(Coloritem);
             }
             return hash.ToHashCode();
         }
@@ -935,11 +930,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ActorValueModulationSubrecord.GetNew();
+            return ActorValueModulationEntry.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValueModulationSubrecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActorValueModulationEntryGetter obj)
         {
             yield break;
         }
@@ -947,47 +942,40 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ActorValueModulationSubrecordSetterTranslationCommon
+    internal partial class ActorValueModulationEntrySetterTranslationCommon
     {
-        public static readonly ActorValueModulationSubrecordSetterTranslationCommon Instance = new ActorValueModulationSubrecordSetterTranslationCommon();
+        public static readonly ActorValueModulationEntrySetterTranslationCommon Instance = new ActorValueModulationEntrySetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IActorValueModulationSubrecord item,
-            IActorValueModulationSubrecordGetter rhs,
+            IActorValueModulationEntry item,
+            IActorValueModulationEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationSubrecord_FieldIndex.LNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.LNAM) ?? true))
             {
                 item.LNAM = rhs.LNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationSubrecord_FieldIndex.VNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.VNAM) ?? true))
             {
                 item.VNAM = rhs.VNAM;
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationSubrecord_FieldIndex.Color) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Color) ?? true))
             {
-                if(rhs.Color is {} Colorrhs)
-                {
-                    item.Color = Colorrhs.ToArray();
-                }
-                else
-                {
-                    item.Color = default;
-                }
+                item.Color = rhs.Color;
             }
         }
         
         #endregion
         
-        public ActorValueModulationSubrecord DeepCopy(
-            IActorValueModulationSubrecordGetter item,
-            ActorValueModulationSubrecord.TranslationMask? copyMask = null)
+        public ActorValueModulationEntry DeepCopy(
+            IActorValueModulationEntryGetter item,
+            ActorValueModulationEntry.TranslationMask? copyMask = null)
         {
-            ActorValueModulationSubrecord ret = (ActorValueModulationSubrecord)((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).GetNew();
-            ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ActorValueModulationEntry ret = (ActorValueModulationEntry)((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).GetNew();
+            ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -996,30 +984,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ActorValueModulationSubrecord DeepCopy(
-            IActorValueModulationSubrecordGetter item,
-            out ActorValueModulationSubrecord.ErrorMask errorMask,
-            ActorValueModulationSubrecord.TranslationMask? copyMask = null)
+        public ActorValueModulationEntry DeepCopy(
+            IActorValueModulationEntryGetter item,
+            out ActorValueModulationEntry.ErrorMask errorMask,
+            ActorValueModulationEntry.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ActorValueModulationSubrecord ret = (ActorValueModulationSubrecord)((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).GetNew();
-            ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ActorValueModulationEntry ret = (ActorValueModulationEntry)((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).GetNew();
+            ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ActorValueModulationSubrecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ActorValueModulationEntry.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ActorValueModulationSubrecord DeepCopy(
-            IActorValueModulationSubrecordGetter item,
+        public ActorValueModulationEntry DeepCopy(
+            IActorValueModulationEntryGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ActorValueModulationSubrecord ret = (ActorValueModulationSubrecord)((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)item).CommonInstance()!).GetNew();
-            ((ActorValueModulationSubrecordSetterTranslationCommon)((IActorValueModulationSubrecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ActorValueModulationEntry ret = (ActorValueModulationEntry)((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)item).CommonInstance()!).GetNew();
+            ((ActorValueModulationEntrySetterTranslationCommon)((IActorValueModulationEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1035,27 +1023,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ActorValueModulationSubrecord
+    public partial class ActorValueModulationEntry
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ActorValueModulationSubrecord_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ActorValueModulationSubrecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ActorValueModulationEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValueModulationEntry_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ActorValueModulationSubrecordCommon.Instance;
+        protected object CommonInstance() => ActorValueModulationEntryCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ActorValueModulationSubrecordSetterCommon.Instance;
+            return ActorValueModulationEntrySetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ActorValueModulationSubrecordSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ActorValueModulationEntrySetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IActorValueModulationSubrecordGetter.CommonInstance() => this.CommonInstance();
+        object IActorValueModulationEntryGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IActorValueModulationSubrecordGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IActorValueModulationEntryGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IActorValueModulationSubrecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IActorValueModulationEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1066,12 +1054,12 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ActorValueModulationSubrecordBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ActorValueModulationEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ActorValueModulationSubrecordBinaryWriteTranslation Instance = new();
+        public static readonly ActorValueModulationEntryBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IActorValueModulationSubrecordGetter item,
+            IActorValueModulationEntryGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1085,7 +1073,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.VNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
@@ -1093,7 +1081,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IActorValueModulationSubrecordGetter item,
+            IActorValueModulationEntryGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1108,19 +1096,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IActorValueModulationSubrecordGetter)item,
+                item: (IActorValueModulationEntryGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ActorValueModulationSubrecordBinaryCreateTranslation
+    internal partial class ActorValueModulationEntryBinaryCreateTranslation
     {
-        public static readonly ActorValueModulationSubrecordBinaryCreateTranslation Instance = new ActorValueModulationSubrecordBinaryCreateTranslation();
+        public static readonly ActorValueModulationEntryBinaryCreateTranslation Instance = new ActorValueModulationEntryBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IActorValueModulationSubrecord item,
+            IActorValueModulationEntry item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1133,12 +1121,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.LNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)ActorValueModulationSubrecord_FieldIndex.LNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorValueModulationEntry_FieldIndex.LNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ActorValueModulationSubrecord_FieldIndex.LNAM;
+                    return (int)ActorValueModulationEntry_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.VNAM:
                 {
@@ -1146,13 +1134,13 @@ namespace Mutagen.Bethesda.Starfield
                     item.VNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ActorValueModulationSubrecord_FieldIndex.VNAM;
+                    return (int)ActorValueModulationEntry_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ActorValueModulationSubrecord_FieldIndex.Color;
+                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)ActorValueModulationEntry_FieldIndex.Color;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1165,14 +1153,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ActorValueModulationSubrecordBinaryTranslationMixIn
+    public static class ActorValueModulationEntryBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IActorValueModulationSubrecordGetter item,
+            this IActorValueModulationEntryGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ActorValueModulationSubrecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ActorValueModulationEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1185,38 +1173,38 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ActorValueModulationSubrecordBinaryOverlay :
+    internal partial class ActorValueModulationEntryBinaryOverlay :
         PluginBinaryOverlay,
-        IActorValueModulationSubrecordGetter
+        IActorValueModulationEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ActorValueModulationSubrecord_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ActorValueModulationSubrecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ActorValueModulationEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ActorValueModulationEntry_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ActorValueModulationSubrecordCommon.Instance;
+        protected object CommonInstance() => ActorValueModulationEntryCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ActorValueModulationSubrecordSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ActorValueModulationEntrySetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IActorValueModulationSubrecordGetter.CommonInstance() => this.CommonInstance();
+        object IActorValueModulationEntryGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IActorValueModulationSubrecordGetter.CommonSetterInstance() => null;
+        object? IActorValueModulationEntryGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IActorValueModulationSubrecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IActorValueModulationEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ActorValueModulationSubrecordBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ActorValueModulationEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ActorValueModulationSubrecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ActorValueModulationEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1232,7 +1220,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Color
         private int? _ColorLocation;
-        public ReadOnlyMemorySlice<Byte>? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1240,7 +1228,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected ActorValueModulationSubrecordBinaryOverlay(
+        protected ActorValueModulationEntryBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1250,7 +1238,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IActorValueModulationSubrecordGetter ActorValueModulationSubrecordFactory(
+        public static IActorValueModulationEntryGetter ActorValueModulationEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1262,7 +1250,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ActorValueModulationSubrecordBinaryOverlay(
+            var ret = new ActorValueModulationEntryBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1274,12 +1262,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IActorValueModulationSubrecordGetter ActorValueModulationSubrecordFactory(
+        public static IActorValueModulationEntryGetter ActorValueModulationEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ActorValueModulationSubrecordFactory(
+            return ActorValueModulationEntryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1299,19 +1287,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.LNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)ActorValueModulationSubrecord_FieldIndex.LNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorValueModulationEntry_FieldIndex.LNAM, translationParams)) return ParseResult.Stop;
                     _LNAMLocation = (stream.Position - offset);
-                    return (int)ActorValueModulationSubrecord_FieldIndex.LNAM;
+                    return (int)ActorValueModulationEntry_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _VNAMLocation = (stream.Position - offset);
-                    return (int)ActorValueModulationSubrecord_FieldIndex.VNAM;
+                    return (int)ActorValueModulationEntry_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
-                    return (int)ActorValueModulationSubrecord_FieldIndex.Color;
+                    return (int)ActorValueModulationEntry_FieldIndex.Color;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1323,7 +1311,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ActorValueModulationSubrecordMixIn.Print(
+            ActorValueModulationEntryMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1334,16 +1322,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IActorValueModulationSubrecordGetter rhs) return false;
-            return ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IActorValueModulationEntryGetter rhs) return false;
+            return ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IActorValueModulationSubrecordGetter? obj)
+        public bool Equals(IActorValueModulationEntryGetter? obj)
         {
-            return ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ActorValueModulationSubrecordCommon)((IActorValueModulationSubrecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ActorValueModulationEntryCommon)((IActorValueModulationEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
