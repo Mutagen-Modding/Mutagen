@@ -9,6 +9,7 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Tests.GUI;
@@ -96,6 +97,7 @@ public class MainVM : ViewModel
     {
         // Set up selected config swapping and loading
         _selectedSettings = this.WhenAnyValue(x => x.SelectedConfigPath.TargetPath)
+            .Skip(1)
             .Select(x =>
             {
                 TestingSettings? settings = null;
@@ -105,6 +107,85 @@ public class MainVM : ViewModel
                     {
                         settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(x));
                     }
+                    else
+                    {
+                        var gameReleases = Enum.GetValues<GameRelease>();
+                        var locator = new GameLocator();
+                        
+                        // Data folder locations
+                        var dataFolderLocations = new DataFolderLocations();
+                        foreach (var release in gameReleases)
+                        {
+                            try 
+                            {
+                                var dataDir = locator.GetDataDirectory(release);
+                                dataFolderLocations.Set(release, dataDir);
+                            }
+                            catch (NotImplementedException)
+                            {
+                                continue;
+                            }
+                            catch (DirectoryNotFoundException)
+                            {
+                                continue;
+                            }
+                        }
+                        
+                        // Target groups
+                        var targetGroups = gameReleases
+                            .Select(release => new TargetGroup
+                            {
+                                GameRelease = release,
+                                NicknameSuffix = string.Empty,
+                                Do = false,
+                                Targets = Implicits.Get(release).BaseMasters
+                                    .Select(implicitMods =>
+                                    {
+                                        try
+                                        {
+                                            return new Target
+                                            {
+                                                Do = true,
+                                                Path = Path.Combine(locator.GetDataDirectory(release), implicitMods.FileName)
+                                            };
+                                        }
+                                        catch (DirectoryNotFoundException)
+                                        {
+                                            return null;
+                                        }
+                                    })
+                                    .NotNull()
+                                    .ToList()
+                            })
+                            .ToList();
+
+                        settings = new TestingSettings
+                        {
+                            PassthroughSettings = new PassthroughSettings
+                            {
+                                CacheReuse = new CacheReuse(true),
+                                TestNormal = true,
+                                TestBinaryOverlay = true,
+                                DeleteCachesAfter = false,
+                                TestImport = false,
+                                ParallelWriting = false,
+                                TestCopyIn = false,
+                                ParallelProcessingSteps = false,
+                                Trimming = new TrimmingSettings()
+                                {
+                                    Enabled = false
+                                }
+                            },
+                            TargetGroups = targetGroups,
+                            TestFlattenedMod = false,
+                            TestBenchmarks = false,
+                            TestEquality = false,
+                            TestPex = false,
+                            TestGroupMasks = false,
+                            TestRecordEnumerables = false,
+                            DataFolderLocations = dataFolderLocations
+                        };
+                    }
                 }
                 catch (Exception)
                 {
@@ -113,17 +194,28 @@ public class MainVM : ViewModel
                 }
                 return (Path: x, Settings: settings);
             })
-            .Skip(1)
-            .Pairwise()
             .Select(p =>
             {
-                if (p.Previous.Settings != null)
+                if (p.Settings != null)
                 {
-                    SaveToSettings(p.Previous.Settings);
-                    File.WriteAllText(p.Previous.Path, JsonConvert.SerializeObject(p.Previous.Settings, Formatting.Indented));
+                    if (p.Path.IsNullOrWhitespace())
+                    {
+                        // Put into Tests project
+                        var mutagenFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()))));
+                        if (mutagenFolder is not null)
+                        {
+                            var testsFolder = Path.Combine(mutagenFolder, "Mutagen.Bethesda.Tests");
+                            if (testsFolder is not null)
+                            {
+                                p.Path = SelectedConfigPath.TargetPath = Path.Combine(testsFolder, "TestingSettings.json");
+                            }
+                        }
+                    }
+
+                    File.WriteAllText(p.Path, JsonConvert.SerializeObject(p.Settings, Formatting.Indented));
                 }
-                ReadInSettings(p.Current.Settings ?? new TestingSettings());
-                return p.Current.Settings;
+                ReadInSettings(p.Settings ?? new TestingSettings());
+                return p.Settings;
             })
             .ToGuiProperty(this, nameof(SelectedSettings), default);
 
