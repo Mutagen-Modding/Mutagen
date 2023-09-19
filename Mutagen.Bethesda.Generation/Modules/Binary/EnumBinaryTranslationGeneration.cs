@@ -277,6 +277,9 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
             case 4:
                 retrieval = $"BinaryPrimitives.ReadInt32LittleEndian({dataAccessor})";
                 break;
+            case 8:
+                retrieval = $"BinaryPrimitives.ReadInt64LittleEndian({dataAccessor})";
+                break;
             default:
                 throw new NotImplementedException();
         }
