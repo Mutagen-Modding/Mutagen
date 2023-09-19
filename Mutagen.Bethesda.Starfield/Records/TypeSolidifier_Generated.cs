@@ -588,9 +588,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on BiomeSwap</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter> BiomeSwap(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter> BiomeSwap(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IBiomeSwapGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -600,9 +600,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on BiomeSwap</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter> BiomeSwap(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter> BiomeSwap(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IBiomeSwapGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IBiomeSwap, IBiomeSwapGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

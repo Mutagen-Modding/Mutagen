@@ -22,6 +22,7 @@
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="Debris" refName="Debris" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
+      <Group name="BiomeSwaps" refName="BiomeSwap" />
     </Fields>
   </Object>
 </Loqui>
