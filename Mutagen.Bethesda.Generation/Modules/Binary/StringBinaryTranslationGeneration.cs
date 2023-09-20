@@ -234,7 +234,8 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                     {  
                         return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParseUnknownLengthString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                     }  
-                case StringBinaryType.PrependLength:  
+                case StringBinaryType.PrependLength:
+                case StringBinaryType.PrependLengthWithNullIfContent: 
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                 case StringBinaryType.PrependLengthUShort:  
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
@@ -255,7 +256,8 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         StringType str = typeGen as StringType;  
         switch (str.BinaryType)  
         {  
-            case StringBinaryType.PrependLength:  
+            case StringBinaryType.PrependLength:
+            case StringBinaryType.PrependLengthWithNullIfContent:
                 sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;");  
                 break;  
             case StringBinaryType.PrependLengthUShort:  

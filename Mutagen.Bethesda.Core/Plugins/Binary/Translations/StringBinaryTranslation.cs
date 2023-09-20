@@ -75,6 +75,11 @@ public sealed class StringBinaryTranslation
                 var len = reader.ReadInt32();
                 return BinaryStringUtility.ToZString(reader.ReadMemory(len), encoding);
             }
+            case StringBinaryType.PrependLengthWithNullIfContent:
+            {
+                var len = reader.ReadInt32();
+                return BinaryStringUtility.ProcessWholeToZString(reader.ReadMemory(len), encoding);
+            }
             case StringBinaryType.PrependLengthUShort:
             {
                 var len = reader.ReadInt16();

@@ -18,6 +18,10 @@ public enum StringBinaryType
     /// </summary>
     PrependLength,
     /// <summary>
+    /// Length prepended as a uint, with null termination if there's content
+    /// </summary>
+    PrependLengthWithNullIfContent,
+    /// <summary>
     /// Length prepended as a ushort
     /// </summary>
     PrependLengthUShort,

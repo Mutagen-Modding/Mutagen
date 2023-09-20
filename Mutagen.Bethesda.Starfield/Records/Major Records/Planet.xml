@@ -67,14 +67,14 @@
   <Object name="PlanetDetails" objType="Subrecord" recordType="HNAM" GUID="f9d3e472-fb6f-419b-bd6f-c83729f06c14" ID="894">
     <Fields>
       <Int32 name="Unknown1" unknown="true" />
-      <String name="SpectralClass" binaryType="PrependLength" />
-      <String name="CatalogueId" binaryType="PrependLength" />
-      <String name="Life" binaryType="PrependLength" />
-      <String name="Magnetosphere" binaryType="PrependLength" />
-      <String name="MassInKg" binaryType="PrependLength" />
-      <String name="Type" binaryType="PrependLength" />
-      <String name="SettledStar" binaryType="PrependLength" />
-      <String name="Special" binaryType="PrependLength" />
+      <String name="SpectralClass" binaryType="PrependLengthWithNullIfContent" />
+      <String name="CatalogueId" binaryType="PrependLengthWithNullIfContent" />
+      <String name="Life" binaryType="PrependLengthWithNullIfContent" />
+      <String name="Magnetosphere" binaryType="PrependLengthWithNullIfContent" />
+      <String name="MassInKg" binaryType="PrependLengthWithNullIfContent" />
+      <String name="Type" binaryType="PrependLengthWithNullIfContent" />
+      <String name="SettledStar" binaryType="PrependLengthWithNullIfContent" />
+      <String name="Special" binaryType="PrependLengthWithNullIfContent" />
       <Double name="Perihelion" />
       <Double name="Stardust" />
       <Float name="Density" />
