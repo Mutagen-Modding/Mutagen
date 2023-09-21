@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ingestible" recordType="ALCH" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record" GUID="f04a4e71-fb0c-4416-8623-5a6ac42fefb4" ID="163">
+  <Object name="Ingestible" recordType="ALCH" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <String name="Description" recordType="DESC" translated="DL" />
@@ -15,7 +15,7 @@
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
       <Float name="Weight" recordType="DATA" nullable="False" />
-      <Data recordType="ENIT" >
+      <Data recordType="ENIT">
         <Fields>
           <UInt32 name="Value" />
           <Enum name="Flags" enumName="Ingestible.Flag" byteLength="4" />

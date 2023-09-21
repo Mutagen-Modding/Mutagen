@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AnimationSoundTagSet" recordType="STAG" objType="Record" baseClass="StarfieldMajorRecord" GUID="8cc45558-705f-4dd9-b7e9-db2cddfe5d75" ID="748">
+  <Object name="AnimationSoundTagSet" recordType="STAG" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="EnableParent" objType="Subrecord" recordType="XESP" GUID="38c30ba6-9e8b-4527-bc32-c50192765290" ID="299" >
+  <Object name="EnableParent" objType="Subrecord" recordType="XESP">
     <Fields>
-      <FormLink name="Reference" >
+      <FormLink name="Reference">
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <Break />

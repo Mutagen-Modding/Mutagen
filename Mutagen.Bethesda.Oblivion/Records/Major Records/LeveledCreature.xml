@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledCreature" objType="Record" recordType="LVLC" baseClass="OblivionMajorRecord" GUID="3b7a7716-fb68-4925-94fc-7ec66bea9349" ID="93">
+  <Object name="LeveledCreature" objType="Record" recordType="LVLC" baseClass="OblivionMajorRecord">
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
       <RefList name="Entries" refName="LeveledCreatureEntry" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
-      <FormLink name="Template" recordType="TNAM" >
+      <FormLink name="Template" recordType="TNAM">
         <Interface>INpcRecord</Interface>
       </FormLink>
     </Fields>
     <LinkInterface>INpcSpawn</LinkInterface>
   </Object>
-  <Object name="LeveledCreatureEntry" objType="Subrecord" recordType="LVLO" GUID="9de329c6-4592-4106-bbab-1b424ce5f900" ID="221">
+  <Object name="LeveledCreatureEntry" objType="Subrecord" recordType="LVLO">
     <Fields>
       <Int16 name="Level" />
       <Int16 name="Unknown" />

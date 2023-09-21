@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ActorValueInformation" recordType="AVIF" baseClass="StarfieldMajorRecord" objType="Record" GUID="e13fc97c-ddd6-464d-b2d0-8cb44f617052" ID="689">
+  <Object name="ActorValueInformation" recordType="AVIF" baseClass="StarfieldMajorRecord" objType="Record">
     <Fields>
     </Fields>
   </Object>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Miscellaneous" objType="Record" baseClass="OblivionMajorRecord" recordType="MISC" GUID="b894fd9b-01a7-4f5c-803f-44167e7d5b71" ID="77">
+  <Object name="Miscellaneous" objType="Record" baseClass="OblivionMajorRecord" recordType="MISC">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -10,7 +10,7 @@
     </Fields>
     <LinkInterface>IItem</LinkInterface>
   </Object>
-  <Object name="MiscellaneousData" objType="Subrecord" recordType="DATA" GUID="e7daacc4-40a3-4e42-93ed-69d7e30e0f16" ID="197">
+  <Object name="MiscellaneousData" objType="Subrecord" recordType="DATA">
     <Fields>
       <Int32 name="Value" />
       <Float name="Weight" />

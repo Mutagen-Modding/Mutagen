@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Location" objType="Record" recordType="LCTN" baseClass="SkyrimMajorRecord" GUID="9450f7b5-2485-4eb3-ad52-910e7f254018" ID="286">
+  <Object name="Location" objType="Record" recordType="LCTN" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefList name="ActorCellPersistentReferences" refName="LocationReference" recordType="ACPR" />
       <RefList name="LocationCellPersistentReferences" refName="LocationReference" recordType="LCPR" />
@@ -21,7 +21,7 @@
           <Interface>IPlacedSimple</Interface>
         </FormLink>
       </List>
-      <List name="ActorCellEncounterCell" >
+      <List name="ActorCellEncounterCell">
         <RefDirect refName="LocationCoordinate" recordType="ACEC" />
       </List>
       <List name="LocationCellEncounterCell">
@@ -58,7 +58,7 @@
     </Fields>
     <LinkInterface>ILocationRecord</LinkInterface>
   </Object>
-  <Object name="LocationReference" objType="Subrecord" GUID="9eabb96c-a6a9-4367-b785-5a605234d4bf" ID="442">
+  <Object name="LocationReference" objType="Subrecord">
     <Fields>
       <FormLink name="Actor">
         <Interface>ILinkedReference</Interface>
@@ -69,14 +69,14 @@
       <P2Int16 name="Grid" swapCoords="true" />
     </Fields>
   </Object>
-  <Object name="LocationCellUnique" objType="Subrecord" GUID="b1c1d0dd-dc4c-40ea-8002-009003c18777" ID="443">
+  <Object name="LocationCellUnique" objType="Subrecord">
     <Fields>
       <FormLink name="Actor" refName="Npc" />
       <FormLink name="Ref" refName="PlacedNpc" />
       <FormLink name="Location" refName="Location" />
     </Fields>
   </Object>
-  <Object name="LocationCellStaticReference" objType="Subrecord" GUID="255e98cf-cb5f-412a-a62d-ace272813bb7" ID="444">
+  <Object name="LocationCellStaticReference" objType="Subrecord">
     <Fields>
       <FormLink name="LocationRefType" refName="LocationReferenceType" />
       <FormLink name="Marker">
@@ -88,17 +88,17 @@
       <P2Int16 name="Grid" swapCoords="true" />
     </Fields>
   </Object>
-  <Object name="LocationCoordinate" objType="Subrecord" GUID="e9cf5169-5dec-499f-9aca-1b0813c5c9d8" ID="445">
+  <Object name="LocationCoordinate" objType="Subrecord">
     <Fields>
       <FormLink name="Location">
         <Interface>IComplexLocation</Interface>
       </FormLink>
-      <List name="Coordinates" >
+      <List name="Coordinates">
         <P2Int16 swapCoords="true" />
       </List>
     </Fields>
   </Object>
-  <Object name="LocationCellEnablePoint" objType="Subrecord" GUID="dcb2f125-f8e9-423d-b6cf-086ba0216254" ID="446">
+  <Object name="LocationCellEnablePoint" objType="Subrecord">
     <Fields>
       <FormLink name="Actor">
         <Interface>IPlaced</Interface>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="IdleMarker" recordType="IDLM" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="50c1215a-a33e-41ac-87a8-9b94874cb2ef" ID="233">
+  <Object name="IdleMarker" recordType="IDLM" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">

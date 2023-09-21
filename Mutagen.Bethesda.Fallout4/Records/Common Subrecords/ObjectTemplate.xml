@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectTemplate" objType="Subrecord" GUID="76a94f99-29cc-4c9c-beba-ffb92253846a" ID="295">
+  <Object name="ObjectTemplate" objType="Subrecord">
     <Generic name="T" isLoqui="false" getterVariance="Out" isClass="false">
       <Where>struct</Where>
       <Where>Enum</Where>
@@ -28,7 +28,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="AObjectModProperty" abstract="true" objType="Subrecord" GUID="b778bd5b-1695-4263-bbcb-daaf62236a7a" ID="294">
+  <Object name="AObjectModProperty" abstract="true" objType="Subrecord">
     <Generic name="T" isLoqui="false" getterVariance="Out" isClass="false">
       <Where>struct</Where>
       <Where>Enum</Where>
@@ -38,49 +38,49 @@
       <Float name="Step" />
     </Fields>
   </Object>
-  <Object name="ObjectModIntProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="b1e409b7-2c71-4cbe-8a17-84ade2dcf360" ID="296">
+  <Object name="ObjectModIntProperty" baseClass="AObjectModProperty" objType="Subrecord">
     <Fields>
       <UInt32 name="Value" />
       <UInt32 name="Value2" />
       <Enum name="FunctionType" enumName="ObjectModProperty.FloatFunctionType" />
     </Fields>
   </Object>
-  <Object name="ObjectModFloatProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="7d48b73b-b397-4241-934b-b8641ec9611d" ID="297">
+  <Object name="ObjectModFloatProperty" baseClass="AObjectModProperty" objType="Subrecord">
     <Fields>
       <Float name="Value" />
       <Float name="Value2" />
       <Enum name="FunctionType" enumName="ObjectModProperty.FloatFunctionType" />
     </Fields>
   </Object>
-  <Object name="ObjectModBoolProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="2d4e8ba9-e227-400f-8e4e-2068b6f2ca01" ID="298">
+  <Object name="ObjectModBoolProperty" baseClass="AObjectModProperty" objType="Subrecord">
     <Fields>
       <Bool name="Value" />
       <Bool name="Value2" />
       <Enum name="FunctionType" enumName="ObjectModProperty.BoolFunctionType" />
     </Fields>
   </Object>
-  <Object name="ObjectModStringProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="0233723f-81ae-49b3-b549-ce3f68668c19" ID="299">
+  <Object name="ObjectModStringProperty" baseClass="AObjectModProperty" objType="Subrecord">
     <Fields>
       <String name="Value" />
       <UInt32 name="Unused" />
       <Enum name="FunctionType" enumName="ObjectModProperty.FloatFunctionType" />
     </Fields>
   </Object>
-  <Object name="ObjectModFormLinkIntProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="c1640d50-726b-47a7-8a1a-eb2e7f1ca16b" ID="300">
+  <Object name="ObjectModFormLinkIntProperty" baseClass="AObjectModProperty" objType="Subrecord">
     <Fields>
       <FormLink name="Record" refName="Fallout4MajorRecord" />
       <UInt32 name="Value" />
       <Enum name="FunctionType" enumName="ObjectModProperty.FormLinkFunctionType" />
     </Fields>
   </Object>
-  <Object name="ObjectModEnumProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="4f65602a-d047-45ad-8e7d-936462753128" ID="660">
+  <Object name="ObjectModEnumProperty" baseClass="AObjectModProperty" objType="Subrecord">
     <Fields>
       <UInt32 name="EnumIntValue" />
       <UInt32 name="Unused" />
       <Enum name="FunctionType" enumName="ObjectModProperty.EnumFunctionType" />
     </Fields>
   </Object>
-  <Object name="ObjectModFormLinkFloatProperty" baseClass="AObjectModProperty" objType="Subrecord" GUID="3c7efd81-1f19-433c-9780-92d63f24eb19" ID="301">
+  <Object name="ObjectModFormLinkFloatProperty" baseClass="AObjectModProperty" objType="Subrecord">
     <Fields>
       <FormLink name="Record" refName="Fallout4MajorRecord" />
       <Float name="Value" />

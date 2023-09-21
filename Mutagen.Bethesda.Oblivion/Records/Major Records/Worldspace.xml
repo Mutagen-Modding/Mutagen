@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Worldspace" objType="Record" baseClass="OblivionMajorRecord" recordType="WRLD" customBinaryEnd="Normal" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
+  <Object name="Worldspace" objType="Record" baseClass="OblivionMajorRecord" recordType="WRLD" customBinaryEnd="Normal">
     <Fields>
       <String name="Name" recordType="FULL" />
       <FormLink name="Parent" recordType="WNAM" refName="Worldspace" />
@@ -20,7 +20,7 @@
     </Fields>
     <LinkInterface>IPlace</LinkInterface>
   </Object>
-  <Object name="WorldspaceBlock" objType="Group" GUID="ffc71d01-f9a7-406b-9c9f-a5760acd87ea" ID="140">
+  <Object name="WorldspaceBlock" objType="Group">
     <Fields>
       <Int16 name="BlockNumberY" />
       <Int16 name="BlockNumberX" />
@@ -29,7 +29,7 @@
       <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
     </Fields>
   </Object>
-  <Object name="WorldspaceSubBlock" objType="Group" GUID="33d37c53-7561-4ea0-aef8-a9b9475eb68f" ID="141">
+  <Object name="WorldspaceSubBlock" objType="Group">
     <Fields>
       <Int16 name="BlockNumberY" />
       <Int16 name="BlockNumberX" />
@@ -38,7 +38,7 @@
       <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="MapData" objType="Subrecord" recordType="MNAM" GUID="493c28c6-8dd0-40cd-9c54-87243564a406" ID="146">
+  <Object name="MapData" objType="Subrecord" recordType="MNAM">
     <Fields>
       <P2Int32 name="UsableDimensions" />
       <P2Int16 name="CellCoordinatesNWCell" />

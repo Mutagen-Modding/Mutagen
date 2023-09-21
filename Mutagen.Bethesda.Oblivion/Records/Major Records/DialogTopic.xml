@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="OblivionMajorRecord" customBinaryEnd="Normal" GUID="64f03683-28fd-43e3-8141-da8e95a52f89" ID="147">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="OblivionMajorRecord" customBinaryEnd="Normal">
     <Fields>
       <List name="Quests">
         <FormLink recordType="QSTI" refName="Quest" />
@@ -11,7 +11,7 @@
       <RefList name="Items" binary="NoGeneration" refName="DialogItem" />
     </Fields>
   </Object>
-  <Object name="DialogItem" objType="Record" baseClass="OblivionMajorRecord" recordType="INFO" GUID="2d9149e0-aa5e-4b4e-8bef-93b32f602f3b" ID="149">
+  <Object name="DialogItem" objType="Record" baseClass="OblivionMajorRecord" recordType="INFO">
     <Fields>
       <RefDirect name="Data" refName="DialogItemData" />
       <FormLink name="Quest" recordType="QSTI" refName="Quest" />
@@ -31,21 +31,21 @@
       <RefDirect name="Script" refName="ScriptFields" singleton="true" />d
     </Fields>
   </Object>
-  <Object name="DialogItemData" objType="Subrecord" recordType="DATA" GUID="2261ed10-f5dd-4b02-b71a-8eedb897e41e" ID="186">
+  <Object name="DialogItemData" objType="Subrecord" recordType="DATA">
     <Fields>
       <Enum name="DialogType" enumName="DialogType" byteLength="2" />
       <Break />
       <Enum name="Flags" enumName="DialogItem.Flag" byteLength="1" />
     </Fields>
   </Object>
-  <Object name="DialogResponse" objType="Subrecord" GUID="d8438f70-ccc0-4bc8-876d-11134cdabd97" ID="150">
+  <Object name="DialogResponse" objType="Subrecord">
     <Fields>
       <RefDirect name="Data" refName="DialogResponseData" />
       <String name="ResponseText" recordType="NAM1" />
       <String name="ActorNotes" recordType="NAM2" />
     </Fields>
   </Object>
-  <Object name="DialogResponseData" objType="Subrecord" recordType="TRDT" GUID="000d3b32-e5ea-42c0-84d5-1f91f223bf0c" ID="187">
+  <Object name="DialogResponseData" objType="Subrecord" recordType="TRDT">
     <Fields>
       <Enum name="Emotion" enumName="EmotionType" byteLength="4" />
       <Int32 name="EmotionValue" />

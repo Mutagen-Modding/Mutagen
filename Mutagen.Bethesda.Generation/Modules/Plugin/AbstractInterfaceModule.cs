@@ -17,7 +17,7 @@ public class AbstractInterfaceModule : GenerationModule
         if (proto.Protocol.Namespace == "Bethesda") return;
 
         HashSet<ObjectGeneration> grupTypes = new();
-        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
             foreach (var field in obj.Fields)
             {
@@ -125,7 +125,7 @@ public class AbstractInterfaceModule : GenerationModule
     {
         Dictionary<ObjectGeneration, ObjectGeneration> inheritingChildren = new();
 
-        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
             if (grupTypes.Contains(obj)) continue;
             if (!await obj.IsMajorRecord()) continue;

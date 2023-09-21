@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SceneCollection" recordType="SCCO" objType="Record" baseClass="Fallout4MajorRecord" GUID="b08a4f39-6f5b-42f6-a7db-9b1eee7407cc" ID="669">
+  <Object name="SceneCollection" recordType="SCCO" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="QNAM" />
       <RefList name="Scenes" refName="SceneCollectionItem" />
       <Int32 name="VNAM" recordType="VNAM" />
-      <List name="XNAMs" >
+      <List name="XNAMs">
         <Int64 recordType="XNAM" />
       </List>
       <Int32 name="VNAM2" recordType="VNAM" />
     </Fields>
   </Object>
-  <Object name="SceneCollectionItem" objType="Subrecord" GUID="d218237e-28cc-4661-b916-a7b3a3d31e79" ID="670">
+  <Object name="SceneCollectionItem" objType="Subrecord">
     <Fields>
       <FormLink name="Scene" refName="Scene" recordType="SNAM" nullable="False" />
       <UInt64 name="XNAM" recordType="XNAM" />

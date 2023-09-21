@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImpactDataSet" recordType="IPDS" objType="Record" baseClass="StarfieldMajorRecord" GUID="7f948bfd-a280-4ea3-84c5-16e53233bbbd" ID="718">
+  <Object name="ImpactDataSet" recordType="IPDS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Key" recordType="KEYM" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" GUID="e9a9564d-a727-49de-8f83-483d0a93415d" ID="221">
+  <Object name="Key" recordType="KEYM" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />

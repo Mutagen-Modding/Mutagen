@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ownership" objType="Subrecord" GUID="818a652b-094d-4aef-8854-d66f76b2037e" ID="458">
+  <Object name="Ownership" objType="Subrecord">
     <Fields>
       <Data recordType="XOWN">
         <Fields>

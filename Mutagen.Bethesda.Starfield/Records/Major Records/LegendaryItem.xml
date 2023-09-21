@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LegendaryItem" recordType="LGDI" objType="Record" baseClass="StarfieldMajorRecord" GUID="62e2e643-58dd-4a4a-b651-3009940f0f07" ID="805">
+  <Object name="LegendaryItem" recordType="LGDI" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

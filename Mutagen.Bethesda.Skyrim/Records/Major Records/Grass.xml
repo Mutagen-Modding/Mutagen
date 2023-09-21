@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Grass" recordType="GRAS" objType="Record" baseClass="SkyrimMajorRecord" GUID="40ec1abd-2509-4d30-b323-24e660c36412" ID="129">
+  <Object name="Grass" recordType="GRAS" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />

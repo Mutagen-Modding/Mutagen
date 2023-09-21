@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GameSetting" recordType="GMST" baseClass="SkyrimMajorRecord" objType="Record" abstract="true" GUID="f850894f-494c-4527-8a48-1209ae13f043" ID="5">
+  <Object name="GameSetting" recordType="GMST" baseClass="SkyrimMajorRecord" objType="Record" abstract="true">
     <Fields>
     </Fields>
   </Object>
-  <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="b7d0b3ba-8eb7-4454-8fb2-21eed8c4f0d5" ID="6">
+  <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Int32 name="Data" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="GameSettingFloat" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="2769d421-881e-4532-a318-67db7d1eb291" ID="7">
+  <Object name="GameSettingFloat" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Float name="Data" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="GameSettingString" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="509a7fa7-9bc7-46bf-b8af-e67ae06c6475" ID="8">
+  <Object name="GameSettingString" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <String name="Data" recordType="DATA" translated="Normal" />
     </Fields>
   </Object>
-  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="6446aadc-335b-4467-b72f-81de8a9ea207" ID="17">
+  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Bool name="Data" recordType="DATA" binary="Custom" />
     </Fields>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="BodyPartData" recordType="BPTD" baseClass="SkyrimMajorRecord" objType="Record" GUID="5429249e-d4da-4637-999b-0f2b8a75e074" ID="61">
+  <Object name="BodyPartData" recordType="BPTD" baseClass="SkyrimMajorRecord" objType="Record">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <RefList name="Parts" refName="BodyPart" />
     </Fields>
   </Object>
-  <Object name="BodyPart" objType="Subrecord" GUID="8a2f315d-0fc0-40ef-abc2-ee949928ba76" ID="432">
+  <Object name="BodyPart" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="BPTN" translated="Normal" nullable="False" />
       <String name="PoseMatching" recordType="PNAM" />

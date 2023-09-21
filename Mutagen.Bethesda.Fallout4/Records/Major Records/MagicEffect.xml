@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="Fallout4MajorRecord" GUID="daa8d891-40bb-4c9f-b41b-be62f907dda4" ID="103">
+  <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -27,7 +27,7 @@
           <Float name="TaperCurve" />
           <Float name="TaperDuration" />
           <Float name="SecondActorValueWeight" />
-          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="8" defaultType="MagicEffectArchetype"  />
+          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="8" defaultType="MagicEffectArchetype" />
           <!-- Actor Value parsed by above custom logic -->
           <FormLink name="Projectile" refName="Projectile" />
           <FormLink name="Explosion" refName="Explosion" />
@@ -59,64 +59,64 @@
       <RefList name="Conditions" refName="Condition" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="AMagicEffectArchetype" abstract="true" objType="Subrecord" ctorPermission="noGeneration" GUID="200b8c5c-b048-41de-aeb9-d1ed2fcf37e6" ID="689">
+  <Object name="AMagicEffectArchetype" abstract="true" objType="Subrecord" ctorPermission="noGeneration">
     <Fields>
       <FormLink name="ActorValue" enumName="ActorValue" refName="ActorValueInformation" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="MagicEffectArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration"  GUID="f0b747b5-e363-4a35-9918-0f8099a15f0c" ID="274">
+  <Object name="MagicEffectArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration">
     <Fields>
       <Enum name="Type" enumName="MagicEffectArchetype.TypeEnum" binary="NoGeneration" />
       <FormLink name="Association" binary="NoGeneration" refName="Fallout4MajorRecord" />
     </Fields>
   </Object>
-  <Object name="MagicEffectLightArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="7bc46047-4215-4c08-841a-9b4b1e57d65b" ID="275">
+  <Object name="MagicEffectLightArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
       <FormLink name="Association" binary="NoGeneration" refName="Light" />
     </Fields>
   </Object>
-  <Object name="MagicEffectBoundArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="9a6509dc-94e2-47df-8676-e450027835d7" ID="276">
+  <Object name="MagicEffectBoundArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
-      <FormLink name="Association" binary="NoGeneration" >
+      <FormLink name="Association" binary="NoGeneration">
         <Interface>IBindableEquipment</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="MagicEffectSummonCreatureArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="8269ac1b-2ec3-4c19-96ce-a7d7d1e33e2f" ID="277">
+  <Object name="MagicEffectSummonCreatureArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
       <FormLink name="Association" binary="NoGeneration" refName="Npc" />
     </Fields>
   </Object>
-  <Object name="MagicEffectGuideArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="895a61f4-4532-4079-b0ad-4a5f2f5f1414" ID="278">
+  <Object name="MagicEffectGuideArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
-      <FormLink name="Association" binary="NoGeneration" >
+      <FormLink name="Association" binary="NoGeneration">
         <Interface>IHazard</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="MagicEffectSpawnHazardArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="0e067efe-9c06-40c2-9595-fb8ecae7877d" ID="279">
+  <Object name="MagicEffectSpawnHazardArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
-      <FormLink name="Association" binary="NoGeneration" >
+      <FormLink name="Association" binary="NoGeneration">
         <Interface>IHazard</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="MagicEffectCloakArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="a46bf6dd-77e0-4b32-aba2-b8550e2ae753" ID="280">
+  <Object name="MagicEffectCloakArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
       <FormLink name="Association" binary="NoGeneration" refName="Spell" />
     </Fields>
   </Object>
-  <Object name="MagicEffectEnhanceWeaponArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="9be01c63-f9c4-47f1-8c75-92a1fe1e6095" ID="283">
+  <Object name="MagicEffectEnhanceWeaponArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
       <FormLink name="Association" binary="NoGeneration" refName="ObjectEffect" />
     </Fields>
   </Object>
-  <Object name="MagicEffectPeakValueModArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration" GUID="ae5a75cd-21d8-4dfa-867b-198d88fec23b" ID="284">
+  <Object name="MagicEffectPeakValueModArchetype" objType="Subrecord" baseClass="AMagicEffectArchetype" binaryOverlay="NoGeneration" ctorPermission="noGeneration">
     <Fields>
       <FormLink name="Association" binary="NoGeneration" refName="Keyword" />
     </Fields>
   </Object>
-  <Object name="MagicEffectSound" objType="Subrecord" GUID="ee28d561-03db-4965-bad7-fee9f5308fd2" ID="287">
+  <Object name="MagicEffectSound" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="MagicEffect.SoundType" byteLength="4" />
       <FormLink name="Sound" refName="SoundDescriptor" />

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <List name="ActorEffect" counterRecType="SPCT">
-        <FormLink recordType="SPLO" >
+        <FormLink recordType="SPLO">
           <Interface>ISpellRecord</Interface>
         </FormLink>
       </List>
@@ -84,7 +84,7 @@
       <List name="MovementTypeNames">
         <String recordType="MTNM" binaryType="Plain" />
       </List>
-      <Gendered name="Voices" recordType="VTCK" nullable="False" >
+      <Gendered name="Voices" recordType="VTCK" nullable="False">
         <Fields>
           <FormLink refName="VoiceType" />
         </Fields>
@@ -105,7 +105,7 @@
       <Float name="FacegenFaceClamp" recordType="UNAM" nullable="False" />
       <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
       <RefList name="Attacks" refName="Attack" />
-      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM" nullable="False" >
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM" nullable="False">
         <Fields>
           <RefDirect refName="BodyData" />
         </Fields>
@@ -118,7 +118,7 @@
       </List>
       <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
       <CustomLogic name="ExtraNAM2" />
-      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM" nullable="False" >
+      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM" nullable="False">
         <Fields>
           <RefDirect refName="Model" />
         </Fields>
@@ -167,25 +167,25 @@
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
   </Object>
-  <Object name="SkillBoost" objType="Subrecord" GUID="8397e320-5ee6-4314-b35a-b69c871fa3ec" ID="53">
+  <Object name="SkillBoost" objType="Subrecord">
     <Fields>
       <Enum name="Skill" enumName="ActorValue" byteLength="1" default="ActorValue.None" />
       <Int8 name="Boost" />
     </Fields>
   </Object>
-  <Object name="BodyData" objType="Subrecord" GUID="baeb0edf-c312-4f2b-9a87-b0bc6542773b" ID="60">
+  <Object name="BodyData" objType="Subrecord">
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
       <RefDirect name="Model" refName="Model" />
     </Fields>
   </Object>
-  <Object name="RaceMovementType" objType="Subrecord" GUID="fb099dce-2d5d-4b0e-86dd-ae8fa82d4951" ID="67">
+  <Object name="RaceMovementType" objType="Subrecord">
     <Fields>
       <FormLink name="MovementType" refName="MovementType" recordType="MTYP" />
       <RefDirect name="Overrides" refName="SpeedOverrides" />
     </Fields>
   </Object>
-  <Object name="SpeedOverrides" objType="Subrecord" recordType="SPED" GUID="9e8f3f43-b822-4733-90a8-18f6e067be2e" ID="68">
+  <Object name="SpeedOverrides" objType="Subrecord" recordType="SPED">
     <Fields>
       <Float name="LeftWalk" />
       <Float name="LeftRun" />
@@ -200,7 +200,7 @@
       <Float name="Unknown" />
     </Fields>
   </Object>
-  <Object name="FaceFxPhonemes" objType="Subrecord" GUID="b965bdb9-1d8c-4efe-8cfa-2f35cd13370a" ID="70">
+  <Object name="FaceFxPhonemes" objType="Subrecord">
     <Fields>
       <Bool name="ForceNames" binary="NoGeneration" />
       <RefDirect name="Aah_LipBigAah" nullable="True" refName="Phoneme" binary="NoGeneration" />
@@ -221,7 +221,7 @@
       <RefDirect name="W" nullable="True" refName="Phoneme" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="Phoneme" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
+  <Object name="Phoneme" objType="Subrecord">
     <Fields>
       <String name="Name" binary="NoGeneration" />
       <Float name="IY" binary="NoGeneration" />
@@ -269,7 +269,7 @@
       <Float name="FLAP" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="HeadData" objType="Subrecord" GUID="c0a94c29-c6cd-4b72-b019-b2af3b6b2b34" ID="72">
+  <Object name="HeadData" objType="Subrecord">
     <Fields>
       <RefList name="HeadParts" refName="HeadPartReference" />
       <RefDirect name="AvailableMorphs" refName="AvailableMorphs" />
@@ -287,13 +287,13 @@
       <RefDirect name="Model" refName="Model" />
     </Fields>
   </Object>
-  <Object name="HeadPartReference" objType="Subrecord" GUID="d9a4b8da-2a5b-42d5-9cf6-614b7a13bc26" ID="73">
+  <Object name="HeadPartReference" objType="Subrecord">
     <Fields>
       <Int32 name="Number" recordType="INDX" />
       <FormLink name="Head" refName="HeadPart" recordType="HEAD" />
     </Fields>
   </Object>
-  <Object name="AvailableMorphs" objType="Subrecord" GUID="43c181c2-3ab3-4a0c-82ce-3eb86e48d09b" ID="74">
+  <Object name="AvailableMorphs" objType="Subrecord">
     <Fields>
       <CustomLogic name="Parse" recordType="MPAI" />
       <RefDirect name="Nose" refName="Morph" nullable="True" binary="NoGeneration" />
@@ -302,12 +302,12 @@
       <RefDirect name="Lip" refName="Morph" nullable="True" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="Morph" objType="Subrecord" GUID="db314c60-7ba5-4df9-8229-527af27db99a" ID="84">
+  <Object name="Morph" objType="Subrecord">
     <Fields>
       <ByteArray name="Data" byteLength="32" nullable="False" />
     </Fields>
   </Object>
-  <Object name="TintAssets" objType="Subrecord" GUID="2a4a72e5-c74d-4afd-9783-e4947dc83f79" ID="76">
+  <Object name="TintAssets" objType="Subrecord">
     <Fields>
       <UInt16 name="Index" recordType="TINI" />
       <AssetLink name="FileName" recordType="TINT" assetType="SkyrimTexture" />
@@ -316,14 +316,14 @@
       <RefList name="Presets" refName="TintPreset" />
     </Fields>
   </Object>
-  <Object name="TintPreset" objType="Subrecord" GUID="3feb2956-21fb-4da7-870a-f55ae751eff0" ID="77">
+  <Object name="TintPreset" objType="Subrecord">
     <Fields>
       <FormLink name="Color" refName="ColorRecord" recordType="TINC" />
       <Float name="DefaultValue" recordType="TINV" />
       <UInt16 name="Index" recordType="TIRS" />
     </Fields>
   </Object>
-  <Object name="MountData" objType="Subrecord" GUID="ad650ea7-f5c5-4e2d-8a01-55a11e11488b" ID="235">
+  <Object name="MountData" objType="Subrecord">
     <Fields>
       <P3Float name="MountOffset" />
       <P3Float name="DismountOffset" />

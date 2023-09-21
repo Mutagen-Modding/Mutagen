@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Script" objType="Record" recordType="SCPT" baseClass="OblivionMajorRecord" GUID="4eda2162-86bb-49f3-babd-a9ea5ad8d928" ID="46">
+  <Object name="Script" objType="Record" recordType="SCPT" baseClass="OblivionMajorRecord">
     <Fields>
       <RefDirect name="Fields" refName="ScriptFields" singleton="true" />
     </Fields>
   </Object>
-  <Object name="ScriptFields" objType="Subrecord" GUID="9b6e1edf-a601-4625-be5c-90b106975b45" ID="152">
+  <Object name="ScriptFields" objType="Subrecord">
     <Fields>
       <CustomLogic name="MetadataSummaryOld" recordType="SCHD" />
       <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" singleton="true" />
@@ -15,7 +15,7 @@
       <RefList name="References" refName="AScriptReference" />
     </Fields>
   </Object>
-  <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR" GUID="80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91" ID="47">
+  <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR">
     <Fields>
       <Int32 name="Unknown" />
       <UInt32 name="RefCount" />
@@ -24,13 +24,13 @@
       <Enum name="Type" enumName="ScriptFields.ScriptType" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="LocalVariable" objType="Subrecord" GUID="b77aa416-b182-4265-8276-44b34bace18f" ID="48">
+  <Object name="LocalVariable" objType="Subrecord">
     <Fields>
       <RefDirect name="Data" refName="LocalVariableData" />
       <String name="Name" recordType="SCVR" />
     </Fields>
   </Object>
-  <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD" GUID="02fb12f0-9bb2-4675-9624-502859e58bd6" ID="207">
+  <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD">
     <Fields>
       <Int32 name="Index" />
       <ByteArray name="Unknown" byteLength="12" nullable="False" />
@@ -38,13 +38,13 @@
       <Int32 name="Unknown2" />
     </Fields>
   </Object>
-  <Object name="AScriptReference" abstract="true" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50" />
-  <Object name="ScriptVariableReference" baseClass="AScriptReference" objType="Subrecord" GUID="fb87f678-c078-4acb-b943-fe3d2142a7be" ID="60">
+  <Object name="AScriptReference" abstract="true" objType="Subrecord" />
+  <Object name="ScriptVariableReference" baseClass="AScriptReference" objType="Subrecord">
     <Fields>
       <Int32 name="VariableIndex" recordType="SCRV" nullable="False" />
     </Fields>
   </Object>
-  <Object name="ScriptObjectReference" baseClass="AScriptReference" objType="Subrecord" GUID="a00d44e0-398b-45a6-9e45-facc1da7a2b2" ID="61">
+  <Object name="ScriptObjectReference" baseClass="AScriptReference" objType="Subrecord">
     <Fields>
       <FormLink name="Reference" recordType="SCRO" refName="OblivionMajorRecord" nullable="False" />
     </Fields>

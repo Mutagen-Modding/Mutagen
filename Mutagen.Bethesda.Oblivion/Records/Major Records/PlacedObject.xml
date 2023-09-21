@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedObject" baseClass="OblivionMajorRecord" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
+  <Object name="PlacedObject" baseClass="OblivionMajorRecord" recordType="REFR" objType="Record">
     <Fields>
       <FormLink name="Base" recordType="NAME" refName="OblivionMajorRecord" />
       <ByteArray name="XPCIFluff" recordType="XPCI" />
       <ByteArray name="FULLFluff" recordType="FULL" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <RefDirect name="Lock" refName="LockInformation" />
-      <FormLink name="Owner" recordType="XOWN" >
+      <FormLink name="Owner" recordType="XOWN">
         <Interface>IOwner</Interface>
       </FormLink>
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
-      <FormLink name="Target" recordType="XTRG" >
+      <FormLink name="Target" recordType="XTRG">
         <Interface>IPlaced</Interface>
       </FormLink>
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
@@ -33,16 +33,16 @@
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
   </Object>
-  <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
+  <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord">
     <Fields>
-      <FormLink name="Destination" >
+      <FormLink name="Destination">
         <Interface>IPlaced</Interface>
       </FormLink>
       <P3Float name="Position" />
       <P3Float name="Rotation" />
     </Fields>
   </Object>
-  <Object name="LockInformation" recordType="XLOC" objType="Subrecord" GUID="46a1b7ce-4f49-4017-8beb-bef9481e5fd2" ID="123">
+  <Object name="LockInformation" recordType="XLOC" objType="Subrecord">
     <Fields>
       <UInt8 name="LockLevel" />
       <ByteArray name="Unused" byteLength="3" nullable="False" />
@@ -50,7 +50,7 @@
       <Enum name="Flags" enumName="LockInformation.Flag" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="MapMarker" objType="Subrecord" GUID="96e2692c-898d-48c5-acd1-fbbee402a4f9" ID="126">
+  <Object name="MapMarker" objType="Subrecord">
     <Fields>
       <Enum name="Flags" recordType="FNAM" enumName="MapMarker.Flag" byteLength="1" />
       <String name="Name" recordType="FULL" />

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectVisibilityManager" recordType="OVIS" objType="Record" baseClass="Fallout4MajorRecord" GUID="36b411ea-5290-414d-9cf5-8f29811d68a1" ID="679">
+  <Object name="ObjectVisibilityManager" recordType="OVIS" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefList name="Objects" refName="ObjectVisibilityManagerItem" />
     </Fields>
   </Object>
-  <Object name="ObjectVisibilityManagerItem" objType="Subrecord" GUID="a7715d5d-cf5f-45a7-9e2b-990b9abf72a2" ID="680">
+  <Object name="ObjectVisibilityManagerItem" objType="Subrecord">
     <Fields>
       <FormLink name="Object" recordType="INDX" refName="Static" />
       <RefList name="ObjectBounds" refName="ObjectBoundsFloat" recordType="DATA" />

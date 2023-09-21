@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="FootstepSet" recordType="FSTS" objType="Record" baseClass="Fallout4MajorRecord" GUID="27d5ff53-19ed-484c-b612-3cc8c2bf2fef" ID="141">
+  <Object name="FootstepSet" recordType="FSTS" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <CustomLogic name="Count" recordType="XCNT" />
-      <List name="WalkFootsteps" binary="NoGeneration" >
+      <List name="WalkFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="RunFootsteps" binary="NoGeneration" >
+      <List name="RunFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="SprintFootsteps" binary="NoGeneration" >
+      <List name="SprintFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="SneakFootsteps" binary="NoGeneration" >
+      <List name="SneakFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="SwimFootsteps" binary="NoGeneration" >
+      <List name="SwimFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
     </Fields>

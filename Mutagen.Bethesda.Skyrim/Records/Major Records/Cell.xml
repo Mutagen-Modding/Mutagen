@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CellBlock" objType="Group" GUID="98f34198-f0b3-4f1d-825d-37d3f343a365" ID="290">
+  <Object name="CellBlock" objType="Group">
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
@@ -9,7 +9,7 @@
       <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
     </Fields>
   </Object>
-  <Object name="CellSubBlock" objType="Group" GUID="e9eba7fb-145a-4bc7-9d92-ea2f24e7ff3b" ID="291">
+  <Object name="CellSubBlock" objType="Group">
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
@@ -18,7 +18,7 @@
       <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="Cell" objType="Record" baseClass="SkyrimMajorRecord" recordType="CELL" majorFlag="true" customBinaryEnd="Normal" GUID="cc9052c9-5f1f-4624-b5ad-16ffbce0f78e" ID="229">
+  <Object name="Cell" objType="Record" baseClass="SkyrimMajorRecord" recordType="CELL" majorFlag="true" customBinaryEnd="Normal">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Enum name="Flags" enumName="Cell.Flag" byteLength="2" nullable="False" recordType="DATA" binaryOverlay="Custom" />
@@ -68,13 +68,13 @@
     </Fields>
     <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
-  <Object name="CellGrid" objType="Subrecord" recordType="XCLC" GUID="c2bbbc23-29b3-49d3-8ed4-623753703bae" ID="283">
+  <Object name="CellGrid" objType="Subrecord" recordType="XCLC">
     <Fields>
       <P2Int32 name="Point" />
       <Enum name="Flags" enumName="CellGrid.Flag" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="CellLighting" objType="Subrecord" recordType="XCLL" GUID="ee8cc403-808a-41cb-81c4-e94fd1fca22d" ID="284">
+  <Object name="CellLighting" objType="Subrecord" recordType="XCLL">
     <Fields>
       <Color name="AmbientColor" binaryType="Alpha" />
       <Color name="DirectionalColor" binaryType="Alpha" />
@@ -95,7 +95,7 @@
       <Enum name="Inherits" enumName="CellLighting.Inherit" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="CellWaterVelocity" objType="Subrecord" recordType="XWCU" GUID="4d534c64-a67f-4044-9a83-f726eff4bd37" ID="288">
+  <Object name="CellWaterVelocity" objType="Subrecord" recordType="XWCU">
     <Fields>
       <P3Float name="Offset" />
       <Int32 name="Unknown" />
@@ -103,7 +103,7 @@
       <ByteArray name="Unknown2" nullable="False" />
     </Fields>
   </Object>
-  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord" GUID="1805172c-baaf-4ee9-9bc6-d850a5e68bdf" ID="481">
+  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord">
     <Fields>
       <Float name="Offset" />
       <Array2d name="HeightMap" fixedWidth="32" fixedHeight="32">

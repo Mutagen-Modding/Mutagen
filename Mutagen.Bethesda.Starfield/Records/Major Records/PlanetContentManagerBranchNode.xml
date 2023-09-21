@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlanetContentManagerBranchNode" recordType="PCBN" objType="Record" baseClass="StarfieldMajorRecord" GUID="846f70f6-183e-4820-bd37-a8e79949fe5e" ID="837">
+  <Object name="PlanetContentManagerBranchNode" recordType="PCBN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -32,8 +32,8 @@ internal static class ModContextExt
 
     public static readonly Landscape.TranslationMask? LandscapeCopyMask = null;
 
-    private static readonly ObjectKey CellObjectKey =
-        LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).ObjectKey; 
+    private static readonly string CellObjectKey =
+        LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).FullName; 
 
     public static IEnumerable<IModContext<IFallout4Mod, IFallout4ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this IFallout4ListGroupGetter<ICellBlockGetter> cellBlocks,

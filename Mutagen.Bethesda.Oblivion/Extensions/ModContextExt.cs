@@ -32,8 +32,8 @@ internal static class ModContextExt
     public static readonly Road.TranslationMask? RoadCopyMask = null;
     public static readonly PathGrid.TranslationMask? PathGridCopyMask = null;
 
-    private static readonly ObjectKey CellObjectKey =
-        LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).ObjectKey; 
+    private static readonly string CellObjectKey =
+        LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).FullName; 
 
     public static IEnumerable<IModContext<IOblivionMod, IOblivionModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
         this IOblivionListGroupGetter<ICellBlockGetter> cellBlocks,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Keyword" recordType="KYWD" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" GUID="d8cd5433-f6e7-4487-8706-3ef3547903da" ID="79">
+  <Object name="Keyword" recordType="KYWD" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />

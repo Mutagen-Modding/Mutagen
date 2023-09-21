@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Quest" recordType="QUST" objType="Record" baseClass="StarfieldMajorRecord" GUID="6b40474b-86fb-47a6-be94-eb198b5491bb" ID="843">
+  <Object name="Quest" recordType="QUST" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

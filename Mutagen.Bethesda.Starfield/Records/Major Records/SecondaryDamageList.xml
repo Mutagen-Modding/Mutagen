@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SecondaryDamageList" recordType="SDLT" objType="Record" baseClass="StarfieldMajorRecord" GUID="06dabf1b-965c-444f-bd6e-80fb40aead2a" ID="851">
+  <Object name="SecondaryDamageList" recordType="SDLT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="VoiceType" recordType="VTYP" baseClass="StarfieldMajorRecord" objType="Record" GUID="7cbd9539-1680-4e7b-a3dc-ecf9d26440e8" ID="707">
+  <Object name="VoiceType" recordType="VTYP" baseClass="StarfieldMajorRecord" objType="Record">
     <Fields>
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>

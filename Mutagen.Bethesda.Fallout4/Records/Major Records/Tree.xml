@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Tree" recordType="TREE" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="0cc3a259-8223-4da7-9ef5-9fcb393486a2" ID="202">
+  <Object name="Tree" recordType="TREE" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true">
     <Interface>IHarvestable</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
@@ -14,18 +14,18 @@
       <String name="Name" recordType="FULL" translated="Normal" />
       <Data recordType="CNAM">
         <Fields>
-          <Float name="TrunkFlexibility"/>
-          <Float name="BranchFlexibility"/>
-          <Float name="TrunkAmplitude"/>
-          <Float name="FrontAmplitude"/>
-          <Float name="BackAmplitude"/>
-          <Float name="SideAmplitude"/>
-          <Float name="FrontFrequency"/>
-          <Float name="BackFrequency"/>
-          <Float name="SideFrequency"/>
-          <Float name="LeafFlexibility"/>
-          <Float name="LeafAmplitude"/>
-          <Float name="LeafFrequency"/>
+          <Float name="TrunkFlexibility" />
+          <Float name="BranchFlexibility" />
+          <Float name="TrunkAmplitude" />
+          <Float name="FrontAmplitude" />
+          <Float name="BackAmplitude" />
+          <Float name="SideAmplitude" />
+          <Float name="FrontFrequency" />
+          <Float name="BackFrequency" />
+          <Float name="SideFrequency" />
+          <Float name="LeafFlexibility" />
+          <Float name="LeafAmplitude" />
+          <Float name="LeafFrequency" />
         </Fields>
       </Data>
     </Fields>

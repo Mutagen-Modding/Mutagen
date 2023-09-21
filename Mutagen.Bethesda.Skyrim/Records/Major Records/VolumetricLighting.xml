@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="VolumetricLighting" recordType="VOLI" baseClass="SkyrimMajorRecord" objType="Record" GUID="825a2586-76f0-41c3-9ba3-138c04e53e06" ID="247">
+  <Object name="VolumetricLighting" recordType="VOLI" baseClass="SkyrimMajorRecord" objType="Record">
     <Fields>
       <Float name="Intensity" recordType="CNAM" />
       <Float name="CustomColorContribution" recordType="DNAM" />

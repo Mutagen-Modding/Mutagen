@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Activity" objType="Subrecord" baseClass="AComponent" GUID="0f7323e4-76df-4bb0-97d6-17f28253543e" ID="879">
+  <Object name="Activity" objType="Subrecord" baseClass="AComponent">
     <Fields>
       <String name="ATAN" recordType="ATAN" unknown="true" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -11,7 +11,7 @@
       <ByteArray name="ATAF" recordType="ATAF" nullable="false" unknown="true" />
     </Fields>
   </Object>
-  <Object name="ProgressionEvaluatorArgument" objType="Subrecord" GUID="260fd12f-8501-4c05-83b8-3804e24be772" ID="880">
+  <Object name="ProgressionEvaluatorArgument" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="DNAM" />
       <!-- Conditions -->

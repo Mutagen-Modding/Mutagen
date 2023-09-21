@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectBounds" objType="Subrecord" recordType="OBND" GUID="61bd404f-769a-4b9a-89b5-b0e02ef67487" ID="36">
+  <Object name="ObjectBounds" objType="Subrecord" recordType="OBND">
     <Fields>
       <P3Int16 name="First" />
       <P3Int16 name="Second" />
     </Fields>
   </Object>
-  <Object name="ObjectBoundsFloat" objType="Subrecord" GUID="86cc3bcc-d956-434b-bfb7-a50f9a311c0a" ID="678">
+  <Object name="ObjectBoundsFloat" objType="Subrecord">
     <Fields>
       <P3Float name="First" />
       <P3Float name="Second" />

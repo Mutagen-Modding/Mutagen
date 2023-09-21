@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Model" objType="Subrecord" GUID="4cd9cae6-96f3-483f-9f1f-730cf7bcb016" ID="70">
+  <Object name="Model" objType="Subrecord">
     <Fields>
       <AssetLink name="File" recordType="MODL" nullable="False" assetType="StarfieldModel" />
       <ByteArray name="MOLM" recordType="MOLM" unknown="true" />

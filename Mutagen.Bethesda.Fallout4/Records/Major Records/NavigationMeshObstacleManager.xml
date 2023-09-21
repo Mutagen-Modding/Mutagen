@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NavigationMeshObstacleManager" recordType="NOCM" objType="Record" baseClass="Fallout4MajorRecord" GUID="b8242a3d-f932-4171-95a4-0c268ded1067" ID="674">
+  <Object name="NavigationMeshObstacleManager" recordType="NOCM" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefList name="SubObjects" refName="NavigationMeshObstacleManagerSubObject" />
     </Fields>
   </Object>
-  <Object name="NavigationMeshObstacleManagerSubObject" objType="Subrecord" GUID="08deb6c4-6348-4a89-9014-e81b9644fa44" ID="675">
+  <Object name="NavigationMeshObstacleManagerSubObject" objType="Subrecord">
     <Fields>
       <UInt32 name="Index" recordType="INDX" />
       <List name="DATAs">

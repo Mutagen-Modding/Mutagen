@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GameSetting" recordType="GMST" baseClass="StarfieldMajorRecord" objType="Record" abstract="true" GUID="f9e386c8-531a-4fef-934b-b89464e1d024" ID="73">
+  <Object name="GameSetting" recordType="GMST" baseClass="StarfieldMajorRecord" objType="Record" abstract="true">
     <Fields>
       <ByteArray name="XALG" recordType="XALG" />
     </Fields>
   </Object>
-  <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="bec2181a-7426-4b64-83ab-071c32279c1d" ID="74">
+  <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Int32 name="Data" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="GameSettingFloat" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="a4b7a7cf-19d1-4404-b896-2b787b22a5a3" ID="75">
+  <Object name="GameSettingFloat" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Float name="Data" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="GameSettingString" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="0427f4de-269b-4497-a1bf-cdff384ca943" ID="76">
+  <Object name="GameSettingString" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <String name="Data" recordType="DATA" translated="Normal" />
     </Fields>
   </Object>
-  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="98e46f7e-6d74-4f4e-b3dc-20eb83efbb02" ID="77">
+  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Bool name="Data" recordType="DATA" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="GameSettingUInt" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="5f840e79-1c99-4592-9abd-e06e663f920f" ID="78">
+  <Object name="GameSettingUInt" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <UInt32 name="Data" recordType="DATA" />
     </Fields>

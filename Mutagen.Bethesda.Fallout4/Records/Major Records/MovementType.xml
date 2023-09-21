@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MovementType" recordType="MOVT" baseClass="Fallout4MajorRecord" objType="Record" GUID="f82d6eee-4520-4ffe-8a9c-2a93ea8837d5" ID="207">
+  <Object name="MovementType" recordType="MOVT" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <String name="Name" recordType="MNAM" />
       <Data recordType="SPED">
@@ -43,7 +43,7 @@
       <Float name="FlightAngleGain" recordType="LNAM" />
     </Fields>
   </Object>
-  <Object name="AnimationChangeThresholds" objType="Subrecord" recordType="INAM" GUID="1b85bed0-630a-4a2f-9213-bf71bc9d1228" ID="635">
+  <Object name="AnimationChangeThresholds" objType="Subrecord" recordType="INAM">
     <Fields>
       <Float name="Directional" />
       <Float name="MovementSpeed" />

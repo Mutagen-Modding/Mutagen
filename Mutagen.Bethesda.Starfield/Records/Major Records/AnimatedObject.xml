@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AnimatedObject" recordType="ANIO" objType="Record" baseClass="StarfieldMajorRecord" GUID="474da340-9680-4350-a980-a1b33c55374d" ID="747">
+  <Object name="AnimatedObject" recordType="ANIO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="Fallout4MajorRecord" GUID="e0e6f665-0d9f-46e4-9418-82320044018b" ID="175">
+  <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <Enum name="Flags" enumName="MusicType.Flag" byteLength="4" recordType="FNAM" nullable="False" />
       <RefDirect name="Data" refName="MusicTypeData" />
@@ -10,7 +10,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="MusicTypeData" recordType="PNAM" objType="Subrecord" GUID="6c4d9157-3611-4d5b-8bd2-578ae7a01fbc" ID="176">
+  <Object name="MusicTypeData" recordType="PNAM" objType="Subrecord">
     <Fields>
       <UInt16 name="Priority" />
       <Float name="DuckingDecibel" binaryType="Integer" integerType="UShort" divisor="100" />

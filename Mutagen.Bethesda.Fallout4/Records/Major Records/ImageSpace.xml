@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImageSpace" recordType="IMGS" baseClass="Fallout4MajorRecord" binaryOverlayGenerateCtor="false" objType="Record" GUID="3b3264aa-9b31-4ee5-939a-eb664fa1b35a" ID="465">
+  <Object name="ImageSpace" recordType="IMGS" baseClass="Fallout4MajorRecord" binaryOverlayGenerateCtor="false" objType="Record">
     <Fields>
       <CustomLogic name="ENAMParsing" recordType="ENAM" />
       <Data recordType="HNAM">

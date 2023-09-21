@@ -233,7 +233,7 @@ public class AspectInterfaceModule : GenerationModule
                     }
 
                     Dictionary<string, List<ObjectGeneration>> looseInterfaces = new();
-                    foreach (var obj in proto.ObjectGenerationsByID.Values)
+                    foreach (var obj in proto.ObjectGenerationsByName.Values)
                     {
                         foreach (var interf in obj.Node.Elements(XName.Get("Interface", LoquiGenerator.Namespace)))
                         {

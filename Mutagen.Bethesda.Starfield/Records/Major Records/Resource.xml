@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Resource" recordType="IRES" objType="Record" baseClass="StarfieldMajorRecord" GUID="d6c71382-e456-497f-8c2e-bd7d73d65901" ID="847">
+  <Object name="Resource" recordType="IRES" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

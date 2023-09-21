@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Armor" objType="Record" recordType="ARMO" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="c4d097a3-85cc-49c7-8a94-606c9086f0ca" ID="136">
+  <Object name="Armor" objType="Record" recordType="ARMO" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -60,7 +60,7 @@
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
-      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" >
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP">
         <Ref>
           <Direct refName="ObjectTemplate">
             <GenericSpecification Definition="Armor.Property" TypeToSpecify="T" />
@@ -80,19 +80,19 @@
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
-  <Object name="ArmorModel" objType="Subrecord" GUID="9c3dda06-b786-4b46-98d2-98ce753be2b5" ID="137">
+  <Object name="ArmorModel" objType="Subrecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />
     </Fields>
   </Object>
-  <Object name="ArmorAddonModel" objType="Subrecord" GUID="48cceadb-aa7c-4586-bf3b-48fff52d5059" ID="144">
+  <Object name="ArmorAddonModel" objType="Subrecord">
     <Fields>
       <UInt16 name="AddonIndex" recordType="INDX" />
       <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
     </Fields>
   </Object>
-  <Object name="ArmorResistance" objType="Subrecord" GUID="376e43f7-2bef-4600-af06-4464f173d2fb" ID="145">
+  <Object name="ArmorResistance" objType="Subrecord">
     <Fields>
       <FormLink name="DamageType" refName="DamageType" />
       <UInt32 name="Value" />

@@ -1,126 +1,126 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AVirtualMachineAdapter" objType="Subrecord" abstract="true" recordType="VMAD"  GUID="970d5a2e-9a0c-401d-b721-db89f4350df7" ID="110">
+  <Object name="AVirtualMachineAdapter" objType="Subrecord" abstract="true" recordType="VMAD">
     <Fields>
       <Int16 name="Version" default="6" />
       <UInt16 name="ObjectFormat" default="2" />
       <RefList name="Scripts" refName="ScriptEntry" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" GUID="80726bd6-7d34-412c-b7f2-a381c271066d" ID="111" />
-  <Object name="VirtualMachineAdapterIndexed" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="14284d41-1d41-4699-8c5f-e6b7925ef990" ID="429">
+  <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" />
+  <Object name="VirtualMachineAdapterIndexed" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
     <Fields>
       <RefDirect name="ScriptFragments" refName="ScriptFragmentsIndexed" binary="Custom" nullable="True" />
     </Fields>
   </Object>
-  <Object name="ScriptEntry" objType="Subrecord" GUID="df2181a6-efca-4ef5-97bb-8ca5f78f5830" ID="112">
+  <Object name="ScriptEntry" objType="Subrecord">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
       <Enum name="Flags" byteLength="1" enumName="ScriptEntry.Flag" binary="NoGeneration" />
       <RefList name="Properties" refName="ScriptProperty" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="ScriptProperty" objType="Subrecord" GUID="ceb6f4fb-96a0-44bf-9837-6b8deec1f44a" ID="113">
+  <Object name="ScriptProperty" objType="Subrecord">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
       <Enum name="Flags" byteLength="1" enumName="ScriptProperty.Flag" binary="NoGeneration" default="ScriptProperty.Flag.Edited" />
     </Fields>
   </Object>
-  <Object name="ScriptObjectProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="f6e60e54-7812-4d0e-a0d0-22dc5b278d98" ID="114">
+  <Object name="ScriptObjectProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <FormLink name="Object" refName="Fallout4MajorRecord" />
       <Int16 name="Alias" default="-1" />
       <UInt16 name="Unused" />
     </Fields>
   </Object>
-  <Object name="ScriptStringProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="3510f3dc-de21-48df-b326-9c36ba45e0c2" ID="115">
+  <Object name="ScriptStringProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <String name="Data" binaryType="PrependLengthUShort" />
     </Fields>
   </Object>
-  <Object name="ScriptIntProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="94586533-1646-435e-b102-1400738f56bf" ID="116">
+  <Object name="ScriptIntProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <Int32 name="Data" />
     </Fields>
   </Object>
-  <Object name="ScriptFloatProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="dca2a10c-7056-48da-a960-22d8da052871" ID="117">
+  <Object name="ScriptFloatProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <Float name="Data" />
     </Fields>
   </Object>
-  <Object name="ScriptBoolProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="8ed6b4e8-720e-4557-9796-2e2bb946cf20" ID="118">
+  <Object name="ScriptBoolProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <Bool name="Data" />
     </Fields>
   </Object>
-  <Object name="ScriptVariableProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="0a8b623b-3c56-4979-932f-1dbeebd504bc" ID="209">
+  <Object name="ScriptVariableProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <Int32 name="Data" />
     </Fields>
   </Object>
-  <Object name="ScriptStructProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="3049aa54-5ced-4a9f-b8e0-29de5476f60e" ID="210">
+  <Object name="ScriptStructProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <RefList name="Members" refName="ScriptEntry" counterLength="4" circular="true" />
     </Fields>
   </Object>
-  <Object name="ScriptObjectListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="cd596198-106e-4bc5-b934-2996a002b9ad" ID="119">
+  <Object name="ScriptObjectListProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <RefList name="Objects" refName="ScriptObjectProperty" counterLength="4" />
     </Fields>
   </Object>
-  <Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="46735242-84b9-4b11-888e-9a0781c565c8" ID="120">
+  <Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <List name="Data" counterLength="4">
         <String binaryType="PrependLengthUShort" />
       </List>
     </Fields>
   </Object>
-  <Object name="ScriptIntListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="b3aa4066-9ddb-40f3-9386-e70e8fa09279" ID="121">
+  <Object name="ScriptIntListProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <List name="Data" counterLength="4">
         <Int32 />
       </List>
     </Fields>
   </Object>
-  <Object name="ScriptFloatListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="cc5263bd-44fc-4c70-af64-b453e796103c" ID="122">
+  <Object name="ScriptFloatListProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <List name="Data" counterLength="4">
         <Float />
       </List>
     </Fields>
   </Object>
-  <Object name="ScriptBoolListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="73480bd5-96f2-47d3-8c9b-3544f4c98448" ID="123">
+  <Object name="ScriptBoolListProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <List name="Data" counterLength="4">
         <Bool />
       </List>
     </Fields>
   </Object>
-  <Object name="ScriptVariableListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="df44bd8d-39a6-410a-803d-9901f47cf625" ID="211">
+  <Object name="ScriptVariableListProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <List name="Data" counterLength="4">
         <Int32 />
       </List>
     </Fields>
   </Object>
-  <Object name="ScriptStructListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="06a4db94-b0bb-42fd-bfdf-18343fc53a61" ID="212">
+  <Object name="ScriptStructListProperty" objType="Subrecord" baseClass="ScriptProperty">
     <Fields>
       <RefList name="Structs" refName="ScriptEntryStructs" counterLength="4" />
     </Fields>
   </Object>
-  <Object name="ScriptEntryStructs" objType="Subrecord" GUID="52485253-6e33-4642-a4ab-649bc593fb33" ID="683">
+  <Object name="ScriptEntryStructs" objType="Subrecord">
     <Fields>
       <RefList name="Members" refName="ScriptProperty" counterLength="4" circular="true" />
     </Fields>
   </Object>
-  <Object name="ScriptFragment" objType="Subrecord" GUID="82853f4c-012a-4c5e-8fce-a74708283750" ID="124">
+  <Object name="ScriptFragment" objType="Subrecord">
     <Fields>
       <UInt8 name="ExtraBindDataVersion" default="3" />
       <String name="ScriptName" binaryType="PrependLengthUShort" />
       <String name="FragmentName" binaryType="PrependLengthUShort" />
     </Fields>
   </Object>
-  <Object name="ScriptFragmentIndexed" objType="Subrecord" GUID="90d728bd-a3c0-4be7-95b6-06fd625786cc" ID="125">
+  <Object name="ScriptFragmentIndexed" objType="Subrecord">
     <Fields>
       <UInt16 name="FragmentIndex" />
       <Int16 name="Unknown" />
@@ -129,7 +129,7 @@
       <String name="FragmentName" binaryType="PrependLengthUShort" />
     </Fields>
   </Object>
-  <Object name="ScriptFragments" objType="Subrecord" GUID="d9a42671-c3dd-418d-bb18-679e341e598b" ID="126">
+  <Object name="ScriptFragments" objType="Subrecord">
     <Fields>
       <UInt8 name="ExtraBindDataVersion" default="3" />
       <RefDirect name="Script" refName="ScriptEntry" binary="NoGeneration" />
@@ -137,7 +137,7 @@
       <RefDirect name="OnEnd" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
     </Fields>
   </Object>
-  <Object name="ScriptFragmentsIndexed" objType="Subrecord" GUID="111c1431-8ddc-44ab-83e1-8acac57ea4f2" ID="430">
+  <Object name="ScriptFragmentsIndexed" objType="Subrecord">
     <Fields>
       <UInt8 name="ExtraBindDataVersion" default="3" binary="NoGeneration" />
       <RefDirect name="Script" refName="ScriptEntry" binary="NoGeneration" />

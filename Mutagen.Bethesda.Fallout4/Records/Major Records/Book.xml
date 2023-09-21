@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Book" objType="Record" recordType="BOOK" baseClass="Fallout4MajorRecord" GUID="c56f0c8d-eb97-4ab3-9fd8-1eb891d6ac5a" ID="156">
+  <Object name="Book" objType="Record" recordType="BOOK" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -43,23 +43,23 @@
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
-  <Object name="BookTeachTarget" abstract="true" objType="Subrecord" GUID="882ce8ae-f4ee-46cf-9943-307e3e6e8945" ID="147" />
-  <Object name="BookActorValue" objType="Subrecord" baseClass="BookTeachTarget" GUID="57859959-1b9f-40b0-a637-afa7838fc143" ID="148">
+  <Object name="BookTeachTarget" abstract="true" objType="Subrecord" />
+  <Object name="BookActorValue" objType="Subrecord" baseClass="BookTeachTarget">
     <Fields>
       <FormLink name="ActorValue" refName="ActorValueInformation" />
     </Fields>
   </Object>
-  <Object name="BookPerk" objType="Subrecord" baseClass="BookTeachTarget" GUID="b69886b5-be72-4497-bc61-343d34eeaf32" ID="149">
+  <Object name="BookPerk" objType="Subrecord" baseClass="BookTeachTarget">
     <Fields>
       <FormLink name="Perk" refName="Perk" />
     </Fields>
   </Object>
-  <Object name="BookSpell" objType="Subrecord" baseClass="BookTeachTarget" GUID="dac10961-a42c-429c-8b54-14ba4563cfd2" ID="150">
+  <Object name="BookSpell" objType="Subrecord" baseClass="BookTeachTarget">
     <Fields>
       <FormLink name="Spell" refName="Spell" />
     </Fields>
   </Object>
-  <Object name="BookTeachesNothing" objType="Subrecord" baseClass="BookTeachTarget" GUID="8d37a460-5252-4bcb-a18d-e0a23f1a38ff" ID="151">
+  <Object name="BookTeachesNothing" objType="Subrecord" baseClass="BookTeachTarget">
     <Fields>
       <UInt32 name="RawContent" />
     </Fields>

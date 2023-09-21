@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="StarfieldMajorRecord" GUID="d6fe4378-542f-4f19-8ea9-686b87856c26" ID="823">
+  <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

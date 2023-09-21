@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="StarfieldMajorRecord" GUID="32f9124e-527b-40b5-a8fa-200718ca047c" ID="770">
+  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Models" refName="DebrisModel" />
     </Fields>
   </Object>
-  <Object name="DebrisModel" objType="Subrecord" GUID="1135d2a6-9241-42d7-a689-3ac8efe03b0b" ID="902">
+  <Object name="DebrisModel" objType="Subrecord">
     <Fields>
       <Data>
         <Fields>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="StarfieldModHeader" recordType="TES4" objType="Record" GUID="8e750e17-6c37-40f0-a16f-4efaaac21143" ID="72">
+  <Object name="StarfieldModHeader" recordType="TES4" objType="Record">
     <Fields>
       <Enum name="Flags" enumName="StarfieldModHeader.HeaderFlag" byteLength="4" />
       <UInt32 name="FormID" />
@@ -23,14 +23,14 @@
       <ByteArray name="CHGL" recordType="CHGL" />
     </Fields>
   </Object>
-  <Object name="ModStats" recordType="HEDR" objType="Subrecord" GUID="4011569e-322f-4e65-b436-d7c6667be637" ID="21">
+  <Object name="ModStats" recordType="HEDR" objType="Subrecord">
     <Fields>
       <Float name="Version" default="1f" />
       <UInt32 name="NumRecords" />
       <UInt32 name="NextFormID" default="0x800" />
     </Fields>
   </Object>
-  <Object name="TransientType" recordType="TNAM" objType="Subrecord" GUID="8585f14c-55ea-4087-8212-937bdd6064a0" ID="30">
+  <Object name="TransientType" recordType="TNAM" objType="Subrecord">
     <Fields>
       <UInt32 name="FormType" />
       <List name="Links">

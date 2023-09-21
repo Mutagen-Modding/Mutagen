@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GenericBaseForm" recordType="GBFM" objType="Record" baseClass="StarfieldMajorRecord" GUID="d8818c41-46e2-429e-b242-ce27957354db" ID="789">
+  <Object name="GenericBaseForm" recordType="GBFM" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="StarfieldMajorRecord" GUID="c5ecd244-8303-4cd2-8eb5-007a988a3842" ID="33">
+  <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />

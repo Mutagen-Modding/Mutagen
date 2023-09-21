@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Impact" objType="Record" recordType="IPCT" baseClass="SkyrimMajorRecord" GUID="d508129e-9303-4d72-bbb5-dc4abc363372" ID="439">
+  <Object name="Impact" objType="Record" recordType="IPCT" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <Data>
@@ -18,10 +18,10 @@
       <RefDirect name="Decal" refName="Decal" />
       <FormLink name="TextureSet" refName="TextureSet" recordType="DNAM" />
       <FormLink name="SecondaryTextureSet" refName="TextureSet" recordType="ENAM" />
-      <FormLink name="Sound1" recordType="SNAM" >
+      <FormLink name="Sound1" recordType="SNAM">
         <Interface>ISound</Interface>
       </FormLink>
-      <FormLink name="Sound2" recordType="NAM1" >
+      <FormLink name="Sound2" recordType="NAM1">
         <Interface>ISound</Interface>
       </FormLink>
       <FormLink name="Hazard" recordType="NAM2" refName="Hazard" />

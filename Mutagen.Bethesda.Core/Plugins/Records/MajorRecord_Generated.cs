@@ -1030,13 +1030,6 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
-            msgID: 1,
-            version: 0);
-
-        public const string GUID = "1382b2d8-9016-424e-923f-502a4417cbc7";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -1068,8 +1061,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static readonly Type BinaryWriteTranslation = typeof(MajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;

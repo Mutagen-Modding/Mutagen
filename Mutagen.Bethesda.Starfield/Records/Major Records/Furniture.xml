@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Furniture" recordType="FURN" objType="Record" baseClass="StarfieldMajorRecord" GUID="365fed57-b4c8-41d1-b36a-b169db6615c5" ID="786">
+  <Object name="Furniture" recordType="FURN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Region" recordType="REGN" objType="Record" baseClass="StarfieldMajorRecord" GUID="0139b94a-949e-43e1-ac8d-a25cee7f83c6" ID="845">
+  <Object name="Region" recordType="REGN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

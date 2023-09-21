@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoundCategory" objType="Record" recordType="SNCT" baseClass="SkyrimMajorRecord" GUID="d8233f0e-3b58-4f2a-b259-5eba0478da71" ID="473">
+  <Object name="SoundCategory" objType="Record" recordType="SNCT" baseClass="SkyrimMajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Enum name="Flags" enumName="SoundCategory.Flag" byteLength="4" recordType="FNAM" />

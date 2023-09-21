@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Class" recordType="CLAS" baseClass="OblivionMajorRecord" objType="Record" GUID="3f2e301a-e8f4-42db-875c-3e760e4eff31" ID="16">
+  <Object name="Class" recordType="CLAS" baseClass="OblivionMajorRecord" objType="Record">
     <Fields>
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" />
@@ -8,20 +8,20 @@
       <RefDirect name="Data" refName="ClassData" />
     </Fields>
   </Object>
-  <Object name="ClassTraining" objType="Subrecord" GUID="db3e6d59-8545-4d81-8531-4eb0b56c4a47" ID="19">
+  <Object name="ClassTraining" objType="Subrecord">
     <Fields>
       <Enum name="TrainedSkill" enumName="Skill" byteLength="1" />
       <UInt8 name="MaximumTrainingLevel" max="100" min="0" />
       <Int16 name="Unknown" />
     </Fields>
   </Object>
-  <Object name="ClassData" recordType="DATA" objType="Subrecord" GUID="3c5fc61b-fde2-42c8-adf4-66340f5e4d61" ID="178">
+  <Object name="ClassData" recordType="DATA" objType="Subrecord">
     <Fields>
-      <Array name="PrimaryAttributes" fixedSize="2" >
+      <Array name="PrimaryAttributes" fixedSize="2">
         <Enum enumName="ActorValue" />
       </Array>
       <Enum name="Specialization" enumName="Class.SpecializationFlag" />
-      <Array name="SecondaryAttributes" fixedSize="7" >
+      <Array name="SecondaryAttributes" fixedSize="7">
         <Enum enumName="ActorValue" />
       </Array>
       <Enum name="Flags" enumName="ClassFlag" />

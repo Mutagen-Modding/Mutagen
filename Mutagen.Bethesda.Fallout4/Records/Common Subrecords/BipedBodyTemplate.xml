@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="BipedBodyTemplate" recordType="BOD2" objType="Subrecord" GUID="c43ea043-1e74-4312-9ef1-3ad783b1d6bb" ID="85">
+  <Object name="BipedBodyTemplate" recordType="BOD2" objType="Subrecord">
     <Fields>
       <Enum name="FirstPersonFlags" enumName="BipedObjectFlag" byteLength="4" />
     </Fields>

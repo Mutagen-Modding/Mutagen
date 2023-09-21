@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="EquipType" recordType="EQUP" objType="Record" baseClass="StarfieldMajorRecord" GUID="7a76a659-a2a0-4735-adba-cd575f1d8a19" ID="717">
+  <Object name="EquipType" recordType="EQUP" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

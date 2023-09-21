@@ -24,7 +24,7 @@ public class TypeOptionSolidifier : GenerationModule
         bool generate = false;
         StructuredStringBuilder sb = new StructuredStringBuilder();
 
-        var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
+        var modObj = proto.ObjectGenerationsByName.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
 
         sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");

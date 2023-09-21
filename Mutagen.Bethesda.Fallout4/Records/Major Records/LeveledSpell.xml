@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledSpell" recordType="LVSP" objType="Record" baseClass="Fallout4MajorRecord" GUID="30f35ff7-3238-4788-b96a-acce6b8afe85" ID="92">
+  <Object name="LeveledSpell" recordType="LVSP" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>

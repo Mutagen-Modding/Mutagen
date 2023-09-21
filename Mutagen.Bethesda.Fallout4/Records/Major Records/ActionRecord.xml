@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ActionRecord" recordType="AACT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="308075bf-ee67-4131-b256-900699707c5d" ID="34">
+  <Object name="ActionRecord" recordType="AACT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <String name="Notes" recordType="DNAM" />

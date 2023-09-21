@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Water" objType="Record" baseClass="OblivionMajorRecord" recordType="WATR" GUID="31d50641-f6df-4533-89c3-e764dc35a702" ID="127">
+  <Object name="Water" objType="Record" baseClass="OblivionMajorRecord" recordType="WATR">
     <Fields>
       <String name="Texture" recordType="TNAM" />
       <UInt8 name="Opacity" recordType="ANAM" />
@@ -11,7 +11,7 @@
       <RefDirect name="RelatedWaters" refName="RelatedWaters" />
     </Fields>
   </Object>
-  <Object name="WaterData" objType="Subrecord" recordType="DATA" binaryOverlay="NoGeneration" GUID="19681672-407a-45b4-a1a8-5fdab94b9777" ID="214">
+  <Object name="WaterData" objType="Subrecord" recordType="DATA" binaryOverlay="NoGeneration">
     <Fields>
       <Break />
       <Float name="WindVelocity" />
@@ -49,7 +49,7 @@
       <UInt16 name="Damage" />
     </Fields>
   </Object>
-  <Object name="RelatedWaters" objType="Subrecord" recordType="GNAM" GUID="3ec1f551-bac0-408e-a3ee-2efd4c2f159a" ID="166">
+  <Object name="RelatedWaters" objType="Subrecord" recordType="GNAM">
     <Fields>
       <FormLink name="RelatedWaterDaytime" refName="Water" />
       <FormLink name="RelatedWaterNighttime" refName="Water" />

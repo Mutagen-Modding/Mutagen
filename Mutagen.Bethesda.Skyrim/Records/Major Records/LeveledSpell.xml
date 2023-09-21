@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledSpell" objType="Record" baseClass="SkyrimMajorRecord" recordType="LVSP" GUID="7390cba1-60b9-4a1d-9734-060a32e15cbc" ID="146">
+  <Object name="LeveledSpell" objType="Record" baseClass="SkyrimMajorRecord" recordType="LVSP">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <UInt8 name="ChanceNone" recordType="LVLD" />
@@ -10,17 +10,17 @@
     <LinkInterface>ISpellRecord</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
-  <Object name="LeveledSpellEntry" objType="Subrecord" GUID="315b973b-31dd-49c8-aa34-9e4905e06064" ID="401">
+  <Object name="LeveledSpellEntry" objType="Subrecord">
     <Fields>
       <RefDirect name="Data" refName="LeveledSpellEntryData" />
       <RefDirect name="ExtraData" refName="ExtraData" />
     </Fields>
   </Object>
-  <Object name="LeveledSpellEntryData" objType="Subrecord" recordType="LVLO" GUID="e94d8e28-424c-403c-af19-c674b6b1069a" ID="402">
+  <Object name="LeveledSpellEntryData" objType="Subrecord" recordType="LVLO">
     <Fields>
       <Int16 name="Level" />
       <Int16 name="Unknown" />
-      <FormLink name="Reference" >
+      <FormLink name="Reference">
         <Interface>ISpellRecord</Interface>
       </FormLink>
       <Int16 name="Count" />

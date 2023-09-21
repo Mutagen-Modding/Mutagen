@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AimModel" recordType="AMDL" objType="Record" baseClass="Fallout4MajorRecord" GUID="646f5dc0-24dd-45a1-a3e7-2bdfbc2bbcc7" ID="335">
+  <Object name="AimModel" recordType="AMDL" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
-      <Data recordType="DNAM" >
+      <Data recordType="DNAM">
         <Fields>
           <Float name="ConeOfFireMinAngle" />
           <Float name="ConeOfFireMaxAngle" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="BoneModifier" recordType="BMOD" objType="Record" baseClass="StarfieldMajorRecord" GUID="b2344ff2-dc22-4227-80a3-33afbb172063" ID="756">
+  <Object name="BoneModifier" recordType="BMOD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

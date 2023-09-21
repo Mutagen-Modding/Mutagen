@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ArtObject" recordType="ARTO" objType="Record" baseClass="StarfieldMajorRecord" GUID="73dad18a-a58e-4ea9-bbd5-5538de280747" ID="750">
+  <Object name="ArtObject" recordType="ARTO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

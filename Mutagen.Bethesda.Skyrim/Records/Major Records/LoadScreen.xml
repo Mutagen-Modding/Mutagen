@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LoadScreen" objType="Record" recordType="LSCR" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="8703704e-090f-4c39-a94f-343b5e1efe7d" ID="399">
+  <Object name="LoadScreen" objType="Record" recordType="LSCR" majorFlag="true" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="Icons" refName="Icons" />
       <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
@@ -13,7 +13,7 @@
       <AssetLink name="CameraPath" recordType="MOD2" assetType="SkyrimModel" />
     </Fields>
   </Object>
-  <Object name="Int16MinMax" objType="Subrecord" GUID="9995601d-590f-4c49-ab44-b7adcff80f3d" ID="400">
+  <Object name="Int16MinMax" objType="Subrecord">
     <Fields>
       <Int16 name="Min" />
       <Int16 name="Max" />

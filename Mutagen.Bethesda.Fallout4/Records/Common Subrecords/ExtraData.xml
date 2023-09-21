@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ExtraData" recordType="COED" objType="Subrecord" GUID="f5df10b7-b4d3-4e61-b6b5-2d9438988aaf" ID="159">
+  <Object name="ExtraData" recordType="COED" objType="Subrecord">
     <Fields>
       <RefDirect name="Owner" refName="OwnerTarget" generateClassMembers="false" binary="Custom" byteLength="8" />
       <Float name="ItemCondition" />
     </Fields>
   </Object>
-  <Object name="OwnerTarget" abstract="true" objType="Subrecord" GUID="e1e6b816-c672-41e7-a468-865e95029f50" ID="160" />
-  <Object name="NpcOwner" baseClass="OwnerTarget" objType="Subrecord" GUID="6aa8a637-3dea-4e35-9f9c-9d032a6cddea" ID="161">
+  <Object name="OwnerTarget" abstract="true" objType="Subrecord" />
+  <Object name="NpcOwner" baseClass="OwnerTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Npc" refName="Npc" />
       <FormLink name="Global" refName="Global" />
     </Fields>
   </Object>
-  <Object name="FactionOwner" baseClass="OwnerTarget" objType="Subrecord" GUID="8eae6741-f724-4746-b77f-cfbefe15c5bd" ID="162">
+  <Object name="FactionOwner" baseClass="OwnerTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <Int32 name="RequiredRank" />
     </Fields>
   </Object>
-  <Object name="NoOwner" baseClass="OwnerTarget" objType="Subrecord" GUID="e4494e41-372e-4037-b686-1a2213b1a6f7" ID="163">
+  <Object name="NoOwner" baseClass="OwnerTarget" objType="Subrecord">
     <Fields>
       <UInt32 name="RawOwnerData" />
       <UInt32 name="RawVariableData" />

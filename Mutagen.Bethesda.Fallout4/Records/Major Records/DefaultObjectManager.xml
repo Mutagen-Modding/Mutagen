@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DefaultObjectManager" recordType="DOBJ" objType="Record" baseClass="Fallout4MajorRecord" GUID="53480608-c2a5-463d-8ae5-b8870469063c" ID="622">
+  <Object name="DefaultObjectManager" recordType="DOBJ" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefList name="Objects" recordType="DNAM" refName="DefaultObjectUse" />
     </Fields>
   </Object>
-  <Object name="DefaultObjectUse" objType="Subrecord" GUID="f8aa3e4d-e8da-4ef0-a43c-eed6663eb32d" ID="623">
+  <Object name="DefaultObjectUse" objType="Subrecord">
     <Fields>
       <RecordType name="Use" />
       <FormLink name="Object" refName="Fallout4MajorRecord" />

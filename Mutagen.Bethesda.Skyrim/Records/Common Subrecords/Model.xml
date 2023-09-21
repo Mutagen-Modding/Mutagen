@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SimpleModel" objType="Subrecord" GUID="b01327de-7969-4c42-bea3-9aeb86194e57" ID="83">
+  <Object name="SimpleModel" objType="Subrecord">
     <Fields>
       <AssetLink name="File" recordType="MODL" nullable="False" assetType="SkyrimModel" />
       <ByteArray name="Data" recordType="MODT" />
     </Fields>
   </Object>
-  <Object name="Model" objType="Subrecord" baseClass="SimpleModel" GUID="b5deaeea-11c5-4c34-94e4-3db4c24be832" ID="42">
+  <Object name="Model" objType="Subrecord" baseClass="SimpleModel">
     <Fields>
       <RefList name="AlternateTextures" refName="AlternateTexture" counterLength="4" recordType="MODS" />
     </Fields>
   </Object>
-  <Object name="AlternateTexture" objType="Subrecord" GUID="8001a465-c267-45ee-81b5-a51613668e74" ID="43">
+  <Object name="AlternateTexture" objType="Subrecord">
     <Fields>
       <String name="Name" binaryType="PrependLength" />
       <FormLink name="NewTexture" refName="TextureSet" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogView" recordType="DLVW" objType="Record" baseClass="Fallout4MajorRecord" GUID="7d7755f2-d4e8-4032-a5b0-ca7d884f1588" ID="630">
+  <Object name="DialogView" recordType="DLVW" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <FormLink name="Quest" refName="Quest" recordType="QNAM" nullable="False" />
       <List name="Branches">

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Light" recordType="LIGH" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="e0a72b05-9730-493d-96df-7fc91bae436b" ID="196">
+  <Object name="Light" recordType="LIGH" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-	  <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
+      <FormLink name="PreviewTransform" refName="Transform" recordType="PTRN" />
       <RefDirect name="Model" refName="Model" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <RefDirect name="Destructible" refName="Destructible" />
-	  <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Icons" refName="Icons" />
       <Data>

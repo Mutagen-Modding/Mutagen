@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LandscapeTexture" recordType="LTEX" objType="Record" baseClass="Fallout4MajorRecord" GUID="3056ac9b-4016-4a65-bfe3-cab83274cd32" ID="99">
+  <Object name="LandscapeTexture" recordType="LTEX" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
       <FormLink name="MaterialType" refName="MaterialType" recordType="MNAM" nullable="False" />

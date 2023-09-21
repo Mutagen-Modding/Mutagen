@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ParticleSystemDefineCollision" recordType="PSDC" objType="Record" baseClass="StarfieldMajorRecord" GUID="8f5768bb-1ffc-4700-9404-ccfc7e25ce2f" ID="833">
+  <Object name="ParticleSystemDefineCollision" recordType="PSDC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

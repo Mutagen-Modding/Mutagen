@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="Fallout4MajorRecord" GUID="b850f468-7ad2-4415-872c-e3a390f1c0e0" ID="332">
+  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
@@ -25,7 +25,7 @@
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IReferenceableObject</LinkInterface>
   </Object>
-  <Object name="ConstructibleObjectComponent" objType="Subrecord" GUID="c43e9372-638e-4849-aabb-1575e750f577" ID="652">
+  <Object name="ConstructibleObjectComponent" objType="Subrecord">
     <Fields>
       <FormLink name="Component">
         <Interface>IItem</Interface>
@@ -33,7 +33,7 @@
       <UInt32 name="Count" />
     </Fields>
   </Object>
-  <Object name="ConstructibleCreatedObjectCount" objType="Subrecord" GUID="8a6a89e7-a3e8-4dbc-99fa-62537e2230f6" ID="653">
+  <Object name="ConstructibleCreatedObjectCount" objType="Subrecord">
     <Fields>
       <UInt16 name="Count" />
       <Break />

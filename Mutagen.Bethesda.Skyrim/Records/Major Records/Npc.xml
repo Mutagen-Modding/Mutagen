@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" recordType="NPC_" objType="Record" majorFlag="true" resolvedAssets="true" baseClass="SkyrimMajorRecord" GUID="63c41e9b-1707-48b0-906a-573f3c678370" ID="75">
+  <Object name="Npc" recordType="NPC_" objType="Record" majorFlag="true" resolvedAssets="true" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -8,12 +8,12 @@
       <RefList name="Factions" refName="RankPlacement" />
       <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
       <FormLink name="Voice" refName="VoiceType" recordType="VTCK" />
-      <FormLink name="Template" recordType="TPLT" >
+      <FormLink name="Template" recordType="TPLT">
         <Interface>INpcSpawn</Interface>
       </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" nullable="False" />
-      <List name="ActorEffect" counterRecType="SPCT" >
-        <FormLink recordType="SPLO" >
+      <List name="ActorEffect" counterRecType="SPCT">
+        <FormLink recordType="SPLO">
           <Interface>ISpellRecord</Interface>
         </FormLink>
       </List>
@@ -32,7 +32,7 @@
       <List name="Packages">
         <FormLink refName="Package" recordType="PKID" />
       </List>
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <FormLink name="Class" refName="Class" recordType="CNAM" nullable="False" />
@@ -70,7 +70,7 @@
     <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
-  <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="32c58c3d-5a6e-4382-8bf1-7e6633863702" ID="201">
+  <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS">
     <Fields>
       <Enum name="Flags" enumName="NpcConfiguration.Flag" byteLength="4" binary="Custom" />
       <Int16 name="MagickaOffset" />
@@ -85,32 +85,32 @@
       <Int16 name="BleedoutOverride" />
     </Fields>
   </Object>
-  <Object name="ANpcLevel" abstract="true" objType="Subrecord" GUID="39eba815-7ba1-4741-9362-3a9417e3f36e" ID="202" />
-  <Object name="NpcLevel" baseClass="ANpcLevel" objType="Subrecord" GUID="b24f6b29-d611-400d-b56f-22332bacb9d2" ID="203">
+  <Object name="ANpcLevel" abstract="true" objType="Subrecord" />
+  <Object name="NpcLevel" baseClass="ANpcLevel" objType="Subrecord">
     <Fields>
       <Int16 name="Level" />
     </Fields>
   </Object>
-  <Object name="PcLevelMult" baseClass="ANpcLevel" objType="Subrecord" GUID="dc10b70e-654d-4b0d-ae7f-6f548dfad269" ID="204">
+  <Object name="PcLevelMult" baseClass="ANpcLevel" objType="Subrecord">
     <Fields>
       <Float name="LevelMult" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="e65aa7ba-d430-4857-97e8-59d0930b622a" ID="205">
+  <Object name="RankPlacement" objType="Subrecord" recordType="SNAM">
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <Int8 name="Rank" />
       <ByteArray name="Fluff" byteLength="3" nullable="False" />
     </Fields>
   </Object>
-  <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR" GUID="d315cc71-0b9e-4617-86b0-c344d66854ae" ID="206">
+  <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR">
     <Fields>
       <FormLink name="Perk" refName="Perk" />
       <UInt8 name="Rank" />
       <ByteArray name="Fluff" byteLength="3" nullable="False" />
     </Fields>
   </Object>
-  <Object name="AIData" objType="Subrecord" recordType="AIDT" GUID="10ac7ce5-4e83-4006-92a0-9976062da7be" ID="207">
+  <Object name="AIData" objType="Subrecord" recordType="AIDT">
     <Fields>
       <Enum name="Aggression" enumName="Aggression" byteLength="1" />
       <Enum name="Confidence" enumName="Confidence" byteLength="1" />
@@ -125,9 +125,9 @@
       <UInt32 name="Attack" />
     </Fields>
   </Object>
-  <Object name="PlayerSkills" recordType="DNAM" objType="Subrecord" GUID="c03007ea-a1f3-4964-aa68-166d211a5176" ID="209">
+  <Object name="PlayerSkills" recordType="DNAM" objType="Subrecord">
     <Fields>
-      <Dict name="SkillValues" numEnumKeys="18" >
+      <Dict name="SkillValues" numEnumKeys="18">
         <Key>
           <Enum enumName="Skill" />
         </Key>
@@ -135,7 +135,7 @@
           <UInt8 />
         </Value>
       </Dict>
-      <Dict name="SkillOffsets" numEnumKeys="18" >
+      <Dict name="SkillOffsets" numEnumKeys="18">
         <Key>
           <Enum enumName="Skill" />
         </Key>
@@ -152,30 +152,30 @@
       <ByteArray name="Unused2" byteLength="3" nullable="False" />
     </Fields>
   </Object>
-  <Object name="ANpcSoundDefinition" objType="Subrecord" abstract="true" GUID="fcefa9b8-781d-44ea-b623-abd75e419f5a" ID="210" />
-  <Object name="NpcInheritSound" objType="Subrecord" baseClass="ANpcSoundDefinition" GUID="055664b9-c721-4840-9cd4-6d4008dd9e03" ID="211">
+  <Object name="ANpcSoundDefinition" objType="Subrecord" abstract="true" />
+  <Object name="NpcInheritSound" objType="Subrecord" baseClass="ANpcSoundDefinition">
     <Fields>
       <FormLink name="InheritsSoundsFrom" refName="Npc" recordType="CSCR" />
     </Fields>
   </Object>
-  <Object name="NpcSoundTypes" objType="Subrecord" baseClass="ANpcSoundDefinition" GUID="b3f45db9-9574-4f61-bc64-325358c7735d" ID="212">
+  <Object name="NpcSoundTypes" objType="Subrecord" baseClass="ANpcSoundDefinition">
     <Fields>
       <RefList name="Types" refName="NpcSoundType" />
     </Fields>
   </Object>
-  <Object name="NpcSoundType" objType="Subrecord" GUID="066bba58-5f30-413e-8bb6-cfa1bfb8e059" ID="213">
+  <Object name="NpcSoundType" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="NpcSoundType.SoundType" byteLength="4" recordType="CSDT" />
       <RefList name="Sounds" refName="NpcSound" />
     </Fields>
   </Object>
-  <Object name="NpcSound" objType="Subrecord" GUID="45a0a03c-fe75-4dca-ace4-42ded3ba9f45" ID="214">
+  <Object name="NpcSound" objType="Subrecord">
     <Fields>
       <FormLink name="Sound" recordType="CSDI" refName="SoundDescriptor" />
       <UInt8 name="SoundChance" recordType="CSDC" />
     </Fields>
   </Object>
-  <Object name="NpcFaceMorph" objType="Subrecord" recordType="NAM9" GUID="914508a1-6dea-4c9c-937e-de17e8bfc18c" ID="216">
+  <Object name="NpcFaceMorph" objType="Subrecord" recordType="NAM9">
     <Fields>
       <Float name="NoseLongVsShort" />
       <Float name="NoseUpVsDown" />
@@ -198,7 +198,7 @@
       <Float name="Unknown" />
     </Fields>
   </Object>
-  <Object name="NpcFaceParts" objType="Subrecord" recordType="NAMA" GUID="249f629e-c964-4c45-b472-59536575c289" ID="217">
+  <Object name="NpcFaceParts" objType="Subrecord" recordType="NAMA">
     <Fields>
       <UInt32 name="Nose" />
       <UInt32 name="Unknown" />
@@ -206,7 +206,7 @@
       <UInt32 name="Mouth" />
     </Fields>
   </Object>
-  <Object name="TintLayer" objType="Subrecord" GUID="d5e96f2b-0bd0-4d61-a637-60c651e75004" ID="218">
+  <Object name="TintLayer" objType="Subrecord">
     <Fields>
       <UInt16 name="Index" recordType="TINI" />
       <Color name="Color" binaryType="Alpha" recordType="TINC" />

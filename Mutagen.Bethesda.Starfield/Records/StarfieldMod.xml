@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="StarfieldMod" objType="Mod" ctorPermission="protected" inferredAssets="true" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
+  <Object name="StarfieldMod" objType="Mod" ctorPermission="protected" inferredAssets="true">
     <Fields>
       <RefDirect name="ModHeader" refName="StarfieldModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />

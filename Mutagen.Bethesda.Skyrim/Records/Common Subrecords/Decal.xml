@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Decal" objType="Subrecord" recordType="DODT" GUID="8e13d6f4-ab4a-46fb-aad6-a31589952a1b" ID="24">
+  <Object name="Decal" objType="Subrecord" recordType="DODT">
     <Fields>
       <Float name="MinWidth" />
       <Float name="MaxWidth" />

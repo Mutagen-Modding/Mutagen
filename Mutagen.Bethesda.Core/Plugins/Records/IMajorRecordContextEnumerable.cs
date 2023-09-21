@@ -65,13 +65,10 @@ internal static class MajorRecordContextEnumerableUtility
         Match
     }
 
-    private static readonly ObjectKey MajorRecordKey =
-        LoquiRegistration.StaticRegister.GetRegister(typeof(IMajorRecord)).ObjectKey; 
-    
-    public static TypeMatch GetMatch(Type type, ObjectKey key)
+    public static TypeMatch GetMatch(Type type, string fullName)
     {
         if (!LoquiRegistration.TryGetRegister(type, out var regis)) return TypeMatch.NotMatch;
-        if (regis.ObjectKey.Equals(MajorRecordKey)) return TypeMatch.MajorRecord;
-        return regis.ObjectKey.Equals(key) ? TypeMatch.Match : TypeMatch.NotMatch;
+        if (regis.Name.Equals("MajorRecord")) return TypeMatch.MajorRecord;
+        return regis.FullName.Equals(fullName) ? TypeMatch.Match : TypeMatch.NotMatch;
     }
 }

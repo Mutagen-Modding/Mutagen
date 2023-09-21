@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DebugInfo" GUID="8adc2f6d-0800-4851-b0bf-f6d812a4d25b" ID="1">
+  <Object name="DebugInfo">
     <Fields>
       <DateTime name="ModificationTime" />
       <RefList name="Functions" refName="DebugFunction" />
@@ -8,7 +8,7 @@
       <RefList name="StructOrders" refName="DebugStructOrder" />
     </Fields>
   </Object>
-  <Object name="DebugFunction" GUID="d0eebac8-b25e-4eae-a95d-5bf054772260" ID="2">
+  <Object name="DebugFunction">
     <Fields>
       <String name="ObjectName" />
       <String name="StateName" />
@@ -19,7 +19,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="DebugPropertyGroup" GUID="43092218-3eb0-48e6-9470-0dc6fbf25245" ID="3">
+  <Object name="DebugPropertyGroup">
     <Fields>
       <String name="ObjectName" />
       <String name="GroupName" />
@@ -28,11 +28,11 @@
       </List>
     </Fields>
   </Object>
-  <Object name="DebugStructOrder" GUID="fd8ffb0e-b1ca-4a61-b7f4-5eccff10d9ca" ID="4">
+  <Object name="DebugStructOrder">
     <Fields>
       <String name="ObjectName" />
       <String name="OrderName" />
-      <List name="Names" >
+      <List name="Names">
         <String />
       </List>
     </Fields>

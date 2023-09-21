@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ingestible" recordType="ALCH" objType="Record" baseClass="StarfieldMajorRecord" GUID="1c3ec2b0-40ae-47af-985f-7141aca58700" ID="799">
+  <Object name="Ingestible" recordType="ALCH" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>
