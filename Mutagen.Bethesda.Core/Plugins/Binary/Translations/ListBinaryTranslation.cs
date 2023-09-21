@@ -1079,6 +1079,37 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             overflow);  
     }
 
+    private void WriteCounter(
+        MutagenWriter writer,
+        int count, 
+        byte counterLength,
+        RecordType counterType)
+    {
+        using (HeaderExport.Subrecord(writer, counterType))
+        {
+            int maxCount;
+            // Fall back to 0 if overflow
+            switch (counterLength)
+            {
+                case 1:
+                    maxCount = byte.MaxValue;
+                    break;
+                case 2:
+                    maxCount = ushort.MaxValue;
+                    break;
+                default:
+                    maxCount = int.MaxValue;
+                    break;
+            }
+
+            if (count > maxCount)
+            {
+                count = 0;
+            }
+            writer.Write(count, counterLength); 
+        } 
+    }
+
     public void WriteWithCounter( 
         MutagenWriter writer, 
         IReadOnlyList<T>? items, 
@@ -1092,20 +1123,14 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         { 
             if (items == null) 
             { 
-                if (writeCounterIfNull) 
-                { 
-                    using (HeaderExport.Subrecord(writer, counterType)) 
-                    { 
-                        writer.Write(0, counterLength); 
-                    } 
+                if (writeCounterIfNull)
+                {
+                    WriteCounter(writer, 0, counterLength: counterLength, counterType);
                 } 
                 return; 
             } 
 
-            using (HeaderExport.Subrecord(writer, counterType)) 
-            { 
-                writer.Write(items.Count, counterLength); 
-            } 
+            WriteCounter(writer, items.Count, counterLength: counterLength, counterType);
         } 
         catch (OverflowException overflow)
         {
@@ -1157,18 +1182,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             { 
                 if (writeCounterIfNull) 
                 { 
-                    using (HeaderExport.Subrecord(writer, counterType)) 
-                    { 
-                        writer.Write(0, counterLength); 
-                    } 
+                    WriteCounter(writer, 0, counterLength: counterLength, counterType);
                 } 
                 return; 
             } 
             
-            using (HeaderExport.Subrecord(writer, counterType)) 
-            { 
-                writer.Write(items.Count, counterLength); 
-            } 
+            WriteCounter(writer, items.Count, counterLength: counterLength, counterType);
         } 
         catch (OverflowException overflow)
         {
@@ -1232,17 +1251,11 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             { 
                 if (writeCounterIfNull) 
                 { 
-                    using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord)) 
-                    { 
-                        writer.Write(0, counterLength); 
-                    } 
+                    WriteCounter(writer, 0, counterLength: counterLength, counterType);
                 } 
                 return; 
             } 
-            using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord)) 
-            { 
-                writer.Write(items.Count, counterLength); 
-            } 
+            WriteCounter(writer, items.Count, counterLength: counterLength, counterType);
         } 
         catch (OverflowException overflow)
         {
