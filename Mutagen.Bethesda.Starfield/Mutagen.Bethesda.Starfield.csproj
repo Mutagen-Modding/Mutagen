@@ -165,6 +165,9 @@
     <Compile Include="Records\Major Records\BodyData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DefaultObject.cs">
+      <DependentUpon>DefaultObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>

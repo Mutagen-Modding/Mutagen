@@ -2,6 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DefaultObject" recordType="DFOB" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Enum name="Flags" enumName="DefaultObject.Flag" byteLength="8" recordType="XALG" />
+      <FormLink name="Object" refName="StarfieldMajorRecord" recordType="DATA" />
     </Fields>
   </Object>
 </Loqui>

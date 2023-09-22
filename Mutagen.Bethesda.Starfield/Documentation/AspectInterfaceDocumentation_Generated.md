@@ -31,6 +31,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StaticCollection
 ### IObjectBounded
 - AudioOcclusionPrimitive
+- BendableSpline
 - StaticCollection
 - TextureSet
 ### IPositionRotation
@@ -44,6 +45,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### AnimatedObject
 - IModeled
 ### AudioOcclusionPrimitive
+- IObjectBounded
+### BendableSpline
 - IObjectBounded
 ### BipedObjectData
 - INamed

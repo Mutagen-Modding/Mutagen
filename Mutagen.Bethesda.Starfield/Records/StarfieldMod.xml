@@ -27,6 +27,10 @@
       <Group name="LandscapeTexture" refName="LandscapeTexture" />
       <Group name="AnimatedObject" refName="AnimatedObject" />
       <Group name="StaticCollection" refName="StaticCollection" />
+      <Group name="AimModel" refName="AimModel" />
+      <Group name="AttractionRule" refName="AttractionRule" />
+      <Group name="BendableSpline" refName="BendableSpline" />
+      <Group name="DefaultObject" refName="DefaultObject" />
     </Fields>
   </Object>
 </Loqui>

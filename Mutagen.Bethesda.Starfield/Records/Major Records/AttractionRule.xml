@@ -2,6 +2,16 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AttractionRule" recordType="AORU" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Data recordType="AOR2">
+        <Fields>
+          <Float name="Radius" />
+          <Float name="MinDelay" />
+          <Float name="MaxDelay" />
+          <Bool name="RequiresLineOfSight" byteLength="1" />
+          <Bool name="IsCombatTarget" byteLength="1" />
+          <UInt16 name="Unused" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

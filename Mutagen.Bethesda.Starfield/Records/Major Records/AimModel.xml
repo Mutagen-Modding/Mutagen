@@ -2,6 +2,26 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AimModel" recordType="AMDL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <Data recordType="ANAM">
+        <Fields>
+          <Float name="ConeOfFireMinAngle" />
+          <Float name="ConeOfFireMaxAngle" />
+          <Float name="ConeOfFireIncreasePerShot" />
+          <Float name="ConeOfFireIncreasePerSec" />
+          <UInt32 name="ConeOfFireDecreaseDelaySeconds" />
+          <Float name="ConeOfFireSneakMult" />
+          <Float name="RecoilDiminishSpringForce" />
+          <Float name="RecoilDiminishSightsMult" />
+          <Float name="RecoilMinPerShot" />
+          <Float name="RecoilMaxPerShot" />
+          <Float name="RecoilHipMult" />
+          <UInt32 name="RunawayRecoilShots" />
+          <Float name="RecoilArc" />
+          <Float name="RecoilArcRotate" />
+          <Float name="ConeOfFireIronSightsMult" />
+          <Float name="BaseStability" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

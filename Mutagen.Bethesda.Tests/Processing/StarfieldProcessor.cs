@@ -22,6 +22,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
+        AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -40,6 +41,17 @@ public class StarfieldProcessor : Processor
         {
             int offset = 0;
             ProcessZeroFloats(frame, fileOffset, ref offset);
+        }
+    }
+
+    private void ProcessBendableSplines(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.DNAM, out var frame))
+        {
+            int offset = 8;
+            ProcessColorFloat(frame, fileOffset, ref offset, alpha: false);
         }
     }
 

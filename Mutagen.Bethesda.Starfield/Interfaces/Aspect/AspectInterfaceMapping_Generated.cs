@@ -110,6 +110,11 @@ namespace Mutagen.Bethesda.Starfield
                 TextureSet_Registration.Instance,
             });
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
+            dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                BendableSpline_Registration.Instance,
+            });
+            dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
             dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 StaticPlacement_Registration.Instance,
