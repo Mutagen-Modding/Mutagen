@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IBook :
         IBookGetter,
         ILoquiObjectSetter<IBookInternal>,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        IStaticTarget
     {
     }
 
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IBookGetter>,
-        IMapsToGetter<IBookGetter>
+        IMapsToGetter<IBookGetter>,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Book_Registration.Instance;
 

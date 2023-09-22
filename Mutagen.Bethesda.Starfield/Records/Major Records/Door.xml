@@ -3,5 +3,6 @@
   <Object name="Door" recordType="DOOR" objType="Record" baseClass="StarfieldMajorRecord" GUID="5f3851ed-951d-49bd-9f92-7914143308b2" ID="776">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

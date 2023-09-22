@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActivator :
         IActivatorGetter,
         ILoquiObjectSetter<IActivatorInternal>,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        IStaticTarget
     {
     }
 
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IActivatorGetter>,
-        IMapsToGetter<IActivatorGetter>
+        IMapsToGetter<IActivatorGetter>,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Activator_Registration.Instance;
 

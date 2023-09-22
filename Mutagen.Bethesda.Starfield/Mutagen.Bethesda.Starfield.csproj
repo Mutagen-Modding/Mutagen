@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="Interfaces\Aspect\IObjectBounded.cs" />
     <Compile Include="Interfaces\Aspect\IPositionRotation.cs" />
+    <Compile Include="Interfaces\Link\IStaticTarget_Generated.cs" />
     <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Records\Common Subrecords\AComponent.cs">
       <DependentUpon>Component.xml</DependentUpon>

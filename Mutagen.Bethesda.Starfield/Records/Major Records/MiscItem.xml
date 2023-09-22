@@ -3,5 +3,6 @@
   <Object name="MiscItem" recordType="MISC" objType="Record" baseClass="StarfieldMajorRecord" GUID="604d4f56-da75-46e0-8e65-23364b6406e8" ID="820">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

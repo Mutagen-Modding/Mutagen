@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IStatic :
         ILoquiObjectSetter<IStaticInternal>,
         IStarfieldMajorRecordInternal,
-        IStaticGetter
+        IStaticGetter,
+        IStaticTarget
     {
     }
 
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IStaticGetter>,
-        IMapsToGetter<IStaticGetter>
+        IMapsToGetter<IStaticGetter>,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;
 

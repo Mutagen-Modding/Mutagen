@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFurniture :
         IFurnitureGetter,
         ILoquiObjectSetter<IFurnitureInternal>,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        IStaticTarget
     {
     }
 
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IFurnitureGetter>,
-        IMapsToGetter<IFurnitureGetter>
+        IMapsToGetter<IFurnitureGetter>,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Furniture_Registration.Instance;
 

@@ -3,5 +3,6 @@
   <Object name="Ingestible" recordType="ALCH" objType="Record" baseClass="StarfieldMajorRecord" GUID="1c3ec2b0-40ae-47af-985f-7141aca58700" ID="799">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

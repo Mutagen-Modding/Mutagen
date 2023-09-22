@@ -3,5 +3,6 @@
   <Object name="Book" recordType="BOOK" objType="Record" baseClass="StarfieldMajorRecord" GUID="697b0fcd-43f7-407c-b283-c6fe52977a4a" ID="757">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>
