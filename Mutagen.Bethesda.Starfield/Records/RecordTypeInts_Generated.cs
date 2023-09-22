@@ -250,6 +250,7 @@ public partial class RecordTypeInts
     public const int SFPT = 0x54504653;
     public const int SFTR = 0x52544653;
     public const int SNAM = 0x4D414E53;
+    public const int SNTP = 0x50544E53;
     public const int SOUN = 0x4E554F53;
     public const int SPCH = 0x48435053;
     public const int SPED = 0x44455053;

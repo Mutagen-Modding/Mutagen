@@ -251,8 +251,9 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             PlanetModelComponentXMPM_Registration.Instance,
             PlanetModelComponentXMPMSubItem_Registration.Instance,
             HoudiniDataComponent_Registration.Instance,
-            EffectSequenceComponent_Registration.Instance
             EffectSequenceComponent_Registration.Instance,
+            StaticPart_Registration.Instance,
+            StaticPlacement_Registration.Instance
         );
     }
 }

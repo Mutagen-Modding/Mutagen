@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 AnimatedObject_Registration.Instance,
                 HeadPart_Registration.Instance,
+                StaticCollection_Registration.Instance,
                 Weapon_Registration.Instance,
             });
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
@@ -51,6 +52,7 @@ namespace Mutagen.Bethesda.Starfield
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
+                StaticCollection_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -68,6 +70,7 @@ namespace Mutagen.Bethesda.Starfield
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
+                StaticCollection_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -81,6 +84,7 @@ namespace Mutagen.Bethesda.Starfield
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
                 Race_Registration.Instance,
+                StaticCollection_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -94,16 +98,19 @@ namespace Mutagen.Bethesda.Starfield
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
                 Race_Registration.Instance,
+                StaticCollection_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AOPFRecord_Registration.Instance,
+                StaticCollection_Registration.Instance,
                 TextureSet_Registration.Instance,
             });
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                StaticPlacement_Registration.Instance,
                 Transform_Registration.Instance,
             });
             dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };

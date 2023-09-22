@@ -22,6 +22,7 @@
       <Group name="Outfit" refName="Outfit" />
       <Group name="LandscapeTexture" refName="LandscapeTexture" />
       <Group name="AnimatedObject" refName="AnimatedObject" />
+      <Group name="StaticCollection" refName="StaticCollection" />
     </Fields>
   </Object>
 </Loqui>

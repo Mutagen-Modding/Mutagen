@@ -80,6 +80,7 @@ namespace Mutagen.Bethesda.Starfield
             _Outfit_Object = new StarfieldGroup<Outfit>(this);
             _LandscapeTexture_Object = new StarfieldGroup<LandscapeTexture>(this);
             _AnimatedObject_Object = new StarfieldGroup<AnimatedObject>(this);
+            _StaticCollection_Object = new StarfieldGroup<StaticCollection>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -225,6 +226,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAnimatedObjectGetter> IStarfieldModGetter.AnimatedObject => _AnimatedObject_Object;
         #endregion
+        #region StaticCollection
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<StaticCollection> _StaticCollection_Object;
+        public StarfieldGroup<StaticCollection> StaticCollection => _StaticCollection_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IStaticCollectionGetter> IStarfieldModGetter.StaticCollection => _StaticCollection_Object;
+        #endregion
 
         #region To String
 
@@ -284,6 +292,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Outfit = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LandscapeTexture = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AnimatedObject = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.StaticCollection = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -306,7 +315,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Planets,
                 TItem Outfit,
                 TItem LandscapeTexture,
-                TItem AnimatedObject)
+                TItem AnimatedObject,
+                TItem StaticCollection)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -328,6 +338,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Outfit = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Outfit, new StarfieldGroup.Mask<TItem>(Outfit));
                 this.LandscapeTexture = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LandscapeTexture, new StarfieldGroup.Mask<TItem>(LandscapeTexture));
                 this.AnimatedObject = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObject, new StarfieldGroup.Mask<TItem>(AnimatedObject));
+                this.StaticCollection = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollection, new StarfieldGroup.Mask<TItem>(StaticCollection));
             }
 
             #pragma warning disable CS8618
@@ -359,6 +370,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Outfit { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LandscapeTexture { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObject { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollection { get; set; }
             #endregion
 
             #region Equals
@@ -391,6 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Outfit, rhs.Outfit)) return false;
                 if (!object.Equals(this.LandscapeTexture, rhs.LandscapeTexture)) return false;
                 if (!object.Equals(this.AnimatedObject, rhs.AnimatedObject)) return false;
+                if (!object.Equals(this.StaticCollection, rhs.StaticCollection)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -416,6 +429,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Outfit);
                 hash.Add(this.LandscapeTexture);
                 hash.Add(this.AnimatedObject);
+                hash.Add(this.StaticCollection);
                 return hash.ToHashCode();
             }
 
@@ -524,6 +538,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.AnimatedObject.Overall)) return false;
                     if (this.AnimatedObject.Specific != null && !this.AnimatedObject.Specific.All(eval)) return false;
                 }
+                if (StaticCollection != null)
+                {
+                    if (!eval(this.StaticCollection.Overall)) return false;
+                    if (this.StaticCollection.Specific != null && !this.StaticCollection.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -631,6 +650,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AnimatedObject.Overall)) return true;
                     if (this.AnimatedObject.Specific != null && this.AnimatedObject.Specific.Any(eval)) return true;
                 }
+                if (StaticCollection != null)
+                {
+                    if (eval(this.StaticCollection.Overall)) return true;
+                    if (this.StaticCollection.Specific != null && this.StaticCollection.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -665,6 +689,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Outfit = this.Outfit == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Outfit.Overall), this.Outfit.Specific?.Translate(eval));
                 obj.LandscapeTexture = this.LandscapeTexture == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LandscapeTexture.Overall), this.LandscapeTexture.Specific?.Translate(eval));
                 obj.AnimatedObject = this.AnimatedObject == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObject.Overall), this.AnimatedObject.Specific?.Translate(eval));
+                obj.StaticCollection = this.StaticCollection == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollection.Overall), this.StaticCollection.Specific?.Translate(eval));
             }
             #endregion
 
@@ -763,6 +788,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AnimatedObject?.Print(sb);
                     }
+                    if (printMask?.StaticCollection?.Overall ?? true)
+                    {
+                        StaticCollection?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -807,6 +836,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>? Outfit;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTexture;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObject;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollection;
             #endregion
 
             #region IErrorMask
@@ -855,6 +885,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LandscapeTexture;
                     case StarfieldMod_FieldIndex.AnimatedObject:
                         return AnimatedObject;
+                    case StarfieldMod_FieldIndex.StaticCollection:
+                        return StaticCollection;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -924,6 +956,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.AnimatedObject:
                         this.AnimatedObject = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.StaticCollection:
+                        this.StaticCollection = new MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -995,6 +1030,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AnimatedObject:
                         this.AnimatedObject = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.StaticCollection:
+                        this.StaticCollection = (MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1023,6 +1061,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Outfit != null) return true;
                 if (LandscapeTexture != null) return true;
                 if (AnimatedObject != null) return true;
+                if (StaticCollection != null) return true;
                 return false;
             }
             #endregion
@@ -1068,6 +1107,7 @@ namespace Mutagen.Bethesda.Starfield
                 Outfit?.Print(sb);
                 LandscapeTexture?.Print(sb);
                 AnimatedObject?.Print(sb);
+                StaticCollection?.Print(sb);
             }
             #endregion
 
@@ -1096,6 +1136,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Outfit = this.Outfit.Combine(rhs.Outfit, (l, r) => l.Combine(r));
                 ret.LandscapeTexture = this.LandscapeTexture.Combine(rhs.LandscapeTexture, (l, r) => l.Combine(r));
                 ret.AnimatedObject = this.AnimatedObject.Combine(rhs.AnimatedObject, (l, r) => l.Combine(r));
+                ret.StaticCollection = this.StaticCollection.Combine(rhs.StaticCollection, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1139,6 +1180,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Outfit.TranslationMask>? Outfit;
             public StarfieldGroup.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTexture;
             public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObject;
+            public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollection;
             #endregion
 
             #region Ctors
@@ -1183,6 +1225,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Outfit != null ? Outfit.OnOverall : DefaultOn, Outfit?.GetCrystal()));
                 ret.Add((LandscapeTexture != null ? LandscapeTexture.OnOverall : DefaultOn, LandscapeTexture?.GetCrystal()));
                 ret.Add((AnimatedObject != null ? AnimatedObject.OnOverall : DefaultOn, AnimatedObject?.GetCrystal()));
+                ret.Add((StaticCollection != null ? StaticCollection.OnOverall : DefaultOn, StaticCollection?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1245,6 +1288,7 @@ namespace Mutagen.Bethesda.Starfield
             _Outfit_Object = new StarfieldGroup<Outfit>(this);
             _LandscapeTexture_Object = new StarfieldGroup<LandscapeTexture>(this);
             _AnimatedObject_Object = new StarfieldGroup<AnimatedObject>(this);
+            _StaticCollection_Object = new StarfieldGroup<StaticCollection>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1327,6 +1371,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.AnimatedObject.RecordCache.Set(rhsMod.AnimatedObject.RecordCache.Items);
             }
+            if (mask?.StaticCollection ?? true)
+            {
+                this.StaticCollection.RecordCache.Set(rhsMod.StaticCollection.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1356,6 +1404,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Outfit.RecordCache.Count > 0 ? 1 : default(uint);
             count += LandscapeTexture.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimatedObject.RecordCache.Count > 0 ? 1 : default(uint);
+            count += StaticCollection.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1631,6 +1680,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Outfit> Outfit { get; }
         new StarfieldGroup<LandscapeTexture> LandscapeTexture { get; }
         new StarfieldGroup<AnimatedObject> AnimatedObject { get; }
+        new StarfieldGroup<StaticCollection> StaticCollection { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -1670,6 +1720,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IOutfitGetter> Outfit { get; }
         IStarfieldGroupGetter<ILandscapeTextureGetter> LandscapeTexture { get; }
         IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObject { get; }
+        IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollection { get; }
 
     }
 
@@ -2260,6 +2311,7 @@ namespace Mutagen.Bethesda.Starfield
         Outfit = 17,
         LandscapeTexture = 18,
         AnimatedObject = 19,
+        StaticCollection = 20,
     }
     #endregion
 
@@ -2277,9 +2329,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2367,6 +2419,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Outfit.Clear();
             item.LandscapeTexture.Clear();
             item.AnimatedObject.Clear();
+            item.StaticCollection.Clear();
         }
         
         #region Mutagen
@@ -2386,6 +2439,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Outfit.RemapLinks(mapping);
             obj.LandscapeTexture.RemapLinks(mapping);
             obj.AnimatedObject.RemapLinks(mapping);
+            obj.StaticCollection.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -2439,6 +2493,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Outfit.Remove(keys);
             obj.LandscapeTexture.Remove(keys);
             obj.AnimatedObject.Remove(keys);
+            obj.StaticCollection.Remove(keys);
         }
         
         public void Remove(
@@ -2630,6 +2685,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    obj.StaticCollection.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -2747,6 +2810,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.StaticCollection is IAssetLinkContainer StaticCollectionlinkCont)
+            {
+                foreach (var item in StaticCollectionlinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2771,6 +2841,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LandscapeTexture.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.AnimatedObject.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.StaticCollection.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2835,6 +2906,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Outfit = MaskItemExt.Factory(item.Outfit.GetEqualsMask(rhs.Outfit, include), include);
             ret.LandscapeTexture = MaskItemExt.Factory(item.LandscapeTexture.GetEqualsMask(rhs.LandscapeTexture, include), include);
             ret.AnimatedObject = MaskItemExt.Factory(item.AnimatedObject.GetEqualsMask(rhs.AnimatedObject, include), include);
+            ret.StaticCollection = MaskItemExt.Factory(item.StaticCollection.GetEqualsMask(rhs.StaticCollection, include), include);
         }
         
         public string Print(
@@ -2958,6 +3030,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.AnimatedObject?.Overall ?? true)
             {
                 item.AnimatedObject?.Print(sb, "AnimatedObject");
+            }
+            if (printMask?.StaticCollection?.Overall ?? true)
+            {
+                item.StaticCollection?.Print(sb, "StaticCollection");
             }
         }
         
@@ -3128,6 +3204,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAnimatedObjectEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.StaticCollection) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.StaticCollection, rhs.StaticCollection, out var lhsStaticCollection, out var rhsStaticCollection, out var isStaticCollectionEqual))
+                {
+                    if (!object.Equals(lhsStaticCollection, rhsStaticCollection)) return false;
+                }
+                else if (!isStaticCollectionEqual) return false;
+            }
             return true;
         }
         
@@ -3154,6 +3238,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Outfit);
             hash.Add(item.LandscapeTexture);
             hash.Add(item.AnimatedObject);
+            hash.Add(item.StaticCollection);
             return hash.ToHashCode();
         }
         
@@ -3267,6 +3352,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
                     return obj.AnimatedObject;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    return obj.StaticCollection;
                 default:
                     return null;
             }
@@ -3292,7 +3382,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[19];
+            Stream[] outputStreams = new Stream[20];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -3313,6 +3403,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Outfit, 16, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LandscapeTexture, 17, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AnimatedObject, 18, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StaticCollection, 19, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -3422,6 +3513,10 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            foreach (var item in obj.StaticCollection.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -3500,6 +3595,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.AnimatedObject.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StaticCollection.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3709,6 +3808,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    foreach (var item in obj.StaticCollection.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
                     {
@@ -3901,6 +4009,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.AnimatedObject,
                 groupGetter: (m) => m.AnimatedObject))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, StaticCollection, IStaticCollectionGetter>(
+                srcGroup: obj.StaticCollection,
+                type: typeof(IStaticCollectionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.StaticCollection,
+                groupGetter: (m) => m.StaticCollection))
             {
                 yield return item;
             }
@@ -4201,6 +4318,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "StaticCollection":
+                case "IStaticCollectionGetter":
+                case "IStaticCollection":
+                case "IStaticCollectionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, StaticCollection, IStaticCollectionGetter>(
+                        srcGroup: obj.StaticCollection,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.StaticCollection,
+                        groupGetter: (m) => m.StaticCollection))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IStarfieldModGetter, IStarfieldMod, IStarfieldModGetter>(
                         GameCategory.Starfield,
@@ -4291,6 +4422,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.AnimatedObject is IAssetLinkContainerGetter AnimatedObjectlinkCont)
                 {
                     foreach (var item in AnimatedObjectlinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.StaticCollection is IAssetLinkContainerGetter StaticCollectionlinkCont)
+                {
+                    foreach (var item in StaticCollectionlinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -4714,6 +4852,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.StaticCollection) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.StaticCollection);
+                try
+                {
+                    item.StaticCollection.DeepCopyIn(
+                        rhs: rhs.StaticCollection,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.StaticCollection));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -4823,6 +4981,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Outfit;
         public bool LandscapeTexture;
         public bool AnimatedObject;
+        public bool StaticCollection;
         public GroupMask()
         {
         }
@@ -4847,6 +5006,7 @@ namespace Mutagen.Bethesda.Starfield
             Outfit = defaultValue;
             LandscapeTexture = defaultValue;
             AnimatedObject = defaultValue;
+            StaticCollection = defaultValue;
         }
     }
 
@@ -5083,6 +5243,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AnimatedObjectItem).BinaryWriteTranslator).Write<IAnimatedObjectGetter>(
                         item: AnimatedObjectItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.StaticCollection ?? true)
+            {
+                var StaticCollectionItem = item.StaticCollection;
+                if (StaticCollectionItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)StaticCollectionItem).BinaryWriteTranslator).Write<IStaticCollectionGetter>(
+                        item: StaticCollectionItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -5413,6 +5584,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.AnimatedObject;
                 }
+                case RecordTypeInts.SCOL:
+                {
+                    if (importMask?.StaticCollection ?? true)
+                    {
+                        item.StaticCollection.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.StaticCollection;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -5678,6 +5863,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAnimatedObjectGetter>? _AnimatedObject => _AnimatedObjectLocations != null ? StarfieldGroupBinaryOverlay<IAnimatedObjectGetter>.StarfieldGroupFactory(_stream, _AnimatedObjectLocations, _package) : default;
         public IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObject => _AnimatedObject ?? new StarfieldGroup<AnimatedObject>(this);
         #endregion
+        #region StaticCollection
+        private List<RangeInt64>? _StaticCollectionLocations;
+        private IStarfieldGroupGetter<IStaticCollectionGetter>? _StaticCollection => _StaticCollectionLocations != null ? StarfieldGroupBinaryOverlay<IStaticCollectionGetter>.StarfieldGroupFactory(_stream, _StaticCollectionLocations, _package) : default;
+        public IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollection => _StaticCollection ?? new StarfieldGroup<StaticCollection>(this);
+        #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -5879,6 +6069,12 @@ namespace Mutagen.Bethesda.Starfield
                     _AnimatedObjectLocations ??= new();
                     _AnimatedObjectLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AnimatedObject;
+                }
+                case RecordTypeInts.SCOL:
+                {
+                    _StaticCollectionLocations ??= new();
+                    _StaticCollectionLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.StaticCollection;
                 }
                 default:
                     return default(int?);

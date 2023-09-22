@@ -252,6 +252,7 @@ public partial class RecordTypes
     public static readonly RecordType SFPT = new(0x54504653);
     public static readonly RecordType SFTR = new(0x52544653);
     public static readonly RecordType SNAM = new(0x4D414E53);
+    public static readonly RecordType SNTP = new(0x50544E53);
     public static readonly RecordType SOUN = new(0x4E554F53);
     public static readonly RecordType SPCH = new(0x48435053);
     public static readonly RecordType SPED = new(0x44455053);

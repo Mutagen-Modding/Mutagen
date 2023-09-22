@@ -10,6 +10,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IModeled
 - AnimatedObject
 - HeadPart
+- StaticCollection
 - Weapon
 ### INamed
 - Activity
@@ -25,10 +26,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Planet
 - ProgressionEvaluatorArgument
 - Race
+- StaticCollection
 ### IObjectBounded
 - AOPFRecord
+- StaticCollection
 - TextureSet
 ### IPositionRotation
+- StaticPlacement
 - Transform
 ## Concrete Classes to Interfaces
 ### Activity
@@ -64,6 +68,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Race
 - IKeyworded
 - INamed
+### StaticCollection
+- IModeled
+- INamed
+- IObjectBounded
+### StaticPlacement
+- IPositionRotation
 ### TextureSet
 - IObjectBounded
 ### Transform
