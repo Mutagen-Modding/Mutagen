@@ -32,6 +32,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IObjectBounded
 - AudioOcclusionPrimitive
 - BendableSpline
+- LegendaryItem
 - StaticCollection
 - TextureSet
 ### IPositionRotation
@@ -68,6 +69,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### KeywordFormComponent
 - IKeyworded
+### LegendaryItem
+- IObjectBounded
 ### MorphGroup
 - INamed
 ### Planet

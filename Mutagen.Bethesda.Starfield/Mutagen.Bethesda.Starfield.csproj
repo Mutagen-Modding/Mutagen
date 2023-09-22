@@ -222,6 +222,9 @@
     <Compile Include="Records\Major Records\Keyword_Generated.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LegendaryItem.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
     </Compile>
@@ -974,6 +977,12 @@
       </Compile>
       <Compile Include="Records\Major Records\StaticPlacement_Generated.cs">
           <DependentUpon>StaticCollection.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\LegendaryMod_Generated.cs">
+          <DependentUpon>LegendaryItem.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\LegendaryFilter_Generated.cs">
+          <DependentUpon>LegendaryItem.xml</DependentUpon>
       </Compile>
   </ItemGroup>
 </Project>

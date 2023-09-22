@@ -2,6 +2,28 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LegendaryItem" recordType="LGDI" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <ByteArray name="DATA" recordType="DATA" unknown="true" />
+      <FormLink name="ApplicableItemList" refName="LeveledItem" recordType="ANAM" />
+      <FormLink name="LegendaryTemplateList" refName="LegendaryItem" recordType="ENAM" />
+      <RefList name="LegendaryMods" refName="LegendaryMod" recordType="BNAM" />
+      <RefList name="IncludeFilters" refName="LegendaryFilter" recordType="CNAM" />
+      <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
+    </Fields>
+  </Object>
+  <Object name="LegendaryMod" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="LegendaryItem.StarSlot" />
+      <FormLink name="LegendaryModifier" refName="ObjectModification" />
+    </Fields>
+  </Object>
+  <Object name="LegendaryFilter" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="LegendaryItem.StarSlot" />
+      <FormLink name="ReferencedModifier" refName="Keyword" />
+      <FormLink name="Keyword" refName="Keyword" />
     </Fields>
   </Object>
 </Loqui>

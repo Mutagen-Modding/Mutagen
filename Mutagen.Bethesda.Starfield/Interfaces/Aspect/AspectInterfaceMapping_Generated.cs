@@ -113,6 +113,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 BendableSpline_Registration.Instance,
+                LegendaryItem_Registration.Instance,
             });
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
             dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
