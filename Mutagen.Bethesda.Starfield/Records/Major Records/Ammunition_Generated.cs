@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAmmunition :
         IAmmunitionGetter,
         ILoquiObjectSetter<IAmmunitionInternal>,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        IStaticTarget
     {
     }
 
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IAmmunitionGetter>,
-        IMapsToGetter<IAmmunitionGetter>
+        IMapsToGetter<IAmmunitionGetter>,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Ammunition_Registration.Instance;
 

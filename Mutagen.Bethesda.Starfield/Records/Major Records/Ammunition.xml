@@ -3,5 +3,6 @@
   <Object name="Ammunition" recordType="AMMO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

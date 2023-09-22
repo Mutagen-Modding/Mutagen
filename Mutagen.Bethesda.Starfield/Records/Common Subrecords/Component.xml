@@ -105,4 +105,9 @@
       <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
     </Fields>
   </Object>
+  <Object name="EffectSequenceComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>

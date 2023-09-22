@@ -3,5 +3,6 @@
   <Object name="MiscItem" recordType="MISC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

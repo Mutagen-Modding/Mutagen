@@ -15,6 +15,7 @@ public partial class AComponent
         BGSAnimationGraph_Component,
         BGSAttachParentArray_Component,
         BGSActivityTracker,
+        BGSEffectSequenceComponent,
         BGSScannable,
         BGSKeywordForm_Component,
         BGSObjectWindowFilter_Component,
@@ -52,7 +53,9 @@ public partial class AComponent
             case ComponentType.BGSAttachParentArray_Component:
                 return AttachParentArrayComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSActivityTracker:
-                return AttachParentArrayComponent.CreateFromBinary(frame, translationParams);
+                return ActivityTrackerComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSEffectSequenceComponent:
+                return EffectSequenceComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSScannable:
                 return ScannableComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSKeywordForm_Component:
@@ -119,6 +122,7 @@ partial class AComponentBinaryWriteTranslation
             IAnimationGraphComponentGetter _ => AComponent.ComponentType.BGSAnimationGraph_Component,
             IAttachParentArrayComponentGetter _ => AComponent.ComponentType.BGSAttachParentArray_Component,
             IActivityTrackerComponentGetter _ => AComponent.ComponentType.BGSActivityTracker,
+            IEffectSequenceComponentGetter _ => AComponent.ComponentType.BGSEffectSequenceComponent,
             IScannableComponentGetter _ => AComponent.ComponentType.BGSScannable,
             IKeywordFormComponentGetter _ => AComponent.ComponentType.BGSKeywordForm_Component,
             IObjectWindowFilterComponentGetter _ => AComponent.ComponentType.BGSObjectWindowFilter_Component,
@@ -155,6 +159,8 @@ partial class AComponentBinaryOverlay
                 return AttachParentArrayComponentBinaryOverlay.AttachParentArrayComponentFactory(stream, package);
             case AComponent.ComponentType.BGSActivityTracker:
                 return ActivityTrackerComponentBinaryOverlay.ActivityTrackerComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSEffectSequenceComponent:
+                return EffectSequenceComponentBinaryOverlay.EffectSequenceComponentFactory(stream, package);
             case AComponent.ComponentType.BGSScannable:
                 return ScannableComponentBinaryOverlay.ScannableComponentFactory(stream, package);
             case AComponent.ComponentType.BGSKeywordForm_Component:

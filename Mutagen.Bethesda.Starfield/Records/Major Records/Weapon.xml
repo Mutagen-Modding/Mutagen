@@ -4,5 +4,6 @@
     <Fields>
       <RefDirect name="Model" refName="Model" />
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

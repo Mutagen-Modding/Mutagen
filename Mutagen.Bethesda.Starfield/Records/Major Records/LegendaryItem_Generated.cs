@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +55,113 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds? _ObjectBounds;
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        public ObjectBounds? ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? ILegendaryItemGetter.ObjectBounds => this.ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILegendaryItemGetter.ODTY => this.ODTY;
+        #endregion
+        #region FLLD
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FLLD;
+        public MemorySlice<Byte>? FLLD
+        {
+            get => this._FLLD;
+            set => this._FLLD = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILegendaryItemGetter.FLLD => this.FLLD;
+        #endregion
+        #region DATA
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _DATA;
+        public MemorySlice<Byte>? DATA
+        {
+            get => this._DATA;
+            set => this._DATA = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILegendaryItemGetter.DATA => this.DATA;
+        #endregion
+        #region ApplicableItemList
+        private readonly IFormLinkNullable<ILeveledItemGetter> _ApplicableItemList = new FormLinkNullable<ILeveledItemGetter>();
+        public IFormLinkNullable<ILeveledItemGetter> ApplicableItemList
+        {
+            get => _ApplicableItemList;
+            set => _ApplicableItemList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILeveledItemGetter> ILegendaryItemGetter.ApplicableItemList => this.ApplicableItemList;
+        #endregion
+        #region LegendaryTemplateList
+        private readonly IFormLinkNullable<ILegendaryItemGetter> _LegendaryTemplateList = new FormLinkNullable<ILegendaryItemGetter>();
+        public IFormLinkNullable<ILegendaryItemGetter> LegendaryTemplateList
+        {
+            get => _LegendaryTemplateList;
+            set => _LegendaryTemplateList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILegendaryItemGetter> ILegendaryItemGetter.LegendaryTemplateList => this.LegendaryTemplateList;
+        #endregion
+        #region LegendaryMods
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LegendaryMod>? _LegendaryMods;
+        public ExtendedList<LegendaryMod>? LegendaryMods
+        {
+            get => this._LegendaryMods;
+            set => this._LegendaryMods = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILegendaryModGetter>? ILegendaryItemGetter.LegendaryMods => _LegendaryMods;
+        #endregion
+
+        #endregion
+        #region IncludeFilters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LegendaryFilter>? _IncludeFilters;
+        public ExtendedList<LegendaryFilter>? IncludeFilters
+        {
+            get => this._IncludeFilters;
+            set => this._IncludeFilters = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILegendaryFilterGetter>? ILegendaryItemGetter.IncludeFilters => _IncludeFilters;
+        #endregion
+
+        #endregion
+        #region ExcludeFilters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LegendaryFilter>? _ExcludeFilters;
+        public ExtendedList<LegendaryFilter>? ExcludeFilters
+        {
+            get => this._ExcludeFilters;
+            set => this._ExcludeFilters = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILegendaryFilterGetter>? ILegendaryItemGetter.ExcludeFilters => _ExcludeFilters;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +187,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.FLLD = initialValue;
+                this.DATA = initialValue;
+                this.ApplicableItemList = initialValue;
+                this.LegendaryTemplateList = initialValue;
+                this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>());
+                this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
+                this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -87,7 +205,16 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem FLLD,
+                TItem DATA,
+                TItem ApplicableItemList,
+                TItem LegendaryTemplateList,
+                TItem LegendaryMods,
+                TItem IncludeFilters,
+                TItem ExcludeFilters)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +224,15 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.FLLD = FLLD;
+                this.DATA = DATA;
+                this.ApplicableItemList = ApplicableItemList;
+                this.LegendaryTemplateList = LegendaryTemplateList;
+                this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(LegendaryMods, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>());
+                this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(IncludeFilters, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
+                this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(ExcludeFilters, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -105,6 +241,18 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public TItem FLLD;
+            public TItem DATA;
+            public TItem ApplicableItemList;
+            public TItem LegendaryTemplateList;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>? LegendaryMods;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>? IncludeFilters;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>? ExcludeFilters;
             #endregion
 
             #region Equals
@@ -118,11 +266,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
+                if (!object.Equals(this.DATA, rhs.DATA)) return false;
+                if (!object.Equals(this.ApplicableItemList, rhs.ApplicableItemList)) return false;
+                if (!object.Equals(this.LegendaryTemplateList, rhs.LegendaryTemplateList)) return false;
+                if (!object.Equals(this.LegendaryMods, rhs.LegendaryMods)) return false;
+                if (!object.Equals(this.IncludeFilters, rhs.IncludeFilters)) return false;
+                if (!object.Equals(this.ExcludeFilters, rhs.ExcludeFilters)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.FLLD);
+                hash.Add(this.DATA);
+                hash.Add(this.ApplicableItemList);
+                hash.Add(this.LegendaryTemplateList);
+                hash.Add(this.LegendaryMods);
+                hash.Add(this.IncludeFilters);
+                hash.Add(this.ExcludeFilters);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +299,52 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (!eval(this.FLLD)) return false;
+                if (!eval(this.DATA)) return false;
+                if (!eval(this.ApplicableItemList)) return false;
+                if (!eval(this.LegendaryTemplateList)) return false;
+                if (this.LegendaryMods != null)
+                {
+                    if (!eval(this.LegendaryMods.Overall)) return false;
+                    if (this.LegendaryMods.Specific != null)
+                    {
+                        foreach (var item in this.LegendaryMods.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.IncludeFilters != null)
+                {
+                    if (!eval(this.IncludeFilters.Overall)) return false;
+                    if (this.IncludeFilters.Specific != null)
+                    {
+                        foreach (var item in this.IncludeFilters.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ExcludeFilters != null)
+                {
+                    if (!eval(this.ExcludeFilters.Overall)) return false;
+                    if (this.ExcludeFilters.Specific != null)
+                    {
+                        foreach (var item in this.ExcludeFilters.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +353,52 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (eval(this.FLLD)) return true;
+                if (eval(this.DATA)) return true;
+                if (eval(this.ApplicableItemList)) return true;
+                if (eval(this.LegendaryTemplateList)) return true;
+                if (this.LegendaryMods != null)
+                {
+                    if (eval(this.LegendaryMods.Overall)) return true;
+                    if (this.LegendaryMods.Specific != null)
+                    {
+                        foreach (var item in this.LegendaryMods.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.IncludeFilters != null)
+                {
+                    if (eval(this.IncludeFilters.Overall)) return true;
+                    if (this.IncludeFilters.Specific != null)
+                    {
+                        foreach (var item in this.IncludeFilters.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ExcludeFilters != null)
+                {
+                    if (eval(this.ExcludeFilters.Overall)) return true;
+                    if (this.ExcludeFilters.Specific != null)
+                    {
+                        foreach (var item in this.ExcludeFilters.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +414,57 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.FLLD = eval(this.FLLD);
+                obj.DATA = eval(this.DATA);
+                obj.ApplicableItemList = eval(this.ApplicableItemList);
+                obj.LegendaryTemplateList = eval(this.LegendaryTemplateList);
+                if (LegendaryMods != null)
+                {
+                    obj.LegendaryMods = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>?>(eval(this.LegendaryMods.Overall), Enumerable.Empty<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>());
+                    if (LegendaryMods.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>();
+                        obj.LegendaryMods.Specific = l;
+                        foreach (var item in LegendaryMods.Specific)
+                        {
+                            MaskItemIndexed<R, LegendaryMod.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LegendaryMod.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (IncludeFilters != null)
+                {
+                    obj.IncludeFilters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>?>(eval(this.IncludeFilters.Overall), Enumerable.Empty<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>());
+                    if (IncludeFilters.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>();
+                        obj.IncludeFilters.Specific = l;
+                        foreach (var item in IncludeFilters.Specific)
+                        {
+                            MaskItemIndexed<R, LegendaryFilter.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LegendaryFilter.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ExcludeFilters != null)
+                {
+                    obj.ExcludeFilters = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>?>(eval(this.ExcludeFilters.Overall), Enumerable.Empty<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>());
+                    if (ExcludeFilters.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LegendaryFilter.Mask<R>?>>();
+                        obj.ExcludeFilters.Specific = l;
+                        foreach (var item in ExcludeFilters.Specific)
+                        {
+                            MaskItemIndexed<R, LegendaryFilter.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LegendaryFilter.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +483,87 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LegendaryItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.FLLD ?? true)
+                    {
+                        sb.AppendItem(FLLD, "FLLD");
+                    }
+                    if (printMask?.DATA ?? true)
+                    {
+                        sb.AppendItem(DATA, "DATA");
+                    }
+                    if (printMask?.ApplicableItemList ?? true)
+                    {
+                        sb.AppendItem(ApplicableItemList, "ApplicableItemList");
+                    }
+                    if (printMask?.LegendaryTemplateList ?? true)
+                    {
+                        sb.AppendItem(LegendaryTemplateList, "LegendaryTemplateList");
+                    }
+                    if ((printMask?.LegendaryMods?.Overall ?? true)
+                        && LegendaryMods is {} LegendaryModsItem)
+                    {
+                        sb.AppendLine("LegendaryMods =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(LegendaryModsItem.Overall);
+                            if (LegendaryModsItem.Specific != null)
+                            {
+                                foreach (var subItem in LegendaryModsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.IncludeFilters?.Overall ?? true)
+                        && IncludeFilters is {} IncludeFiltersItem)
+                    {
+                        sb.AppendLine("IncludeFilters =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(IncludeFiltersItem.Overall);
+                            if (IncludeFiltersItem.Specific != null)
+                            {
+                                foreach (var subItem in IncludeFiltersItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ExcludeFilters?.Overall ?? true)
+                        && ExcludeFilters is {} ExcludeFiltersItem)
+                    {
+                        sb.AppendLine("ExcludeFilters =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ExcludeFiltersItem.Overall);
+                            if (ExcludeFiltersItem.Specific != null)
+                            {
+                                foreach (var subItem in ExcludeFiltersItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +574,42 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public Exception? FLLD;
+            public Exception? DATA;
+            public Exception? ApplicableItemList;
+            public Exception? LegendaryTemplateList;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>? LegendaryMods;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>? IncludeFilters;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>? ExcludeFilters;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LegendaryItem_FieldIndex enu = (LegendaryItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LegendaryItem_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case LegendaryItem_FieldIndex.ODTY:
+                        return ODTY;
+                    case LegendaryItem_FieldIndex.FLLD:
+                        return FLLD;
+                    case LegendaryItem_FieldIndex.DATA:
+                        return DATA;
+                    case LegendaryItem_FieldIndex.ApplicableItemList:
+                        return ApplicableItemList;
+                    case LegendaryItem_FieldIndex.LegendaryTemplateList:
+                        return LegendaryTemplateList;
+                    case LegendaryItem_FieldIndex.LegendaryMods:
+                        return LegendaryMods;
+                    case LegendaryItem_FieldIndex.IncludeFilters:
+                        return IncludeFilters;
+                    case LegendaryItem_FieldIndex.ExcludeFilters:
+                        return ExcludeFilters;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +620,33 @@ namespace Mutagen.Bethesda.Starfield
                 LegendaryItem_FieldIndex enu = (LegendaryItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LegendaryItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case LegendaryItem_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case LegendaryItem_FieldIndex.FLLD:
+                        this.FLLD = ex;
+                        break;
+                    case LegendaryItem_FieldIndex.DATA:
+                        this.DATA = ex;
+                        break;
+                    case LegendaryItem_FieldIndex.ApplicableItemList:
+                        this.ApplicableItemList = ex;
+                        break;
+                    case LegendaryItem_FieldIndex.LegendaryTemplateList:
+                        this.LegendaryTemplateList = ex;
+                        break;
+                    case LegendaryItem_FieldIndex.LegendaryMods:
+                        this.LegendaryMods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LegendaryItem_FieldIndex.IncludeFilters:
+                        this.IncludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LegendaryItem_FieldIndex.ExcludeFilters:
+                        this.ExcludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +658,33 @@ namespace Mutagen.Bethesda.Starfield
                 LegendaryItem_FieldIndex enu = (LegendaryItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LegendaryItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.FLLD:
+                        this.FLLD = (Exception?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.DATA:
+                        this.DATA = (Exception?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.ApplicableItemList:
+                        this.ApplicableItemList = (Exception?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.LegendaryTemplateList:
+                        this.LegendaryTemplateList = (Exception?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.LegendaryMods:
+                        this.LegendaryMods = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.IncludeFilters:
+                        this.IncludeFilters = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.ExcludeFilters:
+                        this.ExcludeFilters = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +694,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (FLLD != null) return true;
+                if (DATA != null) return true;
+                if (ApplicableItemList != null) return true;
+                if (LegendaryTemplateList != null) return true;
+                if (LegendaryMods != null) return true;
+                if (IncludeFilters != null) return true;
+                if (ExcludeFilters != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +729,76 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(FLLD, "FLLD");
+                }
+                {
+                    sb.AppendItem(DATA, "DATA");
+                }
+                {
+                    sb.AppendItem(ApplicableItemList, "ApplicableItemList");
+                }
+                {
+                    sb.AppendItem(LegendaryTemplateList, "LegendaryTemplateList");
+                }
+                if (LegendaryMods is {} LegendaryModsItem)
+                {
+                    sb.AppendLine("LegendaryMods =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(LegendaryModsItem.Overall);
+                        if (LegendaryModsItem.Specific != null)
+                        {
+                            foreach (var subItem in LegendaryModsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (IncludeFilters is {} IncludeFiltersItem)
+                {
+                    sb.AppendLine("IncludeFilters =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(IncludeFiltersItem.Overall);
+                        if (IncludeFiltersItem.Specific != null)
+                        {
+                            foreach (var subItem in IncludeFiltersItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ExcludeFilters is {} ExcludeFiltersItem)
+                {
+                    sb.AppendLine("ExcludeFilters =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ExcludeFiltersItem.Overall);
+                        if (ExcludeFiltersItem.Specific != null)
+                        {
+                            foreach (var subItem in ExcludeFiltersItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +807,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
+                ret.DATA = this.DATA.Combine(rhs.DATA);
+                ret.ApplicableItemList = this.ApplicableItemList.Combine(rhs.ApplicableItemList);
+                ret.LegendaryTemplateList = this.LegendaryTemplateList.Combine(rhs.LegendaryTemplateList);
+                ret.LegendaryMods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LegendaryMods?.Overall, rhs.LegendaryMods?.Overall), Noggog.ExceptionExt.Combine(this.LegendaryMods?.Specific, rhs.LegendaryMods?.Specific));
+                ret.IncludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.IncludeFilters?.Overall, rhs.IncludeFilters?.Overall), Noggog.ExceptionExt.Combine(this.IncludeFilters?.Specific, rhs.IncludeFilters?.Specific));
+                ret.ExcludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ExcludeFilters?.Overall, rhs.ExcludeFilters?.Overall), Noggog.ExceptionExt.Combine(this.ExcludeFilters?.Specific, rhs.ExcludeFilters?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +837,46 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public bool FLLD;
+            public bool DATA;
+            public bool ApplicableItemList;
+            public bool LegendaryTemplateList;
+            public LegendaryMod.TranslationMask? LegendaryMods;
+            public LegendaryFilter.TranslationMask? IncludeFilters;
+            public LegendaryFilter.TranslationMask? ExcludeFilters;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.FLLD = defaultOn;
+                this.DATA = defaultOn;
+                this.ApplicableItemList = defaultOn;
+                this.LegendaryTemplateList = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((FLLD, null));
+                ret.Add((DATA, null));
+                ret.Add((ApplicableItemList, null));
+                ret.Add((LegendaryTemplateList, null));
+                ret.Add((LegendaryMods == null ? DefaultOn : !LegendaryMods.GetCrystal().CopyNothing, LegendaryMods?.GetCrystal()));
+                ret.Add((IncludeFilters == null ? DefaultOn : !IncludeFilters.GetCrystal().CopyNothing, IncludeFilters?.GetCrystal()));
+                ret.Add((ExcludeFilters == null ? DefaultOn : !ExcludeFilters.GetCrystal().CopyNothing, ExcludeFilters?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +888,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LegendaryItem_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LegendaryItemCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LegendaryItemSetterCommon.Instance.RemapLinks(this, mapping);
         public LegendaryItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -417,10 +1012,24 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILegendaryItem :
+        IFormLinkContainer,
         ILegendaryItemGetter,
         ILoquiObjectSetter<ILegendaryItemInternal>,
+        IObjectBoundedOptional,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        new ObjectBounds? ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new MemorySlice<Byte>? FLLD { get; set; }
+        new MemorySlice<Byte>? DATA { get; set; }
+        new IFormLinkNullable<ILeveledItemGetter> ApplicableItemList { get; set; }
+        new IFormLinkNullable<ILegendaryItemGetter> LegendaryTemplateList { get; set; }
+        new ExtendedList<LegendaryMod>? LegendaryMods { get; set; }
+        new ExtendedList<LegendaryFilter>? IncludeFilters { get; set; }
+        new ExtendedList<LegendaryFilter>? ExcludeFilters { get; set; }
     }
 
     public partial interface ILegendaryItemInternal :
@@ -434,10 +1043,26 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILegendaryItemGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ILegendaryItemGetter>,
-        IMapsToGetter<ILegendaryItemGetter>
+        IMapsToGetter<ILegendaryItemGetter>,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration StaticRegistration => LegendaryItem_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedOptionalGetter
+        /// </summary>
+        IObjectBoundsGetter? ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        ReadOnlyMemorySlice<Byte>? FLLD { get; }
+        ReadOnlyMemorySlice<Byte>? DATA { get; }
+        IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList { get; }
+        IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList { get; }
+        IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; }
+        IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; }
+        IReadOnlyList<ILegendaryFilterGetter>? ExcludeFilters { get; }
 
     }
 
@@ -614,6 +1239,15 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ODTY = 8,
+        FLLD = 9,
+        DATA = 10,
+        ApplicableItemList = 11,
+        LegendaryTemplateList = 12,
+        LegendaryMods = 13,
+        IncludeFilters = 14,
+        ExcludeFilters = 15,
     }
     #endregion
 
@@ -624,9 +1258,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(LegendaryItem.Mask<>);
 
@@ -656,8 +1290,19 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LGDI);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LGDI);
+            var all = RecordCollection.Factory(
+                RecordTypes.LGDI,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.FLLD,
+                RecordTypes.DATA,
+                RecordTypes.ANAM,
+                RecordTypes.ENAM,
+                RecordTypes.BNAM,
+                RecordTypes.CNAM,
+                RecordTypes.DNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LegendaryItemBinaryWriteTranslation);
         #region Interface
@@ -699,6 +1344,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILegendaryItemInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = null;
+            item.ODTY = default;
+            item.FLLD = default;
+            item.DATA = default;
+            item.ApplicableItemList.Clear();
+            item.LegendaryTemplateList.Clear();
+            item.LegendaryMods = null;
+            item.IncludeFilters = null;
+            item.ExcludeFilters = null;
             base.Clear(item);
         }
         
@@ -716,6 +1370,11 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILegendaryItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.ApplicableItemList.Relink(mapping);
+            obj.LegendaryTemplateList.Relink(mapping);
+            obj.LegendaryMods?.RemapLinks(mapping);
+            obj.IncludeFilters?.RemapLinks(mapping);
+            obj.ExcludeFilters?.RemapLinks(mapping);
         }
         
         #endregion
@@ -783,6 +1442,28 @@ namespace Mutagen.Bethesda.Starfield
             LegendaryItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
+            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
+            ret.ApplicableItemList = item.ApplicableItemList.Equals(rhs.ApplicableItemList);
+            ret.LegendaryTemplateList = item.LegendaryTemplateList.Equals(rhs.LegendaryTemplateList);
+            ret.LegendaryMods = item.LegendaryMods.CollectionEqualsHelper(
+                rhs.LegendaryMods,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.IncludeFilters = item.IncludeFilters.CollectionEqualsHelper(
+                rhs.IncludeFilters,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ExcludeFilters = item.ExcludeFilters.CollectionEqualsHelper(
+                rhs.ExcludeFilters,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -832,6 +1513,79 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.FLLD ?? true)
+                && item.FLLD is {} FLLDItem)
+            {
+                sb.AppendLine($"FLLD => {SpanExt.ToHexString(FLLDItem)}");
+            }
+            if ((printMask?.DATA ?? true)
+                && item.DATA is {} DATAItem)
+            {
+                sb.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
+            }
+            if (printMask?.ApplicableItemList ?? true)
+            {
+                sb.AppendItem(item.ApplicableItemList.FormKeyNullable, "ApplicableItemList");
+            }
+            if (printMask?.LegendaryTemplateList ?? true)
+            {
+                sb.AppendItem(item.LegendaryTemplateList.FormKeyNullable, "LegendaryTemplateList");
+            }
+            if ((printMask?.LegendaryMods?.Overall ?? true)
+                && item.LegendaryMods is {} LegendaryModsItem)
+            {
+                sb.AppendLine("LegendaryMods =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in LegendaryModsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.IncludeFilters?.Overall ?? true)
+                && item.IncludeFilters is {} IncludeFiltersItem)
+            {
+                sb.AppendLine("IncludeFilters =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in IncludeFiltersItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ExcludeFilters?.Overall ?? true)
+                && item.ExcludeFilters is {} ExcludeFiltersItem)
+            {
+                sb.AppendLine("ExcludeFilters =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ExcludeFiltersItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static LegendaryItem_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -882,6 +1636,46 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.FLLD) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.DATA) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ApplicableItemList) ?? true))
+            {
+                if (!lhs.ApplicableItemList.Equals(rhs.ApplicableItemList)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryTemplateList) ?? true))
+            {
+                if (!lhs.LegendaryTemplateList.Equals(rhs.LegendaryTemplateList)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryMods) ?? true))
+            {
+                if (!lhs.LegendaryMods.SequenceEqualNullable(rhs.LegendaryMods, (l, r) => ((LegendaryModCommon)((ILegendaryModGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.LegendaryMods)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.IncludeFilters) ?? true))
+            {
+                if (!lhs.IncludeFilters.SequenceEqualNullable(rhs.IncludeFilters, (l, r) => ((LegendaryFilterCommon)((ILegendaryFilterGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.IncludeFilters)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ExcludeFilters) ?? true))
+            {
+                if (!lhs.ExcludeFilters.SequenceEqualNullable(rhs.ExcludeFilters, (l, r) => ((LegendaryFilterCommon)((ILegendaryFilterGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.ExcludeFilters)))) return false;
+            }
             return true;
         }
         
@@ -910,6 +1704,27 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILegendaryItemGetter item)
         {
             var hash = new HashCode();
+            if (item.ObjectBounds is {} ObjectBoundsitem)
+            {
+                hash.Add(ObjectBoundsitem);
+            }
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.FLLD is {} FLLDItem)
+            {
+                hash.Add(FLLDItem);
+            }
+            if (item.DATA is {} DATAItem)
+            {
+                hash.Add(DATAItem);
+            }
+            hash.Add(item.ApplicableItemList);
+            hash.Add(item.LegendaryTemplateList);
+            hash.Add(item.LegendaryMods);
+            hash.Add(item.IncludeFilters);
+            hash.Add(item.ExcludeFilters);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -938,6 +1753,35 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.ApplicableItemList, out var ApplicableItemListInfo))
+            {
+                yield return ApplicableItemListInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.LegendaryTemplateList, out var LegendaryTemplateListInfo))
+            {
+                yield return LegendaryTemplateListInfo;
+            }
+            if (obj.LegendaryMods is {} LegendaryModsItem)
+            {
+                foreach (var item in LegendaryModsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.IncludeFilters is {} IncludeFiltersItem)
+            {
+                foreach (var item in IncludeFiltersItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ExcludeFilters is {} ExcludeFiltersItem)
+            {
+                foreach (var item in ExcludeFiltersItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1013,6 +1857,162 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.ObjectBounds);
+                try
+                {
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    {
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.FLLD) ?? true))
+            {
+                if(rhs.FLLD is {} FLLDrhs)
+                {
+                    item.FLLD = FLLDrhs.ToArray();
+                }
+                else
+                {
+                    item.FLLD = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.DATA) ?? true))
+            {
+                if(rhs.DATA is {} DATArhs)
+                {
+                    item.DATA = DATArhs.ToArray();
+                }
+                else
+                {
+                    item.DATA = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ApplicableItemList) ?? true))
+            {
+                item.ApplicableItemList.SetTo(rhs.ApplicableItemList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryTemplateList) ?? true))
+            {
+                item.LegendaryTemplateList.SetTo(rhs.LegendaryTemplateList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryMods) ?? true))
+            {
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.LegendaryMods);
+                try
+                {
+                    if ((rhs.LegendaryMods != null))
+                    {
+                        item.LegendaryMods = 
+                            rhs.LegendaryMods
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LegendaryMod>();
+                    }
+                    else
+                    {
+                        item.LegendaryMods = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.IncludeFilters) ?? true))
+            {
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.IncludeFilters);
+                try
+                {
+                    if ((rhs.IncludeFilters != null))
+                    {
+                        item.IncludeFilters = 
+                            rhs.IncludeFilters
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LegendaryFilter>();
+                    }
+                    else
+                    {
+                        item.IncludeFilters = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ExcludeFilters) ?? true))
+            {
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.ExcludeFilters);
+                try
+                {
+                    if ((rhs.ExcludeFilters != null))
+                    {
+                        item.ExcludeFilters = 
+                            rhs.ExcludeFilters
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LegendaryFilter>();
+                    }
+                    else
+                    {
+                        item.ExcludeFilters = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1161,6 +2161,80 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly LegendaryItemBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ILegendaryItemGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FLLD,
+                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.DATA,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ApplicableItemList,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LegendaryTemplateList,
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILegendaryModGetter>.Instance.Write(
+                writer: writer,
+                items: item.LegendaryMods,
+                recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
+                transl: (MutagenWriter subWriter, ILegendaryModGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LegendaryModBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILegendaryFilterGetter>.Instance.Write(
+                writer: writer,
+                items: item.IncludeFilters,
+                recordType: translationParams.ConvertToCustom(RecordTypes.CNAM),
+                transl: (MutagenWriter subWriter, ILegendaryFilterGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LegendaryFilterBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILegendaryFilterGetter>.Instance.Write(
+                writer: writer,
+                items: item.ExcludeFilters,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                transl: (MutagenWriter subWriter, ILegendaryFilterGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LegendaryFilterBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ILegendaryItemGetter item,
@@ -1177,10 +2251,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1230,6 +2306,95 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly LegendaryItemBinaryCreateTranslation Instance = new LegendaryItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LGDI;
+        public static ParseResult FillBinaryRecordTypes(
+            ILegendaryItemInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)LegendaryItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LegendaryItem_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.FLLD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LegendaryItem_FieldIndex.FLLD;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DATA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LegendaryItem_FieldIndex.DATA;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ApplicableItemList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LegendaryItem_FieldIndex.ApplicableItemList;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LegendaryTemplateList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LegendaryItem_FieldIndex.LegendaryTemplateList;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LegendaryMods = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LegendaryMod>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: LegendaryMod.TryCreateFromBinary)
+                        .CastExtendedList<LegendaryMod>();
+                    return (int)LegendaryItem_FieldIndex.LegendaryMods;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.IncludeFilters = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LegendaryFilter>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: LegendaryFilter.TryCreateFromBinary)
+                        .CastExtendedList<LegendaryFilter>();
+                    return (int)LegendaryItem_FieldIndex.IncludeFilters;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ExcludeFilters = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LegendaryFilter>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: LegendaryFilter.TryCreateFromBinary)
+                        .CastExtendedList<LegendaryFilter>();
+                    return (int)LegendaryItem_FieldIndex.ExcludeFilters;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1262,6 +2427,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LegendaryItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LegendaryItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1276,6 +2442,33 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILegendaryItem);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region FLLD
+        private int? _FLLDLocation;
+        public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region DATA
+        private int? _DATALocation;
+        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region ApplicableItemList
+        private int? _ApplicableItemListLocation;
+        public IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList => _ApplicableItemListLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ApplicableItemListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        #endregion
+        #region LegendaryTemplateList
+        private int? _LegendaryTemplateListLocation;
+        public IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList => _LegendaryTemplateListLocation.HasValue ? new FormLinkNullable<ILegendaryItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LegendaryTemplateListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILegendaryItemGetter>.Null;
+        #endregion
+        public IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; private set; }
+        public IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; private set; }
+        public IReadOnlyList<ILegendaryFilterGetter>? ExcludeFilters { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1333,6 +2526,95 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LegendaryItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.FLLD:
+                {
+                    _FLLDLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.FLLD;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.DATA;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _ApplicableItemListLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.ApplicableItemList;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _LegendaryTemplateListLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.LegendaryTemplateList;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.LegendaryMods = BinaryOverlayList.FactoryByStartIndex<ILegendaryModGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => LegendaryModBinaryOverlay.LegendaryModFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)LegendaryItem_FieldIndex.LegendaryMods;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.IncludeFilters = BinaryOverlayList.FactoryByStartIndex<ILegendaryFilterGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LegendaryFilterBinaryOverlay.LegendaryFilterFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)LegendaryItem_FieldIndex.IncludeFilters;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ExcludeFilters = BinaryOverlayList.FactoryByStartIndex<ILegendaryFilterGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LegendaryFilterBinaryOverlay.LegendaryFilterFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)LegendaryItem_FieldIndex.ExcludeFilters;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

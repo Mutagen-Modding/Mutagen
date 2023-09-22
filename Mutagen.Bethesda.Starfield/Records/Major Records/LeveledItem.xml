@@ -3,5 +3,6 @@
   <Object name="LeveledItem" recordType="LVLI" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IOutfitTarget</LinkInterface>
   </Object>
 </Loqui>

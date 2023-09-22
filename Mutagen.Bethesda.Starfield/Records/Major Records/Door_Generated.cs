@@ -419,7 +419,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IDoor :
         IDoorGetter,
         ILoquiObjectSetter<IDoorInternal>,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        IStaticTarget
     {
     }
 
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IDoorGetter>,
-        IMapsToGetter<IDoorGetter>
+        IMapsToGetter<IDoorGetter>,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Door_Registration.Instance;
 

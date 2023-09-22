@@ -419,6 +419,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ITerminal :
         ILoquiObjectSetter<ITerminalInternal>,
         IStarfieldMajorRecordInternal,
+        IStaticTarget,
         ITerminalGetter
     {
     }
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ITerminalGetter>,
-        IMapsToGetter<ITerminalGetter>
+        IMapsToGetter<ITerminalGetter>,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Terminal_Registration.Instance;
 

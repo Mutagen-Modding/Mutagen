@@ -496,6 +496,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IWeaponInternal>,
         IModeled,
         IStarfieldMajorRecordInternal,
+        IStaticTarget,
         IWeaponGetter
     {
         /// <summary>
@@ -518,7 +519,8 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>,
-        IModeledGetter
+        IModeledGetter,
+        IStaticTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region Model

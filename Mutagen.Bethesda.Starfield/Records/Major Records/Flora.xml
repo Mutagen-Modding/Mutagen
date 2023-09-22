@@ -3,5 +3,6 @@
   <Object name="Flora" recordType="FLOR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

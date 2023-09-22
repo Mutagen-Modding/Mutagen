@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldAnimationTextAssetType.cs" />
+    <Compile Include="Assets\StarfieldMaterialAssetType.cs" />
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
     <Compile Include="Assets\StarfieldRigAssetType.cs" />
     <Compile Include="Enums\BipedObject.cs" />
@@ -108,6 +109,7 @@
     </Compile>
     <Compile Include="Interfaces\Aspect\IObjectBounded.cs" />
     <Compile Include="Interfaces\Aspect\IPositionRotation.cs" />
+    <Compile Include="Interfaces\Link\IStaticTarget_Generated.cs" />
     <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Records\Common Subrecords\AComponent.cs">
       <DependentUpon>Component.xml</DependentUpon>
@@ -151,6 +153,9 @@
     <Compile Include="Records\Major Records\ActionRecord_Generated.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AnimatedObject.cs">
+      <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AttractionRule_Generated.cs">
       <DependentUpon>AttractionRule.xml</DependentUpon>
     </Compile>
@@ -159,6 +164,9 @@
     </Compile>
     <Compile Include="Records\Major Records\BodyData.cs">
       <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DefaultObject.cs">
+      <DependentUpon>DefaultObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
@@ -214,6 +222,9 @@
     <Compile Include="Records\Major Records\Keyword_Generated.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LegendaryItem.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LocationReferenceType_Generated.cs">
       <DependentUpon>LocationReferenceType.xml</DependentUpon>
     </Compile>
@@ -228,6 +239,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Race_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StaticCollection.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -933,26 +947,42 @@
     <Compile Include="Records\Common Subrecords\PlanetModelComponentXMPMSubItem_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
-      <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DebrisModel_Generated.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulationEntry_Generated.cs">
-      <DependentUpon>ActorValueModulation.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulation.cs">
-      <DependentUpon>ActorValueModulation.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\SkinFormComponent_Generated.cs">
-      <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\BodyPartInfoComponent_Generated.cs">
-      <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
+      <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
+          <DependentUpon>Component.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\DebrisModel_Generated.cs">
+          <DependentUpon>Debris.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\DebrisModel.cs">
+          <DependentUpon>Debris.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\ActorValueModulationEntry_Generated.cs">
+          <DependentUpon>ActorValueModulation.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\ActorValueModulation.cs">
+          <DependentUpon>ActorValueModulation.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Common Subrecords\SkinFormComponent_Generated.cs">
+          <DependentUpon>Component.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Common Subrecords\BodyPartInfoComponent_Generated.cs">
+          <DependentUpon>Component.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
+      <Compile Include="Records\Common Subrecords\EffectSequenceComponent_Generated.cs">
+          <DependentUpon>Component.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\StaticPart_Generated.cs">
+          <DependentUpon>StaticCollection.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\StaticPlacement_Generated.cs">
+          <DependentUpon>StaticCollection.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\LegendaryMod_Generated.cs">
+          <DependentUpon>LegendaryItem.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Major Records\LegendaryFilter_Generated.cs">
+          <DependentUpon>LegendaryItem.xml</DependentUpon>
+      </Compile>
   </ItemGroup>
 </Project>

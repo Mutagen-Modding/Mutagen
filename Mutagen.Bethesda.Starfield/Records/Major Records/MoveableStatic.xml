@@ -3,5 +3,6 @@
   <Object name="MoveableStatic" recordType="MSTT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

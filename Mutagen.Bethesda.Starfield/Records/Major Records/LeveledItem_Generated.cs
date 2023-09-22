@@ -419,6 +419,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILeveledItem :
         ILeveledItemGetter,
         ILoquiObjectSetter<ILeveledItemInternal>,
+        IOutfitTarget,
         IStarfieldMajorRecordInternal
     {
     }
@@ -435,7 +436,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         ILoquiObject<ILeveledItemGetter>,
-        IMapsToGetter<ILeveledItemGetter>
+        IMapsToGetter<ILeveledItemGetter>,
+        IOutfitTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
 

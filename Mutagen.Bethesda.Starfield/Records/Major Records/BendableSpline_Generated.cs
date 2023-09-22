@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -31,6 +35,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -53,6 +58,84 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds? _ObjectBounds;
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        public ObjectBounds? ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IBendableSplineGetter.ObjectBounds => this.ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IBendableSplineGetter.ODTY => this.ODTY;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IBendableSplineGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region DefaultNumberOfTiles
+        public Single DefaultNumberOfTiles { get; set; } = default;
+        #endregion
+        #region DefaultNumberOfSlices
+        public UInt16 DefaultNumberOfSlices { get; set; } = default;
+        #endregion
+        #region DefaultNumberOfTilesIsRelativeToLength
+        public Boolean DefaultNumberOfTilesIsRelativeToLength { get; set; } = default;
+        #endregion
+        #region DefaultColor
+        public Color DefaultColor { get; set; } = default;
+        #endregion
+        #region WindSensibility
+        public Single WindSensibility { get; set; } = default;
+        #endregion
+        #region WindFlexibility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _WindFlexibility;
+        public Single WindFlexibility
+        {
+            get => this._WindFlexibility;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._WindFlexibility = value;
+            }
+        }
+        #endregion
+        #region MaterialPath
+        private readonly IFormLinkNullable<IMaterialPathGetter> _MaterialPath = new FormLinkNullable<IMaterialPathGetter>();
+        public IFormLinkNullable<IMaterialPathGetter> MaterialPath
+        {
+            get => _MaterialPath;
+            set => _MaterialPath.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialPathGetter> IBendableSplineGetter.MaterialPath => this.MaterialPath;
+        #endregion
+        #region DNAMDataTypeState
+        public BendableSpline.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -78,6 +161,17 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.DefaultNumberOfTiles = initialValue;
+                this.DefaultNumberOfSlices = initialValue;
+                this.DefaultNumberOfTilesIsRelativeToLength = initialValue;
+                this.DefaultColor = initialValue;
+                this.WindSensibility = initialValue;
+                this.WindFlexibility = initialValue;
+                this.MaterialPath = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -87,7 +181,18 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem Components,
+                TItem DefaultNumberOfTiles,
+                TItem DefaultNumberOfSlices,
+                TItem DefaultNumberOfTilesIsRelativeToLength,
+                TItem DefaultColor,
+                TItem WindSensibility,
+                TItem WindFlexibility,
+                TItem MaterialPath,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +202,17 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.DefaultNumberOfTiles = DefaultNumberOfTiles;
+                this.DefaultNumberOfSlices = DefaultNumberOfSlices;
+                this.DefaultNumberOfTilesIsRelativeToLength = DefaultNumberOfTilesIsRelativeToLength;
+                this.DefaultColor = DefaultColor;
+                this.WindSensibility = WindSensibility;
+                this.WindFlexibility = WindFlexibility;
+                this.MaterialPath = MaterialPath;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +221,20 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem DefaultNumberOfTiles;
+            public TItem DefaultNumberOfSlices;
+            public TItem DefaultNumberOfTilesIsRelativeToLength;
+            public TItem DefaultColor;
+            public TItem WindSensibility;
+            public TItem WindFlexibility;
+            public TItem MaterialPath;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -118,11 +248,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.DefaultNumberOfTiles, rhs.DefaultNumberOfTiles)) return false;
+                if (!object.Equals(this.DefaultNumberOfSlices, rhs.DefaultNumberOfSlices)) return false;
+                if (!object.Equals(this.DefaultNumberOfTilesIsRelativeToLength, rhs.DefaultNumberOfTilesIsRelativeToLength)) return false;
+                if (!object.Equals(this.DefaultColor, rhs.DefaultColor)) return false;
+                if (!object.Equals(this.WindSensibility, rhs.WindSensibility)) return false;
+                if (!object.Equals(this.WindFlexibility, rhs.WindFlexibility)) return false;
+                if (!object.Equals(this.MaterialPath, rhs.MaterialPath)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.Components);
+                hash.Add(this.DefaultNumberOfTiles);
+                hash.Add(this.DefaultNumberOfSlices);
+                hash.Add(this.DefaultNumberOfTilesIsRelativeToLength);
+                hash.Add(this.DefaultColor);
+                hash.Add(this.WindSensibility);
+                hash.Add(this.WindFlexibility);
+                hash.Add(this.MaterialPath);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +285,32 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.DefaultNumberOfTiles)) return false;
+                if (!eval(this.DefaultNumberOfSlices)) return false;
+                if (!eval(this.DefaultNumberOfTilesIsRelativeToLength)) return false;
+                if (!eval(this.DefaultColor)) return false;
+                if (!eval(this.WindSensibility)) return false;
+                if (!eval(this.WindFlexibility)) return false;
+                if (!eval(this.MaterialPath)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +319,32 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.DefaultNumberOfTiles)) return true;
+                if (eval(this.DefaultNumberOfSlices)) return true;
+                if (eval(this.DefaultNumberOfTilesIsRelativeToLength)) return true;
+                if (eval(this.DefaultColor)) return true;
+                if (eval(this.WindSensibility)) return true;
+                if (eval(this.WindFlexibility)) return true;
+                if (eval(this.MaterialPath)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +360,31 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DefaultNumberOfTiles = eval(this.DefaultNumberOfTiles);
+                obj.DefaultNumberOfSlices = eval(this.DefaultNumberOfSlices);
+                obj.DefaultNumberOfTilesIsRelativeToLength = eval(this.DefaultNumberOfTilesIsRelativeToLength);
+                obj.DefaultColor = eval(this.DefaultColor);
+                obj.WindSensibility = eval(this.WindSensibility);
+                obj.WindFlexibility = eval(this.WindFlexibility);
+                obj.MaterialPath = eval(this.MaterialPath);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -174,6 +403,65 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(BendableSpline.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.DefaultNumberOfTiles ?? true)
+                    {
+                        sb.AppendItem(DefaultNumberOfTiles, "DefaultNumberOfTiles");
+                    }
+                    if (printMask?.DefaultNumberOfSlices ?? true)
+                    {
+                        sb.AppendItem(DefaultNumberOfSlices, "DefaultNumberOfSlices");
+                    }
+                    if (printMask?.DefaultNumberOfTilesIsRelativeToLength ?? true)
+                    {
+                        sb.AppendItem(DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
+                    }
+                    if (printMask?.DefaultColor ?? true)
+                    {
+                        sb.AppendItem(DefaultColor, "DefaultColor");
+                    }
+                    if (printMask?.WindSensibility ?? true)
+                    {
+                        sb.AppendItem(WindSensibility, "WindSensibility");
+                    }
+                    if (printMask?.WindFlexibility ?? true)
+                    {
+                        sb.AppendItem(WindFlexibility, "WindFlexibility");
+                    }
+                    if (printMask?.MaterialPath ?? true)
+                    {
+                        sb.AppendItem(MaterialPath, "MaterialPath");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
             }
             #endregion
@@ -184,12 +472,48 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? DefaultNumberOfTiles;
+            public Exception? DefaultNumberOfSlices;
+            public Exception? DefaultNumberOfTilesIsRelativeToLength;
+            public Exception? DefaultColor;
+            public Exception? WindSensibility;
+            public Exception? WindFlexibility;
+            public Exception? MaterialPath;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 BendableSpline_FieldIndex enu = (BendableSpline_FieldIndex)index;
                 switch (enu)
                 {
+                    case BendableSpline_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case BendableSpline_FieldIndex.ODTY:
+                        return ODTY;
+                    case BendableSpline_FieldIndex.Components:
+                        return Components;
+                    case BendableSpline_FieldIndex.DefaultNumberOfTiles:
+                        return DefaultNumberOfTiles;
+                    case BendableSpline_FieldIndex.DefaultNumberOfSlices:
+                        return DefaultNumberOfSlices;
+                    case BendableSpline_FieldIndex.DefaultNumberOfTilesIsRelativeToLength:
+                        return DefaultNumberOfTilesIsRelativeToLength;
+                    case BendableSpline_FieldIndex.DefaultColor:
+                        return DefaultColor;
+                    case BendableSpline_FieldIndex.WindSensibility:
+                        return WindSensibility;
+                    case BendableSpline_FieldIndex.WindFlexibility:
+                        return WindFlexibility;
+                    case BendableSpline_FieldIndex.MaterialPath:
+                        return MaterialPath;
+                    case BendableSpline_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +524,39 @@ namespace Mutagen.Bethesda.Starfield
                 BendableSpline_FieldIndex enu = (BendableSpline_FieldIndex)index;
                 switch (enu)
                 {
+                    case BendableSpline_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case BendableSpline_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case BendableSpline_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case BendableSpline_FieldIndex.DefaultNumberOfTiles:
+                        this.DefaultNumberOfTiles = ex;
+                        break;
+                    case BendableSpline_FieldIndex.DefaultNumberOfSlices:
+                        this.DefaultNumberOfSlices = ex;
+                        break;
+                    case BendableSpline_FieldIndex.DefaultNumberOfTilesIsRelativeToLength:
+                        this.DefaultNumberOfTilesIsRelativeToLength = ex;
+                        break;
+                    case BendableSpline_FieldIndex.DefaultColor:
+                        this.DefaultColor = ex;
+                        break;
+                    case BendableSpline_FieldIndex.WindSensibility:
+                        this.WindSensibility = ex;
+                        break;
+                    case BendableSpline_FieldIndex.WindFlexibility:
+                        this.WindFlexibility = ex;
+                        break;
+                    case BendableSpline_FieldIndex.MaterialPath:
+                        this.MaterialPath = ex;
+                        break;
+                    case BendableSpline_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +568,39 @@ namespace Mutagen.Bethesda.Starfield
                 BendableSpline_FieldIndex enu = (BendableSpline_FieldIndex)index;
                 switch (enu)
                 {
+                    case BendableSpline_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case BendableSpline_FieldIndex.DefaultNumberOfTiles:
+                        this.DefaultNumberOfTiles = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.DefaultNumberOfSlices:
+                        this.DefaultNumberOfSlices = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.DefaultNumberOfTilesIsRelativeToLength:
+                        this.DefaultNumberOfTilesIsRelativeToLength = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.DefaultColor:
+                        this.DefaultColor = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.WindSensibility:
+                        this.WindSensibility = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.WindFlexibility:
+                        this.WindFlexibility = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.MaterialPath:
+                        this.MaterialPath = (Exception?)obj;
+                        break;
+                    case BendableSpline_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +610,17 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (Components != null) return true;
+                if (DefaultNumberOfTiles != null) return true;
+                if (DefaultNumberOfSlices != null) return true;
+                if (DefaultNumberOfTilesIsRelativeToLength != null) return true;
+                if (DefaultColor != null) return true;
+                if (WindSensibility != null) return true;
+                if (WindFlexibility != null) return true;
+                if (MaterialPath != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +647,52 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(DefaultNumberOfTiles, "DefaultNumberOfTiles");
+                }
+                {
+                    sb.AppendItem(DefaultNumberOfSlices, "DefaultNumberOfSlices");
+                }
+                {
+                    sb.AppendItem(DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
+                }
+                {
+                    sb.AppendItem(DefaultColor, "DefaultColor");
+                }
+                {
+                    sb.AppendItem(WindSensibility, "WindSensibility");
+                }
+                {
+                    sb.AppendItem(WindFlexibility, "WindFlexibility");
+                }
+                {
+                    sb.AppendItem(MaterialPath, "MaterialPath");
+                }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -254,6 +701,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.DefaultNumberOfTiles = this.DefaultNumberOfTiles.Combine(rhs.DefaultNumberOfTiles);
+                ret.DefaultNumberOfSlices = this.DefaultNumberOfSlices.Combine(rhs.DefaultNumberOfSlices);
+                ret.DefaultNumberOfTilesIsRelativeToLength = this.DefaultNumberOfTilesIsRelativeToLength.Combine(rhs.DefaultNumberOfTilesIsRelativeToLength);
+                ret.DefaultColor = this.DefaultColor.Combine(rhs.DefaultColor);
+                ret.WindSensibility = this.WindSensibility.Combine(rhs.WindSensibility);
+                ret.WindFlexibility = this.WindFlexibility.Combine(rhs.WindFlexibility);
+                ret.MaterialPath = this.MaterialPath.Combine(rhs.MaterialPath);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +733,54 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public AComponent.TranslationMask? Components;
+            public bool DefaultNumberOfTiles;
+            public bool DefaultNumberOfSlices;
+            public bool DefaultNumberOfTilesIsRelativeToLength;
+            public bool DefaultColor;
+            public bool WindSensibility;
+            public bool WindFlexibility;
+            public bool MaterialPath;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.DefaultNumberOfTiles = defaultOn;
+                this.DefaultNumberOfSlices = defaultOn;
+                this.DefaultNumberOfTilesIsRelativeToLength = defaultOn;
+                this.DefaultColor = defaultOn;
+                this.WindSensibility = defaultOn;
+                this.WindFlexibility = defaultOn;
+                this.MaterialPath = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((DefaultNumberOfTiles, null));
+                ret.Add((DefaultNumberOfSlices, null));
+                ret.Add((DefaultNumberOfTilesIsRelativeToLength, null));
+                ret.Add((DefaultColor, null));
+                ret.Add((WindSensibility, null));
+                ret.Add((WindFlexibility, null));
+                ret.Add((MaterialPath, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +792,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = BendableSpline_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BendableSplineCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BendableSplineSetterCommon.Instance.RemapLinks(this, mapping);
         public BendableSpline(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -338,6 +837,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IBendableSpline);
 
+        [Flags]
+        public enum DNAMDataType
+        {
+            Break0 = 1
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BendableSplineCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BendableSplineSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => BendableSplineSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BendableSplineSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -417,10 +925,27 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IBendableSpline :
+        IAssetLinkContainer,
         IBendableSplineGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IBendableSplineInternal>,
+        IObjectBoundedOptional,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBoundedOptional
+        /// </summary>
+        new ObjectBounds? ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new Single DefaultNumberOfTiles { get; set; }
+        new UInt16 DefaultNumberOfSlices { get; set; }
+        new Boolean DefaultNumberOfTilesIsRelativeToLength { get; set; }
+        new Color DefaultColor { get; set; }
+        new Single WindSensibility { get; set; }
+        new Single WindFlexibility { get; set; }
+        new IFormLinkNullable<IMaterialPathGetter> MaterialPath { get; set; }
+        new BendableSpline.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IBendableSplineInternal :
@@ -433,11 +958,30 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.BNDS)]
     public partial interface IBendableSplineGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IBendableSplineGetter>,
-        IMapsToGetter<IBendableSplineGetter>
+        IMapsToGetter<IBendableSplineGetter>,
+        IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration StaticRegistration => BendableSpline_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedOptionalGetter
+        /// </summary>
+        IObjectBoundsGetter? ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        Single DefaultNumberOfTiles { get; }
+        UInt16 DefaultNumberOfSlices { get; }
+        Boolean DefaultNumberOfTilesIsRelativeToLength { get; }
+        Color DefaultColor { get; }
+        Single WindSensibility { get; }
+        Single WindFlexibility { get; }
+        IFormLinkNullableGetter<IMaterialPathGetter> MaterialPath { get; }
+        BendableSpline.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -614,6 +1158,17 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ODTY = 8,
+        Components = 9,
+        DefaultNumberOfTiles = 10,
+        DefaultNumberOfSlices = 11,
+        DefaultNumberOfTilesIsRelativeToLength = 12,
+        DefaultColor = 13,
+        WindSensibility = 14,
+        WindFlexibility = 15,
+        MaterialPath = 16,
+        DNAMDataTypeState = 17,
     }
     #endregion
 
@@ -624,9 +1179,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(BendableSpline.Mask<>);
 
@@ -656,8 +1211,16 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.BNDS);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.BNDS);
+            var all = RecordCollection.Factory(
+                RecordTypes.BNDS,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.DNAM,
+                RecordTypes.MNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BendableSplineBinaryWriteTranslation);
         #region Interface
@@ -699,6 +1262,17 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBendableSplineInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = null;
+            item.ODTY = default;
+            item.Components.Clear();
+            item.DefaultNumberOfTiles = default;
+            item.DefaultNumberOfSlices = default;
+            item.DefaultNumberOfTilesIsRelativeToLength = default;
+            item.DefaultColor = default;
+            item.WindSensibility = default;
+            item.WindFlexibility = default;
+            item.MaterialPath.Clear();
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -716,6 +1290,32 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IBendableSpline obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.MaterialPath.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBendableSpline obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IBendableSpline obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -783,6 +1383,24 @@ namespace Mutagen.Bethesda.Starfield
             BendableSpline.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DefaultNumberOfTiles = item.DefaultNumberOfTiles.EqualsWithin(rhs.DefaultNumberOfTiles);
+            ret.DefaultNumberOfSlices = item.DefaultNumberOfSlices == rhs.DefaultNumberOfSlices;
+            ret.DefaultNumberOfTilesIsRelativeToLength = item.DefaultNumberOfTilesIsRelativeToLength == rhs.DefaultNumberOfTilesIsRelativeToLength;
+            ret.DefaultColor = item.DefaultColor.ColorOnlyEquals(rhs.DefaultColor);
+            ret.WindSensibility = item.WindSensibility.EqualsWithin(rhs.WindSensibility);
+            ret.WindFlexibility = item.WindFlexibility.EqualsWithin(rhs.WindFlexibility);
+            ret.MaterialPath = item.MaterialPath.Equals(rhs.MaterialPath);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -832,6 +1450,62 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.DefaultNumberOfTiles ?? true)
+            {
+                sb.AppendItem(item.DefaultNumberOfTiles, "DefaultNumberOfTiles");
+            }
+            if (printMask?.DefaultNumberOfSlices ?? true)
+            {
+                sb.AppendItem(item.DefaultNumberOfSlices, "DefaultNumberOfSlices");
+            }
+            if (printMask?.DefaultNumberOfTilesIsRelativeToLength ?? true)
+            {
+                sb.AppendItem(item.DefaultNumberOfTilesIsRelativeToLength, "DefaultNumberOfTilesIsRelativeToLength");
+            }
+            if (printMask?.DefaultColor ?? true)
+            {
+                sb.AppendItem(item.DefaultColor, "DefaultColor");
+            }
+            if (printMask?.WindSensibility ?? true)
+            {
+                sb.AppendItem(item.WindSensibility, "WindSensibility");
+            }
+            if (printMask?.WindFlexibility ?? true)
+            {
+                sb.AppendItem(item.WindFlexibility, "WindFlexibility");
+            }
+            if (printMask?.MaterialPath ?? true)
+            {
+                sb.AppendItem(item.MaterialPath.FormKeyNullable, "MaterialPath");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static BendableSpline_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -882,6 +1556,54 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)BendableSpline_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)BendableSpline_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTiles) ?? true))
+            {
+                if (!lhs.DefaultNumberOfTiles.EqualsWithin(rhs.DefaultNumberOfTiles)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfSlices) ?? true))
+            {
+                if (lhs.DefaultNumberOfSlices != rhs.DefaultNumberOfSlices) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTilesIsRelativeToLength) ?? true))
+            {
+                if (lhs.DefaultNumberOfTilesIsRelativeToLength != rhs.DefaultNumberOfTilesIsRelativeToLength) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultColor) ?? true))
+            {
+                if (!lhs.DefaultColor.ColorOnlyEquals(rhs.DefaultColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindSensibility) ?? true))
+            {
+                if (!lhs.WindSensibility.EqualsWithin(rhs.WindSensibility)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindFlexibility) ?? true))
+            {
+                if (!lhs.WindFlexibility.EqualsWithin(rhs.WindFlexibility)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.MaterialPath) ?? true))
+            {
+                if (!lhs.MaterialPath.Equals(rhs.MaterialPath)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -910,6 +1632,23 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IBendableSplineGetter item)
         {
             var hash = new HashCode();
+            if (item.ObjectBounds is {} ObjectBoundsitem)
+            {
+                hash.Add(ObjectBoundsitem);
+            }
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            hash.Add(item.Components);
+            hash.Add(item.DefaultNumberOfTiles);
+            hash.Add(item.DefaultNumberOfSlices);
+            hash.Add(item.DefaultNumberOfTilesIsRelativeToLength);
+            hash.Add(item.DefaultColor);
+            hash.Add(item.WindSensibility);
+            hash.Add(item.WindFlexibility);
+            hash.Add(item.MaterialPath);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -938,6 +1677,32 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.MaterialPath, out var MaterialPathInfo))
+            {
+                yield return MaterialPathInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBendableSplineGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1013,6 +1778,92 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)BendableSpline_FieldIndex.ObjectBounds);
+                try
+                {
+                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    {
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)BendableSpline_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)BendableSpline_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTiles) ?? true))
+            {
+                item.DefaultNumberOfTiles = rhs.DefaultNumberOfTiles;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfSlices) ?? true))
+            {
+                item.DefaultNumberOfSlices = rhs.DefaultNumberOfSlices;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultNumberOfTilesIsRelativeToLength) ?? true))
+            {
+                item.DefaultNumberOfTilesIsRelativeToLength = rhs.DefaultNumberOfTilesIsRelativeToLength;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DefaultColor) ?? true))
+            {
+                item.DefaultColor = rhs.DefaultColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindSensibility) ?? true))
+            {
+                item.WindSensibility = rhs.WindSensibility;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.WindFlexibility) ?? true))
+            {
+                item.WindFlexibility = rhs.WindFlexibility;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.MaterialPath) ?? true))
+            {
+                item.MaterialPath.SetTo(rhs.MaterialPath.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)BendableSpline_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1161,6 +2012,73 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly BendableSplineBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IBendableSplineGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IBendableSplineGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.ObjectBounds is {} ObjectBoundsItem)
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DefaultNumberOfTiles);
+                writer.Write(item.DefaultNumberOfSlices);
+                writer.Write(item.DefaultNumberOfTilesIsRelativeToLength, length: 2);
+                ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DefaultColor,
+                    binaryType: ColorBinaryType.NoAlphaFloat);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WindSensibility);
+                if (!item.DNAMDataTypeState.HasFlag(BendableSpline.DNAMDataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.WindFlexibility);
+                }
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaterialPath,
+                header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IBendableSplineGetter item,
@@ -1172,15 +2090,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1230,6 +2150,91 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly BendableSplineBinaryCreateTranslation Instance = new BendableSplineBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.BNDS;
+        public static void FillBinaryStructs(
+            IBendableSplineInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IBendableSplineInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)BendableSpline_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)BendableSpline_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)BendableSpline_FieldIndex.Components;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.DefaultNumberOfTiles = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.DefaultNumberOfSlices = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.DefaultNumberOfTilesIsRelativeToLength = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                        reader: dataFrame,
+                        byteLength: 2);
+                    if (dataFrame.Remaining < 12) return null;
+                    item.DefaultColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WindSensibility = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= BendableSpline.DNAMDataType.Break0;
+                        return (int)BendableSpline_FieldIndex.WindSensibility;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WindFlexibility = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)BendableSpline_FieldIndex.WindFlexibility;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaterialPath.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)BendableSpline_FieldIndex.MaterialPath;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1262,6 +2267,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BendableSplineCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BendableSplineCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => BendableSplineBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1276,6 +2283,51 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IBendableSpline);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        private RangeInt32? _DNAMLocation;
+        public BendableSpline.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region DefaultNumberOfTiles
+        private int _DefaultNumberOfTilesLocation => _DNAMLocation!.Value.Min;
+        private bool _DefaultNumberOfTiles_IsSet => _DNAMLocation.HasValue;
+        public Single DefaultNumberOfTiles => _DefaultNumberOfTiles_IsSet ? _recordData.Slice(_DefaultNumberOfTilesLocation, 4).Float() : default;
+        #endregion
+        #region DefaultNumberOfSlices
+        private int _DefaultNumberOfSlicesLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _DefaultNumberOfSlices_IsSet => _DNAMLocation.HasValue;
+        public UInt16 DefaultNumberOfSlices => _DefaultNumberOfSlices_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfSlicesLocation, 2)) : default;
+        #endregion
+        #region DefaultNumberOfTilesIsRelativeToLength
+        private int _DefaultNumberOfTilesIsRelativeToLengthLocation => _DNAMLocation!.Value.Min + 0x6;
+        private bool _DefaultNumberOfTilesIsRelativeToLength_IsSet => _DNAMLocation.HasValue;
+        public Boolean DefaultNumberOfTilesIsRelativeToLength => _DefaultNumberOfTilesIsRelativeToLength_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DefaultNumberOfTilesIsRelativeToLengthLocation, 2)) >= 1 : default;
+        #endregion
+        #region DefaultColor
+        private int _DefaultColorLocation => _DNAMLocation!.Value.Min + 0x8;
+        private bool _DefaultColor_IsSet => _DNAMLocation.HasValue;
+        public Color DefaultColor => _DefaultColor_IsSet ? _recordData.Slice(_DefaultColorLocation, 12).ReadColor(ColorBinaryType.NoAlphaFloat) : default;
+        #endregion
+        #region WindSensibility
+        private int _WindSensibilityLocation => _DNAMLocation!.Value.Min + 0x14;
+        private bool _WindSensibility_IsSet => _DNAMLocation.HasValue;
+        public Single WindSensibility => _WindSensibility_IsSet ? _recordData.Slice(_WindSensibilityLocation, 4).Float() : default;
+        #endregion
+        #region WindFlexibility
+        private int _WindFlexibilityLocation => _DNAMLocation!.Value.Min + 0x18;
+        private bool _WindFlexibility_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(BendableSpline.DNAMDataType.Break0);
+        public Single WindFlexibility => _WindFlexibility_IsSet ? _recordData.Slice(_WindFlexibilityLocation, 4).Float() : default;
+        #endregion
+        #region MaterialPath
+        private int? _MaterialPathLocation;
+        public IFormLinkNullableGetter<IMaterialPathGetter> MaterialPath => _MaterialPathLocation.HasValue ? new FormLinkNullable<IMaterialPathGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialPathLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialPathGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1333,6 +2385,63 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)BendableSpline_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)BendableSpline_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)BendableSpline_FieldIndex.Components;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x18)
+                    {
+                        this.DNAMDataTypeState |= BendableSpline.DNAMDataType.Break0;
+                    }
+                    return (int)BendableSpline_FieldIndex.WindFlexibility;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _MaterialPathLocation = (stream.Position - offset);
+                    return (int)BendableSpline_FieldIndex.MaterialPath;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

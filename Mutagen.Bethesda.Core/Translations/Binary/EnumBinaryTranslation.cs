@@ -84,6 +84,7 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
             1 => reader.ReadUInt8(),
             2 => reader.ReadInt16(),
             4 => reader.ReadInt32(),
+            8 => reader.ReadInt64(),
             _ => throw new NotImplementedException(),
         };
         return Enums<TEnum>.Convert(i);
@@ -91,22 +92,24 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
 
     public TEnum ParseValue(TReader reader)
     {
-        int i;
         switch (reader.Remaining)
         {
             case 1:
-                i = reader.ReadUInt8();
+                Enums<TEnum>.Convert(reader.ReadUInt8());
                 break;
             case 2:
-                i = reader.ReadInt16();
+                Enums<TEnum>.Convert(reader.ReadInt16());
                 break;
             case 4:
-                i = reader.ReadInt32();
+                Enums<TEnum>.Convert(reader.ReadInt32());
+                break;
+            case 8:
+                Enums<TEnum>.Convert(reader.ReadInt64());
                 break;
             default:
                 throw new NotImplementedException();
         }
-        return Enums<TEnum>.Convert(i);
+        return default;
     }
 
     public void Write(TWriter writer, TEnum item, long length)
@@ -126,6 +129,9 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
                 break;
             case 4:
                 writer.Write(item);
+                break;
+            case 8:
+                writer.Write((long)item);
                 break;
             default:
                 throw new NotImplementedException();
@@ -180,6 +186,9 @@ public sealed class EnumBinaryTranslation<TEnum, TReader, TWriter>
                 break;
             case 4:
                 writer.Write((uint)i);
+                break;
+            case 8:
+                writer.Write((ulong)i);
                 break;
             default:
                 throw new NotImplementedException();

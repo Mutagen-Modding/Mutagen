@@ -23,6 +23,15 @@
       <Group name="Debris" refName="Debris" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="BiomeSwaps" refName="BiomeSwap" />
+      <Group name="Outfits" refName="Outfit" />
+      <Group name="LandscapeTextures" refName="LandscapeTexture" />
+      <Group name="AnimatedObjects" refName="AnimatedObject" />
+      <Group name="StaticCollections" refName="StaticCollection" />
+      <Group name="AimModels" refName="AimModel" />
+      <Group name="AttractionRules" refName="AttractionRule" />
+      <Group name="BendableSplines" refName="BendableSpline" />
+      <Group name="DefaultObjects" refName="DefaultObject" />
+      <Group name="LegendaryItems" refName="LegendaryItem" />
     </Fields>
   </Object>
 </Loqui>

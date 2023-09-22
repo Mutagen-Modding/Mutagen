@@ -3,5 +3,6 @@
   <Object name="Furniture" recordType="FURN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>

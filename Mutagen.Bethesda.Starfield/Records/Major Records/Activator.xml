@@ -3,5 +3,6 @@
   <Object name="Activator" recordType="ACTI" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IStaticTarget</LinkInterface>
   </Object>
 </Loqui>
