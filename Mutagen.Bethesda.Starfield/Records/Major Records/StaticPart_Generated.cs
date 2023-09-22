@@ -62,15 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IStaticTargetGetter> IStaticPartGetter.Static => this.Static;
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[4];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IStaticPartGetter.Unknown => this.Unknown;
+        public Int32 Unknown { get; set; } = default;
         #endregion
         #region Placements
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -578,7 +570,7 @@ namespace Mutagen.Bethesda.Starfield
         IStaticPartGetter
     {
         new IFormLink<IStaticTargetGetter> Static { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
+        new Int32 Unknown { get; set; }
         new ExtendedList<StaticPlacement>? Placements { get; set; }
     }
 
@@ -596,7 +588,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => StaticPart_Registration.Instance;
         IFormLinkGetter<IStaticTargetGetter> Static { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        Int32 Unknown { get; }
         IReadOnlyList<IStaticPlacementGetter>? Placements { get; }
 
     }
@@ -859,7 +851,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Static.Clear();
-            item.Unknown = new byte[4];
+            item.Unknown = default;
             item.Placements = null;
         }
         
@@ -912,7 +904,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Static = item.Static.Equals(rhs.Static);
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Placements = item.Placements.CollectionEqualsHelper(
                 rhs.Placements,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -967,7 +959,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if ((printMask?.Placements?.Overall ?? true)
                 && item.Placements is {} PlacementsItem)
@@ -999,7 +991,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)StaticPart_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StaticPart_FieldIndex.Placements) ?? true))
             {
@@ -1053,7 +1045,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)StaticPart_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)StaticPart_FieldIndex.Placements) ?? true))
             {
@@ -1189,9 +1181,7 @@ namespace Mutagen.Bethesda.Starfield
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Static);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unknown);
+                writer.Write(item.Unknown);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IStaticPlacementGetter>.Instance.Write(
                 writer: writer,
@@ -1254,7 +1244,8 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
                     item.Static.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Unknown = dataFrame.ReadInt32();
                     return (int)StaticPart_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DATA:
@@ -1345,7 +1336,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown
         private int _UnknownLocation => _ONAMLocation!.Value.Min + 0x4;
         private bool _Unknown_IsSet => _ONAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 4).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default;
         #endregion
         public IReadOnlyList<IStaticPlacementGetter>? Placements { get; private set; }
         partial void CustomFactoryEnd(
