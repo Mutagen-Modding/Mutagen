@@ -15,13 +15,13 @@
   </Object>
   <Object name="LegendaryMod" objType="Subrecord">
     <Fields>
-      <Enum name="Flags" enumName="LegendaryItem.StarSlot" />
+      <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
       <FormLink name="LegendaryModifier" refName="ObjectModification" />
     </Fields>
   </Object>
   <Object name="LegendaryFilter" objType="Subrecord">
     <Fields>
-      <Enum name="Flags" enumName="LegendaryItem.StarSlot" />
+      <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
       <FormLink name="ReferencedModifier" refName="Keyword" />
       <FormLink name="Keyword" refName="Keyword" />
     </Fields>

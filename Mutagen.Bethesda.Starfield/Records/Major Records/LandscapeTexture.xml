@@ -10,7 +10,7 @@
           <UInt8 name="HavokRestitution" />
         </Fields>
       </Data>
-      <Float name="UnknownQNAM" recordType="QNAM" unknown="True" />
+      <Float name="QNAM" recordType="QNAM" unknown="True" />
     </Fields>
   </Object>
 </Loqui>

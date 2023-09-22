@@ -19,7 +19,7 @@
           <FormLink name="Static">
             <Interface>IStaticTarget</Interface>
           </FormLink>
-          <ByteArray name="Unknown" byteLength="4" nullable="false" unknown="true" />
+          <Int32 name="Unknown" unknown="true" />
         </Fields>
       </Data>
       <RefList name="Placements" refName="StaticPlacement" recordType="DATA" />
