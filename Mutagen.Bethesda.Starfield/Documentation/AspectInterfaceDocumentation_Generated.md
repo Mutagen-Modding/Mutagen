@@ -6,6 +6,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeywordCommon
 - Keyword
 ### IKeyworded
+- KeywordFormComponent
 - Race
 ### IModeled
 - AnimatedObject
@@ -14,6 +15,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### INamed
 - Activity
+- ActorValueModulation
 - BipedObjectData
 - Class
 - DamageType
@@ -28,7 +30,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Race
 - StaticCollection
 ### IObjectBounded
-- AOPFRecord
+- AudioOcclusionPrimitive
 - StaticCollection
 - TextureSet
 ### IPositionRotation
@@ -37,9 +39,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Concrete Classes to Interfaces
 ### Activity
 - INamed
+### ActorValueModulation
+- INamed
 ### AnimatedObject
 - IModeled
-### AOPFRecord
+### AudioOcclusionPrimitive
 - IObjectBounded
 ### BipedObjectData
 - INamed
@@ -59,6 +63,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Keyword
 - IKeywordCommon
 - INamed
+### KeywordFormComponent
+- IKeyworded
 ### MorphGroup
 - INamed
 ### Planet

@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, PlanetModelComponentXMPM, PlanetModelComponentXMPMSubItem, HoudiniDataComponent, EffectSequenceComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent]
     /// </summary>
     public abstract partial class AComponent :
         IAComponent,
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, PlanetModelComponentXMPM, PlanetModelComponentXMPMSubItem, HoudiniDataComponent, EffectSequenceComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent]
     /// </summary>
     public partial interface IAComponent :
         IAComponentGetter,
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, PlanetModelComponentXMPM, PlanetModelComponentXMPMSubItem, HoudiniDataComponent, EffectSequenceComponent]
+    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent]
     /// </summary>
     public partial interface IAComponentGetter :
         ILoquiObject,
@@ -565,13 +565,6 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 82,
-            version: 0);
-
-        public const string GUID = "1bb731ad-a02f-45b0-aa19-05819773d468";
-
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 0;
@@ -613,8 +606,6 @@ namespace Mutagen.Bethesda.Starfield
         public static readonly Type BinaryWriteTranslation = typeof(AComponentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
