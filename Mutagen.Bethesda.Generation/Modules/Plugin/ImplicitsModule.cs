@@ -11,7 +11,7 @@ public class ImplicitsModule : GenerationModule
     {
         if (proto.Protocol.Namespace.Equals("Bethesda")) return;
 
-        var objData = proto.ObjectGenerationsByID.Values.FirstOrDefault()?.GetObjectData();
+        var objData = proto.ObjectGenerationsByName.Values.FirstOrDefault()?.GetObjectData();
         if (objData == null) return;
 
         var relString = objData.HasMultipleReleases ? "release.ToGameRelease()" : $"{nameof(GameRelease)}.{proto.Protocol.Namespace}";

@@ -574,13 +574,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 312,
-            version: 0);
-
-        public const string GUID = "51ca6b56-5b22-4348-a374-e28200136e2f";
-
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 1;
@@ -619,8 +612,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(TopicReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;

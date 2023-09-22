@@ -680,13 +680,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 506,
-            version: 0);
-
-        public const string GUID = "388db562-cdf6-4d6e-b054-0db4cc4f5c3f";
-
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
@@ -718,8 +711,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(NavmeshWaypointBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;

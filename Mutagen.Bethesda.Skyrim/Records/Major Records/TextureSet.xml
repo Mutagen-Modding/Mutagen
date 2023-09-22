@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="SkyrimMajorRecord" GUID="7d698f54-6430-49c7-ab37-7649204e689b" ID="22">
+  <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <AssetLink name="Diffuse" recordType="TX00" assetType="SkyrimTexture" />

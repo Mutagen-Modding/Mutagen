@@ -745,13 +745,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Fallout4.ProtocolKey,
-            msgID: 619,
-            version: 0);
-
-        public const string GUID = "3a488f9a-9fdb-45d1-8ffc-cfc06558ceb9";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -783,8 +776,6 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly Type BinaryWriteTranslation = typeof(LocationCellStaticReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;

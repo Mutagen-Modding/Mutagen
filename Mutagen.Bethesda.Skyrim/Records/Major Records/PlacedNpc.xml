@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedNpc" recordType="ACHR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="b00383a9-1cbf-4c8c-9cdf-f2e886a6909a" ID="224">
+  <Object name="PlacedNpc" recordType="ACHR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <FormLink name="Base" refName="Npc" recordType="NAME" />
@@ -46,7 +46,7 @@
     <LinkInterface>IPlaced</LinkInterface>
     <LinkInterface>IPlacedSimple</LinkInterface>
   </Object>
-  <Object name="LinkedReferenceColor" objType="Subrecord" recordType="XCLP" GUID="abfaf9c3-cb9d-4a16-acd7-d31482f5934d" ID="317">
+  <Object name="LinkedReferenceColor" objType="Subrecord" recordType="XCLP">
     <Fields>
       <Color name="Start" binaryType="Alpha" />
       <Color name="End" binaryType="Alpha" />

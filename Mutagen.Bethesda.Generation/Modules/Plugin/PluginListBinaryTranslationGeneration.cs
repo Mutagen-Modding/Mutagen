@@ -25,6 +25,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     public const string AllowNoCounter = "AllowNoCounter";
     public const string EndMarker = "EndMarker";
     public const string Additive = "Additive";
+    public const string ExpectedLengthLength = "ExpectedLengthLength";
 
     public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
     {
@@ -32,6 +33,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
         listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
         listType.CustomData[CounterByteLength] = node.GetAttribute("counterLength", default(byte));
+        listType.CustomData[ExpectedLengthLength] = node.GetAttribute("expectedLengthLength", default(byte?));
         listType.CustomData[NullIfCounterZero] = node.GetAttribute("nullIfCounterZero", false);
         listType.CustomData[AllowNoCounter] = node.GetAttribute("allowNoCounter", true);
         listType.CustomData[EndMarker] = node.GetAttribute("endMarker", null);
@@ -192,6 +194,16 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         default:
                             throw new NotImplementedException();
                     }
+                    if (list.CustomData.TryGetValue(ExpectedLengthLength, out var expLenLenObj)
+                                             && expLenLenObj is byte expLenLen)
+                    {
+                        if (loqui == null)
+                        {
+                            throw new NotImplementedException();
+                        }
+                        args.Add($"expectedLengthLength: {expLenLen}");
+                        args.Add($"expectedLength: {await subTransl.ExpectedLength(loqui.TargetObjectGeneration, list.SubTypeGeneration) ?? throw new NotImplementedException()}");
+                    }
                     break;
                 case ListBinaryType.Frame:
                     break;
@@ -270,6 +282,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     {
         var list = typeGen as ListType;
         var data = list.GetFieldData();
+        var loqui = list.SubTypeGeneration as LoquiType;
         var subData = list.SubTypeGeneration.GetFieldData();
         if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
         {
@@ -297,6 +310,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                          && (bool)t;
 
         bool needsRecordConv = list.SubTypeGeneration.NeedsRecordConverter();
+
+        var expectedLen = loqui == null ? default(int?) : await subTransl.ExpectedLength(loqui.TargetObjectGeneration, list.SubTypeGeneration);
 
         bool recordPerItem = false;
         if (listBinaryType == ListBinaryType.CounterRecord
@@ -332,7 +347,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                             {
                                 args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                             }
-                            if (list.SubTypeGeneration is LoquiType loqui
+                            if (loqui != null
                                 && !loqui.TargetObjectGeneration.Abstract
                                 && loqui.TargetObjectGeneration.GetObjectData().TriggeringSource == null)
                             {
@@ -401,6 +416,16 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                                     break;
                                 default:
                                     throw new NotImplementedException();
+                            }
+                            if (list.CustomData.TryGetValue(ExpectedLengthLength, out var expLenLenObj)
+                                && expLenLenObj is byte expLenLen)
+                            {
+                                if (loqui == null)
+                                {
+                                    throw new NotImplementedException();
+                                }
+                                args.Add($"expectedLengthLength: {expLenLen}");
+                                args.Add($"expectedLength: {expectedLen ?? throw new NotImplementedException()}");
                             }
                             args.Add($"reader: {Module.ReaderMemberName}");
                             break;
@@ -590,6 +615,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         var subData = list.SubTypeGeneration.GetFieldData();
         ListBinaryType listBinaryType = GetListType(list, data, subData);
         var expLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
+
         if (list.SubTypeGeneration is LoquiType loqui)
         {
             var typeName = loqui.TypeName(getter: true, needsCovariance: true);
@@ -599,7 +625,14 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                     when !data.HasTrigger:
                     if (expLen.HasValue)
                     {
-                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        string expectedLengthLengthAccessor = null;
+                        if (list.CustomData.TryGetValue(ExpectedLengthLength, out var expectedLenLenObj) &&
+                            expectedLenLenObj is byte expectedLenLen)
+                        {
+                            expectedLengthLengthAccessor = $", expectedLengthLength: {expectedLenLen}";
+                        }
+
+                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}{expectedLengthLengthAccessor}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                     }
                     else if (objGen.Fields.Last() == typeGen)
                     {
@@ -1091,27 +1124,42 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
             case ListBinaryType.PrependCount:
             {
                 var len = (byte)list.CustomData[CounterByteLength];
-                var accessorData = $"ret.{dataAccessor}";
-                string readStr;
-                switch (len)
-                {
-                    case 0:
-                        return;
-                    case 1:
-                        readStr = $"{accessorData}[{passedLengthAccessor ?? "0"}]";
-                        break;
-                    case 2:
-                        readStr = $"BinaryPrimitives.ReadUInt16LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
-                        break;
-                    case 4:
-                        readStr = $"BinaryPrimitives.ReadInt32LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                var expectedLengthLength = list.CustomData.TryGetValue(ExpectedLengthLength, out var expLenLenObj)
+                                           && expLenLenObj is byte expLenLen ? expLenLen : 0;
                 if (subExpLen.HasValue)
                 {
-                    sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{readStr} * {subExpLen.Value} + {len};");
+                    var accessorData = $"ret.{dataAccessor}";
+                    string readStr;
+                    switch (len)
+                    {
+                        case 0:
+                            return;
+                        case 1:
+                            readStr = $"{accessorData}[{passedLengthAccessor ?? "0"}]";
+                            break;
+                        case 2:
+                            readStr = $"BinaryPrimitives.ReadUInt16LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
+                            break;
+                        case 4:
+                            readStr = $"BinaryPrimitives.ReadInt32LittleEndian(ret.{dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")})";
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                    sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{readStr} * {subExpLen.Value} + {len}{(expectedLengthLength == 0 ? null : $" + {expectedLengthLength}")};");
+                }
+                else if (list.SubTypeGeneration is StringType strType && strType.BinaryType == StringBinaryType.PrependLengthUShort)
+                {
+                    var accessorData = $"ret.{dataAccessor}";
+                    if (passedLengthAccessor != null)
+                    {
+                        accessorData += $".Slice({passedLengthAccessor})";
+                    }
+                    sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}StringBinaryTranslation.Instance.ExtractManyUInt16PrependedStringsLength({len}, {accessorData}) + {len};");
+                }
+                else if (objGen.Fields.Last() != typeGen)
+                {
+                    throw new NotImplementedException();
                 }
             }
                 break;

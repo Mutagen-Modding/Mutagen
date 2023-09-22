@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AmbienceSet" recordType="AMBS" objType="Record" baseClass="StarfieldMajorRecord" GUID="1b3a1024-2d46-4a46-8d0d-60f062d3cb72" ID="745">
+  <Object name="AmbienceSet" recordType="AMBS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weather" baseClass="SkyrimMajorRecord" objType="Record" customRecordFallback="true" recordType="WTHR" GUID="2a067384-8f2a-4245-9c26-092e2a0351f0" ID="248">
+  <Object name="Weather" baseClass="SkyrimMajorRecord" objType="Record" customRecordFallback="true" recordType="WTHR">
     <Fields>
-      <Array name="CloudTextures" fixedSize="29" binary="NoGeneration" >
+      <Array name="CloudTextures" fixedSize="29" binary="NoGeneration">
         <AssetLink nullable="True" assetType="SkyrimTexture" />
       </Array>
       <CustomLogic name="CloudTexturesParse" isUntypedRecordType="true" />
@@ -81,19 +81,19 @@
         <FormLink refName="Static" recordType="TNAM" />
       </List>
       <RefDirect name="ImageSpaces" refName="WeatherImageSpaces" />
-      <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting" >
+      <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting">
         <Versioning formVersion="43" />
       </RefDirect>
       <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" binary="Custom" />
       <ByteArray name="NAM2" recordType="NAM2" />
       <ByteArray name="NAM3" recordType="NAM3" />
       <RefDirect name="Aurora" refName="Model" />
-      <FormLink name="SunGlareLensFlare" recordType="GNAM" refName="LensFlare" >
+      <FormLink name="SunGlareLensFlare" recordType="GNAM" refName="LensFlare">
         <Versioning formVersion="44" />
       </FormLink>
     </Fields>
   </Object>
-  <Object name="CloudLayer" objType="Subrecord" GUID="e89335dd-a532-4104-9ce3-b607df804f84" ID="249">
+  <Object name="CloudLayer" objType="Subrecord">
     <Fields>
       <Bool name="Enabled" nullable="True" binary="NoGeneration" />
       <Float name="XSpeed" nullable="True" binary="NoGeneration" />
@@ -102,7 +102,7 @@
       <RefDirect name="Alphas" refName="WeatherAlpha" nullable="True" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="WeatherColor" objType="Subrecord" GUID="ee22f5d2-7247-45d2-85f7-5adb24f8f37b" ID="250">
+  <Object name="WeatherColor" objType="Subrecord">
     <Fields>
       <Color name="Sunrise" binaryType="Alpha" />
       <Color name="Day" binaryType="Alpha" />
@@ -110,7 +110,7 @@
       <Color name="Night" binaryType="Alpha" />
     </Fields>
   </Object>
-  <Object name="WeatherAlpha" objType="Subrecord" GUID="ace388c8-f968-415d-906d-d637cc011500" ID="251">
+  <Object name="WeatherAlpha" objType="Subrecord">
     <Fields>
       <Float name="Sunrise" />
       <Float name="Day" />
@@ -118,15 +118,15 @@
       <Float name="Night" />
     </Fields>
   </Object>
-  <Object name="WeatherSound" objType="Subrecord" recordType="SNAM" GUID="64e679e9-2100-4369-99ad-82954aa050ff" ID="252">
+  <Object name="WeatherSound" objType="Subrecord" recordType="SNAM">
     <Fields>
-      <FormLink name="Sound" >
+      <FormLink name="Sound">
         <Interface>ISound</Interface>
       </FormLink>
       <Enum name="Type" enumName="WeatherSound.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="WeatherImageSpaces" objType="Subrecord" recordType="IMSP" GUID="1ed50512-8468-437a-8b6c-8c195c59cf4d" ID="253">
+  <Object name="WeatherImageSpaces" objType="Subrecord" recordType="IMSP">
     <Fields>
       <FormLink name="Sunrise" refName="ImageSpace" />
       <FormLink name="Day" refName="ImageSpace" />
@@ -134,7 +134,7 @@
       <FormLink name="Night" refName="ImageSpace" />
     </Fields>
   </Object>
-  <Object name="WeatherVolumetricLighting" objType="Subrecord" recordType="HNAM" GUID="9c43a8c4-aa8c-4c76-9c57-7770b4583e47" ID="254">
+  <Object name="WeatherVolumetricLighting" objType="Subrecord" recordType="HNAM">
     <Fields>
       <FormLink name="Sunrise" refName="VolumetricLighting" />
       <FormLink name="Day" refName="VolumetricLighting" />
@@ -142,7 +142,7 @@
       <FormLink name="Night" refName="VolumetricLighting" />
     </Fields>
   </Object>
-  <Object name="WeatherAmbientColorSet" objType="Subrecord" recordType="DALC" GUID="b0ef3c9c-7f5e-4b05-bb7c-c8054c9d255e" ID="255">
+  <Object name="WeatherAmbientColorSet" objType="Subrecord" recordType="DALC">
     <Fields>
       <RefDirect name="Sunrise" refName="AmbientColors" binary="NoGeneration" />
       <RefDirect name="Day" refName="AmbientColors" binary="NoGeneration" />

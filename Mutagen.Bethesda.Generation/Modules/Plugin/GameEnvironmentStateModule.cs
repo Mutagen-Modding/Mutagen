@@ -19,7 +19,7 @@ public class GameEnvironmentStateModule : GenerationModule
             
         StructuredStringBuilder sb = new StructuredStringBuilder();
         
-        var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(x => x.GetObjectType() == ObjectType.Mod);
+        var modObj = proto.ObjectGenerationsByName.Values.FirstOrDefault(x => x.GetObjectType() == ObjectType.Mod);
         if (modObj == null) return;
 
         sb.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");

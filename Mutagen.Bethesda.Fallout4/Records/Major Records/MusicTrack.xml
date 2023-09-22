@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="Fallout4MajorRecord" GUID="50577541-2ecf-49a3-a3ba-051025d722f9" ID="173">
+  <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <Enum name="Type" recordType="CNAM" enumName="MusicTrack.TypeEnum" byteLength="4" nullable="False" />
       <Float name="Duration" recordType="FLTV" />
@@ -17,7 +17,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="MusicTrackLoopData" recordType="LNAM" objType="Subrecord" GUID="355a6d65-6c6f-4432-82c7-346cf7117f82" ID="174">
+  <Object name="MusicTrackLoopData" recordType="LNAM" objType="Subrecord">
     <Fields>
       <Float name="Begins" />
       <Float name="Ends" />

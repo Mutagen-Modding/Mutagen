@@ -812,13 +812,6 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 83,
-            version: 0);
-
-        public const string GUID = "96323f32-87b3-4c95-9798-36cb1523038b";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 11;
@@ -863,8 +856,6 @@ namespace Mutagen.Bethesda.Starfield
         public static readonly Type BinaryWriteTranslation = typeof(ActionRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;

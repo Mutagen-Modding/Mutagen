@@ -810,13 +810,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 16,
-            version: 0);
-
-        public const string GUID = "3f2e301a-e8f4-42db-875c-3e760e4eff31";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 9;
@@ -861,8 +854,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly Type BinaryWriteTranslation = typeof(ClassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;

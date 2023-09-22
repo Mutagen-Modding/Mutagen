@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedObject" recordType="REFR" baseClass="SkyrimMajorRecord" objType="Record" GUID="15cab6c0-7390-410a-b2a8-7ee0e58569a6" ID="30">
+  <Object name="PlacedObject" recordType="REFR" baseClass="SkyrimMajorRecord" objType="Record">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
-      <FormLink name="Base" recordType="NAME" >
+      <FormLink name="Base" recordType="NAME">
         <Interface>IPlaceableObject</Interface>
       </FormLink>
       <P3Float name="BoundHalfExtents" recordType="XMBO" />
@@ -87,7 +87,7 @@
     <LinkInterface>IPlacedSimple</LinkInterface>
     <LinkInterface>IPlacedThing</LinkInterface>
   </Object>
-  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM" GUID="0714886f-0394-47a5-9d24-61178136903e" ID="300">
+  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
     <Fields>
       <P3Float name="Bounds" binary="Custom" byteLength="12" />
       <Color name="Color" binaryType="NoAlphaFloat" />
@@ -95,7 +95,7 @@
       <Enum name="Type" enumName="PlacedPrimitive.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="Bounding" objType="Subrecord" GUID="2de6bd62-66a1-461b-b6a3-4130cc82c908" ID="301">
+  <Object name="Bounding" objType="Subrecord">
     <Fields>
       <Float name="Width" />
       <Float name="Height" />
@@ -106,13 +106,13 @@
       <Float name="RotationQ4" />
     </Fields>
   </Object>
-  <Object name="Portal" objType="Subrecord" GUID="72c87f66-75f5-469d-8606-5403337881b0" ID="302">
+  <Object name="Portal" objType="Subrecord">
     <Fields>
       <FormLink name="Origin" refName="PlacedObject" />
       <FormLink name="Destination" refName="PlacedObject" />
     </Fields>
   </Object>
-  <Object name="LightData" objType="Subrecord" recordType="XLIG" GUID="1694c8d4-4733-4b08-bf3a-c0196b0cac4a" ID="303">
+  <Object name="LightData" objType="Subrecord" recordType="XLIG">
     <Fields>
       <Float name="FovOffset" />
       <Float name="FadeOffset" />
@@ -122,13 +122,13 @@
       <Int32 name="Unknown" />
     </Fields>
   </Object>
-  <Object name="Alpha" objType="Subrecord" recordType="XALP" GUID="280a0552-cc8f-4ec1-a700-73e89c77b5cc" ID="304">
+  <Object name="Alpha" objType="Subrecord" recordType="XALP">
     <Fields>
       <UInt8 name="Cutoff" />
       <UInt8 name="Base" />
     </Fields>
   </Object>
-  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL" GUID="b67ff340-7a4a-4aa1-b4cb-076b5ddc5c78" ID="305">
+  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL">
     <Fields>
       <FormLink name="Door" refName="PlacedObject" />
       <P3Float name="Position" />
@@ -136,7 +136,7 @@
       <Enum name="Flags" enumName="TeleportDestination.Flag" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="WaterVelocity" objType="Subrecord" recordType="XWCU" GUID="eb65990d-b48e-464e-886e-68d5c82a939d" ID="307">
+  <Object name="WaterVelocity" objType="Subrecord" recordType="XWCU">
     <Fields>
       <P3Float name="Offset" />
       <Int32 name="Unknown" />
@@ -144,7 +144,7 @@
       <ByteArray name="Unknown2" byteLength="20" nullable="False" />
     </Fields>
   </Object>
-  <Object name="LockData" objType="Subrecord" recordType="XLOC" GUID="ea95a628-10ee-4a0d-911d-af0719cd5ee2" ID="309">
+  <Object name="LockData" objType="Subrecord" recordType="XLOC">
     <Fields>
       <Enum name="Level" enumName="LockLevel" byteLength="1" />
       <ByteArray name="Unused" byteLength="3" nullable="False" />
@@ -153,14 +153,14 @@
       <ByteArray name="Unused2" byteLength="11" nullable="False" />
     </Fields>
   </Object>
-  <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP" GUID="3dfc5897-6afc-4b57-9d2a-1946257205ed" ID="310">
+  <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP">
     <Fields>
       <FormLink name="NavMesh" refName="NavigationMesh" />
       <Int16 name="TeleportMarkerTriangle" />
       <Int16 name="Unused" />
     </Fields>
   </Object>
-  <Object name="MapMarker" objType="Subrecord" GUID="20f60842-6b59-4470-979e-93cd7fe472a3" ID="316">
+  <Object name="MapMarker" objType="Subrecord">
     <Fields>
       <Enum name="Flags" enumName="MapMarker.Flag" byteLength="1" nullable="False" recordType="FNAM" />
       <String name="Name" recordType="FULL" nullable="True" translated="Normal" />

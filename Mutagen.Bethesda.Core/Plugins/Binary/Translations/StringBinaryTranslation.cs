@@ -19,14 +19,15 @@ public sealed class StringBinaryTranslation
         return Parse(
             reader: reader,
             parseWhole: true,
-            item: out item);
+            item: out item,
+            binaryType: StringBinaryType.NullTerminate);
     }
 
     public bool Parse<TReader>(
         TReader reader,
         bool parseWhole,
         out string item,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
         where TReader : IMutagenReadStream
     {
         item = Parse(reader, parseWhole: parseWhole, stringBinaryType: binaryType, encoding: reader.MetaData.Encodings.NonTranslated);
@@ -35,18 +36,18 @@ public sealed class StringBinaryTranslation
 
     public string Parse<TReader>(
         TReader reader,
-        bool parseWhole = true,
-        StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
+        StringBinaryType stringBinaryType,
+        bool parseWhole = true)
         where TReader : IMutagenReadStream
     {
-        return Parse(reader, reader.MetaData.Encodings.NonTranslated, parseWhole, stringBinaryType);
+        return Parse(reader, reader.MetaData.Encodings.NonTranslated, stringBinaryType, parseWhole);
     }
 
     public string Parse<TReader>(
         TReader reader,
         IMutagenEncoding encoding,
-        bool parseWhole = true,
-        StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
+        StringBinaryType stringBinaryType,
+        bool parseWhole)
         where TReader : IMutagenReadStream
     {
         switch (stringBinaryType)
@@ -73,6 +74,11 @@ public sealed class StringBinaryTranslation
             {
                 var len = reader.ReadInt32();
                 return BinaryStringUtility.ToZString(reader.ReadMemory(len), encoding);
+            }
+            case StringBinaryType.PrependLengthWithNullIfContent:
+            {
+                var len = reader.ReadInt32();
+                return BinaryStringUtility.ProcessWholeToZString(reader.ReadMemory(len), encoding);
             }
             case StringBinaryType.PrependLengthUShort:
             {
@@ -103,7 +109,7 @@ public sealed class StringBinaryTranslation
         }
         else
         {
-            return Parse(reader, reader.MetaData.Encodings.NonLocalized, parseWhole, stringBinaryType);
+            return Parse(reader, reader.MetaData.Encodings.NonLocalized, stringBinaryType, parseWhole);
         }
     }
 
@@ -112,7 +118,7 @@ public sealed class StringBinaryTranslation
         StringsSource source,
         StringBinaryType binaryType,
         out TranslatedString item,
-        bool parseWhole = true)
+        bool parseWhole)
     {
         item = Parse(reader, source, binaryType, parseWhole);
         return true;
@@ -188,7 +194,7 @@ public sealed class StringBinaryTranslation
         MutagenWriter writer,
         string item,
         RecordType header,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
     {
         try
         {
@@ -210,7 +216,7 @@ public sealed class StringBinaryTranslation
         MutagenWriter writer,
         string? item,
         RecordType header,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
     {
         if (item == null) return;
         try
@@ -318,7 +324,7 @@ public sealed class StringBinaryTranslation
     public void WriteNullable(
         MutagenWriter writer,
         string? item,
-        StringBinaryType binaryType = StringBinaryType.NullTerminate)
+        StringBinaryType binaryType)
     {
         if (item == null) return;
         writer.Write(
@@ -334,5 +340,42 @@ public sealed class StringBinaryTranslation
             throw new ArgumentException($"Expected length was {item.Length}, but was passed {length}.");
         }
         writer.Write(item, binaryType: StringBinaryType.NullTerminate, encoding: writer.MetaData.Encodings.NonTranslated);
+    }
+
+    public int ExtractManyUInt16PrependedStringsLength(int countLength, ReadOnlySpan<byte> data)
+    {
+        uint amount;
+        switch (countLength)
+        {
+            case 1:
+                amount = data[0];
+                data = data.Slice(1);
+                break;
+            case 2:
+                amount = BinaryPrimitives.ReadUInt16LittleEndian(data);
+                data = data.Slice(2);
+                break;
+            case 4:
+                amount = BinaryPrimitives.ReadUInt32LittleEndian(data);
+                data = data.Slice(4);
+                break;
+            default:
+                throw new ArgumentException();
+        }
+
+        int ret = 0;
+        for (uint i = 0; i < amount; i++)
+        {
+            var len = ExtractUInt16PrependedStringsLength(data);
+            ret += len;
+            data = data.Slice(len);
+        }
+
+        return ret;
+    }
+
+    public int ExtractUInt16PrependedStringsLength(ReadOnlySpan<byte> data)
+    {
+        return 2 + BinaryPrimitives.ReadUInt16LittleEndian(data);
     }
 }

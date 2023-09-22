@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LinkedReferences" objType="Subrecord" recordType="XLKR" GUID="cce00b9d-18b9-410e-bc14-ecb5a01b41d9" ID="471">
+  <Object name="LinkedReferences" objType="Subrecord" recordType="XLKR">
     <Fields>
       <FormLink name="KeywordOrReference">
         <Interface>IKeywordLinkedReference</Interface>

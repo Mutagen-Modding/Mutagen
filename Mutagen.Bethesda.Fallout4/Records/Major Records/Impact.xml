@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Impact" objType="Record" recordType="IPCT" baseClass="Fallout4MajorRecord" GUID="047c6db4-4783-40f6-8168-73fe2fde61ab" ID="614">
+  <Object name="Impact" objType="Record" recordType="IPCT" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <Data>

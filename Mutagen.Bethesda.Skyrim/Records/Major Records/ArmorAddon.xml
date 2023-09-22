@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ArmorAddon" recordType="ARMA" baseClass="SkyrimMajorRecord" objType="Record" inferredAssets="true" GUID="4b6db51f-a0b8-4378-8e8b-8103dfdcd353" ID="153">
+  <Object name="ArmorAddon" recordType="ARMA" baseClass="SkyrimMajorRecord" objType="Record" inferredAssets="true">
     <Fields>
       <RefDirect name="BodyTemplate" refName="BodyTemplate" binary="Custom" />
       <FormLink name="Race" recordType="RNAM" refName="Race" />
-      <Data recordType="DNAM" >
+      <Data recordType="DNAM">
         <Fields>
-          <Gendered name="Priority" >
+          <Gendered name="Priority">
             <Fields>
               <UInt8 />
             </Fields>
           </Gendered>
-          <Gendered name="WeightSliderEnabled" binary="Custom" byteLength="2" generateClassMembers="false" >
+          <Gendered name="WeightSliderEnabled" binary="Custom" byteLength="2" generateClassMembers="false">
             <Fields>
               <Bool />
             </Fields>
@@ -52,17 +52,17 @@
           <RefDirect refName="Model" />
         </Fields>
       </Gendered>
-      <Gendered name="SkinTexture" maleMarker="NAM0" femaleMarker="NAM1" >
+      <Gendered name="SkinTexture" maleMarker="NAM0" femaleMarker="NAM1">
         <Fields>
           <FormLink refName="TextureSet" />
         </Fields>
       </Gendered>
-      <Gendered name="TextureSwapList" maleMarker="NAM2" femaleMarker="NAM3" >
+      <Gendered name="TextureSwapList" maleMarker="NAM2" femaleMarker="NAM3">
         <Fields>
           <FormLink refName="FormList" />
         </Fields>
       </Gendered>
-      <List name="AdditionalRaces" >
+      <List name="AdditionalRaces">
         <FormLink recordType="MODL" refName="Race" />
       </List>
       <FormLink name="FootstepSound" refName="FootstepSet" recordType="SNDD" />

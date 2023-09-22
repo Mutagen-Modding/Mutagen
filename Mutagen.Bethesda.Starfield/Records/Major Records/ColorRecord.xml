@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="StarfieldMajorRecord" GUID="2dcd0e4b-de75-4f28-a8ff-9f48f48bd466" ID="764">
+  <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

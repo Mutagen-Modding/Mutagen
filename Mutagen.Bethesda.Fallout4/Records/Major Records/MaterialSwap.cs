@@ -121,7 +121,7 @@ partial class MaterialSwapBinaryWriteTranslation
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
-                    StringBinaryTranslation.Instance.Write(writer, treeFolder, RecordTypes.FNAM);
+                    StringBinaryTranslation.Instance.Write(writer, treeFolder, RecordTypes.FNAM, StringBinaryType.NullTerminate);
                 });
         }
     }

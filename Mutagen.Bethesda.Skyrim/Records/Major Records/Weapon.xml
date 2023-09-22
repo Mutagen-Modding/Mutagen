@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weapon" recordType="WEAP" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="93888344-5257-4e1e-a99c-450b6e0d06bf" ID="169">
+  <Object name="Weapon" recordType="WEAP" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />
-      <FormLink name="ObjectEffect" recordType="EITM" >
+      <FormLink name="ObjectEffect" recordType="EITM">
         <Interface>IEffectRecord</Interface>
       </FormLink>
       <UInt16 name="EnchantmentAmount" recordType="EAMT" />
@@ -17,7 +17,7 @@
       <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <String name="Description" recordType="DESC" translated="DL" />
@@ -55,14 +55,14 @@
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IWeaponOrList</LinkInterface>
   </Object>
-  <Object name="WeaponBasicStats" objType="Subrecord" recordType="DATA" GUID="be7d3fc4-80d6-464c-931d-8329744fe7d3" ID="196">
+  <Object name="WeaponBasicStats" objType="Subrecord" recordType="DATA">
     <Fields>
       <UInt32 name="Value" />
       <Float name="Weight" />
       <UInt16 name="Damage" />
     </Fields>
   </Object>
-  <Object name="WeaponData" objType="Subrecord" recordType="DNAM" GUID="e4fd60a3-168d-4947-be5a-75a762ff8b1f" ID="197">
+  <Object name="WeaponData" objType="Subrecord" recordType="DNAM">
     <Fields>
       <Enum name="AnimationType" enumName="WeaponAnimationType" byteLength="1" />
       <ByteArray name="Unused" nullable="False" byteLength="3" />
@@ -93,19 +93,19 @@
       <Float name="Stagger" />
     </Fields>
   </Object>
-  <Object name="CriticalData" objType="Subrecord" recordType="CRDT" GUID="cceb2d63-f5de-413e-9150-086047c758a8" ID="198">
+  <Object name="CriticalData" objType="Subrecord" recordType="CRDT">
     <Fields>
       <UInt16 name="Damage" />
       <Int16 name="Unused" />
       <Float name="PercentMult" />
       <Enum name="Flags" enumName="CriticalData.Flag" byteLength="1" />
       <ByteArray name="Unused2" nullable="False" byteLength="3" />
-      <Int32 name="Unused3" >
+      <Int32 name="Unused3">
         <Versioning formVersion="44" />
       </Int32>
       <Break />
       <FormLink name="Effect" refName="Spell" />
-      <Int32 name="Unused4" >
+      <Int32 name="Unused4">
         <Versioning formVersion="44" />
       </Int32>
     </Fields>

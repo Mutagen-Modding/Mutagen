@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SnapTemplateNode" recordType="STND" objType="Record" baseClass="StarfieldMajorRecord" GUID="5a921ffb-1fd2-436b-8cb7-055657f30aa6" ID="855">
+  <Object name="SnapTemplateNode" recordType="STND" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

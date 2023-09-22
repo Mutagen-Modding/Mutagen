@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Book" recordType="BOOK" objType="Record" baseClass="StarfieldMajorRecord" GUID="697b0fcd-43f7-407c-b283-c6fe52977a4a" ID="757">
+  <Object name="Book" recordType="BOOK" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>

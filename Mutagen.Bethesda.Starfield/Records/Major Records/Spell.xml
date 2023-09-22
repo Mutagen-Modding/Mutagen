@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="StarfieldMajorRecord" GUID="5d39eaf2-eb8f-4e3c-9145-8f4e58c12453" ID="728">
+  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>

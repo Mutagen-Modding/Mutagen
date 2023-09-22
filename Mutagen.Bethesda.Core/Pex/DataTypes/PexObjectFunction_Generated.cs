@@ -982,13 +982,6 @@ namespace Mutagen.Bethesda.Pex
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Pex.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Pex.ProtocolKey,
-            msgID: 14,
-            version: 0);
-
-        public const string GUID = "5d7ba301-e8be-4d47-a00e-87a0c49ce82b";
-
         public const ushort AdditionalFieldCount = 7;
 
         public const ushort FieldCount = 7;
@@ -1019,8 +1012,6 @@ namespace Mutagen.Bethesda.Pex
 
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;

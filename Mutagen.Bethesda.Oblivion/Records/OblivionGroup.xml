@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="OblivionGroup" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="284f4b98-0fd4-45a4-aeb7-16a9c4cbc7f0" ID="170">
+  <Object name="OblivionGroup" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false">
     <Generic name="T" isLoqui="true" getterVariance="Out" override="true" isClass="true">
       <Where>OblivionMajorRecord</Where>
     </Generic>
@@ -17,7 +17,7 @@
       </Dict>
     </Fields>
   </Object>
-  <Object name="OblivionListGroup" objType="Group" recordType="GRUP" GUID="d6349d4b-0de2-4c44-bd06-d005ee62aa00" ID="171">
+  <Object name="OblivionListGroup" objType="Group" recordType="GRUP">
     <Generic name="T" isLoqui="true" getterVariance="Out" isClass="true">
       <Where>CellBlock</Where>
     </Generic>
@@ -25,7 +25,7 @@
       <CustomLogic byteLength="4" name="ContainedRecordType" />
       <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
-      <List name="Records" nullable="False" binaryOverlay="NoGeneration" thread="true" >
+      <List name="Records" nullable="False" binaryOverlay="NoGeneration" thread="true">
         <Ref>
           <Generic>T</Generic>
         </Ref>

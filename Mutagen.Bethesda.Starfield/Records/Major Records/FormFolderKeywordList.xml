@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="FormFolderKeywordList" recordType="FFKW" objType="Record" baseClass="StarfieldMajorRecord" GUID="db100180-4cef-497f-a238-d9d8df122f53" ID="785">
+  <Object name="FormFolderKeywordList" recordType="FFKW" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

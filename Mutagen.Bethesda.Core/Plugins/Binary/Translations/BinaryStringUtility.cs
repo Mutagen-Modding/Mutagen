@@ -175,6 +175,17 @@ public static class BinaryStringUtility
                 Write(stream, str, encoding);
                 stream.Write((byte)0);
                 break;
+            case StringBinaryType.PrependLengthWithNullIfContent:
+            {
+                var len = encoding.GetByteCount(str);
+                if (str.Length > 0)
+                {
+                    len += 1;
+                }
+                stream.Write(len);
+                Write(stream, str, encoding, len);
+                break;
+            }
             case StringBinaryType.PrependLength:
             {
                 var len = encoding.GetByteCount(str);

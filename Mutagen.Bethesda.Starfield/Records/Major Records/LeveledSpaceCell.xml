@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledSpaceCell" recordType="LVSC" objType="Record" baseClass="StarfieldMajorRecord" GUID="fbd0ba80-84a8-4511-9195-7f53dce19ced" ID="811">
+  <Object name="LeveledSpaceCell" recordType="LVSC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="HeadPart" recordType="HDPT" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" GUID="f30f8406-8abc-4a00-87a5-2a4bf6af53ee" ID="710">
+  <Object name="HeadPart" recordType="HDPT" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
     <Fields>
-      <RefList name="Components" refName="AComponent"/>
+      <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <FormLink name="FLLD" refName="Static" recordType="FLLD" />

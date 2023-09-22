@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Holotape" recordType="NOTE" objType="Record" baseClass="Fallout4MajorRecord" GUID="2bbbff8d-bde9-4838-8c78-87cbd8407d32" ID="235">
+  <Object name="Holotape" recordType="NOTE" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
@@ -31,23 +31,23 @@
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
-  <Object name="AHolotapeData" objType="Subrecord" abstract="true" GUID="5a1db957-f49f-4455-a3db-fad5ccf4a929" ID="352" />
-  <Object name="HolotapeSound" objType="Subrecord" baseClass="AHolotapeData" GUID="e667cb0b-dcdc-40b9-9b73-b740758f9e50" ID="353">
+  <Object name="AHolotapeData" objType="Subrecord" abstract="true" />
+  <Object name="HolotapeSound" objType="Subrecord" baseClass="AHolotapeData">
     <Fields>
       <FormLink name="Sound" refName="SoundDescriptor" nullable="True" />
     </Fields>
   </Object>
-  <Object name="HolotapeVoice" objType="Subrecord" baseClass="AHolotapeData" GUID="7f88c9dc-771e-4bbe-b1ee-e0a8ee6dccc0" ID="354">
+  <Object name="HolotapeVoice" objType="Subrecord" baseClass="AHolotapeData">
     <Fields>
       <FormLink name="Scene" refName="Scene" nullable="True" />
     </Fields>
   </Object>
-  <Object name="HolotapeProgram" objType="Subrecord" baseClass="AHolotapeData" GUID="600c5389-62be-4b50-bc98-093fa0e20fb6" ID="355">
+  <Object name="HolotapeProgram" objType="Subrecord" baseClass="AHolotapeData">
     <Fields>
       <String name="File" nullable="True" />
     </Fields>
   </Object>
-  <Object name="HolotapeTerminal" objType="Subrecord" baseClass="AHolotapeData" GUID="73e04a7b-352a-4708-b896-f6971b2523d6" ID="356">
+  <Object name="HolotapeTerminal" objType="Subrecord" baseClass="AHolotapeData">
     <Fields>
       <FormLink name="Terminal" refName="Terminal" nullable="True" />
     </Fields>

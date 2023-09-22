@@ -27,6 +27,7 @@ public sealed class FilePathBinaryTranslation
         StringBinaryTranslation.Instance.Write(
             writer,
             item.RelativePath,
-            header);
+            header,
+            binaryType: StringBinaryType.NullTerminate);
     }
 }

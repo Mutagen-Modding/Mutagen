@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="Fallout4MajorRecord" GUID="d61b1bde-1cf4-40d1-9eec-63626d1f147a" ID="241">
+  <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -20,9 +20,9 @@
           <FormLink name="Light" refName="Light" />
           <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
           <FormLink name="Sound" refName="SoundDescriptor" />
-		  <Float name="TaperFullEffectRadius" />
-		  <Float name="TaperWeight" />
-		  <Float name="TaperCurse" />
+          <Float name="TaperFullEffectRadius" />
+          <Float name="TaperWeight" />
+          <Float name="TaperCurse" />
         </Fields>
       </Data>
     </Fields>

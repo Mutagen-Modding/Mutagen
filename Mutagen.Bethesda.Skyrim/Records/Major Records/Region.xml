@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Region" recordType="REGN" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="f10c5e7d-6f32-4e0f-a856-df812878ce5b" ID="88">
+  <Object name="Region" recordType="REGN" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true">
     <Fields>
       <Color name="MapColor" recordType="RCLR" binaryType="Alpha" />
       <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
@@ -15,7 +15,7 @@
     </Fields>
     <LinkInterface>IEmittance</LinkInterface>
   </Object>
-  <Object name="RegionArea" objType="Subrecord" GUID="722b7070-0d0a-4d2d-97e5-0ea574ddcfff" ID="259">
+  <Object name="RegionArea" objType="Subrecord">
     <Fields>
       <UInt32 name="EdgeFallOff" recordType="RPLI" />
       <List name="RegionPointListData" recordType="RPLD">
@@ -23,7 +23,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="RegionData" abstract="true" objType="Subrecord" GUID="a6986ee8-e0cb-4fd9-bd88-b883bbc763d2" ID="260">
+  <Object name="RegionData" abstract="true" objType="Subrecord">
     <Fields>
       <CustomLogic name="HeaderLogic" byteLength="8" recordType="RDAT" />
       <Enum name="Flags" enumName="RegionData.RegionDataFlag" binary="NoGeneration" />
@@ -31,32 +31,32 @@
       <RefDirect name="Icons" refName="Icons" />
     </Fields>
   </Object>
-  <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData" GUID="190e9555-1844-4c56-9deb-d5877459cfb7" ID="262">
+  <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData">
     <Fields>
       <FormLink name="Music" refName="MusicType" recordType="RDMO" />
       <RefList name="Sounds" refName="RegionSound" recordType="RDSA" />
     </Fields>
   </Object>
-  <Object name="RegionSound" objType="Subrecord" GUID="32a58ffc-1995-4c02-8ffd-9fea3d78ede2" ID="263">
+  <Object name="RegionSound" objType="Subrecord">
     <Fields>
       <FormLink name="Sound" refName="SoundDescriptor" />
       <Enum name="Flags" enumName="RegionSound.Flag" />
       <Float name="Chance" min="0" max="100" />
     </Fields>
   </Object>
-  <Object name="RegionMap" objType="Subrecord" baseClass="RegionData" GUID="1c00a511-3a77-4aa9-990a-02cbb48c3478" ID="264">
+  <Object name="RegionMap" objType="Subrecord" baseClass="RegionData">
     <Fields>
       <String name="Name" recordType="RDMP" translated="Normal" />
     </Fields>
   </Object>
-  <Object name="RegionObjects" objType="Subrecord" baseClass="RegionData" GUID="95aee256-1c1e-4ede-bb5a-af5c28507e23" ID="265">
+  <Object name="RegionObjects" objType="Subrecord" baseClass="RegionData">
     <Fields>
       <RefList name="Objects" refName="RegionObject" recordType="RDOT" />
     </Fields>
   </Object>
-  <Object name="RegionObject" objType="Subrecord" GUID="97e90183-2a56-46b0-bbdd-014ba9cc25da" ID="266">
+  <Object name="RegionObject" objType="Subrecord">
     <Fields>
-      <FormLink name="Object" >
+      <FormLink name="Object">
         <Interface>IRegionTarget</Interface>
       </FormLink>
       <UInt16 name="ParentIndex" />
@@ -77,23 +77,23 @@
       <ByteArray name="Unknown2" nullable="False" byteLength="6" />
     </Fields>
   </Object>
-  <Object name="RegionWeather" objType="Subrecord" baseClass="RegionData" GUID="4ee120f4-9a14-49e9-b9d4-50254a1aabec" ID="267">
+  <Object name="RegionWeather" objType="Subrecord" baseClass="RegionData">
     <Fields>
       <RefList name="Weathers" refName="WeatherType" recordType="RDWT" />
     </Fields>
   </Object>
-  <Object name="RegionGrasses" objType="Subrecord" baseClass="RegionData" GUID="8b898374-ebf2-42ec-a5bf-00d7e590062a" ID="269">
+  <Object name="RegionGrasses" objType="Subrecord" baseClass="RegionData">
     <Fields>
       <RefList name="Grasses" refName="RegionGrass" recordType="RDGS" />
     </Fields>
   </Object>
-  <Object name="RegionGrass" objType="Subrecord" GUID="0497c14e-9916-45c5-ada1-ae510d631913" ID="270">
+  <Object name="RegionGrass" objType="Subrecord">
     <Fields>
       <FormLink name="Grass" refName="Grass" />
       <Int32 name="Unknown" />
     </Fields>
   </Object>
-  <Object name="RegionLand" objType="Subrecord" baseClass="RegionData" GUID="4c0cb6ae-ed79-4884-b04b-7f0fd61f3fff" ID="271">
+  <Object name="RegionLand" objType="Subrecord" baseClass="RegionData">
     <Fields>
     </Fields>
   </Object>

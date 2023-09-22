@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="39a0ccd0-da05-4f90-b32a-20fcdb7a9ea3" ID="350">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <ByteArray name="DATA" recordType="DATA" />
@@ -9,7 +9,7 @@
       <FormLink name="PreviousDialog" recordType="PNAM" refName="DialogResponses" />
       <Enum name="FavorLevel" enumName="FavorLevel" byteLength="1" recordType="CNAM" />
       <List name="LinkTo">
-        <FormLink recordType="TCLT" >
+        <FormLink recordType="TCLT">
           <Interface>IDialog</Interface>
         </FormLink>
       </List>
@@ -24,13 +24,13 @@
     </Fields>
     <LinkInterface>IDialog</LinkInterface>
   </Object>
-  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM" GUID="8f8feabd-8d62-4c94-8fb7-3edfc3c31f25" ID="359">
+  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM">
     <Fields>
       <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
       <Float name="ResetHours" integerType="UShort" divisor="65535" multiplier="24" />
     </Fields>
   </Object>
-  <Object name="DialogResponse" objType="Subrecord" GUID="a48dd14d-639a-47de-b96d-4517394936b7" ID="356">
+  <Object name="DialogResponse" objType="Subrecord">
     <Fields>
       <Data recordType="TRDT">
         <Fields>
@@ -51,14 +51,14 @@
       <FormLink name="ListenerIdleAnimation" refName="IdleAnimation" recordType="LNAM" />
     </Fields>
   </Object>
-  <Object name="DialogResponsesUnknownData" objType="Subrecord" GUID="17054176-0068-49c7-be25-be4e156505d0" ID="357">
+  <Object name="DialogResponsesUnknownData" objType="Subrecord">
     <Fields>
       <ByteArray name="SCHR" recordType="SCHR" />
       <FormLink name="QNAM" recordType="QNAM" refName="SkyrimMajorRecord" />
       <Bool name="NEXT" boolAsMarker="NEXT" />
     </Fields>
   </Object>
-  <Object name="DialogResponsesAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="c3525bcf-a5cc-4d2e-8f6f-1a38cbf3545b" ID="427">
+  <Object name="DialogResponsesAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
     <Fields>
       <RefDirect name="ScriptFragments" refName="ScriptFragments" binary="Custom" nullable="True" />
     </Fields>

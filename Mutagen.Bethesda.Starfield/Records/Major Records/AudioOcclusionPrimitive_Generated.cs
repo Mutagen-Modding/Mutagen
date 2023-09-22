@@ -40,14 +40,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class AOPFRecord :
+    public partial class AudioOcclusionPrimitive :
         StarfieldMajorRecord,
-        IAOPFRecordInternal,
-        IEquatable<IAOPFRecordGetter>,
-        ILoquiObjectSetter<AOPFRecord>
+        IAudioOcclusionPrimitiveInternal,
+        IEquatable<IAudioOcclusionPrimitiveGetter>,
+        ILoquiObjectSetter<AudioOcclusionPrimitive>
     {
         #region Ctor
-        protected AOPFRecord()
+        protected AudioOcclusionPrimitive()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IAOPFRecordGetter.ObjectBounds => ObjectBounds;
+        IObjectBoundsGetter IAudioOcclusionPrimitiveGetter.ObjectBounds => ObjectBounds;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ObjectBounds? IObjectBoundedOptional.ObjectBounds
@@ -77,29 +77,17 @@ namespace Mutagen.Bethesda.Starfield
         #region ODTY
         public Single? ODTY { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAOPFRecordGetter.ODTY => this.ODTY;
+        Single? IAudioOcclusionPrimitiveGetter.ODTY => this.ODTY;
         #endregion
         #region OBSV
+        public Single? OBSV { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _OBSV;
-        public MemorySlice<Byte>? OBSV
-        {
-            get => this._OBSV;
-            set => this._OBSV = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAOPFRecordGetter.OBSV => this.OBSV;
+        Single? IAudioOcclusionPrimitiveGetter.OBSV => this.OBSV;
         #endregion
         #region OCCV
+        public Single? OCCV { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _OCCV;
-        public MemorySlice<Byte>? OCCV
-        {
-            get => this._OCCV;
-            set => this._OCCV = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAOPFRecordGetter.OCCV => this.OCCV;
+        Single? IAudioOcclusionPrimitiveGetter.OCCV => this.OCCV;
         #endregion
 
         #region To String
@@ -108,7 +96,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AOPFRecordMixIn.Print(
+            AudioOcclusionPrimitiveMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -239,7 +227,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new AOPFRecord.Mask<R>();
+                var ret = new AudioOcclusionPrimitive.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -257,16 +245,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(AOPFRecord.Mask<bool>? printMask = null)
+            public string Print(AudioOcclusionPrimitive.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, AOPFRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AudioOcclusionPrimitive.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(AOPFRecord.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(AudioOcclusionPrimitive.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.ObjectBounds?.Overall ?? true)
@@ -305,16 +293,16 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                AOPFRecord_FieldIndex enu = (AOPFRecord_FieldIndex)index;
+                AudioOcclusionPrimitive_FieldIndex enu = (AudioOcclusionPrimitive_FieldIndex)index;
                 switch (enu)
                 {
-                    case AOPFRecord_FieldIndex.ObjectBounds:
+                    case AudioOcclusionPrimitive_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case AOPFRecord_FieldIndex.ODTY:
+                    case AudioOcclusionPrimitive_FieldIndex.ODTY:
                         return ODTY;
-                    case AOPFRecord_FieldIndex.OBSV:
+                    case AudioOcclusionPrimitive_FieldIndex.OBSV:
                         return OBSV;
-                    case AOPFRecord_FieldIndex.OCCV:
+                    case AudioOcclusionPrimitive_FieldIndex.OCCV:
                         return OCCV;
                     default:
                         return base.GetNthMask(index);
@@ -323,19 +311,19 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                AOPFRecord_FieldIndex enu = (AOPFRecord_FieldIndex)index;
+                AudioOcclusionPrimitive_FieldIndex enu = (AudioOcclusionPrimitive_FieldIndex)index;
                 switch (enu)
                 {
-                    case AOPFRecord_FieldIndex.ObjectBounds:
+                    case AudioOcclusionPrimitive_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case AOPFRecord_FieldIndex.ODTY:
+                    case AudioOcclusionPrimitive_FieldIndex.ODTY:
                         this.ODTY = ex;
                         break;
-                    case AOPFRecord_FieldIndex.OBSV:
+                    case AudioOcclusionPrimitive_FieldIndex.OBSV:
                         this.OBSV = ex;
                         break;
-                    case AOPFRecord_FieldIndex.OCCV:
+                    case AudioOcclusionPrimitive_FieldIndex.OCCV:
                         this.OCCV = ex;
                         break;
                     default:
@@ -346,19 +334,19 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                AOPFRecord_FieldIndex enu = (AOPFRecord_FieldIndex)index;
+                AudioOcclusionPrimitive_FieldIndex enu = (AudioOcclusionPrimitive_FieldIndex)index;
                 switch (enu)
                 {
-                    case AOPFRecord_FieldIndex.ObjectBounds:
+                    case AudioOcclusionPrimitive_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case AOPFRecord_FieldIndex.ODTY:
+                    case AudioOcclusionPrimitive_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
-                    case AOPFRecord_FieldIndex.OBSV:
+                    case AudioOcclusionPrimitive_FieldIndex.OBSV:
                         this.OBSV = (Exception?)obj;
                         break;
-                    case AOPFRecord_FieldIndex.OCCV:
+                    case AudioOcclusionPrimitive_FieldIndex.OCCV:
                         this.OCCV = (Exception?)obj;
                         break;
                     default:
@@ -481,15 +469,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = AOPFRecord_Registration.TriggeringRecordType;
-        public AOPFRecord(FormKey formKey)
+        public static readonly RecordType GrupRecordType = AudioOcclusionPrimitive_Registration.TriggeringRecordType;
+        public AudioOcclusionPrimitive(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private AOPFRecord(
+        private AudioOcclusionPrimitive(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -498,7 +486,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal AOPFRecord(
+        internal AudioOcclusionPrimitive(
             FormKey formKey,
             ushort formVersion)
         {
@@ -507,12 +495,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public AOPFRecord(IStarfieldMod mod)
+        public AudioOcclusionPrimitive(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public AOPFRecord(IStarfieldMod mod, string editorID)
+        public AudioOcclusionPrimitive(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -520,10 +508,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<AOPFRecord>.ToString(this);
+            return MajorRecordPrinter<AudioOcclusionPrimitive>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IAOPFRecord);
+        protected override Type LinkType => typeof(IAudioOcclusionPrimitive);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -532,16 +520,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAOPFRecordGetter rhs) return false;
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IAudioOcclusionPrimitiveGetter rhs) return false;
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAOPFRecordGetter? obj)
+        public bool Equals(IAudioOcclusionPrimitiveGetter? obj)
         {
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AOPFRecordCommon)((IAOPFRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -549,23 +537,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AOPFRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AudioOcclusionPrimitiveBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AOPFRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AudioOcclusionPrimitiveBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static AOPFRecord CreateFromBinary(
+        public new static AudioOcclusionPrimitive CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new AOPFRecord();
-            ((AOPFRecordSetterCommon)((IAOPFRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new AudioOcclusionPrimitive();
+            ((AudioOcclusionPrimitiveSetterCommon)((IAudioOcclusionPrimitiveGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -576,7 +564,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out AOPFRecord item,
+            out AudioOcclusionPrimitive item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -591,21 +579,21 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((AOPFRecordSetterCommon)((IAOPFRecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AudioOcclusionPrimitiveSetterCommon)((IAudioOcclusionPrimitiveGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new AOPFRecord GetNew()
+        internal static new AudioOcclusionPrimitive GetNew()
         {
-            return new AOPFRecord();
+            return new AudioOcclusionPrimitive();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAOPFRecord :
-        IAOPFRecordGetter,
-        ILoquiObjectSetter<IAOPFRecordInternal>,
+    public partial interface IAudioOcclusionPrimitive :
+        IAudioOcclusionPrimitiveGetter,
+        ILoquiObjectSetter<IAudioOcclusionPrimitiveInternal>,
         IObjectBounded,
         IStarfieldMajorRecordInternal
     {
@@ -614,26 +602,26 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
-        new MemorySlice<Byte>? OBSV { get; set; }
-        new MemorySlice<Byte>? OCCV { get; set; }
+        new Single? OBSV { get; set; }
+        new Single? OCCV { get; set; }
     }
 
-    public partial interface IAOPFRecordInternal :
+    public partial interface IAudioOcclusionPrimitiveInternal :
         IStarfieldMajorRecordInternal,
-        IAOPFRecord,
-        IAOPFRecordGetter
+        IAudioOcclusionPrimitive,
+        IAudioOcclusionPrimitiveGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.AOPF)]
-    public partial interface IAOPFRecordGetter :
+    public partial interface IAudioOcclusionPrimitiveGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IAOPFRecordGetter>,
-        IMapsToGetter<IAOPFRecordGetter>,
+        ILoquiObject<IAudioOcclusionPrimitiveGetter>,
+        IMapsToGetter<IAudioOcclusionPrimitiveGetter>,
         IObjectBoundedGetter
     {
-        static new ILoquiRegistration StaticRegistration => AOPFRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => AudioOcclusionPrimitive_Registration.Instance;
         #region ObjectBounds
         /// <summary>
         /// Aspects: IObjectBoundedGetter
@@ -641,50 +629,50 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
-        ReadOnlyMemorySlice<Byte>? OBSV { get; }
-        ReadOnlyMemorySlice<Byte>? OCCV { get; }
+        Single? OBSV { get; }
+        Single? OCCV { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AOPFRecordMixIn
+    public static partial class AudioOcclusionPrimitiveMixIn
     {
-        public static void Clear(this IAOPFRecordInternal item)
+        public static void Clear(this IAudioOcclusionPrimitiveInternal item)
         {
-            ((AOPFRecordSetterCommon)((IAOPFRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AudioOcclusionPrimitiveSetterCommon)((IAudioOcclusionPrimitiveGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AOPFRecord.Mask<bool> GetEqualsMask(
-            this IAOPFRecordGetter item,
-            IAOPFRecordGetter rhs,
+        public static AudioOcclusionPrimitive.Mask<bool> GetEqualsMask(
+            this IAudioOcclusionPrimitiveGetter item,
+            IAudioOcclusionPrimitiveGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IAOPFRecordGetter item,
+            this IAudioOcclusionPrimitiveGetter item,
             string? name = null,
-            AOPFRecord.Mask<bool>? printMask = null)
+            AudioOcclusionPrimitive.Mask<bool>? printMask = null)
         {
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).Print(
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IAOPFRecordGetter item,
+            this IAudioOcclusionPrimitiveGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AOPFRecord.Mask<bool>? printMask = null)
+            AudioOcclusionPrimitive.Mask<bool>? printMask = null)
         {
-            ((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).Print(
+            ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -692,39 +680,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IAOPFRecordGetter item,
-            IAOPFRecordGetter rhs,
-            AOPFRecord.TranslationMask? equalsMask = null)
+            this IAudioOcclusionPrimitiveGetter item,
+            IAudioOcclusionPrimitiveGetter rhs,
+            AudioOcclusionPrimitive.TranslationMask? equalsMask = null)
         {
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).Equals(
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IAOPFRecordInternal lhs,
-            IAOPFRecordGetter rhs,
-            out AOPFRecord.ErrorMask errorMask,
-            AOPFRecord.TranslationMask? copyMask = null)
+            this IAudioOcclusionPrimitiveInternal lhs,
+            IAudioOcclusionPrimitiveGetter rhs,
+            out AudioOcclusionPrimitive.ErrorMask errorMask,
+            AudioOcclusionPrimitive.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = AOPFRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AudioOcclusionPrimitive.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAOPFRecordInternal lhs,
-            IAOPFRecordGetter rhs,
+            this IAudioOcclusionPrimitiveInternal lhs,
+            IAudioOcclusionPrimitiveGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -732,55 +720,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static AOPFRecord DeepCopy(
-            this IAOPFRecordGetter item,
-            AOPFRecord.TranslationMask? copyMask = null)
+        public static AudioOcclusionPrimitive DeepCopy(
+            this IAudioOcclusionPrimitiveGetter item,
+            AudioOcclusionPrimitive.TranslationMask? copyMask = null)
         {
-            return ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static AOPFRecord DeepCopy(
-            this IAOPFRecordGetter item,
-            out AOPFRecord.ErrorMask errorMask,
-            AOPFRecord.TranslationMask? copyMask = null)
+        public static AudioOcclusionPrimitive DeepCopy(
+            this IAudioOcclusionPrimitiveGetter item,
+            out AudioOcclusionPrimitive.ErrorMask errorMask,
+            AudioOcclusionPrimitive.TranslationMask? copyMask = null)
         {
-            return ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static AOPFRecord DeepCopy(
-            this IAOPFRecordGetter item,
+        public static AudioOcclusionPrimitive DeepCopy(
+            this IAudioOcclusionPrimitiveGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static AOPFRecord Duplicate(
-            this IAOPFRecordGetter item,
+        public static AudioOcclusionPrimitive Duplicate(
+            this IAudioOcclusionPrimitiveGetter item,
             FormKey formKey,
-            AOPFRecord.TranslationMask? copyMask = null)
+            AudioOcclusionPrimitive.TranslationMask? copyMask = null)
         {
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).Duplicate(
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static AOPFRecord Duplicate(
-            this IAOPFRecordGetter item,
+        public static AudioOcclusionPrimitive Duplicate(
+            this IAudioOcclusionPrimitiveGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).Duplicate(
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -790,11 +778,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IAOPFRecordInternal item,
+            this IAudioOcclusionPrimitiveInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((AOPFRecordSetterCommon)((IAOPFRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AudioOcclusionPrimitiveSetterCommon)((IAudioOcclusionPrimitiveGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -810,7 +798,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum AOPFRecord_FieldIndex
+    internal enum AudioOcclusionPrimitive_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -827,40 +815,33 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class AOPFRecord_Registration : ILoquiRegistration
+    internal partial class AudioOcclusionPrimitive_Registration : ILoquiRegistration
     {
-        public static readonly AOPFRecord_Registration Instance = new AOPFRecord_Registration();
+        public static readonly AudioOcclusionPrimitive_Registration Instance = new AudioOcclusionPrimitive_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
-
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 713,
-            version: 0);
-
-        public const string GUID = "3449796e-3bd5-4912-952e-08c0f2cd5ca6";
 
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 11;
 
-        public static readonly Type MaskType = typeof(AOPFRecord.Mask<>);
+        public static readonly Type MaskType = typeof(AudioOcclusionPrimitive.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AOPFRecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AudioOcclusionPrimitive.ErrorMask);
 
-        public static readonly Type ClassType = typeof(AOPFRecord);
+        public static readonly Type ClassType = typeof(AudioOcclusionPrimitive);
 
-        public static readonly Type GetterType = typeof(IAOPFRecordGetter);
+        public static readonly Type GetterType = typeof(IAudioOcclusionPrimitiveGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAOPFRecord);
+        public static readonly Type SetterType = typeof(IAudioOcclusionPrimitive);
 
-        public static readonly Type? InternalSetterType = typeof(IAOPFRecordInternal);
+        public static readonly Type? InternalSetterType = typeof(IAudioOcclusionPrimitiveInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.AOPFRecord";
+        public const string FullName = "Mutagen.Bethesda.Starfield.AudioOcclusionPrimitive";
 
-        public const string Name = "AOPFRecord";
+        public const string Name = "AudioOcclusionPrimitive";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -881,11 +862,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.OCCV);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(AOPFRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AudioOcclusionPrimitiveBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -914,13 +893,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class AOPFRecordSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class AudioOcclusionPrimitiveSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly AOPFRecordSetterCommon Instance = new AOPFRecordSetterCommon();
+        public new static readonly AudioOcclusionPrimitiveSetterCommon Instance = new AudioOcclusionPrimitiveSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IAOPFRecordInternal item)
+        public void Clear(IAudioOcclusionPrimitiveInternal item)
         {
             ClearPartial();
             item.ObjectBounds.Clear();
@@ -932,16 +911,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IAOPFRecordInternal)item);
+            Clear(item: (IAudioOcclusionPrimitiveInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IAOPFRecordInternal)item);
+            Clear(item: (IAudioOcclusionPrimitiveInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IAOPFRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IAudioOcclusionPrimitive obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -950,16 +929,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAOPFRecordInternal item,
+            IAudioOcclusionPrimitiveInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IAOPFRecordInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IAudioOcclusionPrimitiveInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: AOPFRecordBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: AOPFRecordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: AudioOcclusionPrimitiveBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AudioOcclusionPrimitiveBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -968,7 +947,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (AOPFRecord)item,
+                item: (AudioOcclusionPrimitive)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -979,7 +958,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (AOPFRecord)item,
+                item: (AudioOcclusionPrimitive)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -987,17 +966,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class AOPFRecordCommon : StarfieldMajorRecordCommon
+    internal partial class AudioOcclusionPrimitiveCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly AOPFRecordCommon Instance = new AOPFRecordCommon();
+        public new static readonly AudioOcclusionPrimitiveCommon Instance = new AudioOcclusionPrimitiveCommon();
 
-        public AOPFRecord.Mask<bool> GetEqualsMask(
-            IAOPFRecordGetter item,
-            IAOPFRecordGetter rhs,
+        public AudioOcclusionPrimitive.Mask<bool> GetEqualsMask(
+            IAudioOcclusionPrimitiveGetter item,
+            IAudioOcclusionPrimitiveGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AOPFRecord.Mask<bool>(false);
-            ((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AudioOcclusionPrimitive.Mask<bool>(false);
+            ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1006,22 +985,22 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IAOPFRecordGetter item,
-            IAOPFRecordGetter rhs,
-            AOPFRecord.Mask<bool> ret,
+            IAudioOcclusionPrimitiveGetter item,
+            IAudioOcclusionPrimitiveGetter rhs,
+            AudioOcclusionPrimitive.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
-            ret.OBSV = MemorySliceExt.SequenceEqual(item.OBSV, rhs.OBSV);
-            ret.OCCV = MemorySliceExt.SequenceEqual(item.OCCV, rhs.OCCV);
+            ret.OBSV = item.OBSV.EqualsWithin(rhs.OBSV);
+            ret.OCCV = item.OCCV.EqualsWithin(rhs.OCCV);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IAOPFRecordGetter item,
+            IAudioOcclusionPrimitiveGetter item,
             string? name = null,
-            AOPFRecord.Mask<bool>? printMask = null)
+            AudioOcclusionPrimitive.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1033,18 +1012,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IAOPFRecordGetter item,
+            IAudioOcclusionPrimitiveGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AOPFRecord.Mask<bool>? printMask = null)
+            AudioOcclusionPrimitive.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"AOPFRecord =>");
+                sb.AppendLine($"AudioOcclusionPrimitive =>");
             }
             else
             {
-                sb.AppendLine($"{name} (AOPFRecord) =>");
+                sb.AppendLine($"{name} (AudioOcclusionPrimitive) =>");
             }
             using (sb.Brace())
             {
@@ -1056,9 +1035,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IAOPFRecordGetter item,
+            IAudioOcclusionPrimitiveGetter item,
             StructuredStringBuilder sb,
-            AOPFRecord.Mask<bool>? printMask = null)
+            AudioOcclusionPrimitive.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1076,50 +1055,50 @@ namespace Mutagen.Bethesda.Starfield
             if ((printMask?.OBSV ?? true)
                 && item.OBSV is {} OBSVItem)
             {
-                sb.AppendLine($"OBSV => {SpanExt.ToHexString(OBSVItem)}");
+                sb.AppendItem(OBSVItem, "OBSV");
             }
             if ((printMask?.OCCV ?? true)
                 && item.OCCV is {} OCCVItem)
             {
-                sb.AppendLine($"OCCV => {SpanExt.ToHexString(OCCVItem)}");
+                sb.AppendItem(OCCVItem, "OCCV");
             }
         }
         
-        public static AOPFRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static AudioOcclusionPrimitive_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new AOPFRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new AudioOcclusionPrimitive_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (AOPFRecord_FieldIndex)((int)index);
+                    return (AudioOcclusionPrimitive_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1127,31 +1106,31 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAOPFRecordGetter? lhs,
-            IAOPFRecordGetter? rhs,
+            IAudioOcclusionPrimitiveGetter? lhs,
+            IAudioOcclusionPrimitiveGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ObjectBounds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
                 {
-                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)AOPFRecord_FieldIndex.ObjectBounds))) return false;
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds))) return false;
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ODTY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ODTY) ?? true))
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OBSV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.OBSV) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.OBSV, rhs.OBSV)) return false;
+                if (!lhs.OBSV.EqualsWithin(rhs.OBSV)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OCCV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.OCCV) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.OCCV, rhs.OCCV)) return false;
+                if (!lhs.OCCV.EqualsWithin(rhs.OCCV)) return false;
             }
             return true;
         }
@@ -1162,8 +1141,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IAOPFRecordGetter?)lhs,
-                rhs: rhs as IAOPFRecordGetter,
+                lhs: (IAudioOcclusionPrimitiveGetter?)lhs,
+                rhs: rhs as IAudioOcclusionPrimitiveGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1173,12 +1152,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IAOPFRecordGetter?)lhs,
-                rhs: rhs as IAOPFRecordGetter,
+                lhs: (IAudioOcclusionPrimitiveGetter?)lhs,
+                rhs: rhs as IAudioOcclusionPrimitiveGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IAOPFRecordGetter item)
+        public virtual int GetHashCode(IAudioOcclusionPrimitiveGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
@@ -1186,13 +1165,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ODTYitem);
             }
-            if (item.OBSV is {} OBSVItem)
+            if (item.OBSV is {} OBSVitem)
             {
-                hash.Add(OBSVItem);
+                hash.Add(OBSVitem);
             }
-            if (item.OCCV is {} OCCVItem)
+            if (item.OCCV is {} OCCVitem)
             {
-                hash.Add(OCCVItem);
+                hash.Add(OCCVitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1200,12 +1179,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAOPFRecordGetter)item);
+            return GetHashCode(item: (IAudioOcclusionPrimitiveGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAOPFRecordGetter)item);
+            return GetHashCode(item: (IAudioOcclusionPrimitiveGetter)item);
         }
         
         #endregion
@@ -1213,11 +1192,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return AOPFRecord.GetNew();
+            return AudioOcclusionPrimitive.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAOPFRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAudioOcclusionPrimitiveGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -1227,12 +1206,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public AOPFRecord Duplicate(
-            IAOPFRecordGetter item,
+        public AudioOcclusionPrimitive Duplicate(
+            IAudioOcclusionPrimitiveGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new AOPFRecord(formKey);
+            var newRec = new AudioOcclusionPrimitive(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1243,7 +1222,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAOPFRecordGetter)item,
+                item: (IAudioOcclusionPrimitiveGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1254,7 +1233,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAOPFRecordGetter)item,
+                item: (IAudioOcclusionPrimitiveGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1264,14 +1243,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class AOPFRecordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class AudioOcclusionPrimitiveSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly AOPFRecordSetterTranslationCommon Instance = new AOPFRecordSetterTranslationCommon();
+        public new static readonly AudioOcclusionPrimitiveSetterTranslationCommon Instance = new AudioOcclusionPrimitiveSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IAOPFRecordInternal item,
-            IAOPFRecordGetter rhs,
+            IAudioOcclusionPrimitiveInternal item,
+            IAudioOcclusionPrimitiveGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1285,8 +1264,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IAOPFRecord item,
-            IAOPFRecordGetter rhs,
+            IAudioOcclusionPrimitive item,
+            IAudioOcclusionPrimitiveGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1297,15 +1276,15 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ObjectBounds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds) ?? true))
             {
-                errorMask?.PushIndex((int)AOPFRecord_FieldIndex.ObjectBounds);
+                errorMask?.PushIndex((int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ObjectBounds) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds) ?? true))
                     {
                         item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)AOPFRecord_FieldIndex.ObjectBounds),
+                            copyMask: copyMask?.GetSubCrystal((int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds),
                             errorMask: errorMask);
                     }
                 }
@@ -1319,31 +1298,17 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.ODTY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.ODTY) ?? true))
             {
                 item.ODTY = rhs.ODTY;
             }
-            if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OBSV) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.OBSV) ?? true))
             {
-                if(rhs.OBSV is {} OBSVrhs)
-                {
-                    item.OBSV = OBSVrhs.ToArray();
-                }
-                else
-                {
-                    item.OBSV = default;
-                }
+                item.OBSV = rhs.OBSV;
             }
-            if ((copyMask?.GetShouldTranslate((int)AOPFRecord_FieldIndex.OCCV) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AudioOcclusionPrimitive_FieldIndex.OCCV) ?? true))
             {
-                if(rhs.OCCV is {} OCCVrhs)
-                {
-                    item.OCCV = OCCVrhs.ToArray();
-                }
-                else
-                {
-                    item.OCCV = default;
-                }
+                item.OCCV = rhs.OCCV;
             }
         }
         
@@ -1355,8 +1320,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAOPFRecordInternal)item,
-                rhs: (IAOPFRecordGetter)rhs,
+                item: (IAudioOcclusionPrimitiveInternal)item,
+                rhs: (IAudioOcclusionPrimitiveGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1370,8 +1335,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAOPFRecord)item,
-                rhs: (IAOPFRecordGetter)rhs,
+                item: (IAudioOcclusionPrimitive)item,
+                rhs: (IAudioOcclusionPrimitiveGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1385,8 +1350,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAOPFRecordInternal)item,
-                rhs: (IAOPFRecordGetter)rhs,
+                item: (IAudioOcclusionPrimitiveInternal)item,
+                rhs: (IAudioOcclusionPrimitiveGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1400,8 +1365,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IAOPFRecord)item,
-                rhs: (IAOPFRecordGetter)rhs,
+                item: (IAudioOcclusionPrimitive)item,
+                rhs: (IAudioOcclusionPrimitiveGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1409,12 +1374,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public AOPFRecord DeepCopy(
-            IAOPFRecordGetter item,
-            AOPFRecord.TranslationMask? copyMask = null)
+        public AudioOcclusionPrimitive DeepCopy(
+            IAudioOcclusionPrimitiveGetter item,
+            AudioOcclusionPrimitive.TranslationMask? copyMask = null)
         {
-            AOPFRecord ret = (AOPFRecord)((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).GetNew();
-            ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AudioOcclusionPrimitive ret = (AudioOcclusionPrimitive)((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).GetNew();
+            ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1423,30 +1388,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public AOPFRecord DeepCopy(
-            IAOPFRecordGetter item,
-            out AOPFRecord.ErrorMask errorMask,
-            AOPFRecord.TranslationMask? copyMask = null)
+        public AudioOcclusionPrimitive DeepCopy(
+            IAudioOcclusionPrimitiveGetter item,
+            out AudioOcclusionPrimitive.ErrorMask errorMask,
+            AudioOcclusionPrimitive.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AOPFRecord ret = (AOPFRecord)((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).GetNew();
-            ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AudioOcclusionPrimitive ret = (AudioOcclusionPrimitive)((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).GetNew();
+            ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = AOPFRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AudioOcclusionPrimitive.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public AOPFRecord DeepCopy(
-            IAOPFRecordGetter item,
+        public AudioOcclusionPrimitive DeepCopy(
+            IAudioOcclusionPrimitiveGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            AOPFRecord ret = (AOPFRecord)((AOPFRecordCommon)((IAOPFRecordGetter)item).CommonInstance()!).GetNew();
-            ((AOPFRecordSetterTranslationCommon)((IAOPFRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AudioOcclusionPrimitive ret = (AudioOcclusionPrimitive)((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)item).CommonInstance()!).GetNew();
+            ((AudioOcclusionPrimitiveSetterTranslationCommon)((IAudioOcclusionPrimitiveGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1462,21 +1427,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AOPFRecord
+    public partial class AudioOcclusionPrimitive
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AOPFRecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => AOPFRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AudioOcclusionPrimitive_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AudioOcclusionPrimitive_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AOPFRecordCommon.Instance;
+        protected override object CommonInstance() => AudioOcclusionPrimitiveCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return AOPFRecordSetterCommon.Instance;
+            return AudioOcclusionPrimitiveSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AOPFRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AudioOcclusionPrimitiveSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1487,14 +1452,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AOPFRecordBinaryWriteTranslation :
+    public partial class AudioOcclusionPrimitiveBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly AOPFRecordBinaryWriteTranslation Instance = new();
+        public new static readonly AudioOcclusionPrimitiveBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IAOPFRecordGetter item,
+            IAudioOcclusionPrimitiveGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1511,11 +1476,11 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.OBSV,
                 header: translationParams.ConvertToCustom(RecordTypes.OBSV));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.OCCV,
                 header: translationParams.ConvertToCustom(RecordTypes.OCCV));
@@ -1523,7 +1488,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IAOPFRecordGetter item,
+            IAudioOcclusionPrimitiveGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1558,7 +1523,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IAOPFRecordGetter)item,
+                item: (IAudioOcclusionPrimitiveGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1569,7 +1534,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IAOPFRecordGetter)item,
+                item: (IAudioOcclusionPrimitiveGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1580,20 +1545,20 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IAOPFRecordGetter)item,
+                item: (IAudioOcclusionPrimitiveGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class AOPFRecordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class AudioOcclusionPrimitiveBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly AOPFRecordBinaryCreateTranslation Instance = new AOPFRecordBinaryCreateTranslation();
+        public new static readonly AudioOcclusionPrimitiveBinaryCreateTranslation Instance = new AudioOcclusionPrimitiveBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.AOPF;
         public static ParseResult FillBinaryRecordTypes(
-            IAOPFRecordInternal item,
+            IAudioOcclusionPrimitiveInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1607,25 +1572,25 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
-                    return (int)AOPFRecord_FieldIndex.ObjectBounds;
+                    return (int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AOPFRecord_FieldIndex.ODTY;
+                    return (int)AudioOcclusionPrimitive_FieldIndex.ODTY;
                 }
                 case RecordTypeInts.OBSV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OBSV = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AOPFRecord_FieldIndex.OBSV;
+                    item.OBSV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AudioOcclusionPrimitive_FieldIndex.OBSV;
                 }
                 case RecordTypeInts.OCCV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OCCV = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AOPFRecord_FieldIndex.OCCV;
+                    item.OCCV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AudioOcclusionPrimitive_FieldIndex.OCCV;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1645,7 +1610,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class AOPFRecordBinaryTranslationMixIn
+    public static class AudioOcclusionPrimitiveBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1654,35 +1619,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class AOPFRecordBinaryOverlay :
+    internal partial class AudioOcclusionPrimitiveBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IAOPFRecordGetter
+        IAudioOcclusionPrimitiveGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AOPFRecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => AOPFRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AudioOcclusionPrimitive_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => AudioOcclusionPrimitive_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AOPFRecordCommon.Instance;
+        protected override object CommonInstance() => AudioOcclusionPrimitiveCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AOPFRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AudioOcclusionPrimitiveSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AOPFRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AudioOcclusionPrimitiveBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AOPFRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AudioOcclusionPrimitiveBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IAOPFRecord);
+        protected override Type LinkType => typeof(IAudioOcclusionPrimitive);
 
 
         #region ObjectBounds
@@ -1696,11 +1661,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region OBSV
         private int? _OBSVLocation;
-        public ReadOnlyMemorySlice<Byte>? OBSV => _OBSVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OBSVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public Single? OBSV => _OBSVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OBSVLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region OCCV
         private int? _OCCVLocation;
-        public ReadOnlyMemorySlice<Byte>? OCCV => _OCCVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OCCVLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public Single? OCCV => _OCCVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OCCVLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1708,7 +1673,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected AOPFRecordBinaryOverlay(
+        protected AudioOcclusionPrimitiveBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1718,7 +1683,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IAOPFRecordGetter AOPFRecordFactory(
+        public static IAudioOcclusionPrimitiveGetter AudioOcclusionPrimitiveFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1730,7 +1695,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new AOPFRecordBinaryOverlay(
+            var ret = new AudioOcclusionPrimitiveBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1748,12 +1713,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IAOPFRecordGetter AOPFRecordFactory(
+        public static IAudioOcclusionPrimitiveGetter AudioOcclusionPrimitiveFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return AOPFRecordFactory(
+            return AudioOcclusionPrimitiveFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1774,22 +1739,22 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)AOPFRecord_FieldIndex.ObjectBounds;
+                    return (int)AudioOcclusionPrimitive_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.ODTY:
                 {
                     _ODTYLocation = (stream.Position - offset);
-                    return (int)AOPFRecord_FieldIndex.ODTY;
+                    return (int)AudioOcclusionPrimitive_FieldIndex.ODTY;
                 }
                 case RecordTypeInts.OBSV:
                 {
                     _OBSVLocation = (stream.Position - offset);
-                    return (int)AOPFRecord_FieldIndex.OBSV;
+                    return (int)AudioOcclusionPrimitive_FieldIndex.OBSV;
                 }
                 case RecordTypeInts.OCCV:
                 {
                     _OCCVLocation = (stream.Position - offset);
-                    return (int)AOPFRecord_FieldIndex.OCCV;
+                    return (int)AudioOcclusionPrimitive_FieldIndex.OCCV;
                 }
                 default:
                     return base.FillRecordType(
@@ -1808,7 +1773,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AOPFRecordMixIn.Print(
+            AudioOcclusionPrimitiveMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1818,7 +1783,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<AOPFRecord>.ToString(this);
+            return MajorRecordPrinter<AudioOcclusionPrimitive>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1828,16 +1793,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IAOPFRecordGetter rhs) return false;
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IAudioOcclusionPrimitiveGetter rhs) return false;
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAOPFRecordGetter? obj)
+        public bool Equals(IAudioOcclusionPrimitiveGetter? obj)
         {
-            return ((AOPFRecordCommon)((IAOPFRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AOPFRecordCommon)((IAOPFRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AudioOcclusionPrimitiveCommon)((IAudioOcclusionPrimitiveGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

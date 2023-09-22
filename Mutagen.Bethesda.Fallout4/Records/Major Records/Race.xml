@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Race" recordType="RACE" objType="Record" baseClass="Fallout4MajorRecord" GUID="653cc994-ac13-436b-907d-6a4c43bcd98a" ID="244">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -15,7 +15,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-        <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
@@ -190,32 +190,32 @@
     <LinkInterface>IRelatable</LinkInterface>
     <AdditionalContainedRecordType>NAM2</AdditionalContainedRecordType>
   </Object>
-  <Object name="RaceWeight" objType="Subrecord" GUID="81e4197a-7adb-4406-a15e-02095555c257" ID="245">
+  <Object name="RaceWeight" objType="Subrecord">
     <Fields>
       <Float name="Thin" />
       <Float name="Muscular" />
       <Float name="Fat" />
     </Fields>
   </Object>
-  <Object name="BodyData" objType="Subrecord" GUID="c98c6552-aa95-472c-b07d-61440dce57b2" ID="246">
+  <Object name="BodyData" objType="Subrecord">
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
       <RefDirect name="Model" refName="Model" />
     </Fields>
   </Object>
-  <Object name="BipedObjectData" objType="Subrecord" GUID="55ef2302-604e-49bb-beac-842f234edec5" ID="247">
+  <Object name="BipedObjectData" objType="Subrecord">
     <Fields>
       <String name="Name" binary="NoGeneration" />
       <FormLink name="Conditions" refName="ActorValueInformation" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="MovementDataOverride" objType="Subrecord" GUID="d44d5e3b-c6d7-4de4-90a2-58132102ff1a" ID="248">
+  <Object name="MovementDataOverride" objType="Subrecord">
     <Fields>
       <FormLink name="MovementType" recordType="MTYP" refName="MovementType" />
       <RefDirect name="MovementData" recordType="SPED" refName="MovementData" />
     </Fields>
   </Object>
-  <Object name="MovementData" objType="Subrecord" GUID="04ef2528-6125-4b56-8eb8-cbb711f8e311" ID="249">
+  <Object name="MovementData" objType="Subrecord">
     <Fields>
       <RefDirect name="Left" refName="MovementDirectionData" />
       <RefDirect name="Right" refName="MovementDirectionData" />
@@ -227,7 +227,7 @@
       <ByteArray name="Unused" byteLength="12" nullable="False" />
     </Fields>
   </Object>
-  <Object name="MovementDirectionData" objType="Subrecord" GUID="03bc6cd4-dadd-47ef-86fe-996407171f64" ID="250">
+  <Object name="MovementDirectionData" objType="Subrecord">
     <Fields>
       <Int32 name="Unused1" />
       <Float name="Walk" />
@@ -235,7 +235,7 @@
       <Int32 name="Unused2" />
     </Fields>
   </Object>
-  <Object name="MovementRotationData" objType="Subrecord" GUID="6e5d85c7-a48f-4365-bb7d-4b97b9dfc82a" ID="251">
+  <Object name="MovementRotationData" objType="Subrecord">
     <Fields>
       <Int32 name="Unused1" />
       <Float name="Walk" isRotation="true" />
@@ -243,7 +243,7 @@
       <Int32 name="Unused2" />
     </Fields>
   </Object>
-  <Object name="FaceFxPhonemes" objType="Subrecord" GUID="9319b560-0d83-4c5a-9133-281ed67d8d2f" ID="252">
+  <Object name="FaceFxPhonemes" objType="Subrecord">
     <Fields>
       <Bool name="ForceNames" binary="NoGeneration" />
       <RefDirect name="Aah_LipBigAah" nullable="True" refName="Phoneme" binary="NoGeneration" />
@@ -265,7 +265,7 @@
       <RefList name="Unknowns" refName="Phoneme" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="Phoneme" objType="Subrecord" GUID="3d986dc9-0861-4e9d-9f73-339253f68cbb" ID="253">
+  <Object name="Phoneme" objType="Subrecord">
     <Fields>
       <String name="Name" binary="NoGeneration" />
       <Float name="IY" binary="NoGeneration" />
@@ -313,7 +313,7 @@
       <Float name="FLAP" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="HeadData" objType="Subrecord" GUID="4fb44f2a-d848-41f9-aa0a-4339022a3400" ID="254">
+  <Object name="HeadData" objType="Subrecord">
     <Fields>
       <RefDirect name="NeckFatAdjustmentsScale" recordType="NNAM" refName="NeckFatAdjustmentsScale" />
       <RefList name="HeadParts" refName="HeadPartReference" />
@@ -333,27 +333,27 @@
       <String name="MaleWrinkleMapPath" recordType="WMAP" />
     </Fields>
   </Object>
-  <Object name="NeckFatAdjustmentsScale" objType="Subrecord" GUID="9a750944-2ce7-4dec-bf22-3e190d9d3070" ID="255">
+  <Object name="NeckFatAdjustmentsScale" objType="Subrecord">
     <Fields>
       <UInt32 name="Unknown" />
       <Float name="X" />
       <Float name="Y" />
     </Fields>
   </Object>
-  <Object name="HeadPartReference" objType="Subrecord" GUID="358f9c73-2168-4c5e-9be6-2437ed14cfc0" ID="256">
+  <Object name="HeadPartReference" objType="Subrecord">
     <Fields>
       <Int32 name="Number" recordType="INDX" />
       <FormLink name="Head" refName="HeadPart" recordType="HEAD" />
     </Fields>
   </Object>
-  <Object name="TintGroup" objType="Subrecord" GUID="e9d66df5-fbeb-4f9b-98d4-a5369ed0c741" ID="257">
+  <Object name="TintGroup" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="TTGP" translated="Normal" />
       <RefList name="Options" refName="TintTemplateOption" />
       <UInt32 name="CategoryIndex" recordType="TTGE" />
     </Fields>
   </Object>
-  <Object name="TintTemplateOption" objType="Subrecord" GUID="f16b47d8-d290-4bd8-9678-673778a46050" ID="258">
+  <Object name="TintTemplateOption" objType="Subrecord">
     <Fields>
       <Data recordType="TETI">
         <Fields>
@@ -372,7 +372,7 @@
       <Float name="Default" recordType="TTED" />
     </Fields>
   </Object>
-  <Object name="TintTemplateColor" objType="Subrecord" GUID="7a65ccac-22b3-4b22-999c-e7041d1116d9" ID="259">
+  <Object name="TintTemplateColor" objType="Subrecord">
     <Fields>
       <FormLink name="Color" refName="ColorRecord" />
       <Float name="Alpha" />
@@ -380,7 +380,7 @@
       <Enum name="BlendOperation" enumName="BlendOperation" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="MorphGroup" objType="Subrecord" GUID="f6ad0ece-f514-44d3-99e5-4c6b52e3b85f" ID="260">
+  <Object name="MorphGroup" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="MPGN" />
       <RefList name="MorphPresets" refName="MorphPreset" counterRecType="MPPC" />
@@ -388,7 +388,7 @@
       <ByteArray name="UnknownMPGS" recordType="MPGS" />
     </Fields>
   </Object>
-  <Object name="MorphPreset" objType="Subrecord" GUID="c06ee700-01b5-46fe-8047-6cbd4eeeb74d" ID="261">
+  <Object name="MorphPreset" objType="Subrecord">
     <Fields>
       <UInt32 name="Index" recordType="MPPI" />
       <String name="Name" recordType="MPPN" translated="Normal" />
@@ -397,13 +397,13 @@
       <ByteArray name="UnknownMPPF" recordType="MPPF" />
     </Fields>
   </Object>
-  <Object name="FaceMorph" objType="Subrecord" GUID="0b0f2ecd-d3a5-4659-8ed0-52ca56395482" ID="262">
+  <Object name="FaceMorph" objType="Subrecord">
     <Fields>
       <UInt32 name="Index" recordType="FMRI" />
       <String name="Name" recordType="FMRN" translated="Normal" />
     </Fields>
   </Object>
-  <Object name="Subgraph" objType="Subrecord" GUID="ffb4e210-de52-4021-a797-6384123f8a01" ID="263" shortCircuitToLastRequired="true">
+  <Object name="Subgraph" objType="Subrecord" shortCircuitToLastRequired="true">
     <Fields>
       <String name="BehaviorGraph" recordType="SGNM" />
       <List name="ActorKeywords">
@@ -419,14 +419,14 @@
       <Enum name="Perspective" enumName="Perspective" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="MorphValue" objType="Subrecord" GUID="60ecab47-8ab4-491c-998b-330f30ebfba2" ID="264">
+  <Object name="MorphValue" objType="Subrecord">
     <Fields>
       <Int32 name="Index" recordType="MSID" />
       <String name="MinName" recordType="MSM0" />
       <String name="MaxName" recordType="MSM1" />
     </Fields>
   </Object>
-  <Object name="EquipmentSlot" objType="Subrecord" GUID="a01724f1-1a38-49ec-8762-ddf47baa785e" ID="265">
+  <Object name="EquipmentSlot" objType="Subrecord">
     <Fields>
       <FormLink name="Slot" recordType="QNAM" refName="EquipType" />
       <String name="Node" recordType="ZNAM" />

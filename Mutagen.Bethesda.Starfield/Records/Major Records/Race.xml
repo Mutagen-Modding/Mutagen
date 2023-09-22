@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Race" recordType="RACE" objType="Record" baseClass="StarfieldMajorRecord" GUID="df5bcfff-2683-4441-8a86-6f89a74c11f8" ID="721">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
@@ -74,19 +74,19 @@
     <AdditionalContainedRecordType>RBPC</AdditionalContainedRecordType>
     <LinkInterface>IRelatable</LinkInterface>
   </Object>
-  <Object name="BodyData" objType="Subrecord" GUID="96396474-5b2f-4a91-8ebb-922e63b96f05" ID="722">
+  <Object name="BodyData" objType="Subrecord">
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
       <ByteArray name="FLLD" recordType="FLLD" />
     </Fields>
   </Object>
-  <Object name="MovementDataOverride" objType="Subrecord" GUID="2f039203-0c5a-4b0a-8c43-1c4b66ff3d2d" ID="723">
+  <Object name="MovementDataOverride" objType="Subrecord">
     <Fields>
       <FormLink name="MovementType" recordType="MTYP" refName="MovementType" />
       <RefDirect name="MovementData" recordType="SPED" refName="MovementData" />
     </Fields>
   </Object>
-  <Object name="MovementData" objType="Subrecord" GUID="677daedf-cb74-4ce3-833c-9a0a8e7c8e7c" ID="724">
+  <Object name="MovementData" objType="Subrecord">
     <Fields>
       <RefDirect name="Left" refName="MovementDirectionData" />
       <RefDirect name="Right" refName="MovementDirectionData" />
@@ -98,7 +98,7 @@
       <ByteArray name="Unused" byteLength="12" nullable="False" />
     </Fields>
   </Object>
-  <Object name="MovementDirectionData" objType="Subrecord" GUID="71039de6-22ec-4ce1-805a-bdb454382ef6" ID="725">
+  <Object name="MovementDirectionData" objType="Subrecord">
     <Fields>
       <Int32 name="Unused1" />
       <Float name="Walk" />
@@ -106,7 +106,7 @@
       <Int32 name="Unused2" />
     </Fields>
   </Object>
-  <Object name="MovementRotationData" objType="Subrecord" GUID="9f7140e1-3062-40c7-8bc6-c5e3e4b953f4" ID="726">
+  <Object name="MovementRotationData" objType="Subrecord">
     <Fields>
       <Int32 name="Unused1" />
       <Float name="Walk" isRotation="true" />
@@ -114,13 +114,13 @@
       <Int32 name="Unused2" />
     </Fields>
   </Object>
-  <Object name="EquipmentSlot" objType="Subrecord" GUID="3f40e9c0-42e7-41ca-98d9-d24e628fa282" ID="727">
+  <Object name="EquipmentSlot" objType="Subrecord">
     <Fields>
       <FormLink name="Slot" recordType="QNAM" refName="EquipType" />
       <String name="Node" recordType="ZNAM" />
     </Fields>
   </Object>
-  <Object name="SkeletalModel" objType="Subrecord" baseClass="Model" GUID="cac6a709-a4cd-463f-b85f-203ac7a58097" ID="729">
+  <Object name="SkeletalModel" objType="Subrecord" baseClass="Model">
     <BaseRecordTypeOverrides>
       <Mapping From="MODL" To="ANAM" />
     </BaseRecordTypeOverrides>
@@ -130,13 +130,13 @@
       <String name="DNAM" recordType="DNAM" unknown="true" />
     </Fields>
   </Object>
-  <Object name="BipedObjectData" objType="Subrecord" GUID="9b4379d3-4ed3-489d-af70-9cc1d632d660" ID="731">
+  <Object name="BipedObjectData" objType="Subrecord">
     <Fields>
       <String name="Name" binary="NoGeneration" />
       <FormLink name="Conditions" refName="ActorValueInformation" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="HeadData" objType="Subrecord" GUID="a590f6d7-dbe4-4c77-aaa0-07fdfe9a8e1e" ID="732">
+  <Object name="HeadData" objType="Subrecord">
     <Fields>
       <Marker name="NAM0" recordType="NAM0" />
       <RefDirect name="NeckFatAdjustmentsScale" recordType="NNAM" refName="NeckFatAdjustmentsScale" />
@@ -151,14 +151,14 @@
       <String name="FSTT" recordType="FSTT" unknown="true" />
     </Fields>
   </Object>
-  <Object name="NeckFatAdjustmentsScale" objType="Subrecord" GUID="c35cb442-8a13-45c5-9b06-368ce22dff82" ID="733">
+  <Object name="NeckFatAdjustmentsScale" objType="Subrecord">
     <Fields>
       <UInt32 name="Unknown" />
       <Float name="X" />
       <Float name="Y" />
     </Fields>
   </Object>
-  <Object name="MorphGroup" objType="Subrecord" GUID="85e30a47-5afc-491c-b81f-cafd9c172b68" ID="734">
+  <Object name="MorphGroup" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="MPGN" />
       <List name="MPGMs" unknown="true">
@@ -166,13 +166,13 @@
       </List>
     </Fields>
   </Object>
-  <Object name="FaceMorph" objType="Subrecord" GUID="c227ba3f-91c2-454d-a785-3a1837d6c93c" ID="735">
+  <Object name="FaceMorph" objType="Subrecord">
     <Fields>
       <UInt32 name="Index" recordType="FMRI" />
       <RefList name="FaceMorphItems" refName="FaceMorphItem" unknown="true" />
     </Fields>
   </Object>
-  <Object name="FaceMorphItem" objType="Subrecord" GUID="5b99d469-cd1e-4f9f-9efc-e6f3e5fe4e1c" ID="736">
+  <Object name="FaceMorphItem" objType="Subrecord">
     <Fields>
       <String name="FMRU" recordType="FMRU" unknown="true" />
       <String name="Name" recordType="FMRN" translated="Normal" />
@@ -180,7 +180,7 @@
       <Int32 name="FMSR" recordType="FMSR" unknown="true" />
     </Fields>
   </Object>
-  <Object name="FDSIRecord" objType="Subrecord" GUID="c96951de-583e-480d-8142-0b2d6db586da" ID="737">
+  <Object name="FDSIRecord" objType="Subrecord">
     <Fields>
       <Int32 name="FDSI" recordType="FDSI" unknown="true" />
       <Int32 name="FDSL" recordType="FDSL" unknown="true" />

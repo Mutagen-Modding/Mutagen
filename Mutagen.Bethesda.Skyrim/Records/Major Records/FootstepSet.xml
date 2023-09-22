@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="FootstepSet" recordType="FSTS" objType="Record" baseClass="SkyrimMajorRecord" GUID="7bc68bd1-2eb5-4094-8e32-00eec9922c48" ID="441">
+  <Object name="FootstepSet" recordType="FSTS" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <CustomLogic name="Count" recordType="XCNT" />
-      <List name="WalkForwardFootsteps" binary="NoGeneration" >
+      <List name="WalkForwardFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="RunForwardFootsteps" binary="NoGeneration" >
+      <List name="RunForwardFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="WalkForwardAlternateFootsteps" binary="NoGeneration" >
+      <List name="WalkForwardAlternateFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="RunForwardAlternateFootsteps" binary="NoGeneration" >
+      <List name="RunForwardAlternateFootsteps" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
-      <List name="WalkForwardAlternateFootsteps2" binary="NoGeneration" >
+      <List name="WalkForwardAlternateFootsteps2" binary="NoGeneration">
         <FormLink refName="Footstep" />
       </List>
     </Fields>

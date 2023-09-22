@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Climate" objType="Record" baseClass="OblivionMajorRecord" recordType="CLMT" GUID="25ca8fab-7f62-4f8b-9c32-d65a3261ac05" ID="105">
+  <Object name="Climate" objType="Record" baseClass="OblivionMajorRecord" recordType="CLMT">
     <Fields>
       <List name="Weathers" recordType="WLST">
         <RefDirect refName="WeatherType" />
@@ -11,7 +11,7 @@
       <RefDirect name="Data" refName="ClimateData" />
     </Fields>
   </Object>
-  <Object name="ClimateData" recordType="TNAM" objType="Subrecord" GUID="765abd7c-fef0-4833-9020-ab4b8b215f18" ID="179">
+  <Object name="ClimateData" recordType="TNAM" objType="Subrecord">
     <Fields>
       <TimeOnly name="SunriseBegin" binary="Custom" byteLength="1" />
       <TimeOnly name="SunriseEnd" binary="Custom" byteLength="1" />

@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="SkyrimMajorRecord" GUID="9bc07114-08cb-4a62-8819-b3edc36ab87e" ID="115">
+  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />

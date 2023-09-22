@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AObjectModification" recordType="OMOD" objType="Record" abstract="true" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="a0536c2f-a2a1-4faf-b038-9ebe8e076f1c" ID="236">
+  <Object name="AObjectModification" recordType="OMOD" objType="Record" abstract="true" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" />
@@ -31,13 +31,13 @@
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <AdditionalContainedRecordType>NONE</AdditionalContainedRecordType>
   </Object>
-  <Object name="ObjectModItem" objType="Subrecord" GUID="f8b8c99c-63f5-42ba-897c-2ee4dc442e9d" ID="654">
+  <Object name="ObjectModItem" objType="Subrecord">
     <Fields>
       <UInt32 name="Value1" />
       <UInt32 name="Value2" />
     </Fields>
   </Object>
-  <Object name="ObjectModInclude" objType="Subrecord" GUID="3ef02a2f-8f49-40a6-95c5-8ccb780ad182" ID="655">
+  <Object name="ObjectModInclude" objType="Subrecord">
     <Fields>
       <FormLink name="Mod" refName="AObjectModification" />
       <UInt8 name="MinimumLevel" />
@@ -45,7 +45,7 @@
       <Bool name="DoNotUseAll" byteLength="1" />
     </Fields>
   </Object>
-  <Object name="ArmorModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="c762d78b-2491-4f14-a1fd-e2373071b5e1" ID="656">
+  <Object name="ArmorModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
     <Fields>
       <List name="Properties" binary="NoGeneration">
         <Ref>
@@ -56,7 +56,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="NpcModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="03f6227f-e295-4869-bc28-e65a6001f00e" ID="657">
+  <Object name="NpcModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
     <Fields>
       <List name="Properties" binary="NoGeneration">
         <Ref>
@@ -67,7 +67,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="WeaponModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="3a0bc5ec-32af-4381-9283-a444c89cfce2" ID="658">
+  <Object name="WeaponModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
     <Fields>
       <List name="Properties" binary="NoGeneration">
         <Ref>
@@ -78,7 +78,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="ea6acf0a-4fa1-474f-bb0d-95dc4cf7bd97" ID="659">
+  <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
     <Fields>
       <List name="Properties" binary="NoGeneration">
         <Ref>
@@ -89,7 +89,7 @@
       </List>
     </Fields>
   </Object>
-  <Object name="UnknownObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification" GUID="dcb6dc31-9319-46f3-b97e-4f27251a3af4" ID="688">
+  <Object name="UnknownObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
     <Fields>
       <List name="Properties" binary="NoGeneration">
         <Ref>

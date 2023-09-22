@@ -12,7 +12,7 @@ public class RecordTypeOrderExporterModule : GenerationModule
     {
         var basePath = Path.Combine("RecordTypeOrdering", proto.Protocol.Namespace);
         Directory.CreateDirectory(basePath);
-        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
             var path = Path.Combine(basePath, $"{obj.Name}.txt");
             if (File.Exists(path))

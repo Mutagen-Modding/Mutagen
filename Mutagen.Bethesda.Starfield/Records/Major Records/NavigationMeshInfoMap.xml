@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NavigationMeshInfoMap" recordType="NAVI" objType="Record" baseClass="StarfieldMajorRecord" GUID="dca64c62-73e7-47f5-b94f-b5f6e53ca9bc" ID="825">
+  <Object name="NavigationMeshInfoMap" recordType="NAVI" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

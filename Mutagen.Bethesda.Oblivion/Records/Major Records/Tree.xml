@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Tree" baseClass="OblivionMajorRecord" objType="Record" recordType="TREE" GUID="82606775-b1a1-4c44-9052-b021c5ccc13a" ID="79">
+  <Object name="Tree" baseClass="OblivionMajorRecord" objType="Record" recordType="TREE">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" />
@@ -11,7 +11,7 @@
       <RefDirect name="BillboardDimensions" refName="Dimensions" />
     </Fields>
   </Object>
-  <Object name="TreeData" recordType="CNAM" objType="Subrecord" GUID="690e9f8f-ddb5-4a0a-8d70-59c08a37997d" ID="212">
+  <Object name="TreeData" recordType="CNAM" objType="Subrecord">
     <Fields>
       <Float name="LeafCurvature" />
       <Float name="MinimumLeafAngle" />
@@ -23,7 +23,7 @@
       <Float name="RustleSpeed" />
     </Fields>
   </Object>
-  <Object name="Dimensions" recordType="BNAM" objType="Subrecord" GUID="0689828d-fb99-478d-81f7-0260867ff78b" ID="213">
+  <Object name="Dimensions" recordType="BNAM" objType="Subrecord">
     <Fields>
       <Float name="Width" />
       <Float name="Height" />

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImpactDataSet" objType="Record" recordType="IPDS" baseClass="SkyrimMajorRecord" GUID="c121a55e-e93f-481f-a6b0-cea75cfbdb64" ID="79">
+  <Object name="ImpactDataSet" objType="Record" recordType="IPDS" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefList name="Impacts" refName="ImpactData" />
     </Fields>
   </Object>
-  <Object name="ImpactData" objType="Subrecord" recordType="PNAM" GUID="4c10409f-4cdd-4f1a-b7a8-0700ae4c1bd1" ID="440">
+  <Object name="ImpactData" objType="Subrecord" recordType="PNAM">
     <Fields>
       <FormLink name="Material" refName="MaterialType" />
       <FormLink name="Impact" refName="Impact" />

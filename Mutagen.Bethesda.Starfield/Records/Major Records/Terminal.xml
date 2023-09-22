@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Terminal" recordType="TERM" objType="Record" baseClass="StarfieldMajorRecord" GUID="4b58fc0c-61fe-430b-b273-e05da674fb8b" ID="866">
+  <Object name="Terminal" recordType="TERM" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>

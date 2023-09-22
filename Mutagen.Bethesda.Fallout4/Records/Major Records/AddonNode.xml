@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AddonNode" recordType="ADDN" objType="Record" baseClass="Fallout4MajorRecord" GUID="532676e2-896e-4295-b298-076f1cbe69cc" ID="593">
+  <Object name="AddonNode" recordType="ADDN" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <RefDirect name="Model" refName="Model" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Icons" objType="Subrecord" GUID="41d61c12-3813-4952-9eac-00eb6f924e5f" ID="234">
+  <Object name="Icons" objType="Subrecord">
     <Fields>
       <AssetLink name="LargeIconFilename" recordType="ICON" nullable="False" assetType="SkyrimTexture" />
       <AssetLink name="SmallIconFilename" recordType="MICO" assetType="SkyrimTexture" />

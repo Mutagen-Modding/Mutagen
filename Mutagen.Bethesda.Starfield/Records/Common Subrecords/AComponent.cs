@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -24,8 +24,10 @@ public partial class AComponent
         TESModel_Component,
         TESPlanetModel_Component,
         HoudiniData_Component,
+        BGSSkinForm_Component,
+        BGSBodyPartInfo_Component,
     }
-    
+
     public static bool TryCreateFromBinary(
         MutagenFrame frame,
         out AComponent item,
@@ -37,7 +39,7 @@ public partial class AComponent
             translationParams: translationParams);
         return startPos != frame.Position;
     }
-    
+
     public static AComponent CreateFromBinary(
         MutagenFrame frame,
         TypedParseParams translationParams)
@@ -70,11 +72,15 @@ public partial class AComponent
                 return PlanetModelComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.HoudiniData_Component:
                 return HoudiniDataComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSkinForm_Component:
+                return SkinFormComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSBodyPartInfo_Component:
+                return BodyPartInfoComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
     }
-    
+
     public static ComponentType GetComponentType(SubrecordFrame bfcb)
     {
         return Enum.Parse<ComponentType>(bfcb.AsString(MutagenEncodingProvider._1252));
@@ -125,9 +131,11 @@ partial class AComponentBinaryWriteTranslation
             IModelComponentGetter _ => AComponent.ComponentType.TESModel_Component,
             IPlanetModelComponentGetter _ => AComponent.ComponentType.TESPlanetModel_Component,
             IHoudiniDataComponentGetter _ => AComponent.ComponentType.HoudiniData_Component,
+            ISkinFormComponentGetter _ => AComponent.ComponentType.BGSSkinForm_Component,
+            IBodyPartInfoComponentGetter _ => AComponent.ComponentType.BGSBodyPartInfo_Component,
             _ => throw new NotImplementedException()
         };
-        
+
         using (HeaderExport.Subrecord(writer, RecordTypes.BFCB))
         {
             writer.Write(type.ToStringFast(), StringBinaryType.NullTerminate, MutagenEncodingProvider._1252);
@@ -169,10 +177,14 @@ partial class AComponentBinaryOverlay
                 return PlanetModelComponentBinaryOverlay.PlanetModelComponentFactory(stream, package);
             case AComponent.ComponentType.HoudiniData_Component:
                 return HoudiniDataComponentBinaryOverlay.HoudiniDataComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSkinForm_Component:
+                return SkinFormComponentBinaryOverlay.SkinFormComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSBodyPartInfo_Component:
+                return BodyPartInfoComponentBinaryOverlay.BodyPartInfoComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }
-        
-        
+
+
     }
 }

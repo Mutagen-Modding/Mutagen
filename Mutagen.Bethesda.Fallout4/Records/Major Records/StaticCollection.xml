@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="StaticCollection" recordType="SCOL" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="8ced1ea5-9689-40cf-aba2-ec935ddac390" ID="197">
+  <Object name="StaticCollection" recordType="SCOL" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -15,19 +15,19 @@
     <LinkInterface>IStaticObject</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
-  <Object name="StaticPart" objType="Subrecord" GUID="24d0a7c0-8933-4abb-9d66-c56a3ce655fa" ID="198">
+  <Object name="StaticPart" objType="Subrecord">
     <Fields>
-      <FormLink name="Static" recordType="ONAM" >
+      <FormLink name="Static" recordType="ONAM">
         <Interface>IStaticTarget</Interface>
       </FormLink>
       <RefList name="Placements" refName="StaticPlacement" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="StaticPlacement" objType="Subrecord" GUID="caddd826-3213-4e45-b983-17447ba30c77" ID="199">
+  <Object name="StaticPlacement" objType="Subrecord">
     <Fields>
       <P3Float name="Position" />
       <P3Float name="Rotation" />
       <Float name="Scale" />
-	</Fields>
+    </Fields>
   </Object>
 </Loqui>

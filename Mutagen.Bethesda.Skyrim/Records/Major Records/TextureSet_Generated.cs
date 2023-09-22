@@ -1122,13 +1122,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 22,
-            version: 0);
-
-        public const string GUID = "7d698f54-6430-49c7-ab37-7649204e689b";
-
         public const ushort AdditionalFieldCount = 11;
 
         public const ushort FieldCount = 18;
@@ -1180,8 +1173,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(TextureSetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2178,65 +2169,49 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TX00:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Diffuse = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.Diffuse = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Diffuse;
                 }
                 case RecordTypeInts.TX01:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NormalOrGloss = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.NormalOrGloss = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.NormalOrGloss;
                 }
                 case RecordTypeInts.TX02:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnvironmentMaskOrSubsurfaceTint = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.EnvironmentMaskOrSubsurfaceTint = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint;
                 }
                 case RecordTypeInts.TX03:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GlowOrDetailMap = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.GlowOrDetailMap = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.GlowOrDetailMap;
                 }
                 case RecordTypeInts.TX04:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Height = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.Height = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Height;
                 }
                 case RecordTypeInts.TX05:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Environment = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.Environment = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Environment;
                 }
                 case RecordTypeInts.TX06:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Multilayer = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.Multilayer = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Multilayer;
                 }
                 case RecordTypeInts.TX07:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BacklightMaskOrSpecular = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.BacklightMaskOrSpecular = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.BacklightMaskOrSpecular;
                 }
                 case RecordTypeInts.DODT:

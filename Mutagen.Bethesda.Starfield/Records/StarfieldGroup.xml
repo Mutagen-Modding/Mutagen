@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="StarfieldGroup" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false" GUID="bf12722f-f38f-429d-b80e-b055025380eb" ID="62">
+  <Object name="StarfieldGroup" objType="Group" recordType="GRUP" ctorPermission="protected" setBaseClass="false">
     <Generic name="T" isLoqui="true" getterVariance="Out" override="true" isClass="true">
       <Where>StarfieldMajorRecord</Where>
     </Generic>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Relationship" objType="Record" recordType="RELA" baseClass="Fallout4MajorRecord" GUID="3e59d695-6da8-45ea-a3df-6e914bfdc339" ID="632">
+  <Object name="Relationship" objType="Record" recordType="RELA" baseClass="Fallout4MajorRecord">
     <Fields>
       <Data>
         <Fields>

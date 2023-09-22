@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -51,6 +53,27 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordFormComponentGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
 
         #region To String
 
@@ -89,11 +112,11 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem initialValue)
-            : base(initialValue)
+            public Mask(TItem Keywords)
+            : base()
             {
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
             }
-
 
             #pragma warning disable CS8618
             protected Mask()
@@ -101,6 +124,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             #endregion
 
             #region Equals
@@ -114,11 +141,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Keywords);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -129,6 +158,17 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -137,6 +177,17 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -152,6 +203,20 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -170,6 +235,27 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(KeywordFormComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -180,12 +266,18 @@ namespace Mutagen.Bethesda.Starfield
             AComponent.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 KeywordFormComponent_FieldIndex enu = (KeywordFormComponent_FieldIndex)index;
                 switch (enu)
                 {
+                    case KeywordFormComponent_FieldIndex.Keywords:
+                        return Keywords;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -196,6 +288,9 @@ namespace Mutagen.Bethesda.Starfield
                 KeywordFormComponent_FieldIndex enu = (KeywordFormComponent_FieldIndex)index;
                 switch (enu)
                 {
+                    case KeywordFormComponent_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -207,6 +302,9 @@ namespace Mutagen.Bethesda.Starfield
                 KeywordFormComponent_FieldIndex enu = (KeywordFormComponent_FieldIndex)index;
                 switch (enu)
                 {
+                    case KeywordFormComponent_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -216,6 +314,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Keywords != null) return true;
                 return false;
             }
             #endregion
@@ -242,6 +341,26 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -250,6 +369,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -271,15 +391,26 @@ namespace Mutagen.Bethesda.Starfield
             AComponent.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Keywords;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Keywords = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Keywords, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -287,6 +418,11 @@ namespace Mutagen.Bethesda.Starfield
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => KeywordFormComponentCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeywordFormComponentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -347,17 +483,31 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IKeywordFormComponent :
         IAComponent,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         IKeywordFormComponentGetter,
         ILoquiObjectSetter<IKeywordFormComponent>
     {
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
     }
 
     public partial interface IKeywordFormComponentGetter :
         IAComponentGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IKeywordFormComponentGetter>
     {
         static new ILoquiRegistration StaticRegistration => KeywordFormComponent_Registration.Instance;
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
 
     }
 
@@ -502,6 +652,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum KeywordFormComponent_FieldIndex
     {
+        Keywords = 0,
     }
     #endregion
 
@@ -512,16 +663,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 885,
-            version: 0);
+        public const ushort AdditionalFieldCount = 1;
 
-        public const string GUID = "2a979c6c-5762-419f-9f2b-bb2fc2ea7d97";
-
-        public const ushort AdditionalFieldCount = 0;
-
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 1;
 
         public static readonly Type MaskType = typeof(KeywordFormComponent.Mask<>);
 
@@ -551,14 +695,16 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.BFCB);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.BFCB);
+            var all = RecordCollection.Factory(
+                RecordTypes.BFCB,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(KeywordFormComponentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -596,6 +742,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IKeywordFormComponent item)
         {
             ClearPartial();
+            item.Keywords = null;
             base.Clear(item);
         }
         
@@ -608,6 +755,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IKeywordFormComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Keywords?.RemapLinks(mapping);
         }
         
         #endregion
@@ -663,6 +811,10 @@ namespace Mutagen.Bethesda.Starfield
             KeywordFormComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -712,6 +864,21 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static KeywordFormComponent_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
@@ -731,6 +898,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)KeywordFormComponent_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
             return true;
         }
         
@@ -748,6 +919,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IKeywordFormComponentGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Keywords);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -771,6 +943,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -796,6 +975,33 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)KeywordFormComponent_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)KeywordFormComponent_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         
@@ -900,12 +1106,35 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly KeywordFormComponentBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IKeywordFormComponentGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            AComponentBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IKeywordFormComponentGetter item,
             TypedWriteParams translationParams)
         {
-            AComponentBinaryWriteTranslation.WriteRecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -940,6 +1169,43 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly KeywordFormComponentBinaryCreateTranslation Instance = new KeywordFormComponentBinaryCreateTranslation();
 
+        public static ParseResult FillBinaryRecordTypes(
+            IKeywordFormComponent item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)KeywordFormComponent_FieldIndex.Keywords;
+                }
+                default:
+                    return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -972,6 +1238,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => KeywordFormComponentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => KeywordFormComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -984,6 +1251,10 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1035,6 +1306,42 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)KeywordFormComponent_FieldIndex.Keywords;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

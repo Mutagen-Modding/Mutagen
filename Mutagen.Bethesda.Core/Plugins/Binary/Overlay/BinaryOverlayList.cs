@@ -351,6 +351,23 @@ internal abstract class BinaryOverlayList
         byte countLength,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
+        return FactoryByCountLength<T>(
+            mem,
+            package,
+            itemLength: itemLength,
+            countLength: countLength,
+            expectedLengthLength: 0,
+            getter: getter);
+    }
+
+    public static IReadOnlyList<T> FactoryByCountLength<T>(
+        ReadOnlyMemorySlice<byte> mem,
+        BinaryOverlayFactoryPackage package,
+        int itemLength,
+        byte countLength,
+        byte expectedLengthLength,
+        PluginBinaryOverlay.SpanFactory<T> getter)
+    {
         var count = countLength switch
         {
             1 => mem[0],
@@ -363,7 +380,7 @@ internal abstract class BinaryOverlayList
             throw new ArgumentException("Item count and expected size did not match.");
         }
         return new BinaryOverlayListByStartIndex<T>(
-            mem.Slice(countLength, checked((int)(count * itemLength))),
+            mem.Slice(countLength + expectedLengthLength, checked((int)(count * itemLength))),
             package,
             getter,
             itemLength);
@@ -378,6 +395,8 @@ internal abstract class BinaryOverlayList
         var count = countLength switch
         {
             4 => BinaryPrimitives.ReadUInt32LittleEndian(mem),
+            2 => BinaryPrimitives.ReadUInt16LittleEndian(mem),
+            1 => mem[0],
             _ => throw new NotImplementedException(),
         };
         int[] locs = new int[count];
@@ -448,7 +467,9 @@ internal abstract class BinaryOverlayList
         byte countLength,
         PluginBinaryOverlay.Factory<T> getter)
     {
-        return FactoryByLazyParse(mem.Slice(countLength), package, getter);
+        // Don't care about count, at the moment
+        var contentMem = mem.Slice(countLength);
+        return FactoryByLazyParse(contentMem, package, getter);
     }
 
     private class BinaryOverlayListByLocationArray<T> : IReadOnlyList<T>

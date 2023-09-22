@@ -434,7 +434,7 @@ public class TriggeringRecordModule : GenerationModule
             }
             else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
             {
-                var implementingObjs = obj.ProtoGen.ObjectGenerationsByID.Values
+                var implementingObjs = obj.ProtoGen.ObjectGenerationsByName.Values
                     .Where(o => o.Interfaces.ContainsAtLeast(loqui.GetterInterface, LoquiInterfaceDefinitionType.Direct)
                         || o.Interfaces.ContainsAtLeast(loqui.SetterInterface, LoquiInterfaceDefinitionType.Direct))
                     .ToArray();
@@ -817,7 +817,7 @@ public class TriggeringRecordModule : GenerationModule
     {
         await base.FinalizeGeneration(proto);
         HashSet<RecordType> recordTypes = new HashSet<RecordType>();
-        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
             recordTypes.Add(GetAllRecordTypes(obj).ToEnumerable());
         }

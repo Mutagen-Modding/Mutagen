@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DistantLODData" recordType="XLOD" objType="Subrecord" GUID="d259776d-0a81-447e-8981-6b3af132e18c" ID="125">
+  <Object name="DistantLODData" recordType="XLOD" objType="Subrecord">
     <Fields>
       <Float name="Unknown0" />
       <Float name="Unknown1" />

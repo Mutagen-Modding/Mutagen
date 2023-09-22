@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Key" recordType="KEYM" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record" GUID="aae23e29-1f5c-44c3-aa51-ae68f15be91b" ID="165">
+  <Object name="Key" recordType="KEYM" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -10,7 +10,7 @@
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <Data>

@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +56,20 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Models
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DebrisModel> _Models = new ExtendedList<DebrisModel>();
+        public ExtendedList<DebrisModel> Models
+        {
+            get => this._Models;
+            init => this._Models = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDebrisModelGetter> IDebrisGetter.Models => _Models;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +95,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Models = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -87,7 +105,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Models)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +116,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Models = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>(Models, Enumerable.Empty<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -105,6 +125,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebrisModel.Mask<TItem>?>>?>? Models;
             #endregion
 
             #region Equals
@@ -118,11 +142,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Models, rhs.Models)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Models);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +159,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Models != null)
+                {
+                    if (!eval(this.Models.Overall)) return false;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +179,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Models != null)
+                {
+                    if (eval(this.Models.Overall)) return true;
+                    if (this.Models.Specific != null)
+                    {
+                        foreach (var item in this.Models.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +206,21 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Models != null)
+                {
+                    obj.Models = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DebrisModel.Mask<R>?>>?>(eval(this.Models.Overall), Enumerable.Empty<MaskItemIndexed<R, DebrisModel.Mask<R>?>>());
+                    if (Models.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DebrisModel.Mask<R>?>>();
+                        obj.Models.Specific = l;
+                        foreach (var item in Models.Specific)
+                        {
+                            MaskItemIndexed<R, DebrisModel.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, DebrisModel.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +239,25 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Debris.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Models?.Overall ?? true)
+                        && Models is {} ModelsItem)
+                    {
+                        sb.AppendLine("Models =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ModelsItem.Overall);
+                            if (ModelsItem.Specific != null)
+                            {
+                                foreach (var subItem in ModelsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +268,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>? Models;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        return Models;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +290,9 @@ namespace Mutagen.Bethesda.Starfield
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        this.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +304,9 @@ namespace Mutagen.Bethesda.Starfield
                 Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
+                    case Debris_FieldIndex.Models:
+                        this.Models = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +316,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Models != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +343,24 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Models is {} ModelsItem)
+                {
+                    sb.AppendLine("Models =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ModelsItem.Overall);
+                        if (ModelsItem.Specific != null)
+                        {
+                            foreach (var subItem in ModelsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +369,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Models = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebrisModel.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Models?.Overall, rhs.Models?.Overall), Noggog.ExceptionExt.Combine(this.Models?.Specific, rhs.Models?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,6 +391,10 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public DebrisModel.TranslationMask? Models;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
@@ -284,6 +404,12 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Models == null ? DefaultOn : !Models.GetCrystal().CopyNothing, Models?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -338,6 +464,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IDebris);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DebrisCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DebrisSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DebrisSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DebrisSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -417,10 +547,12 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IDebris :
+        IAssetLinkContainer,
         IDebrisGetter,
         ILoquiObjectSetter<IDebrisInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<DebrisModel> Models { get; }
     }
 
     public partial interface IDebrisInternal :
@@ -433,11 +565,13 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.DEBR)]
     public partial interface IDebrisGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IDebrisGetter>,
         IMapsToGetter<IDebrisGetter>
     {
         static new ILoquiRegistration StaticRegistration => Debris_Registration.Instance;
+        IReadOnlyList<IDebrisModelGetter> Models { get; }
 
     }
 
@@ -614,6 +748,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Models = 7,
     }
     #endregion
 
@@ -624,16 +759,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 770,
-            version: 0);
+        public const ushort AdditionalFieldCount = 1;
 
-        public const string GUID = "32f9124e-527b-40b5-a8fa-200718ca047c";
-
-        public const ushort AdditionalFieldCount = 0;
-
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Debris.Mask<>);
 
@@ -663,14 +791,16 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.DEBR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.DEBR);
+            var all = RecordCollection.Factory(
+                RecordTypes.DEBR,
+                RecordTypes.DATA,
+                RecordTypes.MODT);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DebrisBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -708,6 +838,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDebrisInternal item)
         {
             ClearPartial();
+            item.Models.Clear();
             base.Clear(item);
         }
         
@@ -725,6 +856,29 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IDebris obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebris obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Models.SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IDebris obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Models.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -792,6 +946,10 @@ namespace Mutagen.Bethesda.Starfield
             Debris.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Models = item.Models.CollectionEqualsHelper(
+                rhs.Models,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -841,6 +999,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Models?.Overall ?? true)
+            {
+                sb.AppendLine("Models =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Models)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Debris_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -891,6 +1063,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            {
+                if (!lhs.Models.SequenceEqual(rhs.Models, (l, r) => ((DebrisModelCommon)((IDebrisModelGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Debris_FieldIndex.Models)))) return false;
+            }
             return true;
         }
         
@@ -919,6 +1095,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IDebrisGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Models);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -947,6 +1124,22 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Models.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1022,6 +1215,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            {
+                errorMask?.PushIndex((int)Debris_FieldIndex.Models);
+                try
+                {
+                    item.Models.SetTo(
+                        rhs.Models
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1170,6 +1387,28 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly DebrisBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IDebrisGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDebrisModelGetter>.Instance.Write(
+                writer: writer,
+                items: item.Models,
+                transl: (MutagenWriter subWriter, IDebrisModelGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((DebrisModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IDebrisGetter item,
@@ -1186,10 +1425,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1239,6 +1480,40 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.DEBR;
+        public static ParseResult FillBinaryRecordTypes(
+            IDebrisInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    item.Models.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DebrisModel>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: DebrisModel_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: DebrisModel.TryCreateFromBinary));
+                    return (int)Debris_FieldIndex.Models;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1271,6 +1546,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DebrisCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1285,6 +1561,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IDebris);
 
 
+        public IReadOnlyList<IDebrisModelGetter> Models { get; private set; } = Array.Empty<IDebrisModelGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1342,6 +1619,38 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    this.Models = this.ParseRepeatedTypelessSubrecord<IDebrisModelGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: DebrisModel_Registration.TriggerSpecs,
+                        factory: DebrisModelBinaryOverlay.DebrisModelFactory);
+                    return (int)Debris_FieldIndex.Models;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

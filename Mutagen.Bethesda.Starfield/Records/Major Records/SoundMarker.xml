@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoundMarker" recordType="SOUN" objType="Record" baseClass="StarfieldMajorRecord" GUID="cda3f06c-39c7-4b23-8c28-2ec35fe40a61" ID="858">
+  <Object name="SoundMarker" recordType="SOUN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

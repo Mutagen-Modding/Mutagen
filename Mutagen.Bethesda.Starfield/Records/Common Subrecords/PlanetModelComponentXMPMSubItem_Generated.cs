@@ -18,7 +18,6 @@ using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -38,7 +37,6 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     public partial class PlanetModelComponentXMPMSubItem :
-        AComponent,
         IEquatable<IPlanetModelComponentXMPMSubItemGetter>,
         ILoquiObjectSetter<PlanetModelComponentXMPMSubItem>,
         IPlanetModelComponentXMPMSubItem
@@ -66,7 +64,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -95,14 +93,12 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mask
-        public new class Mask<TItem> :
-            AComponent.Mask<TItem>,
+        public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
-            : base(initialValue)
             {
                 this.Unknown1 = initialValue;
                 this.Unknown2 = initialValue;
@@ -115,7 +111,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Unknown2,
                 TItem Unknown3,
                 TItem Unknown4)
-            : base()
             {
                 this.Unknown1 = Unknown1;
                 this.Unknown2 = Unknown2;
@@ -148,7 +143,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
@@ -162,16 +156,14 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Unknown2);
                 hash.Add(this.Unknown3);
                 hash.Add(this.Unknown4);
-                hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public override bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (!base.All(eval)) return false;
                 if (!eval(this.Unknown1)) return false;
                 if (!eval(this.Unknown2)) return false;
                 if (!eval(this.Unknown3)) return false;
@@ -181,9 +173,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Any
-            public override bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (base.Any(eval)) return true;
                 if (eval(this.Unknown1)) return true;
                 if (eval(this.Unknown2)) return true;
                 if (eval(this.Unknown3)) return true;
@@ -193,7 +184,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<TItem, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new PlanetModelComponentXMPMSubItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
@@ -202,7 +193,6 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                base.Translate_InternalFill(obj, eval);
                 obj.Unknown1 = eval(this.Unknown1);
                 obj.Unknown2 = eval(this.Unknown2);
                 obj.Unknown3 = eval(this.Unknown3);
@@ -247,11 +237,24 @@ namespace Mutagen.Bethesda.Starfield
 
         }
 
-        public new class ErrorMask :
-            AComponent.ErrorMask,
+        public class ErrorMask :
+            IErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
             public Exception? Unknown1;
             public Exception? Unknown2;
             public Exception? Unknown3;
@@ -259,7 +262,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region IErrorMask
-            public override object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
                 PlanetModelComponentXMPMSubItem_FieldIndex enu = (PlanetModelComponentXMPMSubItem_FieldIndex)index;
                 switch (enu)
@@ -273,11 +276,11 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown4:
                         return Unknown4;
                     default:
-                        return base.GetNthMask(index);
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
                 PlanetModelComponentXMPMSubItem_FieldIndex enu = (PlanetModelComponentXMPMSubItem_FieldIndex)index;
                 switch (enu)
@@ -295,12 +298,11 @@ namespace Mutagen.Bethesda.Starfield
                         this.Unknown4 = ex;
                         break;
                     default:
-                        base.SetNthException(index, ex);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
                 PlanetModelComponentXMPMSubItem_FieldIndex enu = (PlanetModelComponentXMPMSubItem_FieldIndex)index;
                 switch (enu)
@@ -318,12 +320,11 @@ namespace Mutagen.Bethesda.Starfield
                         this.Unknown4 = (Exception?)obj;
                         break;
                     default:
-                        base.SetNthMask(index, obj);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
                 if (Unknown1 != null) return true;
@@ -337,7 +338,7 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public override void Print(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -353,9 +354,8 @@ namespace Mutagen.Bethesda.Starfield
                     PrintFillInternal(sb);
                 }
             }
-            protected override void PrintFillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(Unknown1, "Unknown1");
                 }
@@ -390,18 +390,19 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Factory
-            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
             {
                 return new ErrorMask();
             }
             #endregion
 
         }
-        public new class TranslationMask :
-            AComponent.TranslationMask,
-            ITranslationMask
+        public class TranslationMask : ITranslationMask
         {
             #region Members
+            private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool Unknown1;
             public bool Unknown2;
             public bool Unknown3;
@@ -412,8 +413,9 @@ namespace Mutagen.Bethesda.Starfield
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
-                : base(defaultOn, onOverall)
             {
+                this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Unknown1 = defaultOn;
                 this.Unknown2 = defaultOn;
                 this.Unknown3 = defaultOn;
@@ -422,9 +424,17 @@ namespace Mutagen.Bethesda.Starfield
 
             #endregion
 
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            public TranslationCrystal GetCrystal()
             {
-                base.GetCrystal(ret);
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
                 ret.Add((Unknown1, null));
                 ret.Add((Unknown2, null));
                 ret.Add((Unknown3, null));
@@ -441,7 +451,9 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PlanetModelComponentXMPMSubItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PlanetModelComponentXMPMSubItemBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -452,7 +464,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static PlanetModelComponentXMPMSubItem CreateFromBinary(
+        public static PlanetModelComponentXMPMSubItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -486,7 +498,7 @@ namespace Mutagen.Bethesda.Starfield
             ((PlanetModelComponentXMPMSubItemSetterCommon)((IPlanetModelComponentXMPMSubItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new PlanetModelComponentXMPMSubItem GetNew()
+        internal static PlanetModelComponentXMPMSubItem GetNew()
         {
             return new PlanetModelComponentXMPMSubItem();
         }
@@ -496,7 +508,6 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPlanetModelComponentXMPMSubItem :
-        IAComponent,
         ILoquiObjectSetter<IPlanetModelComponentXMPMSubItem>,
         IPlanetModelComponentXMPMSubItemGetter
     {
@@ -507,11 +518,17 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     public partial interface IPlanetModelComponentXMPMSubItemGetter :
-        IAComponentGetter,
+        ILoquiObject,
         IBinaryItem,
         ILoquiObject<IPlanetModelComponentXMPMSubItemGetter>
     {
-        static new ILoquiRegistration StaticRegistration => PlanetModelComponentXMPMSubItem_Registration.Instance;
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object? CommonSetterInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonSetterTranslationInstance();
+        static ILoquiRegistration StaticRegistration => PlanetModelComponentXMPMSubItem_Registration.Instance;
         String Unknown1 { get; }
         Int32 Unknown2 { get; }
         String Unknown3 { get; }
@@ -573,6 +590,31 @@ namespace Mutagen.Bethesda.Starfield
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
+        }
+
+        public static void DeepCopyIn(
+            this IPlanetModelComponentXMPMSubItem lhs,
+            IPlanetModelComponentXMPMSubItemGetter rhs)
+        {
+            ((PlanetModelComponentXMPMSubItemSetterTranslationCommon)((IPlanetModelComponentXMPMSubItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default,
+                deepCopy: false);
+        }
+
+        public static void DeepCopyIn(
+            this IPlanetModelComponentXMPMSubItem lhs,
+            IPlanetModelComponentXMPMSubItemGetter rhs,
+            PlanetModelComponentXMPMSubItem.TranslationMask? copyMask = null)
+        {
+            ((PlanetModelComponentXMPMSubItemSetterTranslationCommon)((IPlanetModelComponentXMPMSubItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -674,13 +716,6 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 900,
-            version: 0);
-
-        public const string GUID = "94032746-87ff-4b9f-b961-9a30df6f32af";
-
         public const ushort AdditionalFieldCount = 4;
 
         public const ushort FieldCount = 4;
@@ -709,18 +744,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BFCB;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var all = RecordCollection.Factory(RecordTypes.BFCB);
-            return new RecordTriggerSpecs(allRecordTypes: all);
-        });
         public static readonly Type BinaryWriteTranslation = typeof(PlanetModelComponentXMPMSubItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -749,9 +775,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class PlanetModelComponentXMPMSubItemSetterCommon : AComponentSetterCommon
+    internal partial class PlanetModelComponentXMPMSubItemSetterCommon
     {
-        public new static readonly PlanetModelComponentXMPMSubItemSetterCommon Instance = new PlanetModelComponentXMPMSubItemSetterCommon();
+        public static readonly PlanetModelComponentXMPMSubItemSetterCommon Instance = new PlanetModelComponentXMPMSubItemSetterCommon();
 
         partial void ClearPartial();
         
@@ -762,18 +788,11 @@ namespace Mutagen.Bethesda.Starfield
             item.Unknown2 = default;
             item.Unknown3 = string.Empty;
             item.Unknown4 = default;
-            base.Clear(item);
-        }
-        
-        public override void Clear(IAComponent item)
-        {
-            Clear(item: (IPlanetModelComponentXMPMSubItem)item);
         }
         
         #region Mutagen
         public void RemapLinks(IPlanetModelComponentXMPMSubItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            base.RemapLinks(obj, mapping);
         }
         
         #endregion
@@ -788,27 +807,15 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PlanetModelComponentXMPMSubItemBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: PlanetModelComponentXMPMSubItemBinaryCreateTranslation.FillBinaryRecordTypes);
-        }
-        
-        public override void CopyInFromBinary(
-            IAComponent item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (PlanetModelComponentXMPMSubItem)item,
-                frame: frame,
-                translationParams: translationParams);
+                fillStructs: PlanetModelComponentXMPMSubItemBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class PlanetModelComponentXMPMSubItemCommon : AComponentCommon
+    internal partial class PlanetModelComponentXMPMSubItemCommon
     {
-        public new static readonly PlanetModelComponentXMPMSubItemCommon Instance = new PlanetModelComponentXMPMSubItemCommon();
+        public static readonly PlanetModelComponentXMPMSubItemCommon Instance = new PlanetModelComponentXMPMSubItemCommon();
 
         public PlanetModelComponentXMPMSubItem.Mask<bool> GetEqualsMask(
             IPlanetModelComponentXMPMSubItemGetter item,
@@ -834,7 +841,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.Unknown3 = string.Equals(item.Unknown3, rhs.Unknown3);
             ret.Unknown4 = item.Unknown4 == rhs.Unknown4;
-            base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
@@ -879,10 +885,6 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             PlanetModelComponentXMPMSubItem.Mask<bool>? printMask = null)
         {
-            AComponentCommon.ToStringFields(
-                item: item,
-                sb: sb,
-                printMask: printMask);
             if (printMask?.Unknown1 ?? true)
             {
                 sb.AppendItem(item.Unknown1, "Unknown1");
@@ -901,15 +903,6 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static PlanetModelComponentXMPMSubItem_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
-        {
-            switch (index)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IPlanetModelComponentXMPMSubItemGetter? lhs,
@@ -917,7 +910,6 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown1) ?? true))
             {
                 if (!string.Equals(lhs.Unknown1, rhs.Unknown1)) return false;
@@ -937,17 +929,6 @@ namespace Mutagen.Bethesda.Starfield
             return true;
         }
         
-        public override bool Equals(
-            IAComponentGetter? lhs,
-            IAComponentGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IPlanetModelComponentXMPMSubItemGetter?)lhs,
-                rhs: rhs as IPlanetModelComponentXMPMSubItemGetter,
-                equalsMask: equalsMask);
-        }
-        
         public virtual int GetHashCode(IPlanetModelComponentXMPMSubItemGetter item)
         {
             var hash = new HashCode();
@@ -955,19 +936,13 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Unknown2);
             hash.Add(item.Unknown3);
             hash.Add(item.Unknown4);
-            hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAComponentGetter item)
-        {
-            return GetHashCode(item: (IPlanetModelComponentXMPMSubItemGetter)item);
         }
         
         #endregion
         
         
-        public override object GetNew()
+        public object GetNew()
         {
             return PlanetModelComponentXMPMSubItem.GetNew();
         }
@@ -975,19 +950,15 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetModelComponentXMPMSubItemGetter obj)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
-            {
-                yield return item;
-            }
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class PlanetModelComponentXMPMSubItemSetterTranslationCommon : AComponentSetterTranslationCommon
+    internal partial class PlanetModelComponentXMPMSubItemSetterTranslationCommon
     {
-        public new static readonly PlanetModelComponentXMPMSubItemSetterTranslationCommon Instance = new PlanetModelComponentXMPMSubItemSetterTranslationCommon();
+        public static readonly PlanetModelComponentXMPMSubItemSetterTranslationCommon Instance = new PlanetModelComponentXMPMSubItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
@@ -997,12 +968,6 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            base.DeepCopyIn(
-                (IAComponent)item,
-                (IAComponentGetter)rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown1) ?? true))
             {
                 item.Unknown1 = rhs.Unknown1;
@@ -1019,22 +984,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown4 = rhs.Unknown4;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IAComponent item,
-            IAComponentGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlanetModelComponentXMPMSubItem)item,
-                rhs: (IPlanetModelComponentXMPMSubItemGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1097,16 +1046,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlanetModelComponentXMPMSubItem_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => PlanetModelComponentXMPMSubItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlanetModelComponentXMPMSubItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PlanetModelComponentXMPMSubItemCommon.Instance;
+        protected object CommonInstance() => PlanetModelComponentXMPMSubItemCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
             return PlanetModelComponentXMPMSubItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PlanetModelComponentXMPMSubItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PlanetModelComponentXMPMSubItemSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object IPlanetModelComponentXMPMSubItemGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object IPlanetModelComponentXMPMSubItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
+        object IPlanetModelComponentXMPMSubItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1117,11 +1072,9 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlanetModelComponentXMPMSubItemBinaryWriteTranslation :
-        AComponentBinaryWriteTranslation,
-        IBinaryWriteTranslator
+    public partial class PlanetModelComponentXMPMSubItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public new static readonly PlanetModelComponentXMPMSubItemBinaryWriteTranslation Instance = new();
+        public static readonly PlanetModelComponentXMPMSubItemBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
             IPlanetModelComponentXMPMSubItemGetter item,
@@ -1147,14 +1100,9 @@ namespace Mutagen.Bethesda.Starfield
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            AComponentBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, RecordTypes.BFCE)) { } // End Marker
         }
 
-        public override void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams translationParams = default)
@@ -1165,22 +1113,11 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public override void Write(
-            MutagenWriter writer,
-            IAComponentGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IPlanetModelComponentXMPMSubItemGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
     }
 
-    internal partial class PlanetModelComponentXMPMSubItemBinaryCreateTranslation : AComponentBinaryCreateTranslation
+    internal partial class PlanetModelComponentXMPMSubItemBinaryCreateTranslation
     {
-        public new static readonly PlanetModelComponentXMPMSubItemBinaryCreateTranslation Instance = new PlanetModelComponentXMPMSubItemBinaryCreateTranslation();
+        public static readonly PlanetModelComponentXMPMSubItemBinaryCreateTranslation Instance = new PlanetModelComponentXMPMSubItemBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
             IPlanetModelComponentXMPMSubItem item,
@@ -1205,6 +1142,17 @@ namespace Mutagen.Bethesda.Starfield
     #region Binary Write Mixins
     public static class PlanetModelComponentXMPMSubItemBinaryTranslationMixIn
     {
+        public static void WriteToBinary(
+            this IPlanetModelComponentXMPMSubItemGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams = default)
+        {
+            ((PlanetModelComponentXMPMSubItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
     }
     #endregion
 
@@ -1213,24 +1161,32 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     internal partial class PlanetModelComponentXMPMSubItemBinaryOverlay :
-        AComponentBinaryOverlay,
+        PluginBinaryOverlay,
         IPlanetModelComponentXMPMSubItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => PlanetModelComponentXMPMSubItem_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => PlanetModelComponentXMPMSubItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PlanetModelComponentXMPMSubItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => PlanetModelComponentXMPMSubItemCommon.Instance;
+        protected object CommonInstance() => PlanetModelComponentXMPMSubItemCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => PlanetModelComponentXMPMSubItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PlanetModelComponentXMPMSubItemSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object IPlanetModelComponentXMPMSubItemGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object? IPlanetModelComponentXMPMSubItemGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
+        object IPlanetModelComponentXMPMSubItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => PlanetModelComponentXMPMSubItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PlanetModelComponentXMPMSubItemBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -1272,7 +1228,7 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordRecordMemory(
+            stream = ExtractTypelessSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
@@ -1285,12 +1241,11 @@ namespace Mutagen.Bethesda.Starfield
             ret.Unknown1EndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
             ret.Unknown3 = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(ret.Unknown1EndingPos + 0x4), package.MetaData.Encodings.NonTranslated);
             ret.Unknown3EndingPos = ret.Unknown1EndingPos + 0x4 + ret.Unknown3.Length + 1;
-            ret.FillTypelessSubrecordTypes(
+            stream.Position += ret.Unknown3EndingPos + 0x4;
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: offset,
-                translationParams: translationParams,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
@@ -1307,7 +1262,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {

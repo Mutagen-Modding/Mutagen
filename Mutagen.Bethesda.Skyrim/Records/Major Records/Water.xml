@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Water" objType="Record" recordType="WATR" baseClass="SkyrimMajorRecord" GUID="cf1e41d5-72e0-47c6-82ca-e1289b290653" ID="148">
+  <Object name="Water" objType="Record" recordType="WATR" baseClass="SkyrimMajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <List name="UnusedNoisemaps" >
+      <List name="UnusedNoisemaps">
         <String recordType="NNAM" />
       </List>
       <UInt8 name="Opacity" nullable="False" recordType="ANAM" />
@@ -14,7 +14,7 @@
       <FormLink name="Spell" refName="Spell" recordType="XNAM" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" />
       <UInt16 name="DamagePerSecond" recordType="DATA" />
-      <Data recordType="DNAM" >
+      <Data recordType="DNAM">
         <Fields>
           <ByteArray name="Unknown" byteLength="16" nullable="False" />
           <Float name="SpecularSunPower" />

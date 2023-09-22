@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Message" recordType="MESG" objType="Record" baseClass="SkyrimMajorRecord" GUID="924feeb5-b9e9-4526-9caa-89a233a69240" ID="306">
+  <Object name="Message" recordType="MESG" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -11,7 +11,7 @@
       <RefList name="MenuButtons" refName="MessageButton" />
     </Fields>
   </Object>
-  <Object name="MessageButton" objType="Subrecord" GUID="34cf38b7-fac2-462c-90d9-55e7d57d8e08" ID="447">
+  <Object name="MessageButton" objType="Subrecord">
     <Fields>
       <String name="Text" recordType="ITXT" translated="Normal" />
       <RefList name="Conditions" refName="Condition" />

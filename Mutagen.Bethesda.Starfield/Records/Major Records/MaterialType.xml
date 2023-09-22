@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MaterialType" recordType="MATT" objType="Record" baseClass="StarfieldMajorRecord" GUID="05817646-95d2-42fc-94d1-4f88ae89236c" ID="719">
+  <Object name="MaterialType" recordType="MATT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

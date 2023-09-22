@@ -1436,13 +1436,6 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 894,
-            version: 0);
-
-        public const string GUID = "f9d3e472-fb6f-419b-bd6f-c83729f06c14";
-
         public const ushort AdditionalFieldCount = 24;
 
         public const ushort FieldCount = 24;
@@ -1481,8 +1474,6 @@ namespace Mutagen.Bethesda.Starfield
         public static readonly Type BinaryWriteTranslation = typeof(PlanetDetailsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2124,35 +2115,35 @@ namespace Mutagen.Bethesda.Starfield
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SpectralClass,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CatalogueId,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Life,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Magnetosphere,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MassInKg,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Type,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SettledStar,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Special,
-                binaryType: StringBinaryType.PrependLength);
+                binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             writer.Write(item.Perihelion);
             writer.Write(item.Stardust);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2227,28 +2218,28 @@ namespace Mutagen.Bethesda.Starfield
             item.Unknown1 = frame.ReadInt32();
             item.SpectralClass = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.CatalogueId = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.Life = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.Magnetosphere = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.MassInKg = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.Type = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.SettledStar = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.Special = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
             item.Perihelion = frame.ReadDouble();
             item.Stardust = frame.ReadDouble();
             item.Density = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

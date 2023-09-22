@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ArmorAddon" recordType="ARMA" majorFlag="true" baseClass="Fallout4MajorRecord" objType="Record" GUID="591e9041-abf3-4466-82af-d6ef0d1db771" ID="138">
+  <Object name="ArmorAddon" recordType="ARMA" majorFlag="true" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefDirect name="BodyTemplate" refName="BodyTemplate" />
       <FormLink name="Race" recordType="RNAM" refName="Race" />

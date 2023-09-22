@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Faction" recordType="FACT" objType="Record" baseClass="StarfieldMajorRecord" GUID="3795ee1a-0f0d-42a8-8196-853a8730d6e5" ID="702">
+  <Object name="Faction" recordType="FACT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
-      <RefList name="Components" refName="AComponent"/>
+      <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />
       <FormLink name="Keyword" recordType="DNAM" refName="Keyword" />
@@ -14,7 +14,7 @@
       <ByteArray name="PRIS" recordType="PRIS" unknown="true" />
       <RefDirect name="VendorValues" refName="VendorValues" />
       <RefDirect name="VendorLocation" refName="LocationTargetRadius" recordType="PLVD" />
-      <FormLink name="VoiceType" recordType="VTCK" >
+      <FormLink name="VoiceType" recordType="VTCK">
         <Interface>IVoiceTypeOrList</Interface>
       </FormLink>
       <ByteArray name="HERD" markerType="CRHR" recordType="HERD" unknown="true" />
@@ -25,7 +25,7 @@
     <LinkInterface>IRelatable</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
   </Object>
-  <Object name="CrimeValues" objType="Subrecord" recordType="CRVA" GUID="dfa672ae-6a40-447c-a002-aa3d2ef3f271" ID="703">
+  <Object name="CrimeValues" objType="Subrecord" recordType="CRVA">
     <Fields>
       <Bool name="Arrest" byteLength="1" />
       <Bool name="AttackOnSight" byteLength="1" />
@@ -41,7 +41,7 @@
       <UInt32 name="Unknown2" />
     </Fields>
   </Object>
-  <Object name="VendorValues" objType="Subrecord" recordType="VENV" GUID="e4d1aa27-5467-4f28-8243-037ea6521fec" ID="704">
+  <Object name="VendorValues" objType="Subrecord" recordType="VENV">
     <Fields>
       <UInt16 name="StartHour" />
       <UInt16 name="EndHour" />

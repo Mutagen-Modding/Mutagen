@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="13dc9a9a-040d-459c-82f4-53985876bc3c" ID="208">
+  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true">
     <Fields>
       <Data recordType="CSGD">
         <Fields>
@@ -26,7 +26,7 @@
       <Enum name="Flags" enumName="CombatStyle.Flag" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="CombatStyleMelee" objType="Subrecord" recordType="CSME" GUID="b0968dab-5dff-40f8-8969-dfeb8cb53ef7" ID="396">
+  <Object name="CombatStyleMelee" objType="Subrecord" recordType="CSME">
     <Fields>
       <Float name="AttackStaggeredMult" />
       <Float name="PowerAttackStaggeredMult" />
@@ -39,7 +39,7 @@
       <Float name="SpecialAttackMult" />
     </Fields>
   </Object>
-  <Object name="CombatStyleCloseRange" objType="Subrecord" recordType="CSCR" GUID="6bd80eb8-1071-44f3-a309-4b0c6f04ac7d" ID="397">
+  <Object name="CombatStyleCloseRange" objType="Subrecord" recordType="CSCR">
     <Fields>
       <Float name="CircleMult" />
       <Float name="FallbackMult" />
@@ -48,7 +48,7 @@
       <Float name="StalkTime" />
     </Fields>
   </Object>
-  <Object name="CombatStyleFlight" objType="Subrecord" recordType="CSFL" GUID="ae37ae46-1989-470b-879e-9ea5fb1b6bf7" ID="398">
+  <Object name="CombatStyleFlight" objType="Subrecord" recordType="CSFL">
     <Fields>
       <Float name="HoverChance" />
       <Break />

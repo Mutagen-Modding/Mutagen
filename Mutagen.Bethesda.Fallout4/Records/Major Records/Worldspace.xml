@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Worldspace" recordType="WRLD" objType="Record" majorFlag="true" customBinaryEnd="Normal" baseClass="Fallout4MajorRecord" GUID="bfb0097a-7cb4-4c2b-82e1-8c58d6d73720" ID="191">
+  <Object name="Worldspace" recordType="WRLD" objType="Record" majorFlag="true" customBinaryEnd="Normal" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefList name="LargeReferences" refName="WorldspaceGridReference" />
       <RefDirect name="MaxHeight" refName="WorldspaceMaxHeight" overflowRecordType="XXXX" />
@@ -51,19 +51,19 @@
     </Fields>
     <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
-  <Object name="WorldspaceGridReference" objType="Subrecord" recordType="RNAM" GUID="accb0377-93f7-403f-827d-8a17f65be51b" ID="515">
+  <Object name="WorldspaceGridReference" objType="Subrecord" recordType="RNAM">
     <Fields>
       <P2Int16 name="GridPosition" />
       <RefList name="References" refName="WorldspaceReference" counterLength="4" />
     </Fields>
   </Object>
-  <Object name="WorldspaceReference" objType="Subrecord" GUID="2bea6caf-19cd-4b05-90de-4eb376d721a8" ID="516">
+  <Object name="WorldspaceReference" objType="Subrecord">
     <Fields>
       <FormLink name="Reference" refName="PlacedObject" />
       <P2Int16 name="Position" />
     </Fields>
   </Object>
-  <Object name="WorldspaceBlock" objType="Group" GUID="53e6ac99-7e8e-4977-990a-1e6b486f3dba" ID="512">
+  <Object name="WorldspaceBlock" objType="Group">
     <Fields>
       <Int16 name="BlockNumberY" />
       <Int16 name="BlockNumberX" />
@@ -73,7 +73,7 @@
       <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
     </Fields>
   </Object>
-  <Object name="WorldspaceSubBlock" objType="Group" GUID="0bc03d0f-76e7-4e32-84be-c12467ca0462" ID="513">
+  <Object name="WorldspaceSubBlock" objType="Group">
     <Fields>
       <Int16 name="BlockNumberY" />
       <Int16 name="BlockNumberX" />
@@ -83,33 +83,33 @@
       <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="WorldspaceMaxHeight" objType="Subrecord" recordType="MHDT" GUID="60860285-d33d-4e5c-95fb-97a019f412dd" ID="507">
+  <Object name="WorldspaceMaxHeight" objType="Subrecord" recordType="MHDT">
     <Fields>
       <P2Int16 name="Min" />
       <P2Int16 name="Max" />
       <ByteArray name="CellData" nullable="False" />
     </Fields>
   </Object>
-  <Object name="WorldspaceParent" objType="Subrecord" GUID="2868ea4b-01bb-4dfc-8eb2-4b7ae0177bd8" ID="508">
+  <Object name="WorldspaceParent" objType="Subrecord">
     <Fields>
       <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" nullable="False" />
       <Enum name="Flags" enumName="WorldspaceParent.Flag" byteLength="2" nullable="False" recordType="PNAM" />
     </Fields>
   </Object>
-  <Object name="WorldspaceLandDefaults" objType="Subrecord" recordType="DNAM" GUID="e871c007-9edc-45fa-a79c-81a4c6af5243" ID="509">
+  <Object name="WorldspaceLandDefaults" objType="Subrecord" recordType="DNAM">
     <Fields>
       <Float name="DefaultLandHeight" />
       <Float name="DefaultWaterHeight" />
     </Fields>
   </Object>
-  <Object name="WorldspaceMap" recordType="MNAM" objType="Subrecord" GUID="e82a5b1e-b728-4c6b-a476-4a25dc774fb7" ID="510">
+  <Object name="WorldspaceMap" recordType="MNAM" objType="Subrecord">
     <Fields>
       <P2Int32 name="UsableDimensions" />
       <P2Int16 name="NorthwestCellCoords" />
       <P2Int16 name="SoutheastCellCoords" />
     </Fields>
   </Object>
-  <Object name="WorldDefaultLevelData" objType="Subrecord" GUID="40c8c9de-51f2-488e-b290-c9dc65e380d1" ID="511">
+  <Object name="WorldDefaultLevelData" objType="Subrecord">
     <Fields>
       <Data recordType="WLEV">
         <Fields>

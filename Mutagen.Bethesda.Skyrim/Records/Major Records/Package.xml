@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Package" objType="Record" recordType="PACK" baseClass="SkyrimMajorRecord" GUID="b5148cf5-ebc6-439e-b0d2-7b254b24f3eb" ID="215">
+  <Object name="Package" objType="Record" recordType="PACK" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="PackageAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <Data recordType="PKDT">
@@ -48,7 +48,7 @@
     </Fields>
     <AdditionalContainedRecordType>PLDT</AdditionalContainedRecordType>
   </Object>
-  <Object name="PackageIdles" objType="Subrecord" GUID="a26ac911-8b7d-4045-9454-3ab37481a795" ID="394">
+  <Object name="PackageIdles" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="PackageIdles.Types" byteLength="1" nullable="False" recordType="IDLF" />
       <Float name="TimerSetting" recordType="IDLT" nullable="False" binary="Custom" />
@@ -57,95 +57,95 @@
       </List>
     </Fields>
   </Object>
-  <Object name="APackageData" objType="Subrecord" GUID="88e8ac4c-9592-4956-9154-3e8d115ec0f9" ID="374">
+  <Object name="APackageData" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="BNAM" binary="NoGeneration" nullable="True" />
       <Enum name="Flags" enumName="APackageData.Flag" recordType="PNAM" nullable="True" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="PackageDataBool" objType="Subrecord" baseClass="APackageData" GUID="d00a40a9-2f39-4a0e-afb2-396dfe024205" ID="387">
+  <Object name="PackageDataBool" objType="Subrecord" baseClass="APackageData">
     <Fields>
       <Bool name="Data" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="PackageDataInt" objType="Subrecord" baseClass="APackageData" GUID="9ed95e65-b720-44db-9d2b-be2bb15ca173" ID="388">
+  <Object name="PackageDataInt" objType="Subrecord" baseClass="APackageData">
     <Fields>
       <UInt32 name="Data" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="PackageDataFloat" objType="Subrecord" baseClass="APackageData" GUID="1a6ac6c7-34a5-4dbb-acd0-0bab73588174" ID="389">
+  <Object name="PackageDataFloat" objType="Subrecord" baseClass="APackageData">
     <Fields>
       <Float name="Data" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="PackageDataObjectList" objType="Subrecord" baseClass="APackageData" GUID="7247dd72-3a6a-4aab-a1f1-cc2095011237" ID="395">
+  <Object name="PackageDataObjectList" objType="Subrecord" baseClass="APackageData">
     <Fields>
       <Float name="Data" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
-  <Object name="PackageDataLocation" objType="Subrecord" baseClass="APackageData" GUID="947ddb8a-c1b6-41cc-a7bf-c50b627aa80a" ID="391">
+  <Object name="PackageDataLocation" objType="Subrecord" baseClass="APackageData">
     <Fields>
       <RefDirect name="Location" refName="LocationTargetRadius" recordType="PLVD" nullable="False" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="PackageDataTarget" objType="Subrecord" baseClass="APackageData" GUID="3fca774e-9f38-4d5c-aa94-e19393aeeeb0" ID="392">
+  <Object name="PackageDataTarget" objType="Subrecord" baseClass="APackageData">
     <Fields>
       <Enum name="Type" enumName="PackageDataTarget.Types" binary="NoGeneration" />
       <RefDirect name="Target" refName="APackageTarget" recordType="PTDA" binary="NoGeneration" nullable="False" generateClassMembers="false" />
     </Fields>
   </Object>
-  <Object name="PackageDataTopic" objType="Subrecord" baseClass="APackageData" GUID="46e615e7-8460-4870-bbde-eed20364ae44" ID="393">
+  <Object name="PackageDataTopic" objType="Subrecord" baseClass="APackageData">
     <Fields>
       <RefList name="Topics" refName="ATopicReference" binary="NoGeneration" />
       <ByteArray name="TPIC" recordType="TPIC" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="APackageTarget" abstract="true" objType="Subrecord" GUID="d99aa9dc-0c39-4321-ac3f-9fd29accd256" ID="375">
+  <Object name="APackageTarget" abstract="true" objType="Subrecord">
     <Fields>
       <CustomLogic name="DataParse" byteLength="8" />
       <Int32 name="CountOrDistance" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="PackageTargetSpecificReference" baseClass="APackageTarget" objType="Subrecord" GUID="c412e131-d50c-428d-9698-a8548aef0a99" ID="376">
+  <Object name="PackageTargetSpecificReference" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
-      <FormLink name="Reference" >
+      <FormLink name="Reference">
         <Interface>ILinkedReference</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="PackageTargetObjectID" baseClass="APackageTarget" objType="Subrecord" GUID="9e7ef46d-9664-4c21-b10d-97bae6621a10" ID="377">
+  <Object name="PackageTargetObjectID" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
-      <FormLink name="Reference" >
+      <FormLink name="Reference">
         <Interface>IObjectId</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="PackageTargetObjectType" baseClass="APackageTarget" objType="Subrecord" GUID="86cab593-b2d7-4751-b0a6-077ec0c17122" ID="378">
+  <Object name="PackageTargetObjectType" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="TargetObjectType" />
     </Fields>
   </Object>
-  <Object name="PackageTargetReference" baseClass="APackageTarget" objType="Subrecord" GUID="d5b20856-db55-42fc-bf0c-7fcc08b4fb62" ID="379">
+  <Object name="PackageTargetReference" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Reference" refName="SkyrimMajorRecord" />
     </Fields>
   </Object>
-  <Object name="PackageTargetAlias" baseClass="APackageTarget" objType="Subrecord" GUID="45cd4472-40fd-42e2-b35b-3c1bf78b6ca4" ID="380">
+  <Object name="PackageTargetAlias" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
       <Int32 name="Alias" />
     </Fields>
   </Object>
-  <Object name="PackageTargetUnknown" baseClass="APackageTarget" objType="Subrecord" GUID="9fc66bed-a089-4e72-bdb2-a542bbf97818" ID="381">
+  <Object name="PackageTargetUnknown" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
       <Int32 name="Data" />
     </Fields>
   </Object>
-  <Object name="PackageTargetSelf" baseClass="APackageTarget" objType="Subrecord" GUID="34612b61-b538-49e8-b013-2729d5e1b730" ID="382">
+  <Object name="PackageTargetSelf" baseClass="APackageTarget" objType="Subrecord">
     <Fields>
       <Int32 name="Data" />
     </Fields>
   </Object>
-  <Object name="PackageBranch" objType="Subrecord" GUID="571810b7-1ca9-4979-8322-cd0124cbca44" ID="383">
+  <Object name="PackageBranch" objType="Subrecord">
     <Fields>
       <String name="BranchType" recordType="ANAM" nullable="False" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" nullable="False" />
@@ -157,18 +157,18 @@
       </List>
       <RefDirect name="FlagsOverride" refName="PackageFlagsOverride" binary="Custom" />
       <RefDirect name="FlagsOverrideUnused" refName="PackageFlagsOverride" binary="NoGeneration" />
-      <List name="Unknown" >
+      <List name="Unknown">
         <ByteArray recordType="PFOR" />
       </List>
     </Fields>
   </Object>
-  <Object name="PackageRoot" objType="Subrecord" GUID="361121b0-bd00-444e-a906-a72e443ae85b" ID="384">
+  <Object name="PackageRoot" objType="Subrecord">
     <Fields>
       <Int32 name="BranchCount" />
       <Enum name="Flags" enumName="PackageRoot.Flag" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="PackageFlagsOverride" objType="Subrecord" recordType="PFO2" GUID="e3e10acf-4fd7-462e-a251-b778ee0d9c5e" ID="385">
+  <Object name="PackageFlagsOverride" objType="Subrecord" recordType="PFO2">
     <Fields>
       <Enum name="SetFlags" enumName="Package.Flag" byteLength="4" />
       <Enum name="ClearFlags" enumName="Package.Flag" byteLength="4" />
@@ -178,7 +178,7 @@
       <ByteArray name="Unknown" byteLength="3" nullable="False" />
     </Fields>
   </Object>
-  <Object name="PackageEvent" objType="Subrecord" GUID="097ee8cc-5081-463f-ae70-7e8921899f9e" ID="386">
+  <Object name="PackageEvent" objType="Subrecord">
     <Fields>
       <FormLink name="Idle" refName="IdleAnimation" recordType="INAM" nullable="False" />
       <ByteArray name="SCHR" recordType="SCHR" />
@@ -189,12 +189,12 @@
       <RefList name="Topics" refName="ATopicReference" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="PackageAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="b6994042-d407-490d-8387-54e33396f705" ID="352">
+  <Object name="PackageAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
     <Fields>
       <RefDirect name="ScriptFragments" refName="PackageScriptFragments" binary="Custom" nullable="True" />
     </Fields>
   </Object>
-  <Object name="PackageScriptFragments" objType="Subrecord" GUID="2ec19b11-bd07-4dcc-beb4-826dfc1de531" ID="353">
+  <Object name="PackageScriptFragments" objType="Subrecord">
     <Fields>
       <UInt8 name="ExtraBindDataVersion" default="2" />
       <CustomLogic name="FlagsParse" />

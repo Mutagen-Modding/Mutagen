@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoundMarker" recordType="SOUN" objType="Record" baseClass="Fallout4MajorRecord" GUID="6a96f977-61fd-4f4b-aa9c-e02c1e9a1dc1" ID="93">
+  <Object name="SoundMarker" recordType="SOUN" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="SoundDescriptor" recordType="SDSC" refName="SoundDescriptor" />
@@ -11,11 +11,11 @@
     <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
-  <Object name="SoundRepeat" objType="Subrecord" recordType="REPT" GUID="beab6506-5f95-4dd2-b8ee-02655c76538c" ID="94">
+  <Object name="SoundRepeat" objType="Subrecord" recordType="REPT">
     <Fields>
       <Float name="MinTime" />
       <Float name="MaxTime" />
-	  <Break/>
+      <Break />
       <Bool name="Stackable" byteLength="1" />
     </Fields>
   </Object>

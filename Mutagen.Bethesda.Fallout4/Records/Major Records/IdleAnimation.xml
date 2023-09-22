@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="IdleAnimation" recordType="IDLE" baseClass="Fallout4MajorRecord" objType="Record" GUID="62b9bc11-4e8a-46aa-ad46-be6516201220" ID="232">
+  <Object name="IdleAnimation" recordType="IDLE" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefList name="Conditions" refName="Condition" />
       <String name="BehaviorGraph" recordType="DNAM" />

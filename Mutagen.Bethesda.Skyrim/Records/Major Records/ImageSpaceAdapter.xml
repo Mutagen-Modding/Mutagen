@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImageSpaceAdapter" objType="Record" recordType="IMAD" baseClass="SkyrimMajorRecord" GUID="b65ec92e-e1e5-4524-91a3-9dc25d0cafed" ID="113">
+  <Object name="ImageSpaceAdapter" objType="Record" recordType="IMAD" baseClass="SkyrimMajorRecord">
     <Fields>
       <Data recordType="DNAM">
         <Fields>
@@ -70,13 +71,13 @@
       <RefList name="Unknown54" refName="KeyFrame" recordTypeHex="0x44414954" />
     </Fields>
   </Object>
-  <Object name="KeyFrame" objType="Subrecord" GUID="b58e26b4-d37e-404e-92a1-bc482dbf77a4" ID="410">
+  <Object name="KeyFrame" objType="Subrecord">
     <Fields>
       <Float name="Time" />
       <Float name="Value" />
     </Fields>
   </Object>
-  <Object name="ColorFrame" objType="Subrecord" GUID="5e0778b8-259e-444a-9ff1-b0cdfaef88e1" ID="411">
+  <Object name="ColorFrame" objType="Subrecord">
     <Fields>
       <Float name="Time" />
       <Color name="Color" binaryType="AlphaFloat" />

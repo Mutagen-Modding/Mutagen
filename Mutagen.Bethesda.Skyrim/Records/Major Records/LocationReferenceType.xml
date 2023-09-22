@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="SkyrimMajorRecord" GUID="a17b8351-47c0-4da3-9676-338a040891ca" ID="19">
+  <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>

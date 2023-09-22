@@ -1132,13 +1132,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 399,
-            version: 0);
-
-        public const string GUID = "8703704e-090f-4c39-a94f-343b5e1efe7d";
-
         public const ushort AdditionalFieldCount = 9;
 
         public const ushort FieldCount = 16;
@@ -1190,8 +1183,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(LoadScreenBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -2212,9 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MOD2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CameraPath = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.CameraPath = AssetLinkBinaryTranslation.Instance.Parse<SkyrimModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.CameraPath;
                 }
                 default:

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Armor" recordType="ARMO" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="e2a20eca-5715-4c3b-9189-5cb7b6248375" ID="48">
+  <Object name="Armor" recordType="ARMO" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <FormLink name="ObjectEffect" recordType="EITM" >
+      <FormLink name="ObjectEffect" recordType="EITM">
         <Interface>IEffectRecord</Interface>
       </FormLink>
       <UInt16 name="EnchantmentAmount" recordType="EAMT" />
@@ -35,7 +35,7 @@
       <FormLink name="BashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
       <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
       <FormLink name="Race" recordType="RNAM" refName="Race" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <String name="Description" recordType="DESC" translated="DL" />
@@ -62,7 +62,7 @@
     <LinkInterface>IReferenceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
-  <Object name="ArmorModel" objType="Subrecord" GUID="39a3a83f-68bd-473a-aa14-10efdb07031b" ID="151">
+  <Object name="ArmorModel" objType="Subrecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Icons" refName="Icons" />

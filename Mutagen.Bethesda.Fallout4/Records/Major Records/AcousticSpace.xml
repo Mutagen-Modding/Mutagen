@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="Fallout4MajorRecord" GUID="14c09254-586f-4b9a-9397-2af190f53224" ID="95">
+  <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />

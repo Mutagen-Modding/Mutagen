@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Destructible" objType="Subrecord" GUID="ac14ba89-a6ef-4b9a-ba7d-3c0d46d02ccf" ID="138">
+  <Object name="Destructible" objType="Subrecord">
     <Fields>
       <RefDirect name="Data" refName="DestructableData" />
       <RefList name="Stages" refName="DestructionStage" />
     </Fields>
   </Object>
-  <Object name="DestructableData" objType="Subrecord" recordType="DEST" GUID="8708bc55-aa73-4a26-acfe-643ad2546c98" ID="149">
+  <Object name="DestructableData" objType="Subrecord" recordType="DEST">
     <Fields>
       <Int32 name="Health" />
       <UInt8 name="DESTCount" />
@@ -14,7 +14,7 @@
       <Int16 name="Unknown" />
     </Fields>
   </Object>
-  <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF" GUID="8f5dd48b-9ae2-4626-838c-c0821263148a" ID="140">
+  <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF">
     <Fields>
       <RefDirect name="Data" refName="DestructionStageData" />
       <RefDirect name="Model" refName="Model">
@@ -26,7 +26,7 @@
       </RefDirect>
     </Fields>
   </Object>
-  <Object name="DestructionStageData" objType="Subrecord" recordType="DSTD" GUID="6c5320be-ca47-498f-a1ff-e1f756517873" ID="141">
+  <Object name="DestructionStageData" objType="Subrecord" recordType="DSTD">
     <Fields>
       <UInt8 name="HealthPercent" />
       <UInt8 name="Index" />

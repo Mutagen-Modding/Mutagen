@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectEffect" recordType="ENCH" objType="Record" baseClass="Fallout4MajorRecord" GUID="6bc55e21-a9ae-4ddc-9300-ee6b7e55f77e" ID="104">
+  <Object name="ObjectEffect" recordType="ENCH" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />

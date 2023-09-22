@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="BodyPartData" recordType="BPTD" objType="Record" baseClass="StarfieldMajorRecord" GUID="24420c9a-9064-44a3-9939-4525b7409def" ID="716">
+  <Object name="BodyPartData" recordType="BPTD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

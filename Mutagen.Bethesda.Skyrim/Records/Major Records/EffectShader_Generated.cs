@@ -4772,13 +4772,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 106,
-            version: 0);
-
-        public const string GUID = "faa7eca9-d976-44d0-aadd-b5a8dbb97974";
-
         public const ushort AdditionalFieldCount = 106;
 
         public const ushort FieldCount = 113;
@@ -4825,8 +4818,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(EffectShaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -7445,41 +7436,31 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FillTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.FillTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticleShaderTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.ParticleShaderTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HolesTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.HolesTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.HolesTexture;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MembranePaletteTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.MembranePaletteTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.MembranePaletteTexture;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticlePaletteTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.ParticlePaletteTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.ParticlePaletteTexture;
                 }
                 case RecordTypeInts.DATA:

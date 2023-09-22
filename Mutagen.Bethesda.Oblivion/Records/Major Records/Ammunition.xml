@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ammunition" baseClass="OblivionMajorRecord" objType="Record" recordType="AMMO" GUID="b9883ff5-be2f-44d5-acf7-69751cd6e87f" ID="83">
+  <Object name="Ammunition" baseClass="OblivionMajorRecord" objType="Record" recordType="AMMO">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -11,7 +11,7 @@
     </Fields>
     <LinkInterface>IItem</LinkInterface>
   </Object>
-  <Object name="AmmunitionData" recordType="DATA" objType="Subrecord" GUID="23c0f6c1-3952-4c89-a2ca-3137d4bb8aa5" ID="175">
+  <Object name="AmmunitionData" recordType="DATA" objType="Subrecord">
     <Fields>
       <Float name="Speed" />
       <Enum name="Flags" enumName="AmmunitionData.Flag" byteLength="4" />

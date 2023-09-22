@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Global" recordType="GLOB" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" abstract="true" GUID="c7d0e2c2-7592-4900-b500-6ee7da100519" ID="38">
+  <Object name="Global" recordType="GLOB" baseClass="Fallout4MajorRecord" majorFlag="true" objType="Record" abstract="true">
     <Fields>
       <CustomLogic name="TypeChar" recordType="FNAM" byteLength="1" />
     </Fields>
   </Object>
-  <Object name="GlobalInt" recordType="GLOB" baseClass="Global" objType="Record" GUID="642ed971-5eec-4148-8284-83b51da6c5e8" ID="13">
+  <Object name="GlobalInt" recordType="GLOB" baseClass="Global" objType="Record">
     <Fields>
       <Int32 name="Data" recordType="FLTV" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="GlobalShort" recordType="GLOB" baseClass="Global" objType="Record" GUID="210d6370-5c20-42eb-b912-ddd64bf50bcc" ID="14">
+  <Object name="GlobalShort" recordType="GLOB" baseClass="Global" objType="Record">
     <Fields>
       <Int16 name="Data" recordType="FLTV" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="GlobalFloat" recordType="GLOB" baseClass="Global" objType="Record" GUID="5bfe4364-b00f-48be-840e-b79a252985b5" ID="15">
+  <Object name="GlobalFloat" recordType="GLOB" baseClass="Global" objType="Record">
     <Fields>
       <Float name="Data" recordType="FLTV" />
       <Bool name="OutputChar" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record" GUID="f1f69742-d1da-4bbd-951c-f2bac3f7ea98" ID="16">
+  <Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record">
     <Fields>
       <Bool name="Data" recordType="FLTV" binary="Custom" />
     </Fields>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MovementType" recordType="MOVT" objType="Record" baseClass="SkyrimMajorRecord" GUID="d6455262-af10-48b1-acd1-01fbee5f3687" ID="81">
+  <Object name="MovementType" recordType="MOVT" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <String name="Name" recordType="MNAM" />
       <Data recordType="SPED">
@@ -22,11 +22,9 @@
       <RefDirect name="AnimationChangeThresholds" refName="AnimationChangeThresholds" />
     </Fields>
   </Object>
-  <Object name="AnimationChangeThresholds" objType="Subrecord" recordType="INAM" GUID="e41a14ca-64d4-482f-8dd9-eff7d94adfa8" ID="472">
+  <Object name="AnimationChangeThresholds" objType="Subrecord" recordType="INAM">
     <Fields>
       <Float name="Directional" /> wbFloat('Directional', cpNormal, True, 180/Pi),
-      <Float name="MovementSpeed" />
-      <Float name="RotationSpeed" />
-    </Fields>
+      <Float name="MovementSpeed" /><Float name="RotationSpeed" /></Fields>
   </Object>
 </Loqui>

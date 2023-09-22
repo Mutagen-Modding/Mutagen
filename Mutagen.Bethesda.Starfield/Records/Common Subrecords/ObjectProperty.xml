@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectProperty" objType="Subrecord" GUID="99518193-5a21-406f-92ee-03ba18ec55f1" ID="688">
+  <Object name="ObjectProperty" objType="Subrecord">
     <Fields>
       <FormLink name="ActorValue" refName="ActorValueInformation" />
       <Float name="Value" />

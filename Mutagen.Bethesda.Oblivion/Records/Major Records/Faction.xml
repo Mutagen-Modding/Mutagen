@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Faction" objType="Record" baseClass="OblivionMajorRecord" recordType="FACT" GUID="153fd2c1-b407-450e-af54-30f99328faff" ID="22">
+  <Object name="Faction" objType="Record" baseClass="OblivionMajorRecord" recordType="FACT">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefList name="Relations" refName="Relation" />
@@ -10,10 +10,10 @@
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
   </Object>
-  <Object name="Rank" objType="Subrecord" GUID="4945b664-16ac-4464-89b0-03534ffd5e18" ID="24">
+  <Object name="Rank" objType="Subrecord">
     <Fields>
       <Int32 name="RankNumber" recordType="RNAM" />
-      <Gendered name="Name" maleMarker="MNAM" femaleMarker="FNAM" >
+      <Gendered name="Name" maleMarker="MNAM" femaleMarker="FNAM">
         <Fields>
           <String />
         </Fields>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LocationTargetRadius" objType="Subrecord" GUID="8b82d989-27ee-4f34-a0eb-49110395efd0" ID="692">
+  <Object name="LocationTargetRadius" objType="Subrecord">
     <Fields>
       <RefDirect name="Target" refName="ALocationTarget" byteLength="8" generateClassMembers="false" binary="Custom" />
       <UInt32 name="Radius" />
@@ -8,37 +8,37 @@
       <UInt32 name="CollectionIndex" />
     </Fields>
   </Object>
-  <Object name="ALocationTarget" abstract="true" objType="Subrecord" GUID="cde1d127-d857-480f-9a7f-13d1b358f723" ID="693" />
-  <Object name="LocationTarget" baseClass="ALocationTarget" objType="Subrecord" GUID="b0c2b3e0-d2c9-4ffd-bc56-0bc44e67cd40" ID="694">
+  <Object name="ALocationTarget" abstract="true" objType="Subrecord" />
+  <Object name="LocationTarget" baseClass="ALocationTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Link">
         <Interface>IPlaced</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="LocationCell" baseClass="ALocationTarget" objType="Subrecord" GUID="02736d71-f08c-4553-ac74-baa5547c88c4" ID="695">
+  <Object name="LocationCell" baseClass="ALocationTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Link" refName="Cell" />
     </Fields>
   </Object>
-  <Object name="LocationObjectId" baseClass="ALocationTarget" objType="Subrecord" GUID="21f1a370-78d5-4121-84a2-68b8382e91b6" ID="696">
+  <Object name="LocationObjectId" baseClass="ALocationTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Link">
         <Interface>IObjectId</Interface>
       </FormLink>
     </Fields>
   </Object>
-  <Object name="LocationObjectType" baseClass="ALocationTarget" objType="Subrecord" GUID="7d1d8948-ba1e-41f0-b183-aa0bda0520cb" ID="697">
+  <Object name="LocationObjectType" baseClass="ALocationTarget" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="TargetObjectType" />
     </Fields>
   </Object>
-  <Object name="LocationKeyword" baseClass="ALocationTarget" objType="Subrecord" GUID="defc23c2-a346-4d35-88b4-0fcde7c04a80" ID="698">
+  <Object name="LocationKeyword" baseClass="ALocationTarget" objType="Subrecord">
     <Fields>
       <FormLink name="Link" refName="Keyword" />
     </Fields>
   </Object>
-  <Object name="LocationFallback" baseClass="ALocationTarget" objType="Subrecord" GUID="f64faed6-3467-41da-bea9-22c214d5baf1" ID="699">
+  <Object name="LocationFallback" baseClass="ALocationTarget" objType="Subrecord">
     <Fields>
       <Enum name="Type" enumName="LocationTargetRadius.LocationType" byteLength="4" />
       <Int32 name="Data" />

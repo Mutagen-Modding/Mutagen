@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AimAssistModelData" recordType="AAMD" objType="Record" baseClass="StarfieldMajorRecord" GUID="3dab3cd5-2c41-4df9-a54a-6b48153c9546" ID="742">
+  <Object name="AimAssistModelData" recordType="AAMD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

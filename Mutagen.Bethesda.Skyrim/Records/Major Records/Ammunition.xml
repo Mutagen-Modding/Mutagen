@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ammunition" recordType="AMMO" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="14e93a4b-95d0-42a5-8ccf-bad4555e8184" ID="162">
+  <Object name="Ammunition" recordType="AMMO" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -10,7 +10,7 @@
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <String name="Description" recordType="DESC" translated="DL" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
       <Data>
@@ -20,7 +20,7 @@
           <Float name="Damage" />
           <UInt32 name="Value" />
           <Break />
-          <Float name="Weight" >
+          <Float name="Weight">
             <Versioning formVersion="44" />
           </Float>
         </Fields>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="EffectShader" objType="Record" recordType="EFSH" baseClass="OblivionMajorRecord" GUID="2fe14395-5518-4c4a-85ff-7aba6d405e2b" ID="57">
+  <Object name="EffectShader" objType="Record" recordType="EFSH" baseClass="OblivionMajorRecord">
     <Fields>
       <String name="FillTexture" recordType="ICON" />
       <String name="ParticleShaderTexture" recordType="ICO2" />
       <RefDirect name="Data" refName="EffectShaderData" />
     </Fields>
   </Object>
-  <Object name="EffectShaderData" objType="Subrecord" recordType="DATA" GUID="b9b0e800-594c-4327-9bde-47e9f6d99eb7" ID="188">
+  <Object name="EffectShaderData" objType="Subrecord" recordType="DATA">
     <Fields>
       <Enum name="Flags" enumName="EffectShader.Flag" byteLength="4" />
       <Enum name="MembraneShaderSourceBlendMode" enumName="EffectShader.SourceBlendMode" byteLength="4" />

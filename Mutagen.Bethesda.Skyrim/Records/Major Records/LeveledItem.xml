@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledItem" recordType="LVLI" baseClass="SkyrimMajorRecord" objType="Record" GUID="dbc7006d-3752-43d0-9e4f-95268f3353ab" ID="166">
+  <Object name="LeveledItem" recordType="LVLI" baseClass="SkyrimMajorRecord" objType="Record">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
@@ -14,17 +14,17 @@
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
-  <Object name="LeveledItemEntry" objType="Subrecord" GUID="a077418e-1fb2-4956-abe3-a48f9d76449b" ID="239">
+  <Object name="LeveledItemEntry" objType="Subrecord">
     <Fields>
       <RefDirect name="Data" refName="LeveledItemEntryData" />
       <RefDirect name="ExtraData" refName="ExtraData" />
     </Fields>
   </Object>
-  <Object name="LeveledItemEntryData" objType="Subrecord" recordType="LVLO" GUID="a14b1375-6780-4482-bb8c-bf9362feb0e9" ID="240">
+  <Object name="LeveledItemEntryData" objType="Subrecord" recordType="LVLO">
     <Fields>
       <Int16 name="Level" />
       <Int16 name="Unknown" />
-      <FormLink name="Reference" >
+      <FormLink name="Reference">
         <Interface>IItem</Interface>
       </FormLink>
       <Int16 name="Count" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SkillRecord" objType="Record" baseClass="OblivionMajorRecord" recordType="SKIL" GUID="d6afa219-e0d6-4f44-83d4-2d0298897f4d" ID="42">
+  <Object name="SkillRecord" objType="Record" baseClass="OblivionMajorRecord" recordType="SKIL">
     <Fields>
       <Enum name="Skill" enumName="ActorValue" byteLength="4" recordType="INDX" />
       <String name="Description" recordType="DESC" nullable="True" />
@@ -12,7 +12,7 @@
       <String name="MasterText" recordType="MNAM" />
     </Fields>
   </Object>
-  <Object name="SkillData" objType="Subrecord" recordType="DATA" GUID="7d77fda3-ca94-4126-b35e-52098fb45b40" ID="209">
+  <Object name="SkillData" objType="Subrecord" recordType="DATA">
     <Fields>
       <Enum name="Action" enumName="ActorValue" byteLength="4" />
       <Enum name="Attribute" enumName="ActorValue" byteLength="4" />

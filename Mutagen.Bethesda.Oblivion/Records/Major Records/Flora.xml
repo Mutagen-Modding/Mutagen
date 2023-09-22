@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Flora" objType="Record" baseClass="OblivionMajorRecord" recordType="FLOR" GUID="5cc7a37a-95ea-4486-8c4c-02c55c3a4566" ID="80">
+  <Object name="Flora" objType="Record" baseClass="OblivionMajorRecord" recordType="FLOR">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -9,7 +9,7 @@
       <RefDirect name="SeasonalIngredientProduction" refName="SeasonalIngredientProduction" />
     </Fields>
   </Object>
-  <Object name="SeasonalIngredientProduction" recordType="PFPC" objType="Subrecord" GUID="00b07de3-bac8-4cf6-8f3d-947654512854" ID="190">
+  <Object name="SeasonalIngredientProduction" recordType="PFPC" objType="Subrecord">
     <Fields>
       <UInt8 name="Spring" />
       <UInt8 name="Summer" />

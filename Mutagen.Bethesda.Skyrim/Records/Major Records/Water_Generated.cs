@@ -3335,13 +3335,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 148,
-            version: 0);
-
-        public const string GUID = "cf1e41d5-72e0-47c6-82ca-e1289b290653";
-
         public const ushort AdditionalFieldCount = 68;
 
         public const ushort FieldCount = 75;
@@ -3400,8 +3393,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -5615,33 +5606,25 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NoiseLayerOneTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.NoiseLayerOneTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Water_FieldIndex.NoiseLayerOneTexture;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NoiseLayerTwoTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.NoiseLayerTwoTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Water_FieldIndex.NoiseLayerTwoTexture;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NoiseLayerThreeTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.NoiseLayerThreeTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Water_FieldIndex.NoiseLayerThreeTexture;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FlowNormalsNoiseTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.FlowNormalsNoiseTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Water_FieldIndex.FlowNormalsNoiseTexture;
                 }
                 default:

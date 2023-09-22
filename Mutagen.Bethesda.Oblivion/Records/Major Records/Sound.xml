@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Sound" objType="Record" baseClass="OblivionMajorRecord" recordType="SOUN" GUID="449f0e34-9512-4a5f-a83f-7e3dbb0cee42" ID="39">
+  <Object name="Sound" objType="Record" baseClass="OblivionMajorRecord" recordType="SOUN">
     <Fields>
       <String name="File" recordType="FNAM" />
       <RefDirect name="Data" refName="SoundData" />
     </Fields>
   </Object>
-  <Object name="SoundData" objType="Subrecord" recordType="SNDD" forceInternalInterface="true" GUID="4849cf00-7d46-4b82-bec2-e7eb7f54e563" ID="40">
+  <Object name="SoundData" objType="Subrecord" recordType="SNDD" forceInternalInterface="true">
     <Fields>
       <UInt16 name="MinimumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
       <UInt16 name="MaximumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
@@ -15,7 +15,7 @@
       <Enum name="Flags" enumName="SoundData.Flag" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="SoundDataExtended" baseClass="SoundData" objType="Subrecord" recordType="SNDX" GUID="3af22aab-9cdf-4fac-a210-9c06331d2180" ID="41">
+  <Object name="SoundDataExtended" baseClass="SoundData" objType="Subrecord" recordType="SNDX">
     <Fields>
       <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
       <Float name="StopTime" binary="Custom" min="0" max="1434.375" byteLength="1" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weather" recordType="WTHR" objType="Record" customRecordFallback="true" baseClass="Fallout4MajorRecord" GUID="f7bedd11-8b56-481c-9fe6-605dc20bff8c" ID="190">
+  <Object name="Weather" recordType="WTHR" objType="Record" customRecordFallback="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <Array name="CloudTextures" fixedSize="29" binary="NoGeneration">
         <String nullable="True" />
@@ -117,7 +117,7 @@
       <Float name="VisibilityMult" recordType="WNAM" />
     </Fields>
   </Object>
-  <Object name="CloudLayer" objType="Subrecord" GUID="a5a963f3-3a94-4890-b74c-3307b5340912" ID="437">
+  <Object name="CloudLayer" objType="Subrecord">
     <Fields>
       <Bool name="Enabled" nullable="True" binary="NoGeneration" />
       <Float name="XSpeed" nullable="True" binary="NoGeneration" />
@@ -126,7 +126,7 @@
       <RefDirect name="Alphas" refName="WeatherAlpha" nullable="True" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="WeatherColor" objType="Subrecord" GUID="5f63507e-d3ab-4460-8be0-b36e02a9d2af" ID="438">
+  <Object name="WeatherColor" objType="Subrecord">
     <Fields>
       <Color name="Sunrise" binaryType="Alpha" />
       <Color name="Day" binaryType="Alpha" />
@@ -139,7 +139,7 @@
       <Color name="LateSunset" binaryType="Alpha" />
     </Fields>
   </Object>
-  <Object name="WeatherGodRays" objType="Subrecord" recordType="WGDR" GUID="26265bbf-8a5f-4362-a51c-fdd5828d4642" ID="443">
+  <Object name="WeatherGodRays" objType="Subrecord" recordType="WGDR">
     <Fields>
       <FormLink name="GodRaySunrise" refName="GodRays" />
       <FormLink name="GodRayDay" refName="GodRays" />
@@ -151,7 +151,7 @@
       <FormLink name="GodRayLateSunset" refName="GodRays" />
     </Fields>
   </Object>
-  <Object name="WeatherAlpha" objType="Subrecord" GUID="75106865-2fb6-4dd5-af2a-29d661b0b014" ID="439">
+  <Object name="WeatherAlpha" objType="Subrecord">
     <Fields>
       <Float name="Sunrise" default="1f" />
       <Float name="Day" default="1f" />
@@ -163,7 +163,7 @@
       <Float name="LateSunset" default="1f" />
     </Fields>
   </Object>
-  <Object name="WeatherAmbientColorSet" objType="Subrecord" GUID="77ba4aba-f0d8-43fa-b1dd-bed4052b3d6c" ID="440">
+  <Object name="WeatherAmbientColorSet" objType="Subrecord">
     <Fields>
       <RefDirect name="Sunrise" refName="AmbientColors" binary="NoGeneration" />
       <RefDirect name="Day" refName="AmbientColors" binary="NoGeneration" />
@@ -175,7 +175,7 @@
       <RefDirect name="LateSunset" refName="AmbientColors" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="WeatherSound" objType="Subrecord" recordType="SNAM" GUID="e89b54f8-32c5-4176-a08c-d5ae961c86b8" ID="441">
+  <Object name="WeatherSound" objType="Subrecord" recordType="SNAM">
     <Fields>
       <FormLink name="Sound">
         <Interface>ISound</Interface>
@@ -183,7 +183,7 @@
       <Enum name="Type" enumName="WeatherSound.TypeEnum" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="WeatherMagic" objType="Subrecord" recordType="UNAM" GUID="0c33f0bf-563d-4e9f-82df-ea52b289acd1" ID="442">
+  <Object name="WeatherMagic" objType="Subrecord" recordType="UNAM">
     <Fields>
       <FormLink name="OnLightningStrikeSpell" refName="Spell" />
       <Float name="OnLightningStrikeThreshold" />

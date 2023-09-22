@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Condition" objType="Subrecord" recordType="CTDA" GUID="b992280d-2cc5-46ce-b935-e1cfd5bdd34f" ID="151">
+  <Object name="Condition" objType="Subrecord" recordType="CTDA">
     <Fields>
       <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
       <Enum name="Flags" enumName="Condition.Flag" binary="NoGeneration" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="NavigationMeshInfoMap" recordType="NAVI" objType="Record" baseClass="Fallout4MajorRecord" GUID="ee51327e-a848-423b-8f03-e97f8f6730ee" ID="445">
+  <Object name="NavigationMeshInfoMap" recordType="NAVI" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <UInt32 name="NavMeshVersion" recordType="NVER" />
       <RefList name="MapInfos" refName="NavigationMapInfo" />
@@ -8,7 +8,7 @@
       <ByteArray name="NVSI" recordType="NVSI" />
     </Fields>
   </Object>
-  <Object name="NavigationMapInfo" objType="Subrecord" recordType="NVMI" GUID="03ca5e8f-6fd0-48b4-bf36-6146693f69a5" ID="446">
+  <Object name="NavigationMapInfo" objType="Subrecord" recordType="NVMI">
     <Fields>
       <FormLink name="NavigationMesh" refName="NavigationMesh" />
       <Int32 name="Unknown" />
@@ -26,13 +26,13 @@
       <RefDirect name="Parent" refName="ANavigationMapInfoParent" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="LinkedDoor" objType="Subrecord" GUID="887e6b28-462d-4f2c-a981-65e591efced9" ID="447">
+  <Object name="LinkedDoor" objType="Subrecord">
     <Fields>
       <Int32 name="Unknown" />
       <FormLink name="Door" refName="PlacedObject" />
     </Fields>
   </Object>
-  <Object name="IslandData" objType="Subrecord" GUID="893c17cd-783f-4570-808b-f1185071cd49" ID="448">
+  <Object name="IslandData" objType="Subrecord">
     <Fields>
       <P3Float name="Min" />
       <P3Float name="Max" />
@@ -44,33 +44,33 @@
       </List>
     </Fields>
   </Object>
-  <Object name="PreferredPathing" objType="Subrecord" recordType="NVPP" GUID="f7237b6b-a1d8-4fe8-a020-ace4beff46eb" ID="449">
+  <Object name="PreferredPathing" objType="Subrecord" recordType="NVPP">
     <Fields>
       <RefList name="NavmeshSets" refName="NavmeshSet" counterLength="4" binaryOverlay="Custom" />
       <RefList name="NavmeshTree" refName="NavmeshNode" counterLength="4" />
     </Fields>
   </Object>
-  <Object name="NavmeshSet" objType="Subrecord" GUID="945414e9-610f-4f53-881e-0fe4c68f2dfa" ID="450">
+  <Object name="NavmeshSet" objType="Subrecord">
     <Fields>
       <List name="Navmeshes" counterLength="4">
         <FormLink refName="NavigationMesh" />
       </List>
     </Fields>
   </Object>
-  <Object name="NavmeshNode" objType="Subrecord" GUID="74c7620b-98c4-4df1-8445-1dc9d9e376ca" ID="451">
+  <Object name="NavmeshNode" objType="Subrecord">
     <Fields>
       <FormLink name="NavMesh" refName="NavigationMesh" />
       <UInt32 name="NodeIndex" />
     </Fields>
   </Object>
-  <Object name="ANavigationMapInfoParent" objType="Subrecord" abstract="true" GUID="bea56752-6d22-43f4-a721-af7704a1af78" ID="685" />
-  <Object name="NavigationMapInfoWorldspaceParent" objType="Subrecord" baseClass="ANavigationMapInfoParent" GUID="e6543946-d30f-47bc-821d-d98a2cc6c305" ID="686">
+  <Object name="ANavigationMapInfoParent" objType="Subrecord" abstract="true" />
+  <Object name="NavigationMapInfoWorldspaceParent" objType="Subrecord" baseClass="ANavigationMapInfoParent">
     <Fields>
       <FormLink name="Worldspace" refName="Worldspace" />
       <P2Int16 name="Coord" />
     </Fields>
   </Object>
-  <Object name="NavigationMapInfoCellParent" objType="Subrecord" baseClass="ANavigationMapInfoParent" GUID="009fddd0-096e-4584-bae4-777f0ea562ce" ID="687">
+  <Object name="NavigationMapInfoCellParent" objType="Subrecord" baseClass="ANavigationMapInfoParent">
     <Fields>
       <FormLink name="Cell" refName="Cell" />
     </Fields>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Activator" baseClass="OblivionMajorRecord" objType="Record" recordType="ACTI" GUID="4c83cb95-a21f-4772-be1a-c0a60582e80f" ID="65">
+  <Object name="Activator" baseClass="OblivionMajorRecord" objType="Record" recordType="ACTI">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />

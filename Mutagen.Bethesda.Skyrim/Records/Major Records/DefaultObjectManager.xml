@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DefaultObjectManager" recordType="DOBJ" objType="Record" baseClass="SkyrimMajorRecord" GUID="584803b3-0de0-44fe-af54-ada72032daf5" ID="448">
+  <Object name="DefaultObjectManager" recordType="DOBJ" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <RefList name="Objects" recordType="DNAM" refName="DefaultObject" />
     </Fields>
   </Object>
-  <Object name="DefaultObject" objType="Subrecord" GUID="9c2cd515-76fa-4031-8339-99a1bfa61cf1" ID="449">
+  <Object name="DefaultObject" objType="Subrecord">
     <Fields>
       <RecordType name="Use" />
       <FormLink name="Object" refName="SkyrimMajorRecord" />

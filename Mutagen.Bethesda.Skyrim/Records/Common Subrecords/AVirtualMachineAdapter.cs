@@ -12,7 +12,10 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
         ushort count = frame.ReadUInt16();
         for (int i = 0; i < count; i++)
         {
-            var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, encoding: frame.MetaData.Encodings.NonTranslated);
+            var scriptName = StringBinaryTranslation.Instance.Parse(
+                frame, stringBinaryType: StringBinaryType.PrependLengthUShort,
+                encoding: frame.MetaData.Encodings.NonTranslated,
+                parseWhole: true);
             var scriptFlags = (ScriptEntry.Flag)frame.ReadUInt8();
             var entry = new ScriptEntry()
             {
@@ -34,7 +37,10 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
         var count = frame.ReadUInt16();
         for (int i = 0; i < count; i++)
         {
-            var name = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, encoding: frame.MetaData.Encodings.NonTranslated);
+            var name = StringBinaryTranslation.Instance.Parse(
+                frame, stringBinaryType: StringBinaryType.PrependLengthUShort, 
+                encoding: frame.MetaData.Encodings.NonTranslated,
+                parseWhole: true);
             var type = (ScriptProperty.Type)frame.ReadUInt8();
             var flags = (ScriptProperty.Flag)frame.ReadUInt8();
             ScriptProperty prop = type switch

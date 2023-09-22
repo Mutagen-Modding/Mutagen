@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Tree" recordType="TREE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="5353e43a-3c33-49d9-b5a7-fc971ba96d88" ID="188">
+  <Object name="Tree" recordType="TREE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true">
     <Interface>IHarvestable</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
@@ -12,7 +12,7 @@
       <FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />
       <RefDirect name="Production" refName="SeasonalIngredientProduction" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Data recordType="CNAM" >
+      <Data recordType="CNAM">
         <Fields>
           <Float name="TrunkFlexibility" />
           <Float name="BranchFlexibility" />

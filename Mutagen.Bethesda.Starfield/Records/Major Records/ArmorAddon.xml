@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ArmorAddon" recordType="ARMA" objType="Record" baseClass="StarfieldMajorRecord" GUID="223f7bea-efa1-40a7-a036-69ba0fdb9fd0" ID="749">
+  <Object name="ArmorAddon" recordType="ARMA" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

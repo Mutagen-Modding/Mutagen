@@ -2467,13 +2467,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 268,
-            version: 0);
-
-        public const string GUID = "2ee9dfa0-e46f-43fe-b3e3-acc2314e4bce";
-
         public const ushort AdditionalFieldCount = 33;
 
         public const ushort FieldCount = 40;
@@ -2583,8 +2576,6 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly Type BinaryWriteTranslation = typeof(WorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -5430,9 +5421,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MapImage = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.MapImage = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.MapImage;
                 }
                 case RecordTypeInts.MODL:
@@ -5498,41 +5487,31 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CanopyShadow = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.CanopyShadow = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.CanopyShadow;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterNoiseTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.WaterNoiseTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.WaterNoiseTexture;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodDiffuseTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.HdLodDiffuseTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.HdLodDiffuseTexture;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodNormalTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.HdLodNormalTexture = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.HdLodNormalTexture;
                 }
                 case RecordTypeInts.XWEM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterEnvironmentMap = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.WaterEnvironmentMap = AssetLinkBinaryTranslation.Instance.Parse<SkyrimTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.OFST:

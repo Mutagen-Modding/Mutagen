@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CameraShot" objType="Record" recordType="CAMS" baseClass="Fallout4MajorRecord" GUID="04392897-34ef-4ee9-abf5-18b0b3ba0e41" ID="613">
+  <Object name="CameraShot" objType="Record" recordType="CAMS" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <RefList name="Conditions" refName="Condition" />

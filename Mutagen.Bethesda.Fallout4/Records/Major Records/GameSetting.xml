@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GameSetting" recordType="GMST" baseClass="Fallout4MajorRecord" objType="Record" abstract="true" GUID="2b24ab8b-f7d3-4860-b4bd-ccca29fc619c" ID="23">
+  <Object name="GameSetting" recordType="GMST" baseClass="Fallout4MajorRecord" objType="Record" abstract="true">
     <Fields>
     </Fields>
   </Object>
-  <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="469e0994-1266-4a0a-8117-21d65d2495ab" ID="24">
+  <Object name="GameSettingInt" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Int32 name="Data" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="GameSettingFloat" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="4da1301a-2cbe-419a-b3b1-c63d11f1c7a7" ID="25">
+  <Object name="GameSettingFloat" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Float name="Data" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="GameSettingString" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="a06b1240-e620-4420-96ce-4887ab459ba4" ID="26">
+  <Object name="GameSettingString" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <String name="Data" recordType="DATA" translated="Normal" />
     </Fields>
   </Object>
-  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="3773c8a5-ec13-4c34-8ed9-d0d2d6e3c22a" ID="27">
+  <Object name="GameSettingBool" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <Bool name="Data" recordType="DATA" binary="Custom" />
     </Fields>
   </Object>
-  <Object name="GameSettingUInt" recordType="GMST" baseClass="GameSetting" objType="Record" GUID="5d09a5dd-3b6d-41f8-a228-b913f16bb141" ID="29">
+  <Object name="GameSettingUInt" recordType="GMST" baseClass="GameSetting" objType="Record">
     <Fields>
       <UInt32 name="Data" recordType="DATA" />
     </Fields>

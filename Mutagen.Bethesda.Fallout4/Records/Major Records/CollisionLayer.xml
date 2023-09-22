@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="Fallout4MajorRecord" GUID="02047758-1851-41b7-b34c-81b802520b8f" ID="234">
+  <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <UInt32 name="Index" recordType="BNAM" nullable="False" />

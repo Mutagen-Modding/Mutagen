@@ -29,7 +29,7 @@ public class LinkInterfaceModule : GenerationModule
         // Compile interfaces implementing interfaces mapping data
         var interfaceInheritenceMappings = new Dictionary<string, HashSet<string>>();
 
-        foreach (var obj in proto.ObjectGenerationsByID.Values)
+        foreach (var obj in proto.ObjectGenerationsByName.Values)
         {
             foreach (var item in obj.Node.Elements(XName.Get("LinkInterface", LoquiGenerator.Namespace)))
             {

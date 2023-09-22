@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PackIn" recordType="PKIN" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="0129a653-2320-4a50-90f2-567820b86377" ID="651">
+  <Object name="PackIn" recordType="PKIN" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
       <String name="Filter" recordType="FLTR" />

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Effect" objType="Subrecord" GUID="85ccb56e-7055-4f2a-894d-f998f0ac9ab8" ID="53">
+  <Object name="Effect" objType="Subrecord">
     <Fields>
       <CustomLogic name="EffectInitial" recordType="EFID" />
       <RefDirect name="Data" refName="EffectData" nullable="False" />
       <RefDirect name="ScriptEffect" refName="ScriptEffect" />
     </Fields>
   </Object>
-  <Object name="EffectData" objType="Subrecord" recordType="EFIT" GUID="1d6314d9-f497-4ce0-9a70-55a5f3a29bab" ID="219">
+  <Object name="EffectData" objType="Subrecord" recordType="EFIT">
     <Fields>
       <FormLink name="MagicEffect" type="EDIDChars" refName="MagicEffect" />
       <UInt32 name="Magnitude" />
@@ -17,13 +17,13 @@
       <Enum name="ActorValue" enumName="ActorValueExtended" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="ScriptEffect" objType="Subrecord" GUID="52a9e0c6-6771-4b3d-a4e7-a082ff8384a9" ID="54">
+  <Object name="ScriptEffect" objType="Subrecord">
     <Fields>
       <RefDirect name="Data" refName="ScriptEffectData" />
       <String name="Name" recordType="FULL" />
     </Fields>
   </Object>
-  <Object name="ScriptEffectData" objType="Subrecord" recordType="SCIT" GUID="dd76cd47-15a0-437f-8c99-011168a7e431" ID="220">
+  <Object name="ScriptEffectData" objType="Subrecord" recordType="SCIT">
     <Fields>
       <FormLink name="Script" refName="Script" />
       <Break />

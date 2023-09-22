@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ConditionForm" recordType="CNDF" objType="Record" baseClass="StarfieldMajorRecord" GUID="d6f0fd2b-5e5b-4b8f-84b6-80cd5edb5668" ID="766">
+  <Object name="ConditionForm" recordType="CNDF" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

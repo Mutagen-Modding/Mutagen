@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ClothingFlags" objType="Subrecord" recordType="BMDT" GUID="adc86e29-358e-43de-95e7-210c128be31f" ID="172">
+  <Object name="ClothingFlags" objType="Subrecord" recordType="BMDT">
     <Fields>
       <Enum name="BipedFlags" enumName="BipedFlag" byteLength="2" />
       <Enum name="GeneralFlags" enumName="EquipmentFlag" byteLength="2" />

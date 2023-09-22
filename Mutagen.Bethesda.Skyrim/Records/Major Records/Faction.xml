@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Faction" recordType="FACT" objType="Record" baseClass="SkyrimMajorRecord" GUID="db110917-5be4-4ea2-b679-55c8ac5b6179" ID="27">
+  <Object name="Faction" recordType="FACT" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Relations" refName="Relation" />
@@ -23,7 +23,7 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IRelatable</LinkInterface>
   </Object>
-  <Object name="CrimeValues" objType="Subrecord" recordType="CRVA" GUID="7bd6c4ae-2666-4f6f-a7a0-f459a05b7787" ID="132">
+  <Object name="CrimeValues" objType="Subrecord" recordType="CRVA">
     <Fields>
       <Bool name="Arrest" byteLength="1" />
       <Bool name="AttackOnSight" byteLength="1" />
@@ -39,21 +39,21 @@
       <UInt16 name="Werewolf" />
     </Fields>
   </Object>
-  <Object name="VendorValues" objType="Subrecord" recordType="VENV" GUID="31dd7308-ffd1-4311-a69c-f6c0bed71382" ID="34">
+  <Object name="VendorValues" objType="Subrecord" recordType="VENV">
     <Fields>
       <UInt16 name="StartHour" />
       <UInt16 name="EndHour" />
       <UInt16 name="Radius" />
-      <UInt16 name="Unknown"/>
+      <UInt16 name="Unknown" />
       <Bool name="OnlyBuysStolenItems" byteLength="1" />
       <Bool name="NotSellBuy" byteLength="1" />
       <UInt16 name="Unknown2" />
     </Fields>
   </Object>
-  <Object name="Rank" objType="Subrecord" GUID="168a7e1e-9304-4604-b927-7b61cfa16730" ID="32">
+  <Object name="Rank" objType="Subrecord">
     <Fields>
       <UInt32 name="Number" recordType="RNAM" />
-      <Gendered name="Title" maleMarker="MNAM" femaleMarker="FNAM" >
+      <Gendered name="Title" maleMarker="MNAM" femaleMarker="FNAM">
         <Fields>
           <String translated="Normal" />
         </Fields>

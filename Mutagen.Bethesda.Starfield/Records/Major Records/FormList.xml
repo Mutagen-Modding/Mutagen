@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="FormList" recordType="FLST" baseClass="StarfieldMajorRecord" objType="Record" GUID="3632ef02-0f49-4c41-a089-22b5474f8e12" ID="705">
+  <Object name="FormList" recordType="FLST" baseClass="StarfieldMajorRecord" objType="Record">
     <Fields>
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>

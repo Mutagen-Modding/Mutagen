@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Effect" objType="Subrecord" GUID="cc0dd4e2-89d6-4248-9e27-1c9157e59204" ID="101">
+  <Object name="Effect" objType="Subrecord">
     <Fields>
       <FormLink name="BaseEffect" refName="MagicEffect" recordType="EFID" />
       <RefDirect name="Data" refName="EffectData" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
-  <Object name="EffectData" objType="Subrecord" recordType="EFIT" GUID="d4b9227e-a026-4b30-8a1f-7aee9834456f" ID="102">
+  <Object name="EffectData" objType="Subrecord" recordType="EFIT">
     <Fields>
       <Float name="Magnitude" />
       <Int32 name="Area" />

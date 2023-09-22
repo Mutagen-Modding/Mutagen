@@ -787,13 +787,6 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Starfield.ProtocolKey,
-            msgID: 898,
-            version: 0);
-
-        public const string GUID = "d85582e4-2483-48f6-8435-3bcbfd652a1a";
-
         public const ushort AdditionalFieldCount = 6;
 
         public const ushort FieldCount = 6;
@@ -831,6 +824,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.MODL,
                 RecordTypes.FLLD,
+                RecordTypes.XMPM,
                 RecordTypes.MCQP,
                 RecordTypes.XMSP,
                 RecordTypes.XLMS);
@@ -839,8 +833,6 @@ namespace Mutagen.Bethesda.Starfield
         public static readonly Type BinaryWriteTranslation = typeof(PlanetModelComponentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
-        ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
-        string ILoquiRegistration.GUID => GUID;
         ushort ILoquiRegistration.FieldCount => FieldCount;
         ushort ILoquiRegistration.AdditionalFieldCount => AdditionalFieldCount;
         Type ILoquiRegistration.MaskType => MaskType;
@@ -1470,11 +1462,9 @@ namespace Mutagen.Bethesda.Starfield
                     item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PlanetModelComponent_FieldIndex.FLLD;
                 }
-                case RecordTypeInts.BFCB:
+                case RecordTypeInts.XMPM:
                 {
-                    item.XMPM = Mutagen.Bethesda.Starfield.PlanetModelComponentXMPM.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
+                    item.XMPM = Mutagen.Bethesda.Starfield.PlanetModelComponentXMPM.CreateFromBinary(frame: frame);
                     return (int)PlanetModelComponent_FieldIndex.XMPM;
                 }
                 case RecordTypeInts.MCQP:
@@ -1566,7 +1556,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FLLDLocation;
         public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IPlanetModelComponentXMPMGetter? XMPM { get; private set; }
+        #region XMPM
+        private RangeInt32? _XMPMLocation;
+        public IPlanetModelComponentXMPMGetter? XMPM => _XMPMLocation.HasValue ? PlanetModelComponentXMPMBinaryOverlay.PlanetModelComponentXMPMFactory(_recordData.Slice(_XMPMLocation!.Value.Min), _package) : default;
+        #endregion
         #region RingModel
         private int? _RingModelLocation;
         public String? RingModel => _RingModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RingModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1652,12 +1645,9 @@ namespace Mutagen.Bethesda.Starfield
                     _FLLDLocation = (stream.Position - offset);
                     return (int)PlanetModelComponent_FieldIndex.FLLD;
                 }
-                case RecordTypeInts.BFCB:
+                case RecordTypeInts.XMPM:
                 {
-                    this.XMPM = PlanetModelComponentXMPMBinaryOverlay.PlanetModelComponentXMPMFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
+                    _XMPMLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)PlanetModelComponent_FieldIndex.XMPM;
                 }
                 case RecordTypeInts.MCQP:

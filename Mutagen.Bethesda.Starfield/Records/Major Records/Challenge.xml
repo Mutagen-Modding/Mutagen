@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Challenge" recordType="CHAL" objType="Record" baseClass="StarfieldMajorRecord" GUID="69f16bfc-ffcc-4b3e-9eca-860e6e0eb49e" ID="760">
+  <Object name="Challenge" recordType="CHAL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>

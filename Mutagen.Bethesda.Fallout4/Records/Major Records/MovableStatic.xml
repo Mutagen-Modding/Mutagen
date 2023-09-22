@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MovableStatic" recordType="MSTT" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" GUID="1f8b969d-e065-45b8-8cce-d5b826d35a35" ID="200">
+  <Object name="MovableStatic" recordType="MSTT" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />

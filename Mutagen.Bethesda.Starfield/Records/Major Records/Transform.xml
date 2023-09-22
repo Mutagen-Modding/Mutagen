@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Transform" recordType="TRNS" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord" GUID="216cda2a-f726-4cfb-a87c-772493c24c28" ID="84">
+  <Object name="Transform" recordType="TRNS" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
     <Fields>
       <Data recordType="DATA">
         <Fields>

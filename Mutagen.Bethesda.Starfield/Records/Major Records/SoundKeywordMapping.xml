@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoundKeywordMapping" recordType="KSSM" objType="Record" baseClass="StarfieldMajorRecord" GUID="538ef047-d775-461d-8e15-5aa531c2fe7d" ID="857">
+  <Object name="SoundKeywordMapping" recordType="KSSM" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
   </Object>
