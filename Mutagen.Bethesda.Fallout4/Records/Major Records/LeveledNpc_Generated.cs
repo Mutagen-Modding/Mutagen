@@ -2413,9 +2413,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var subMeta = stream.ReadSubrecordHeader();
                     var subLen = finalPos - stream.Position;
-                    this.FilterKeywordChances = BinaryOverlayList.FactoryByLazyParse<IFilterKeywordChanceGetter>(
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndex<IFilterKeywordChanceGetter>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
+                        itemLength: 8,
                         getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
                     stream.Position += subLen;
                     return (int)LeveledNpc_FieldIndex.FilterKeywordChances;

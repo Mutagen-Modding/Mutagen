@@ -51,17 +51,17 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FilterKeyword
-        private readonly IFormLinkNullable<IKeywordGetter> _FilterKeyword = new FormLinkNullable<IKeywordGetter>();
-        public IFormLinkNullable<IKeywordGetter> FilterKeyword
+        private readonly IFormLink<IKeywordGetter> _FilterKeyword = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> FilterKeyword
         {
             get => _FilterKeyword;
             set => _FilterKeyword.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IKeywordGetter> IFilterKeywordChanceGetter.FilterKeyword => this.FilterKeyword;
+        IFormLinkGetter<IKeywordGetter> IFilterKeywordChanceGetter.FilterKeyword => this.FilterKeyword;
         #endregion
         #region Chance
-        public UInt32 Chance { get; set; } = default;
+        public Percent Chance { get; set; } = default;
         #endregion
 
         #region To String
@@ -459,8 +459,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IFilterKeywordChance>
     {
-        new IFormLinkNullable<IKeywordGetter> FilterKeyword { get; set; }
-        new UInt32 Chance { get; set; }
+        new IFormLink<IKeywordGetter> FilterKeyword { get; set; }
+        new Percent Chance { get; set; }
     }
 
     public partial interface IFilterKeywordChanceGetter :
@@ -476,8 +476,8 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => FilterKeywordChance_Registration.Instance;
-        IFormLinkNullableGetter<IKeywordGetter> FilterKeyword { get; }
-        UInt32 Chance { get; }
+        IFormLinkGetter<IKeywordGetter> FilterKeyword { get; }
+        Percent Chance { get; }
 
     }
 
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.FilterKeyword = item.FilterKeyword.Equals(rhs.FilterKeyword);
-            ret.Chance = item.Chance == rhs.Chance;
+            ret.Chance = item.Chance.Equals(rhs.Chance);
         }
         
         public string Print(
@@ -827,7 +827,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (printMask?.FilterKeyword ?? true)
             {
-                sb.AppendItem(item.FilterKeyword.FormKeyNullable, "FilterKeyword");
+                sb.AppendItem(item.FilterKeyword.FormKey, "FilterKeyword");
             }
             if (printMask?.Chance ?? true)
             {
@@ -848,7 +848,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)FilterKeywordChance_FieldIndex.Chance) ?? true))
             {
-                if (lhs.Chance != rhs.Chance) return false;
+                if (!lhs.Chance.Equals(rhs.Chance)) return false;
             }
             return true;
         }
@@ -872,10 +872,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFilterKeywordChanceGetter obj)
         {
-            if (FormLinkInformation.TryFactory(obj.FilterKeyword, out var FilterKeywordInfo))
-            {
-                yield return FilterKeywordInfo;
-            }
+            yield return FormLinkInformation.Factory(obj.FilterKeyword);
             yield break;
         }
         
@@ -896,7 +893,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if ((copyMask?.GetShouldTranslate((int)FilterKeywordChance_FieldIndex.FilterKeyword) ?? true))
             {
-                item.FilterKeyword.SetTo(rhs.FilterKeyword.FormKeyNullable);
+                item.FilterKeyword.SetTo(rhs.FilterKeyword.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FilterKeywordChance_FieldIndex.Chance) ?? true))
             {
@@ -998,10 +995,13 @@ namespace Mutagen.Bethesda.Fallout4
             IFilterKeywordChanceGetter item,
             MutagenWriter writer)
         {
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FilterKeyword);
-            writer.Write(item.Chance);
+            PercentBinaryTranslation.Write(
+                writer: writer,
+                item: item.Chance,
+                integerType: FloatIntegerType.UInt);
         }
 
         public void Write(
@@ -1035,9 +1035,10 @@ namespace Mutagen.Bethesda.Fallout4
             IFilterKeywordChance item,
             MutagenFrame frame)
         {
-            if (frame.Complete) return;
             item.FilterKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Chance = frame.ReadUInt32();
+            item.Chance = PercentBinaryTranslation.Parse(
+                reader: frame,
+                integerType: FloatIntegerType.UInt);
         }
 
     }
@@ -1104,8 +1105,8 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkNullableGetter<IKeywordGetter> FilterKeyword => new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public UInt32 Chance => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IFormLinkGetter<IKeywordGetter> FilterKeyword => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Percent Chance => PercentBinaryTranslation.GetPercent(_structData.Slice(0x4, 0x4), FloatIntegerType.UInt);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

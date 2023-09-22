@@ -2,8 +2,9 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="FilterKeywordChance" objType="Subrecord">
     <Fields>
-      <FormLink name="FilterKeyword" refName="Keyword" nullable="True" />
-      <UInt32 name="Chance" />
+      <FormLink name="FilterKeyword" refName="Keyword" />
+      <Percent name="Chance" integerType="UInt" />
     </Fields>
   </Object>
 </Loqui>
+
