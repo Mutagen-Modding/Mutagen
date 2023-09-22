@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="StaticCollection" recordType="SCOL" objType="Record" baseClass="StarfieldMajorRecord" majorFlags="true" GUID="c165c588-c264-45c0-bfc0-22c15885dc3e" ID="860">
+  <Object name="StaticCollection" recordType="SCOL" objType="Record" baseClass="StarfieldMajorRecord" majorFlags="true">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
@@ -12,7 +12,7 @@
       <RefList name="Parts" refName="StaticPart" />
     </Fields>
   </Object>
-  <Object name="StaticPart" objType="Subrecord" GUID="6e30fda9-4682-4908-9825-46b66fa0b517" ID="905">
+  <Object name="StaticPart" objType="Subrecord">
     <Fields>
       <Data recordType="ONAM">
         <Fields>
@@ -25,7 +25,7 @@
       <RefList name="Placements" refName="StaticPlacement" recordType="DATA" />
     </Fields>
   </Object>
-  <Object name="StaticPlacement" objType="Subrecord" GUID="b5700849-3b1f-4c02-a02a-d2b1beeb6d36" ID="906">
+  <Object name="StaticPlacement" objType="Subrecord">
     <Fields>
       <P3Float name="Position" />
       <P3Float name="Rotation" />
