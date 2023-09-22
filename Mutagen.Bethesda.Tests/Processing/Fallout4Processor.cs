@@ -190,12 +190,6 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.FormID.ID == 0x05D672)
-        {
-            int wer = 23;
-            wer++;
-        }
-        
         const int blockSize = 0x104; 
         foreach (var mnam in majorFrame.FindEnumerateSubrecords(RecordTypes.MNAM)) 
         { 
