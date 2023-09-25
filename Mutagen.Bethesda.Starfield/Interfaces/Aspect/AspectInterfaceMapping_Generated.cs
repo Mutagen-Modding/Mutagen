@@ -29,6 +29,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 KeywordFormComponent_Registration.Instance,
                 Race_Registration.Instance,
+                Weather_Registration.Instance,
             });
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

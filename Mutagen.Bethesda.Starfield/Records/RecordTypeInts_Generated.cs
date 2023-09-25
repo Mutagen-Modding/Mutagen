@@ -54,6 +54,7 @@ public partial class RecordTypeInts
     public const int CHAL = 0x4C414843;
     public const int CHGL = 0x4C474843;
     public const int CLAS = 0x53414C43;
+    public const int CLDC = 0x43444C43;
     public const int CLDF = 0x46444C43;
     public const int CLFM = 0x4D464C43;
     public const int CLMT = 0x544D4C43;
@@ -69,6 +70,7 @@ public partial class RecordTypeInts
     public const int CRVA = 0x41565243;
     public const int CSTY = 0x59545343;
     public const int CUR3 = 0x33525543;
+    public const int DALC = 0x434C4144;
     public const int DAT2 = 0x32544144;
     public const int DATA = 0x41544144;
     public const int DEBR = 0x52424544;
@@ -137,6 +139,7 @@ public partial class RecordTypeInts
     public const int IDLM = 0x4D4C4449;
     public const int IMAD = 0x44414D49;
     public const int IMGS = 0x53474D49;
+    public const int IMSP = 0x50534D49;
     public const int INAM = 0x4D414E49;
     public const int INCC = 0x43434E49;
     public const int INDX = 0x58444E49;
@@ -147,6 +150,7 @@ public partial class RecordTypeInts
     public const int IPDS = 0x53445049;
     public const int IRES = 0x53455249;
     public const int ITMC = 0x434D5449;
+    public const int JNAM = 0x4D414E4A;
     public const int KEYM = 0x4D59454B;
     public const int KNAM = 0x4D414E4B;
     public const int KSIZ = 0x5A49534B;
