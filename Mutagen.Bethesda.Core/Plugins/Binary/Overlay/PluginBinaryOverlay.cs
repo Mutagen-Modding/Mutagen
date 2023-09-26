@@ -703,6 +703,36 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
 
     public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
         OverlayStream stream,
+        RecordType itemStartMarker,
+        RecordType itemEndMarker,
+        StreamTypedFactory<T> factory,
+        TypedParseParams translationParams)
+    {
+        translationParams = translationParams.ShortCircuit();
+        var ret = new List<T>();
+        while (!stream.Complete)
+        {
+            var subMeta = stream.GetSubrecordHeader();
+            var recType = subMeta.RecordType;
+            if (itemStartMarker != recType) break;
+            stream.Position += stream.MetaData.Constants.SubConstants.HeaderLength;
+            
+            subMeta = stream.GetSubrecordHeader();
+            recType = subMeta.RecordType;
+            var minimumFinalPos = stream.Position + subMeta.TotalLength;
+            ret.Add(factory(stream, recType, _package, translationParams));
+            
+            stream.TryReadSubrecord(itemEndMarker, out _);
+            if (stream.Position < minimumFinalPos)
+            {
+                stream.Position = minimumFinalPos;
+            }
+        }
+        return ret;
+    }
+
+    public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
+        OverlayStream stream,
         RecordTriggerSpecs trigger,
         ConverterFactory<T> factory,
         TypedParseParams translationParams)
@@ -710,6 +740,21 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         return ParseRepeatedTypelessSubrecord(
             stream,
             trigger,
+            (s, r, p, recConv) => factory(s, p, recConv),
+            translationParams);
+    }
+
+    public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
+        OverlayStream stream,
+        RecordType itemStartMarker,
+        RecordType itemEndMarker,
+        ConverterFactory<T> factory,
+        TypedParseParams translationParams)
+    {
+        return ParseRepeatedTypelessSubrecord(
+            stream,
+            itemStartMarker: itemStartMarker,
+            itemEndMarker: itemEndMarker,
             (s, r, p, recConv) => factory(s, p, recConv),
             translationParams);
     }

@@ -309,6 +309,38 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         return ret; 
     } 
+    
+    public ExtendedList<T> Parse( 
+        MutagenFrame reader, 
+        RecordType itemStartMarker,
+        RecordType itemEndMarker,
+        BinaryMasterParseDelegate<T> transl, 
+        TypedParseParams translationParams = default) 
+    { 
+        translationParams = translationParams.ShortCircuit(); 
+        var ret = new ExtendedList<T>(); 
+        while (!reader.Complete) 
+        { 
+            var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader); 
+            nextRecord = translationParams.ConvertToStandard(nextRecord); 
+            if (nextRecord != itemStartMarker) break; 
+            reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
+            var startingPos = reader.Position; 
+            if (transl(reader, out var subIitem, translationParams)) 
+            { 
+                ret.Add(subIitem); 
+            }
+
+            reader.TryReadSubrecord(itemEndMarker, out _);
+            if (reader.Position == startingPos) 
+            { 
+                throw SubrecordException.Enrich( 
+                    new MalformedDataException("Parsed item on the list consumed no data."), 
+                    nextRecord); 
+            } 
+        } 
+        return ret; 
+    } 
     #endregion 
  
     public ExtendedList<T> Parse( 
@@ -767,8 +799,29 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
     { 
         if (items == null) return; 
         foreach (var item in items) 
-        { 
+        {
             transl(writer, item, translationParams); 
+        } 
+    } 
+ 
+    public void Write( 
+        MutagenWriter writer, 
+        IEnumerable<T>? items, 
+        RecordType itemStartMarker,
+        RecordType itemEndMarker,
+        BinaryMasterWriteDelegate<T> transl, 
+        TypedWriteParams translationParams = default) 
+    { 
+        if (items == null) return; 
+        foreach (var item in items) 
+        {
+            using (HeaderExport.Subrecord(writer, itemStartMarker))
+            {
+            }
+            transl(writer, item, translationParams); 
+            using (HeaderExport.Subrecord(writer, itemEndMarker))
+            {
+            }
         } 
     } 
  

@@ -17,7 +17,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
 public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGeneration
 {
-    const string AsyncItemKey = "ListAsyncItem";
     const string ThreadKey = "ListThread";
     public const string CounterRecordType = "ListCounterRecordType";
     public const string CounterByteLength = "CounterByteLength";
@@ -26,6 +25,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     public const string EndMarker = "EndMarker";
     public const string Additive = "Additive";
     public const string ExpectedLengthLength = "ExpectedLengthLength";
+    public const string ItemStartMarker = "ItemStartMarker";
+    public const string ItemEndMarker = "ItemEndMarker";
 
     public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)
     {
@@ -38,6 +39,8 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         listType.CustomData[AllowNoCounter] = node.GetAttribute("allowNoCounter", true);
         listType.CustomData[EndMarker] = node.GetAttribute("endMarker", null);
         listType.CustomData[Additive] = node.GetAttribute("additive", false);
+        listType.CustomData[ItemStartMarker] = node.GetAttribute("itemMarkerType", null);
+        listType.CustomData[ItemEndMarker] = node.GetAttribute("itemEndMarkerType", null);
         var asyncItem = node.GetAttribute<bool>("asyncItems", false);
         if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
         {
@@ -227,6 +230,14 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
             {
                 args.Add($"endMarker: RecordTypes.{endMarker}");
             }
+            if (list.CustomData.TryGetValue(ItemStartMarker, out var itemStartMarkerObj) && itemStartMarkerObj is string itemStartMarker)
+            {
+                args.Add($"itemStartMarker: RecordTypes.{itemStartMarker}");
+            }
+            if (list.CustomData.TryGetValue(ItemEndMarker, out var itemEndMarkerObj) && itemEndMarkerObj is string itemEndMarker)
+            {
+                args.Add($"itemEndMarker: RecordTypes.{itemEndMarker}");
+            }
             if (allowDirectWrite)
             {
                 args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: true)}.Write");
@@ -339,13 +350,24 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                     {
                         case ListBinaryType.SubTrigger:
                             args.Add($"reader: {Module.ReaderMemberName}");
-                            if (needsRecordConv)
+                            if (list.CustomData.TryGetValue(ItemStartMarker, out var itemStartMarkerObj) && itemStartMarkerObj is string itemStartMarker)
                             {
-                                args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                args.Add($"itemStartMarker: RecordTypes.{itemStartMarker}");
                             }
                             else
                             {
-                                args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                if (needsRecordConv)
+                                {
+                                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                }
+                                else
+                                {
+                                    args.Add($"triggeringRecord: translationParams.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                }
+                            }
+                            if (list.CustomData.TryGetValue(ItemEndMarker, out var itemEndMarkerObj) && itemEndMarkerObj is string itemEndMarker)
+                            {
+                                args.Add($"itemEndMarker: RecordTypes.{itemEndMarker}");
                             }
                             if (loqui != null
                                 && !loqui.TargetObjectGeneration.Abstract
@@ -758,7 +780,18 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         {
                             args.AddPassArg("stream");
                             args.Add($"translationParams: {converterAccessor}");
-                            args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
+                            if (list.CustomData.TryGetValue(ItemStartMarker, out var itemStartMarkerObj) && itemStartMarkerObj is string itemStartMarker)
+                            {
+                                args.Add($"itemStartMarker: RecordTypes.{itemStartMarker}");
+                            }
+                            else
+                            {
+                                args.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
+                            }
+                            if (list.CustomData.TryGetValue(ItemEndMarker, out var itemEndMarkerObj) && itemEndMarkerObj is string itemEndMarker)
+                            {
+                                args.Add($"itemEndMarker: RecordTypes.{itemEndMarker}");
+                            }
                             if (subGenTypes.Count <= 1)
                             {
                                 args.Add($"factory: {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory");

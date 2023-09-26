@@ -509,6 +509,20 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="itemMarkerType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                RecordType of an starting marker for each item
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="itemEndMarkerType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                RecordType of an ending marker for each item
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="additive" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>

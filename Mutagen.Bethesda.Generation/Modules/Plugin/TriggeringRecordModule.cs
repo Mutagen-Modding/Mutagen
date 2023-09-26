@@ -445,7 +445,12 @@ public class TriggeringRecordModule : GenerationModule
             && !data.RecordType.HasValue)
         {
             bool previouslyTurnedOff = false;
-            if (listType.SubTypeGeneration is LoquiType subListLoqui)
+            if (listType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.ItemStartMarker, out var itemStartMarkerObj)
+                && itemStartMarkerObj is string itemStartMarker)
+            {
+                data.TriggeringRecordTypes.Add(itemStartMarker);
+            }
+            else if (listType.SubTypeGeneration is LoquiType subListLoqui)
             {
                 if (subListLoqui.GenericDef != null)
                 {
