@@ -538,6 +538,7 @@
         <xs:element name="Gendered" type="NGenderedItem" />
         <xs:element name="Break" />
         <xs:element name="Zero" type="ZeroType"/>
+        <xs:element name="Guid" type="NGuid" />
       </xs:choice>
     </xs:group>
 
@@ -555,6 +556,7 @@
         <xs:element name="Marker" type="MarkerType"/>
         <xs:element name="Gendered" type="GenderedItem" />
         <xs:element name="Break" />
+        <xs:element name="Guid" type="Guid" />
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -777,6 +779,20 @@
   <xs:complexType name="NModKey" >
     <xs:complexContent>
       <xs:extension base="ModKey">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Guid" >
+    <xs:complexContent>
+      <xs:extension base="Field" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NGuid" >
+    <xs:complexContent>
+      <xs:extension base="Guid">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>
