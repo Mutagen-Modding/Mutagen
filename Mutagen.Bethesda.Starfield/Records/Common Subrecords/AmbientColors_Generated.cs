@@ -68,13 +68,6 @@ namespace Mutagen.Bethesda.Starfield
         #region DirectionalZMinus
         public Color DirectionalZMinus { get; set; } = default;
         #endregion
-        #region Specular
-        public Color Specular { get; set; } = default;
-        #endregion
-        #region Scale
-        public static readonly Single ScaleDefault = 1f;
-        public Single Scale { get; set; } = ScaleDefault;
-        #endregion
 
         #region To String
 
@@ -120,8 +113,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirectionalYMinus = initialValue;
                 this.DirectionalZPlus = initialValue;
                 this.DirectionalZMinus = initialValue;
-                this.Specular = initialValue;
-                this.Scale = initialValue;
             }
 
             public Mask(
@@ -130,9 +121,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem DirectionalYPlus,
                 TItem DirectionalYMinus,
                 TItem DirectionalZPlus,
-                TItem DirectionalZMinus,
-                TItem Specular,
-                TItem Scale)
+                TItem DirectionalZMinus)
             {
                 this.DirectionalXPlus = DirectionalXPlus;
                 this.DirectionalXMinus = DirectionalXMinus;
@@ -140,8 +129,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirectionalYMinus = DirectionalYMinus;
                 this.DirectionalZPlus = DirectionalZPlus;
                 this.DirectionalZMinus = DirectionalZMinus;
-                this.Specular = Specular;
-                this.Scale = Scale;
             }
 
             #pragma warning disable CS8618
@@ -159,8 +146,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem DirectionalYMinus;
             public TItem DirectionalZPlus;
             public TItem DirectionalZMinus;
-            public TItem Specular;
-            public TItem Scale;
             #endregion
 
             #region Equals
@@ -179,8 +164,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.DirectionalYMinus, rhs.DirectionalYMinus)) return false;
                 if (!object.Equals(this.DirectionalZPlus, rhs.DirectionalZPlus)) return false;
                 if (!object.Equals(this.DirectionalZMinus, rhs.DirectionalZMinus)) return false;
-                if (!object.Equals(this.Specular, rhs.Specular)) return false;
-                if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -192,8 +175,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.DirectionalYMinus);
                 hash.Add(this.DirectionalZPlus);
                 hash.Add(this.DirectionalZMinus);
-                hash.Add(this.Specular);
-                hash.Add(this.Scale);
                 return hash.ToHashCode();
             }
 
@@ -208,8 +189,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.DirectionalYMinus)) return false;
                 if (!eval(this.DirectionalZPlus)) return false;
                 if (!eval(this.DirectionalZMinus)) return false;
-                if (!eval(this.Specular)) return false;
-                if (!eval(this.Scale)) return false;
                 return true;
             }
             #endregion
@@ -223,8 +202,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.DirectionalYMinus)) return true;
                 if (eval(this.DirectionalZPlus)) return true;
                 if (eval(this.DirectionalZMinus)) return true;
-                if (eval(this.Specular)) return true;
-                if (eval(this.Scale)) return true;
                 return false;
             }
             #endregion
@@ -245,8 +222,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DirectionalYMinus = eval(this.DirectionalYMinus);
                 obj.DirectionalZPlus = eval(this.DirectionalZPlus);
                 obj.DirectionalZMinus = eval(this.DirectionalZMinus);
-                obj.Specular = eval(this.Specular);
-                obj.Scale = eval(this.Scale);
             }
             #endregion
 
@@ -289,14 +264,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(DirectionalZMinus, "DirectionalZMinus");
                     }
-                    if (printMask?.Specular ?? true)
-                    {
-                        sb.AppendItem(Specular, "Specular");
-                    }
-                    if (printMask?.Scale ?? true)
-                    {
-                        sb.AppendItem(Scale, "Scale");
-                    }
                 }
             }
             #endregion
@@ -327,8 +294,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? DirectionalYMinus;
             public Exception? DirectionalZPlus;
             public Exception? DirectionalZMinus;
-            public Exception? Specular;
-            public Exception? Scale;
             #endregion
 
             #region IErrorMask
@@ -349,10 +314,6 @@ namespace Mutagen.Bethesda.Starfield
                         return DirectionalZPlus;
                     case AmbientColors_FieldIndex.DirectionalZMinus:
                         return DirectionalZMinus;
-                    case AmbientColors_FieldIndex.Specular:
-                        return Specular;
-                    case AmbientColors_FieldIndex.Scale:
-                        return Scale;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -380,12 +341,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case AmbientColors_FieldIndex.DirectionalZMinus:
                         this.DirectionalZMinus = ex;
-                        break;
-                    case AmbientColors_FieldIndex.Specular:
-                        this.Specular = ex;
-                        break;
-                    case AmbientColors_FieldIndex.Scale:
-                        this.Scale = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -415,12 +370,6 @@ namespace Mutagen.Bethesda.Starfield
                     case AmbientColors_FieldIndex.DirectionalZMinus:
                         this.DirectionalZMinus = (Exception?)obj;
                         break;
-                    case AmbientColors_FieldIndex.Specular:
-                        this.Specular = (Exception?)obj;
-                        break;
-                    case AmbientColors_FieldIndex.Scale:
-                        this.Scale = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -435,8 +384,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (DirectionalYMinus != null) return true;
                 if (DirectionalZPlus != null) return true;
                 if (DirectionalZMinus != null) return true;
-                if (Specular != null) return true;
-                if (Scale != null) return true;
                 return false;
             }
             #endregion
@@ -480,12 +427,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(DirectionalZMinus, "DirectionalZMinus");
                 }
-                {
-                    sb.AppendItem(Specular, "Specular");
-                }
-                {
-                    sb.AppendItem(Scale, "Scale");
-                }
             }
             #endregion
 
@@ -500,8 +441,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.DirectionalYMinus = this.DirectionalYMinus.Combine(rhs.DirectionalYMinus);
                 ret.DirectionalZPlus = this.DirectionalZPlus.Combine(rhs.DirectionalZPlus);
                 ret.DirectionalZMinus = this.DirectionalZMinus.Combine(rhs.DirectionalZMinus);
-                ret.Specular = this.Specular.Combine(rhs.Specular);
-                ret.Scale = this.Scale.Combine(rhs.Scale);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -531,8 +470,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool DirectionalYMinus;
             public bool DirectionalZPlus;
             public bool DirectionalZMinus;
-            public bool Specular;
-            public bool Scale;
             #endregion
 
             #region Ctors
@@ -548,8 +485,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirectionalYMinus = defaultOn;
                 this.DirectionalZPlus = defaultOn;
                 this.DirectionalZMinus = defaultOn;
-                this.Specular = defaultOn;
-                this.Scale = defaultOn;
             }
 
             #endregion
@@ -571,8 +506,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((DirectionalYMinus, null));
                 ret.Add((DirectionalZPlus, null));
                 ret.Add((DirectionalZMinus, null));
-                ret.Add((Specular, null));
-                ret.Add((Scale, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -651,8 +584,6 @@ namespace Mutagen.Bethesda.Starfield
         new Color DirectionalYMinus { get; set; }
         new Color DirectionalZPlus { get; set; }
         new Color DirectionalZMinus { get; set; }
-        new Color Specular { get; set; }
-        new Single Scale { get; set; }
     }
 
     public partial interface IAmbientColorsGetter :
@@ -673,8 +604,6 @@ namespace Mutagen.Bethesda.Starfield
         Color DirectionalYMinus { get; }
         Color DirectionalZPlus { get; }
         Color DirectionalZMinus { get; }
-        Color Specular { get; }
-        Single Scale { get; }
 
     }
 
@@ -850,8 +779,6 @@ namespace Mutagen.Bethesda.Starfield
         DirectionalYMinus = 3,
         DirectionalZPlus = 4,
         DirectionalZMinus = 5,
-        Specular = 6,
-        Scale = 7,
     }
     #endregion
 
@@ -862,9 +789,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(AmbientColors.Mask<>);
 
@@ -936,8 +863,6 @@ namespace Mutagen.Bethesda.Starfield
             item.DirectionalYMinus = default;
             item.DirectionalZPlus = default;
             item.DirectionalZMinus = default;
-            item.Specular = default;
-            item.Scale = AmbientColors.ScaleDefault;
         }
         
         #region Mutagen
@@ -993,8 +918,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.DirectionalYMinus = item.DirectionalYMinus.ColorOnlyEquals(rhs.DirectionalYMinus);
             ret.DirectionalZPlus = item.DirectionalZPlus.ColorOnlyEquals(rhs.DirectionalZPlus);
             ret.DirectionalZMinus = item.DirectionalZMinus.ColorOnlyEquals(rhs.DirectionalZMinus);
-            ret.Specular = item.Specular.ColorOnlyEquals(rhs.Specular);
-            ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
         }
         
         public string Print(
@@ -1063,14 +986,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DirectionalZMinus, "DirectionalZMinus");
             }
-            if (printMask?.Specular ?? true)
-            {
-                sb.AppendItem(item.Specular, "Specular");
-            }
-            if (printMask?.Scale ?? true)
-            {
-                sb.AppendItem(item.Scale, "Scale");
-            }
         }
         
         #region Equals and Hash
@@ -1104,14 +1019,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirectionalZMinus.ColorOnlyEquals(rhs.DirectionalZMinus)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Specular) ?? true))
-            {
-                if (!lhs.Specular.ColorOnlyEquals(rhs.Specular)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Scale) ?? true))
-            {
-                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            }
             return true;
         }
         
@@ -1124,8 +1031,6 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.DirectionalYMinus);
             hash.Add(item.DirectionalZPlus);
             hash.Add(item.DirectionalZMinus);
-            hash.Add(item.Specular);
-            hash.Add(item.Scale);
             return hash.ToHashCode();
         }
         
@@ -1181,14 +1086,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZMinus) ?? true))
             {
                 item.DirectionalZMinus = rhs.DirectionalZMinus;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Specular) ?? true))
-            {
-                item.Specular = rhs.Specular;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Scale) ?? true))
-            {
-                item.Scale = rhs.Scale;
             }
         }
         
@@ -1288,35 +1185,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalXPlus,
-                binaryType: ColorBinaryType.NoAlpha);
+                item: item.DirectionalXPlus);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalXMinus,
-                binaryType: ColorBinaryType.NoAlpha);
+                item: item.DirectionalXMinus);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalYPlus,
-                binaryType: ColorBinaryType.NoAlpha);
+                item: item.DirectionalYPlus);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalYMinus,
-                binaryType: ColorBinaryType.NoAlpha);
+                item: item.DirectionalYMinus);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalZPlus,
-                binaryType: ColorBinaryType.NoAlpha);
+                item: item.DirectionalZPlus);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalZMinus,
-                binaryType: ColorBinaryType.NoAlpha);
-            ColorBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Specular,
-                binaryType: ColorBinaryType.NoAlpha);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Scale);
+                item: item.DirectionalZMinus);
         }
 
         public void Write(
@@ -1350,14 +1234,12 @@ namespace Mutagen.Bethesda.Starfield
             IAmbientColors item,
             MutagenFrame frame)
         {
-            item.DirectionalXPlus = frame.ReadColor(ColorBinaryType.NoAlpha);
-            item.DirectionalXMinus = frame.ReadColor(ColorBinaryType.NoAlpha);
-            item.DirectionalYPlus = frame.ReadColor(ColorBinaryType.NoAlpha);
-            item.DirectionalYMinus = frame.ReadColor(ColorBinaryType.NoAlpha);
-            item.DirectionalZPlus = frame.ReadColor(ColorBinaryType.NoAlpha);
-            item.DirectionalZMinus = frame.ReadColor(ColorBinaryType.NoAlpha);
-            item.Specular = frame.ReadColor(ColorBinaryType.NoAlpha);
-            item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalXMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalYPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalYMinus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalZPlus = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalZMinus = frame.ReadColor(ColorBinaryType.Alpha);
         }
 
     }
@@ -1423,14 +1305,12 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public Color DirectionalXPlus => _structData.Slice(0x0, 0x3).ReadColor(ColorBinaryType.NoAlpha);
-        public Color DirectionalXMinus => _structData.Slice(0x3, 0x3).ReadColor(ColorBinaryType.NoAlpha);
-        public Color DirectionalYPlus => _structData.Slice(0x6, 0x3).ReadColor(ColorBinaryType.NoAlpha);
-        public Color DirectionalYMinus => _structData.Slice(0x9, 0x3).ReadColor(ColorBinaryType.NoAlpha);
-        public Color DirectionalZPlus => _structData.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
-        public Color DirectionalZMinus => _structData.Slice(0xF, 0x3).ReadColor(ColorBinaryType.NoAlpha);
-        public Color Specular => _structData.Slice(0x12, 0x3).ReadColor(ColorBinaryType.NoAlpha);
-        public Single Scale => _structData.Slice(0x15, 0x4).Float();
+        public Color DirectionalXPlus => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalXMinus => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYPlus => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalYMinus => _structData.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZPlus => _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalZMinus => _structData.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1456,13 +1336,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x19,
+                length: 0x18,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
             var ret = new AmbientColorsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x19;
+            stream.Position += 0x18;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
