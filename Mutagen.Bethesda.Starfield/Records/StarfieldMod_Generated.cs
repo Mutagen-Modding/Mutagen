@@ -3446,6 +3446,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.LegendaryItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.ActorValueModulations is IAssetLinkContainer ActorValueModulationslinkCont)
             {
                 foreach (var item in ActorValueModulationslinkCont.EnumerateListedAssetLinks())
@@ -3480,6 +3486,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueModulations.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
@@ -5665,6 +5672,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         yield return item;
                     }
+                }
+                foreach (var item in obj.LegendaryItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
                 }
                 if (obj.ActorValueModulations is IAssetLinkContainerGetter ActorValueModulationslinkCont)
                 {

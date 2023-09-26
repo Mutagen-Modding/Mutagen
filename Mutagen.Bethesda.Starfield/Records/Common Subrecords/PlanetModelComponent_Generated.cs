@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Starfield;
-using Mutagen.Bethesda.Starfield.Assets;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -55,20 +55,23 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region File
-        public AssetLink<StarfieldModelAssetType> File { get; set; } = new AssetLink<StarfieldModelAssetType>();
-        AssetLinkGetter<StarfieldModelAssetType> IPlanetModelComponentGetter.File => this.File;
-        #endregion
-        #region FLLD
+        #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLLD;
-        public MemorySlice<Byte>? FLLD
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
         {
-            get => this._FLLD;
-            set => this._FLLD = value;
+            get => _Model;
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetModelComponentGetter.FLLD => this.FLLD;
+        IModelGetter? IPlanetModelComponentGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region XMPM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -137,8 +140,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.File = initialValue;
-                this.FLLD = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.XMPM = new MaskItem<TItem, PlanetModelComponentXMPM.Mask<TItem>?>(initialValue, new PlanetModelComponentXMPM.Mask<TItem>(initialValue));
                 this.RingModel = initialValue;
                 this.RingMaterial = initialValue;
@@ -146,16 +148,14 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             public Mask(
-                TItem File,
-                TItem FLLD,
+                TItem Model,
                 TItem XMPM,
                 TItem RingModel,
                 TItem RingMaterial,
                 TItem RingId)
             : base()
             {
-                this.File = File;
-                this.FLLD = FLLD;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.XMPM = new MaskItem<TItem, PlanetModelComponentXMPM.Mask<TItem>?>(XMPM, new PlanetModelComponentXMPM.Mask<TItem>(XMPM));
                 this.RingModel = RingModel;
                 this.RingMaterial = RingMaterial;
@@ -171,8 +171,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem File;
-            public TItem FLLD;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, PlanetModelComponentXMPM.Mask<TItem>?>? XMPM { get; set; }
             public TItem RingModel;
             public TItem RingMaterial;
@@ -190,8 +189,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.File, rhs.File)) return false;
-                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.XMPM, rhs.XMPM)) return false;
                 if (!object.Equals(this.RingModel, rhs.RingModel)) return false;
                 if (!object.Equals(this.RingMaterial, rhs.RingMaterial)) return false;
@@ -201,8 +199,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.File);
-                hash.Add(this.FLLD);
+                hash.Add(this.Model);
                 hash.Add(this.XMPM);
                 hash.Add(this.RingModel);
                 hash.Add(this.RingMaterial);
@@ -217,8 +214,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.File)) return false;
-                if (!eval(this.FLLD)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 if (XMPM != null)
                 {
                     if (!eval(this.XMPM.Overall)) return false;
@@ -235,8 +235,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.File)) return true;
-                if (eval(this.FLLD)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 if (XMPM != null)
                 {
                     if (eval(this.XMPM.Overall)) return true;
@@ -260,8 +263,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.File = eval(this.File);
-                obj.FLLD = eval(this.FLLD);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.XMPM = this.XMPM == null ? null : new MaskItem<R, PlanetModelComponentXMPM.Mask<R>?>(eval(this.XMPM.Overall), this.XMPM.Specific?.Translate(eval));
                 obj.RingModel = eval(this.RingModel);
                 obj.RingMaterial = eval(this.RingMaterial);
@@ -284,13 +286,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PlanetModelComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.File ?? true)
+                    if (printMask?.Model?.Overall ?? true)
                     {
-                        sb.AppendItem(File, "File");
-                    }
-                    if (printMask?.FLLD ?? true)
-                    {
-                        sb.AppendItem(FLLD, "FLLD");
+                        Model?.Print(sb);
                     }
                     if (printMask?.XMPM?.Overall ?? true)
                     {
@@ -319,8 +317,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? File;
-            public Exception? FLLD;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, PlanetModelComponentXMPM.ErrorMask?>? XMPM;
             public Exception? RingModel;
             public Exception? RingMaterial;
@@ -333,10 +330,8 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetModelComponent_FieldIndex enu = (PlanetModelComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetModelComponent_FieldIndex.File:
-                        return File;
-                    case PlanetModelComponent_FieldIndex.FLLD:
-                        return FLLD;
+                    case PlanetModelComponent_FieldIndex.Model:
+                        return Model;
                     case PlanetModelComponent_FieldIndex.XMPM:
                         return XMPM;
                     case PlanetModelComponent_FieldIndex.RingModel:
@@ -355,11 +350,8 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetModelComponent_FieldIndex enu = (PlanetModelComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetModelComponent_FieldIndex.File:
-                        this.File = ex;
-                        break;
-                    case PlanetModelComponent_FieldIndex.FLLD:
-                        this.FLLD = ex;
+                    case PlanetModelComponent_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
                     case PlanetModelComponent_FieldIndex.XMPM:
                         this.XMPM = new MaskItem<Exception?, PlanetModelComponentXMPM.ErrorMask?>(ex, null);
@@ -384,11 +376,8 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetModelComponent_FieldIndex enu = (PlanetModelComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetModelComponent_FieldIndex.File:
-                        this.File = (Exception?)obj;
-                        break;
-                    case PlanetModelComponent_FieldIndex.FLLD:
-                        this.FLLD = (Exception?)obj;
+                    case PlanetModelComponent_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case PlanetModelComponent_FieldIndex.XMPM:
                         this.XMPM = (MaskItem<Exception?, PlanetModelComponentXMPM.ErrorMask?>?)obj;
@@ -411,8 +400,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (File != null) return true;
-                if (FLLD != null) return true;
+                if (Model != null) return true;
                 if (XMPM != null) return true;
                 if (RingModel != null) return true;
                 if (RingMaterial != null) return true;
@@ -443,12 +431,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(File, "File");
-                }
-                {
-                    sb.AppendItem(FLLD, "FLLD");
-                }
+                Model?.Print(sb);
                 XMPM?.Print(sb);
                 {
                     sb.AppendItem(RingModel, "RingModel");
@@ -467,8 +450,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.File = this.File.Combine(rhs.File);
-                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.XMPM = this.XMPM.Combine(rhs.XMPM, (l, r) => l.Combine(r));
                 ret.RingModel = this.RingModel.Combine(rhs.RingModel);
                 ret.RingMaterial = this.RingMaterial.Combine(rhs.RingMaterial);
@@ -495,8 +477,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool File;
-            public bool FLLD;
+            public Model.TranslationMask? Model;
             public PlanetModelComponentXMPM.TranslationMask? XMPM;
             public bool RingModel;
             public bool RingMaterial;
@@ -509,8 +490,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.File = defaultOn;
-                this.FLLD = defaultOn;
                 this.RingModel = defaultOn;
                 this.RingMaterial = defaultOn;
                 this.RingId = defaultOn;
@@ -521,8 +500,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((File, null));
-                ret.Add((FLLD, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((XMPM != null ? XMPM.OnOverall : DefaultOn, XMPM?.GetCrystal()));
                 ret.Add((RingModel, null));
                 ret.Add((RingMaterial, null));
@@ -604,10 +582,13 @@ namespace Mutagen.Bethesda.Starfield
         IAComponent,
         IAssetLinkContainer,
         ILoquiObjectSetter<IPlanetModelComponent>,
+        IModeled,
         IPlanetModelComponentGetter
     {
-        new AssetLink<StarfieldModelAssetType> File { get; set; }
-        new MemorySlice<Byte>? FLLD { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
         new PlanetModelComponentXMPM? XMPM { get; set; }
         new String? RingModel { get; set; }
         new String? RingMaterial { get; set; }
@@ -618,11 +599,16 @@ namespace Mutagen.Bethesda.Starfield
         IAComponentGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
-        ILoquiObject<IPlanetModelComponentGetter>
+        ILoquiObject<IPlanetModelComponentGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => PlanetModelComponent_Registration.Instance;
-        AssetLinkGetter<StarfieldModelAssetType> File { get; }
-        ReadOnlyMemorySlice<Byte>? FLLD { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
         IPlanetModelComponentXMPMGetter? XMPM { get; }
         String? RingModel { get; }
         String? RingMaterial { get; }
@@ -771,12 +757,11 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum PlanetModelComponent_FieldIndex
     {
-        File = 0,
-        FLLD = 1,
-        XMPM = 2,
-        RingModel = 3,
-        RingMaterial = 4,
-        RingId = 5,
+        Model = 0,
+        XMPM = 1,
+        RingModel = 2,
+        RingMaterial = 3,
+        RingId = 4,
     }
     #endregion
 
@@ -787,9 +772,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(PlanetModelComponent.Mask<>);
 
@@ -823,7 +808,9 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
                 RecordTypes.MODL,
+                RecordTypes.MOLM,
                 RecordTypes.FLLD,
+                RecordTypes.XFLG,
                 RecordTypes.XMPM,
                 RecordTypes.MCQP,
                 RecordTypes.XMSP,
@@ -870,8 +857,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetModelComponent item)
         {
             ClearPartial();
-            item.File.SetToNull();
-            item.FLLD = default;
+            item.Model = null;
             item.XMPM = null;
             item.RingModel = default;
             item.RingMaterial = default;
@@ -896,7 +882,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            yield return obj.File;
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -907,10 +899,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
-            {
-                obj.File.Relink(mapping);
-            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -966,8 +955,11 @@ namespace Mutagen.Bethesda.Starfield
             PlanetModelComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.File = object.Equals(item.File, rhs.File);
-            ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.XMPM = EqualsMaskHelper.EqualsHelper(
                 item.XMPM,
                 rhs.XMPM,
@@ -1025,14 +1017,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.File ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
             {
-                sb.AppendItem(item.File, "File");
-            }
-            if ((printMask?.FLLD ?? true)
-                && item.FLLD is {} FLLDItem)
-            {
-                sb.AppendLine($"FLLD => {SpanExt.ToHexString(FLLDItem)}");
+                ModelItem?.Print(sb, "Model");
             }
             if ((printMask?.XMPM?.Overall ?? true)
                 && item.XMPM is {} XMPMItem)
@@ -1073,13 +1061,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponent_FieldIndex.File) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponent_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.File, rhs.File)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponent_FieldIndex.FLLD) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)PlanetModelComponent_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponent_FieldIndex.XMPM) ?? true))
             {
@@ -1118,10 +1106,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPlanetModelComponentGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.File);
-            if (item.FLLD is {} FLLDItem)
+            if (item.Model is {} Modelitem)
             {
-                hash.Add(FLLDItem);
+                hash.Add(Modelitem);
             }
             if (item.XMPM is {} XMPMitem)
             {
@@ -1174,7 +1161,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                yield return obj.File;
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1200,16 +1193,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            item.File.RawPath = rhs.File.RawPath;
-            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponent_FieldIndex.FLLD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponent_FieldIndex.Model) ?? true))
             {
-                if(rhs.FLLD is {} FLLDrhs)
+                errorMask?.PushIndex((int)PlanetModelComponent_FieldIndex.Model);
+                try
                 {
-                    item.FLLD = FLLDrhs.ToArray();
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlanetModelComponent_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLLD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetModelComponent_FieldIndex.XMPM) ?? true))
@@ -1363,15 +1370,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.File.RawPath,
-                header: translationParams.ConvertToCustom(RecordTypes.MODL),
-                binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLLD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.XMPM is {} XMPMItem)
             {
                 ((PlanetModelComponentXMPMBinaryWriteTranslation)((IBinaryItem)XMPMItem).BinaryWriteTranslator).Write(
@@ -1449,18 +1454,14 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File.RawPath = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)PlanetModelComponent_FieldIndex.File;
-                }
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PlanetModelComponent_FieldIndex.FLLD;
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlanetModelComponent_FieldIndex.Model;
                 }
                 case RecordTypeInts.XMPM:
                 {
@@ -1548,14 +1549,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region File
-        private int? _FileLocation;
-        public AssetLinkGetter<StarfieldModelAssetType> File => _FileLocation.HasValue ? new AssetLinkGetter<StarfieldModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<StarfieldModelAssetType>.Null;
-        #endregion
-        #region FLLD
-        private int? _FLLDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IModelGetter? Model { get; private set; }
         #region XMPM
         private RangeInt32? _XMPMLocation;
         public IPlanetModelComponentXMPMGetter? XMPM => _XMPMLocation.HasValue ? PlanetModelComponentXMPMBinaryOverlay.PlanetModelComponentXMPMFactory(_recordData.Slice(_XMPMLocation!.Value.Min), _package) : default;
@@ -1636,14 +1630,15 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
-                {
-                    _FileLocation = (stream.Position - offset);
-                    return (int)PlanetModelComponent_FieldIndex.File;
-                }
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    _FLLDLocation = (stream.Position - offset);
-                    return (int)PlanetModelComponent_FieldIndex.FLLD;
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PlanetModelComponent_FieldIndex.Model;
                 }
                 case RecordTypeInts.XMPM:
                 {

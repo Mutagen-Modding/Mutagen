@@ -7,9 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -78,16 +80,23 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? ILegendaryItemGetter.ODTY => this.ODTY;
         #endregion
-        #region FLLD
+        #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLLD;
-        public MemorySlice<Byte>? FLLD
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
         {
-            get => this._FLLD;
-            set => this._FLLD = value;
+            get => _Model;
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILegendaryItemGetter.FLLD => this.FLLD;
+        IModelGetter? ILegendaryItemGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
         #region DATA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -189,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
-                this.FLLD = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.DATA = initialValue;
                 this.ApplicableItemList = initialValue;
                 this.LegendaryTemplateList = initialValue;
@@ -208,7 +217,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
-                TItem FLLD,
+                TItem Model,
                 TItem DATA,
                 TItem ApplicableItemList,
                 TItem LegendaryTemplateList,
@@ -226,7 +235,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
-                this.FLLD = FLLD;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.DATA = DATA;
                 this.ApplicableItemList = ApplicableItemList;
                 this.LegendaryTemplateList = LegendaryTemplateList;
@@ -246,7 +255,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
-            public TItem FLLD;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem DATA;
             public TItem ApplicableItemList;
             public TItem LegendaryTemplateList;
@@ -268,7 +277,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
-                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 if (!object.Equals(this.ApplicableItemList, rhs.ApplicableItemList)) return false;
                 if (!object.Equals(this.LegendaryTemplateList, rhs.LegendaryTemplateList)) return false;
@@ -282,7 +291,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
-                hash.Add(this.FLLD);
+                hash.Add(this.Model);
                 hash.Add(this.DATA);
                 hash.Add(this.ApplicableItemList);
                 hash.Add(this.LegendaryTemplateList);
@@ -305,7 +314,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
-                if (!eval(this.FLLD)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 if (!eval(this.DATA)) return false;
                 if (!eval(this.ApplicableItemList)) return false;
                 if (!eval(this.LegendaryTemplateList)) return false;
@@ -359,7 +372,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
-                if (eval(this.FLLD)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 if (eval(this.DATA)) return true;
                 if (eval(this.ApplicableItemList)) return true;
                 if (eval(this.LegendaryTemplateList)) return true;
@@ -416,7 +433,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
-                obj.FLLD = eval(this.FLLD);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.DATA = eval(this.DATA);
                 obj.ApplicableItemList = eval(this.ApplicableItemList);
                 obj.LegendaryTemplateList = eval(this.LegendaryTemplateList);
@@ -491,9 +508,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ODTY, "ODTY");
                     }
-                    if (printMask?.FLLD ?? true)
+                    if (printMask?.Model?.Overall ?? true)
                     {
-                        sb.AppendItem(FLLD, "FLLD");
+                        Model?.Print(sb);
                     }
                     if (printMask?.DATA ?? true)
                     {
@@ -577,7 +594,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
-            public Exception? FLLD;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? DATA;
             public Exception? ApplicableItemList;
             public Exception? LegendaryTemplateList;
@@ -596,8 +613,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case LegendaryItem_FieldIndex.ODTY:
                         return ODTY;
-                    case LegendaryItem_FieldIndex.FLLD:
-                        return FLLD;
+                    case LegendaryItem_FieldIndex.Model:
+                        return Model;
                     case LegendaryItem_FieldIndex.DATA:
                         return DATA;
                     case LegendaryItem_FieldIndex.ApplicableItemList:
@@ -626,8 +643,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.ODTY:
                         this.ODTY = ex;
                         break;
-                    case LegendaryItem_FieldIndex.FLLD:
-                        this.FLLD = ex;
+                    case LegendaryItem_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
                     case LegendaryItem_FieldIndex.DATA:
                         this.DATA = ex;
@@ -664,8 +681,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
-                    case LegendaryItem_FieldIndex.FLLD:
-                        this.FLLD = (Exception?)obj;
+                    case LegendaryItem_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case LegendaryItem_FieldIndex.DATA:
                         this.DATA = (Exception?)obj;
@@ -696,7 +713,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
-                if (FLLD != null) return true;
+                if (Model != null) return true;
                 if (DATA != null) return true;
                 if (ApplicableItemList != null) return true;
                 if (LegendaryTemplateList != null) return true;
@@ -733,9 +750,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(ODTY, "ODTY");
                 }
-                {
-                    sb.AppendItem(FLLD, "FLLD");
-                }
+                Model?.Print(sb);
                 {
                     sb.AppendItem(DATA, "DATA");
                 }
@@ -809,7 +824,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
-                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.DATA = this.DATA.Combine(rhs.DATA);
                 ret.ApplicableItemList = this.ApplicableItemList.Combine(rhs.ApplicableItemList);
                 ret.LegendaryTemplateList = this.LegendaryTemplateList.Combine(rhs.LegendaryTemplateList);
@@ -840,7 +855,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
-            public bool FLLD;
+            public Model.TranslationMask? Model;
             public bool DATA;
             public bool ApplicableItemList;
             public bool LegendaryTemplateList;
@@ -856,7 +871,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
-                this.FLLD = defaultOn;
                 this.DATA = defaultOn;
                 this.ApplicableItemList = defaultOn;
                 this.LegendaryTemplateList = defaultOn;
@@ -869,7 +883,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
-                ret.Add((FLLD, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((DATA, null));
                 ret.Add((ApplicableItemList, null));
                 ret.Add((LegendaryTemplateList, null));
@@ -933,6 +947,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILegendaryItem);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LegendaryItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LegendaryItemSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LegendaryItemSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LegendaryItemSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1012,9 +1030,11 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILegendaryItem :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILegendaryItemGetter,
         ILoquiObjectSetter<ILegendaryItemInternal>,
+        IModeled,
         IObjectBoundedOptional,
         IStarfieldMajorRecordInternal
     {
@@ -1023,7 +1043,10 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds? ObjectBounds { get; set; }
         new Single? ODTY { get; set; }
-        new MemorySlice<Byte>? FLLD { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
         new IFormLinkNullable<ILeveledItemGetter> ApplicableItemList { get; set; }
         new IFormLinkNullable<ILegendaryItemGetter> LegendaryTemplateList { get; set; }
@@ -1042,10 +1065,12 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.LGDI)]
     public partial interface ILegendaryItemGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILegendaryItemGetter>,
         IMapsToGetter<ILegendaryItemGetter>,
+        IModeledGetter,
         IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration StaticRegistration => LegendaryItem_Registration.Instance;
@@ -1056,7 +1081,12 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         Single? ODTY { get; }
-        ReadOnlyMemorySlice<Byte>? FLLD { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList { get; }
         IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList { get; }
@@ -1241,7 +1271,7 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        FLLD = 9,
+        Model = 9,
         DATA = 10,
         ApplicableItemList = 11,
         LegendaryTemplateList = 12,
@@ -1295,7 +1325,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LGDI,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.MODL,
+                RecordTypes.MOLM,
                 RecordTypes.FLLD,
+                RecordTypes.XFLG,
                 RecordTypes.DATA,
                 RecordTypes.ANAM,
                 RecordTypes.ENAM,
@@ -1346,7 +1379,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds = null;
             item.ODTY = default;
-            item.FLLD = default;
+            item.Model = null;
             item.DATA = default;
             item.ApplicableItemList.Clear();
             item.LegendaryTemplateList.Clear();
@@ -1375,6 +1408,32 @@ namespace Mutagen.Bethesda.Starfield
             obj.LegendaryMods?.RemapLinks(mapping);
             obj.IncludeFilters?.RemapLinks(mapping);
             obj.ExcludeFilters?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILegendaryItem obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILegendaryItem obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1448,7 +1507,11 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
-            ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.ApplicableItemList = item.ApplicableItemList.Equals(rhs.ApplicableItemList);
             ret.LegendaryTemplateList = item.LegendaryTemplateList.Equals(rhs.LegendaryTemplateList);
@@ -1523,10 +1586,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ODTYItem, "ODTY");
             }
-            if ((printMask?.FLLD ?? true)
-                && item.FLLD is {} FLLDItem)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
             {
-                sb.AppendLine($"FLLD => {SpanExt.ToHexString(FLLDItem)}");
+                ModelItem?.Print(sb, "Model");
             }
             if ((printMask?.DATA ?? true)
                 && item.DATA is {} DATAItem)
@@ -1648,9 +1711,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.FLLD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.DATA) ?? true))
             {
@@ -1712,9 +1779,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ODTYitem);
             }
-            if (item.FLLD is {} FLLDItem)
+            if (item.Model is {} Modelitem)
             {
-                hash.Add(FLLDItem);
+                hash.Add(Modelitem);
             }
             if (item.DATA is {} DATAItem)
             {
@@ -1781,6 +1848,25 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in ExcludeFiltersItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILegendaryItemGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;
@@ -1887,15 +1973,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ODTY = rhs.ODTY;
             }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.FLLD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
-                if(rhs.FLLD is {} FLLDrhs)
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.Model);
+                try
                 {
-                    item.FLLD = FLLDrhs.ToArray();
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLLD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.DATA) ?? true))
@@ -2181,10 +2282,13 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLLD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DATA,
@@ -2329,11 +2433,15 @@ namespace Mutagen.Bethesda.Starfield
                     item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LegendaryItem_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LegendaryItem_FieldIndex.FLLD;
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)LegendaryItem_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2428,6 +2536,7 @@ namespace Mutagen.Bethesda.Starfield
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LegendaryItemCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LegendaryItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LegendaryItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2450,10 +2559,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ODTYLocation;
         public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region FLLD
-        private int? _FLLDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IModelGetter? Model { get; private set; }
         #region DATA
         private int? _DATALocation;
         public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -2548,10 +2654,16 @@ namespace Mutagen.Bethesda.Starfield
                     _ODTYLocation = (stream.Position - offset);
                     return (int)LegendaryItem_FieldIndex.ODTY;
                 }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    _FLLDLocation = (stream.Position - offset);
-                    return (int)LegendaryItem_FieldIndex.FLLD;
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)LegendaryItem_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {

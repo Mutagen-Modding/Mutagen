@@ -34,7 +34,11 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AnimatedObject_Registration.Instance,
+                BodyData_Registration.Instance,
                 HeadPart_Registration.Instance,
+                LegendaryItem_Registration.Instance,
+                ModelComponent_Registration.Instance,
+                PlanetModelComponent_Registration.Instance,
                 SkeletalModel_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 Weapon_Registration.Instance,

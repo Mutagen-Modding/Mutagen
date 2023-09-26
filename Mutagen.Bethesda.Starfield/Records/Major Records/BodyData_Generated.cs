@@ -7,17 +7,22 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -54,16 +59,23 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         BodyData.PartIndex? IBodyDataGetter.Index => this.Index;
         #endregion
-        #region FLLD
+        #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLLD;
-        public MemorySlice<Byte>? FLLD
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
         {
-            get => this._FLLD;
-            set => this._FLLD = value;
+            get => _Model;
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBodyDataGetter.FLLD => this.FLLD;
+        IModelGetter? IBodyDataGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
 
         #region To String
@@ -105,15 +117,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.FLLD = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem Index,
-                TItem FLLD)
+                TItem Model)
             {
                 this.Index = Index;
-                this.FLLD = FLLD;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
             #pragma warning disable CS8618
@@ -126,7 +138,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Index;
-            public TItem FLLD;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
             #region Equals
@@ -140,14 +152,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
-                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Index);
-                hash.Add(this.FLLD);
+                hash.Add(this.Model);
                 return hash.ToHashCode();
             }
 
@@ -157,7 +169,11 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Index)) return false;
-                if (!eval(this.FLLD)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -166,7 +182,11 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Index)) return true;
-                if (eval(this.FLLD)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -182,7 +202,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
-                obj.FLLD = eval(this.FLLD);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
 
@@ -205,9 +225,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Index, "Index");
                     }
-                    if (printMask?.FLLD ?? true)
+                    if (printMask?.Model?.Overall ?? true)
                     {
-                        sb.AppendItem(FLLD, "FLLD");
+                        Model?.Print(sb);
                     }
                 }
             }
@@ -234,7 +254,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Index;
-            public Exception? FLLD;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
             #endregion
 
             #region IErrorMask
@@ -245,8 +265,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case BodyData_FieldIndex.Index:
                         return Index;
-                    case BodyData_FieldIndex.FLLD:
-                        return FLLD;
+                    case BodyData_FieldIndex.Model:
+                        return Model;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -260,8 +280,8 @@ namespace Mutagen.Bethesda.Starfield
                     case BodyData_FieldIndex.Index:
                         this.Index = ex;
                         break;
-                    case BodyData_FieldIndex.FLLD:
-                        this.FLLD = ex;
+                    case BodyData_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -276,8 +296,8 @@ namespace Mutagen.Bethesda.Starfield
                     case BodyData_FieldIndex.Index:
                         this.Index = (Exception?)obj;
                         break;
-                    case BodyData_FieldIndex.FLLD:
-                        this.FLLD = (Exception?)obj;
+                    case BodyData_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -288,7 +308,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Index != null) return true;
-                if (FLLD != null) return true;
+                if (Model != null) return true;
                 return false;
             }
             #endregion
@@ -317,9 +337,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Index, "Index");
                 }
-                {
-                    sb.AppendItem(FLLD, "FLLD");
-                }
+                Model?.Print(sb);
             }
             #endregion
 
@@ -329,7 +347,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Index = this.Index.Combine(rhs.Index);
-                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -354,7 +372,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Index;
-            public bool FLLD;
+            public Model.TranslationMask? Model;
             #endregion
 
             #region Ctors
@@ -365,7 +383,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Index = defaultOn;
-                this.FLLD = defaultOn;
             }
 
             #endregion
@@ -382,7 +399,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Index, null));
-                ret.Add((FLLD, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -391,6 +408,13 @@ namespace Mutagen.Bethesda.Starfield
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BodyDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => BodyDataSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BodyDataSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -452,17 +476,24 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IBodyData :
+        IAssetLinkContainer,
         IBodyDataGetter,
-        ILoquiObjectSetter<IBodyData>
+        ILoquiObjectSetter<IBodyData>,
+        IModeled
     {
         new BodyData.PartIndex? Index { get; set; }
-        new MemorySlice<Byte>? FLLD { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
     }
 
     public partial interface IBodyDataGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
-        ILoquiObject<IBodyDataGetter>
+        ILoquiObject<IBodyDataGetter>,
+        IModeledGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -472,7 +503,12 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => BodyData_Registration.Instance;
         BodyData.PartIndex? Index { get; }
-        ReadOnlyMemorySlice<Byte>? FLLD { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
 
     }
 
@@ -643,7 +679,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum BodyData_FieldIndex
     {
         Index = 0,
-        FLLD = 1,
+        Model = 1,
     }
     #endregion
 
@@ -687,7 +723,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             var all = RecordCollection.Factory(
                 RecordTypes.INDX,
-                RecordTypes.FLLD);
+                RecordTypes.MODL,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BodyDataBinaryWriteTranslation);
@@ -731,12 +770,33 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Index = default;
-            item.FLLD = default;
+            item.Model = null;
         }
         
         #region Mutagen
         public void RemapLinks(IBodyData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBodyData obj)
+        {
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IBodyData obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -782,7 +842,11 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Index = item.Index == rhs.Index;
-            ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
         }
         
         public string Print(
@@ -832,10 +896,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(IndexItem, "Index");
             }
-            if ((printMask?.FLLD ?? true)
-                && item.FLLD is {} FLLDItem)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
             {
-                sb.AppendLine($"FLLD => {SpanExt.ToHexString(FLLDItem)}");
+                ModelItem?.Print(sb, "Model");
             }
         }
         
@@ -850,9 +914,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyData_FieldIndex.FLLD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyData_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             return true;
         }
@@ -864,9 +932,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Indexitem);
             }
-            if (item.FLLD is {} FLLDItem)
+            if (item.Model is {} Modelitem)
             {
-                hash.Add(FLLDItem);
+                hash.Add(Modelitem);
             }
             return hash.ToHashCode();
         }
@@ -882,6 +950,21 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyDataGetter obj)
         {
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+            }
             yield break;
         }
         
@@ -904,15 +987,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Index = rhs.Index;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.FLLD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
             {
-                if(rhs.FLLD is {} FLLDrhs)
+                errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
+                try
                 {
-                    item.FLLD = FLLDrhs.ToArray();
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLLD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -1017,10 +1115,13 @@ namespace Mutagen.Bethesda.Starfield
                 item.Index,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.INDX));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLLD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
         public void Write(
@@ -1072,12 +1173,16 @@ namespace Mutagen.Bethesda.Starfield
                         length: contentLength);
                     return (int)BodyData_FieldIndex.Index;
                 }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.FLLD, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)BodyData_FieldIndex.FLLD;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)BodyData_FieldIndex.Model;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1133,6 +1238,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1151,10 +1257,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _IndexLocation;
         public BodyData.PartIndex? Index => _IndexLocation.HasValue ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(BodyData.PartIndex?);
         #endregion
-        #region FLLD
-        private int? _FLLDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1224,11 +1327,17 @@ namespace Mutagen.Bethesda.Starfield
                     _IndexLocation = (stream.Position - offset);
                     return (int)BodyData_FieldIndex.Index;
                 }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.FLLD, translationParams)) return ParseResult.Stop;
-                    _FLLDLocation = (stream.Position - offset);
-                    return (int)BodyData_FieldIndex.FLLD;
+                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)BodyData_FieldIndex.Model;
                 }
                 default:
                     return ParseResult.Stop;

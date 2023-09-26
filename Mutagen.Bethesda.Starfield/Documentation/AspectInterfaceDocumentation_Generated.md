@@ -10,7 +10,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Race
 ### IModeled
 - AnimatedObject
+- BodyData
 - HeadPart
+- LegendaryItem
+- ModelComponent
+- PlanetModelComponent
 - SkeletalModel
 - StaticCollection
 - Weapon
@@ -53,6 +57,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### BipedObjectData
 - INamed
+### BodyData
+- IModeled
 ### Class
 - INamed
 ### DamageType
@@ -72,11 +78,16 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### KeywordFormComponent
 - IKeyworded
 ### LegendaryItem
+- IModeled
 - IObjectBounded
+### ModelComponent
+- IModeled
 ### MorphGroup
 - INamed
 ### Planet
 - INamed
+### PlanetModelComponent
+- IModeled
 ### ProgressionEvaluatorArgument
 - INamed
 ### Race

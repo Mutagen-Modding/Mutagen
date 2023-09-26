@@ -64,14 +64,12 @@
   </Object>
   <Object name="ModelComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <AssetLink name="File" recordType="MODL" assetType="StarfieldModel" />
-      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <RefDirect name="Model" refName="Model" />
     </Fields>
   </Object>
   <Object name="PlanetModelComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <AssetLink name="File" recordType="MODL" nullable="False" assetType="StarfieldModel" />
-      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <RefDirect name="Model" refName="Model" />
       <RefDirect name="XMPM" refName="PlanetModelComponentXMPM" />
       <String name="RingModel" recordType="MCQP" />
       <String name="RingMaterial" recordType="XMSP" />

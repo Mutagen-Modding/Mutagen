@@ -77,7 +77,7 @@
   <Object name="BodyData" objType="Subrecord">
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
-      <ByteArray name="FLLD" recordType="FLLD" />
+      <RefDirect name="Model" refName="Model" />
     </Fields>
   </Object>
   <Object name="MovementDataOverride" objType="Subrecord">

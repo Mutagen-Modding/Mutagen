@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -22,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Starfield;
-using Mutagen.Bethesda.Starfield.Assets;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -55,21 +55,23 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region File
-        public AssetLink<StarfieldModelAssetType>? File { get; set; }
+        #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AssetLinkGetter<StarfieldModelAssetType>? IModelComponentGetter.File => this.File;
-        #endregion
-        #region FLLD
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLLD;
-        public MemorySlice<Byte>? FLLD
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
         {
-            get => this._FLLD;
-            set => this._FLLD = value;
+            get => _Model;
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModelComponentGetter.FLLD => this.FLLD;
+        IModelGetter? IModelComponentGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
         #endregion
 
         #region To String
@@ -109,20 +111,10 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem initialValue)
-            : base(initialValue)
-            {
-                this.File = initialValue;
-                this.FLLD = initialValue;
-            }
-
-            public Mask(
-                TItem File,
-                TItem FLLD)
+            public Mask(TItem Model)
             : base()
             {
-                this.File = File;
-                this.FLLD = FLLD;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
             #pragma warning disable CS8618
@@ -134,8 +126,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem File;
-            public TItem FLLD;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
             #region Equals
@@ -149,15 +140,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.File, rhs.File)) return false;
-                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.File);
-                hash.Add(this.FLLD);
+                hash.Add(this.Model);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -168,8 +157,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.File)) return false;
-                if (!eval(this.FLLD)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -178,8 +170,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.File)) return true;
-                if (eval(this.FLLD)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -195,8 +190,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.File = eval(this.File);
-                obj.FLLD = eval(this.FLLD);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
 
@@ -215,13 +209,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ModelComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.File ?? true)
+                    if (printMask?.Model?.Overall ?? true)
                     {
-                        sb.AppendItem(File, "File");
-                    }
-                    if (printMask?.FLLD ?? true)
-                    {
-                        sb.AppendItem(FLLD, "FLLD");
+                        Model?.Print(sb);
                     }
                 }
             }
@@ -234,8 +224,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? File;
-            public Exception? FLLD;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
             #endregion
 
             #region IErrorMask
@@ -244,10 +233,8 @@ namespace Mutagen.Bethesda.Starfield
                 ModelComponent_FieldIndex enu = (ModelComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModelComponent_FieldIndex.File:
-                        return File;
-                    case ModelComponent_FieldIndex.FLLD:
-                        return FLLD;
+                    case ModelComponent_FieldIndex.Model:
+                        return Model;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -258,11 +245,8 @@ namespace Mutagen.Bethesda.Starfield
                 ModelComponent_FieldIndex enu = (ModelComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModelComponent_FieldIndex.File:
-                        this.File = ex;
-                        break;
-                    case ModelComponent_FieldIndex.FLLD:
-                        this.FLLD = ex;
+                    case ModelComponent_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -275,11 +259,8 @@ namespace Mutagen.Bethesda.Starfield
                 ModelComponent_FieldIndex enu = (ModelComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModelComponent_FieldIndex.File:
-                        this.File = (Exception?)obj;
-                        break;
-                    case ModelComponent_FieldIndex.FLLD:
-                        this.FLLD = (Exception?)obj;
+                    case ModelComponent_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -290,8 +271,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (File != null) return true;
-                if (FLLD != null) return true;
+                if (Model != null) return true;
                 return false;
             }
             #endregion
@@ -318,12 +298,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(File, "File");
-                }
-                {
-                    sb.AppendItem(FLLD, "FLLD");
-                }
+                Model?.Print(sb);
             }
             #endregion
 
@@ -332,8 +307,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.File = this.File.Combine(rhs.File);
-                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -356,8 +330,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool File;
-            public bool FLLD;
+            public Model.TranslationMask? Model;
             #endregion
 
             #region Ctors
@@ -366,8 +339,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.File = defaultOn;
-                this.FLLD = defaultOn;
             }
 
             #endregion
@@ -375,8 +346,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((File, null));
-                ret.Add((FLLD, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -454,21 +424,29 @@ namespace Mutagen.Bethesda.Starfield
         IAComponent,
         IAssetLinkContainer,
         ILoquiObjectSetter<IModelComponent>,
-        IModelComponentGetter
+        IModelComponentGetter,
+        IModeled
     {
-        new AssetLink<StarfieldModelAssetType>? File { get; set; }
-        new MemorySlice<Byte>? FLLD { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
     }
 
     public partial interface IModelComponentGetter :
         IAComponentGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
-        ILoquiObject<IModelComponentGetter>
+        ILoquiObject<IModelComponentGetter>,
+        IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => ModelComponent_Registration.Instance;
-        AssetLinkGetter<StarfieldModelAssetType>? File { get; }
-        ReadOnlyMemorySlice<Byte>? FLLD { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
 
     }
 
@@ -613,8 +591,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum ModelComponent_FieldIndex
     {
-        File = 0,
-        FLLD = 1,
+        Model = 0,
     }
     #endregion
 
@@ -625,9 +602,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 1;
 
         public static readonly Type MaskType = typeof(ModelComponent.Mask<>);
 
@@ -661,7 +638,9 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
                 RecordTypes.MODL,
-                RecordTypes.FLLD);
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ModelComponentBinaryWriteTranslation);
@@ -704,8 +683,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IModelComponent item)
         {
             ClearPartial();
-            item.File = default;
-            item.FLLD = default;
+            item.Model = null;
             base.Clear(item);
         }
         
@@ -726,9 +704,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (obj.File != null)
+            if (obj.Model is {} ModelItems)
             {
-                yield return obj.File;
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -740,10 +721,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
-            {
-                obj.File?.Relink(mapping);
-            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -799,8 +777,11 @@ namespace Mutagen.Bethesda.Starfield
             ModelComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.File = object.Equals(item.File, rhs.File);
-            ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -850,15 +831,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.File ?? true)
-                && item.File is {} FileItem)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
             {
-                sb.AppendItem(FileItem, "File");
-            }
-            if ((printMask?.FLLD ?? true)
-                && item.FLLD is {} FLLDItem)
-            {
-                sb.AppendLine($"FLLD => {SpanExt.ToHexString(FLLDItem)}");
+                ModelItem?.Print(sb, "Model");
             }
         }
         
@@ -879,13 +855,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)ModelComponent_FieldIndex.File) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ModelComponent_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.File, rhs.File)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ModelComponent_FieldIndex.FLLD) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)ModelComponent_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             return true;
         }
@@ -904,13 +880,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IModelComponentGetter item)
         {
             var hash = new HashCode();
-            if (item.File is {} Fileitem)
+            if (item.Model is {} Modelitem)
             {
-                hash.Add(Fileitem);
-            }
-            if (item.FLLD is {} FLLDItem)
-            {
-                hash.Add(FLLDItem);
+                hash.Add(Modelitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -947,9 +919,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                if (obj.File != null)
+                if (obj.Model is {} ModelItems)
                 {
-                    yield return obj.File;
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;
@@ -976,16 +951,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            item.File = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.File, rhs.File);
-            if ((copyMask?.GetShouldTranslate((int)ModelComponent_FieldIndex.FLLD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ModelComponent_FieldIndex.Model) ?? true))
             {
-                if(rhs.FLLD is {} FLLDrhs)
+                errorMask?.PushIndex((int)ModelComponent_FieldIndex.Model);
+                try
                 {
-                    item.FLLD = FLLDrhs.ToArray();
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ModelComponent_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLLD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -1101,15 +1090,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.File?.RawPath,
-                header: translationParams.ConvertToCustom(RecordTypes.MODL),
-                binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLLD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
         public void Write(
@@ -1165,16 +1152,14 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File = AssetLinkBinaryTranslation.Instance.Parse<StarfieldModelAssetType>(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ModelComponent_FieldIndex.File;
-                }
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ModelComponent_FieldIndex.FLLD;
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)ModelComponent_FieldIndex.Model;
                 }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1233,14 +1218,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region File
-        private int? _FileLocation;
-        public AssetLinkGetter<StarfieldModelAssetType>? File => _FileLocation.HasValue ? new AssetLinkGetter<StarfieldModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
-        #endregion
-        #region FLLD
-        private int? _FLLDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1305,14 +1283,15 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
-                {
-                    _FileLocation = (stream.Position - offset);
-                    return (int)ModelComponent_FieldIndex.File;
-                }
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    _FLLDLocation = (stream.Position - offset);
-                    return (int)ModelComponent_FieldIndex.FLLD;
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)ModelComponent_FieldIndex.Model;
                 }
                 default:
                     return base.FillRecordType(

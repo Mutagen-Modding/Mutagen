@@ -2598,6 +2598,10 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
@@ -2613,6 +2617,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.SkeletalModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.BodyData.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.BehaviorGraph.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
@@ -3335,6 +3340,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         yield return item;
                     }
+                }
+                foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
                 }
                 foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
