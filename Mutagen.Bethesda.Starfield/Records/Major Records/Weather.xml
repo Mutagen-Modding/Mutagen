@@ -12,7 +12,7 @@
       <Array name="Clouds" fixedSize="32" binary="Custom" recordType="RNAM" nullable="False">
         <RefDirect refName="CloudLayer" />
       </Array>
-      <CustomLogic name="CloudYSpeeds" recordType="QNAM" />
+      <CustomLogic name="CloudXSpeeds" recordType="QNAM" />
       <CustomLogic name="CloudColors" recordType="PNAM" />
       <CustomLogic name="CloudAlphas" recordType="JNAM" />
       <Data recordType="NAM0">

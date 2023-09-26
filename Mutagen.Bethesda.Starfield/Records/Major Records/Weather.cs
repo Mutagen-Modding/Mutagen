@@ -102,7 +102,7 @@ partial class WeatherBinaryCreateTranslation
         }
     }
 
-    public static partial ParseResult FillBinaryCloudYSpeedsCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
+    public static partial ParseResult FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
     {
         FillBinaryCloudXSpeeds(frame, item.Clouds);
         return null;
@@ -287,7 +287,7 @@ partial class WeatherBinaryWriteTranslation
     {
     }
 
-    public static partial void WriteBinaryCloudYSpeedsCustom(MutagenWriter writer, IWeatherGetter item)
+    public static partial void WriteBinaryCloudXSpeedsCustom(MutagenWriter writer, IWeatherGetter item)
     {
     }
     #endregion
@@ -376,7 +376,7 @@ partial class WeatherBinaryOverlay
             _clouds);
     }
 
-    public partial ParseResult CloudYSpeedsCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
+    public partial ParseResult CloudXSpeedsCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         WeatherBinaryCreateTranslation.FillBinaryCloudXSpeeds(
             new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),

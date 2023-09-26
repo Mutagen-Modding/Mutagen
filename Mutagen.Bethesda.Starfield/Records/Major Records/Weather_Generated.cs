@@ -6585,7 +6585,7 @@ namespace Mutagen.Bethesda.Starfield
             WeatherBinaryWriteTranslation.WriteBinaryClouds(
                 writer: writer,
                 item: item);
-            WeatherBinaryWriteTranslation.WriteBinaryCloudYSpeeds(
+            WeatherBinaryWriteTranslation.WriteBinaryCloudXSpeeds(
                 writer: writer,
                 item: item);
             WeatherBinaryWriteTranslation.WriteBinaryCloudColors(
@@ -6918,15 +6918,15 @@ namespace Mutagen.Bethesda.Starfield
                 item: item);
         }
 
-        public static partial void WriteBinaryCloudYSpeedsCustom(
+        public static partial void WriteBinaryCloudXSpeedsCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
-        public static void WriteBinaryCloudYSpeeds(
+        public static void WriteBinaryCloudXSpeeds(
             MutagenWriter writer,
             IWeatherGetter item)
         {
-            WriteBinaryCloudYSpeedsCustom(
+            WriteBinaryCloudXSpeedsCustom(
                 writer: writer,
                 item: item);
         }
@@ -7113,7 +7113,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    return WeatherBinaryCreateTranslation.FillBinaryCloudYSpeedsCustom(
+                    return WeatherBinaryCreateTranslation.FillBinaryCloudXSpeedsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
                         lastParsed: lastParsed);
@@ -7404,7 +7404,7 @@ namespace Mutagen.Bethesda.Starfield
             IWeatherInternal item,
             PreviousParse lastParsed);
 
-        public static partial ParseResult FillBinaryCloudYSpeedsCustom(
+        public static partial ParseResult FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
             IWeatherInternal item,
             PreviousParse lastParsed);
@@ -7505,8 +7505,8 @@ namespace Mutagen.Bethesda.Starfield
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        #region CloudYSpeeds
-        public partial ParseResult CloudYSpeedsCustomParse(
+        #region CloudXSpeeds
+        public partial ParseResult CloudXSpeedsCustomParse(
             OverlayStream stream,
             int offset,
             PreviousParse lastParsed);
@@ -8017,7 +8017,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    return CloudYSpeedsCustomParse(
+                    return CloudXSpeedsCustomParse(
                         stream,
                         offset,
                         lastParsed: lastParsed);
