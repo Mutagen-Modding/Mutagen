@@ -106,6 +106,7 @@
     <Compile Include="Enums\EquipType.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
+    <Compile Include="Enums\TimeOfDay.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
