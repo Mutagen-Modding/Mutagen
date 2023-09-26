@@ -26,7 +26,6 @@
           <RefDirect name="StarsColor" refName="WeatherColor" />
           <RefDirect name="SkyLowerColor" refName="WeatherColor" />
           <RefDirect name="HorizonColor" refName="WeatherColor" />
-          <Break />
           <RefDirect name="EffectLightingColor" refName="WeatherColor" />
           <RefDirect name="CloudLodDiffuseColor" refName="WeatherColor" />
           <RefDirect name="CloudLodAmbientColor" refName="WeatherColor" />
@@ -35,7 +34,6 @@
           <RefDirect name="WaterMultiplierColor" refName="WeatherColor" />
           <RefDirect name="SunGlareColor" refName="WeatherColor" />
           <RefDirect name="MoonGlareColor" refName="WeatherColor" />
-          <Break />
           <RefDirect name="FogNearHigh" refName="WeatherColor" />
           <RefDirect name="FogFarHigh" refName="WeatherColor" />
         </Fields>
@@ -53,14 +51,12 @@
           <Float name="FogDistanceNightPower" />
           <Float name="FogDistanceDayMax" />
           <Float name="FogDistanceNightMax" />
-          <Break />
           <Float name="FogDistanceDayNearHeightMid" default="0f" />
           <Float name="FogDistanceDayNearHeightRange" default="10000f" />
           <Float name="FogDistanceNightNearHeightMid" default="0f" />
           <Float name="FogDistanceNightNearHeightRange" default="10000f" />
           <Float name="FogDistanceDayHighDensityScale" default="1f" />
           <Float name="FogDistanceNightHighDensityScale" default="1f" />
-          <Break />
           <Float name="FogDistanceDayFarHeightMid" default="0f" />
           <Float name="FogDistanceDayFarHeightRange" default="10000f" />
           <Float name="FogDistanceNightFarHeightMid" default="0f" />
@@ -85,7 +81,6 @@
           <Percent name="VisualEffectEnd" integerType="Byte" />
           <Float name="WindDirection" integerType="Byte" min="0" max="360" divisor="360" />
           <Float name="WindDirectionRange" integerType="Byte" min="0" max="180" divisor="180" />
-          <Break />
           <Percent name="WindTurbulance" integerType="Byte" />
         </Fields>
       </Data>
@@ -99,7 +94,6 @@
           <FormLink name="ImageSpaceDay" refName="ImageSpace" />
           <FormLink name="ImageSpaceSunset" refName="ImageSpace" />
           <FormLink name="ImageSpaceNight" refName="ImageSpace" />
-          <Break />
           <FormLink name="ImageSpaceEarlySunrise" refName="ImageSpace" />
           <FormLink name="ImageSpaceLateSunrise" refName="ImageSpace" />
           <FormLink name="ImageSpaceEarlySunset" refName="ImageSpace" />

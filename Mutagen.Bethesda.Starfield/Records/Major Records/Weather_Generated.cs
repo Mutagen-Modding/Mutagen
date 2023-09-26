@@ -271,147 +271,43 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FogDistanceDayNearHeightMid
         public static readonly Single FogDistanceDayNearHeightMidDefault = 0f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceDayNearHeightMid;
-        public Single FogDistanceDayNearHeightMid
-        {
-            get => this._FogDistanceDayNearHeightMid;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this._FogDistanceDayNearHeightMid = value;
-            }
-        }
+        public Single FogDistanceDayNearHeightMid { get; set; } = FogDistanceDayNearHeightMidDefault;
         #endregion
         #region FogDistanceDayNearHeightRange
         public static readonly Single FogDistanceDayNearHeightRangeDefault = 10000f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceDayNearHeightRange;
-        public Single FogDistanceDayNearHeightRange
-        {
-            get => this._FogDistanceDayNearHeightRange;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this._FogDistanceDayNearHeightRange = value;
-            }
-        }
+        public Single FogDistanceDayNearHeightRange { get; set; } = FogDistanceDayNearHeightRangeDefault;
         #endregion
         #region FogDistanceNightNearHeightMid
         public static readonly Single FogDistanceNightNearHeightMidDefault = 0f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceNightNearHeightMid;
-        public Single FogDistanceNightNearHeightMid
-        {
-            get => this._FogDistanceNightNearHeightMid;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this._FogDistanceNightNearHeightMid = value;
-            }
-        }
+        public Single FogDistanceNightNearHeightMid { get; set; } = FogDistanceNightNearHeightMidDefault;
         #endregion
         #region FogDistanceNightNearHeightRange
         public static readonly Single FogDistanceNightNearHeightRangeDefault = 10000f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceNightNearHeightRange;
-        public Single FogDistanceNightNearHeightRange
-        {
-            get => this._FogDistanceNightNearHeightRange;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this._FogDistanceNightNearHeightRange = value;
-            }
-        }
+        public Single FogDistanceNightNearHeightRange { get; set; } = FogDistanceNightNearHeightRangeDefault;
         #endregion
         #region FogDistanceDayHighDensityScale
         public static readonly Single FogDistanceDayHighDensityScaleDefault = 1f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceDayHighDensityScale;
-        public Single FogDistanceDayHighDensityScale
-        {
-            get => this._FogDistanceDayHighDensityScale;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this._FogDistanceDayHighDensityScale = value;
-            }
-        }
+        public Single FogDistanceDayHighDensityScale { get; set; } = FogDistanceDayHighDensityScaleDefault;
         #endregion
         #region FogDistanceNightHighDensityScale
         public static readonly Single FogDistanceNightHighDensityScaleDefault = 1f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceNightHighDensityScale;
-        public Single FogDistanceNightHighDensityScale
-        {
-            get => this._FogDistanceNightHighDensityScale;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this._FogDistanceNightHighDensityScale = value;
-            }
-        }
+        public Single FogDistanceNightHighDensityScale { get; set; } = FogDistanceNightHighDensityScaleDefault;
         #endregion
         #region FogDistanceDayFarHeightMid
         public static readonly Single FogDistanceDayFarHeightMidDefault = 0f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceDayFarHeightMid;
-        public Single FogDistanceDayFarHeightMid
-        {
-            get => this._FogDistanceDayFarHeightMid;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this.FNAMDataTypeState &= ~FNAMDataType.Break1;
-                this._FogDistanceDayFarHeightMid = value;
-            }
-        }
+        public Single FogDistanceDayFarHeightMid { get; set; } = FogDistanceDayFarHeightMidDefault;
         #endregion
         #region FogDistanceDayFarHeightRange
         public static readonly Single FogDistanceDayFarHeightRangeDefault = 10000f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceDayFarHeightRange;
-        public Single FogDistanceDayFarHeightRange
-        {
-            get => this._FogDistanceDayFarHeightRange;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this.FNAMDataTypeState &= ~FNAMDataType.Break1;
-                this._FogDistanceDayFarHeightRange = value;
-            }
-        }
+        public Single FogDistanceDayFarHeightRange { get; set; } = FogDistanceDayFarHeightRangeDefault;
         #endregion
         #region FogDistanceNightFarHeightMid
         public static readonly Single FogDistanceNightFarHeightMidDefault = 0f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceNightFarHeightMid;
-        public Single FogDistanceNightFarHeightMid
-        {
-            get => this._FogDistanceNightFarHeightMid;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this.FNAMDataTypeState &= ~FNAMDataType.Break1;
-                this._FogDistanceNightFarHeightMid = value;
-            }
-        }
+        public Single FogDistanceNightFarHeightMid { get; set; } = FogDistanceNightFarHeightMidDefault;
         #endregion
         #region FogDistanceNightFarHeightRange
         public static readonly Single FogDistanceNightFarHeightRangeDefault = 10000f;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceNightFarHeightRange;
-        public Single FogDistanceNightFarHeightRange
-        {
-            get => this._FogDistanceNightFarHeightRange;
-            set
-            {
-                this.FNAMDataTypeState &= ~FNAMDataType.Break0;
-                this.FNAMDataTypeState &= ~FNAMDataType.Break1;
-                this._FogDistanceNightFarHeightRange = value;
-            }
-        }
+        public Single FogDistanceNightFarHeightRange { get; set; } = FogDistanceNightFarHeightRangeDefault;
         #endregion
         #region WindSpeed
         public Percent WindSpeed { get; set; } = default;
@@ -465,17 +361,7 @@ namespace Mutagen.Bethesda.Starfield
         public static RangeFloat WindDirectionRange_Range = new RangeFloat(0, 255f);
         #endregion
         #region WindTurbulance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Percent _WindTurbulance;
-        public Percent WindTurbulance
-        {
-            get => this._WindTurbulance;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._WindTurbulance = value;
-            }
-        }
+        public Percent WindTurbulance { get; set; } = default;
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -640,18 +526,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IWeatherGetter.VisibilityMult => this.VisibilityMult;
         #endregion
-        #region NAM0DataTypeState
-        public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
-        #endregion
-        #region FNAMDataTypeState
-        public Weather.FNAMDataType FNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region DATADataTypeState
-        public Weather.DATADataType DATADataTypeState { get; set; } = default;
-        #endregion
-        #region IMSPDataTypeState
-        public Weather.IMSPDataType IMSPDataTypeState { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -755,10 +629,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Magic = new MaskItem<TItem, WeatherMagic.Mask<TItem>?>(initialValue, new WeatherMagic.Mask<TItem>(initialValue));
                 this.VolatilityMult = initialValue;
                 this.VisibilityMult = initialValue;
-                this.NAM0DataTypeState = initialValue;
-                this.FNAMDataTypeState = initialValue;
-                this.DATADataTypeState = initialValue;
-                this.IMSPDataTypeState = initialValue;
             }
 
             public Mask(
@@ -846,11 +716,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SunGlareLensFlare,
                 TItem Magic,
                 TItem VolatilityMult,
-                TItem VisibilityMult,
-                TItem NAM0DataTypeState,
-                TItem FNAMDataTypeState,
-                TItem DATADataTypeState,
-                TItem IMSPDataTypeState)
+                TItem VisibilityMult)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -938,10 +804,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Magic = new MaskItem<TItem, WeatherMagic.Mask<TItem>?>(Magic, new WeatherMagic.Mask<TItem>(Magic));
                 this.VolatilityMult = VolatilityMult;
                 this.VisibilityMult = VisibilityMult;
-                this.NAM0DataTypeState = NAM0DataTypeState;
-                this.FNAMDataTypeState = FNAMDataTypeState;
-                this.DATADataTypeState = DATADataTypeState;
-                this.IMSPDataTypeState = IMSPDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1031,10 +893,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, WeatherMagic.Mask<TItem>?>? Magic { get; set; }
             public TItem VolatilityMult;
             public TItem VisibilityMult;
-            public TItem NAM0DataTypeState;
-            public TItem FNAMDataTypeState;
-            public TItem DATADataTypeState;
-            public TItem IMSPDataTypeState;
             #endregion
 
             #region Equals
@@ -1126,10 +984,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Magic, rhs.Magic)) return false;
                 if (!object.Equals(this.VolatilityMult, rhs.VolatilityMult)) return false;
                 if (!object.Equals(this.VisibilityMult, rhs.VisibilityMult)) return false;
-                if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
-                if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
-                if (!object.Equals(this.IMSPDataTypeState, rhs.IMSPDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1213,10 +1067,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Magic);
                 hash.Add(this.VolatilityMult);
                 hash.Add(this.VisibilityMult);
-                hash.Add(this.NAM0DataTypeState);
-                hash.Add(this.FNAMDataTypeState);
-                hash.Add(this.DATADataTypeState);
-                hash.Add(this.IMSPDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1430,10 +1280,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.VolatilityMult)) return false;
                 if (!eval(this.VisibilityMult)) return false;
-                if (!eval(this.NAM0DataTypeState)) return false;
-                if (!eval(this.FNAMDataTypeState)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
-                if (!eval(this.IMSPDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1645,10 +1491,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.VolatilityMult)) return true;
                 if (eval(this.VisibilityMult)) return true;
-                if (eval(this.NAM0DataTypeState)) return true;
-                if (eval(this.FNAMDataTypeState)) return true;
-                if (eval(this.DATADataTypeState)) return true;
-                if (eval(this.IMSPDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1795,10 +1637,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Magic = this.Magic == null ? null : new MaskItem<R, WeatherMagic.Mask<R>?>(eval(this.Magic.Overall), this.Magic.Specific?.Translate(eval));
                 obj.VolatilityMult = eval(this.VolatilityMult);
                 obj.VisibilityMult = eval(this.VisibilityMult);
-                obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
-                obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
-                obj.IMSPDataTypeState = eval(this.IMSPDataTypeState);
             }
             #endregion
 
@@ -2195,22 +2033,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(VisibilityMult, "VisibilityMult");
                     }
-                    if (printMask?.NAM0DataTypeState ?? true)
-                    {
-                        sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                    }
-                    if (printMask?.FNAMDataTypeState ?? true)
-                    {
-                        sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
-                    if (printMask?.IMSPDataTypeState ?? true)
-                    {
-                        sb.AppendItem(IMSPDataTypeState, "IMSPDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -2300,10 +2122,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, WeatherMagic.ErrorMask?>? Magic;
             public Exception? VolatilityMult;
             public Exception? VisibilityMult;
-            public Exception? NAM0DataTypeState;
-            public Exception? FNAMDataTypeState;
-            public Exception? DATADataTypeState;
-            public Exception? IMSPDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -2468,14 +2286,6 @@ namespace Mutagen.Bethesda.Starfield
                         return VolatilityMult;
                     case Weather_FieldIndex.VisibilityMult:
                         return VisibilityMult;
-                    case Weather_FieldIndex.NAM0DataTypeState:
-                        return NAM0DataTypeState;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        return FNAMDataTypeState;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
-                    case Weather_FieldIndex.IMSPDataTypeState:
-                        return IMSPDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -2719,18 +2529,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Weather_FieldIndex.VisibilityMult:
                         this.VisibilityMult = ex;
-                        break;
-                    case Weather_FieldIndex.NAM0DataTypeState:
-                        this.NAM0DataTypeState = ex;
-                        break;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = ex;
-                        break;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
-                    case Weather_FieldIndex.IMSPDataTypeState:
-                        this.IMSPDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -2977,18 +2775,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Weather_FieldIndex.VisibilityMult:
                         this.VisibilityMult = (Exception?)obj;
                         break;
-                    case Weather_FieldIndex.NAM0DataTypeState:
-                        this.NAM0DataTypeState = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.IMSPDataTypeState:
-                        this.IMSPDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -3076,10 +2862,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Magic != null) return true;
                 if (VolatilityMult != null) return true;
                 if (VisibilityMult != null) return true;
-                if (NAM0DataTypeState != null) return true;
-                if (FNAMDataTypeState != null) return true;
-                if (DATADataTypeState != null) return true;
-                if (IMSPDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -3364,18 +3146,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(VisibilityMult, "VisibilityMult");
                 }
-                {
-                    sb.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
-                }
-                {
-                    sb.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
-                {
-                    sb.AppendItem(IMSPDataTypeState, "IMSPDataTypeState");
-                }
             }
             #endregion
 
@@ -3462,10 +3232,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Magic = this.Magic.Combine(rhs.Magic, (l, r) => l.Combine(r));
                 ret.VolatilityMult = this.VolatilityMult.Combine(rhs.VolatilityMult);
                 ret.VisibilityMult = this.VisibilityMult.Combine(rhs.VisibilityMult);
-                ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
-                ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
-                ret.IMSPDataTypeState = this.IMSPDataTypeState.Combine(rhs.IMSPDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3566,10 +3332,6 @@ namespace Mutagen.Bethesda.Starfield
             public WeatherMagic.TranslationMask? Magic;
             public bool VolatilityMult;
             public bool VisibilityMult;
-            public bool NAM0DataTypeState;
-            public bool FNAMDataTypeState;
-            public bool DATADataTypeState;
-            public bool IMSPDataTypeState;
             #endregion
 
             #region Ctors
@@ -3634,10 +3396,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SunGlareLensFlare = defaultOn;
                 this.VolatilityMult = defaultOn;
                 this.VisibilityMult = defaultOn;
-                this.NAM0DataTypeState = defaultOn;
-                this.FNAMDataTypeState = defaultOn;
-                this.DATADataTypeState = defaultOn;
-                this.IMSPDataTypeState = defaultOn;
             }
 
             #endregion
@@ -3723,10 +3481,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Magic != null ? Magic.OnOverall : DefaultOn, Magic?.GetCrystal()));
                 ret.Add((VolatilityMult, null));
                 ret.Add((VisibilityMult, null));
-                ret.Add((NAM0DataTypeState, null));
-                ret.Add((FNAMDataTypeState, null));
-                ret.Add((DATADataTypeState, null));
-                ret.Add((IMSPDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3784,28 +3538,6 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IWeather);
 
-        [Flags]
-        public enum NAM0DataType
-        {
-            Break0 = 1,
-            Break1 = 2
-        }
-        [Flags]
-        public enum FNAMDataType
-        {
-            Break0 = 1,
-            Break1 = 2
-        }
-        [Flags]
-        public enum DATADataType
-        {
-            Break0 = 1
-        }
-        [Flags]
-        public enum IMSPDataType
-        {
-            Break0 = 1
-        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WeatherSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => WeatherSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -3977,10 +3709,6 @@ namespace Mutagen.Bethesda.Starfield
         new WeatherMagic? Magic { get; set; }
         new Single? VolatilityMult { get; set; }
         new Single? VisibilityMult { get; set; }
-        new Weather.NAM0DataType NAM0DataTypeState { get; set; }
-        new Weather.FNAMDataType FNAMDataTypeState { get; set; }
-        new Weather.DATADataType DATADataTypeState { get; set; }
-        new Weather.IMSPDataType IMSPDataTypeState { get; set; }
     }
 
     public partial interface IWeatherInternal :
@@ -4084,10 +3812,6 @@ namespace Mutagen.Bethesda.Starfield
         IWeatherMagicGetter? Magic { get; }
         Single? VolatilityMult { get; }
         Single? VisibilityMult { get; }
-        Weather.NAM0DataType NAM0DataTypeState { get; }
-        Weather.FNAMDataType FNAMDataTypeState { get; }
-        Weather.DATADataType DATADataTypeState { get; }
-        Weather.IMSPDataType IMSPDataTypeState { get; }
 
     }
 
@@ -4342,10 +4066,6 @@ namespace Mutagen.Bethesda.Starfield
         Magic = 82,
         VolatilityMult = 83,
         VisibilityMult = 84,
-        NAM0DataTypeState = 85,
-        FNAMDataTypeState = 86,
-        DATADataTypeState = 87,
-        IMSPDataTypeState = 88,
     }
     #endregion
 
@@ -4356,9 +4076,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 82;
+        public const ushort AdditionalFieldCount = 78;
 
-        public const ushort FieldCount = 89;
+        public const ushort FieldCount = 85;
 
         public static readonly Type MaskType = typeof(Weather.Mask<>);
 
@@ -4536,10 +4256,6 @@ namespace Mutagen.Bethesda.Starfield
             item.Magic = null;
             item.VolatilityMult = default;
             item.VisibilityMult = default;
-            item.NAM0DataTypeState = default;
-            item.FNAMDataTypeState = default;
-            item.DATADataTypeState = default;
-            item.IMSPDataTypeState = default;
             base.Clear(item);
         }
         
@@ -4764,10 +4480,6 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.VolatilityMult = item.VolatilityMult.EqualsWithin(rhs.VolatilityMult);
             ret.VisibilityMult = item.VisibilityMult.EqualsWithin(rhs.VisibilityMult);
-            ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
-            ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
-            ret.IMSPDataTypeState = item.IMSPDataTypeState == rhs.IMSPDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -5179,22 +4891,6 @@ namespace Mutagen.Bethesda.Starfield
                 && item.VisibilityMult is {} VisibilityMultItem)
             {
                 sb.AppendItem(VisibilityMultItem, "VisibilityMult");
-            }
-            if (printMask?.NAM0DataTypeState ?? true)
-            {
-                sb.AppendItem(item.NAM0DataTypeState, "NAM0DataTypeState");
-            }
-            if (printMask?.FNAMDataTypeState ?? true)
-            {
-                sb.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
-            if (printMask?.IMSPDataTypeState ?? true)
-            {
-                sb.AppendItem(item.IMSPDataTypeState, "IMSPDataTypeState");
             }
         }
         
@@ -5643,22 +5339,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.VisibilityMult.EqualsWithin(rhs.VisibilityMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
-            {
-                if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.IMSPDataTypeState) ?? true))
-            {
-                if (lhs.IMSPDataTypeState != rhs.IMSPDataTypeState) return false;
-            }
             return true;
         }
         
@@ -5792,10 +5472,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(VisibilityMultitem);
             }
-            hash.Add(item.NAM0DataTypeState);
-            hash.Add(item.FNAMDataTypeState);
-            hash.Add(item.DATADataTypeState);
-            hash.Add(item.IMSPDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -6721,22 +6397,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.VisibilityMult = rhs.VisibilityMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
-            {
-                item.NAM0DataTypeState = rhs.NAM0DataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                item.FNAMDataTypeState = rhs.FNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.IMSPDataTypeState) ?? true))
-            {
-                item.IMSPDataTypeState = rhs.IMSPDataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -6885,15 +6545,6 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly WeatherBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IWeatherGetter item,
-            MutagenWriter writer)
-        {
-            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IWeatherGetter item,
             MutagenWriter writer,
@@ -6990,62 +6641,56 @@ namespace Mutagen.Bethesda.Starfield
                     item: HorizonColorItem,
                     writer: writer,
                     translationParams: translationParams);
-                if (!item.NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0))
-                {
-                    var EffectLightingColorItem = item.EffectLightingColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)EffectLightingColorItem).BinaryWriteTranslator).Write(
-                        item: EffectLightingColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    var CloudLodDiffuseColorItem = item.CloudLodDiffuseColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)CloudLodDiffuseColorItem).BinaryWriteTranslator).Write(
-                        item: CloudLodDiffuseColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    var CloudLodAmbientColorItem = item.CloudLodAmbientColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)CloudLodAmbientColorItem).BinaryWriteTranslator).Write(
-                        item: CloudLodAmbientColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    var FogFarColorItem = item.FogFarColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)FogFarColorItem).BinaryWriteTranslator).Write(
-                        item: FogFarColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    var SkyStaticsColorItem = item.SkyStaticsColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)SkyStaticsColorItem).BinaryWriteTranslator).Write(
-                        item: SkyStaticsColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    var WaterMultiplierColorItem = item.WaterMultiplierColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)WaterMultiplierColorItem).BinaryWriteTranslator).Write(
-                        item: WaterMultiplierColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    var SunGlareColorItem = item.SunGlareColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)SunGlareColorItem).BinaryWriteTranslator).Write(
-                        item: SunGlareColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    var MoonGlareColorItem = item.MoonGlareColor;
-                    ((WeatherColorBinaryWriteTranslation)((IBinaryItem)MoonGlareColorItem).BinaryWriteTranslator).Write(
-                        item: MoonGlareColorItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                    if (!item.NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1))
-                    {
-                        var FogNearHighItem = item.FogNearHigh;
-                        ((WeatherColorBinaryWriteTranslation)((IBinaryItem)FogNearHighItem).BinaryWriteTranslator).Write(
-                            item: FogNearHighItem,
-                            writer: writer,
-                            translationParams: translationParams);
-                        var FogFarHighItem = item.FogFarHigh;
-                        ((WeatherColorBinaryWriteTranslation)((IBinaryItem)FogFarHighItem).BinaryWriteTranslator).Write(
-                            item: FogFarHighItem,
-                            writer: writer,
-                            translationParams: translationParams);
-                    }
-                }
+                var EffectLightingColorItem = item.EffectLightingColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)EffectLightingColorItem).BinaryWriteTranslator).Write(
+                    item: EffectLightingColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var CloudLodDiffuseColorItem = item.CloudLodDiffuseColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)CloudLodDiffuseColorItem).BinaryWriteTranslator).Write(
+                    item: CloudLodDiffuseColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var CloudLodAmbientColorItem = item.CloudLodAmbientColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)CloudLodAmbientColorItem).BinaryWriteTranslator).Write(
+                    item: CloudLodAmbientColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var FogFarColorItem = item.FogFarColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)FogFarColorItem).BinaryWriteTranslator).Write(
+                    item: FogFarColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var SkyStaticsColorItem = item.SkyStaticsColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)SkyStaticsColorItem).BinaryWriteTranslator).Write(
+                    item: SkyStaticsColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var WaterMultiplierColorItem = item.WaterMultiplierColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)WaterMultiplierColorItem).BinaryWriteTranslator).Write(
+                    item: WaterMultiplierColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var SunGlareColorItem = item.SunGlareColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)SunGlareColorItem).BinaryWriteTranslator).Write(
+                    item: SunGlareColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var MoonGlareColorItem = item.MoonGlareColor;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)MoonGlareColorItem).BinaryWriteTranslator).Write(
+                    item: MoonGlareColorItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var FogNearHighItem = item.FogNearHigh;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)FogNearHighItem).BinaryWriteTranslator).Write(
+                    item: FogNearHighItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var FogFarHighItem = item.FogFarHigh;
+                ((WeatherColorBinaryWriteTranslation)((IBinaryItem)FogFarHighItem).BinaryWriteTranslator).Write(
+                    item: FogFarHighItem,
+                    writer: writer,
+                    translationParams: translationParams);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
                 writer: writer,
@@ -7078,42 +6723,36 @@ namespace Mutagen.Bethesda.Starfield
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FogDistanceNightMax);
-                if (!item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break0))
-                {
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.FogDistanceDayNearHeightMid);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.FogDistanceDayNearHeightRange);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.FogDistanceNightNearHeightMid);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.FogDistanceNightNearHeightRange);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.FogDistanceDayHighDensityScale);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.FogDistanceNightHighDensityScale);
-                    if (!item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break1))
-                    {
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer: writer,
-                            item: item.FogDistanceDayFarHeightMid);
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer: writer,
-                            item: item.FogDistanceDayFarHeightRange);
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer: writer,
-                            item: item.FogDistanceNightFarHeightMid);
-                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer: writer,
-                            item: item.FogDistanceNightFarHeightRange);
-                    }
-                }
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceDayNearHeightMid);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceDayNearHeightRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceNightNearHeightMid);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceNightNearHeightRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceDayHighDensityScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceNightHighDensityScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceDayFarHeightMid);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceDayFarHeightRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceNightFarHeightMid);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FogDistanceNightFarHeightRange);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
@@ -7184,13 +6823,10 @@ namespace Mutagen.Bethesda.Starfield
                     integerType: FloatIntegerType.Byte,
                     multiplier: 180f,
                     divisor: null);
-                if (!item.DATADataTypeState.HasFlag(Weather.DATADataType.Break0))
-                {
-                    PercentBinaryTranslation.Write(
-                        writer: writer,
-                        item: item.WindTurbulance,
-                        integerType: FloatIntegerType.Byte);
-                }
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.WindTurbulance,
+                    integerType: FloatIntegerType.Byte);
             }
             WeatherBinaryWriteTranslation.WriteBinaryDisabledCloudLayers(
                 writer: writer,
@@ -7219,21 +6855,18 @@ namespace Mutagen.Bethesda.Starfield
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ImageSpaceNight);
-                if (!item.IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0))
-                {
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ImageSpaceEarlySunrise);
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ImageSpaceLateSunrise);
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ImageSpaceEarlySunset);
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.ImageSpaceLateSunset);
-                }
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImageSpaceEarlySunrise);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImageSpaceLateSunrise);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImageSpaceEarlySunset);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImageSpaceLateSunset);
             }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -7361,7 +6994,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    WriteEmbedded(
+                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
@@ -7421,15 +7054,6 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly WeatherBinaryCreateTranslation Instance = new WeatherBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WTHR;
-        public static void FillBinaryStructs(
-            IWeatherInternal item,
-            MutagenFrame frame)
-        {
-            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IWeatherInternal item,
             MutagenFrame frame,
@@ -7530,11 +7154,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.SkyLowerColor = Mutagen.Bethesda.Starfield.WeatherColor.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete) return null;
                     item.HorizonColor = Mutagen.Bethesda.Starfield.WeatherColor.CreateFromBinary(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
-                        return (int)Weather_FieldIndex.HorizonColor;
-                    }
                     if (dataFrame.Complete) return null;
                     item.EffectLightingColor = Mutagen.Bethesda.Starfield.WeatherColor.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete) return null;
@@ -7551,11 +7170,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.SunGlareColor = Mutagen.Bethesda.Starfield.WeatherColor.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete) return null;
                     item.MoonGlareColor = Mutagen.Bethesda.Starfield.WeatherColor.CreateFromBinary(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.NAM0DataTypeState |= Weather.NAM0DataType.Break1;
-                        return (int)Weather_FieldIndex.MoonGlareColor;
-                    }
                     if (dataFrame.Complete) return null;
                     item.FogNearHigh = Mutagen.Bethesda.Starfield.WeatherColor.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Complete) return null;
@@ -7588,11 +7202,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.FogDistanceDayMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.FNAMDataTypeState |= Weather.FNAMDataType.Break0;
-                        return (int)Weather_FieldIndex.FogDistanceNightMax;
-                    }
                     if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayNearHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -7605,11 +7214,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.FogDistanceDayHighDensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceNightHighDensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.FNAMDataTypeState |= Weather.FNAMDataType.Break1;
-                        return (int)Weather_FieldIndex.FogDistanceNightHighDensityScale;
-                    }
                     if (dataFrame.Remaining < 4) return null;
                     item.FogDistanceDayFarHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -7690,11 +7294,6 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.Byte,
                         multiplier: null,
                         divisor: 180f);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= Weather.DATADataType.Break0;
-                        return (int)Weather_FieldIndex.WindDirectionRange;
-                    }
                     if (dataFrame.Remaining < 1) return null;
                     item.WindTurbulance = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
@@ -7729,11 +7328,6 @@ namespace Mutagen.Bethesda.Starfield
                     item.ImageSpaceSunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceNight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    if (dataFrame.Complete)
-                    {
-                        item.IMSPDataTypeState |= Weather.IMSPDataType.Break0;
-                        return (int)Weather_FieldIndex.ImageSpaceNight;
-                    }
                     if (dataFrame.Remaining < 4) return null;
                     item.ImageSpaceEarlySunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
@@ -7930,7 +7524,6 @@ namespace Mutagen.Bethesda.Starfield
             PreviousParse lastParsed);
         #endregion
         private RangeInt32? _NAM0Location;
-        public Weather.NAM0DataType NAM0DataTypeState { get; private set; }
         #region SkyUpperColor
         private int _SkyUpperColorLocation => _NAM0Location!.Value.Min;
         private bool _SkyUpperColor_IsSet => _NAM0Location.HasValue;
@@ -7987,61 +7580,61 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region EffectLightingColor
         private int _EffectLightingColorLocation => _NAM0Location!.Value.Min + 0x120;
-        private bool _EffectLightingColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _EffectLightingColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _EffectLightingColor => _EffectLightingColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_EffectLightingColorLocation).Slice(0, _NAM0Location!.Value.Width - 288), _package) : default;
         public IWeatherColorGetter EffectLightingColor => _EffectLightingColor ?? new WeatherColor();
         #endregion
         #region CloudLodDiffuseColor
         private int _CloudLodDiffuseColorLocation => _NAM0Location!.Value.Min + 0x140;
-        private bool _CloudLodDiffuseColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _CloudLodDiffuseColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _CloudLodDiffuseColor => _CloudLodDiffuseColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_CloudLodDiffuseColorLocation).Slice(0, _NAM0Location!.Value.Width - 320), _package) : default;
         public IWeatherColorGetter CloudLodDiffuseColor => _CloudLodDiffuseColor ?? new WeatherColor();
         #endregion
         #region CloudLodAmbientColor
         private int _CloudLodAmbientColorLocation => _NAM0Location!.Value.Min + 0x160;
-        private bool _CloudLodAmbientColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _CloudLodAmbientColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _CloudLodAmbientColor => _CloudLodAmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_CloudLodAmbientColorLocation).Slice(0, _NAM0Location!.Value.Width - 352), _package) : default;
         public IWeatherColorGetter CloudLodAmbientColor => _CloudLodAmbientColor ?? new WeatherColor();
         #endregion
         #region FogFarColor
         private int _FogFarColorLocation => _NAM0Location!.Value.Min + 0x180;
-        private bool _FogFarColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _FogFarColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _FogFarColor => _FogFarColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_FogFarColorLocation).Slice(0, _NAM0Location!.Value.Width - 384), _package) : default;
         public IWeatherColorGetter FogFarColor => _FogFarColor ?? new WeatherColor();
         #endregion
         #region SkyStaticsColor
         private int _SkyStaticsColorLocation => _NAM0Location!.Value.Min + 0x1A0;
-        private bool _SkyStaticsColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _SkyStaticsColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _SkyStaticsColor => _SkyStaticsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SkyStaticsColorLocation).Slice(0, _NAM0Location!.Value.Width - 416), _package) : default;
         public IWeatherColorGetter SkyStaticsColor => _SkyStaticsColor ?? new WeatherColor();
         #endregion
         #region WaterMultiplierColor
         private int _WaterMultiplierColorLocation => _NAM0Location!.Value.Min + 0x1C0;
-        private bool _WaterMultiplierColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _WaterMultiplierColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _WaterMultiplierColor => _WaterMultiplierColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_WaterMultiplierColorLocation).Slice(0, _NAM0Location!.Value.Width - 448), _package) : default;
         public IWeatherColorGetter WaterMultiplierColor => _WaterMultiplierColor ?? new WeatherColor();
         #endregion
         #region SunGlareColor
         private int _SunGlareColorLocation => _NAM0Location!.Value.Min + 0x1E0;
-        private bool _SunGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _SunGlareColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _SunGlareColor => _SunGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_SunGlareColorLocation).Slice(0, _NAM0Location!.Value.Width - 480), _package) : default;
         public IWeatherColorGetter SunGlareColor => _SunGlareColor ?? new WeatherColor();
         #endregion
         #region MoonGlareColor
         private int _MoonGlareColorLocation => _NAM0Location!.Value.Min + 0x200;
-        private bool _MoonGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
+        private bool _MoonGlareColor_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _MoonGlareColor => _MoonGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_MoonGlareColorLocation).Slice(0, _NAM0Location!.Value.Width - 512), _package) : default;
         public IWeatherColorGetter MoonGlareColor => _MoonGlareColor ?? new WeatherColor();
         #endregion
         #region FogNearHigh
         private int _FogNearHighLocation => _NAM0Location!.Value.Min + 0x220;
-        private bool _FogNearHigh_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
+        private bool _FogNearHigh_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _FogNearHigh => _FogNearHigh_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_FogNearHighLocation).Slice(0, _NAM0Location!.Value.Width - 544), _package) : default;
         public IWeatherColorGetter FogNearHigh => _FogNearHigh ?? new WeatherColor();
         #endregion
         #region FogFarHigh
         private int _FogFarHighLocation => _NAM0Location!.Value.Min + 0x240;
-        private bool _FogFarHigh_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
+        private bool _FogFarHigh_IsSet => _NAM0Location.HasValue;
         private IWeatherColorGetter? _FogFarHigh => _FogFarHigh_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(_recordData.Slice(_FogFarHighLocation).Slice(0, _NAM0Location!.Value.Width - 576), _package) : default;
         public IWeatherColorGetter FogFarHigh => _FogFarHigh ?? new WeatherColor();
         #endregion
@@ -8050,7 +7643,6 @@ namespace Mutagen.Bethesda.Starfield
         public ReadOnlyMemorySlice<Single>? NAM4 => _NAM4Location.HasValue ? BinaryOverlayArrayHelper.FloatSliceFromFixedSize(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM4Location.Value, _package.MetaData.Constants), amount: 32) : default(ReadOnlyMemorySlice<Single>?);
         #endregion
         private RangeInt32? _FNAMLocation;
-        public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
         #region FogDistanceDayNear
         private int _FogDistanceDayNearLocation => _FNAMLocation!.Value.Min;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
@@ -8093,56 +7685,55 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region FogDistanceDayNearHeightMid
         private int _FogDistanceDayNearHeightMidLocation => _FNAMLocation!.Value.Min + 0x20;
-        private bool _FogDistanceDayNearHeightMid_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break0);
+        private bool _FogDistanceDayNearHeightMid_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayNearHeightMid => _FogDistanceDayNearHeightMid_IsSet ? _recordData.Slice(_FogDistanceDayNearHeightMidLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayNearHeightRange
         private int _FogDistanceDayNearHeightRangeLocation => _FNAMLocation!.Value.Min + 0x24;
-        private bool _FogDistanceDayNearHeightRange_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break0);
+        private bool _FogDistanceDayNearHeightRange_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayNearHeightRange => _FogDistanceDayNearHeightRange_IsSet ? _recordData.Slice(_FogDistanceDayNearHeightRangeLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightNearHeightMid
         private int _FogDistanceNightNearHeightMidLocation => _FNAMLocation!.Value.Min + 0x28;
-        private bool _FogDistanceNightNearHeightMid_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break0);
+        private bool _FogDistanceNightNearHeightMid_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightNearHeightMid => _FogDistanceNightNearHeightMid_IsSet ? _recordData.Slice(_FogDistanceNightNearHeightMidLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightNearHeightRange
         private int _FogDistanceNightNearHeightRangeLocation => _FNAMLocation!.Value.Min + 0x2C;
-        private bool _FogDistanceNightNearHeightRange_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break0);
+        private bool _FogDistanceNightNearHeightRange_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightNearHeightRange => _FogDistanceNightNearHeightRange_IsSet ? _recordData.Slice(_FogDistanceNightNearHeightRangeLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayHighDensityScale
         private int _FogDistanceDayHighDensityScaleLocation => _FNAMLocation!.Value.Min + 0x30;
-        private bool _FogDistanceDayHighDensityScale_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break0);
+        private bool _FogDistanceDayHighDensityScale_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayHighDensityScale => _FogDistanceDayHighDensityScale_IsSet ? _recordData.Slice(_FogDistanceDayHighDensityScaleLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightHighDensityScale
         private int _FogDistanceNightHighDensityScaleLocation => _FNAMLocation!.Value.Min + 0x34;
-        private bool _FogDistanceNightHighDensityScale_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break0);
+        private bool _FogDistanceNightHighDensityScale_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightHighDensityScale => _FogDistanceNightHighDensityScale_IsSet ? _recordData.Slice(_FogDistanceNightHighDensityScaleLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayFarHeightMid
         private int _FogDistanceDayFarHeightMidLocation => _FNAMLocation!.Value.Min + 0x38;
-        private bool _FogDistanceDayFarHeightMid_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break1);
+        private bool _FogDistanceDayFarHeightMid_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayFarHeightMid => _FogDistanceDayFarHeightMid_IsSet ? _recordData.Slice(_FogDistanceDayFarHeightMidLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayFarHeightRange
         private int _FogDistanceDayFarHeightRangeLocation => _FNAMLocation!.Value.Min + 0x3C;
-        private bool _FogDistanceDayFarHeightRange_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break1);
+        private bool _FogDistanceDayFarHeightRange_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceDayFarHeightRange => _FogDistanceDayFarHeightRange_IsSet ? _recordData.Slice(_FogDistanceDayFarHeightRangeLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightFarHeightMid
         private int _FogDistanceNightFarHeightMidLocation => _FNAMLocation!.Value.Min + 0x40;
-        private bool _FogDistanceNightFarHeightMid_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break1);
+        private bool _FogDistanceNightFarHeightMid_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightFarHeightMid => _FogDistanceNightFarHeightMid_IsSet ? _recordData.Slice(_FogDistanceNightFarHeightMidLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightFarHeightRange
         private int _FogDistanceNightFarHeightRangeLocation => _FNAMLocation!.Value.Min + 0x44;
-        private bool _FogDistanceNightFarHeightRange_IsSet => _FNAMLocation.HasValue && !FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Break1);
+        private bool _FogDistanceNightFarHeightRange_IsSet => _FNAMLocation.HasValue;
         public Single FogDistanceNightFarHeightRange => _FogDistanceNightFarHeightRange_IsSet ? _recordData.Slice(_FogDistanceNightFarHeightRangeLocation, 4).Float() : default;
         #endregion
         private RangeInt32? _DATALocation;
-        public Weather.DATADataType DATADataTypeState { get; private set; }
         #region WindSpeed
         private int _WindSpeedLocation => _DATALocation!.Value.Min;
         private bool _WindSpeed_IsSet => _DATALocation.HasValue;
@@ -8225,7 +7816,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region WindTurbulance
         private int _WindTurbulanceLocation => _DATALocation!.Value.Min + 0x13;
-        private bool _WindTurbulance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Weather.DATADataType.Break0);
+        private bool _WindTurbulance_IsSet => _DATALocation.HasValue;
         public Percent WindTurbulance => _WindTurbulance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_WindTurbulanceLocation, 1), FloatIntegerType.Byte) : default;
         #endregion
         #region DisabledCloudLayers
@@ -8236,7 +7827,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = Array.Empty<IFormLinkGetter<IStaticGetter>>();
         private RangeInt32? _IMSPLocation;
-        public Weather.IMSPDataType IMSPDataTypeState { get; private set; }
         #region ImageSpaceSunrise
         private int _ImageSpaceSunriseLocation => _IMSPLocation!.Value.Min;
         private bool _ImageSpaceSunrise_IsSet => _IMSPLocation.HasValue;
@@ -8259,22 +7849,22 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ImageSpaceEarlySunrise
         private int _ImageSpaceEarlySunriseLocation => _IMSPLocation!.Value.Min + 0x10;
-        private bool _ImageSpaceEarlySunrise_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
+        private bool _ImageSpaceEarlySunrise_IsSet => _IMSPLocation.HasValue;
         public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunrise => _ImageSpaceEarlySunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceEarlySunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceLateSunrise
         private int _ImageSpaceLateSunriseLocation => _IMSPLocation!.Value.Min + 0x14;
-        private bool _ImageSpaceLateSunrise_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
+        private bool _ImageSpaceLateSunrise_IsSet => _IMSPLocation.HasValue;
         public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunrise => _ImageSpaceLateSunrise_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceLateSunriseLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceEarlySunset
         private int _ImageSpaceEarlySunsetLocation => _IMSPLocation!.Value.Min + 0x18;
-        private bool _ImageSpaceEarlySunset_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
+        private bool _ImageSpaceEarlySunset_IsSet => _IMSPLocation.HasValue;
         public IFormLinkGetter<IImageSpaceGetter> ImageSpaceEarlySunset => _ImageSpaceEarlySunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceEarlySunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region ImageSpaceLateSunset
         private int _ImageSpaceLateSunsetLocation => _IMSPLocation!.Value.Min + 0x1C;
-        private bool _ImageSpaceLateSunset_IsSet => _IMSPLocation.HasValue && !IMSPDataTypeState.HasFlag(Weather.IMSPDataType.Break0);
+        private bool _ImageSpaceLateSunset_IsSet => _IMSPLocation.HasValue;
         public IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset => _ImageSpaceLateSunset_IsSet ? new FormLink<IImageSpaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceLateSunsetLocation, 0x4)))) : FormLink<IImageSpaceGetter>.Null;
         #endregion
         #region HNAM
@@ -8449,15 +8039,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM0:
                 {
                     _NAM0Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x120)
-                    {
-                        this.NAM0DataTypeState |= Weather.NAM0DataType.Break0;
-                    }
-                    if (subLen <= 0x220)
-                    {
-                        this.NAM0DataTypeState |= Weather.NAM0DataType.Break1;
-                    }
                     return (int)Weather_FieldIndex.FogFarHigh;
                 }
                 case RecordTypeInts.NAM4:
@@ -8468,25 +8049,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x20)
-                    {
-                        this.FNAMDataTypeState |= Weather.FNAMDataType.Break0;
-                    }
-                    if (subLen <= 0x38)
-                    {
-                        this.FNAMDataTypeState |= Weather.FNAMDataType.Break1;
-                    }
                     return (int)Weather_FieldIndex.FogDistanceNightFarHeightRange;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x13)
-                    {
-                        this.DATADataTypeState |= Weather.DATADataType.Break0;
-                    }
                     return (int)Weather_FieldIndex.WindTurbulance;
                 }
                 case RecordTypeInts.NAM1:
@@ -8513,11 +8080,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.IMSP:
                 {
                     _IMSPLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x10)
-                    {
-                        this.IMSPDataTypeState |= Weather.IMSPDataType.Break0;
-                    }
                     return (int)Weather_FieldIndex.ImageSpaceLateSunset;
                 }
                 case RecordTypeInts.HNAM:
