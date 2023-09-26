@@ -8,8 +8,6 @@
       <Color name="DirectionalYMinus" binaryType="Alpha" />
       <Color name="DirectionalZPlus" binaryType="Alpha" />
       <Color name="DirectionalZMinus" binaryType="Alpha" />
-<!--      <Color name="Specular" binaryType="Alpha" />-->
-<!--      <Float name="Scale" default="1f" />-->
     </Fields>
   </Object>
 </Loqui>
