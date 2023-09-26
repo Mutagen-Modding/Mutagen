@@ -56,6 +56,7 @@ public partial class RecordTypes
     public static readonly RecordType CHAL = new(0x4C414843);
     public static readonly RecordType CHGL = new(0x4C474843);
     public static readonly RecordType CLAS = new(0x53414C43);
+    public static readonly RecordType CLDC = new(0x43444C43);
     public static readonly RecordType CLDF = new(0x46444C43);
     public static readonly RecordType CLFM = new(0x4D464C43);
     public static readonly RecordType CLMT = new(0x544D4C43);
@@ -71,6 +72,7 @@ public partial class RecordTypes
     public static readonly RecordType CRVA = new(0x41565243);
     public static readonly RecordType CSTY = new(0x59545343);
     public static readonly RecordType CUR3 = new(0x33525543);
+    public static readonly RecordType DALC = new(0x434C4144);
     public static readonly RecordType DAT2 = new(0x32544144);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DEBR = new(0x52424544);
@@ -139,6 +141,7 @@ public partial class RecordTypes
     public static readonly RecordType IDLM = new(0x4D4C4449);
     public static readonly RecordType IMAD = new(0x44414D49);
     public static readonly RecordType IMGS = new(0x53474D49);
+    public static readonly RecordType IMSP = new(0x50534D49);
     public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType INCC = new(0x43434E49);
     public static readonly RecordType INDX = new(0x58444E49);
@@ -149,6 +152,7 @@ public partial class RecordTypes
     public static readonly RecordType IPDS = new(0x53445049);
     public static readonly RecordType IRES = new(0x53455249);
     public static readonly RecordType ITMC = new(0x434D5449);
+    public static readonly RecordType JNAM = new(0x4D414E4A);
     public static readonly RecordType KEYM = new(0x4D59454B);
     public static readonly RecordType KNAM = new(0x4D414E4B);
     public static readonly RecordType KSIZ = new(0x5A49534B);

@@ -91,6 +91,10 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
+    <None Update="Records\Common Subrecords\AmbientColors.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldAnimationTextAssetType.cs" />
@@ -251,6 +255,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Weapon_Generated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherAmbientColorSet.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ModStats_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
@@ -989,6 +996,76 @@
     </Compile>
     <Compile Include="Records\Major Records\EchoMarker_Generated.cs">
       <DependentUpon>SoundEchoMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AmbientColors_Generated.cs">
+      <DependentUpon>AmbientColors.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CloudLayer_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherColor_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherAlpha_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherMagic_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ConditionRecord_Generated.cs">
+      <DependentUpon>ConditionRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CloudLayer.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Weather.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DebrisModel_Generated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DebrisModel.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulationEntry_Generated.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulation.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SkinFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BodyPartInfoComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\EffectSequenceComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StaticPart_Generated.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StaticPlacement_Generated.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LegendaryMod_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LegendaryFilter_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SoundReference_Generated.cs">
+      <DependentUpon>SoundReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EchoMarker_Generated.cs">
+      <DependentUpon>SoundEchoMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherAmbientColorSet_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

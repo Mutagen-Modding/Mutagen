@@ -8,6 +8,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeyworded
 - KeywordFormComponent
 - Race
+- Weather
 ### IModeled
 - AnimatedObject
 - BodyData
@@ -109,3 +110,5 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IPositionRotation
 ### Weapon
 - IModeled
+### Weather
+- IKeyworded

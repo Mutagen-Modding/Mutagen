@@ -2,6 +2,167 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Weather" recordType="WTHR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <ByteArray name="LNAM" recordType="LNAM" unknown="true" />
+      <FormLink name="Precipitation" recordType="MNAM" refName="ShaderParticleGeometry" nullable="true" />
+      <FormLink name="CameraEffect" recordType="NNAM" refName="ArtObject" nullable="true" />
+      <ByteArray name="CLDC" recordType="CLDC" unknown="true" />
+      <Array name="Clouds" fixedSize="32" binary="Custom" recordType="RNAM" nullable="False">
+        <RefDirect refName="CloudLayer" />
+      </Array>
+      <CustomLogic name="CloudXSpeeds" recordType="QNAM" />
+      <CustomLogic name="CloudColors" recordType="PNAM" />
+      <CustomLogic name="CloudAlphas" recordType="JNAM" />
+      <Data recordType="NAM0">
+        <Fields>
+          <RefDirect name="SkyUpperColor" refName="WeatherColor" />
+          <RefDirect name="FogNearColor" refName="WeatherColor" />
+          <RefDirect name="UnknownColor" refName="WeatherColor" />
+          <RefDirect name="AmbientColor" refName="WeatherColor" />
+          <RefDirect name="SunlightColor" refName="WeatherColor" />
+          <RefDirect name="SunColor" refName="WeatherColor" />
+          <RefDirect name="StarsColor" refName="WeatherColor" />
+          <RefDirect name="SkyLowerColor" refName="WeatherColor" />
+          <RefDirect name="HorizonColor" refName="WeatherColor" />
+          <RefDirect name="EffectLightingColor" refName="WeatherColor" />
+          <RefDirect name="CloudLodDiffuseColor" refName="WeatherColor" />
+          <RefDirect name="CloudLodAmbientColor" refName="WeatherColor" />
+          <RefDirect name="FogFarColor" refName="WeatherColor" />
+          <RefDirect name="SkyStaticsColor" refName="WeatherColor" />
+          <RefDirect name="WaterMultiplierColor" refName="WeatherColor" />
+          <RefDirect name="SunGlareColor" refName="WeatherColor" />
+          <RefDirect name="MoonGlareColor" refName="WeatherColor" />
+          <RefDirect name="FogNearHigh" refName="WeatherColor" />
+          <RefDirect name="FogFarHigh" refName="WeatherColor" />
+        </Fields>
+      </Data>
+      <Array name="NAM4" recordType="NAM4" fixedSize="32" default="NAM4Default">
+        <Float />
+      </Array>
+      <Data recordType="FNAM">
+        <Fields>
+          <Float name="FogDistanceDayNear" />
+          <Float name="FogDistanceDayFar" />
+          <Float name="FogDistanceNightNear" />
+          <Float name="FogDistanceNightFar" />
+          <Float name="FogDistanceDayPower" />
+          <Float name="FogDistanceNightPower" />
+          <Float name="FogDistanceDayMax" />
+          <Float name="FogDistanceNightMax" />
+          <Float name="FogDistanceDayNearHeightMid" default="0f" />
+          <Float name="FogDistanceDayNearHeightRange" default="10000f" />
+          <Float name="FogDistanceNightNearHeightMid" default="0f" />
+          <Float name="FogDistanceNightNearHeightRange" default="10000f" />
+          <Float name="FogDistanceDayHighDensityScale" default="1f" />
+          <Float name="FogDistanceNightHighDensityScale" default="1f" />
+          <Float name="FogDistanceDayFarHeightMid" default="0f" />
+          <Float name="FogDistanceDayFarHeightRange" default="10000f" />
+          <Float name="FogDistanceNightFarHeightMid" default="0f" />
+          <Float name="FogDistanceNightFarHeightRange" default="10000f" />
+        </Fields>
+      </Data>
+      <Data>
+        <Fields>
+          <Percent name="WindSpeed" integerType="Byte" />
+          <UInt16 name="Unknown" />
+          <Float name="TransDelta" integerType="Byte" min="0" max="0.25" multiplier="4" />
+          <Percent name="SunGlare" integerType="Byte" />
+          <Percent name="SunDamage" integerType="Byte" />
+          <Percent name="PrecipitationBeginFadeIn" integerType="Byte" />
+          <Percent name="PrecipitationEndFadeOut" integerType="Byte" />
+          <Percent name="ThunderLightningBeginFadeIn" integerType="Byte" />
+          <Percent name="ThunderLightningEndFadeOut" integerType="Byte" />
+          <Percent name="ThunderLightningFrequency" integerType="Byte" />
+          <Enum name="Flags" enumName="Weather.Flag" byteLength="1" />
+          <Color name="LightningColor" binaryType="NoAlpha" />
+          <Percent name="VisualEffectBegin" integerType="Byte" />
+          <Percent name="VisualEffectEnd" integerType="Byte" />
+          <Float name="WindDirection" integerType="Byte" min="0" max="360" divisor="360" />
+          <Float name="WindDirectionRange" integerType="Byte" min="0" max="180" divisor="180" />
+          <Percent name="WindTurbulance" integerType="Byte" />
+        </Fields>
+      </Data>
+      <CustomLogic name="DisabledCloudLayers" recordType="NAM1" />
+      <List name="SkyStatics">
+        <FormLink refName="Static" recordType="TNAM" />
+      </List>
+      <Data recordType="IMSP">
+        <Fields>
+          <FormLink name="ImageSpaceSunrise" refName="ImageSpace" />
+          <FormLink name="ImageSpaceDay" refName="ImageSpace" />
+          <FormLink name="ImageSpaceSunset" refName="ImageSpace" />
+          <FormLink name="ImageSpaceNight" refName="ImageSpace" />
+          <FormLink name="ImageSpaceEarlySunrise" refName="ImageSpace" />
+          <FormLink name="ImageSpaceLateSunrise" refName="ImageSpace" />
+          <FormLink name="ImageSpaceEarlySunset" refName="ImageSpace" />
+          <FormLink name="ImageSpaceLateSunset" refName="ImageSpace" />
+        </Fields>
+      </Data>
+      <ByteArray name="HNAM" recordType="HNAM" unknown="true" />
+      <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" recordType="DALC" binary="Custom" />
+      <RefDirect name="Aurora" refName="Model" />
+      <FormLink name="SunGlareLensFlare" recordType="GNAM" refName="LensFlare" />
+      <RefDirect name="Magic" refName="WeatherMagic" />
+      <Float name="VolatilityMult" recordType="VNAM" />
+      <Float name="VisibilityMult" recordType="WNAM" />
+    </Fields>
+  </Object>
+  <Object name="CloudLayer" objType="Subrecord">
+    <Fields>
+      <Bool name="Enabled" nullable="True" binary="NoGeneration" />
+      <Float name="XSpeed" nullable="True" binary="NoGeneration" />
+      <Float name="YSpeed" nullable="True" binary="NoGeneration" />
+      <RefDirect name="Colors" refName="WeatherColor" nullable="True" binary="NoGeneration" />
+      <RefDirect name="Alphas" refName="WeatherAlpha" nullable="True" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="WeatherColor" objType="Subrecord">
+    <Fields>
+      <Color name="Sunrise" binaryType="Alpha" />
+      <Color name="Day" binaryType="Alpha" />
+      <Color name="Sunset" binaryType="Alpha" />
+      <Color name="Night" binaryType="Alpha" />
+      <Break />
+      <Color name="EarlySunrise" binaryType="Alpha" />
+      <Color name="LateSunrise" binaryType="Alpha" />
+      <Color name="EarlySunset" binaryType="Alpha" />
+      <Color name="LateSunset" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="WeatherAlpha" objType="Subrecord">
+    <Fields>
+      <Float name="Sunrise" default="1f" />
+      <Float name="Day" default="1f" />
+      <Float name="Sunset" default="1f" />
+      <Float name="Night" default="1f" />
+      <Float name="EarlySunrise" default="1f" />
+      <Float name="LateSunrise" default="1f" />
+      <Float name="EarlySunset" default="1f" />
+      <Float name="LateSunset" default="1f" />
+    </Fields>
+  </Object>
+  <Object name="WeatherAmbientColorSet" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Sunrise" refName="AmbientColors" binary="NoGeneration" />
+      <RefDirect name="Day" refName="AmbientColors" binary="NoGeneration" />
+      <RefDirect name="Sunset" refName="AmbientColors" binary="NoGeneration" />
+      <RefDirect name="Night" refName="AmbientColors" binary="NoGeneration" />
+      <RefDirect name="EarlySunrise" refName="AmbientColors" binary="NoGeneration" />
+      <RefDirect name="LateSunrise" refName="AmbientColors" binary="NoGeneration" />
+      <RefDirect name="EarlySunset" refName="AmbientColors" binary="NoGeneration" />
+      <RefDirect name="LateSunset" refName="AmbientColors" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="WeatherMagic" objType="Subrecord" recordType="UNAM">
+    <Fields>
+      <FormLink name="OnLightningStrikeSpell" refName="Spell" />
+      <Float name="OnLightningStrikeThreshold" />
+      <FormLink name="OnWeatherActivateSpell" refName="Spell" />
+      <Break />
+      <Float name="OnWeatherActivateThreshold" />
+      <UInt64 name="Unknown" />
     </Fields>
   </Object>
 </Loqui>
