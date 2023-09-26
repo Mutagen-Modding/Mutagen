@@ -17,22 +17,22 @@
       <Group name="AffinityEvents" refName="AffinityEvent" />
       <Group name="HeadParts" refName="HeadPart" />
       <Group name="Races" refName="Race" />
+      <Group name="SoundEchoMarkers" refName="SoundEchoMarker" />
       <Group name="AudioOcclusionPrimitives" refName="AudioOcclusionPrimitive" />
-      <Group name="Planets" refName="Planet" />
-      <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
-      <Group name="Debris" refName="Debris" />
-      <Group name="ActorValueModulations" refName="ActorValueModulation" />
-      <Group name="BiomeSwaps" refName="BiomeSwap" />
-      <Group name="Outfits" refName="Outfit" />
       <Group name="LandscapeTextures" refName="LandscapeTexture" />
-      <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="StaticCollections" refName="StaticCollection" />
+      <Group name="BendableSplines" refName="BendableSpline" />
+      <Group name="AnimatedObjects" refName="AnimatedObject" />
+      <Group name="Debris" refName="Debris" />
+      <Group name="DefaultObjects" refName="DefaultObject" />
+      <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />
       <Group name="AttractionRules" refName="AttractionRule" />
-      <Group name="BendableSplines" refName="BendableSpline" />
-      <Group name="DefaultObjects" refName="DefaultObject" />
+      <Group name="BiomeSwaps" refName="BiomeSwap" />
+      <Group name="Planets" refName="Planet" />
+      <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
-      <Group name="SoundEchoMarkers" refName="SoundEchoMarker" />
+      <Group name="ActorValueModulations" refName="ActorValueModulation" />
     </Fields>
   </Object>
 </Loqui>
