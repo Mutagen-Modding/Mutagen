@@ -11,6 +11,7 @@ public class MutagenFieldData
     public readonly TypeGeneration SourceTypeGeneration;
     public TypeGeneration Parent;
     public RecordType? MarkerType { get; set; }
+    public RecordType? EndMarkerType { get; set; }
     public RecordType? RecordType { get; set; }
     public RecordType? OverflowRecordType { get; set; }
     public RecordCollection TriggeringRecordTypes { get; } = new();

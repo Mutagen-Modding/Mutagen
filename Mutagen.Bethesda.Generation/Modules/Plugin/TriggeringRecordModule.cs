@@ -37,6 +37,11 @@ public class TriggeringRecordModule : GenerationModule
         {
             data.MarkerType = new RecordType(markerAttr);
         }
+        var endMarkerAttr = node.GetAttribute("endMarkerType");
+        if (endMarkerAttr != null)
+        {
+            data.EndMarkerType = new RecordType(endMarkerAttr);
+        }
         if (obj.IsTopLevelGroup() && (field.Name?.Equals("Items") ?? false))
         {
             data.TriggeringRecordAccessors.Add($"Group<T>.T_RecordType");
@@ -166,6 +171,10 @@ public class TriggeringRecordModule : GenerationModule
             if (fieldData.MarkerType.HasValue)
             {
                 recordTypes.Add(fieldData.MarkerType.Value);
+            }
+            if (fieldData.EndMarkerType.HasValue)
+            {
+                recordTypes.Add(fieldData.EndMarkerType.Value);
             }
             if (fieldData.OverflowRecordType.HasValue)
             {

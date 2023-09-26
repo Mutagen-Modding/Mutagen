@@ -141,6 +141,10 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         }
                     }
                 }
+                if (data.EndMarkerType.HasValue)
+                {
+                    sb.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }}");
+                }
             }
         }
     }
@@ -224,6 +228,11 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         args.Add($"translationParams: translationParams.DoNotShortCircuit()");
                     }
                 }
+            }
+
+            if (data.EndMarkerType.HasValue)
+            {
+                sb.AppendLine($"{frameAccessor}.TryReadSubrecord(RecordTypes.{data.EndMarkerType.Value}, out _);");
             }
         }
         else
@@ -638,6 +647,10 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 args.Add($"translationParams: {converterAccessor}.DoNotShortCircuit()");
             }
+        }
+        if (data.EndMarkerType.HasValue)
+        {
+            sb.AppendLine($"stream.TryReadSubrecord(RecordTypes.{data.EndMarkerType.Value}, out _); // Skip marker");
         }
     }
 

@@ -287,6 +287,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="endMarkerType" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the discarded marker type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="binary" type="MutagenBinaryType" use="optional" >
             <xs:annotation>
               <xs:documentation>
@@ -562,8 +569,8 @@
         <xs:element name="FormLink" type="FormLink"/>
         <xs:element name="FormID" type="FormID"/>
         <xs:element name="FormKey" type="FormKey"/>
-		<xs:element name="ModKey" type="ModKey"/>
-		<xs:element name="AssetLink" type="AssetLink"/>
+        <xs:element name="ModKey" type="ModKey"/>
+        <xs:element name="AssetLink" type="AssetLink"/>
         <xs:element name="RecordType" type="RecordType"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="Zero" type="ZeroType"/>
