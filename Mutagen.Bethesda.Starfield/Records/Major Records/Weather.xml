@@ -108,7 +108,8 @@
       </Data>
       <ByteArray name="HNAM" recordType="HNAM" unknown="true" />
       <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" recordType="DALC" binary="Custom" />
-      <RefDirect name="Aurora" refName="Model" />
+      <AssetLink name="Aurora" recordType="MODL" nullable="true" assetType="StarfieldModel" />
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
       <FormLink name="SunGlareLensFlare" recordType="GNAM" refName="LensFlare" />
       <RefDirect name="Magic" refName="WeatherMagic" />
       <Float name="VolatilityMult" recordType="VNAM" />
