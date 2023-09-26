@@ -2,6 +2,24 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SoundEchoMarker" recordType="SECH" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <String name="Description" recordType="NNAM" />
+      <RefList name="Markers" refName="EchoMarker" itemMarkerType="ECHO" itemEndMarkerType="ECHE" />
+      <RefDirect name="DefaultStartMarker" refName="EchoMarker" markerType="ECHD" endMarkerType="ECHE" />
+    </Fields>
+  </Object>
+  <Object name="EchoMarker" objType="Subrecord" >
+    <Fields>
+      <Guid name="ECTE" recordType="ECTE" unknown="true" />
+      <RefDirect name="Sound" refName="SoundReference" recordType="ECSH" />
+      <ByteArray name="ANAM" recordType="ANAM" unknown="true" />
+      <Float name="BNAM" recordType="BNAM" unknown="true" />
+      <ByteArray name="CNAM" recordType="CNAM" unknown="true" />
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+      <ByteArray name="ENAM" recordType="ENAM" unknown="true" />
+      <String name="Description" recordType="NNAM" />
     </Fields>
   </Object>
 </Loqui>

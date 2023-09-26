@@ -33,6 +33,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - AudioOcclusionPrimitive
 - BendableSpline
 - LegendaryItem
+- SoundEchoMarker
 - StaticCollection
 - TextureSet
 ### IPositionRotation
@@ -80,6 +81,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Race
 - IKeyworded
 - INamed
+### SoundEchoMarker
+- IObjectBounded
 ### StaticCollection
 - IModeled
 - INamed

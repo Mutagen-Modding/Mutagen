@@ -920,27 +920,27 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
-        /// Scope a load order query to ConditionForm
+        /// Scope a load order query to ConditionRecord
         /// </summary>
         /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ConditionForm</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionForm, IConditionFormGetter> ConditionForm(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        /// <returns>A typed object to do further queries on ConditionRecord</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter> ConditionRecord(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionForm, IConditionFormGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IConditionFormGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IConditionForm, IConditionFormGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IConditionRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
-        /// Scope a load order query to ConditionForm
+        /// Scope a load order query to ConditionRecord
         /// </summary>
         /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ConditionForm</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionForm, IConditionFormGetter> ConditionForm(this IEnumerable<IStarfieldModGetter> mods)
+        /// <returns>A typed object to do further queries on ConditionRecord</returns>
+        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter> ConditionRecord(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionForm, IConditionFormGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IConditionFormGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IConditionForm, IConditionFormGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IConditionRecordGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>
@@ -3516,9 +3516,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SoundEchoMarker</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter> SoundEchoMarker(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter> SoundEchoMarker(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundEchoMarkerGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3528,9 +3528,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on SoundEchoMarker</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter> SoundEchoMarker(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter> SoundEchoMarker(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ISoundEchoMarkerGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ISoundEchoMarker, ISoundEchoMarkerGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

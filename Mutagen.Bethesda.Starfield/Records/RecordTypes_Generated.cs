@@ -85,6 +85,11 @@ public partial class RecordTypes
     public static readonly RecordType DOBJ = new(0x4A424F44);
     public static readonly RecordType DODT = new(0x54444F44);
     public static readonly RecordType DOOR = new(0x524F4F44);
+    public static readonly RecordType ECHD = new(0x44484345);
+    public static readonly RecordType ECHE = new(0x45484345);
+    public static readonly RecordType ECHO = new(0x4F484345);
+    public static readonly RecordType ECSH = new(0x48534345);
+    public static readonly RecordType ECTE = new(0x45544345);
     public static readonly RecordType EDID = new(0x44494445);
     public static readonly RecordType EFSH = new(0x48534645);
     public static readonly RecordType EFSQ = new(0x51534645);

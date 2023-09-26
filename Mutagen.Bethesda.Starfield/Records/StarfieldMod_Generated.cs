@@ -90,6 +90,7 @@ namespace Mutagen.Bethesda.Starfield
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
+            _SoundEchoMarkers_Object = new StarfieldGroup<SoundEchoMarker>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -305,6 +306,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ILegendaryItemGetter> IStarfieldModGetter.LegendaryItems => _LegendaryItems_Object;
         #endregion
+        #region SoundEchoMarkers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<SoundEchoMarker> _SoundEchoMarkers_Object;
+        public StarfieldGroup<SoundEchoMarker> SoundEchoMarkers => _SoundEchoMarkers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ISoundEchoMarkerGetter> IStarfieldModGetter.SoundEchoMarkers => _SoundEchoMarkers_Object;
+        #endregion
 
         #region To String
 
@@ -374,6 +382,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.SoundEchoMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -406,7 +415,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AttractionRules,
                 TItem BendableSplines,
                 TItem DefaultObjects,
-                TItem LegendaryItems)
+                TItem LegendaryItems,
+                TItem SoundEchoMarkers)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -438,6 +448,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LegendaryItems, new StarfieldGroup.Mask<TItem>(LegendaryItems));
+                this.SoundEchoMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SoundEchoMarkers, new StarfieldGroup.Mask<TItem>(SoundEchoMarkers));
             }
 
             #pragma warning disable CS8618
@@ -479,6 +490,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LegendaryItems { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SoundEchoMarkers { get; set; }
             #endregion
 
             #region Equals
@@ -521,6 +533,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
                 if (!object.Equals(this.LegendaryItems, rhs.LegendaryItems)) return false;
+                if (!object.Equals(this.SoundEchoMarkers, rhs.SoundEchoMarkers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -556,6 +569,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.BendableSplines);
                 hash.Add(this.DefaultObjects);
                 hash.Add(this.LegendaryItems);
+                hash.Add(this.SoundEchoMarkers);
                 return hash.ToHashCode();
             }
 
@@ -714,6 +728,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.LegendaryItems.Overall)) return false;
                     if (this.LegendaryItems.Specific != null && !this.LegendaryItems.Specific.All(eval)) return false;
                 }
+                if (SoundEchoMarkers != null)
+                {
+                    if (!eval(this.SoundEchoMarkers.Overall)) return false;
+                    if (this.SoundEchoMarkers.Specific != null && !this.SoundEchoMarkers.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -871,6 +890,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.LegendaryItems.Overall)) return true;
                     if (this.LegendaryItems.Specific != null && this.LegendaryItems.Specific.Any(eval)) return true;
                 }
+                if (SoundEchoMarkers != null)
+                {
+                    if (eval(this.SoundEchoMarkers.Overall)) return true;
+                    if (this.SoundEchoMarkers.Specific != null && this.SoundEchoMarkers.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -915,6 +939,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
                 obj.LegendaryItems = this.LegendaryItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LegendaryItems.Overall), this.LegendaryItems.Specific?.Translate(eval));
+                obj.SoundEchoMarkers = this.SoundEchoMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SoundEchoMarkers.Overall), this.SoundEchoMarkers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1053,6 +1078,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         LegendaryItems?.Print(sb);
                     }
+                    if (printMask?.SoundEchoMarkers?.Overall ?? true)
+                    {
+                        SoundEchoMarkers?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1107,6 +1136,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>? LegendaryItems;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundEchoMarker.ErrorMask>?>? SoundEchoMarkers;
             #endregion
 
             #region IErrorMask
@@ -1175,6 +1205,8 @@ namespace Mutagen.Bethesda.Starfield
                         return DefaultObjects;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         return LegendaryItems;
+                    case StarfieldMod_FieldIndex.SoundEchoMarkers:
+                        return SoundEchoMarkers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1274,6 +1306,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         this.LegendaryItems = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.SoundEchoMarkers:
+                        this.SoundEchoMarkers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundEchoMarker.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1375,6 +1410,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.LegendaryItems:
                         this.LegendaryItems = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.SoundEchoMarkers:
+                        this.SoundEchoMarkers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundEchoMarker.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1413,6 +1451,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (BendableSplines != null) return true;
                 if (DefaultObjects != null) return true;
                 if (LegendaryItems != null) return true;
+                if (SoundEchoMarkers != null) return true;
                 return false;
             }
             #endregion
@@ -1468,6 +1507,7 @@ namespace Mutagen.Bethesda.Starfield
                 BendableSplines?.Print(sb);
                 DefaultObjects?.Print(sb);
                 LegendaryItems?.Print(sb);
+                SoundEchoMarkers?.Print(sb);
             }
             #endregion
 
@@ -1506,6 +1546,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
                 ret.LegendaryItems = this.LegendaryItems.Combine(rhs.LegendaryItems, (l, r) => l.Combine(r));
+                ret.SoundEchoMarkers = this.SoundEchoMarkers.Combine(rhs.SoundEchoMarkers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1559,6 +1600,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
             public StarfieldGroup.TranslationMask<LegendaryItem.TranslationMask>? LegendaryItems;
+            public StarfieldGroup.TranslationMask<SoundEchoMarker.TranslationMask>? SoundEchoMarkers;
             #endregion
 
             #region Ctors
@@ -1613,6 +1655,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
                 ret.Add((LegendaryItems != null ? LegendaryItems.OnOverall : DefaultOn, LegendaryItems?.GetCrystal()));
+                ret.Add((SoundEchoMarkers != null ? SoundEchoMarkers.OnOverall : DefaultOn, SoundEchoMarkers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1685,6 +1728,7 @@ namespace Mutagen.Bethesda.Starfield
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
+            _SoundEchoMarkers_Object = new StarfieldGroup<SoundEchoMarker>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1807,6 +1851,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.LegendaryItems.RecordCache.Set(rhsMod.LegendaryItems.RecordCache.Items);
             }
+            if (mask?.SoundEchoMarkers ?? true)
+            {
+                this.SoundEchoMarkers.RecordCache.Set(rhsMod.SoundEchoMarkers.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -1846,6 +1894,7 @@ namespace Mutagen.Bethesda.Starfield
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += SoundEchoMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2131,6 +2180,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
         new StarfieldGroup<LegendaryItem> LegendaryItems { get; }
+        new StarfieldGroup<SoundEchoMarker> SoundEchoMarkers { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -2180,6 +2230,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
         IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems { get; }
+        IStarfieldGroupGetter<ISoundEchoMarkerGetter> SoundEchoMarkers { get; }
 
     }
 
@@ -2780,6 +2831,7 @@ namespace Mutagen.Bethesda.Starfield
         BendableSplines = 27,
         DefaultObjects = 28,
         LegendaryItems = 29,
+        SoundEchoMarkers = 30,
     }
     #endregion
 
@@ -2790,9 +2842,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 30;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 30;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2888,6 +2940,7 @@ namespace Mutagen.Bethesda.Starfield
             item.BendableSplines.Clear();
             item.DefaultObjects.Clear();
             item.LegendaryItems.Clear();
+            item.SoundEchoMarkers.Clear();
         }
         
         #region Mutagen
@@ -2912,6 +2965,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.BendableSplines.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
             obj.LegendaryItems.RemapLinks(mapping);
+            obj.SoundEchoMarkers.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -2975,6 +3029,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.BendableSplines.Remove(keys);
             obj.DefaultObjects.Remove(keys);
             obj.LegendaryItems.Remove(keys);
+            obj.SoundEchoMarkers.Remove(keys);
         }
         
         public void Remove(
@@ -3246,6 +3301,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "SoundEchoMarker":
+                case "ISoundEchoMarkerGetter":
+                case "ISoundEchoMarker":
+                case "ISoundEchoMarkerInternal":
+                    obj.SoundEchoMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -3492,6 +3555,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
             ret.LegendaryItems = MaskItemExt.Factory(item.LegendaryItems.GetEqualsMask(rhs.LegendaryItems, include), include);
+            ret.SoundEchoMarkers = MaskItemExt.Factory(item.SoundEchoMarkers.GetEqualsMask(rhs.SoundEchoMarkers, include), include);
         }
         
         public string Print(
@@ -3655,6 +3719,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.LegendaryItems?.Overall ?? true)
             {
                 item.LegendaryItems?.Print(sb, "LegendaryItems");
+            }
+            if (printMask?.SoundEchoMarkers?.Overall ?? true)
+            {
+                item.SoundEchoMarkers?.Print(sb, "SoundEchoMarkers");
             }
         }
         
@@ -3905,6 +3973,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isLegendaryItemsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SoundEchoMarkers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SoundEchoMarkers, rhs.SoundEchoMarkers, out var lhsSoundEchoMarkers, out var rhsSoundEchoMarkers, out var isSoundEchoMarkersEqual))
+                {
+                    if (!object.Equals(lhsSoundEchoMarkers, rhsSoundEchoMarkers)) return false;
+                }
+                else if (!isSoundEchoMarkersEqual) return false;
+            }
             return true;
         }
         
@@ -3941,6 +4017,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.BendableSplines);
             hash.Add(item.DefaultObjects);
             hash.Add(item.LegendaryItems);
+            hash.Add(item.SoundEchoMarkers);
             return hash.ToHashCode();
         }
         
@@ -4104,6 +4181,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ILegendaryItem":
                 case "ILegendaryItemInternal":
                     return obj.LegendaryItems;
+                case "SoundEchoMarker":
+                case "ISoundEchoMarkerGetter":
+                case "ISoundEchoMarker":
+                case "ISoundEchoMarkerInternal":
+                    return obj.SoundEchoMarkers;
                 default:
                     return null;
             }
@@ -4129,7 +4211,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[29];
+            Stream[] outputStreams = new Stream[30];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4160,6 +4242,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.BendableSplines, 26, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 27, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SoundEchoMarkers, 29, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4292,6 +4375,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.SoundEchoMarkers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -4410,6 +4497,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.LegendaryItems.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundEchoMarkers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4709,6 +4800,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "SoundEchoMarker":
+                case "ISoundEchoMarkerGetter":
+                case "ISoundEchoMarker":
+                case "ISoundEchoMarkerInternal":
+                    foreach (var item in obj.SoundEchoMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
                     {
@@ -4991,6 +5091,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.LegendaryItems,
                 groupGetter: (m) => m.LegendaryItems))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SoundEchoMarker, ISoundEchoMarkerGetter>(
+                srcGroup: obj.SoundEchoMarkers,
+                type: typeof(ISoundEchoMarkerGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SoundEchoMarkers,
+                groupGetter: (m) => m.SoundEchoMarkers))
             {
                 yield return item;
             }
@@ -5427,6 +5536,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.LegendaryItems,
                         groupGetter: (m) => m.LegendaryItems))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoundEchoMarker":
+                case "ISoundEchoMarkerGetter":
+                case "ISoundEchoMarker":
+                case "ISoundEchoMarkerInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, SoundEchoMarker, ISoundEchoMarkerGetter>(
+                        srcGroup: obj.SoundEchoMarkers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SoundEchoMarkers,
+                        groupGetter: (m) => m.SoundEchoMarkers))
                     {
                         yield return item;
                     }
@@ -6169,6 +6292,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.SoundEchoMarkers) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.SoundEchoMarkers);
+                try
+                {
+                    item.SoundEchoMarkers.DeepCopyIn(
+                        rhs: rhs.SoundEchoMarkers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.SoundEchoMarkers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -6288,6 +6431,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool BendableSplines;
         public bool DefaultObjects;
         public bool LegendaryItems;
+        public bool SoundEchoMarkers;
         public GroupMask()
         {
         }
@@ -6322,6 +6466,7 @@ namespace Mutagen.Bethesda.Starfield
             BendableSplines = defaultValue;
             DefaultObjects = defaultValue;
             LegendaryItems = defaultValue;
+            SoundEchoMarkers = defaultValue;
         }
     }
 
@@ -6668,6 +6813,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)LegendaryItemsItem).BinaryWriteTranslator).Write<ILegendaryItemGetter>(
                         item: LegendaryItemsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SoundEchoMarkers ?? true)
+            {
+                var SoundEchoMarkersItem = item.SoundEchoMarkers;
+                if (SoundEchoMarkersItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SoundEchoMarkersItem).BinaryWriteTranslator).Write<ISoundEchoMarkerGetter>(
+                        item: SoundEchoMarkersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7138,6 +7294,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.LegendaryItems;
                 }
+                case RecordTypeInts.SECH:
+                {
+                    if (importMask?.SoundEchoMarkers ?? true)
+                    {
+                        item.SoundEchoMarkers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.SoundEchoMarkers;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -7453,6 +7623,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ILegendaryItemGetter>? _LegendaryItems => _LegendaryItemsLocations != null ? StarfieldGroupBinaryOverlay<ILegendaryItemGetter>.StarfieldGroupFactory(_stream, _LegendaryItemsLocations, _package) : default;
         public IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems => _LegendaryItems ?? new StarfieldGroup<LegendaryItem>(this);
         #endregion
+        #region SoundEchoMarkers
+        private List<RangeInt64>? _SoundEchoMarkersLocations;
+        private IStarfieldGroupGetter<ISoundEchoMarkerGetter>? _SoundEchoMarkers => _SoundEchoMarkersLocations != null ? StarfieldGroupBinaryOverlay<ISoundEchoMarkerGetter>.StarfieldGroupFactory(_stream, _SoundEchoMarkersLocations, _package) : default;
+        public IStarfieldGroupGetter<ISoundEchoMarkerGetter> SoundEchoMarkers => _SoundEchoMarkers ?? new StarfieldGroup<SoundEchoMarker>(this);
+        #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -7714,6 +7889,12 @@ namespace Mutagen.Bethesda.Starfield
                     _LegendaryItemsLocations ??= new();
                     _LegendaryItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.LegendaryItems;
+                }
+                case RecordTypeInts.SECH:
+                {
+                    _SoundEchoMarkersLocations ??= new();
+                    _SoundEchoMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.SoundEchoMarkers;
                 }
                 default:
                     return default(int?);

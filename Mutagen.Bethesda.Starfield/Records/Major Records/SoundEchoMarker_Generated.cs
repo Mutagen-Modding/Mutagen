@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -53,6 +55,72 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ISoundEchoMarkerGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISoundEchoMarkerGetter.ODTY => this.ODTY;
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ISoundEchoMarkerGetter.XALG => this.XALG;
+        #endregion
+        #region Description
+        public String? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ISoundEchoMarkerGetter.Description => this.Description;
+        #endregion
+        #region Markers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<EchoMarker> _Markers = new ExtendedList<EchoMarker>();
+        public ExtendedList<EchoMarker> Markers
+        {
+            get => this._Markers;
+            init => this._Markers = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IEchoMarkerGetter> ISoundEchoMarkerGetter.Markers => _Markers;
+        #endregion
+
+        #endregion
+        #region DefaultStartMarker
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EchoMarker? _DefaultStartMarker;
+        public EchoMarker? DefaultStartMarker
+        {
+            get => _DefaultStartMarker;
+            set => _DefaultStartMarker = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEchoMarkerGetter? ISoundEchoMarkerGetter.DefaultStartMarker => this.DefaultStartMarker;
+        #endregion
 
         #region To String
 
@@ -78,6 +146,12 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.XALG = initialValue;
+                this.Description = initialValue;
+                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>());
+                this.DefaultStartMarker = new MaskItem<TItem, EchoMarker.Mask<TItem>?>(initialValue, new EchoMarker.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -87,7 +161,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem XALG,
+                TItem Description,
+                TItem Markers,
+                TItem DefaultStartMarker)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +177,12 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.XALG = XALG;
+                this.Description = Description;
+                this.Markers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>?>(Markers, Enumerable.Empty<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>());
+                this.DefaultStartMarker = new MaskItem<TItem, EchoMarker.Mask<TItem>?>(DefaultStartMarker, new EchoMarker.Mask<TItem>(DefaultStartMarker));
             }
 
             #pragma warning disable CS8618
@@ -105,6 +191,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public TItem XALG;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EchoMarker.Mask<TItem>?>>?>? Markers;
+            public MaskItem<TItem, EchoMarker.Mask<TItem>?>? DefaultStartMarker { get; set; }
             #endregion
 
             #region Equals
@@ -118,11 +213,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Markers, rhs.Markers)) return false;
+                if (!object.Equals(this.DefaultStartMarker, rhs.DefaultStartMarker)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.XALG);
+                hash.Add(this.Description);
+                hash.Add(this.Markers);
+                hash.Add(this.DefaultStartMarker);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +240,31 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (!eval(this.XALG)) return false;
+                if (!eval(this.Description)) return false;
+                if (this.Markers != null)
+                {
+                    if (!eval(this.Markers.Overall)) return false;
+                    if (this.Markers.Specific != null)
+                    {
+                        foreach (var item in this.Markers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (DefaultStartMarker != null)
+                {
+                    if (!eval(this.DefaultStartMarker.Overall)) return false;
+                    if (this.DefaultStartMarker.Specific != null && !this.DefaultStartMarker.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -141,6 +273,31 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (eval(this.XALG)) return true;
+                if (eval(this.Description)) return true;
+                if (this.Markers != null)
+                {
+                    if (eval(this.Markers.Overall)) return true;
+                    if (this.Markers.Specific != null)
+                    {
+                        foreach (var item in this.Markers.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (DefaultStartMarker != null)
+                {
+                    if (eval(this.DefaultStartMarker.Overall)) return true;
+                    if (this.DefaultStartMarker.Specific != null && this.DefaultStartMarker.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -156,6 +313,26 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.XALG = eval(this.XALG);
+                obj.Description = eval(this.Description);
+                if (Markers != null)
+                {
+                    obj.Markers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EchoMarker.Mask<R>?>>?>(eval(this.Markers.Overall), Enumerable.Empty<MaskItemIndexed<R, EchoMarker.Mask<R>?>>());
+                    if (Markers.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, EchoMarker.Mask<R>?>>();
+                        obj.Markers.Specific = l;
+                        foreach (var item in Markers.Specific)
+                        {
+                            MaskItemIndexed<R, EchoMarker.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, EchoMarker.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.DefaultStartMarker = this.DefaultStartMarker == null ? null : new MaskItem<R, EchoMarker.Mask<R>?>(eval(this.DefaultStartMarker.Overall), this.DefaultStartMarker.Specific?.Translate(eval));
             }
             #endregion
 
@@ -174,6 +351,45 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SoundEchoMarker.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if ((printMask?.Markers?.Overall ?? true)
+                        && Markers is {} MarkersItem)
+                    {
+                        sb.AppendLine("Markers =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MarkersItem.Overall);
+                            if (MarkersItem.Specific != null)
+                            {
+                                foreach (var subItem in MarkersItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.DefaultStartMarker?.Overall ?? true)
+                    {
+                        DefaultStartMarker?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -184,12 +400,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public Exception? XALG;
+            public Exception? Description;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EchoMarker.ErrorMask?>>?>? Markers;
+            public MaskItem<Exception?, EchoMarker.ErrorMask?>? DefaultStartMarker;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SoundEchoMarker_FieldIndex enu = (SoundEchoMarker_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundEchoMarker_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case SoundEchoMarker_FieldIndex.ODTY:
+                        return ODTY;
+                    case SoundEchoMarker_FieldIndex.XALG:
+                        return XALG;
+                    case SoundEchoMarker_FieldIndex.Description:
+                        return Description;
+                    case SoundEchoMarker_FieldIndex.Markers:
+                        return Markers;
+                    case SoundEchoMarker_FieldIndex.DefaultStartMarker:
+                        return DefaultStartMarker;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +437,24 @@ namespace Mutagen.Bethesda.Starfield
                 SoundEchoMarker_FieldIndex enu = (SoundEchoMarker_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundEchoMarker_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case SoundEchoMarker_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case SoundEchoMarker_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case SoundEchoMarker_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case SoundEchoMarker_FieldIndex.Markers:
+                        this.Markers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EchoMarker.ErrorMask?>>?>(ex, null);
+                        break;
+                    case SoundEchoMarker_FieldIndex.DefaultStartMarker:
+                        this.DefaultStartMarker = new MaskItem<Exception?, EchoMarker.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +466,24 @@ namespace Mutagen.Bethesda.Starfield
                 SoundEchoMarker_FieldIndex enu = (SoundEchoMarker_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoundEchoMarker_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case SoundEchoMarker_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case SoundEchoMarker_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case SoundEchoMarker_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case SoundEchoMarker_FieldIndex.Markers:
+                        this.Markers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EchoMarker.ErrorMask?>>?>)obj;
+                        break;
+                    case SoundEchoMarker_FieldIndex.DefaultStartMarker:
+                        this.DefaultStartMarker = (MaskItem<Exception?, EchoMarker.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +493,12 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (XALG != null) return true;
+                if (Description != null) return true;
+                if (Markers != null) return true;
+                if (DefaultStartMarker != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +525,35 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                if (Markers is {} MarkersItem)
+                {
+                    sb.AppendLine("Markers =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MarkersItem.Overall);
+                        if (MarkersItem.Specific != null)
+                        {
+                            foreach (var subItem in MarkersItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                DefaultStartMarker?.Print(sb);
             }
             #endregion
 
@@ -254,6 +562,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Markers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EchoMarker.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Markers?.Overall, rhs.Markers?.Overall), Noggog.ExceptionExt.Combine(this.Markers?.Specific, rhs.Markers?.Specific));
+                ret.DefaultStartMarker = this.DefaultStartMarker.Combine(rhs.DefaultStartMarker, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +589,38 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public bool XALG;
+            public bool Description;
+            public EchoMarker.TranslationMask? Markers;
+            public EchoMarker.TranslationMask? DefaultStartMarker;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.XALG = defaultOn;
+                this.Description = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((XALG, null));
+                ret.Add((Description, null));
+                ret.Add((Markers == null ? DefaultOn : !Markers.GetCrystal().CopyNothing, Markers?.GetCrystal()));
+                ret.Add((DefaultStartMarker != null ? DefaultStartMarker.OnOverall : DefaultOn, DefaultStartMarker?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +632,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SoundEchoMarker_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundEchoMarkerCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundEchoMarkerSetterCommon.Instance.RemapLinks(this, mapping);
         public SoundEchoMarker(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -417,10 +756,21 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ISoundEchoMarker :
+        IFormLinkContainer,
         ILoquiObjectSetter<ISoundEchoMarkerInternal>,
+        IObjectBounded,
         ISoundEchoMarkerGetter,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new String? Description { get; set; }
+        new ExtendedList<EchoMarker> Markers { get; }
+        new EchoMarker? DefaultStartMarker { get; set; }
     }
 
     public partial interface ISoundEchoMarkerInternal :
@@ -434,10 +784,23 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ISoundEchoMarkerGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISoundEchoMarkerGetter>,
-        IMapsToGetter<ISoundEchoMarkerGetter>
+        IMapsToGetter<ISoundEchoMarkerGetter>,
+        IObjectBoundedGetter
     {
         static new ILoquiRegistration StaticRegistration => SoundEchoMarker_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        String? Description { get; }
+        IReadOnlyList<IEchoMarkerGetter> Markers { get; }
+        IEchoMarkerGetter? DefaultStartMarker { get; }
 
     }
 
@@ -614,6 +977,12 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        ObjectBounds = 7,
+        ODTY = 8,
+        XALG = 9,
+        Description = 10,
+        Markers = 11,
+        DefaultStartMarker = 12,
     }
     #endregion
 
@@ -624,9 +993,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SoundEchoMarker.Mask<>);
 
@@ -656,8 +1025,24 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.SECH);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.SECH);
+            var all = RecordCollection.Factory(
+                RecordTypes.SECH,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.XALG,
+                RecordTypes.NNAM,
+                RecordTypes.ECHO,
+                RecordTypes.ECTE,
+                RecordTypes.ECSH,
+                RecordTypes.ANAM,
+                RecordTypes.BNAM,
+                RecordTypes.CNAM,
+                RecordTypes.DNAM,
+                RecordTypes.ENAM,
+                RecordTypes.ECHD,
+                RecordTypes.ECHE);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundEchoMarkerBinaryWriteTranslation);
         #region Interface
@@ -699,6 +1084,12 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISoundEchoMarkerInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.XALG = default;
+            item.Description = default;
+            item.Markers.Clear();
+            item.DefaultStartMarker = null;
             base.Clear(item);
         }
         
@@ -716,6 +1107,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISoundEchoMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Markers.RemapLinks(mapping);
+            obj.DefaultStartMarker?.RemapLinks(mapping);
         }
         
         #endregion
@@ -783,6 +1176,19 @@ namespace Mutagen.Bethesda.Starfield
             SoundEchoMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Markers = item.Markers.CollectionEqualsHelper(
+                rhs.Markers,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.DefaultStartMarker = EqualsMaskHelper.EqualsHelper(
+                item.DefaultStartMarker,
+                rhs.DefaultStartMarker,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -832,6 +1238,44 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.Markers?.Overall ?? true)
+            {
+                sb.AppendLine("Markers =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Markers)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.DefaultStartMarker?.Overall ?? true)
+                && item.DefaultStartMarker is {} DefaultStartMarkerItem)
+            {
+                DefaultStartMarkerItem?.Print(sb, "DefaultStartMarker");
+            }
         }
         
         public static SoundEchoMarker_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -882,6 +1326,38 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)SoundEchoMarker_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.Description) ?? true))
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.Markers) ?? true))
+            {
+                if (!lhs.Markers.SequenceEqual(rhs.Markers, (l, r) => ((EchoMarkerCommon)((IEchoMarkerGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SoundEchoMarker_FieldIndex.Markers)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.DefaultStartMarker) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DefaultStartMarker, rhs.DefaultStartMarker, out var lhsDefaultStartMarker, out var rhsDefaultStartMarker, out var isDefaultStartMarkerEqual))
+                {
+                    if (!((EchoMarkerCommon)((IEchoMarkerGetter)lhsDefaultStartMarker).CommonInstance()!).Equals(lhsDefaultStartMarker, rhsDefaultStartMarker, equalsMask?.GetSubCrystal((int)SoundEchoMarker_FieldIndex.DefaultStartMarker))) return false;
+                }
+                else if (!isDefaultStartMarkerEqual) return false;
+            }
             return true;
         }
         
@@ -910,6 +1386,24 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISoundEchoMarkerGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
+            hash.Add(item.Markers);
+            if (item.DefaultStartMarker is {} DefaultStartMarkeritem)
+            {
+                hash.Add(DefaultStartMarkeritem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -938,6 +1432,17 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Markers.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.DefaultStartMarker is {} DefaultStartMarkerItems)
+            {
+                foreach (var item in DefaultStartMarkerItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1013,6 +1518,97 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundEchoMarker_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)SoundEchoMarker_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.Markers) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundEchoMarker_FieldIndex.Markers);
+                try
+                {
+                    item.Markers.SetTo(
+                        rhs.Markers
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.DefaultStartMarker) ?? true))
+            {
+                errorMask?.PushIndex((int)SoundEchoMarker_FieldIndex.DefaultStartMarker);
+                try
+                {
+                    if(rhs.DefaultStartMarker is {} rhsDefaultStartMarker)
+                    {
+                        item.DefaultStartMarker = rhsDefaultStartMarker.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoundEchoMarker_FieldIndex.DefaultStartMarker));
+                    }
+                    else
+                    {
+                        item.DefaultStartMarker = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1161,6 +1757,57 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly SoundEchoMarkerBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ISoundEchoMarkerGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEchoMarkerGetter>.Instance.Write(
+                writer: writer,
+                items: item.Markers,
+                itemStartMarker: RecordTypes.ECHO,
+                itemEndMarker: RecordTypes.ECHE,
+                transl: (MutagenWriter subWriter, IEchoMarkerGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((EchoMarkerBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.DefaultStartMarker is {} DefaultStartMarkerItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.ECHD)) { }
+                ((EchoMarkerBinaryWriteTranslation)((IBinaryItem)DefaultStartMarkerItem).BinaryWriteTranslator).Write(
+                    item: DefaultStartMarkerItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.ECHE)) { }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             ISoundEchoMarkerGetter item,
@@ -1177,10 +1824,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1230,6 +1879,75 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly SoundEchoMarkerBinaryCreateTranslation Instance = new SoundEchoMarkerBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.SECH;
+        public static ParseResult FillBinaryRecordTypes(
+            ISoundEchoMarkerInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)SoundEchoMarker_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SoundEchoMarker_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SoundEchoMarker_FieldIndex.XALG;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)SoundEchoMarker_FieldIndex.Description;
+                }
+                case RecordTypeInts.ECHO:
+                {
+                    item.Markers.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EchoMarker>.Instance.Parse(
+                            reader: frame,
+                            itemStartMarker: RecordTypes.ECHO,
+                            itemEndMarker: RecordTypes.ECHE,
+                            translationParams: translationParams,
+                            transl: EchoMarker.TryCreateFromBinary));
+                    return (int)SoundEchoMarker_FieldIndex.Markers;
+                }
+                case RecordTypeInts.ECHD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.DefaultStartMarker = Mutagen.Bethesda.Starfield.EchoMarker.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    frame.TryReadSubrecord(RecordTypes.ECHE, out _);
+                    return (int)SoundEchoMarker_FieldIndex.DefaultStartMarker;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1262,6 +1980,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SoundEchoMarkerCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SoundEchoMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1276,6 +1995,25 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ISoundEchoMarker);
 
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        public IReadOnlyList<IEchoMarkerGetter> Markers { get; private set; } = Array.Empty<IEchoMarkerGetter>();
+        public IEchoMarkerGetter? DefaultStartMarker { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1333,6 +2071,69 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)SoundEchoMarker_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)SoundEchoMarker_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)SoundEchoMarker_FieldIndex.XALG;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)SoundEchoMarker_FieldIndex.Description;
+                }
+                case RecordTypeInts.ECHO:
+                {
+                    this.Markers = this.ParseRepeatedTypelessSubrecord<IEchoMarkerGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        itemStartMarker: RecordTypes.ECHO,
+                        itemEndMarker: RecordTypes.ECHE,
+                        factory: EchoMarkerBinaryOverlay.EchoMarkerFactory);
+                    return (int)SoundEchoMarker_FieldIndex.Markers;
+                }
+                case RecordTypeInts.ECHD:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.DefaultStartMarker = EchoMarkerBinaryOverlay.EchoMarkerFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    stream.TryReadSubrecord(RecordTypes.ECHE, out _); // Skip marker
+                    return (int)SoundEchoMarker_FieldIndex.DefaultStartMarker;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

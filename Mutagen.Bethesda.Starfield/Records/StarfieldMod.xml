@@ -32,6 +32,7 @@
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
+      <Group name="SoundEchoMarkers" refName="SoundEchoMarker" />
     </Fields>
   </Object>
 </Loqui>

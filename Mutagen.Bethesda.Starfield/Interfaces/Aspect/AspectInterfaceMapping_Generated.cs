@@ -106,6 +106,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AudioOcclusionPrimitive_Registration.Instance,
+                SoundEchoMarker_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TextureSet_Registration.Instance,
             });

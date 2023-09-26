@@ -83,6 +83,11 @@ public partial class RecordTypeInts
     public const int DOBJ = 0x4A424F44;
     public const int DODT = 0x54444F44;
     public const int DOOR = 0x524F4F44;
+    public const int ECHD = 0x44484345;
+    public const int ECHE = 0x45484345;
+    public const int ECHO = 0x4F484345;
+    public const int ECSH = 0x48534345;
+    public const int ECTE = 0x45544345;
     public const int EDID = 0x44494445;
     public const int EFSH = 0x48534645;
     public const int EFSQ = 0x51534645;

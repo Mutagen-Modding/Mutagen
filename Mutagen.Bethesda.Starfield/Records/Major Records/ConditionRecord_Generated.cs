@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ConditionForm :
+    public partial class ConditionRecord :
         StarfieldMajorRecord,
-        IConditionFormInternal,
-        IEquatable<IConditionFormGetter>,
-        ILoquiObjectSetter<ConditionForm>
+        IConditionRecordInternal,
+        IEquatable<IConditionRecordGetter>,
+        ILoquiObjectSetter<ConditionRecord>
     {
         #region Ctor
-        protected ConditionForm()
+        protected ConditionRecord()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionFormMixIn.Print(
+            ConditionRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ConditionForm.Mask<R>();
+                var ret = new ConditionRecord.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ConditionForm.Mask<bool>? printMask = null)
+            public string Print(ConditionRecord.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ConditionForm.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ConditionRecord.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ConditionForm.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ConditionRecord.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ConditionForm_FieldIndex enu = (ConditionForm_FieldIndex)index;
+                ConditionRecord_FieldIndex enu = (ConditionRecord_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                ConditionForm_FieldIndex enu = (ConditionForm_FieldIndex)index;
+                ConditionRecord_FieldIndex enu = (ConditionRecord_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                ConditionForm_FieldIndex enu = (ConditionForm_FieldIndex)index;
+                ConditionRecord_FieldIndex enu = (ConditionRecord_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,15 +294,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ConditionForm_Registration.TriggeringRecordType;
-        public ConditionForm(FormKey formKey)
+        public static readonly RecordType GrupRecordType = ConditionRecord_Registration.TriggeringRecordType;
+        public ConditionRecord(FormKey formKey)
         {
             this.FormKey = formKey;
             this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
             CustomCtor();
         }
 
-        private ConditionForm(
+        private ConditionRecord(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal ConditionForm(
+        internal ConditionRecord(
             FormKey formKey,
             ushort formVersion)
         {
@@ -320,12 +320,12 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public ConditionForm(IStarfieldMod mod)
+        public ConditionRecord(IStarfieldMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ConditionForm(IStarfieldMod mod, string editorID)
+        public ConditionRecord(IStarfieldMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -333,10 +333,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ConditionForm>.ToString(this);
+            return MajorRecordPrinter<ConditionRecord>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IConditionForm);
+        protected override Type LinkType => typeof(IConditionRecord);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -345,16 +345,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IConditionFormGetter rhs) return false;
-            return ((ConditionFormCommon)((IConditionFormGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IConditionRecordGetter rhs) return false;
+            return ((ConditionRecordCommon)((IConditionRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IConditionFormGetter? obj)
+        public bool Equals(IConditionRecordGetter? obj)
         {
-            return ((ConditionFormCommon)((IConditionFormGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ConditionRecordCommon)((IConditionRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ConditionFormCommon)((IConditionFormGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ConditionRecordCommon)((IConditionRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -362,23 +362,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ConditionFormBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ConditionRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ConditionFormBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ConditionRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static ConditionForm CreateFromBinary(
+        public new static ConditionRecord CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ConditionForm();
-            ((ConditionFormSetterCommon)((IConditionFormGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ConditionRecord();
+            ((ConditionRecordSetterCommon)((IConditionRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ConditionForm item,
+            out ConditionRecord item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -404,82 +404,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ConditionFormSetterCommon)((IConditionFormGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ConditionRecordSetterCommon)((IConditionRecordGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ConditionForm GetNew()
+        internal static new ConditionRecord GetNew()
         {
-            return new ConditionForm();
+            return new ConditionRecord();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IConditionForm :
-        IConditionFormGetter,
-        ILoquiObjectSetter<IConditionFormInternal>,
+    public partial interface IConditionRecord :
+        IConditionRecordGetter,
+        ILoquiObjectSetter<IConditionRecordInternal>,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface IConditionFormInternal :
+    public partial interface IConditionRecordInternal :
         IStarfieldMajorRecordInternal,
-        IConditionForm,
-        IConditionFormGetter
+        IConditionRecord,
+        IConditionRecordGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.CNDF)]
-    public partial interface IConditionFormGetter :
+    public partial interface IConditionRecordGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IConditionFormGetter>,
-        IMapsToGetter<IConditionFormGetter>
+        ILoquiObject<IConditionRecordGetter>,
+        IMapsToGetter<IConditionRecordGetter>
     {
-        static new ILoquiRegistration StaticRegistration => ConditionForm_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ConditionRecord_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ConditionFormMixIn
+    public static partial class ConditionRecordMixIn
     {
-        public static void Clear(this IConditionFormInternal item)
+        public static void Clear(this IConditionRecordInternal item)
         {
-            ((ConditionFormSetterCommon)((IConditionFormGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ConditionRecordSetterCommon)((IConditionRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ConditionForm.Mask<bool> GetEqualsMask(
-            this IConditionFormGetter item,
-            IConditionFormGetter rhs,
+        public static ConditionRecord.Mask<bool> GetEqualsMask(
+            this IConditionRecordGetter item,
+            IConditionRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IConditionFormGetter item,
+            this IConditionRecordGetter item,
             string? name = null,
-            ConditionForm.Mask<bool>? printMask = null)
+            ConditionRecord.Mask<bool>? printMask = null)
         {
-            return ((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).Print(
+            return ((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IConditionFormGetter item,
+            this IConditionRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ConditionForm.Mask<bool>? printMask = null)
+            ConditionRecord.Mask<bool>? printMask = null)
         {
-            ((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).Print(
+            ((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -487,39 +487,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IConditionFormGetter item,
-            IConditionFormGetter rhs,
-            ConditionForm.TranslationMask? equalsMask = null)
+            this IConditionRecordGetter item,
+            IConditionRecordGetter rhs,
+            ConditionRecord.TranslationMask? equalsMask = null)
         {
-            return ((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).Equals(
+            return ((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IConditionFormInternal lhs,
-            IConditionFormGetter rhs,
-            out ConditionForm.ErrorMask errorMask,
-            ConditionForm.TranslationMask? copyMask = null)
+            this IConditionRecordInternal lhs,
+            IConditionRecordGetter rhs,
+            out ConditionRecord.ErrorMask errorMask,
+            ConditionRecord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ConditionForm.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ConditionRecord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IConditionFormInternal lhs,
-            IConditionFormGetter rhs,
+            this IConditionRecordInternal lhs,
+            IConditionRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -527,55 +527,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ConditionForm DeepCopy(
-            this IConditionFormGetter item,
-            ConditionForm.TranslationMask? copyMask = null)
+        public static ConditionRecord DeepCopy(
+            this IConditionRecordGetter item,
+            ConditionRecord.TranslationMask? copyMask = null)
         {
-            return ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ConditionForm DeepCopy(
-            this IConditionFormGetter item,
-            out ConditionForm.ErrorMask errorMask,
-            ConditionForm.TranslationMask? copyMask = null)
+        public static ConditionRecord DeepCopy(
+            this IConditionRecordGetter item,
+            out ConditionRecord.ErrorMask errorMask,
+            ConditionRecord.TranslationMask? copyMask = null)
         {
-            return ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ConditionForm DeepCopy(
-            this IConditionFormGetter item,
+        public static ConditionRecord DeepCopy(
+            this IConditionRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ConditionForm Duplicate(
-            this IConditionFormGetter item,
+        public static ConditionRecord Duplicate(
+            this IConditionRecordGetter item,
             FormKey formKey,
-            ConditionForm.TranslationMask? copyMask = null)
+            ConditionRecord.TranslationMask? copyMask = null)
         {
-            return ((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).Duplicate(
+            return ((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static ConditionForm Duplicate(
-            this IConditionFormGetter item,
+        public static ConditionRecord Duplicate(
+            this IConditionRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).Duplicate(
+            return ((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -585,11 +585,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IConditionFormInternal item,
+            this IConditionRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ConditionFormSetterCommon)((IConditionFormGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ConditionRecordSetterCommon)((IConditionRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ConditionForm_FieldIndex
+    internal enum ConditionRecord_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -618,9 +618,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class ConditionForm_Registration : ILoquiRegistration
+    internal partial class ConditionRecord_Registration : ILoquiRegistration
     {
-        public static readonly ConditionForm_Registration Instance = new ConditionForm_Registration();
+        public static readonly ConditionRecord_Registration Instance = new ConditionRecord_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -628,23 +628,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(ConditionForm.Mask<>);
+        public static readonly Type MaskType = typeof(ConditionRecord.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ConditionForm.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ConditionRecord.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ConditionForm);
+        public static readonly Type ClassType = typeof(ConditionRecord);
 
-        public static readonly Type GetterType = typeof(IConditionFormGetter);
+        public static readonly Type GetterType = typeof(IConditionRecordGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IConditionForm);
+        public static readonly Type SetterType = typeof(IConditionRecord);
 
-        public static readonly Type? InternalSetterType = typeof(IConditionFormInternal);
+        public static readonly Type? InternalSetterType = typeof(IConditionRecordInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ConditionForm";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ConditionRecord";
 
-        public const string Name = "ConditionForm";
+        public const string Name = "ConditionRecord";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.CNDF);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ConditionFormBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ConditionRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -690,13 +690,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ConditionFormSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class ConditionRecordSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly ConditionFormSetterCommon Instance = new ConditionFormSetterCommon();
+        public new static readonly ConditionRecordSetterCommon Instance = new ConditionRecordSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IConditionFormInternal item)
+        public void Clear(IConditionRecordInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -704,16 +704,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IConditionFormInternal)item);
+            Clear(item: (IConditionRecordInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IConditionFormInternal)item);
+            Clear(item: (IConditionRecordInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IConditionForm obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IConditionRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -722,16 +722,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IConditionFormInternal item,
+            IConditionRecordInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IConditionFormInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IConditionRecordInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ConditionFormBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ConditionFormBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ConditionRecordBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ConditionRecordBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (ConditionForm)item,
+                item: (ConditionRecord)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -751,7 +751,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (ConditionForm)item,
+                item: (ConditionRecord)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -759,17 +759,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ConditionFormCommon : StarfieldMajorRecordCommon
+    internal partial class ConditionRecordCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly ConditionFormCommon Instance = new ConditionFormCommon();
+        public new static readonly ConditionRecordCommon Instance = new ConditionRecordCommon();
 
-        public ConditionForm.Mask<bool> GetEqualsMask(
-            IConditionFormGetter item,
-            IConditionFormGetter rhs,
+        public ConditionRecord.Mask<bool> GetEqualsMask(
+            IConditionRecordGetter item,
+            IConditionRecordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ConditionForm.Mask<bool>(false);
-            ((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ConditionRecord.Mask<bool>(false);
+            ((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -778,18 +778,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IConditionFormGetter item,
-            IConditionFormGetter rhs,
-            ConditionForm.Mask<bool> ret,
+            IConditionRecordGetter item,
+            IConditionRecordGetter rhs,
+            ConditionRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IConditionFormGetter item,
+            IConditionRecordGetter item,
             string? name = null,
-            ConditionForm.Mask<bool>? printMask = null)
+            ConditionRecord.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -801,18 +801,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IConditionFormGetter item,
+            IConditionRecordGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ConditionForm.Mask<bool>? printMask = null)
+            ConditionRecord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ConditionForm =>");
+                sb.AppendLine($"ConditionRecord =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ConditionForm) =>");
+                sb.AppendLine($"{name} (ConditionRecord) =>");
             }
             using (sb.Brace())
             {
@@ -824,9 +824,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IConditionFormGetter item,
+            IConditionRecordGetter item,
             StructuredStringBuilder sb,
-            ConditionForm.Mask<bool>? printMask = null)
+            ConditionRecord.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -834,41 +834,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static ConditionForm_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static ConditionRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new ConditionForm_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ConditionRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ConditionForm_FieldIndex)((int)index);
+                    return (ConditionRecord_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -876,8 +876,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IConditionFormGetter? lhs,
-            IConditionFormGetter? rhs,
+            IConditionRecordGetter? lhs,
+            IConditionRecordGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -891,8 +891,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IConditionFormGetter?)lhs,
-                rhs: rhs as IConditionFormGetter,
+                lhs: (IConditionRecordGetter?)lhs,
+                rhs: rhs as IConditionRecordGetter,
                 equalsMask: equalsMask);
         }
         
@@ -902,12 +902,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IConditionFormGetter?)lhs,
-                rhs: rhs as IConditionFormGetter,
+                lhs: (IConditionRecordGetter?)lhs,
+                rhs: rhs as IConditionRecordGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IConditionFormGetter item)
+        public virtual int GetHashCode(IConditionRecordGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -916,12 +916,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IConditionFormGetter)item);
+            return GetHashCode(item: (IConditionRecordGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IConditionFormGetter)item);
+            return GetHashCode(item: (IConditionRecordGetter)item);
         }
         
         #endregion
@@ -929,11 +929,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return ConditionForm.GetNew();
+            return ConditionRecord.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionFormGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConditionRecordGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -943,12 +943,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public ConditionForm Duplicate(
-            IConditionFormGetter item,
+        public ConditionRecord Duplicate(
+            IConditionRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ConditionForm(formKey);
+            var newRec = new ConditionRecord(formKey);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IConditionFormGetter)item,
+                item: (IConditionRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IConditionFormGetter)item,
+                item: (IConditionRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -980,14 +980,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ConditionFormSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class ConditionRecordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly ConditionFormSetterTranslationCommon Instance = new ConditionFormSetterTranslationCommon();
+        public new static readonly ConditionRecordSetterTranslationCommon Instance = new ConditionRecordSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IConditionFormInternal item,
-            IConditionFormGetter rhs,
+            IConditionRecordInternal item,
+            IConditionRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1001,8 +1001,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IConditionForm item,
-            IConditionFormGetter rhs,
+            IConditionRecord item,
+            IConditionRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1023,8 +1023,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IConditionFormInternal)item,
-                rhs: (IConditionFormGetter)rhs,
+                item: (IConditionRecordInternal)item,
+                rhs: (IConditionRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1038,8 +1038,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IConditionForm)item,
-                rhs: (IConditionFormGetter)rhs,
+                item: (IConditionRecord)item,
+                rhs: (IConditionRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1053,8 +1053,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IConditionFormInternal)item,
-                rhs: (IConditionFormGetter)rhs,
+                item: (IConditionRecordInternal)item,
+                rhs: (IConditionRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1068,8 +1068,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IConditionForm)item,
-                rhs: (IConditionFormGetter)rhs,
+                item: (IConditionRecord)item,
+                rhs: (IConditionRecordGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1077,12 +1077,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public ConditionForm DeepCopy(
-            IConditionFormGetter item,
-            ConditionForm.TranslationMask? copyMask = null)
+        public ConditionRecord DeepCopy(
+            IConditionRecordGetter item,
+            ConditionRecord.TranslationMask? copyMask = null)
         {
-            ConditionForm ret = (ConditionForm)((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).GetNew();
-            ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ConditionRecord ret = (ConditionRecord)((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).GetNew();
+            ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1091,30 +1091,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ConditionForm DeepCopy(
-            IConditionFormGetter item,
-            out ConditionForm.ErrorMask errorMask,
-            ConditionForm.TranslationMask? copyMask = null)
+        public ConditionRecord DeepCopy(
+            IConditionRecordGetter item,
+            out ConditionRecord.ErrorMask errorMask,
+            ConditionRecord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ConditionForm ret = (ConditionForm)((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).GetNew();
-            ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ConditionRecord ret = (ConditionRecord)((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).GetNew();
+            ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ConditionForm.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ConditionRecord.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ConditionForm DeepCopy(
-            IConditionFormGetter item,
+        public ConditionRecord DeepCopy(
+            IConditionRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ConditionForm ret = (ConditionForm)((ConditionFormCommon)((IConditionFormGetter)item).CommonInstance()!).GetNew();
-            ((ConditionFormSetterTranslationCommon)((IConditionFormGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ConditionRecord ret = (ConditionRecord)((ConditionRecordCommon)((IConditionRecordGetter)item).CommonInstance()!).GetNew();
+            ((ConditionRecordSetterTranslationCommon)((IConditionRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1130,21 +1130,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ConditionForm
+    public partial class ConditionRecord
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ConditionForm_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ConditionForm_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ConditionRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionRecord_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ConditionFormCommon.Instance;
+        protected override object CommonInstance() => ConditionRecordCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ConditionFormSetterCommon.Instance;
+            return ConditionRecordSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ConditionFormSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ConditionRecordSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1155,15 +1155,15 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ConditionFormBinaryWriteTranslation :
+    public partial class ConditionRecordBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ConditionFormBinaryWriteTranslation Instance = new();
+        public new static readonly ConditionRecordBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IConditionFormGetter item,
+            IConditionRecordGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IConditionFormGetter)item,
+                item: (IConditionRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1207,7 +1207,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IConditionFormGetter)item,
+                item: (IConditionRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1218,16 +1218,16 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IConditionFormGetter)item,
+                item: (IConditionRecordGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ConditionFormBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class ConditionRecordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly ConditionFormBinaryCreateTranslation Instance = new ConditionFormBinaryCreateTranslation();
+        public new static readonly ConditionRecordBinaryCreateTranslation Instance = new ConditionRecordBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CNDF;
     }
@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ConditionFormBinaryTranslationMixIn
+    public static class ConditionRecordBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1245,35 +1245,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ConditionFormBinaryOverlay :
+    internal partial class ConditionRecordBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IConditionFormGetter
+        IConditionRecordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ConditionForm_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ConditionForm_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ConditionRecord_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ConditionRecord_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ConditionFormCommon.Instance;
+        protected override object CommonInstance() => ConditionRecordCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ConditionFormSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ConditionRecordSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ConditionFormBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ConditionRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ConditionFormBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ConditionRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IConditionForm);
+        protected override Type LinkType => typeof(IConditionRecord);
 
 
         partial void CustomFactoryEnd(
@@ -1282,7 +1282,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected ConditionFormBinaryOverlay(
+        protected ConditionRecordBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IConditionFormGetter ConditionFormFactory(
+        public static IConditionRecordGetter ConditionRecordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ConditionFormBinaryOverlay(
+            var ret = new ConditionRecordBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1322,12 +1322,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IConditionFormGetter ConditionFormFactory(
+        public static IConditionRecordGetter ConditionRecordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ConditionFormFactory(
+            return ConditionRecordFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ConditionFormMixIn.Print(
+            ConditionRecordMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ConditionForm>.ToString(this);
+            return MajorRecordPrinter<ConditionRecord>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1359,16 +1359,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IConditionFormGetter rhs) return false;
-            return ((ConditionFormCommon)((IConditionFormGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IConditionRecordGetter rhs) return false;
+            return ((ConditionRecordCommon)((IConditionRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IConditionFormGetter? obj)
+        public bool Equals(IConditionRecordGetter? obj)
         {
-            return ((ConditionFormCommon)((IConditionFormGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ConditionRecordCommon)((IConditionRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ConditionFormCommon)((IConditionFormGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ConditionRecordCommon)((IConditionRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

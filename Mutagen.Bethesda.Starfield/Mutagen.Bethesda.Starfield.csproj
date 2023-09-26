@@ -542,8 +542,8 @@
     <Compile Include="Records\Major Records\CombatStyle_Generated.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ConditionForm_Generated.cs">
-      <DependentUpon>ConditionForm.xml</DependentUpon>
+    <Compile Include="Records\Major Records\ConditionRecord_Generated.cs">
+      <DependentUpon>ConditionRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ConstructibleObject_Generated.cs">
       <DependentUpon>ConstructibleObject.xml</DependentUpon>
@@ -947,42 +947,48 @@
     <Compile Include="Records\Common Subrecords\PlanetModelComponentXMPMSubItem_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-      <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
-          <DependentUpon>Component.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\DebrisModel_Generated.cs">
-          <DependentUpon>Debris.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\DebrisModel.cs">
-          <DependentUpon>Debris.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\ActorValueModulationEntry_Generated.cs">
-          <DependentUpon>ActorValueModulation.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\ActorValueModulation.cs">
-          <DependentUpon>ActorValueModulation.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Common Subrecords\SkinFormComponent_Generated.cs">
-          <DependentUpon>Component.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Common Subrecords\BodyPartInfoComponent_Generated.cs">
-          <DependentUpon>Component.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
-      <Compile Include="Records\Common Subrecords\EffectSequenceComponent_Generated.cs">
-          <DependentUpon>Component.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\StaticPart_Generated.cs">
-          <DependentUpon>StaticCollection.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\StaticPlacement_Generated.cs">
-          <DependentUpon>StaticCollection.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\LegendaryMod_Generated.cs">
-          <DependentUpon>LegendaryItem.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Major Records\LegendaryFilter_Generated.cs">
-          <DependentUpon>LegendaryItem.xml</DependentUpon>
-      </Compile>
+    <Compile Include="Records\Common Subrecords\HoudiniDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DebrisModel_Generated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DebrisModel.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulationEntry_Generated.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorValueModulation.cs">
+      <DependentUpon>ActorValueModulation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SkinFormComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\BodyPartInfoComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\EffectSequenceComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StaticPart_Generated.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StaticPlacement_Generated.cs">
+      <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LegendaryMod_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LegendaryFilter_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SoundReference_Generated.cs">
+      <DependentUpon>SoundReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EchoMarker_Generated.cs">
+      <DependentUpon>SoundEchoMarker.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
