@@ -25,7 +25,6 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
-using Mutagen.Bethesda.Starfield.Assets;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -480,20 +479,15 @@ namespace Mutagen.Bethesda.Starfield
         IWeatherAmbientColorSetGetter? IWeatherGetter.DirectionalAmbientLightingColors => this.DirectionalAmbientLightingColors;
         #endregion
         #region Aurora
-        public AssetLink<StarfieldModelAssetType>? Aurora { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AssetLinkGetter<StarfieldModelAssetType>? IWeatherGetter.Aurora => this.Aurora;
-        #endregion
-        #region FLLD
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLLD;
-        public MemorySlice<Byte>? FLLD
+        private Model? _Aurora;
+        public Model? Aurora
         {
-            get => this._FLLD;
-            set => this._FLLD = value;
+            get => _Aurora;
+            set => _Aurora = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWeatherGetter.FLLD => this.FLLD;
+        IModelGetter? IWeatherGetter.Aurora => this.Aurora;
         #endregion
         #region SunGlareLensFlare
         private readonly IFormLinkNullable<ILensFlareGetter> _SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>();
@@ -623,8 +617,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ImageSpaceLateSunset = initialValue;
                 this.HNAM = initialValue;
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(initialValue, new WeatherAmbientColorSet.Mask<TItem>(initialValue));
-                this.Aurora = initialValue;
-                this.FLLD = initialValue;
+                this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.SunGlareLensFlare = initialValue;
                 this.Magic = new MaskItem<TItem, WeatherMagic.Mask<TItem>?>(initialValue, new WeatherMagic.Mask<TItem>(initialValue));
                 this.VolatilityMult = initialValue;
@@ -712,7 +705,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem HNAM,
                 TItem DirectionalAmbientLightingColors,
                 TItem Aurora,
-                TItem FLLD,
                 TItem SunGlareLensFlare,
                 TItem Magic,
                 TItem VolatilityMult,
@@ -798,8 +790,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ImageSpaceLateSunset = ImageSpaceLateSunset;
                 this.HNAM = HNAM;
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(DirectionalAmbientLightingColors, new WeatherAmbientColorSet.Mask<TItem>(DirectionalAmbientLightingColors));
-                this.Aurora = Aurora;
-                this.FLLD = FLLD;
+                this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(Aurora, new Model.Mask<TItem>(Aurora));
                 this.SunGlareLensFlare = SunGlareLensFlare;
                 this.Magic = new MaskItem<TItem, WeatherMagic.Mask<TItem>?>(Magic, new WeatherMagic.Mask<TItem>(Magic));
                 this.VolatilityMult = VolatilityMult;
@@ -887,8 +878,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem ImageSpaceLateSunset;
             public TItem HNAM;
             public MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>? DirectionalAmbientLightingColors { get; set; }
-            public TItem Aurora;
-            public TItem FLLD;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Aurora { get; set; }
             public TItem SunGlareLensFlare;
             public MaskItem<TItem, WeatherMagic.Mask<TItem>?>? Magic { get; set; }
             public TItem VolatilityMult;
@@ -979,7 +969,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.HNAM, rhs.HNAM)) return false;
                 if (!object.Equals(this.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
                 if (!object.Equals(this.Aurora, rhs.Aurora)) return false;
-                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
                 if (!object.Equals(this.SunGlareLensFlare, rhs.SunGlareLensFlare)) return false;
                 if (!object.Equals(this.Magic, rhs.Magic)) return false;
                 if (!object.Equals(this.VolatilityMult, rhs.VolatilityMult)) return false;
@@ -1062,7 +1051,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.HNAM);
                 hash.Add(this.DirectionalAmbientLightingColors);
                 hash.Add(this.Aurora);
-                hash.Add(this.FLLD);
                 hash.Add(this.SunGlareLensFlare);
                 hash.Add(this.Magic);
                 hash.Add(this.VolatilityMult);
@@ -1270,8 +1258,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.DirectionalAmbientLightingColors.Overall)) return false;
                     if (this.DirectionalAmbientLightingColors.Specific != null && !this.DirectionalAmbientLightingColors.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Aurora)) return false;
-                if (!eval(this.FLLD)) return false;
+                if (Aurora != null)
+                {
+                    if (!eval(this.Aurora.Overall)) return false;
+                    if (this.Aurora.Specific != null && !this.Aurora.Specific.All(eval)) return false;
+                }
                 if (!eval(this.SunGlareLensFlare)) return false;
                 if (Magic != null)
                 {
@@ -1481,8 +1472,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.DirectionalAmbientLightingColors.Overall)) return true;
                     if (this.DirectionalAmbientLightingColors.Specific != null && this.DirectionalAmbientLightingColors.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Aurora)) return true;
-                if (eval(this.FLLD)) return true;
+                if (Aurora != null)
+                {
+                    if (eval(this.Aurora.Overall)) return true;
+                    if (this.Aurora.Specific != null && this.Aurora.Specific.Any(eval)) return true;
+                }
                 if (eval(this.SunGlareLensFlare)) return true;
                 if (Magic != null)
                 {
@@ -1631,8 +1625,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ImageSpaceLateSunset = eval(this.ImageSpaceLateSunset);
                 obj.HNAM = eval(this.HNAM);
                 obj.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors == null ? null : new MaskItem<R, WeatherAmbientColorSet.Mask<R>?>(eval(this.DirectionalAmbientLightingColors.Overall), this.DirectionalAmbientLightingColors.Specific?.Translate(eval));
-                obj.Aurora = eval(this.Aurora);
-                obj.FLLD = eval(this.FLLD);
+                obj.Aurora = this.Aurora == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Aurora.Overall), this.Aurora.Specific?.Translate(eval));
                 obj.SunGlareLensFlare = eval(this.SunGlareLensFlare);
                 obj.Magic = this.Magic == null ? null : new MaskItem<R, WeatherMagic.Mask<R>?>(eval(this.Magic.Overall), this.Magic.Specific?.Translate(eval));
                 obj.VolatilityMult = eval(this.VolatilityMult);
@@ -2009,13 +2002,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         DirectionalAmbientLightingColors?.Print(sb);
                     }
-                    if (printMask?.Aurora ?? true)
+                    if (printMask?.Aurora?.Overall ?? true)
                     {
-                        sb.AppendItem(Aurora, "Aurora");
-                    }
-                    if (printMask?.FLLD ?? true)
-                    {
-                        sb.AppendItem(FLLD, "FLLD");
+                        Aurora?.Print(sb);
                     }
                     if (printMask?.SunGlareLensFlare ?? true)
                     {
@@ -2116,8 +2105,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? ImageSpaceLateSunset;
             public Exception? HNAM;
             public MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>? DirectionalAmbientLightingColors;
-            public Exception? Aurora;
-            public Exception? FLLD;
+            public MaskItem<Exception?, Model.ErrorMask?>? Aurora;
             public Exception? SunGlareLensFlare;
             public MaskItem<Exception?, WeatherMagic.ErrorMask?>? Magic;
             public Exception? VolatilityMult;
@@ -2276,8 +2264,6 @@ namespace Mutagen.Bethesda.Starfield
                         return DirectionalAmbientLightingColors;
                     case Weather_FieldIndex.Aurora:
                         return Aurora;
-                    case Weather_FieldIndex.FLLD:
-                        return FLLD;
                     case Weather_FieldIndex.SunGlareLensFlare:
                         return SunGlareLensFlare;
                     case Weather_FieldIndex.Magic:
@@ -2513,10 +2499,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.DirectionalAmbientLightingColors = new MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>(ex, null);
                         break;
                     case Weather_FieldIndex.Aurora:
-                        this.Aurora = ex;
-                        break;
-                    case Weather_FieldIndex.FLLD:
-                        this.FLLD = ex;
+                        this.Aurora = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
                     case Weather_FieldIndex.SunGlareLensFlare:
                         this.SunGlareLensFlare = ex;
@@ -2758,10 +2741,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.DirectionalAmbientLightingColors = (MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>?)obj;
                         break;
                     case Weather_FieldIndex.Aurora:
-                        this.Aurora = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.FLLD:
-                        this.FLLD = (Exception?)obj;
+                        this.Aurora = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     case Weather_FieldIndex.SunGlareLensFlare:
                         this.SunGlareLensFlare = (Exception?)obj;
@@ -2857,7 +2837,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (HNAM != null) return true;
                 if (DirectionalAmbientLightingColors != null) return true;
                 if (Aurora != null) return true;
-                if (FLLD != null) return true;
                 if (SunGlareLensFlare != null) return true;
                 if (Magic != null) return true;
                 if (VolatilityMult != null) return true;
@@ -3130,12 +3109,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(HNAM, "HNAM");
                 }
                 DirectionalAmbientLightingColors?.Print(sb);
-                {
-                    sb.AppendItem(Aurora, "Aurora");
-                }
-                {
-                    sb.AppendItem(FLLD, "FLLD");
-                }
+                Aurora?.Print(sb);
                 {
                     sb.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                 }
@@ -3226,8 +3200,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ImageSpaceLateSunset = this.ImageSpaceLateSunset.Combine(rhs.ImageSpaceLateSunset);
                 ret.HNAM = this.HNAM.Combine(rhs.HNAM);
                 ret.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors.Combine(rhs.DirectionalAmbientLightingColors, (l, r) => l.Combine(r));
-                ret.Aurora = this.Aurora.Combine(rhs.Aurora);
-                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
+                ret.Aurora = this.Aurora.Combine(rhs.Aurora, (l, r) => l.Combine(r));
                 ret.SunGlareLensFlare = this.SunGlareLensFlare.Combine(rhs.SunGlareLensFlare);
                 ret.Magic = this.Magic.Combine(rhs.Magic, (l, r) => l.Combine(r));
                 ret.VolatilityMult = this.VolatilityMult.Combine(rhs.VolatilityMult);
@@ -3326,8 +3299,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool ImageSpaceLateSunset;
             public bool HNAM;
             public WeatherAmbientColorSet.TranslationMask? DirectionalAmbientLightingColors;
-            public bool Aurora;
-            public bool FLLD;
+            public Model.TranslationMask? Aurora;
             public bool SunGlareLensFlare;
             public WeatherMagic.TranslationMask? Magic;
             public bool VolatilityMult;
@@ -3391,8 +3363,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.ImageSpaceEarlySunset = defaultOn;
                 this.ImageSpaceLateSunset = defaultOn;
                 this.HNAM = defaultOn;
-                this.Aurora = defaultOn;
-                this.FLLD = defaultOn;
                 this.SunGlareLensFlare = defaultOn;
                 this.VolatilityMult = defaultOn;
                 this.VisibilityMult = defaultOn;
@@ -3475,8 +3445,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ImageSpaceLateSunset, null));
                 ret.Add((HNAM, null));
                 ret.Add((DirectionalAmbientLightingColors != null ? DirectionalAmbientLightingColors.OnOverall : DefaultOn, DirectionalAmbientLightingColors?.GetCrystal()));
-                ret.Add((Aurora, null));
-                ret.Add((FLLD, null));
+                ret.Add((Aurora != null ? Aurora.OnOverall : DefaultOn, Aurora?.GetCrystal()));
                 ret.Add((SunGlareLensFlare, null));
                 ret.Add((Magic != null ? Magic.OnOverall : DefaultOn, Magic?.GetCrystal()));
                 ret.Add((VolatilityMult, null));
@@ -3703,8 +3672,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLink<IImageSpaceGetter> ImageSpaceLateSunset { get; set; }
         new MemorySlice<Byte>? HNAM { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
-        new AssetLink<StarfieldModelAssetType>? Aurora { get; set; }
-        new MemorySlice<Byte>? FLLD { get; set; }
+        new Model? Aurora { get; set; }
         new IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; }
         new WeatherMagic? Magic { get; set; }
         new Single? VolatilityMult { get; set; }
@@ -3806,8 +3774,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IImageSpaceGetter> ImageSpaceLateSunset { get; }
         ReadOnlyMemorySlice<Byte>? HNAM { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
-        AssetLinkGetter<StarfieldModelAssetType>? Aurora { get; }
-        ReadOnlyMemorySlice<Byte>? FLLD { get; }
+        IModelGetter? Aurora { get; }
         IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare { get; }
         IWeatherMagicGetter? Magic { get; }
         Single? VolatilityMult { get; }
@@ -4061,11 +4028,10 @@ namespace Mutagen.Bethesda.Starfield
         HNAM = 77,
         DirectionalAmbientLightingColors = 78,
         Aurora = 79,
-        FLLD = 80,
-        SunGlareLensFlare = 81,
-        Magic = 82,
-        VolatilityMult = 83,
-        VisibilityMult = 84,
+        SunGlareLensFlare = 80,
+        Magic = 81,
+        VolatilityMult = 82,
+        VisibilityMult = 83,
     }
     #endregion
 
@@ -4076,9 +4042,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 78;
+        public const ushort AdditionalFieldCount = 77;
 
-        public const ushort FieldCount = 85;
+        public const ushort FieldCount = 84;
 
         public static readonly Type MaskType = typeof(Weather.Mask<>);
 
@@ -4131,7 +4097,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.HNAM,
                 RecordTypes.DALC,
                 RecordTypes.MODL,
+                RecordTypes.MOLM,
                 RecordTypes.FLLD,
+                RecordTypes.XFLG,
                 RecordTypes.GNAM,
                 RecordTypes.UNAM,
                 RecordTypes.VNAM,
@@ -4250,8 +4218,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ImageSpaceLateSunset.Clear();
             item.HNAM = default;
             item.DirectionalAmbientLightingColors = null;
-            item.Aurora = default;
-            item.FLLD = default;
+            item.Aurora = null;
             item.SunGlareLensFlare.Clear();
             item.Magic = null;
             item.VolatilityMult = default;
@@ -4295,9 +4262,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (obj.Aurora != null)
+            if (obj.Aurora is {} AuroraItems)
             {
-                yield return obj.Aurora;
+                foreach (var item in AuroraItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -4309,10 +4279,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
-            {
-                obj.Aurora?.Relink(mapping);
-            }
+            obj.Aurora?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -4470,8 +4437,11 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.DirectionalAmbientLightingColors,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Aurora = object.Equals(item.Aurora, rhs.Aurora);
-            ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
+            ret.Aurora = EqualsMaskHelper.EqualsHelper(
+                item.Aurora,
+                rhs.Aurora,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.SunGlareLensFlare = item.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare);
             ret.Magic = EqualsMaskHelper.EqualsHelper(
                 item.Magic,
@@ -4863,15 +4833,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 DirectionalAmbientLightingColorsItem?.Print(sb, "DirectionalAmbientLightingColors");
             }
-            if ((printMask?.Aurora ?? true)
+            if ((printMask?.Aurora?.Overall ?? true)
                 && item.Aurora is {} AuroraItem)
             {
-                sb.AppendItem(AuroraItem, "Aurora");
-            }
-            if ((printMask?.FLLD ?? true)
-                && item.FLLD is {} FLLDItem)
-            {
-                sb.AppendLine($"FLLD => {SpanExt.ToHexString(FLLDItem)}");
+                AuroraItem?.Print(sb, "Aurora");
             }
             if (printMask?.SunGlareLensFlare ?? true)
             {
@@ -5313,11 +5278,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
             {
-                if (!object.Equals(lhs.Aurora, rhs.Aurora)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.FLLD) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Aurora, rhs.Aurora, out var lhsAurora, out var rhsAurora, out var isAuroraEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsAurora).CommonInstance()!).Equals(lhsAurora, rhsAurora, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Aurora))) return false;
+                }
+                else if (!isAuroraEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
@@ -5455,10 +5420,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Auroraitem);
             }
-            if (item.FLLD is {} FLLDItem)
-            {
-                hash.Add(FLLDItem);
-            }
             hash.Add(item.SunGlareLensFlare);
             if (item.Magic is {} Magicitem)
             {
@@ -5550,9 +5511,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                if (obj.Aurora != null)
+                if (obj.Aurora is {} AuroraItems)
                 {
-                    yield return obj.Aurora;
+                    foreach (var item in AuroraItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
             }
             yield break;
@@ -6347,16 +6311,30 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            item.Aurora = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Aurora, rhs.Aurora);
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FLLD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
             {
-                if(rhs.FLLD is {} FLLDrhs)
+                errorMask?.PushIndex((int)Weather_FieldIndex.Aurora);
+                try
                 {
-                    item.FLLD = FLLDrhs.ToArray();
+                    if(rhs.Aurora is {} rhsAurora)
+                    {
+                        item.Aurora = rhsAurora.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.Aurora));
+                    }
+                    else
+                    {
+                        item.Aurora = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FLLD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
@@ -6875,15 +6853,13 @@ namespace Mutagen.Bethesda.Starfield
             WeatherBinaryWriteTranslation.WriteBinaryDirectionalAmbientLightingColors(
                 writer: writer,
                 item: item);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Aurora?.RawPath,
-                header: translationParams.ConvertToCustom(RecordTypes.MODL),
-                binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLLD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
+            if (item.Aurora is {} AuroraItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)AuroraItem).BinaryWriteTranslator).Write(
+                    item: AuroraItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SunGlareLensFlare,
@@ -7353,16 +7329,14 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.MODL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Aurora = AssetLinkBinaryTranslation.Instance.Parse<StarfieldModelAssetType>(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Weather_FieldIndex.Aurora;
-                }
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Weather_FieldIndex.FLLD;
+                    item.Aurora = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Weather_FieldIndex.Aurora;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -7879,14 +7853,7 @@ namespace Mutagen.Bethesda.Starfield
         public partial IWeatherAmbientColorSetGetter? GetDirectionalAmbientLightingColorsCustom();
         public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
         #endregion
-        #region Aurora
-        private int? _AuroraLocation;
-        public AssetLinkGetter<StarfieldModelAssetType>? Aurora => _AuroraLocation.HasValue ? new AssetLinkGetter<StarfieldModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AuroraLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
-        #endregion
-        #region FLLD
-        private int? _FLLDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
         public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
@@ -8096,14 +8063,15 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.MODL:
-                {
-                    _AuroraLocation = (stream.Position - offset);
-                    return (int)Weather_FieldIndex.Aurora;
-                }
+                case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
-                    _FLLDLocation = (stream.Position - offset);
-                    return (int)Weather_FieldIndex.FLLD;
+                    this.Aurora = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Weather_FieldIndex.Aurora;
                 }
                 case RecordTypeInts.GNAM:
                 {
