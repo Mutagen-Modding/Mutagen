@@ -752,7 +752,9 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.WEAP,
                 RecordTypes.MODL,
-                RecordTypes.ANAM);
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
@@ -1453,15 +1455,11 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
                     item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Weapon_FieldIndex.Model;
-                }
-                case RecordTypeInts.ANAM:
-                {
-                    item.Model = Mutagen.Bethesda.Starfield.SkeletalModel.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Weapon_FieldIndex.Model;
@@ -1596,16 +1594,11 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Weapon_FieldIndex.Model;
-                }
-                case RecordTypeInts.ANAM:
-                {
-                    this.Model = SkeletalModelBinaryOverlay.SkeletalModelFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());

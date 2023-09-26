@@ -11,6 +11,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IModeled
 - AnimatedObject
 - HeadPart
+- SkeletalModel
 - StaticCollection
 - Weapon
 ### INamed
@@ -81,6 +82,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Race
 - IKeyworded
 - INamed
+### SkeletalModel
+- IModeled
 ### SoundEchoMarker
 - IObjectBounded
 ### StaticCollection

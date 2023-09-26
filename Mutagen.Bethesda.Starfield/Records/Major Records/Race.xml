@@ -120,11 +120,13 @@
       <String name="Node" recordType="ZNAM" />
     </Fields>
   </Object>
-  <Object name="SkeletalModel" objType="Subrecord" baseClass="Model">
-    <BaseRecordTypeOverrides>
-      <Mapping From="MODL" To="ANAM" />
-    </BaseRecordTypeOverrides>
+  <Object name="SkeletalModel" objType="Subrecord" >
     <Fields>
+      <RefDirect name="Model" refName="Model" >
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="ANAM" />
+        </RecordTypeOverrides>
+      </RefDirect>
       <AssetLink name="Rig" recordType="NAM5" assetType="StarfieldRig" />
       <AssetLink name="AnimationText" recordType="NAM6" assetType="StarfieldAnimationText" />
       <String name="DNAM" recordType="DNAM" unknown="true" />

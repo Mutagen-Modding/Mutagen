@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -42,7 +43,6 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     public partial class SkeletalModel :
-        Model,
         IEquatable<ISkeletalModelGetter>,
         ILoquiObjectSetter<SkeletalModel>,
         ISkeletalModel
@@ -55,6 +55,24 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ISkeletalModelGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
         #region Rig
         public AssetLink<StarfieldRigAssetType>? Rig { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,7 +91,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -102,34 +120,26 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mask
-        public new class Mask<TItem> :
-            Model.Mask<TItem>,
+        public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
-            : base(initialValue)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Rig = initialValue;
                 this.AnimationText = initialValue;
                 this.DNAM = initialValue;
             }
 
             public Mask(
-                TItem File,
-                TItem MOLM,
-                TItem FLLD,
-                TItem XFLG,
+                TItem Model,
                 TItem Rig,
                 TItem AnimationText,
                 TItem DNAM)
-            : base(
-                File: File,
-                MOLM: MOLM,
-                FLLD: FLLD,
-                XFLG: XFLG)
             {
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Rig = Rig;
                 this.AnimationText = AnimationText;
                 this.DNAM = DNAM;
@@ -144,6 +154,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Rig;
             public TItem AnimationText;
             public TItem DNAM;
@@ -159,7 +170,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Rig, rhs.Rig)) return false;
                 if (!object.Equals(this.AnimationText, rhs.AnimationText)) return false;
                 if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
@@ -168,19 +179,23 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Model);
                 hash.Add(this.Rig);
                 hash.Add(this.AnimationText);
                 hash.Add(this.DNAM);
-                hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public override bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (!base.All(eval)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Rig)) return false;
                 if (!eval(this.AnimationText)) return false;
                 if (!eval(this.DNAM)) return false;
@@ -189,9 +204,13 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Any
-            public override bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (base.Any(eval)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Rig)) return true;
                 if (eval(this.AnimationText)) return true;
                 if (eval(this.DNAM)) return true;
@@ -200,7 +219,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<TItem, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new SkeletalModel.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
@@ -209,7 +228,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                base.Translate_InternalFill(obj, eval);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Rig = eval(this.Rig);
                 obj.AnimationText = eval(this.AnimationText);
                 obj.DNAM = eval(this.DNAM);
@@ -231,6 +250,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SkeletalModel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
                     if (printMask?.Rig ?? true)
                     {
                         sb.AppendItem(Rig, "Rig");
@@ -249,22 +272,38 @@ namespace Mutagen.Bethesda.Starfield
 
         }
 
-        public new class ErrorMask :
-            Model.ErrorMask,
+        public class ErrorMask :
+            IErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? Rig;
             public Exception? AnimationText;
             public Exception? DNAM;
             #endregion
 
             #region IErrorMask
-            public override object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
                 SkeletalModel_FieldIndex enu = (SkeletalModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case SkeletalModel_FieldIndex.Model:
+                        return Model;
                     case SkeletalModel_FieldIndex.Rig:
                         return Rig;
                     case SkeletalModel_FieldIndex.AnimationText:
@@ -272,15 +311,18 @@ namespace Mutagen.Bethesda.Starfield
                     case SkeletalModel_FieldIndex.DNAM:
                         return DNAM;
                     default:
-                        return base.GetNthMask(index);
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
                 SkeletalModel_FieldIndex enu = (SkeletalModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case SkeletalModel_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
                     case SkeletalModel_FieldIndex.Rig:
                         this.Rig = ex;
                         break;
@@ -291,16 +333,18 @@ namespace Mutagen.Bethesda.Starfield
                         this.DNAM = ex;
                         break;
                     default:
-                        base.SetNthException(index, ex);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
                 SkeletalModel_FieldIndex enu = (SkeletalModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case SkeletalModel_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
                     case SkeletalModel_FieldIndex.Rig:
                         this.Rig = (Exception?)obj;
                         break;
@@ -311,14 +355,14 @@ namespace Mutagen.Bethesda.Starfield
                         this.DNAM = (Exception?)obj;
                         break;
                     default:
-                        base.SetNthMask(index, obj);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Model != null) return true;
                 if (Rig != null) return true;
                 if (AnimationText != null) return true;
                 if (DNAM != null) return true;
@@ -329,7 +373,7 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public override void Print(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -345,9 +389,9 @@ namespace Mutagen.Bethesda.Starfield
                     PrintFillInternal(sb);
                 }
             }
-            protected override void PrintFillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.PrintFillInternal(sb);
+                Model?.Print(sb);
                 {
                     sb.AppendItem(Rig, "Rig");
                 }
@@ -365,6 +409,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Rig = this.Rig.Combine(rhs.Rig);
                 ret.AnimationText = this.AnimationText.Combine(rhs.AnimationText);
                 ret.DNAM = this.DNAM.Combine(rhs.DNAM);
@@ -378,18 +423,20 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Factory
-            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
             {
                 return new ErrorMask();
             }
             #endregion
 
         }
-        public new class TranslationMask :
-            Model.TranslationMask,
-            ITranslationMask
+        public class TranslationMask : ITranslationMask
         {
             #region Members
+            private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
+            public bool OnOverall;
+            public Model.TranslationMask? Model;
             public bool Rig;
             public bool AnimationText;
             public bool DNAM;
@@ -399,8 +446,9 @@ namespace Mutagen.Bethesda.Starfield
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
-                : base(defaultOn, onOverall)
             {
+                this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.Rig = defaultOn;
                 this.AnimationText = defaultOn;
                 this.DNAM = defaultOn;
@@ -408,9 +456,18 @@ namespace Mutagen.Bethesda.Starfield
 
             #endregion
 
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            public TranslationCrystal GetCrystal()
             {
-                base.GetCrystal(ret);
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Rig, null));
                 ret.Add((AnimationText, null));
                 ret.Add((DNAM, null));
@@ -425,15 +482,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkeletalModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkeletalModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SkeletalModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkeletalModelSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkeletalModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkeletalModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SkeletalModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SkeletalModelSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SkeletalModelBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkeletalModelBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -444,7 +503,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static SkeletalModel CreateFromBinary(
+        public static SkeletalModel CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -478,7 +537,7 @@ namespace Mutagen.Bethesda.Starfield
             ((SkeletalModelSetterCommon)((ISkeletalModelGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new SkeletalModel GetNew()
+        internal static SkeletalModel GetNew()
         {
             return new SkeletalModel();
         }
@@ -490,21 +549,38 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ISkeletalModel :
         IAssetLinkContainer,
         ILoquiObjectSetter<ISkeletalModel>,
-        IModel,
+        IModeled,
         ISkeletalModelGetter
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
         new AssetLink<StarfieldRigAssetType>? Rig { get; set; }
         new AssetLink<StarfieldAnimationTextAssetType>? AnimationText { get; set; }
         new String? DNAM { get; set; }
     }
 
     public partial interface ISkeletalModelGetter :
-        IModelGetter,
+        ILoquiObject,
         IAssetLinkContainerGetter,
         IBinaryItem,
-        ILoquiObject<ISkeletalModelGetter>
+        ILoquiObject<ISkeletalModelGetter>,
+        IModeledGetter
     {
-        static new ILoquiRegistration StaticRegistration => SkeletalModel_Registration.Instance;
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object? CommonSetterInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonSetterTranslationInstance();
+        static ILoquiRegistration StaticRegistration => SkeletalModel_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
         AssetLinkGetter<StarfieldRigAssetType>? Rig { get; }
         AssetLinkGetter<StarfieldAnimationTextAssetType>? AnimationText { get; }
         String? DNAM { get; }
@@ -565,6 +641,31 @@ namespace Mutagen.Bethesda.Starfield
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
+        }
+
+        public static void DeepCopyIn(
+            this ISkeletalModel lhs,
+            ISkeletalModelGetter rhs)
+        {
+            ((SkeletalModelSetterTranslationCommon)((ISkeletalModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default,
+                deepCopy: false);
+        }
+
+        public static void DeepCopyIn(
+            this ISkeletalModel lhs,
+            ISkeletalModelGetter rhs,
+            SkeletalModel.TranslationMask? copyMask = null)
+        {
+            ((SkeletalModelSetterTranslationCommon)((ISkeletalModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -652,13 +753,10 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum SkeletalModel_FieldIndex
     {
-        File = 0,
-        MOLM = 1,
-        FLLD = 2,
-        XFLG = 3,
-        Rig = 4,
-        AnimationText = 5,
-        DNAM = 6,
+        Model = 0,
+        Rig = 1,
+        AnimationText = 2,
+        DNAM = 3,
     }
     #endregion
 
@@ -669,9 +767,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(SkeletalModel.Mask<>);
 
@@ -697,19 +795,20 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.ANAM;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.ANAM);
             var all = RecordCollection.Factory(
                 RecordTypes.ANAM,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
                 RecordTypes.NAM5,
                 RecordTypes.NAM6,
                 RecordTypes.DNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static RecordTypeConverter BaseConverter = new RecordTypeConverter(
+        public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,
                 RecordTypes.ANAM));
@@ -744,24 +843,19 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class SkeletalModelSetterCommon : ModelSetterCommon
+    internal partial class SkeletalModelSetterCommon
     {
-        public new static readonly SkeletalModelSetterCommon Instance = new SkeletalModelSetterCommon();
+        public static readonly SkeletalModelSetterCommon Instance = new SkeletalModelSetterCommon();
 
         partial void ClearPartial();
         
         public void Clear(ISkeletalModel item)
         {
             ClearPartial();
+            item.Model = null;
             item.Rig = default;
             item.AnimationText = default;
             item.DNAM = default;
-            base.Clear(item);
-        }
-        
-        public override void Clear(IModel item)
-        {
-            Clear(item: (ISkeletalModel)item);
         }
         
         #region Mutagen
@@ -771,9 +865,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISkeletalModel obj)
         {
-            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            if (obj.Model is {} ModelItems)
             {
-                yield return item;
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.Rig != null)
             {
@@ -792,12 +889,12 @@ namespace Mutagen.Bethesda.Starfield
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
-            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
                 obj.Rig?.Relink(mapping);
                 obj.AnimationText?.Relink(mapping);
             }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -815,23 +912,12 @@ namespace Mutagen.Bethesda.Starfield
                 fillTyped: SkeletalModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
-        public override void CopyInFromBinary(
-            IModel item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (SkeletalModel)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
         #endregion
         
     }
-    internal partial class SkeletalModelCommon : ModelCommon
+    internal partial class SkeletalModelCommon
     {
-        public new static readonly SkeletalModelCommon Instance = new SkeletalModelCommon();
+        public static readonly SkeletalModelCommon Instance = new SkeletalModelCommon();
 
         public SkeletalModel.Mask<bool> GetEqualsMask(
             ISkeletalModelGetter item,
@@ -853,10 +939,14 @@ namespace Mutagen.Bethesda.Starfield
             SkeletalModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Rig = object.Equals(item.Rig, rhs.Rig);
             ret.AnimationText = object.Equals(item.AnimationText, rhs.AnimationText);
             ret.DNAM = string.Equals(item.DNAM, rhs.DNAM);
-            base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
@@ -901,10 +991,11 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             SkeletalModel.Mask<bool>? printMask = null)
         {
-            ModelCommon.ToStringFields(
-                item: item,
-                sb: sb,
-                printMask: printMask);
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
             if ((printMask?.Rig ?? true)
                 && item.Rig is {} RigItem)
             {
@@ -922,23 +1013,6 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static SkeletalModel_FieldIndex ConvertFieldIndex(Model_FieldIndex index)
-        {
-            switch (index)
-            {
-                case Model_FieldIndex.File:
-                    return (SkeletalModel_FieldIndex)((int)index);
-                case Model_FieldIndex.MOLM:
-                    return (SkeletalModel_FieldIndex)((int)index);
-                case Model_FieldIndex.FLLD:
-                    return (SkeletalModel_FieldIndex)((int)index);
-                case Model_FieldIndex.XFLG:
-                    return (SkeletalModel_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ISkeletalModelGetter? lhs,
@@ -946,7 +1020,14 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IModelGetter)lhs, (IModelGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)SkeletalModel_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)SkeletalModel_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)SkeletalModel_FieldIndex.Rig) ?? true))
             {
                 if (!object.Equals(lhs.Rig, rhs.Rig)) return false;
@@ -962,20 +1043,13 @@ namespace Mutagen.Bethesda.Starfield
             return true;
         }
         
-        public override bool Equals(
-            IModelGetter? lhs,
-            IModelGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (ISkeletalModelGetter?)lhs,
-                rhs: rhs as ISkeletalModelGetter,
-                equalsMask: equalsMask);
-        }
-        
         public virtual int GetHashCode(ISkeletalModelGetter item)
         {
             var hash = new HashCode();
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
             if (item.Rig is {} Rigitem)
             {
                 hash.Add(Rigitem);
@@ -988,19 +1062,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(DNAMitem);
             }
-            hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IModelGetter item)
-        {
-            return GetHashCode(item: (ISkeletalModelGetter)item);
         }
         
         #endregion
         
         
-        public override object GetNew()
+        public object GetNew()
         {
             return SkeletalModel.GetNew();
         }
@@ -1013,12 +1081,15 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISkeletalModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
-            {
-                yield return item;
-            }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
                 if (obj.Rig != null)
                 {
                     yield return obj.Rig;
@@ -1034,9 +1105,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class SkeletalModelSetterTranslationCommon : ModelSetterTranslationCommon
+    internal partial class SkeletalModelSetterTranslationCommon
     {
-        public new static readonly SkeletalModelSetterTranslationCommon Instance = new SkeletalModelSetterTranslationCommon();
+        public static readonly SkeletalModelSetterTranslationCommon Instance = new SkeletalModelSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
@@ -1046,34 +1117,38 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            base.DeepCopyIn(
-                (IModel)item,
-                (IModelGetter)rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)SkeletalModel_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)SkeletalModel_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SkeletalModel_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             item.Rig = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Rig, rhs.Rig);
             item.AnimationText = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.AnimationText, rhs.AnimationText);
             if ((copyMask?.GetShouldTranslate((int)SkeletalModel_FieldIndex.DNAM) ?? true))
             {
                 item.DNAM = rhs.DNAM;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IModel item,
-            IModelGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISkeletalModel)item,
-                rhs: (ISkeletalModelGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1136,16 +1211,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkeletalModel_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => SkeletalModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkeletalModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SkeletalModelCommon.Instance;
+        protected object CommonInstance() => SkeletalModelCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
             return SkeletalModelSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SkeletalModelSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkeletalModelSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object ISkeletalModelGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object ISkeletalModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
+        object ISkeletalModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1156,21 +1237,22 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SkeletalModelBinaryWriteTranslation :
-        ModelBinaryWriteTranslation,
-        IBinaryWriteTranslator
+    public partial class SkeletalModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public new static readonly SkeletalModelBinaryWriteTranslation Instance = new();
+        public static readonly SkeletalModelBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ISkeletalModelGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            ModelBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams.Combine(SkeletalModel_Registration.BaseConverter));
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams.With(SkeletalModel_Registration.ModelConverter));
+            }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Rig?.RawPath,
@@ -1199,7 +1281,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public override void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams translationParams = default)
@@ -1210,22 +1292,11 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public override void Write(
-            MutagenWriter writer,
-            IModelGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (ISkeletalModelGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
     }
 
-    internal partial class SkeletalModelBinaryCreateTranslation : ModelBinaryCreateTranslation
+    internal partial class SkeletalModelBinaryCreateTranslation
     {
-        public new static readonly SkeletalModelBinaryCreateTranslation Instance = new SkeletalModelBinaryCreateTranslation();
+        public static readonly SkeletalModelBinaryCreateTranslation Instance = new SkeletalModelBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
             ISkeletalModel item,
@@ -1239,20 +1310,34 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.ANAM:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.Model, translationParams)) return ParseResult.Stop;
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(SkeletalModel_Registration.ModelConverter).DoNotShortCircuit());
+                    return (int)SkeletalModel_FieldIndex.Model;
+                }
                 case RecordTypeInts.NAM5:
                 {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.Rig, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Rig = AssetLinkBinaryTranslation.Instance.Parse<StarfieldRigAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)SkeletalModel_FieldIndex.Rig;
                 }
                 case RecordTypeInts.NAM6:
                 {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.AnimationText, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AnimationText = AssetLinkBinaryTranslation.Instance.Parse<StarfieldAnimationTextAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)SkeletalModel_FieldIndex.AnimationText;
                 }
                 case RecordTypeInts.DNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.DNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1260,14 +1345,7 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)SkeletalModel_FieldIndex.DNAM;
                 }
                 default:
-                    return ModelBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        translationParams: translationParams.With(SkeletalModel_Registration.BaseConverter));
+                    return ParseResult.Stop;
             }
         }
 
@@ -1279,6 +1357,17 @@ namespace Mutagen.Bethesda.Starfield
     #region Binary Write Mixins
     public static class SkeletalModelBinaryTranslationMixIn
     {
+        public static void WriteToBinary(
+            this ISkeletalModelGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams = default)
+        {
+            ((SkeletalModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
     }
     #endregion
 
@@ -1287,25 +1376,33 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     internal partial class SkeletalModelBinaryOverlay :
-        ModelBinaryOverlay,
+        PluginBinaryOverlay,
         ISkeletalModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkeletalModel_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => SkeletalModel_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SkeletalModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SkeletalModelCommon.Instance;
+        protected object CommonInstance() => SkeletalModelCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SkeletalModelSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkeletalModelSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object ISkeletalModelGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object? ISkeletalModelGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
+        object ISkeletalModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkeletalModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkeletalModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SkeletalModelBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkeletalModelBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -1316,6 +1413,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public IModelGetter? Model { get; private set; }
         #region Rig
         private int? _RigLocation;
         public AssetLinkGetter<StarfieldRigAssetType>? Rig => _RigLocation.HasValue ? new AssetLinkGetter<StarfieldRigAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RigLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
@@ -1379,7 +1477,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public override ParseResult FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1391,35 +1489,43 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.ANAM:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.Model, translationParams)) return ParseResult.Stop;
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.With(SkeletalModel_Registration.ModelConverter).DoNotShortCircuit());
+                    return (int)SkeletalModel_FieldIndex.Model;
+                }
                 case RecordTypeInts.NAM5:
                 {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.Rig, translationParams)) return ParseResult.Stop;
                     _RigLocation = (stream.Position - offset);
                     return (int)SkeletalModel_FieldIndex.Rig;
                 }
                 case RecordTypeInts.NAM6:
                 {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.AnimationText, translationParams)) return ParseResult.Stop;
                     _AnimationTextLocation = (stream.Position - offset);
                     return (int)SkeletalModel_FieldIndex.AnimationText;
                 }
                 case RecordTypeInts.DNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)SkeletalModel_FieldIndex.DNAM, translationParams)) return ParseResult.Stop;
                     _DNAMLocation = (stream.Position - offset);
                     return (int)SkeletalModel_FieldIndex.DNAM;
                 }
                 default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        translationParams: SkeletalModel_Registration.BaseConverter);
+                    return ParseResult.Stop;
             }
         }
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {

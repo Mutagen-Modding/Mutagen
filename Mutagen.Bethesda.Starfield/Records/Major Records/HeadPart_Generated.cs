@@ -126,16 +126,6 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region FLLD
-        private readonly IFormLinkNullable<IStaticGetter> _FLLD = new FormLinkNullable<IStaticGetter>();
-        public IFormLinkNullable<IStaticGetter> FLLD
-        {
-            get => _FLLD;
-            set => _FLLD.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IStaticGetter> IHeadPartGetter.FLLD => this.FLLD;
-        #endregion
         #region Flags
         public HeadPart.Flag Flags { get; set; } = default;
         #endregion
@@ -226,7 +216,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.FLLD = initialValue;
                 this.Flags = initialValue;
                 this.Type = initialValue;
                 this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -248,7 +237,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Components,
                 TItem Name,
                 TItem Model,
-                TItem FLLD,
                 TItem Flags,
                 TItem Type,
                 TItem ExtraParts,
@@ -269,7 +257,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.FLLD = FLLD;
                 this.Flags = Flags;
                 this.Type = Type;
                 this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
@@ -292,7 +279,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem FLLD;
             public TItem Flags;
             public TItem Type;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ExtraParts;
@@ -317,7 +303,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.ExtraParts, rhs.ExtraParts)) return false;
@@ -334,7 +319,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Components);
                 hash.Add(this.Name);
                 hash.Add(this.Model);
-                hash.Add(this.FLLD);
                 hash.Add(this.Flags);
                 hash.Add(this.Type);
                 hash.Add(this.ExtraParts);
@@ -371,7 +355,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.FLLD)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Type)) return false;
                 if (this.ExtraParts != null)
@@ -416,7 +399,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.FLLD)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Type)) return true;
                 if (this.ExtraParts != null)
@@ -467,7 +449,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.FLLD = eval(this.FLLD);
                 obj.Flags = eval(this.Flags);
                 obj.Type = eval(this.Type);
                 if (ExtraParts != null)
@@ -534,10 +515,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.FLLD ?? true)
-                    {
-                        sb.AppendItem(FLLD, "FLLD");
-                    }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
@@ -601,7 +578,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? FLLD;
             public Exception? Flags;
             public Exception? Type;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ExtraParts;
@@ -624,8 +600,6 @@ namespace Mutagen.Bethesda.Starfield
                         return Name;
                     case HeadPart_FieldIndex.Model:
                         return Model;
-                    case HeadPart_FieldIndex.FLLD:
-                        return FLLD;
                     case HeadPart_FieldIndex.Flags:
                         return Flags;
                     case HeadPart_FieldIndex.Type:
@@ -660,9 +634,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case HeadPart_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case HeadPart_FieldIndex.FLLD:
-                        this.FLLD = ex;
                         break;
                     case HeadPart_FieldIndex.Flags:
                         this.Flags = ex;
@@ -708,9 +679,6 @@ namespace Mutagen.Bethesda.Starfield
                     case HeadPart_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case HeadPart_FieldIndex.FLLD:
-                        this.FLLD = (Exception?)obj;
-                        break;
                     case HeadPart_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
@@ -747,7 +715,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Components != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
-                if (FLLD != null) return true;
                 if (Flags != null) return true;
                 if (Type != null) return true;
                 if (ExtraParts != null) return true;
@@ -805,9 +772,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 Model?.Print(sb);
                 {
-                    sb.AppendItem(FLLD, "FLLD");
-                }
-                {
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
@@ -859,7 +823,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), Noggog.ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
@@ -893,7 +856,6 @@ namespace Mutagen.Bethesda.Starfield
             public AComponent.TranslationMask? Components;
             public bool Name;
             public Model.TranslationMask? Model;
-            public bool FLLD;
             public bool Flags;
             public bool Type;
             public bool ExtraParts;
@@ -911,7 +873,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
-                this.FLLD = defaultOn;
                 this.Flags = defaultOn;
                 this.Type = defaultOn;
                 this.ExtraParts = defaultOn;
@@ -930,7 +891,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((FLLD, null));
                 ret.Add((Flags, null));
                 ret.Add((Type, null));
                 ret.Add((ExtraParts, null));
@@ -1104,7 +1064,6 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IStaticGetter> FLLD { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
@@ -1154,7 +1113,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        IFormLinkNullableGetter<IStaticGetter> FLLD { get; }
         HeadPart.Flag Flags { get; }
         HeadPart.TypeEnum? Type { get; }
         IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
@@ -1346,15 +1304,14 @@ namespace Mutagen.Bethesda.Starfield
         Components = 7,
         Name = 8,
         Model = 9,
-        FLLD = 10,
-        Flags = 11,
-        Type = 12,
-        ExtraParts = 13,
-        NAM2 = 14,
-        NAM3 = 15,
-        TextureSet = 16,
-        ValidRaces = 17,
-        MNAM = 18,
+        Flags = 10,
+        Type = 11,
+        ExtraParts = 12,
+        NAM2 = 13,
+        NAM3 = 14,
+        TextureSet = 15,
+        ValidRaces = 16,
+        MNAM = 17,
     }
     #endregion
 
@@ -1365,9 +1322,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(HeadPart.Mask<>);
 
@@ -1404,8 +1361,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
-                RecordTypes.ANAM,
+                RecordTypes.MOLM,
                 RecordTypes.FLLD,
+                RecordTypes.XFLG,
                 RecordTypes.DATA,
                 RecordTypes.PNAM,
                 RecordTypes.HNAM,
@@ -1459,7 +1417,6 @@ namespace Mutagen.Bethesda.Starfield
             item.Components.Clear();
             item.Name = default;
             item.Model = null;
-            item.FLLD.Clear();
             item.Flags = default;
             item.Type = default;
             item.ExtraParts.Clear();
@@ -1486,7 +1443,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
-            obj.FLLD.Relink(mapping);
             obj.ExtraParts.RemapLinks(mapping);
             obj.TextureSet.Relink(mapping);
             obj.ValidRaces.Relink(mapping);
@@ -1600,7 +1556,6 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.FLLD = item.FLLD.Equals(rhs.FLLD);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Type = item.Type == rhs.Type;
             ret.ExtraParts = item.ExtraParts.CollectionEqualsHelper(
@@ -1684,10 +1639,6 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Model is {} ModelItem)
             {
                 ModelItem?.Print(sb, "Model");
-            }
-            if (printMask?.FLLD ?? true)
-            {
-                sb.AppendItem(item.FLLD.FormKeyNullable, "FLLD");
             }
             if (printMask?.Flags ?? true)
             {
@@ -1800,10 +1751,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.FLLD) ?? true))
-            {
-                if (!lhs.FLLD.Equals(rhs.FLLD)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
@@ -1873,7 +1820,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.FLLD);
             hash.Add(item.Flags);
             if (item.Type is {} Typeitem)
             {
@@ -1924,10 +1870,6 @@ namespace Mutagen.Bethesda.Starfield
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
-            }
-            if (FormLinkInformation.TryFactory(obj.FLLD, out var FLLDInfo))
-            {
-                yield return FLLDInfo;
             }
             foreach (var item in obj.ExtraParts)
             {
@@ -2096,10 +2038,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.FLLD) ?? true))
-            {
-                item.FLLD.SetTo(rhs.FLLD.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
             {
@@ -2329,10 +2267,6 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.FLLD,
-                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
             EnumBinaryTranslation<HeadPart.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
@@ -2480,24 +2414,14 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
                     item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadPart_FieldIndex.Model;
-                }
-                case RecordTypeInts.ANAM:
-                {
-                    item.Model = Mutagen.Bethesda.Starfield.SkeletalModel.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)HeadPart_FieldIndex.Model;
-                }
-                case RecordTypeInts.FLLD:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLLD.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)HeadPart_FieldIndex.FLLD;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2633,10 +2557,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region FLLD
-        private int? _FLLDLocation;
-        public IFormLinkNullableGetter<IStaticGetter> FLLD => _FLLDLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
-        #endregion
         #region Flags
         private int? _FlagsLocation;
         public HeadPart.Flag Flags => _FlagsLocation.HasValue ? (HeadPart.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(HeadPart.Flag);
@@ -2750,25 +2670,15 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)HeadPart_FieldIndex.Model;
-                }
-                case RecordTypeInts.ANAM:
-                {
-                    this.Model = SkeletalModelBinaryOverlay.SkeletalModelFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)HeadPart_FieldIndex.Model;
-                }
-                case RecordTypeInts.FLLD:
-                {
-                    _FLLDLocation = (stream.Position - offset);
-                    return (int)HeadPart_FieldIndex.FLLD;
                 }
                 case RecordTypeInts.DATA:
                 {

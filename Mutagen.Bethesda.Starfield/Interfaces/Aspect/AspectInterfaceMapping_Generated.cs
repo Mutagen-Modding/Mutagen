@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 AnimatedObject_Registration.Instance,
                 HeadPart_Registration.Instance,
+                SkeletalModel_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 Weapon_Registration.Instance,
             });

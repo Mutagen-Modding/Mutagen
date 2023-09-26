@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Model" objType="Subrecord">
     <Fields>
-      <AssetLink name="File" recordType="MODL" nullable="False" assetType="StarfieldModel" />
+      <AssetLink name="File" recordType="MODL" assetType="StarfieldModel" />
       <ByteArray name="MOLM" recordType="MOLM" unknown="true" />
       <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
       <ByteArray name="XFLG" recordType="XFLG" unknown="true" />
