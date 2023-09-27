@@ -80,6 +80,7 @@ namespace Mutagen.Bethesda.Starfield
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
+            _Weathers_Object = new StarfieldGroup<Weather>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -91,7 +92,6 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
-            _Weathers_Object = new StarfieldGroup<Weather>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -237,6 +237,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IBendableSplineGetter> IStarfieldModGetter.BendableSplines => _BendableSplines_Object;
         #endregion
+        #region Weathers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Weather> _Weathers_Object;
+        public StarfieldGroup<Weather> Weathers => _Weathers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IWeatherGetter> IStarfieldModGetter.Weathers => _Weathers_Object;
+        #endregion
         #region AnimatedObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AnimatedObject> _AnimatedObjects_Object;
@@ -314,13 +321,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IActorValueModulationGetter> IStarfieldModGetter.ActorValueModulations => _ActorValueModulations_Object;
         #endregion
-        #region Weathers
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<Weather> _Weathers_Object;
-        public StarfieldGroup<Weather> Weathers => _Weathers_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IWeatherGetter> IStarfieldModGetter.Weathers => _Weathers_Object;
-        #endregion
 
         #region To String
 
@@ -380,6 +380,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -391,7 +392,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -415,6 +415,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LandscapeTextures,
                 TItem StaticCollections,
                 TItem BendableSplines,
+                TItem Weathers,
                 TItem AnimatedObjects,
                 TItem Debris,
                 TItem DefaultObjects,
@@ -425,8 +426,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Planets,
                 TItem SurfacePatternStyles,
                 TItem LegendaryItems,
-                TItem ActorValueModulations,
-                TItem Weathers)
+                TItem ActorValueModulations)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -448,6 +448,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LandscapeTextures, new StarfieldGroup.Mask<TItem>(LandscapeTextures));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollections, new StarfieldGroup.Mask<TItem>(StaticCollections));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
+                this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weathers, new StarfieldGroup.Mask<TItem>(Weathers));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObjects, new StarfieldGroup.Mask<TItem>(AnimatedObjects));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
@@ -459,7 +460,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LegendaryItems, new StarfieldGroup.Mask<TItem>(LegendaryItems));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
-                this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weathers, new StarfieldGroup.Mask<TItem>(Weathers));
             }
 
             #pragma warning disable CS8618
@@ -491,6 +491,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LandscapeTextures { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollections { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weathers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
@@ -502,7 +503,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LegendaryItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weathers { get; set; }
             #endregion
 
             #region Equals
@@ -535,6 +535,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
+                if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
@@ -546,7 +547,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 if (!object.Equals(this.LegendaryItems, rhs.LegendaryItems)) return false;
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
-                if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -572,6 +572,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LandscapeTextures);
                 hash.Add(this.StaticCollections);
                 hash.Add(this.BendableSplines);
+                hash.Add(this.Weathers);
                 hash.Add(this.AnimatedObjects);
                 hash.Add(this.Debris);
                 hash.Add(this.DefaultObjects);
@@ -583,7 +584,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SurfacePatternStyles);
                 hash.Add(this.LegendaryItems);
                 hash.Add(this.ActorValueModulations);
-                hash.Add(this.Weathers);
                 return hash.ToHashCode();
             }
 
@@ -692,6 +692,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.BendableSplines.Overall)) return false;
                     if (this.BendableSplines.Specific != null && !this.BendableSplines.Specific.All(eval)) return false;
                 }
+                if (Weathers != null)
+                {
+                    if (!eval(this.Weathers.Overall)) return false;
+                    if (this.Weathers.Specific != null && !this.Weathers.Specific.All(eval)) return false;
+                }
                 if (AnimatedObjects != null)
                 {
                     if (!eval(this.AnimatedObjects.Overall)) return false;
@@ -746,11 +751,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ActorValueModulations.Overall)) return false;
                     if (this.ActorValueModulations.Specific != null && !this.ActorValueModulations.Specific.All(eval)) return false;
-                }
-                if (Weathers != null)
-                {
-                    if (!eval(this.Weathers.Overall)) return false;
-                    if (this.Weathers.Specific != null && !this.Weathers.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -859,6 +859,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.BendableSplines.Overall)) return true;
                     if (this.BendableSplines.Specific != null && this.BendableSplines.Specific.Any(eval)) return true;
                 }
+                if (Weathers != null)
+                {
+                    if (eval(this.Weathers.Overall)) return true;
+                    if (this.Weathers.Specific != null && this.Weathers.Specific.Any(eval)) return true;
+                }
                 if (AnimatedObjects != null)
                 {
                     if (eval(this.AnimatedObjects.Overall)) return true;
@@ -914,11 +919,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ActorValueModulations.Overall)) return true;
                     if (this.ActorValueModulations.Specific != null && this.ActorValueModulations.Specific.Any(eval)) return true;
                 }
-                if (Weathers != null)
-                {
-                    if (eval(this.Weathers.Overall)) return true;
-                    if (this.Weathers.Specific != null && this.Weathers.Specific.Any(eval)) return true;
-                }
                 return false;
             }
             #endregion
@@ -953,6 +953,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
+                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
                 obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
@@ -964,7 +965,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
                 obj.LegendaryItems = this.LegendaryItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LegendaryItems.Overall), this.LegendaryItems.Specific?.Translate(eval));
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
-                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1063,6 +1063,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         BendableSplines?.Print(sb);
                     }
+                    if (printMask?.Weathers?.Overall ?? true)
+                    {
+                        Weathers?.Print(sb);
+                    }
                     if (printMask?.AnimatedObjects?.Overall ?? true)
                     {
                         AnimatedObjects?.Print(sb);
@@ -1106,10 +1110,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ActorValueModulations?.Overall ?? true)
                     {
                         ActorValueModulations?.Print(sb);
-                    }
-                    if (printMask?.Weathers?.Overall ?? true)
-                    {
-                        Weathers?.Print(sb);
                     }
                 }
             }
@@ -1155,6 +1155,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
@@ -1166,7 +1167,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>? LegendaryItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
             #endregion
 
             #region IErrorMask
@@ -1215,6 +1215,8 @@ namespace Mutagen.Bethesda.Starfield
                         return StaticCollections;
                     case StarfieldMod_FieldIndex.BendableSplines:
                         return BendableSplines;
+                    case StarfieldMod_FieldIndex.Weathers:
+                        return Weathers;
                     case StarfieldMod_FieldIndex.AnimatedObjects:
                         return AnimatedObjects;
                     case StarfieldMod_FieldIndex.Debris:
@@ -1237,8 +1239,6 @@ namespace Mutagen.Bethesda.Starfield
                         return LegendaryItems;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         return ActorValueModulations;
-                    case StarfieldMod_FieldIndex.Weathers:
-                        return Weathers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1309,6 +1309,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.BendableSplines:
                         this.BendableSplines = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>(ex, null);
                         break;
+                    case StarfieldMod_FieldIndex.Weathers:
+                        this.Weathers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        break;
                     case StarfieldMod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
                         break;
@@ -1341,9 +1344,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.Weathers:
-                        this.Weathers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1415,6 +1415,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.BendableSplines:
                         this.BendableSplines = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Weathers:
+                        this.Weathers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
                         break;
@@ -1448,9 +1451,6 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>?)obj;
                         break;
-                    case StarfieldMod_FieldIndex.Weathers:
-                        this.Weathers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1479,6 +1479,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (LandscapeTextures != null) return true;
                 if (StaticCollections != null) return true;
                 if (BendableSplines != null) return true;
+                if (Weathers != null) return true;
                 if (AnimatedObjects != null) return true;
                 if (Debris != null) return true;
                 if (DefaultObjects != null) return true;
@@ -1490,7 +1491,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (SurfacePatternStyles != null) return true;
                 if (LegendaryItems != null) return true;
                 if (ActorValueModulations != null) return true;
-                if (Weathers != null) return true;
                 return false;
             }
             #endregion
@@ -1536,6 +1536,7 @@ namespace Mutagen.Bethesda.Starfield
                 LandscapeTextures?.Print(sb);
                 StaticCollections?.Print(sb);
                 BendableSplines?.Print(sb);
+                Weathers?.Print(sb);
                 AnimatedObjects?.Print(sb);
                 Debris?.Print(sb);
                 DefaultObjects?.Print(sb);
@@ -1547,7 +1548,6 @@ namespace Mutagen.Bethesda.Starfield
                 SurfacePatternStyles?.Print(sb);
                 LegendaryItems?.Print(sb);
                 ActorValueModulations?.Print(sb);
-                Weathers?.Print(sb);
             }
             #endregion
 
@@ -1576,6 +1576,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LandscapeTextures = this.LandscapeTextures.Combine(rhs.LandscapeTextures, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
+                ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
@@ -1587,7 +1588,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 ret.LegendaryItems = this.LegendaryItems.Combine(rhs.LegendaryItems, (l, r) => l.Combine(r));
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
-                ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1631,6 +1631,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
             public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
+            public StarfieldGroup.TranslationMask<Weather.TranslationMask>? Weathers;
             public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
@@ -1642,7 +1643,6 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             public StarfieldGroup.TranslationMask<LegendaryItem.TranslationMask>? LegendaryItems;
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
-            public StarfieldGroup.TranslationMask<Weather.TranslationMask>? Weathers;
             #endregion
 
             #region Ctors
@@ -1687,6 +1687,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LandscapeTextures != null ? LandscapeTextures.OnOverall : DefaultOn, LandscapeTextures?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
+                ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
                 ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
@@ -1698,7 +1699,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
                 ret.Add((LegendaryItems != null ? LegendaryItems.OnOverall : DefaultOn, LegendaryItems?.GetCrystal()));
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
-                ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1761,6 +1761,7 @@ namespace Mutagen.Bethesda.Starfield
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
+            _Weathers_Object = new StarfieldGroup<Weather>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -1772,7 +1773,6 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
-            _Weathers_Object = new StarfieldGroup<Weather>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1855,6 +1855,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BendableSplines.RecordCache.Set(rhsMod.BendableSplines.RecordCache.Items);
             }
+            if (mask?.Weathers ?? true)
+            {
+                this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
+            }
             if (mask?.AnimatedObjects ?? true)
             {
                 this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
@@ -1899,10 +1903,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ActorValueModulations.RecordCache.Set(rhsMod.ActorValueModulations.RecordCache.Items);
             }
-            if (mask?.Weathers ?? true)
-            {
-                this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
-            }
         }
 
         public override void SyncRecordCount()
@@ -1932,6 +1932,7 @@ namespace Mutagen.Bethesda.Starfield
             count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
             count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
@@ -1943,7 +1944,6 @@ namespace Mutagen.Bethesda.Starfield
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2219,6 +2219,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<LandscapeTexture> LandscapeTextures { get; }
         new StarfieldGroup<StaticCollection> StaticCollections { get; }
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
+        new StarfieldGroup<Weather> Weathers { get; }
         new StarfieldGroup<AnimatedObject> AnimatedObjects { get; }
         new StarfieldGroup<Debris> Debris { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
@@ -2230,7 +2231,6 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
         new StarfieldGroup<LegendaryItem> LegendaryItems { get; }
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
-        new StarfieldGroup<Weather> Weathers { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -2270,6 +2270,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
         IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections { get; }
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
+        IStarfieldGroupGetter<IWeatherGetter> Weathers { get; }
         IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
@@ -2281,7 +2282,6 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
         IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems { get; }
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
-        IStarfieldGroupGetter<IWeatherGetter> Weathers { get; }
 
     }
 
@@ -2872,18 +2872,18 @@ namespace Mutagen.Bethesda.Starfield
         LandscapeTextures = 17,
         StaticCollections = 18,
         BendableSplines = 19,
-        AnimatedObjects = 20,
-        Debris = 21,
-        DefaultObjects = 22,
-        Outfits = 23,
-        AimModels = 24,
-        AttractionRules = 25,
-        BiomeSwaps = 26,
-        Planets = 27,
-        SurfacePatternStyles = 28,
-        LegendaryItems = 29,
-        ActorValueModulations = 30,
-        Weathers = 31,
+        Weathers = 20,
+        AnimatedObjects = 21,
+        Debris = 22,
+        DefaultObjects = 23,
+        Outfits = 24,
+        AimModels = 25,
+        AttractionRules = 26,
+        BiomeSwaps = 27,
+        Planets = 28,
+        SurfacePatternStyles = 29,
+        LegendaryItems = 30,
+        ActorValueModulations = 31,
     }
     #endregion
 
@@ -2982,6 +2982,7 @@ namespace Mutagen.Bethesda.Starfield
             item.LandscapeTextures.Clear();
             item.StaticCollections.Clear();
             item.BendableSplines.Clear();
+            item.Weathers.Clear();
             item.AnimatedObjects.Clear();
             item.Debris.Clear();
             item.DefaultObjects.Clear();
@@ -2993,7 +2994,6 @@ namespace Mutagen.Bethesda.Starfield
             item.SurfacePatternStyles.Clear();
             item.LegendaryItems.Clear();
             item.ActorValueModulations.Clear();
-            item.Weathers.Clear();
         }
         
         #region Mutagen
@@ -3013,13 +3013,13 @@ namespace Mutagen.Bethesda.Starfield
             obj.LandscapeTextures.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
+            obj.Weathers.RemapLinks(mapping);
             obj.AnimatedObjects.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
             obj.Outfits.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
             obj.LegendaryItems.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
-            obj.Weathers.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -3073,6 +3073,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LandscapeTextures.Remove(keys);
             obj.StaticCollections.Remove(keys);
             obj.BendableSplines.Remove(keys);
+            obj.Weathers.Remove(keys);
             obj.AnimatedObjects.Remove(keys);
             obj.Debris.Remove(keys);
             obj.DefaultObjects.Remove(keys);
@@ -3084,7 +3085,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.SurfacePatternStyles.Remove(keys);
             obj.LegendaryItems.Remove(keys);
             obj.ActorValueModulations.Remove(keys);
-            obj.Weathers.Remove(keys);
         }
         
         public void Remove(
@@ -3276,6 +3276,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    obj.Weathers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
@@ -3361,14 +3369,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     obj.ActorValueModulations.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Weather":
-                case "IWeatherGetter":
-                case "IWeather":
-                case "IWeatherInternal":
-                    obj.Weathers.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -3489,6 +3489,12 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.Weathers.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.AnimatedObjects is IAssetLinkContainer AnimatedObjectslinkCont)
             {
                 foreach (var item in AnimatedObjectslinkCont.EnumerateListedAssetLinks())
@@ -3522,12 +3528,6 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            {
-                foreach (var item in obj.Weathers.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
@@ -3552,12 +3552,12 @@ namespace Mutagen.Bethesda.Starfield
             obj.LandscapeTextures.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.StaticCollections.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BendableSplines.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueModulations.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -3622,6 +3622,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.LandscapeTextures = MaskItemExt.Factory(item.LandscapeTextures.GetEqualsMask(rhs.LandscapeTextures, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
+            ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
             ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
@@ -3633,7 +3634,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
             ret.LegendaryItems = MaskItemExt.Factory(item.LegendaryItems.GetEqualsMask(rhs.LegendaryItems, include), include);
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
-            ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
         }
         
         public string Print(
@@ -3758,6 +3758,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.BendableSplines?.Print(sb, "BendableSplines");
             }
+            if (printMask?.Weathers?.Overall ?? true)
+            {
+                item.Weathers?.Print(sb, "Weathers");
+            }
             if (printMask?.AnimatedObjects?.Overall ?? true)
             {
                 item.AnimatedObjects?.Print(sb, "AnimatedObjects");
@@ -3801,10 +3805,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.ActorValueModulations?.Overall ?? true)
             {
                 item.ActorValueModulations?.Print(sb, "ActorValueModulations");
-            }
-            if (printMask?.Weathers?.Overall ?? true)
-            {
-                item.Weathers?.Print(sb, "Weathers");
             }
         }
         
@@ -3975,6 +3975,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isBendableSplinesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weathers) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Weathers, rhs.Weathers, out var lhsWeathers, out var rhsWeathers, out var isWeathersEqual))
+                {
+                    if (!object.Equals(lhsWeathers, rhsWeathers)) return false;
+                }
+                else if (!isWeathersEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
@@ -4063,14 +4071,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isActorValueModulationsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weathers) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Weathers, rhs.Weathers, out var lhsWeathers, out var rhsWeathers, out var isWeathersEqual))
-                {
-                    if (!object.Equals(lhsWeathers, rhsWeathers)) return false;
-                }
-                else if (!isWeathersEqual) return false;
-            }
             return true;
         }
         
@@ -4097,6 +4097,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.LandscapeTextures);
             hash.Add(item.StaticCollections);
             hash.Add(item.BendableSplines);
+            hash.Add(item.Weathers);
             hash.Add(item.AnimatedObjects);
             hash.Add(item.Debris);
             hash.Add(item.DefaultObjects);
@@ -4108,7 +4109,6 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SurfacePatternStyles);
             hash.Add(item.LegendaryItems);
             hash.Add(item.ActorValueModulations);
-            hash.Add(item.Weathers);
             return hash.ToHashCode();
         }
         
@@ -4222,6 +4222,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBendableSpline":
                 case "IBendableSplineInternal":
                     return obj.BendableSplines;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    return obj.Weathers;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
@@ -4277,11 +4282,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     return obj.ActorValueModulations;
-                case "Weather":
-                case "IWeatherGetter":
-                case "IWeather":
-                case "IWeatherInternal":
-                    return obj.Weathers;
                 default:
                     return null;
             }
@@ -4328,18 +4328,18 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 16, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.StaticCollections, 17, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BendableSplines, 18, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 19, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 20, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 21, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 22, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 23, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 24, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 25, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 19, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 20, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 21, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 22, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 23, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 24, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 25, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 26, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 30, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4446,6 +4446,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.Weathers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             if (obj.AnimatedObjects is IFormLinkContainerGetter AnimatedObjectslinkCont)
             {
                 foreach (var item in AnimatedObjectslinkCont.EnumerateFormLinks())
@@ -4475,10 +4479,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
-            }
-            foreach (var item in obj.Weathers.EnumerateFormLinks())
-            {
-                yield return item;
             }
             yield break;
         }
@@ -4561,6 +4561,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.Weathers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords())
             {
                 yield return item;
@@ -4602,10 +4606,6 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ActorValueModulations.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Weathers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4815,6 +4815,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
@@ -4910,15 +4919,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     foreach (var item in obj.ActorValueModulations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Weather":
-                case "IWeatherGetter":
-                case "IWeather":
-                case "IWeatherInternal":
-                    foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -5118,6 +5118,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weather, IWeatherGetter>(
+                srcGroup: obj.Weathers,
+                type: typeof(IWeatherGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weathers,
+                groupGetter: (m) => m.Weathers))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AnimatedObject, IAnimatedObjectGetter>(
                 srcGroup: obj.AnimatedObjects,
                 type: typeof(IAnimatedObjectGetter),
@@ -5214,15 +5223,6 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.ActorValueModulations,
                 groupGetter: (m) => m.ActorValueModulations))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weather, IWeatherGetter>(
-                srcGroup: obj.Weathers,
-                type: typeof(IWeatherGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Weathers,
-                groupGetter: (m) => m.Weathers))
             {
                 yield return item;
             }
@@ -5523,6 +5523,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weather, IWeatherGetter>(
+                        srcGroup: obj.Weathers,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weathers,
+                        groupGetter: (m) => m.Weathers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
@@ -5677,20 +5691,6 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "Weather":
-                case "IWeatherGetter":
-                case "IWeather":
-                case "IWeatherInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weather, IWeatherGetter>(
-                        srcGroup: obj.Weathers,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Weathers,
-                        groupGetter: (m) => m.Weathers))
-                    {
-                        yield return item;
-                    }
-                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IStarfieldModGetter, IStarfieldMod, IStarfieldModGetter>(
                         GameCategory.Starfield,
@@ -5785,6 +5785,10 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                 }
+                foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
                 if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
                 {
                     foreach (var item in AnimatedObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
@@ -5813,10 +5817,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         yield return item;
                     }
-                }
-                foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
                 }
             }
             yield break;
@@ -6237,6 +6237,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weathers) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Weathers);
+                try
+                {
+                    item.Weathers.DeepCopyIn(
+                        rhs: rhs.Weathers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Weathers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AnimatedObjects);
@@ -6457,26 +6477,6 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weathers) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Weathers);
-                try
-                {
-                    item.Weathers.DeepCopyIn(
-                        rhs: rhs.Weathers,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Weathers));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
         }
         
         #endregion
@@ -6586,6 +6586,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool LandscapeTextures;
         public bool StaticCollections;
         public bool BendableSplines;
+        public bool Weathers;
         public bool AnimatedObjects;
         public bool Debris;
         public bool DefaultObjects;
@@ -6597,7 +6598,6 @@ namespace Mutagen.Bethesda.Starfield
         public bool SurfacePatternStyles;
         public bool LegendaryItems;
         public bool ActorValueModulations;
-        public bool Weathers;
         public GroupMask()
         {
         }
@@ -6622,6 +6622,7 @@ namespace Mutagen.Bethesda.Starfield
             LandscapeTextures = defaultValue;
             StaticCollections = defaultValue;
             BendableSplines = defaultValue;
+            Weathers = defaultValue;
             AnimatedObjects = defaultValue;
             Debris = defaultValue;
             DefaultObjects = defaultValue;
@@ -6633,7 +6634,6 @@ namespace Mutagen.Bethesda.Starfield
             SurfacePatternStyles = defaultValue;
             LegendaryItems = defaultValue;
             ActorValueModulations = defaultValue;
-            Weathers = defaultValue;
         }
     }
 
@@ -6874,6 +6874,17 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.Weathers ?? true)
+            {
+                var WeathersItem = item.Weathers;
+                if (WeathersItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
+                        item: WeathersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.AnimatedObjects ?? true)
             {
                 var AnimatedObjectsItem = item.AnimatedObjects;
@@ -6991,17 +7002,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ActorValueModulationsItem).BinaryWriteTranslator).Write<IActorValueModulationGetter>(
                         item: ActorValueModulationsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.Weathers ?? true)
-            {
-                var WeathersItem = item.Weathers;
-                if (WeathersItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
-                        item: WeathersItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7332,6 +7332,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.BendableSplines;
                 }
+                case RecordTypeInts.WTHR:
+                {
+                    if (importMask?.Weathers ?? true)
+                    {
+                        item.Weathers.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Weathers;
+                }
                 case RecordTypeInts.ANIO:
                 {
                     if (importMask?.AnimatedObjects ?? true)
@@ -7485,20 +7499,6 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.ActorValueModulations;
-                }
-                case RecordTypeInts.WTHR:
-                {
-                    if (importMask?.Weathers ?? true)
-                    {
-                        item.Weathers.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.Weathers;
                 }
                 default:
                     frame.Position += contentLength;
@@ -7765,6 +7765,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? StarfieldGroupBinaryOverlay<IBendableSplineGetter>.StarfieldGroupFactory(_stream, _BendableSplinesLocations, _package) : default;
         public IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines => _BendableSplines ?? new StarfieldGroup<BendableSpline>(this);
         #endregion
+        #region Weathers
+        private List<RangeInt64>? _WeathersLocations;
+        private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package) : default;
+        public IStarfieldGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new StarfieldGroup<Weather>(this);
+        #endregion
         #region AnimatedObjects
         private List<RangeInt64>? _AnimatedObjectsLocations;
         private IStarfieldGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? StarfieldGroupBinaryOverlay<IAnimatedObjectGetter>.StarfieldGroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
@@ -7819,11 +7824,6 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _ActorValueModulationsLocations;
         private IStarfieldGroupGetter<IActorValueModulationGetter>? _ActorValueModulations => _ActorValueModulationsLocations != null ? StarfieldGroupBinaryOverlay<IActorValueModulationGetter>.StarfieldGroupFactory(_stream, _ActorValueModulationsLocations, _package) : default;
         public IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations => _ActorValueModulations ?? new StarfieldGroup<ActorValueModulation>(this);
-        #endregion
-        #region Weathers
-        private List<RangeInt64>? _WeathersLocations;
-        private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package) : default;
-        public IStarfieldGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new StarfieldGroup<Weather>(this);
         #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
@@ -8027,6 +8027,12 @@ namespace Mutagen.Bethesda.Starfield
                     _BendableSplinesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.BendableSplines;
                 }
+                case RecordTypeInts.WTHR:
+                {
+                    _WeathersLocations ??= new();
+                    _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Weathers;
+                }
                 case RecordTypeInts.ANIO:
                 {
                     _AnimatedObjectsLocations ??= new();
@@ -8092,12 +8098,6 @@ namespace Mutagen.Bethesda.Starfield
                     _ActorValueModulationsLocations ??= new();
                     _ActorValueModulationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ActorValueModulations;
-                }
-                case RecordTypeInts.WTHR:
-                {
-                    _WeathersLocations ??= new();
-                    _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.Weathers;
                 }
                 default:
                     return default(int?);

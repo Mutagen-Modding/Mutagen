@@ -22,6 +22,7 @@
       <Group name="LandscapeTextures" refName="LandscapeTexture" />
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="BendableSplines" refName="BendableSpline" />
+      <Group name="Weathers" refName="Weather" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Debris" refName="Debris" />
       <Group name="DefaultObjects" refName="DefaultObject" />
@@ -33,7 +34,6 @@
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
-      <Group name="Weathers" refName="Weather" />
     </Fields>
   </Object>
 </Loqui>
