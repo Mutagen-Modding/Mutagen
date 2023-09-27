@@ -1,3 +1,7 @@
+---
+order: 400
+label: Strings
+---
 # Translated Strings
 Newer Bethesda titles come with the ability for a single string record to have multiple different translations in different languages.  This is provided via the concept of extra `.strings` files, which provide an index to string mapping to alternate translations for a language.  On the mod file binary side, string record contents are replaced with an index that can be used to lookup a value in the strings files for the language desired.
 

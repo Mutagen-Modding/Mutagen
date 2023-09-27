@@ -1,21 +1,6 @@
 # Translation Masks
 Several functionalities such as Equality, DeepCopy, and a few others have support for a concept called Translation Masks.  These allow for customization of what members are involved in those operations.
 
-## Equality
-Providing a translation mask to an Equality call will control what members are compared when determining equality.
-
-```cs
-var mask = new Npc.TranslationMask(defaultOn: false)
-{
-    Height = true,
-    Weight = true,
-};
-
-npc.Equals(npc2, mask);
-```
-
-The above would compare equality of the Height and Weight of the two Npcs.  All other members would not be considered.
-
 ## DeepCopy(In)
 
 ```cs
@@ -31,29 +16,51 @@ npc.DeepCopyIn(npc2, mask);
 
 The above would copy in the values of the `Height`, `Weight`, and `Destructible` subobject from `npc2` into `npc`.  All other members of `npc` would be left untouched.
 
+[:octicons-arrow-right-24: Copy Functionality](plugins/Copy-Functionality.md)
+
+## Equality
+Providing a translation mask to an Equality call will control what members are compared when determining equality.
+
+```cs
+var mask = new Npc.TranslationMask(defaultOn: false)
+{
+    Height = true,
+    Weight = true,
+};
+
+npc.Equals(npc2, mask);
+```
+
+The above would compare equality of the Height and Weight of the two Npcs.  All other members would not be considered.
+
+[:octicons-arrow-right-24: Equality](plugins/Translation-Masks.md)
+
+!!! bug "Work in Progress"
+    Equality functionality exists, but has not been thoroughly tested.  Bugs within may exist.  Please report if you see any.
+
 ## Translation Mask Construction
 The above examples are very simple mask constructions.  They can get more complex when there are subobjects and/or lists involved.
 
 ### defaultOn Parameter 
 When creating a mask, you can either give it `defaultOn: true` where all the fields will be marked `true` by default, and then you can selectively mark fields false as desired.  Inversely, you can give it `defaultOn: false` where all the fields will be marked `false` by default, and you'll need to turn specific fields `true` as needed.
 
-Copy of only one field:
-```cs
-// Only copy Height
-var mask = new Npc.TranslationMask(defaultOn: false)
-{
-    Height = true,
-};
-```
+=== "Copy Only One Field"
+    ```cs
+    // Only copy Height
+    var mask = new Npc.TranslationMask(defaultOn: false)
+    {
+        Height = true,
+    };
+    ```
 
-Copy of all but one field:
-```cs
-// Copy everything BUT Height
-var mask = new Npc.TranslationMask(defaultOn: true)
-{
-    Height = false,
-};
-```
+=== "Copy All But One Field"
+    ```cs
+    // Copy everything BUT Height
+    var mask = new Npc.TranslationMask(defaultOn: true)
+    {
+        Height = false,
+    };
+    ```
 
 ### Subobjects
 When a record has subobjects, the subobject field is itself a Translation mask letting you set members within that subobject
@@ -67,6 +74,21 @@ var mask = new Npc.TranslationMask(defaultOn: true)
     }
 };
 ```
+
+#### Implicit Bool Conversion Shorthand
+When dealing with subobjects, the above API can get a bit verbose.  For the basic situations of inclusion/exclusion, Translation Masks are implicitly convertible from `bool`s.  So you can do something like this:
+
+```cs
+rec.DeepCopy(new Npc.TranslationMask(defaultOn: false)
+{
+    // Boolean converts to a translation mask for you
+    Destructible = true
+    // Equivalent to
+    // Destructible = new Destructible.TranslationMask(true)
+});
+```
+
+This would copy over everything but the `Destructible` member, but is much easier to write
 
 ### onOverall Parameter
 This one has a lot more nuance.  It relates to behavior for a nullable subobject, and gives the user more control as to how those are handled.
@@ -109,7 +131,7 @@ The bool `onOverall` gives us the extra control to specify exactly what we want.
 rec.DeepCopy(new Npc.TranslationMask(true)
 {
     Name = false,
-    Destructible = new Destructible.TranslationMask(doesNotMatter, onOverall: false)
+    Destructible = new Destructible.TranslationMask(onOverall: false)
 });
 ```
 So whatever value the `rec.Destructible` had before, it will still have, as it will be not touched or considered at all.
@@ -131,23 +153,10 @@ rec.DeepCopy(new Npc.TranslationMask(true)
 This setup has `onOverall` of true, and so the mask will be applied and considered during the copy.
 `defaultOn` is false, and so by default it would only copy over the `Stages` member of Destructible, as well as respecting the nullability.  If the source Npc had a null Destructible, the the target will get a null Destructible.
 
-As you can see, `defaultOn = false` still means the mask has effects during the copy job.  `onOverall = false` is what we'd set if we did not want it to have any effects, and wanted `Destructible` to not be considered whatsoever.
-
-## Subobject Shorthand
-When dealing with subobjects, the above API can get a bit verbose.  For the basic situations of inclusion/exclusion, Translation Masks are implicitly convertible from `bool`s.  So you can do something like this:
-
-```cs
-rec.DeepCopy(new Npc.TranslationMask(true)
-{
-    // Boolean converts to a translation mask for you
-    Destructible = false
-    // Equivalent to
-    // Destructible = new Destructible.TranslationMask(false, false)
-});
-```
-
-This would copy over everything but the `Destructible` member, but is much easier to write.  Similarly, you can just provide `true` to include it in a false-by-default mask.
+In summary:
+`onOverall = false` is what we'd set if we did not want it to have any effects, and wanted `Destructible` to not be considered whatsoever.  
+`onOverall = true` (default), is what we'd set if we wanted the mask to be applied, in which case `defaultOn` and any field settings would take effect during the application.
 
 ## Best Practices
-## Create Once, Use Many
-It's best practice to not create a translation mask per call.  As in, try to not make a new mask for every equality call, but rather make the desired mask once ahead of time and reuse it for each equality call if possible.
+### Create Once, Use Many
+Usually you do not need to create a translation mask per call.  Rather, you can make the desired mask once ahead of time and reuse it for each equality call.

@@ -1,4 +1,6 @@
-# FormKey Allocation and Persistence
+!!! danger "Experimental"
+    This feature has had some work put into it, but is still an experimental proof of concept
+
 It is common that tooling that is generating new records when creating plugins wants to keep their FormKeys consistent across several runs.  The same records should get the same FormKeys.
 
 There are some challenges with fulfilling this:

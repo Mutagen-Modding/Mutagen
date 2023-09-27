@@ -2,7 +2,7 @@
 Mutagen provides functionality for copying in data to an already existing object.
 
 ## DeepCopy
-**This call will create a new object, and copy all fields.**  This will be done in a "deep" fashion, where duplicate objects will be made for each subobject and their fields copied over as well.  No references to the original object or any subobjects from the original will exist in the object copied to.
+This call will create a new object, and copy all fields.  This will be done in a "deep" fashion, where duplicate objects will be made for each subobject and their fields copied over as well.  No references to the original object or any subobjects from the original will exist in the object copied to.
 
 This separates the new object from the original object so that modifying either has no effect on the other.
 
@@ -19,7 +19,7 @@ Some things to note:
 - The cast is required currently, but will hopefully be unnecessary eventually.
 
 ## DeepCopyIn
-**This call will copy in all fields from a second object to an already existing object**
+This call will copy in all fields from a second object to an already existing object.  Changes to either object will not affect the other.
 
 ```cs
 IPotionGetter potionSource = ...;
@@ -27,15 +27,14 @@ Potion potionCopy = mod.Potions.AddNew();
 potionCopy.DeepCopyIn(potionSource);
 ```
 
-Some things to note:
-
-- `FormKey`s are immutable, and will never be changed even with a copy in.  If you want a second record with the original's `FormKey`, use DeepCopy instead.
-- Changes to either object will not affect the other
+!!! info "FormKey Will Not Be Copied"
+    `FormKey`s are immutable, and will never be changed even with a copy in.
 
 ## Translation Masks
 As with many other translational tasks in Mutagen, Copy functionality comes with the option to provide Masks to control what will get copied.
 
 ```cs
+IPotionGetter otherPotion = ...;
 var onlyScriptsMask = new Potion.TranslationMask(defaultOn: false)
 {
     Script = true

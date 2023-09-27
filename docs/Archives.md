@@ -1,3 +1,6 @@
+---
+order: 500
+---
 # Archives (BSAs)
 Certain Bethesda files like textures, meshes, and similar assets are often stored in zipped up files with extensions like `.bsa` or `b2a`.
 
