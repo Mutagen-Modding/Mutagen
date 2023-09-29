@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectPlacementDefaults" objType="Subrecord" recordType="OPDS">
+    <Fields>
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+      <Float name="Unknown3" />
+      <Float name="Unknown4" />
+      <Float name="Unknown5" />
+      <Float name="Unknown6" />
+      <Float name="Unknown7" />
+      <Float name="Unknown8" />
+      <Float name="Unknown9" />
+      <Float name="Unknown10" />
+      <Float name="Unknown11" />
+      <Float name="Unknown12" />
+      <Float name="Unknown13" />
+      <Float name="Unknown14" />
+      <Float name="Unknown15" />
+      <Float name="Unknown16" />
+      <Float name="Unknown17" />
+      <Float name="Unknown18" />
+      <Float name="Unknown19" />
+      <Float name="Unknown20" />
+    </Fields>
+  </Object>
+</Loqui>

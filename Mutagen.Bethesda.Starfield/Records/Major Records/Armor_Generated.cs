@@ -418,6 +418,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IArmor :
         IArmorGetter,
+        IItem,
         ILoquiObjectSetter<IArmorInternal>,
         IOutfitTarget,
         IStarfieldMajorRecordInternal
@@ -435,6 +436,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IArmorGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IItemGetter,
         ILoquiObject<IArmorGetter>,
         IMapsToGetter<IArmorGetter>,
         IOutfitTargetGetter

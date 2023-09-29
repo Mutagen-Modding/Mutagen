@@ -20,6 +20,10 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IHaveVirtualMachineAdapterGetter)] = new InterfaceMappingResult(false, new ILoquiRegistration[]
+            {
+                LeveledItem_Registration.Instance,
+            });
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Keyword_Registration.Instance,
@@ -38,6 +42,7 @@ namespace Mutagen.Bethesda.Starfield
                 BodyData_Registration.Instance,
                 HeadPart_Registration.Instance,
                 LegendaryItem_Registration.Instance,
+                LeveledItem_Registration.Instance,
                 ModelComponent_Registration.Instance,
                 PlanetModelComponent_Registration.Instance,
                 SkeletalModel_Registration.Instance,
@@ -78,6 +83,22 @@ namespace Mutagen.Bethesda.Starfield
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
+                ScriptBoolListProperty_Registration.Instance,
+                ScriptBoolProperty_Registration.Instance,
+                ScriptEntry_Registration.Instance,
+                ScriptFloatListProperty_Registration.Instance,
+                ScriptFloatProperty_Registration.Instance,
+                ScriptIntListProperty_Registration.Instance,
+                ScriptIntProperty_Registration.Instance,
+                ScriptObjectListProperty_Registration.Instance,
+                ScriptObjectProperty_Registration.Instance,
+                ScriptProperty_Registration.Instance,
+                ScriptStringListProperty_Registration.Instance,
+                ScriptStringProperty_Registration.Instance,
+                ScriptStructListProperty_Registration.Instance,
+                ScriptStructProperty_Registration.Instance,
+                ScriptVariableListProperty_Registration.Instance,
+                ScriptVariableProperty_Registration.Instance,
                 StaticCollection_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
@@ -112,6 +133,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AudioOcclusionPrimitive_Registration.Instance,
+                LeveledItem_Registration.Instance,
                 SoundEchoMarker_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TextureSet_Registration.Instance,
@@ -129,6 +151,11 @@ namespace Mutagen.Bethesda.Starfield
                 Transform_Registration.Instance,
             });
             dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
+            dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                LeveledItem_Registration.Instance,
+            });
+            dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

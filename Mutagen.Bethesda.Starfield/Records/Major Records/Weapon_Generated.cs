@@ -493,6 +493,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IWeapon :
         IAssetLinkContainer,
+        IItem,
         ILoquiObjectSetter<IWeaponInternal>,
         IModeled,
         IStarfieldMajorRecordInternal,
@@ -517,6 +518,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IItemGetter,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>,
         IModeledGetter,

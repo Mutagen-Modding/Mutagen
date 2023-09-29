@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +26,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +58,208 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? ILeveledItemGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ILeveledItemGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILeveledItemGetter.ODTY => this.ODTY;
+        #endregion
+        #region ObjectPlacementDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        {
+            get => _ObjectPlacementDefaults;
+            set => _ObjectPlacementDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? ILeveledItemGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ILeveledItemGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILeveledItemGetter.XALG => this.XALG;
+        #endregion
+        #region ChanceNone
+        public Single ChanceNone { get; set; } = default;
+        #endregion
+        #region MaxCount
+        public Byte? MaxCount { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? ILeveledItemGetter.MaxCount => this.MaxCount;
+        #endregion
+        #region Flags
+        public LeveledItem.Flag Flags { get; set; } = default;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> ILeveledItemGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region UseGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _UseGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> UseGlobal
+        {
+            get => _UseGlobal;
+            set => _UseGlobal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> ILeveledItemGetter.UseGlobal => this.UseGlobal;
+        #endregion
+        #region Entries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LeveledItemEntry>? _Entries;
+        public ExtendedList<LeveledItemEntry>? Entries
+        {
+            get => this._Entries;
+            set => this._Entries = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILeveledItemEntryGetter>? ILeveledItemGetter.Entries => _Entries;
+        #endregion
+
+        #endregion
+        #region FilterKeywordChances
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<FilterKeywordChance>? _FilterKeywordChances;
+        public ExtendedList<FilterKeywordChance>? FilterKeywordChances
+        {
+            get => this._FilterKeywordChances;
+            set => this._FilterKeywordChances = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFilterKeywordChanceGetter>? ILeveledItemGetter.FilterKeywordChances => _FilterKeywordChances;
+        #endregion
+
+        #endregion
+        #region LVLL
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _LVLL;
+        public MemorySlice<Byte>? LVLL
+        {
+            get => this._LVLL;
+            set => this._LVLL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILeveledItemGetter.LVLL => this.LVLL;
+        #endregion
+        #region LIMC
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _LIMC;
+        public MemorySlice<Byte>? LIMC
+        {
+            get => this._LIMC;
+            set => this._LIMC = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ILeveledItemGetter.LIMC => this.LIMC;
+        #endregion
+        #region OverrideName
+        public TranslatedString? OverrideName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ILeveledItemGetter.OverrideName => this.OverrideName;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ILeveledItemGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region ForcedLocations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? _ForcedLocations;
+        public ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations
+        {
+            get => this._ForcedLocations;
+            set => this._ForcedLocations = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ILeveledItemGetter.ForcedLocations => _ForcedLocations;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +285,24 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.XALG = initialValue;
+                this.ChanceNone = initialValue;
+                this.MaxCount = initialValue;
+                this.Flags = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UseGlobal = initialValue;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
+                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
+                this.LVLL = initialValue;
+                this.LIMC = initialValue;
+                this.OverrideName = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -87,7 +312,25 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem ObjectPlacementDefaults,
+                TItem Components,
+                TItem XALG,
+                TItem ChanceNone,
+                TItem MaxCount,
+                TItem Flags,
+                TItem Conditions,
+                TItem UseGlobal,
+                TItem Entries,
+                TItem FilterKeywordChances,
+                TItem LVLL,
+                TItem LIMC,
+                TItem OverrideName,
+                TItem Model,
+                TItem ForcedLocations)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +340,24 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.XALG = XALG;
+                this.ChanceNone = ChanceNone;
+                this.MaxCount = MaxCount;
+                this.Flags = Flags;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UseGlobal = UseGlobal;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
+                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(FilterKeywordChances, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
+                this.LVLL = LVLL;
+                this.LIMC = LIMC;
+                this.OverrideName = OverrideName;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -105,6 +366,27 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem XALG;
+            public TItem ChanceNone;
+            public TItem MaxCount;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem UseGlobal;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>? Entries;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>? FilterKeywordChances;
+            public TItem LVLL;
+            public TItem LIMC;
+            public TItem OverrideName;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocations;
             #endregion
 
             #region Equals
@@ -118,11 +400,47 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
+                if (!object.Equals(this.MaxCount, rhs.MaxCount)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.UseGlobal, rhs.UseGlobal)) return false;
+                if (!object.Equals(this.Entries, rhs.Entries)) return false;
+                if (!object.Equals(this.FilterKeywordChances, rhs.FilterKeywordChances)) return false;
+                if (!object.Equals(this.LVLL, rhs.LVLL)) return false;
+                if (!object.Equals(this.LIMC, rhs.LIMC)) return false;
+                if (!object.Equals(this.OverrideName, rhs.OverrideName)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.ForcedLocations, rhs.ForcedLocations)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.Components);
+                hash.Add(this.XALG);
+                hash.Add(this.ChanceNone);
+                hash.Add(this.MaxCount);
+                hash.Add(this.Flags);
+                hash.Add(this.Conditions);
+                hash.Add(this.UseGlobal);
+                hash.Add(this.Entries);
+                hash.Add(this.FilterKeywordChances);
+                hash.Add(this.LVLL);
+                hash.Add(this.LIMC);
+                hash.Add(this.OverrideName);
+                hash.Add(this.Model);
+                hash.Add(this.ForcedLocations);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +451,94 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
+                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.XALG)) return false;
+                if (!eval(this.ChanceNone)) return false;
+                if (!eval(this.MaxCount)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.UseGlobal)) return false;
+                if (this.Entries != null)
+                {
+                    if (!eval(this.Entries.Overall)) return false;
+                    if (this.Entries.Specific != null)
+                    {
+                        foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FilterKeywordChances != null)
+                {
+                    if (!eval(this.FilterKeywordChances.Overall)) return false;
+                    if (this.FilterKeywordChances.Specific != null)
+                    {
+                        foreach (var item in this.FilterKeywordChances.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.LVLL)) return false;
+                if (!eval(this.LIMC)) return false;
+                if (!eval(this.OverrideName)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (this.ForcedLocations != null)
+                {
+                    if (!eval(this.ForcedLocations.Overall)) return false;
+                    if (this.ForcedLocations.Specific != null)
+                    {
+                        foreach (var item in this.ForcedLocations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +547,94 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
+                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.XALG)) return true;
+                if (eval(this.ChanceNone)) return true;
+                if (eval(this.MaxCount)) return true;
+                if (eval(this.Flags)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.UseGlobal)) return true;
+                if (this.Entries != null)
+                {
+                    if (eval(this.Entries.Overall)) return true;
+                    if (this.Entries.Specific != null)
+                    {
+                        foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FilterKeywordChances != null)
+                {
+                    if (eval(this.FilterKeywordChances.Overall)) return true;
+                    if (this.FilterKeywordChances.Specific != null)
+                    {
+                        foreach (var item in this.FilterKeywordChances.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.LVLL)) return true;
+                if (eval(this.LIMC)) return true;
+                if (eval(this.OverrideName)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (this.ForcedLocations != null)
+                {
+                    if (eval(this.ForcedLocations.Overall)) return true;
+                    if (this.ForcedLocations.Specific != null)
+                    {
+                        foreach (var item in this.ForcedLocations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +650,93 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.XALG = eval(this.XALG);
+                obj.ChanceNone = eval(this.ChanceNone);
+                obj.MaxCount = eval(this.MaxCount);
+                obj.Flags = eval(this.Flags);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.UseGlobal = eval(this.UseGlobal);
+                if (Entries != null)
+                {
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>());
+                    if (Entries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>();
+                        obj.Entries.Specific = l;
+                        foreach (var item in Entries.Specific)
+                        {
+                            MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (FilterKeywordChances != null)
+                {
+                    obj.FilterKeywordChances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>?>(eval(this.FilterKeywordChances.Overall), Enumerable.Empty<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>());
+                    if (FilterKeywordChances.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>();
+                        obj.FilterKeywordChances.Specific = l;
+                        foreach (var item in FilterKeywordChances.Specific)
+                        {
+                            MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.LVLL = eval(this.LVLL);
+                obj.LIMC = eval(this.LIMC);
+                obj.OverrideName = eval(this.OverrideName);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                if (ForcedLocations != null)
+                {
+                    obj.ForcedLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ForcedLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ForcedLocations.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ForcedLocations.Specific = l;
+                        foreach (var item in ForcedLocations.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +755,155 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LeveledItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                    {
+                        ObjectPlacementDefaults?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if (printMask?.ChanceNone ?? true)
+                    {
+                        sb.AppendItem(ChanceNone, "ChanceNone");
+                    }
+                    if (printMask?.MaxCount ?? true)
+                    {
+                        sb.AppendItem(MaxCount, "MaxCount");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.UseGlobal ?? true)
+                    {
+                        sb.AppendItem(UseGlobal, "UseGlobal");
+                    }
+                    if ((printMask?.Entries?.Overall ?? true)
+                        && Entries is {} EntriesItem)
+                    {
+                        sb.AppendLine("Entries =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(EntriesItem.Overall);
+                            if (EntriesItem.Specific != null)
+                            {
+                                foreach (var subItem in EntriesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.FilterKeywordChances?.Overall ?? true)
+                        && FilterKeywordChances is {} FilterKeywordChancesItem)
+                    {
+                        sb.AppendLine("FilterKeywordChances =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(FilterKeywordChancesItem.Overall);
+                            if (FilterKeywordChancesItem.Specific != null)
+                            {
+                                foreach (var subItem in FilterKeywordChancesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.LVLL ?? true)
+                    {
+                        sb.AppendItem(LVLL, "LVLL");
+                    }
+                    if (printMask?.LIMC ?? true)
+                    {
+                        sb.AppendItem(LIMC, "LIMC");
+                    }
+                    if (printMask?.OverrideName ?? true)
+                    {
+                        sb.AppendItem(OverrideName, "OverrideName");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if ((printMask?.ForcedLocations?.Overall ?? true)
+                        && ForcedLocations is {} ForcedLocationsItem)
+                    {
+                        sb.AppendLine("ForcedLocations =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ForcedLocationsItem.Overall);
+                            if (ForcedLocationsItem.Specific != null)
+                            {
+                                foreach (var subItem in ForcedLocationsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +914,69 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? XALG;
+            public Exception? ChanceNone;
+            public Exception? MaxCount;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? UseGlobal;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>? Entries;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>? FilterKeywordChances;
+            public Exception? LVLL;
+            public Exception? LIMC;
+            public Exception? OverrideName;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocations;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledItem_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case LeveledItem_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case LeveledItem_FieldIndex.ODTY:
+                        return ODTY;
+                    case LeveledItem_FieldIndex.ObjectPlacementDefaults:
+                        return ObjectPlacementDefaults;
+                    case LeveledItem_FieldIndex.Components:
+                        return Components;
+                    case LeveledItem_FieldIndex.XALG:
+                        return XALG;
+                    case LeveledItem_FieldIndex.ChanceNone:
+                        return ChanceNone;
+                    case LeveledItem_FieldIndex.MaxCount:
+                        return MaxCount;
+                    case LeveledItem_FieldIndex.Flags:
+                        return Flags;
+                    case LeveledItem_FieldIndex.Conditions:
+                        return Conditions;
+                    case LeveledItem_FieldIndex.UseGlobal:
+                        return UseGlobal;
+                    case LeveledItem_FieldIndex.Entries:
+                        return Entries;
+                    case LeveledItem_FieldIndex.FilterKeywordChances:
+                        return FilterKeywordChances;
+                    case LeveledItem_FieldIndex.LVLL:
+                        return LVLL;
+                    case LeveledItem_FieldIndex.LIMC:
+                        return LIMC;
+                    case LeveledItem_FieldIndex.OverrideName:
+                        return OverrideName;
+                    case LeveledItem_FieldIndex.Model:
+                        return Model;
+                    case LeveledItem_FieldIndex.ForcedLocations:
+                        return ForcedLocations;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +987,60 @@ namespace Mutagen.Bethesda.Starfield
                 LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledItem_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case LeveledItem_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case LeveledItem_FieldIndex.ChanceNone:
+                        this.ChanceNone = ex;
+                        break;
+                    case LeveledItem_FieldIndex.MaxCount:
+                        this.MaxCount = ex;
+                        break;
+                    case LeveledItem_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case LeveledItem_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.UseGlobal:
+                        this.UseGlobal = ex;
+                        break;
+                    case LeveledItem_FieldIndex.Entries:
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.FilterKeywordChances:
+                        this.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.LVLL:
+                        this.LVLL = ex;
+                        break;
+                    case LeveledItem_FieldIndex.LIMC:
+                        this.LIMC = ex;
+                        break;
+                    case LeveledItem_FieldIndex.OverrideName:
+                        this.OverrideName = ex;
+                        break;
+                    case LeveledItem_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledItem_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +1052,60 @@ namespace Mutagen.Bethesda.Starfield
                 LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledItem_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case LeveledItem_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.ChanceNone:
+                        this.ChanceNone = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.MaxCount:
+                        this.MaxCount = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case LeveledItem_FieldIndex.UseGlobal:
+                        this.UseGlobal = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Entries:
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>)obj;
+                        break;
+                    case LeveledItem_FieldIndex.FilterKeywordChances:
+                        this.FilterKeywordChances = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>)obj;
+                        break;
+                    case LeveledItem_FieldIndex.LVLL:
+                        this.LVLL = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.LIMC:
+                        this.LIMC = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.OverrideName:
+                        this.OverrideName = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.ForcedLocations:
+                        this.ForcedLocations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +1115,24 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (ObjectPlacementDefaults != null) return true;
+                if (Components != null) return true;
+                if (XALG != null) return true;
+                if (ChanceNone != null) return true;
+                if (MaxCount != null) return true;
+                if (Flags != null) return true;
+                if (Conditions != null) return true;
+                if (UseGlobal != null) return true;
+                if (Entries != null) return true;
+                if (FilterKeywordChances != null) return true;
+                if (LVLL != null) return true;
+                if (LIMC != null) return true;
+                if (OverrideName != null) return true;
+                if (Model != null) return true;
+                if (ForcedLocations != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +1159,129 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                ObjectPlacementDefaults?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                {
+                    sb.AppendItem(ChanceNone, "ChanceNone");
+                }
+                {
+                    sb.AppendItem(MaxCount, "MaxCount");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(UseGlobal, "UseGlobal");
+                }
+                if (Entries is {} EntriesItem)
+                {
+                    sb.AppendLine("Entries =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(EntriesItem.Overall);
+                        if (EntriesItem.Specific != null)
+                        {
+                            foreach (var subItem in EntriesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (FilterKeywordChances is {} FilterKeywordChancesItem)
+                {
+                    sb.AppendLine("FilterKeywordChances =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(FilterKeywordChancesItem.Overall);
+                        if (FilterKeywordChancesItem.Specific != null)
+                        {
+                            foreach (var subItem in FilterKeywordChancesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(LVLL, "LVLL");
+                }
+                {
+                    sb.AppendItem(LIMC, "LIMC");
+                }
+                {
+                    sb.AppendItem(OverrideName, "OverrideName");
+                }
+                Model?.Print(sb);
+                if (ForcedLocations is {} ForcedLocationsItem)
+                {
+                    sb.AppendLine("ForcedLocations =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ForcedLocationsItem.Overall);
+                        if (ForcedLocationsItem.Specific != null)
+                        {
+                            foreach (var subItem in ForcedLocationsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +1290,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
+                ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.UseGlobal = this.UseGlobal.Combine(rhs.UseGlobal);
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Overall, rhs.FilterKeywordChances?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Specific, rhs.FilterKeywordChances?.Specific));
+                ret.LVLL = this.LVLL.Combine(rhs.LVLL);
+                ret.LIMC = this.LIMC.Combine(rhs.LIMC);
+                ret.OverrideName = this.OverrideName.Combine(rhs.OverrideName);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocations?.Overall, rhs.ForcedLocations?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocations?.Specific, rhs.ForcedLocations?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +1329,69 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public AComponent.TranslationMask? Components;
+            public bool XALG;
+            public bool ChanceNone;
+            public bool MaxCount;
+            public bool Flags;
+            public Condition.TranslationMask? Conditions;
+            public bool UseGlobal;
+            public LeveledItemEntry.TranslationMask? Entries;
+            public FilterKeywordChance.TranslationMask? FilterKeywordChances;
+            public bool LVLL;
+            public bool LIMC;
+            public bool OverrideName;
+            public Model.TranslationMask? Model;
+            public bool ForcedLocations;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.XALG = defaultOn;
+                this.ChanceNone = defaultOn;
+                this.MaxCount = defaultOn;
+                this.Flags = defaultOn;
+                this.UseGlobal = defaultOn;
+                this.LVLL = defaultOn;
+                this.LIMC = defaultOn;
+                this.OverrideName = defaultOn;
+                this.ForcedLocations = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((XALG, null));
+                ret.Add((ChanceNone, null));
+                ret.Add((MaxCount, null));
+                ret.Add((Flags, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((UseGlobal, null));
+                ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
+                ret.Add((FilterKeywordChances == null ? DefaultOn : !FilterKeywordChances.GetCrystal().CopyNothing, FilterKeywordChances?.GetCrystal()));
+                ret.Add((LVLL, null));
+                ret.Add((LIMC, null));
+                ret.Add((OverrideName, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((ForcedLocations, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1403,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledItemCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -338,6 +1448,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILeveledItem);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LeveledItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LeveledItemSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LeveledItemSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LeveledItemSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -417,11 +1531,44 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ILeveledItem :
+        IAssetLinkContainer,
+        IFormLinkContainer,
+        IItem,
         ILeveledItemGetter,
         ILoquiObjectSetter<ILeveledItemInternal>,
+        IModeled,
+        IObjectBounded,
         IOutfitTarget,
+        IScripted,
         IStarfieldMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new Single ChanceNone { get; set; }
+        new Byte? MaxCount { get; set; }
+        new LeveledItem.Flag Flags { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new IFormLinkNullable<IGlobalGetter> UseGlobal { get; set; }
+        new ExtendedList<LeveledItemEntry>? Entries { get; set; }
+        new ExtendedList<FilterKeywordChance>? FilterKeywordChances { get; set; }
+        new MemorySlice<Byte>? LVLL { get; set; }
+        new MemorySlice<Byte>? LIMC { get; set; }
+        new TranslatedString? OverrideName { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
     }
 
     public partial interface ILeveledItemInternal :
@@ -434,12 +1581,52 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.LVLI)]
     public partial interface ILeveledItemGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
+        IItemGetter,
         ILoquiObject<ILeveledItemGetter>,
         IMapsToGetter<ILeveledItemGetter>,
-        IOutfitTargetGetter
+        IModeledGetter,
+        IObjectBoundedGetter,
+        IOutfitTargetGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        Single ChanceNone { get; }
+        Byte? MaxCount { get; }
+        LeveledItem.Flag Flags { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        IFormLinkNullableGetter<IGlobalGetter> UseGlobal { get; }
+        IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; }
+        IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; }
+        ReadOnlyMemorySlice<Byte>? LVLL { get; }
+        ReadOnlyMemorySlice<Byte>? LIMC { get; }
+        ITranslatedStringGetter? OverrideName { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
 
     }
 
@@ -616,6 +1803,24 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        ODTY = 9,
+        ObjectPlacementDefaults = 10,
+        Components = 11,
+        XALG = 12,
+        ChanceNone = 13,
+        MaxCount = 14,
+        Flags = 15,
+        Conditions = 16,
+        UseGlobal = 17,
+        Entries = 18,
+        FilterKeywordChances = 19,
+        LVLL = 20,
+        LIMC = 21,
+        OverrideName = 22,
+        Model = 23,
+        ForcedLocations = 24,
     }
     #endregion
 
@@ -626,9 +1831,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(LeveledItem.Mask<>);
 
@@ -658,8 +1863,37 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.LVLI);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.LVLI);
+            var all = RecordCollection.Factory(
+                RecordTypes.LVLI,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.XALG,
+                RecordTypes.LVLD,
+                RecordTypes.LVLM,
+                RecordTypes.LVLF,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.LVLG,
+                RecordTypes.LVLO,
+                RecordTypes.LLCT,
+                RecordTypes.LLKC,
+                RecordTypes.LVLL,
+                RecordTypes.LIMC,
+                RecordTypes.ONAM,
+                RecordTypes.MODL,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.FTYP);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
         #region Interface
@@ -701,6 +1935,24 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILeveledItemInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.ObjectPlacementDefaults = null;
+            item.Components.Clear();
+            item.XALG = default;
+            item.ChanceNone = default;
+            item.MaxCount = default;
+            item.Flags = default;
+            item.Conditions.Clear();
+            item.UseGlobal.Clear();
+            item.Entries = null;
+            item.FilterKeywordChances = null;
+            item.LVLL = default;
+            item.LIMC = default;
+            item.OverrideName = default;
+            item.Model = null;
+            item.ForcedLocations = null;
             base.Clear(item);
         }
         
@@ -718,6 +1970,45 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILeveledItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.UseGlobal.Relink(mapping);
+            obj.Entries?.RemapLinks(mapping);
+            obj.FilterKeywordChances?.RemapLinks(mapping);
+            obj.ForcedLocations?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILeveledItem obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILeveledItem obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -785,6 +2076,51 @@ namespace Mutagen.Bethesda.Starfield
             LeveledItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults,
+                rhs.ObjectPlacementDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.ChanceNone = item.ChanceNone.EqualsWithin(rhs.ChanceNone);
+            ret.MaxCount = item.MaxCount == rhs.MaxCount;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.UseGlobal = item.UseGlobal.Equals(rhs.UseGlobal);
+            ret.Entries = item.Entries.CollectionEqualsHelper(
+                rhs.Entries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FilterKeywordChances = item.FilterKeywordChances.CollectionEqualsHelper(
+                rhs.FilterKeywordChances,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LVLL = MemorySliceExt.SequenceEqual(item.LVLL, rhs.LVLL);
+            ret.LIMC = MemorySliceExt.SequenceEqual(item.LIMC, rhs.LIMC);
+            ret.OverrideName = object.Equals(item.OverrideName, rhs.OverrideName);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ForcedLocations = item.ForcedLocations.CollectionEqualsHelper(
+                rhs.ForcedLocations,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -834,6 +2170,140 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if (printMask?.ChanceNone ?? true)
+            {
+                sb.AppendItem(item.ChanceNone, "ChanceNone");
+            }
+            if ((printMask?.MaxCount ?? true)
+                && item.MaxCount is {} MaxCountItem)
+            {
+                sb.AppendItem(MaxCountItem, "MaxCount");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.UseGlobal ?? true)
+            {
+                sb.AppendItem(item.UseGlobal.FormKeyNullable, "UseGlobal");
+            }
+            if ((printMask?.Entries?.Overall ?? true)
+                && item.Entries is {} EntriesItem)
+            {
+                sb.AppendLine("Entries =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in EntriesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.FilterKeywordChances?.Overall ?? true)
+                && item.FilterKeywordChances is {} FilterKeywordChancesItem)
+            {
+                sb.AppendLine("FilterKeywordChances =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in FilterKeywordChancesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.LVLL ?? true)
+                && item.LVLL is {} LVLLItem)
+            {
+                sb.AppendLine($"LVLL => {SpanExt.ToHexString(LVLLItem)}");
+            }
+            if ((printMask?.LIMC ?? true)
+                && item.LIMC is {} LIMCItem)
+            {
+                sb.AppendLine($"LIMC => {SpanExt.ToHexString(LIMCItem)}");
+            }
+            if ((printMask?.OverrideName ?? true)
+                && item.OverrideName is {} OverrideNameItem)
+            {
+                sb.AppendItem(OverrideNameItem, "OverrideName");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.ForcedLocations?.Overall ?? true)
+                && item.ForcedLocations is {} ForcedLocationsItem)
+            {
+                sb.AppendLine("ForcedLocations =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ForcedLocationsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static LeveledItem_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -884,6 +2354,94 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectPlacementDefaults))) return false;
+                }
+                else if (!isObjectPlacementDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
+            {
+                if (!lhs.ChanceNone.EqualsWithin(rhs.ChanceNone)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.MaxCount) ?? true))
+            {
+                if (lhs.MaxCount != rhs.MaxCount) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.UseGlobal) ?? true))
+            {
+                if (!lhs.UseGlobal.Equals(rhs.UseGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
+            {
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledItemEntryCommon)((ILeveledItemEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.FilterKeywordChances) ?? true))
+            {
+                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.FilterKeywordChances)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LVLL) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.LVLL, rhs.LVLL)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LIMC) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.LIMC, rhs.LIMC)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.OverrideName) ?? true))
+            {
+                if (!object.Equals(lhs.OverrideName, rhs.OverrideName)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ForcedLocations) ?? true))
+            {
+                if (!lhs.ForcedLocations.SequenceEqualNullable(rhs.ForcedLocations)) return false;
+            }
             return true;
         }
         
@@ -912,6 +2470,51 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILeveledItemGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
+            {
+                hash.Add(ObjectPlacementDefaultsitem);
+            }
+            hash.Add(item.Components);
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            hash.Add(item.ChanceNone);
+            if (item.MaxCount is {} MaxCountitem)
+            {
+                hash.Add(MaxCountitem);
+            }
+            hash.Add(item.Flags);
+            hash.Add(item.Conditions);
+            hash.Add(item.UseGlobal);
+            hash.Add(item.Entries);
+            hash.Add(item.FilterKeywordChances);
+            if (item.LVLL is {} LVLLItem)
+            {
+                hash.Add(LVLLItem);
+            }
+            if (item.LIMC is {} LIMCItem)
+            {
+                hash.Add(LIMCItem);
+            }
+            if (item.OverrideName is {} OverrideNameitem)
+            {
+                hash.Add(OverrideNameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.ForcedLocations);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -940,6 +2543,71 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.UseGlobal, out var UseGlobalInfo))
+            {
+                yield return UseGlobalInfo;
+            }
+            if (obj.Entries is {} EntriesItem)
+            {
+                foreach (var item in EntriesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.FilterKeywordChances is {} FilterKeywordChancesItem)
+            {
+                foreach (var item in FilterKeywordChancesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ForcedLocations is {} ForcedLocationsItem)
+            {
+                foreach (var item in ForcedLocationsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILeveledItemGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1015,6 +2683,302 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledItem_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.ObjectPlacementDefaults);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    {
+                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectPlacementDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
+            {
+                item.ChanceNone = rhs.ChanceNone;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.MaxCount) ?? true))
+            {
+                item.MaxCount = rhs.MaxCount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.UseGlobal) ?? true))
+            {
+                item.UseGlobal.SetTo(rhs.UseGlobal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
+                try
+                {
+                    if ((rhs.Entries != null))
+                    {
+                        item.Entries = 
+                            rhs.Entries
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LeveledItemEntry>();
+                    }
+                    else
+                    {
+                        item.Entries = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.FilterKeywordChances) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.FilterKeywordChances);
+                try
+                {
+                    if ((rhs.FilterKeywordChances != null))
+                    {
+                        item.FilterKeywordChances = 
+                            rhs.FilterKeywordChances
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<FilterKeywordChance>();
+                    }
+                    else
+                    {
+                        item.FilterKeywordChances = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LVLL) ?? true))
+            {
+                if(rhs.LVLL is {} LVLLrhs)
+                {
+                    item.LVLL = LVLLrhs.ToArray();
+                }
+                else
+                {
+                    item.LVLL = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LIMC) ?? true))
+            {
+                if(rhs.LIMC is {} LIMCrhs)
+                {
+                    item.LIMC = LIMCrhs.ToArray();
+                }
+                else
+                {
+                    item.LIMC = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.OverrideName) ?? true))
+            {
+                item.OverrideName = rhs.OverrideName?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ForcedLocations) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledItem_FieldIndex.ForcedLocations);
+                try
+                {
+                    if ((rhs.ForcedLocations != null))
+                    {
+                        item.ForcedLocations = 
+                            rhs.ForcedLocations
+                            .Select(r => (IFormLinkGetter<ILocationReferenceTypeGetter>)new FormLink<ILocationReferenceTypeGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    }
+                    else
+                    {
+                        item.ForcedLocations = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1163,6 +3127,139 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly LeveledItemBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ILeveledItemGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.ChanceNone,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLD));
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaxCount,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLM));
+            EnumBinaryTranslation<LeveledItem.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 2,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLF));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.UseGlobal,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledItemEntryGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Entries,
+                counterType: RecordTypes.LLCT,
+                counterLength: 1,
+                transl: (MutagenWriter subWriter, ILeveledItemEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((LeveledItemEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFilterKeywordChanceGetter>.Instance.Write(
+                writer: writer,
+                items: item.FilterKeywordChances,
+                recordType: translationParams.ConvertToCustom(RecordTypes.LLKC),
+                transl: (MutagenWriter subWriter, IFilterKeywordChanceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((FilterKeywordChanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.LVLL,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLL));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.LIMC,
+                header: translationParams.ConvertToCustom(RecordTypes.LIMC));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OverrideName,
+                header: translationParams.ConvertToCustom(RecordTypes.ONAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ForcedLocations,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FTYP),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILocationReferenceTypeGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ILeveledItemGetter item,
@@ -1179,10 +3276,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1232,6 +3331,175 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.LVLI;
+        public static ParseResult FillBinaryRecordTypes(
+            ILeveledItemInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)LeveledItem_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)LeveledItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LeveledItem_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    return (int)LeveledItem_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)LeveledItem_FieldIndex.Components;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LeveledItem_FieldIndex.XALG;
+                }
+                case RecordTypeInts.LVLD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ChanceNone = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
+                }
+                case RecordTypeInts.LVLM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaxCount = frame.ReadUInt8();
+                    return (int)LeveledItem_FieldIndex.MaxCount;
+                }
+                case RecordTypeInts.LVLF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<LeveledItem.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)LeveledItem_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)LeveledItem_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.LVLG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.UseGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LeveledItem_FieldIndex.UseGlobal;
+                }
+                case RecordTypeInts.LVLO:
+                case RecordTypeInts.LLCT:
+                {
+                    item.Entries = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LeveledItemEntry>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 1,
+                            countRecord: RecordTypes.LLCT,
+                            triggeringRecord: LeveledItemEntry_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: LeveledItemEntry.TryCreateFromBinary)
+                        .CastExtendedList<LeveledItemEntry>();
+                    return (int)LeveledItem_FieldIndex.Entries;
+                }
+                case RecordTypeInts.LLKC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FilterKeywordChances = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FilterKeywordChance>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FilterKeywordChance.TryCreateFromBinary)
+                        .CastExtendedList<FilterKeywordChance>();
+                    return (int)LeveledItem_FieldIndex.FilterKeywordChances;
+                }
+                case RecordTypeInts.LVLL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LVLL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LeveledItem_FieldIndex.LVLL;
+                }
+                case RecordTypeInts.LIMC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LIMC = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)LeveledItem_FieldIndex.LIMC;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OverrideName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)LeveledItem_FieldIndex.OverrideName;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)LeveledItem_FieldIndex.Model;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ForcedLocations = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
+                    return (int)LeveledItem_FieldIndex.ForcedLocations;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1264,6 +3532,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LeveledItemCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LeveledItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1278,6 +3548,63 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ILeveledItem);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ObjectPlacementDefaults
+        private RangeInt32? _ObjectPlacementDefaultsLocation;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region ChanceNone
+        private int? _ChanceNoneLocation;
+        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default;
+        #endregion
+        #region MaxCount
+        private int? _MaxCountLocation;
+        public Byte? MaxCount => _MaxCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxCountLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public LeveledItem.Flag Flags => _FlagsLocation.HasValue ? (LeveledItem.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledItem.Flag);
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        #region UseGlobal
+        private int? _UseGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => _UseGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UseGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
+        public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
+        #region LVLL
+        private int? _LVLLLocation;
+        public ReadOnlyMemorySlice<Byte>? LVLL => _LVLLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LVLLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region LIMC
+        private int? _LIMCLocation;
+        public ReadOnlyMemorySlice<Byte>? LIMC => _LIMCLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LIMCLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region OverrideName
+        private int? _OverrideNameLocation;
+        public ITranslatedStringGetter? OverrideName => _OverrideNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OverrideNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1335,6 +3662,172 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)LeveledItem_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LeveledItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LeveledItem_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)LeveledItem_FieldIndex.Components;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.XALG;
+                }
+                case RecordTypeInts.LVLD:
+                {
+                    _ChanceNoneLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
+                }
+                case RecordTypeInts.LVLM:
+                {
+                    _MaxCountLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.MaxCount;
+                }
+                case RecordTypeInts.LVLF:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.Flags;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)LeveledItem_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.LVLG:
+                {
+                    _UseGlobalLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.UseGlobal;
+                }
+                case RecordTypeInts.LVLO:
+                case RecordTypeInts.LLCT:
+                {
+                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<ILeveledItemEntryGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 1,
+                        trigger: LeveledItemEntry_Registration.TriggerSpecs,
+                        countType: RecordTypes.LLCT,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => LeveledItemEntryBinaryOverlay.LeveledItemEntryFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)LeveledItem_FieldIndex.Entries;
+                }
+                case RecordTypeInts.LLKC:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndex<IFilterKeywordChanceGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)LeveledItem_FieldIndex.FilterKeywordChances;
+                }
+                case RecordTypeInts.LVLL:
+                {
+                    _LVLLLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.LVLL;
+                }
+                case RecordTypeInts.LIMC:
+                {
+                    _LIMCLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.LIMC;
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _OverrideNameLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.OverrideName;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)LeveledItem_FieldIndex.Model;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)LeveledItem_FieldIndex.ForcedLocations;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

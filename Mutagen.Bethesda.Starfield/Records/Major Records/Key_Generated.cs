@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IKey :
+        IItem,
         IKeyGetter,
         ILoquiObjectSetter<IKeyInternal>,
         IStarfieldMajorRecordInternal
@@ -434,6 +435,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IKeyGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IItemGetter,
         ILoquiObject<IKeyGetter>,
         IMapsToGetter<IKeyGetter>
     {

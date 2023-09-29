@@ -418,6 +418,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IFlora :
         IFloraGetter,
+        IItem,
         ILoquiObjectSetter<IFloraInternal>,
         IStarfieldMajorRecordInternal,
         IStaticTarget
@@ -435,6 +436,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFloraGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IItemGetter,
         ILoquiObject<IFloraGetter>,
         IMapsToGetter<IFloraGetter>,
         IStaticTargetGetter

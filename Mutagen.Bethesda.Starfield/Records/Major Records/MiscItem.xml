@@ -4,5 +4,6 @@
     <Fields>
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IProjectedDecal :
+        IItem,
         ILoquiObjectSetter<IProjectedDecalInternal>,
         IProjectedDecalGetter,
         IStarfieldMajorRecordInternal
@@ -434,6 +435,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IProjectedDecalGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IItemGetter,
         ILoquiObject<IProjectedDecalGetter>,
         IMapsToGetter<IProjectedDecalGetter>
     {

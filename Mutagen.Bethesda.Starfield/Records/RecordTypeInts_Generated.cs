@@ -53,6 +53,9 @@ public partial class RecordTypeInts
     public const int CELL = 0x4C4C4543;
     public const int CHAL = 0x4C414843;
     public const int CHGL = 0x4C474843;
+    public const int CIS1 = 0x31534943;
+    public const int CIS2 = 0x32534943;
+    public const int CITC = 0x43544943;
     public const int CLAS = 0x53414C43;
     public const int CLDC = 0x43444C43;
     public const int CLDF = 0x46444C43;
@@ -69,6 +72,7 @@ public partial class RecordTypeInts
     public const int CRHR = 0x52485243;
     public const int CRVA = 0x41565243;
     public const int CSTY = 0x59545343;
+    public const int CTDA = 0x41445443;
     public const int CUR3 = 0x33525543;
     public const int DALC = 0x434C4144;
     public const int DAT2 = 0x32544144;
@@ -118,6 +122,7 @@ public partial class RecordTypeInts
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
     public const int FSTT = 0x54545346;
+    public const int FTYP = 0x50595446;
     public const int FULL = 0x4C4C5546;
     public const int FURN = 0x4E525546;
     public const int GBFM = 0x4D464247;
@@ -164,13 +169,22 @@ public partial class RecordTypeInts
     public const int LGDI = 0x4944474C;
     public const int LGTM = 0x4D54474C;
     public const int LIGH = 0x4847494C;
+    public const int LIMC = 0x434D494C;
+    public const int LLCT = 0x54434C4C;
+    public const int LLKC = 0x434B4C4C;
     public const int LMSW = 0x57534D4C;
     public const int LNAM = 0x4D414E4C;
     public const int LSCR = 0x5243534C;
     public const int LTEX = 0x5845544C;
     public const int LVLB = 0x424C564C;
+    public const int LVLD = 0x444C564C;
+    public const int LVLF = 0x464C564C;
+    public const int LVLG = 0x474C564C;
     public const int LVLI = 0x494C564C;
+    public const int LVLL = 0x4C4C564C;
+    public const int LVLM = 0x4D4C564C;
     public const int LVLN = 0x4E4C564C;
+    public const int LVLO = 0x4F4C564C;
     public const int LVLP = 0x504C564C;
     public const int LVSC = 0x4353564C;
     public const int MAAM = 0x4D41414D;
@@ -215,6 +229,7 @@ public partial class RecordTypeInts
     public const int OFST = 0x5453464F;
     public const int OMOD = 0x444F4D4F;
     public const int ONAM = 0x4D414E4F;
+    public const int OPDS = 0x5344504F;
     public const int OSWP = 0x5057534F;
     public const int OTFT = 0x5446544F;
     public const int OVIS = 0x5349564F;
@@ -297,6 +312,7 @@ public partial class RecordTypeInts
     public const int VENC = 0x434E4556;
     public const int VEND = 0x444E4556;
     public const int VENV = 0x564E4556;
+    public const int VMAD = 0x44414D56;
     public const int VNAM = 0x4D414E56;
     public const int VOLI = 0x494C4F56;
     public const int VTCK = 0x4B435456;

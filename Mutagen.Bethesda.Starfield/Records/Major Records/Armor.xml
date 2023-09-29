@@ -4,5 +4,6 @@
     <Fields>
     </Fields>
     <LinkInterface>IOutfitTarget</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

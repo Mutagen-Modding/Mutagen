@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AVirtualMachineAdapter" objType="Subrecord" abstract="true" recordType="VMAD">
+    <Fields>
+      <Int16 name="Version" default="6" />
+      <UInt16 name="ObjectFormat" default="2" />
+      <RefList name="Scripts" refName="ScriptEntry" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="VirtualMachineAdapter" objType="Subrecord" baseClass="AVirtualMachineAdapter" recordType="VMAD" />
+  <Object name="VirtualMachineAdapterIndexed" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="ScriptFragmentsIndexed" binary="Custom" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="ScriptEntry" objType="Subrecord">
+    <Fields>
+      <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
+      <Enum name="Flags" byteLength="1" enumName="ScriptEntry.Flag" binary="NoGeneration" />
+      <RefList name="Properties" refName="ScriptProperty" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="ScriptProperty" objType="Subrecord">
+    <Fields>
+      <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
+      <Enum name="Flags" byteLength="1" enumName="ScriptProperty.Flag" binary="NoGeneration" default="ScriptProperty.Flag.Edited" />
+    </Fields>
+  </Object>
+  <Object name="ScriptObjectProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <FormLink name="Object" refName="StarfieldMajorRecord" />
+      <Int16 name="Alias" default="-1" />
+      <UInt16 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="ScriptStringProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <String name="Data" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="ScriptIntProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFloatProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <Float name="Data" />
+    </Fields>
+  </Object>
+  <Object name="ScriptBoolProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <Bool name="Data" />
+    </Fields>
+  </Object>
+  <Object name="ScriptVariableProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+  <Object name="ScriptStructProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <RefList name="Members" refName="ScriptEntry" counterLength="4" circular="true" />
+    </Fields>
+  </Object>
+  <Object name="ScriptObjectListProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <RefList name="Objects" refName="ScriptObjectProperty" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <List name="Data" counterLength="4">
+        <String binaryType="PrependLengthUShort" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ScriptIntListProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <List name="Data" counterLength="4">
+        <Int32 />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ScriptFloatListProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <List name="Data" counterLength="4">
+        <Float />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ScriptBoolListProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <List name="Data" counterLength="4">
+        <Bool />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ScriptVariableListProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <List name="Data" counterLength="4">
+        <Int32 />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ScriptStructListProperty" objType="Subrecord" baseClass="ScriptProperty">
+    <Fields>
+      <RefList name="Structs" refName="ScriptEntryStructs" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="ScriptEntryStructs" objType="Subrecord">
+    <Fields>
+      <RefList name="Members" refName="ScriptProperty" counterLength="4" circular="true" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFragment" objType="Subrecord">
+    <Fields>
+      <UInt8 name="ExtraBindDataVersion" default="3" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFragmentIndexed" objType="Subrecord">
+    <Fields>
+      <UInt16 name="FragmentIndex" />
+      <Int16 name="Unknown" />
+      <Int8 name="Unknown2" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFragments" objType="Subrecord">
+    <Fields>
+      <UInt8 name="ExtraBindDataVersion" default="3" />
+      <RefDirect name="Script" refName="ScriptEntry" binary="NoGeneration" />
+      <RefDirect name="OnBegin" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnEnd" nullable="True" binary="NoGeneration" refName="ScriptFragment" />
+    </Fields>
+  </Object>
+  <Object name="ScriptFragmentsIndexed" objType="Subrecord">
+    <Fields>
+      <UInt8 name="ExtraBindDataVersion" default="3" binary="NoGeneration" />
+      <RefDirect name="Script" refName="ScriptEntry" binary="NoGeneration" />
+      <RefList name="Fragments" refName="ScriptFragmentIndexed" binary="NoGeneration" />
+    </Fields>
+  </Object>
+</Loqui>

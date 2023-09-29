@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMoveableStatic :
+        IItem,
         ILoquiObjectSetter<IMoveableStaticInternal>,
         IMoveableStaticGetter,
         IStarfieldMajorRecordInternal,
@@ -435,6 +436,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IMoveableStaticGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IItemGetter,
         ILoquiObject<IMoveableStaticGetter>,
         IMapsToGetter<IMoveableStaticGetter>,
         IStaticTargetGetter

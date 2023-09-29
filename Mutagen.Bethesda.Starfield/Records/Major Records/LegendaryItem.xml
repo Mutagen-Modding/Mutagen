@@ -12,6 +12,7 @@
       <RefList name="IncludeFilters" refName="LegendaryFilter" recordType="CNAM" />
       <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
   <Object name="LegendaryMod" objType="Subrecord">
     <Fields>

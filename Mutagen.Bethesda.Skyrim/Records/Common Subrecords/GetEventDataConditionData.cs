@@ -34,7 +34,7 @@ public partial class GetEventDataConditionData : IConditionStringParameter
         Keyword = 0x314B,
         Form = 0x3146,
         Value1 = 0x3156,
-        Value = 0x3256
+        Value2 = 0x3256
     }
     
     public enum EventFunction : ushort

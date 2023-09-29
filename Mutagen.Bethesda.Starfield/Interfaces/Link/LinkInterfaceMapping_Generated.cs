@@ -41,6 +41,25 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Weapon_Registration.Instance,
         });
         dict[typeof(IStaticTargetGetter)] = dict[typeof(IStaticTarget)] with { Setter = false };
+        dict[typeof(IItem)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Activator_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
+            Container_Registration.Instance,
+            Flora_Registration.Instance,
+            Ingestible_Registration.Instance,
+            Key_Registration.Instance,
+            LegendaryItem_Registration.Instance,
+            LeveledItem_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MoveableStatic_Registration.Instance,
+            ProjectedDecal_Registration.Instance,
+            Static_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
         dict[typeof(IOutfitTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Armor_Registration.Instance,

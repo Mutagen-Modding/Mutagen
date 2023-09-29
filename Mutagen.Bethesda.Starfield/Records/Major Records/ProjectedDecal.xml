@@ -3,5 +3,6 @@
   <Object name="ProjectedDecal" recordType="PDCL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

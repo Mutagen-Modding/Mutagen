@@ -1032,6 +1032,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILegendaryItem :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IItem,
         ILegendaryItemGetter,
         ILoquiObjectSetter<ILegendaryItemInternal>,
         IModeled,
@@ -1068,6 +1069,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<ILegendaryItemGetter>,
         IMapsToGetter<ILegendaryItemGetter>,
         IModeledGetter,

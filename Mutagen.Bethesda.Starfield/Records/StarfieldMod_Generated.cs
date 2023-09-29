@@ -80,6 +80,7 @@ namespace Mutagen.Bethesda.Starfield
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
+            _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
@@ -237,6 +238,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IBendableSplineGetter> IStarfieldModGetter.BendableSplines => _BendableSplines_Object;
         #endregion
+        #region LeveledItems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<LeveledItem> _LeveledItems_Object;
+        public StarfieldGroup<LeveledItem> LeveledItems => _LeveledItems_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<ILeveledItemGetter> IStarfieldModGetter.LeveledItems => _LeveledItems_Object;
+        #endregion
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<Weather> _Weathers_Object;
@@ -380,6 +388,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -415,6 +424,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LandscapeTextures,
                 TItem StaticCollections,
                 TItem BendableSplines,
+                TItem LeveledItems,
                 TItem Weathers,
                 TItem AnimatedObjects,
                 TItem Debris,
@@ -448,6 +458,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LandscapeTextures, new StarfieldGroup.Mask<TItem>(LandscapeTextures));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollections, new StarfieldGroup.Mask<TItem>(StaticCollections));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
+                this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledItems, new StarfieldGroup.Mask<TItem>(LeveledItems));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weathers, new StarfieldGroup.Mask<TItem>(Weathers));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObjects, new StarfieldGroup.Mask<TItem>(AnimatedObjects));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
@@ -491,6 +502,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LandscapeTextures { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollections { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weathers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
@@ -535,6 +547,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
+                if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
                 if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 if (!object.Equals(this.Debris, rhs.Debris)) return false;
@@ -572,6 +585,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.LandscapeTextures);
                 hash.Add(this.StaticCollections);
                 hash.Add(this.BendableSplines);
+                hash.Add(this.LeveledItems);
                 hash.Add(this.Weathers);
                 hash.Add(this.AnimatedObjects);
                 hash.Add(this.Debris);
@@ -691,6 +705,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.BendableSplines.Overall)) return false;
                     if (this.BendableSplines.Specific != null && !this.BendableSplines.Specific.All(eval)) return false;
+                }
+                if (LeveledItems != null)
+                {
+                    if (!eval(this.LeveledItems.Overall)) return false;
+                    if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.All(eval)) return false;
                 }
                 if (Weathers != null)
                 {
@@ -859,6 +878,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.BendableSplines.Overall)) return true;
                     if (this.BendableSplines.Specific != null && this.BendableSplines.Specific.Any(eval)) return true;
                 }
+                if (LeveledItems != null)
+                {
+                    if (eval(this.LeveledItems.Overall)) return true;
+                    if (this.LeveledItems.Specific != null && this.LeveledItems.Specific.Any(eval)) return true;
+                }
                 if (Weathers != null)
                 {
                     if (eval(this.Weathers.Overall)) return true;
@@ -953,6 +977,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
+                obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
                 obj.Weathers = this.Weathers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
                 obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
@@ -1063,6 +1088,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         BendableSplines?.Print(sb);
                     }
+                    if (printMask?.LeveledItems?.Overall ?? true)
+                    {
+                        LeveledItems?.Print(sb);
+                    }
                     if (printMask?.Weathers?.Overall ?? true)
                     {
                         Weathers?.Print(sb);
@@ -1155,6 +1184,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
@@ -1215,6 +1245,8 @@ namespace Mutagen.Bethesda.Starfield
                         return StaticCollections;
                     case StarfieldMod_FieldIndex.BendableSplines:
                         return BendableSplines;
+                    case StarfieldMod_FieldIndex.LeveledItems:
+                        return LeveledItems;
                     case StarfieldMod_FieldIndex.Weathers:
                         return Weathers;
                     case StarfieldMod_FieldIndex.AnimatedObjects:
@@ -1308,6 +1340,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.BendableSplines:
                         this.BendableSplines = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.LeveledItems:
+                        this.LeveledItems = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
@@ -1415,6 +1450,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.BendableSplines:
                         this.BendableSplines = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.LeveledItems:
+                        this.LeveledItems = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
                         break;
@@ -1479,6 +1517,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (LandscapeTextures != null) return true;
                 if (StaticCollections != null) return true;
                 if (BendableSplines != null) return true;
+                if (LeveledItems != null) return true;
                 if (Weathers != null) return true;
                 if (AnimatedObjects != null) return true;
                 if (Debris != null) return true;
@@ -1536,6 +1575,7 @@ namespace Mutagen.Bethesda.Starfield
                 LandscapeTextures?.Print(sb);
                 StaticCollections?.Print(sb);
                 BendableSplines?.Print(sb);
+                LeveledItems?.Print(sb);
                 Weathers?.Print(sb);
                 AnimatedObjects?.Print(sb);
                 Debris?.Print(sb);
@@ -1576,6 +1616,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.LandscapeTextures = this.LandscapeTextures.Combine(rhs.LandscapeTextures, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
+                ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
                 ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
@@ -1631,6 +1672,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
             public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
+            public StarfieldGroup.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
             public StarfieldGroup.TranslationMask<Weather.TranslationMask>? Weathers;
             public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
@@ -1687,6 +1729,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((LandscapeTextures != null ? LandscapeTextures.OnOverall : DefaultOn, LandscapeTextures?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
+                ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
                 ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
                 ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
@@ -1761,6 +1804,7 @@ namespace Mutagen.Bethesda.Starfield
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
+            _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
@@ -1855,6 +1899,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BendableSplines.RecordCache.Set(rhsMod.BendableSplines.RecordCache.Items);
             }
+            if (mask?.LeveledItems ?? true)
+            {
+                this.LeveledItems.RecordCache.Set(rhsMod.LeveledItems.RecordCache.Items);
+            }
             if (mask?.Weathers ?? true)
             {
                 this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
@@ -1932,6 +1980,7 @@ namespace Mutagen.Bethesda.Starfield
             count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
             count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
+            count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
@@ -2219,6 +2268,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<LandscapeTexture> LandscapeTextures { get; }
         new StarfieldGroup<StaticCollection> StaticCollections { get; }
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
+        new StarfieldGroup<LeveledItem> LeveledItems { get; }
         new StarfieldGroup<Weather> Weathers { get; }
         new StarfieldGroup<AnimatedObject> AnimatedObjects { get; }
         new StarfieldGroup<Debris> Debris { get; }
@@ -2270,6 +2320,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
         IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections { get; }
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
+        IStarfieldGroupGetter<ILeveledItemGetter> LeveledItems { get; }
         IStarfieldGroupGetter<IWeatherGetter> Weathers { get; }
         IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
@@ -2872,18 +2923,19 @@ namespace Mutagen.Bethesda.Starfield
         LandscapeTextures = 17,
         StaticCollections = 18,
         BendableSplines = 19,
-        Weathers = 20,
-        AnimatedObjects = 21,
-        Debris = 22,
-        DefaultObjects = 23,
-        Outfits = 24,
-        AimModels = 25,
-        AttractionRules = 26,
-        BiomeSwaps = 27,
-        Planets = 28,
-        SurfacePatternStyles = 29,
-        LegendaryItems = 30,
-        ActorValueModulations = 31,
+        LeveledItems = 20,
+        Weathers = 21,
+        AnimatedObjects = 22,
+        Debris = 23,
+        DefaultObjects = 24,
+        Outfits = 25,
+        AimModels = 26,
+        AttractionRules = 27,
+        BiomeSwaps = 28,
+        Planets = 29,
+        SurfacePatternStyles = 30,
+        LegendaryItems = 31,
+        ActorValueModulations = 32,
     }
     #endregion
 
@@ -2894,9 +2946,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 33;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -2982,6 +3034,7 @@ namespace Mutagen.Bethesda.Starfield
             item.LandscapeTextures.Clear();
             item.StaticCollections.Clear();
             item.BendableSplines.Clear();
+            item.LeveledItems.Clear();
             item.Weathers.Clear();
             item.AnimatedObjects.Clear();
             item.Debris.Clear();
@@ -3013,6 +3066,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LandscapeTextures.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
+            obj.LeveledItems.RemapLinks(mapping);
             obj.Weathers.RemapLinks(mapping);
             obj.AnimatedObjects.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
@@ -3073,6 +3127,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LandscapeTextures.Remove(keys);
             obj.StaticCollections.Remove(keys);
             obj.BendableSplines.Remove(keys);
+            obj.LeveledItems.Remove(keys);
             obj.Weathers.Remove(keys);
             obj.AnimatedObjects.Remove(keys);
             obj.Debris.Remove(keys);
@@ -3276,6 +3331,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    obj.LeveledItems.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
@@ -3375,6 +3438,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IItem":
+                case "IItemGetter":
+                    Remove(obj, keys, typeof(ILegendaryItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IOutfitTarget":
+                case "IOutfitTargetGetter":
+                    Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IOwner":
                 case "IOwnerGetter":
@@ -3489,6 +3561,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.LeveledItems is IAssetLinkContainer LeveledItemslinkCont)
+            {
+                foreach (var item in LeveledItemslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             {
                 foreach (var item in obj.Weathers.EnumerateListedAssetLinks())
                 {
@@ -3552,6 +3631,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LandscapeTextures.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.StaticCollections.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BendableSplines.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LeveledItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -3622,6 +3702,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.LandscapeTextures = MaskItemExt.Factory(item.LandscapeTextures.GetEqualsMask(rhs.LandscapeTextures, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
+            ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
             ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
             ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
@@ -3757,6 +3838,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.BendableSplines?.Overall ?? true)
             {
                 item.BendableSplines?.Print(sb, "BendableSplines");
+            }
+            if (printMask?.LeveledItems?.Overall ?? true)
+            {
+                item.LeveledItems?.Print(sb, "LeveledItems");
             }
             if (printMask?.Weathers?.Overall ?? true)
             {
@@ -3975,6 +4060,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isBendableSplinesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LeveledItems) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.LeveledItems, rhs.LeveledItems, out var lhsLeveledItems, out var rhsLeveledItems, out var isLeveledItemsEqual))
+                {
+                    if (!object.Equals(lhsLeveledItems, rhsLeveledItems)) return false;
+                }
+                else if (!isLeveledItemsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weathers) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weathers, rhs.Weathers, out var lhsWeathers, out var rhsWeathers, out var isWeathersEqual))
@@ -4097,6 +4190,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.LandscapeTextures);
             hash.Add(item.StaticCollections);
             hash.Add(item.BendableSplines);
+            hash.Add(item.LeveledItems);
             hash.Add(item.Weathers);
             hash.Add(item.AnimatedObjects);
             hash.Add(item.Debris);
@@ -4222,6 +4316,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBendableSpline":
                 case "IBendableSplineInternal":
                     return obj.BendableSplines;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    return obj.LeveledItems;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
@@ -4307,7 +4406,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[31];
+            Stream[] outputStreams = new Stream[32];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4328,18 +4427,19 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 16, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.StaticCollections, 17, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BendableSplines, 18, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 19, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 20, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 21, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 22, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 23, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 24, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 25, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 19, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 20, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 21, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 22, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 23, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 24, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 25, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 26, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 31, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4443,6 +4543,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.BendableSplines.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledItems.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4558,6 +4662,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.BendableSplines.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledItems.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4811,6 +4919,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IBendableSpline":
                 case "IBendableSplineInternal":
                     foreach (var item in obj.BendableSplines.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -5115,6 +5232,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.BendableSplines,
                 groupGetter: (m) => m.BendableSplines))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, LeveledItem, ILeveledItemGetter>(
+                srcGroup: obj.LeveledItems,
+                type: typeof(ILeveledItemGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.LeveledItems,
+                groupGetter: (m) => m.LeveledItems))
             {
                 yield return item;
             }
@@ -5523,6 +5649,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "LeveledItem":
+                case "ILeveledItemGetter":
+                case "ILeveledItem":
+                case "ILeveledItemInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, LeveledItem, ILeveledItemGetter>(
+                        srcGroup: obj.LeveledItems,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.LeveledItems,
+                        groupGetter: (m) => m.LeveledItems))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
@@ -5781,6 +5921,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.BendableSplines is IAssetLinkContainerGetter BendableSplineslinkCont)
                 {
                     foreach (var item in BendableSplineslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.LeveledItems is IAssetLinkContainerGetter LeveledItemslinkCont)
+                {
+                    foreach (var item in LeveledItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -6237,6 +6384,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LeveledItems) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.LeveledItems);
+                try
+                {
+                    item.LeveledItems.DeepCopyIn(
+                        rhs: rhs.LeveledItems,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.LeveledItems));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weathers) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Weathers);
@@ -6586,6 +6753,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool LandscapeTextures;
         public bool StaticCollections;
         public bool BendableSplines;
+        public bool LeveledItems;
         public bool Weathers;
         public bool AnimatedObjects;
         public bool Debris;
@@ -6622,6 +6790,7 @@ namespace Mutagen.Bethesda.Starfield
             LandscapeTextures = defaultValue;
             StaticCollections = defaultValue;
             BendableSplines = defaultValue;
+            LeveledItems = defaultValue;
             Weathers = defaultValue;
             AnimatedObjects = defaultValue;
             Debris = defaultValue;
@@ -6870,6 +7039,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)BendableSplinesItem).BinaryWriteTranslator).Write<IBendableSplineGetter>(
                         item: BendableSplinesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.LeveledItems ?? true)
+            {
+                var LeveledItemsItem = item.LeveledItems;
+                if (LeveledItemsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)LeveledItemsItem).BinaryWriteTranslator).Write<ILeveledItemGetter>(
+                        item: LeveledItemsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7332,6 +7512,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.BendableSplines;
                 }
+                case RecordTypeInts.LVLI:
+                {
+                    if (importMask?.LeveledItems ?? true)
+                    {
+                        item.LeveledItems.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.LeveledItems;
+                }
                 case RecordTypeInts.WTHR:
                 {
                     if (importMask?.Weathers ?? true)
@@ -7765,6 +7959,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? StarfieldGroupBinaryOverlay<IBendableSplineGetter>.StarfieldGroupFactory(_stream, _BendableSplinesLocations, _package) : default;
         public IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines => _BendableSplines ?? new StarfieldGroup<BendableSpline>(this);
         #endregion
+        #region LeveledItems
+        private List<RangeInt64>? _LeveledItemsLocations;
+        private IStarfieldGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? StarfieldGroupBinaryOverlay<ILeveledItemGetter>.StarfieldGroupFactory(_stream, _LeveledItemsLocations, _package) : default;
+        public IStarfieldGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new StarfieldGroup<LeveledItem>(this);
+        #endregion
         #region Weathers
         private List<RangeInt64>? _WeathersLocations;
         private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package) : default;
@@ -8026,6 +8225,12 @@ namespace Mutagen.Bethesda.Starfield
                     _BendableSplinesLocations ??= new();
                     _BendableSplinesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.BendableSplines;
+                }
+                case RecordTypeInts.LVLI:
+                {
+                    _LeveledItemsLocations ??= new();
+                    _LeveledItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
