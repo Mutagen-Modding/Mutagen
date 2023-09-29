@@ -2,6 +2,19 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SoundMarker" recordType="SOUN" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="SMLS" recordType="SMLS" unknown="true" refName="SoundReference" />
+      <Data recordType="DEVT">
+        <Fields>
+          <Int32 name="Unknown" unknown="true" />
+          <Float name="Unknown2" unknown="true" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

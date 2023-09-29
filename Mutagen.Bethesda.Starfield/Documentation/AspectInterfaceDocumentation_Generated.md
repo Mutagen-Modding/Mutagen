@@ -10,6 +10,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeyworded
 - KeywordFormComponent
 - Race
+- SoundMarker
 - Weather
 ### IModeled
 - AnimatedObject
@@ -60,6 +61,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LegendaryItem
 - LeveledItem
 - SoundEchoMarker
+- SoundMarker
 - StaticCollection
 - TextureSet
 ### IPositionRotation
@@ -156,6 +158,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### SkeletalModel
 - IModeled
 ### SoundEchoMarker
+- IObjectBounded
+### SoundMarker
+- IKeyworded
 - IObjectBounded
 ### StaticCollection
 - IModeled

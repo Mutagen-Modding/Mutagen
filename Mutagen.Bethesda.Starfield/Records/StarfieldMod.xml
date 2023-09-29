@@ -17,6 +17,7 @@
       <Group name="AffinityEvents" refName="AffinityEvent" />
       <Group name="HeadParts" refName="HeadPart" />
       <Group name="Races" refName="Race" />
+      <Group name="SoundMarkers" refName="SoundMarker" />
       <Group name="SoundEchoMarkers" refName="SoundEchoMarker" />
       <Group name="AudioOcclusionPrimitives" refName="AudioOcclusionPrimitive" />
       <Group name="LandscapeTextures" refName="LandscapeTexture" />

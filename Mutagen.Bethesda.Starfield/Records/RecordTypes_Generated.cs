@@ -83,6 +83,7 @@ public partial class RecordTypes
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DENS = new(0x534E4544);
     public static readonly RecordType DESC = new(0x43534544);
+    public static readonly RecordType DEVT = new(0x54564544);
     public static readonly RecordType DFOB = new(0x424F4644);
     public static readonly RecordType DIAL = new(0x4C414944);
     public static readonly RecordType DLBR = new(0x52424C44);
@@ -279,6 +280,7 @@ public partial class RecordTypes
     public static readonly RecordType SFPC = new(0x43504653);
     public static readonly RecordType SFPT = new(0x54504653);
     public static readonly RecordType SFTR = new(0x52544653);
+    public static readonly RecordType SMLS = new(0x534C4D53);
     public static readonly RecordType SNAM = new(0x4D414E53);
     public static readonly RecordType SNTP = new(0x50544E53);
     public static readonly RecordType SOUN = new(0x4E554F53);

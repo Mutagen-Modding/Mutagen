@@ -81,6 +81,7 @@ public partial class RecordTypeInts
     public const int DELE = 0x454C4544;
     public const int DENS = 0x534E4544;
     public const int DESC = 0x43534544;
+    public const int DEVT = 0x54564544;
     public const int DFOB = 0x424F4644;
     public const int DIAL = 0x4C414944;
     public const int DLBR = 0x52424C44;
@@ -277,6 +278,7 @@ public partial class RecordTypeInts
     public const int SFPC = 0x43504653;
     public const int SFPT = 0x54504653;
     public const int SFTR = 0x52544653;
+    public const int SMLS = 0x534C4D53;
     public const int SNAM = 0x4D414E53;
     public const int SNTP = 0x50544E53;
     public const int SOUN = 0x4E554F53;

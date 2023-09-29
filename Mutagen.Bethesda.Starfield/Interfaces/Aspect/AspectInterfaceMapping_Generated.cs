@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 KeywordFormComponent_Registration.Instance,
                 Race_Registration.Instance,
+                SoundMarker_Registration.Instance,
                 Weather_Registration.Instance,
             });
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
@@ -135,6 +136,7 @@ namespace Mutagen.Bethesda.Starfield
                 AudioOcclusionPrimitive_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 SoundEchoMarker_Registration.Instance,
+                SoundMarker_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TextureSet_Registration.Instance,
             });
