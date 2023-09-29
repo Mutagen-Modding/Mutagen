@@ -19,6 +19,7 @@
       <Group name="Races" refName="Race" />
       <Group name="SoundMarkers" refName="SoundMarker" />
       <Group name="SoundEchoMarkers" refName="SoundEchoMarker" />
+      <Group name="AcousticSpaces" refName="AcousticSpace" />
       <Group name="AudioOcclusionPrimitives" refName="AudioOcclusionPrimitive" />
       <Group name="LandscapeTextures" refName="LandscapeTexture" />
       <Group name="StaticCollections" refName="StaticCollection" />

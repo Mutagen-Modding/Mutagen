@@ -3,16 +3,19 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 public partial class RecordTypeInts
 {
     public const int AACT = 0x54434141;
+    public const int AAMB = 0x424D4141;
     public const int AAMD = 0x444D4141;
     public const int AAPD = 0x44504141;
     public const int ACHR = 0x52484341;
     public const int ACTI = 0x49544341;
     public const int ADDN = 0x4E444441;
+    public const int AEAR = 0x52414541;
     public const int AFFE = 0x45464641;
     public const int ALCH = 0x48434C41;
     public const int AMBS = 0x53424D41;
     public const int AMDL = 0x4C444D41;
     public const int AMMO = 0x4F4D4D41;
+    public const int AMUS = 0x53554D41;
     public const int ANAM = 0x4D414E41;
     public const int ANIO = 0x4F494E41;
     public const int AOPF = 0x46504F41;
@@ -23,6 +26,8 @@ public partial class RecordTypeInts
     public const int ARMA = 0x414D5241;
     public const int ARMO = 0x4F4D5241;
     public const int ARTO = 0x4F545241;
+    public const int ASDF = 0x46445341;
+    public const int ASLS = 0x534C5341;
     public const int ASPC = 0x43505341;
     public const int ATAF = 0x46415441;
     public const int ATAN = 0x4E415441;
@@ -46,6 +51,7 @@ public partial class RecordTypeInts
     public const int BNAM = 0x4D414E42;
     public const int BNDS = 0x53444E42;
     public const int BO64 = 0x34364F42;
+    public const int BOLV = 0x564C4F42;
     public const int BOOK = 0x4B4F4F42;
     public const int BPTD = 0x44545042;
     public const int BSTT = 0x54545342;
@@ -337,6 +343,7 @@ public partial class RecordTypeInts
     public const int XMPM = 0x4D504D58;
     public const int XMSP = 0x50534D58;
     public const int XNAM = 0x4D414E58;
+    public const int XTRI = 0x49525458;
     public const int XXXX = 0x58585858;
     public const int YNAM = 0x4D414E59;
     public const int ZNAM = 0x4D414E5A;

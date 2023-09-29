@@ -2,6 +2,20 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ASLS" recordType="ASLS" unknown="true" refName="SoundReference" />
+      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
+      <RefDirect name="WED1" recordType="WED1" unknown="true" refName="SoundReference" />
+      <FormLink name="AmbientSet" refName="AmbienceSet" recordType="AAMB" />
+      <FormLink name="Music" refName="MusicType" recordType="AMUS" />
+      <FormLink name="EnvironmentType" refName="ReverbParameters" recordType="BNAM" />
+      <Float name="AEAR" recordType="AEAR" unknown="true" />
+      <Float name="FLTV" recordType="FLTV" unknown="true" />
+      <Bool name="IsInterior" recordType="XTRI" byteLength="1" nullable="false" />
+      <Bool name="BOLV" recordType="BOLV" byteLength="1" />
+      <ByteArray name="DEVT" recordType="DEVT" />
+      <ByteArray name="ASDF" recordType="ASDF" />
     </Fields>
   </Object>
 </Loqui>

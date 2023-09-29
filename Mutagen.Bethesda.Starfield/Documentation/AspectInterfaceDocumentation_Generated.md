@@ -56,6 +56,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptVariableProperty
 - StaticCollection
 ### IObjectBounded
+- AcousticSpace
 - AudioOcclusionPrimitive
 - BendableSpline
 - LegendaryItem
@@ -70,6 +71,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IScripted
 - LeveledItem
 ## Concrete Classes to Interfaces
+### AcousticSpace
+- IObjectBounded
 ### Activity
 - INamed
 ### ActorValueModulation

@@ -5,16 +5,19 @@ namespace Mutagen.Bethesda.Starfield.Internals;
 public partial class RecordTypes
 {
     public static readonly RecordType AACT = new(0x54434141);
+    public static readonly RecordType AAMB = new(0x424D4141);
     public static readonly RecordType AAMD = new(0x444D4141);
     public static readonly RecordType AAPD = new(0x44504141);
     public static readonly RecordType ACHR = new(0x52484341);
     public static readonly RecordType ACTI = new(0x49544341);
     public static readonly RecordType ADDN = new(0x4E444441);
+    public static readonly RecordType AEAR = new(0x52414541);
     public static readonly RecordType AFFE = new(0x45464641);
     public static readonly RecordType ALCH = new(0x48434C41);
     public static readonly RecordType AMBS = new(0x53424D41);
     public static readonly RecordType AMDL = new(0x4C444D41);
     public static readonly RecordType AMMO = new(0x4F4D4D41);
+    public static readonly RecordType AMUS = new(0x53554D41);
     public static readonly RecordType ANAM = new(0x4D414E41);
     public static readonly RecordType ANIO = new(0x4F494E41);
     public static readonly RecordType AOPF = new(0x46504F41);
@@ -25,6 +28,8 @@ public partial class RecordTypes
     public static readonly RecordType ARMA = new(0x414D5241);
     public static readonly RecordType ARMO = new(0x4F4D5241);
     public static readonly RecordType ARTO = new(0x4F545241);
+    public static readonly RecordType ASDF = new(0x46445341);
+    public static readonly RecordType ASLS = new(0x534C5341);
     public static readonly RecordType ASPC = new(0x43505341);
     public static readonly RecordType ATAF = new(0x46415441);
     public static readonly RecordType ATAN = new(0x4E415441);
@@ -48,6 +53,7 @@ public partial class RecordTypes
     public static readonly RecordType BNAM = new(0x4D414E42);
     public static readonly RecordType BNDS = new(0x53444E42);
     public static readonly RecordType BO64 = new(0x34364F42);
+    public static readonly RecordType BOLV = new(0x564C4F42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);
     public static readonly RecordType BPTD = new(0x44545042);
     public static readonly RecordType BSTT = new(0x54545342);
@@ -339,6 +345,7 @@ public partial class RecordTypes
     public static readonly RecordType XMPM = new(0x4D504D58);
     public static readonly RecordType XMSP = new(0x50534D58);
     public static readonly RecordType XNAM = new(0x4D414E58);
+    public static readonly RecordType XTRI = new(0x49525458);
     public static readonly RecordType XXXX = new(0x58585858);
     public static readonly RecordType YNAM = new(0x4D414E59);
     public static readonly RecordType ZNAM = new(0x4D414E5A);

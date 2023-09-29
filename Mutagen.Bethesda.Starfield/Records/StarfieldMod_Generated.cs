@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Starfield
             _Races_Object = new StarfieldGroup<Race>(this);
             _SoundMarkers_Object = new StarfieldGroup<SoundMarker>(this);
             _SoundEchoMarkers_Object = new StarfieldGroup<SoundEchoMarker>(this);
+            _AcousticSpaces_Object = new StarfieldGroup<AcousticSpace>(this);
             _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
@@ -217,6 +218,13 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<SoundEchoMarker> SoundEchoMarkers => _SoundEchoMarkers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ISoundEchoMarkerGetter> IStarfieldModGetter.SoundEchoMarkers => _SoundEchoMarkers_Object;
+        #endregion
+        #region AcousticSpaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<AcousticSpace> _AcousticSpaces_Object;
+        public StarfieldGroup<AcousticSpace> AcousticSpaces => _AcousticSpaces_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IAcousticSpaceGetter> IStarfieldModGetter.AcousticSpaces => _AcousticSpaces_Object;
         #endregion
         #region AudioOcclusionPrimitives
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -393,6 +401,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SoundMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.SoundEchoMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.AcousticSpaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -430,6 +439,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Races,
                 TItem SoundMarkers,
                 TItem SoundEchoMarkers,
+                TItem AcousticSpaces,
                 TItem AudioOcclusionPrimitives,
                 TItem LandscapeTextures,
                 TItem StaticCollections,
@@ -465,6 +475,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Races = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Races, new StarfieldGroup.Mask<TItem>(Races));
                 this.SoundMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SoundMarkers, new StarfieldGroup.Mask<TItem>(SoundMarkers));
                 this.SoundEchoMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SoundEchoMarkers, new StarfieldGroup.Mask<TItem>(SoundEchoMarkers));
+                this.AcousticSpaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AcousticSpaces, new StarfieldGroup.Mask<TItem>(AcousticSpaces));
                 this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AudioOcclusionPrimitives, new StarfieldGroup.Mask<TItem>(AudioOcclusionPrimitives));
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LandscapeTextures, new StarfieldGroup.Mask<TItem>(LandscapeTextures));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollections, new StarfieldGroup.Mask<TItem>(StaticCollections));
@@ -510,6 +521,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Races { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SoundMarkers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SoundEchoMarkers { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AcousticSpaces { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AudioOcclusionPrimitives { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LandscapeTextures { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollections { get; set; }
@@ -556,6 +568,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Races, rhs.Races)) return false;
                 if (!object.Equals(this.SoundMarkers, rhs.SoundMarkers)) return false;
                 if (!object.Equals(this.SoundEchoMarkers, rhs.SoundEchoMarkers)) return false;
+                if (!object.Equals(this.AcousticSpaces, rhs.AcousticSpaces)) return false;
                 if (!object.Equals(this.AudioOcclusionPrimitives, rhs.AudioOcclusionPrimitives)) return false;
                 if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
@@ -595,6 +608,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Races);
                 hash.Add(this.SoundMarkers);
                 hash.Add(this.SoundEchoMarkers);
+                hash.Add(this.AcousticSpaces);
                 hash.Add(this.AudioOcclusionPrimitives);
                 hash.Add(this.LandscapeTextures);
                 hash.Add(this.StaticCollections);
@@ -704,6 +718,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.SoundEchoMarkers.Overall)) return false;
                     if (this.SoundEchoMarkers.Specific != null && !this.SoundEchoMarkers.Specific.All(eval)) return false;
+                }
+                if (AcousticSpaces != null)
+                {
+                    if (!eval(this.AcousticSpaces.Overall)) return false;
+                    if (this.AcousticSpaces.Specific != null && !this.AcousticSpaces.Specific.All(eval)) return false;
                 }
                 if (AudioOcclusionPrimitives != null)
                 {
@@ -882,6 +901,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.SoundEchoMarkers.Overall)) return true;
                     if (this.SoundEchoMarkers.Specific != null && this.SoundEchoMarkers.Specific.Any(eval)) return true;
                 }
+                if (AcousticSpaces != null)
+                {
+                    if (eval(this.AcousticSpaces.Overall)) return true;
+                    if (this.AcousticSpaces.Specific != null && this.AcousticSpaces.Specific.Any(eval)) return true;
+                }
                 if (AudioOcclusionPrimitives != null)
                 {
                     if (eval(this.AudioOcclusionPrimitives.Overall)) return true;
@@ -998,6 +1022,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Races = this.Races == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
                 obj.SoundMarkers = this.SoundMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SoundMarkers.Overall), this.SoundMarkers.Specific?.Translate(eval));
                 obj.SoundEchoMarkers = this.SoundEchoMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SoundEchoMarkers.Overall), this.SoundEchoMarkers.Specific?.Translate(eval));
+                obj.AcousticSpaces = this.AcousticSpaces == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AcousticSpaces.Overall), this.AcousticSpaces.Specific?.Translate(eval));
                 obj.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AudioOcclusionPrimitives.Overall), this.AudioOcclusionPrimitives.Specific?.Translate(eval));
                 obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
@@ -1100,6 +1125,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.SoundEchoMarkers?.Overall ?? true)
                     {
                         SoundEchoMarkers?.Print(sb);
+                    }
+                    if (printMask?.AcousticSpaces?.Overall ?? true)
+                    {
+                        AcousticSpaces?.Print(sb);
                     }
                     if (printMask?.AudioOcclusionPrimitives?.Overall ?? true)
                     {
@@ -1210,6 +1239,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundMarker.ErrorMask>?>? SoundMarkers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundEchoMarker.ErrorMask>?>? SoundEchoMarkers;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>? AudioOcclusionPrimitives;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
@@ -1269,6 +1299,8 @@ namespace Mutagen.Bethesda.Starfield
                         return SoundMarkers;
                     case StarfieldMod_FieldIndex.SoundEchoMarkers:
                         return SoundEchoMarkers;
+                    case StarfieldMod_FieldIndex.AcousticSpaces:
+                        return AcousticSpaces;
                     case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
                         return AudioOcclusionPrimitives;
                     case StarfieldMod_FieldIndex.LandscapeTextures:
@@ -1363,6 +1395,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.SoundEchoMarkers:
                         this.SoundEchoMarkers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundEchoMarker.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.AcousticSpaces:
+                        this.AcousticSpaces = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AcousticSpace.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
                         this.AudioOcclusionPrimitives = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>(ex, null);
@@ -1476,6 +1511,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.SoundEchoMarkers:
                         this.SoundEchoMarkers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundEchoMarker.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.AcousticSpaces:
+                        this.AcousticSpaces = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AcousticSpace.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
                         this.AudioOcclusionPrimitives = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>?)obj;
                         break;
@@ -1552,6 +1590,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Races != null) return true;
                 if (SoundMarkers != null) return true;
                 if (SoundEchoMarkers != null) return true;
+                if (AcousticSpaces != null) return true;
                 if (AudioOcclusionPrimitives != null) return true;
                 if (LandscapeTextures != null) return true;
                 if (StaticCollections != null) return true;
@@ -1611,6 +1650,7 @@ namespace Mutagen.Bethesda.Starfield
                 Races?.Print(sb);
                 SoundMarkers?.Print(sb);
                 SoundEchoMarkers?.Print(sb);
+                AcousticSpaces?.Print(sb);
                 AudioOcclusionPrimitives?.Print(sb);
                 LandscapeTextures?.Print(sb);
                 StaticCollections?.Print(sb);
@@ -1653,6 +1693,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 ret.SoundMarkers = this.SoundMarkers.Combine(rhs.SoundMarkers, (l, r) => l.Combine(r));
                 ret.SoundEchoMarkers = this.SoundEchoMarkers.Combine(rhs.SoundEchoMarkers, (l, r) => l.Combine(r));
+                ret.AcousticSpaces = this.AcousticSpaces.Combine(rhs.AcousticSpaces, (l, r) => l.Combine(r));
                 ret.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives.Combine(rhs.AudioOcclusionPrimitives, (l, r) => l.Combine(r));
                 ret.LandscapeTextures = this.LandscapeTextures.Combine(rhs.LandscapeTextures, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
@@ -1710,6 +1751,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Race.TranslationMask>? Races;
             public StarfieldGroup.TranslationMask<SoundMarker.TranslationMask>? SoundMarkers;
             public StarfieldGroup.TranslationMask<SoundEchoMarker.TranslationMask>? SoundEchoMarkers;
+            public StarfieldGroup.TranslationMask<AcousticSpace.TranslationMask>? AcousticSpaces;
             public StarfieldGroup.TranslationMask<AudioOcclusionPrimitive.TranslationMask>? AudioOcclusionPrimitives;
             public StarfieldGroup.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
             public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
@@ -1768,6 +1810,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
                 ret.Add((SoundMarkers != null ? SoundMarkers.OnOverall : DefaultOn, SoundMarkers?.GetCrystal()));
                 ret.Add((SoundEchoMarkers != null ? SoundEchoMarkers.OnOverall : DefaultOn, SoundEchoMarkers?.GetCrystal()));
+                ret.Add((AcousticSpaces != null ? AcousticSpaces.OnOverall : DefaultOn, AcousticSpaces?.GetCrystal()));
                 ret.Add((AudioOcclusionPrimitives != null ? AudioOcclusionPrimitives.OnOverall : DefaultOn, AudioOcclusionPrimitives?.GetCrystal()));
                 ret.Add((LandscapeTextures != null ? LandscapeTextures.OnOverall : DefaultOn, LandscapeTextures?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
@@ -1844,6 +1887,7 @@ namespace Mutagen.Bethesda.Starfield
             _Races_Object = new StarfieldGroup<Race>(this);
             _SoundMarkers_Object = new StarfieldGroup<SoundMarker>(this);
             _SoundEchoMarkers_Object = new StarfieldGroup<SoundEchoMarker>(this);
+            _AcousticSpaces_Object = new StarfieldGroup<AcousticSpace>(this);
             _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
@@ -1930,6 +1974,10 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.SoundEchoMarkers ?? true)
             {
                 this.SoundEchoMarkers.RecordCache.Set(rhsMod.SoundEchoMarkers.RecordCache.Items);
+            }
+            if (mask?.AcousticSpaces ?? true)
+            {
+                this.AcousticSpaces.RecordCache.Set(rhsMod.AcousticSpaces.RecordCache.Items);
             }
             if (mask?.AudioOcclusionPrimitives ?? true)
             {
@@ -2025,6 +2073,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             count += SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += SoundEchoMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
             count += AudioOcclusionPrimitives.RecordCache.Count > 0 ? 1 : default(uint);
             count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
             count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
@@ -2314,6 +2363,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Race> Races { get; }
         new StarfieldGroup<SoundMarker> SoundMarkers { get; }
         new StarfieldGroup<SoundEchoMarker> SoundEchoMarkers { get; }
+        new StarfieldGroup<AcousticSpace> AcousticSpaces { get; }
         new StarfieldGroup<AudioOcclusionPrimitive> AudioOcclusionPrimitives { get; }
         new StarfieldGroup<LandscapeTexture> LandscapeTextures { get; }
         new StarfieldGroup<StaticCollection> StaticCollections { get; }
@@ -2367,6 +2417,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IRaceGetter> Races { get; }
         IStarfieldGroupGetter<ISoundMarkerGetter> SoundMarkers { get; }
         IStarfieldGroupGetter<ISoundEchoMarkerGetter> SoundEchoMarkers { get; }
+        IStarfieldGroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
         IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> AudioOcclusionPrimitives { get; }
         IStarfieldGroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
         IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections { get; }
@@ -2971,23 +3022,24 @@ namespace Mutagen.Bethesda.Starfield
         Races = 14,
         SoundMarkers = 15,
         SoundEchoMarkers = 16,
-        AudioOcclusionPrimitives = 17,
-        LandscapeTextures = 18,
-        StaticCollections = 19,
-        BendableSplines = 20,
-        LeveledItems = 21,
-        Weathers = 22,
-        AnimatedObjects = 23,
-        Debris = 24,
-        DefaultObjects = 25,
-        Outfits = 26,
-        AimModels = 27,
-        AttractionRules = 28,
-        BiomeSwaps = 29,
-        Planets = 30,
-        SurfacePatternStyles = 31,
-        LegendaryItems = 32,
-        ActorValueModulations = 33,
+        AcousticSpaces = 17,
+        AudioOcclusionPrimitives = 18,
+        LandscapeTextures = 19,
+        StaticCollections = 20,
+        BendableSplines = 21,
+        LeveledItems = 22,
+        Weathers = 23,
+        AnimatedObjects = 24,
+        Debris = 25,
+        DefaultObjects = 26,
+        Outfits = 27,
+        AimModels = 28,
+        AttractionRules = 29,
+        BiomeSwaps = 30,
+        Planets = 31,
+        SurfacePatternStyles = 32,
+        LegendaryItems = 33,
+        ActorValueModulations = 34,
     }
     #endregion
 
@@ -2998,9 +3050,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 34;
+        public const ushort AdditionalFieldCount = 35;
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -3083,6 +3135,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Races.Clear();
             item.SoundMarkers.Clear();
             item.SoundEchoMarkers.Clear();
+            item.AcousticSpaces.Clear();
             item.AudioOcclusionPrimitives.Clear();
             item.LandscapeTextures.Clear();
             item.StaticCollections.Clear();
@@ -3117,6 +3170,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Races.RemapLinks(mapping);
             obj.SoundMarkers.RemapLinks(mapping);
             obj.SoundEchoMarkers.RemapLinks(mapping);
+            obj.AcousticSpaces.RemapLinks(mapping);
             obj.LandscapeTextures.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
@@ -3178,6 +3232,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Races.Remove(keys);
             obj.SoundMarkers.Remove(keys);
             obj.SoundEchoMarkers.Remove(keys);
+            obj.AcousticSpaces.Remove(keys);
             obj.AudioOcclusionPrimitives.Remove(keys);
             obj.LandscapeTextures.Remove(keys);
             obj.StaticCollections.Remove(keys);
@@ -3359,6 +3414,14 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISoundEchoMarker":
                 case "ISoundEchoMarkerInternal":
                     obj.SoundEchoMarkers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    obj.AcousticSpaces.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -3762,6 +3825,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
             ret.SoundMarkers = MaskItemExt.Factory(item.SoundMarkers.GetEqualsMask(rhs.SoundMarkers, include), include);
             ret.SoundEchoMarkers = MaskItemExt.Factory(item.SoundEchoMarkers.GetEqualsMask(rhs.SoundEchoMarkers, include), include);
+            ret.AcousticSpaces = MaskItemExt.Factory(item.AcousticSpaces.GetEqualsMask(rhs.AcousticSpaces, include), include);
             ret.AudioOcclusionPrimitives = MaskItemExt.Factory(item.AudioOcclusionPrimitives.GetEqualsMask(rhs.AudioOcclusionPrimitives, include), include);
             ret.LandscapeTextures = MaskItemExt.Factory(item.LandscapeTextures.GetEqualsMask(rhs.LandscapeTextures, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
@@ -3890,6 +3954,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SoundEchoMarkers?.Overall ?? true)
             {
                 item.SoundEchoMarkers?.Print(sb, "SoundEchoMarkers");
+            }
+            if (printMask?.AcousticSpaces?.Overall ?? true)
+            {
+                item.AcousticSpaces?.Print(sb, "AcousticSpaces");
             }
             if (printMask?.AudioOcclusionPrimitives?.Overall ?? true)
             {
@@ -4104,6 +4172,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isSoundEchoMarkersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AcousticSpaces) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AcousticSpaces, rhs.AcousticSpaces, out var lhsAcousticSpaces, out var rhsAcousticSpaces, out var isAcousticSpacesEqual))
+                {
+                    if (!object.Equals(lhsAcousticSpaces, rhsAcousticSpaces)) return false;
+                }
+                else if (!isAcousticSpacesEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AudioOcclusionPrimitives, rhs.AudioOcclusionPrimitives, out var lhsAudioOcclusionPrimitives, out var rhsAudioOcclusionPrimitives, out var isAudioOcclusionPrimitivesEqual))
@@ -4263,6 +4339,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Races);
             hash.Add(item.SoundMarkers);
             hash.Add(item.SoundEchoMarkers);
+            hash.Add(item.AcousticSpaces);
             hash.Add(item.AudioOcclusionPrimitives);
             hash.Add(item.LandscapeTextures);
             hash.Add(item.StaticCollections);
@@ -4378,6 +4455,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISoundEchoMarker":
                 case "ISoundEchoMarkerInternal":
                     return obj.SoundEchoMarkers;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    return obj.AcousticSpaces;
                 case "AudioOcclusionPrimitive":
                 case "IAudioOcclusionPrimitiveGetter":
                 case "IAudioOcclusionPrimitive":
@@ -4488,7 +4570,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[33];
+            Stream[] outputStreams = new Stream[34];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4506,23 +4588,24 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Races, 13, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SoundMarkers, 14, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.SoundEchoMarkers, 15, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AudioOcclusionPrimitives, 16, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 17, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 18, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 19, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 20, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 21, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 22, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 23, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 24, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 25, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, 16, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AudioOcclusionPrimitives, 17, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 18, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 19, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 20, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 21, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 22, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 23, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 24, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 25, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 26, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 33, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4618,6 +4701,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SoundEchoMarkers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AcousticSpaces.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4737,6 +4824,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.SoundEchoMarkers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4983,6 +5074,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ISoundEchoMarker":
                 case "ISoundEchoMarkerInternal":
                     foreach (var item in obj.SoundEchoMarkers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    foreach (var item in obj.AcousticSpaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -5305,6 +5405,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.SoundEchoMarkers,
                 groupGetter: (m) => m.SoundEchoMarkers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                srcGroup: obj.AcousticSpaces,
+                type: typeof(IAcousticSpaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AcousticSpaces,
+                groupGetter: (m) => m.AcousticSpaces))
             {
                 yield return item;
             }
@@ -5712,6 +5821,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.SoundEchoMarkers,
                         groupGetter: (m) => m.SoundEchoMarkers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AcousticSpace":
+                case "IAcousticSpaceGetter":
+                case "IAcousticSpace":
+                case "IAcousticSpaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, AcousticSpace, IAcousticSpaceGetter>(
+                        srcGroup: obj.AcousticSpaces,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AcousticSpaces,
+                        groupGetter: (m) => m.AcousticSpaces))
                     {
                         yield return item;
                     }
@@ -6447,6 +6570,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AcousticSpaces) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AcousticSpaces);
+                try
+                {
+                    item.AcousticSpaces.DeepCopyIn(
+                        rhs: rhs.AcousticSpaces,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.AcousticSpaces));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives);
@@ -6893,6 +7036,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Races;
         public bool SoundMarkers;
         public bool SoundEchoMarkers;
+        public bool AcousticSpaces;
         public bool AudioOcclusionPrimitives;
         public bool LandscapeTextures;
         public bool StaticCollections;
@@ -6931,6 +7075,7 @@ namespace Mutagen.Bethesda.Starfield
             Races = defaultValue;
             SoundMarkers = defaultValue;
             SoundEchoMarkers = defaultValue;
+            AcousticSpaces = defaultValue;
             AudioOcclusionPrimitives = defaultValue;
             LandscapeTextures = defaultValue;
             StaticCollections = defaultValue;
@@ -7151,6 +7296,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)SoundEchoMarkersItem).BinaryWriteTranslator).Write<ISoundEchoMarkerGetter>(
                         item: SoundEchoMarkersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AcousticSpaces ?? true)
+            {
+                var AcousticSpacesItem = item.AcousticSpaces;
+                if (AcousticSpacesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)AcousticSpacesItem).BinaryWriteTranslator).Write<IAcousticSpaceGetter>(
+                        item: AcousticSpacesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7625,6 +7781,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.SoundEchoMarkers;
+                }
+                case RecordTypeInts.ASPC:
+                {
+                    if (importMask?.AcousticSpaces ?? true)
+                    {
+                        item.AcousticSpaces.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.AOPF:
                 {
@@ -8114,6 +8284,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ISoundEchoMarkerGetter>? _SoundEchoMarkers => _SoundEchoMarkersLocations != null ? StarfieldGroupBinaryOverlay<ISoundEchoMarkerGetter>.StarfieldGroupFactory(_stream, _SoundEchoMarkersLocations, _package) : default;
         public IStarfieldGroupGetter<ISoundEchoMarkerGetter> SoundEchoMarkers => _SoundEchoMarkers ?? new StarfieldGroup<SoundEchoMarker>(this);
         #endregion
+        #region AcousticSpaces
+        private List<RangeInt64>? _AcousticSpacesLocations;
+        private IStarfieldGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? StarfieldGroupBinaryOverlay<IAcousticSpaceGetter>.StarfieldGroupFactory(_stream, _AcousticSpacesLocations, _package) : default;
+        public IStarfieldGroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new StarfieldGroup<AcousticSpace>(this);
+        #endregion
         #region AudioOcclusionPrimitives
         private List<RangeInt64>? _AudioOcclusionPrimitivesLocations;
         private IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter>? _AudioOcclusionPrimitives => _AudioOcclusionPrimitivesLocations != null ? StarfieldGroupBinaryOverlay<IAudioOcclusionPrimitiveGetter>.StarfieldGroupFactory(_stream, _AudioOcclusionPrimitivesLocations, _package) : default;
@@ -8382,6 +8557,12 @@ namespace Mutagen.Bethesda.Starfield
                     _SoundEchoMarkersLocations ??= new();
                     _SoundEchoMarkersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.SoundEchoMarkers;
+                }
+                case RecordTypeInts.ASPC:
+                {
+                    _AcousticSpacesLocations ??= new();
+                    _AcousticSpacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.AOPF:
                 {

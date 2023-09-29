@@ -133,6 +133,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                AcousticSpace_Registration.Instance,
                 AudioOcclusionPrimitive_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 SoundEchoMarker_Registration.Instance,
