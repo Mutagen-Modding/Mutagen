@@ -2,6 +2,15 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ObjectEffect" recordType="ENCH" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="ENIT">
+        <Fields>
+          <ByteArray name="UnknownENIT" byteLength="27" nullable="false" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

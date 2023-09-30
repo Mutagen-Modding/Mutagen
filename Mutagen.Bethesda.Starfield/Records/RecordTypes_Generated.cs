@@ -104,10 +104,14 @@ public partial class RecordTypes
     public static readonly RecordType ECSH = new(0x48534345);
     public static readonly RecordType ECTE = new(0x45544345);
     public static readonly RecordType EDID = new(0x44494445);
+    public static readonly RecordType EFID = new(0x44494645);
+    public static readonly RecordType EFIF = new(0x46494645);
+    public static readonly RecordType EFIT = new(0x54494645);
     public static readonly RecordType EFSH = new(0x48534645);
     public static readonly RecordType EFSQ = new(0x51534645);
     public static readonly RecordType ENAM = new(0x4D414E45);
     public static readonly RecordType ENCH = new(0x48434E45);
+    public static readonly RecordType ENIT = new(0x54494E45);
     public static readonly RecordType EQUP = new(0x50555145);
     public static readonly RecordType ESSH = new(0x48535345);
     public static readonly RecordType EXPL = new(0x4C505845);
@@ -216,6 +220,7 @@ public partial class RecordTypes
     public static readonly RecordType MTNM = new(0x4D4E544D);
     public static readonly RecordType MTPT = new(0x5450544D);
     public static readonly RecordType MTYP = new(0x5059544D);
+    public static readonly RecordType MUID = new(0x4449554D);
     public static readonly RecordType MUSC = new(0x4353554D);
     public static readonly RecordType MUST = new(0x5453554D);
     public static readonly RecordType NAM0 = new(0x304D414E);

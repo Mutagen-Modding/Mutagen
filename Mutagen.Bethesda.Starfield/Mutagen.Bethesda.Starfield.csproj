@@ -107,6 +107,10 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
+    <None Update="Records\Common Subrecords\Effect.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldAnimationTextAssetType.cs" />
@@ -1976,6 +1980,12 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ConditionDatas\GetTargetHeightConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EffectData_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Effect_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptBoolListProperty_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>

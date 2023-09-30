@@ -109,6 +109,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             DoesNotExistConditionData_Registration.Instance,
             Door_Registration.Instance,
             EchoMarker_Registration.Instance,
+            Effect_Registration.Instance,
+            EffectData_Registration.Instance,
             EffectSequence_Registration.Instance,
             EffectSequenceComponent_Registration.Instance,
             EffectShader_Registration.Instance,

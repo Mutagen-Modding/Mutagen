@@ -102,10 +102,14 @@ public partial class RecordTypeInts
     public const int ECSH = 0x48534345;
     public const int ECTE = 0x45544345;
     public const int EDID = 0x44494445;
+    public const int EFID = 0x44494645;
+    public const int EFIF = 0x46494645;
+    public const int EFIT = 0x54494645;
     public const int EFSH = 0x48534645;
     public const int EFSQ = 0x51534645;
     public const int ENAM = 0x4D414E45;
     public const int ENCH = 0x48434E45;
+    public const int ENIT = 0x54494E45;
     public const int EQUP = 0x50555145;
     public const int ESSH = 0x48535345;
     public const int EXPL = 0x4C505845;
@@ -214,6 +218,7 @@ public partial class RecordTypeInts
     public const int MTNM = 0x4D4E544D;
     public const int MTPT = 0x5450544D;
     public const int MTYP = 0x5059544D;
+    public const int MUID = 0x4449554D;
     public const int MUSC = 0x4353554D;
     public const int MUST = 0x5453554D;
     public const int NAM0 = 0x304D414E;

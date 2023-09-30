@@ -38,6 +38,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Keyword
 - MagicEffect
 - MorphGroup
+- ObjectEffect
 - Planet
 - ProgressionEvaluatorArgument
 - Race
@@ -64,6 +65,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BendableSpline
 - LegendaryItem
 - LeveledItem
+- ObjectEffect
 - ProjectedDecal
 - SoundEchoMarker
 - SoundMarker
@@ -127,6 +129,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### MorphGroup
 - INamed
+### ObjectEffect
+- INamed
+- IObjectBounded
 ### Planet
 - INamed
 ### PlanetModelComponent
