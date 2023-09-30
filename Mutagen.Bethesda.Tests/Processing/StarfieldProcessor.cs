@@ -95,10 +95,12 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "PNDT", "FULL" },
                     new RecordType[] { "LVLI", "ONAM" },
                     new RecordType[] { "ENCH", "FULL" },
+                    new RecordType[] { "SPEL", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
                 {
+                    new RecordType[] { "SPEL", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

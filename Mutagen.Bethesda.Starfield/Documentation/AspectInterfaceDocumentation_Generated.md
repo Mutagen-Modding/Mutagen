@@ -13,6 +13,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - Race
 - SoundMarker
+- Spell
 - Weather
 ### IModeled
 - AnimatedObject
@@ -58,6 +59,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptStructProperty
 - ScriptVariableListProperty
 - ScriptVariableProperty
+- Spell
 - StaticCollection
 ### IObjectBounded
 - AcousticSpace
@@ -69,6 +71,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ProjectedDecal
 - SoundEchoMarker
 - SoundMarker
+- Spell
 - StaticCollection
 - TextureSet
 ### IPositionRotation
@@ -181,6 +184,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### SoundMarker
 - IKeyworded
+- IObjectBounded
+### Spell
+- IKeyworded
+- INamed
 - IObjectBounded
 ### StaticCollection
 - IModeled

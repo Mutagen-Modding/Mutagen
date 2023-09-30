@@ -112,6 +112,7 @@ public partial class RecordTypeInts
     public const int ENIT = 0x54494E45;
     public const int EQUP = 0x50555145;
     public const int ESSH = 0x48535345;
+    public const int ETYP = 0x50595445;
     public const int EXPL = 0x4C505845;
     public const int FACT = 0x54434146;
     public const int FDSI = 0x49534446;
@@ -252,6 +253,7 @@ public partial class RecordTypeInts
     public const int PCCN = 0x4E434350;
     public const int PCMT = 0x544D4350;
     public const int PDCL = 0x4C434450;
+    public const int PDSH = 0x48534450;
     public const int PERK = 0x4B524550;
     public const int PFPC = 0x43504650;
     public const int PHLA = 0x414C4850;
@@ -267,6 +269,7 @@ public partial class RecordTypeInts
     public const int PSDC = 0x43445350;
     public const int PTST = 0x54535450;
     public const int PTT2 = 0x32545450;
+    public const int PUSH = 0x48535550;
     public const int QNAM = 0x4D414E51;
     public const int QUST = 0x54535551;
     public const int RACE = 0x45434152;
@@ -300,6 +303,7 @@ public partial class RecordTypeInts
     public const int SPED = 0x44455053;
     public const int SPEL = 0x4C455053;
     public const int SPGD = 0x44475053;
+    public const int SPIT = 0x54495053;
     public const int SPLO = 0x4F4C5053;
     public const int STAG = 0x47415453;
     public const int STAT = 0x54415453;

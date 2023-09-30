@@ -114,6 +114,7 @@ public partial class RecordTypes
     public static readonly RecordType ENIT = new(0x54494E45);
     public static readonly RecordType EQUP = new(0x50555145);
     public static readonly RecordType ESSH = new(0x48535345);
+    public static readonly RecordType ETYP = new(0x50595445);
     public static readonly RecordType EXPL = new(0x4C505845);
     public static readonly RecordType FACT = new(0x54434146);
     public static readonly RecordType FDSI = new(0x49534446);
@@ -254,6 +255,7 @@ public partial class RecordTypes
     public static readonly RecordType PCCN = new(0x4E434350);
     public static readonly RecordType PCMT = new(0x544D4350);
     public static readonly RecordType PDCL = new(0x4C434450);
+    public static readonly RecordType PDSH = new(0x48534450);
     public static readonly RecordType PERK = new(0x4B524550);
     public static readonly RecordType PFPC = new(0x43504650);
     public static readonly RecordType PHLA = new(0x414C4850);
@@ -269,6 +271,7 @@ public partial class RecordTypes
     public static readonly RecordType PSDC = new(0x43445350);
     public static readonly RecordType PTST = new(0x54535450);
     public static readonly RecordType PTT2 = new(0x32545450);
+    public static readonly RecordType PUSH = new(0x48535550);
     public static readonly RecordType QNAM = new(0x4D414E51);
     public static readonly RecordType QUST = new(0x54535551);
     public static readonly RecordType RACE = new(0x45434152);
@@ -302,6 +305,7 @@ public partial class RecordTypes
     public static readonly RecordType SPED = new(0x44455053);
     public static readonly RecordType SPEL = new(0x4C455053);
     public static readonly RecordType SPGD = new(0x44475053);
+    public static readonly RecordType SPIT = new(0x54495053);
     public static readonly RecordType SPLO = new(0x4F4C5053);
     public static readonly RecordType STAG = new(0x47415453);
     public static readonly RecordType STAT = new(0x54415453);

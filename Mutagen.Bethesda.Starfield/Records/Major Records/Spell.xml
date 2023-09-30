@@ -2,6 +2,24 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Spell" recordType="SPEL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
+      <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <String name="Description" recordType="DESC" translated="DL" nullable="false" />
+      <Data recordType="SPIT" >
+        <Fields>
+          <ByteArray name="Unknown" nullable="false" byteLength="9" />
+          <Float name="Unknown2" />
+          <ByteArray name="Unknown3" nullable="false" byteLength="14" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" />
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>
   </Object>

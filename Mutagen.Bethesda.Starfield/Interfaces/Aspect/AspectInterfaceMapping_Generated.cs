@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffect_Registration.Instance,
                 Race_Registration.Instance,
                 SoundMarker_Registration.Instance,
+                Spell_Registration.Instance,
                 Weather_Registration.Instance,
             });
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
@@ -69,6 +70,7 @@ namespace Mutagen.Bethesda.Starfield
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
+                Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
@@ -106,6 +108,7 @@ namespace Mutagen.Bethesda.Starfield
                 ScriptStructProperty_Registration.Instance,
                 ScriptVariableListProperty_Registration.Instance,
                 ScriptVariableProperty_Registration.Instance,
+                Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
@@ -122,6 +125,7 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffect_Registration.Instance,
                 ObjectEffect_Registration.Instance,
                 Race_Registration.Instance,
+                Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
@@ -138,6 +142,7 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffect_Registration.Instance,
                 ObjectEffect_Registration.Instance,
                 Race_Registration.Instance,
+                Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
@@ -150,6 +155,7 @@ namespace Mutagen.Bethesda.Starfield
                 ProjectedDecal_Registration.Instance,
                 SoundEchoMarker_Registration.Instance,
                 SoundMarker_Registration.Instance,
+                Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TextureSet_Registration.Instance,
             });
