@@ -2,6 +2,42 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MagicEffect" recordType="MGEF" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+<!--          <CustomLogic name="AssociatedItem" byteLength="4" />-->
+          <FormLink name="MagicSkill" refName="ActorValueInformation" />
+          <FormLink name="CastingArt" refName="ArtObject" />
+          <FormLink name="MovementType" refName="MovementType" />
+          <FormLink name="HitShader" refName="EffectShader" />
+          <FormLink name="EnchantShader" refName="EffectShader" />
+          <FormLink name="EnchantArt" refName="ArtObject" />
+          <FormLink name="EquipAbility" refName="Spell" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="HitEffectArt" refName="ArtObject" />
+          <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" />
+          <FormLink name="ImpactData" refName="ImpactDataSet" />
+          <FormLink name="CastingLight" refName="Light" />
+          <FormLink name="PerkToApply" refName="Perk" />
+<!--          <RefDirect name="Archetype" binary="Custom" refName="AMagicEffectArchetype" byteLength="8" defaultType="MagicEffectArchetype" />-->
+          <!-- Actor Value parsed by above custom logic -->
+        </Fields>
+      </Data>
+      <RefList name="Sounds" refName="MagicEffectSound" />
+      <String name="Description" recordType="DNAM" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
+
+  <Object name="MagicEffectSound" objType="Subrecord" recordType="ESSH" >
+    <Fields>
+      <UInt8 name="Unknown" />
+      <RefDirect name="Sound" refName="SoundReference" />
+    </Fields>
+  </Object>
+
 </Loqui>

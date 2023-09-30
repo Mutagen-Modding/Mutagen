@@ -23,6 +23,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IHaveVirtualMachineAdapterGetter)] = new InterfaceMappingResult(false, new ILoquiRegistration[]
             {
                 LeveledItem_Registration.Instance,
+                MagicEffect_Registration.Instance,
             });
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
@@ -32,6 +33,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 KeywordFormComponent_Registration.Instance,
+                MagicEffect_Registration.Instance,
                 Race_Registration.Instance,
                 SoundMarker_Registration.Instance,
                 Weather_Registration.Instance,
@@ -61,6 +63,7 @@ namespace Mutagen.Bethesda.Starfield
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                MagicEffect_Registration.Instance,
                 MorphGroup_Registration.Instance,
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
@@ -80,6 +83,7 @@ namespace Mutagen.Bethesda.Starfield
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                MagicEffect_Registration.Instance,
                 MorphGroup_Registration.Instance,
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
@@ -113,6 +117,7 @@ namespace Mutagen.Bethesda.Starfield
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                MagicEffect_Registration.Instance,
                 Race_Registration.Instance,
                 StaticCollection_Registration.Instance,
             });
@@ -127,6 +132,7 @@ namespace Mutagen.Bethesda.Starfield
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
                 Keyword_Registration.Instance,
+                MagicEffect_Registration.Instance,
                 Race_Registration.Instance,
                 StaticCollection_Registration.Instance,
             });
@@ -136,6 +142,7 @@ namespace Mutagen.Bethesda.Starfield
                 AcousticSpace_Registration.Instance,
                 AudioOcclusionPrimitive_Registration.Instance,
                 LeveledItem_Registration.Instance,
+                ProjectedDecal_Registration.Instance,
                 SoundEchoMarker_Registration.Instance,
                 SoundMarker_Registration.Instance,
                 StaticCollection_Registration.Instance,
@@ -157,6 +164,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 LeveledItem_Registration.Instance,
+                MagicEffect_Registration.Instance,
             });
             dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
             InterfaceToObjectTypes = dict;

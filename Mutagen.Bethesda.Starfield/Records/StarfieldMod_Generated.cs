@@ -79,7 +79,9 @@ namespace Mutagen.Bethesda.Starfield
             _SoundEchoMarkers_Object = new StarfieldGroup<SoundEchoMarker>(this);
             _AcousticSpaces_Object = new StarfieldGroup<AcousticSpace>(this);
             _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
+            _MagicEffects_Object = new StarfieldGroup<MagicEffect>(this);
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
+            _ProjectedDecals_Object = new StarfieldGroup<ProjectedDecal>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
@@ -233,12 +235,26 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> IStarfieldModGetter.AudioOcclusionPrimitives => _AudioOcclusionPrimitives_Object;
         #endregion
+        #region MagicEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<MagicEffect> _MagicEffects_Object;
+        public StarfieldGroup<MagicEffect> MagicEffects => _MagicEffects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IMagicEffectGetter> IStarfieldModGetter.MagicEffects => _MagicEffects_Object;
+        #endregion
         #region LandscapeTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<LandscapeTexture> _LandscapeTextures_Object;
         public StarfieldGroup<LandscapeTexture> LandscapeTextures => _LandscapeTextures_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ILandscapeTextureGetter> IStarfieldModGetter.LandscapeTextures => _LandscapeTextures_Object;
+        #endregion
+        #region ProjectedDecals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ProjectedDecal> _ProjectedDecals_Object;
+        public StarfieldGroup<ProjectedDecal> ProjectedDecals => _ProjectedDecals_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IProjectedDecalGetter> IStarfieldModGetter.ProjectedDecals => _ProjectedDecals_Object;
         #endregion
         #region StaticCollections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -403,7 +419,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.SoundEchoMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AcousticSpaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.MagicEffects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ProjectedDecals = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -441,7 +459,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SoundEchoMarkers,
                 TItem AcousticSpaces,
                 TItem AudioOcclusionPrimitives,
+                TItem MagicEffects,
                 TItem LandscapeTextures,
+                TItem ProjectedDecals,
                 TItem StaticCollections,
                 TItem BendableSplines,
                 TItem LeveledItems,
@@ -477,7 +497,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.SoundEchoMarkers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SoundEchoMarkers, new StarfieldGroup.Mask<TItem>(SoundEchoMarkers));
                 this.AcousticSpaces = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AcousticSpaces, new StarfieldGroup.Mask<TItem>(AcousticSpaces));
                 this.AudioOcclusionPrimitives = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AudioOcclusionPrimitives, new StarfieldGroup.Mask<TItem>(AudioOcclusionPrimitives));
+                this.MagicEffects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MagicEffects, new StarfieldGroup.Mask<TItem>(MagicEffects));
                 this.LandscapeTextures = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LandscapeTextures, new StarfieldGroup.Mask<TItem>(LandscapeTextures));
+                this.ProjectedDecals = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ProjectedDecals, new StarfieldGroup.Mask<TItem>(ProjectedDecals));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollections, new StarfieldGroup.Mask<TItem>(StaticCollections));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledItems, new StarfieldGroup.Mask<TItem>(LeveledItems));
@@ -523,7 +545,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SoundEchoMarkers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AcousticSpaces { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AudioOcclusionPrimitives { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MagicEffects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LandscapeTextures { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ProjectedDecals { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollections { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledItems { get; set; }
@@ -570,7 +594,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SoundEchoMarkers, rhs.SoundEchoMarkers)) return false;
                 if (!object.Equals(this.AcousticSpaces, rhs.AcousticSpaces)) return false;
                 if (!object.Equals(this.AudioOcclusionPrimitives, rhs.AudioOcclusionPrimitives)) return false;
+                if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
                 if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
+                if (!object.Equals(this.ProjectedDecals, rhs.ProjectedDecals)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
@@ -610,7 +636,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SoundEchoMarkers);
                 hash.Add(this.AcousticSpaces);
                 hash.Add(this.AudioOcclusionPrimitives);
+                hash.Add(this.MagicEffects);
                 hash.Add(this.LandscapeTextures);
+                hash.Add(this.ProjectedDecals);
                 hash.Add(this.StaticCollections);
                 hash.Add(this.BendableSplines);
                 hash.Add(this.LeveledItems);
@@ -729,10 +757,20 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.AudioOcclusionPrimitives.Overall)) return false;
                     if (this.AudioOcclusionPrimitives.Specific != null && !this.AudioOcclusionPrimitives.Specific.All(eval)) return false;
                 }
+                if (MagicEffects != null)
+                {
+                    if (!eval(this.MagicEffects.Overall)) return false;
+                    if (this.MagicEffects.Specific != null && !this.MagicEffects.Specific.All(eval)) return false;
+                }
                 if (LandscapeTextures != null)
                 {
                     if (!eval(this.LandscapeTextures.Overall)) return false;
                     if (this.LandscapeTextures.Specific != null && !this.LandscapeTextures.Specific.All(eval)) return false;
+                }
+                if (ProjectedDecals != null)
+                {
+                    if (!eval(this.ProjectedDecals.Overall)) return false;
+                    if (this.ProjectedDecals.Specific != null && !this.ProjectedDecals.Specific.All(eval)) return false;
                 }
                 if (StaticCollections != null)
                 {
@@ -911,10 +949,20 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.AudioOcclusionPrimitives.Overall)) return true;
                     if (this.AudioOcclusionPrimitives.Specific != null && this.AudioOcclusionPrimitives.Specific.Any(eval)) return true;
                 }
+                if (MagicEffects != null)
+                {
+                    if (eval(this.MagicEffects.Overall)) return true;
+                    if (this.MagicEffects.Specific != null && this.MagicEffects.Specific.Any(eval)) return true;
+                }
                 if (LandscapeTextures != null)
                 {
                     if (eval(this.LandscapeTextures.Overall)) return true;
                     if (this.LandscapeTextures.Specific != null && this.LandscapeTextures.Specific.Any(eval)) return true;
+                }
+                if (ProjectedDecals != null)
+                {
+                    if (eval(this.ProjectedDecals.Overall)) return true;
+                    if (this.ProjectedDecals.Specific != null && this.ProjectedDecals.Specific.Any(eval)) return true;
                 }
                 if (StaticCollections != null)
                 {
@@ -1024,7 +1072,9 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SoundEchoMarkers = this.SoundEchoMarkers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SoundEchoMarkers.Overall), this.SoundEchoMarkers.Specific?.Translate(eval));
                 obj.AcousticSpaces = this.AcousticSpaces == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AcousticSpaces.Overall), this.AcousticSpaces.Specific?.Translate(eval));
                 obj.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AudioOcclusionPrimitives.Overall), this.AudioOcclusionPrimitives.Specific?.Translate(eval));
+                obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
                 obj.LandscapeTextures = this.LandscapeTextures == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LandscapeTextures.Overall), this.LandscapeTextures.Specific?.Translate(eval));
+                obj.ProjectedDecals = this.ProjectedDecals == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ProjectedDecals.Overall), this.ProjectedDecals.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
@@ -1134,9 +1184,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         AudioOcclusionPrimitives?.Print(sb);
                     }
+                    if (printMask?.MagicEffects?.Overall ?? true)
+                    {
+                        MagicEffects?.Print(sb);
+                    }
                     if (printMask?.LandscapeTextures?.Overall ?? true)
                     {
                         LandscapeTextures?.Print(sb);
+                    }
+                    if (printMask?.ProjectedDecals?.Overall ?? true)
+                    {
+                        ProjectedDecals?.Print(sb);
                     }
                     if (printMask?.StaticCollections?.Overall ?? true)
                     {
@@ -1241,7 +1299,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SoundEchoMarker.ErrorMask>?>? SoundEchoMarkers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>? AudioOcclusionPrimitives;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LandscapeTexture.ErrorMask>?>? LandscapeTextures;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ProjectedDecal.ErrorMask>?>? ProjectedDecals;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
@@ -1303,8 +1363,12 @@ namespace Mutagen.Bethesda.Starfield
                         return AcousticSpaces;
                     case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
                         return AudioOcclusionPrimitives;
+                    case StarfieldMod_FieldIndex.MagicEffects:
+                        return MagicEffects;
                     case StarfieldMod_FieldIndex.LandscapeTextures:
                         return LandscapeTextures;
+                    case StarfieldMod_FieldIndex.ProjectedDecals:
+                        return ProjectedDecals;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         return StaticCollections;
                     case StarfieldMod_FieldIndex.BendableSplines:
@@ -1402,8 +1466,14 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
                         this.AudioOcclusionPrimitives = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>(ex, null);
                         break;
+                    case StarfieldMod_FieldIndex.MagicEffects:
+                        this.MagicEffects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<MagicEffect.ErrorMask>?>(ex, null);
+                        break;
                     case StarfieldMod_FieldIndex.LandscapeTextures:
                         this.LandscapeTextures = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LandscapeTexture.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ProjectedDecals:
+                        this.ProjectedDecals = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ProjectedDecal.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = new MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>(ex, null);
@@ -1517,8 +1587,14 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.AudioOcclusionPrimitives:
                         this.AudioOcclusionPrimitives = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AudioOcclusionPrimitive.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.MagicEffects:
+                        this.MagicEffects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<MagicEffect.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.LandscapeTextures:
                         this.LandscapeTextures = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LandscapeTexture.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.ProjectedDecals:
+                        this.ProjectedDecals = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ProjectedDecal.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = (MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>?)obj;
@@ -1592,7 +1668,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (SoundEchoMarkers != null) return true;
                 if (AcousticSpaces != null) return true;
                 if (AudioOcclusionPrimitives != null) return true;
+                if (MagicEffects != null) return true;
                 if (LandscapeTextures != null) return true;
+                if (ProjectedDecals != null) return true;
                 if (StaticCollections != null) return true;
                 if (BendableSplines != null) return true;
                 if (LeveledItems != null) return true;
@@ -1652,7 +1730,9 @@ namespace Mutagen.Bethesda.Starfield
                 SoundEchoMarkers?.Print(sb);
                 AcousticSpaces?.Print(sb);
                 AudioOcclusionPrimitives?.Print(sb);
+                MagicEffects?.Print(sb);
                 LandscapeTextures?.Print(sb);
+                ProjectedDecals?.Print(sb);
                 StaticCollections?.Print(sb);
                 BendableSplines?.Print(sb);
                 LeveledItems?.Print(sb);
@@ -1695,7 +1775,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SoundEchoMarkers = this.SoundEchoMarkers.Combine(rhs.SoundEchoMarkers, (l, r) => l.Combine(r));
                 ret.AcousticSpaces = this.AcousticSpaces.Combine(rhs.AcousticSpaces, (l, r) => l.Combine(r));
                 ret.AudioOcclusionPrimitives = this.AudioOcclusionPrimitives.Combine(rhs.AudioOcclusionPrimitives, (l, r) => l.Combine(r));
+                ret.MagicEffects = this.MagicEffects.Combine(rhs.MagicEffects, (l, r) => l.Combine(r));
                 ret.LandscapeTextures = this.LandscapeTextures.Combine(rhs.LandscapeTextures, (l, r) => l.Combine(r));
+                ret.ProjectedDecals = this.ProjectedDecals.Combine(rhs.ProjectedDecals, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
@@ -1753,7 +1835,9 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<SoundEchoMarker.TranslationMask>? SoundEchoMarkers;
             public StarfieldGroup.TranslationMask<AcousticSpace.TranslationMask>? AcousticSpaces;
             public StarfieldGroup.TranslationMask<AudioOcclusionPrimitive.TranslationMask>? AudioOcclusionPrimitives;
+            public StarfieldGroup.TranslationMask<MagicEffect.TranslationMask>? MagicEffects;
             public StarfieldGroup.TranslationMask<LandscapeTexture.TranslationMask>? LandscapeTextures;
+            public StarfieldGroup.TranslationMask<ProjectedDecal.TranslationMask>? ProjectedDecals;
             public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
             public StarfieldGroup.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
@@ -1812,7 +1896,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SoundEchoMarkers != null ? SoundEchoMarkers.OnOverall : DefaultOn, SoundEchoMarkers?.GetCrystal()));
                 ret.Add((AcousticSpaces != null ? AcousticSpaces.OnOverall : DefaultOn, AcousticSpaces?.GetCrystal()));
                 ret.Add((AudioOcclusionPrimitives != null ? AudioOcclusionPrimitives.OnOverall : DefaultOn, AudioOcclusionPrimitives?.GetCrystal()));
+                ret.Add((MagicEffects != null ? MagicEffects.OnOverall : DefaultOn, MagicEffects?.GetCrystal()));
                 ret.Add((LandscapeTextures != null ? LandscapeTextures.OnOverall : DefaultOn, LandscapeTextures?.GetCrystal()));
+                ret.Add((ProjectedDecals != null ? ProjectedDecals.OnOverall : DefaultOn, ProjectedDecals?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
                 ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
@@ -1889,7 +1975,9 @@ namespace Mutagen.Bethesda.Starfield
             _SoundEchoMarkers_Object = new StarfieldGroup<SoundEchoMarker>(this);
             _AcousticSpaces_Object = new StarfieldGroup<AcousticSpace>(this);
             _AudioOcclusionPrimitives_Object = new StarfieldGroup<AudioOcclusionPrimitive>(this);
+            _MagicEffects_Object = new StarfieldGroup<MagicEffect>(this);
             _LandscapeTextures_Object = new StarfieldGroup<LandscapeTexture>(this);
+            _ProjectedDecals_Object = new StarfieldGroup<ProjectedDecal>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
@@ -1983,9 +2071,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.AudioOcclusionPrimitives.RecordCache.Set(rhsMod.AudioOcclusionPrimitives.RecordCache.Items);
             }
+            if (mask?.MagicEffects ?? true)
+            {
+                this.MagicEffects.RecordCache.Set(rhsMod.MagicEffects.RecordCache.Items);
+            }
             if (mask?.LandscapeTextures ?? true)
             {
                 this.LandscapeTextures.RecordCache.Set(rhsMod.LandscapeTextures.RecordCache.Items);
+            }
+            if (mask?.ProjectedDecals ?? true)
+            {
+                this.ProjectedDecals.RecordCache.Set(rhsMod.ProjectedDecals.RecordCache.Items);
             }
             if (mask?.StaticCollections ?? true)
             {
@@ -2075,7 +2171,9 @@ namespace Mutagen.Bethesda.Starfield
             count += SoundEchoMarkers.RecordCache.Count > 0 ? 1 : default(uint);
             count += AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
             count += AudioOcclusionPrimitives.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
             count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ProjectedDecals.RecordCache.Count > 0 ? 1 : default(uint);
             count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
             count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
@@ -2365,7 +2463,9 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<SoundEchoMarker> SoundEchoMarkers { get; }
         new StarfieldGroup<AcousticSpace> AcousticSpaces { get; }
         new StarfieldGroup<AudioOcclusionPrimitive> AudioOcclusionPrimitives { get; }
+        new StarfieldGroup<MagicEffect> MagicEffects { get; }
         new StarfieldGroup<LandscapeTexture> LandscapeTextures { get; }
+        new StarfieldGroup<ProjectedDecal> ProjectedDecals { get; }
         new StarfieldGroup<StaticCollection> StaticCollections { get; }
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
         new StarfieldGroup<LeveledItem> LeveledItems { get; }
@@ -2419,7 +2519,9 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ISoundEchoMarkerGetter> SoundEchoMarkers { get; }
         IStarfieldGroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
         IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> AudioOcclusionPrimitives { get; }
+        IStarfieldGroupGetter<IMagicEffectGetter> MagicEffects { get; }
         IStarfieldGroupGetter<ILandscapeTextureGetter> LandscapeTextures { get; }
+        IStarfieldGroupGetter<IProjectedDecalGetter> ProjectedDecals { get; }
         IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections { get; }
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
         IStarfieldGroupGetter<ILeveledItemGetter> LeveledItems { get; }
@@ -3024,22 +3126,24 @@ namespace Mutagen.Bethesda.Starfield
         SoundEchoMarkers = 16,
         AcousticSpaces = 17,
         AudioOcclusionPrimitives = 18,
-        LandscapeTextures = 19,
-        StaticCollections = 20,
-        BendableSplines = 21,
-        LeveledItems = 22,
-        Weathers = 23,
-        AnimatedObjects = 24,
-        Debris = 25,
-        DefaultObjects = 26,
-        Outfits = 27,
-        AimModels = 28,
-        AttractionRules = 29,
-        BiomeSwaps = 30,
-        Planets = 31,
-        SurfacePatternStyles = 32,
-        LegendaryItems = 33,
-        ActorValueModulations = 34,
+        MagicEffects = 19,
+        LandscapeTextures = 20,
+        ProjectedDecals = 21,
+        StaticCollections = 22,
+        BendableSplines = 23,
+        LeveledItems = 24,
+        Weathers = 25,
+        AnimatedObjects = 26,
+        Debris = 27,
+        DefaultObjects = 28,
+        Outfits = 29,
+        AimModels = 30,
+        AttractionRules = 31,
+        BiomeSwaps = 32,
+        Planets = 33,
+        SurfacePatternStyles = 34,
+        LegendaryItems = 35,
+        ActorValueModulations = 36,
     }
     #endregion
 
@@ -3050,9 +3154,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 35;
+        public const ushort AdditionalFieldCount = 37;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -3137,7 +3241,9 @@ namespace Mutagen.Bethesda.Starfield
             item.SoundEchoMarkers.Clear();
             item.AcousticSpaces.Clear();
             item.AudioOcclusionPrimitives.Clear();
+            item.MagicEffects.Clear();
             item.LandscapeTextures.Clear();
+            item.ProjectedDecals.Clear();
             item.StaticCollections.Clear();
             item.BendableSplines.Clear();
             item.LeveledItems.Clear();
@@ -3171,7 +3277,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.SoundMarkers.RemapLinks(mapping);
             obj.SoundEchoMarkers.RemapLinks(mapping);
             obj.AcousticSpaces.RemapLinks(mapping);
+            obj.MagicEffects.RemapLinks(mapping);
             obj.LandscapeTextures.RemapLinks(mapping);
+            obj.ProjectedDecals.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
             obj.LeveledItems.RemapLinks(mapping);
@@ -3234,7 +3342,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.SoundEchoMarkers.Remove(keys);
             obj.AcousticSpaces.Remove(keys);
             obj.AudioOcclusionPrimitives.Remove(keys);
+            obj.MagicEffects.Remove(keys);
             obj.LandscapeTextures.Remove(keys);
+            obj.ProjectedDecals.Remove(keys);
             obj.StaticCollections.Remove(keys);
             obj.BendableSplines.Remove(keys);
             obj.LeveledItems.Remove(keys);
@@ -3433,11 +3543,27 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    obj.MagicEffects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
                     obj.LandscapeTextures.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ProjectedDecal":
+                case "IProjectedDecalGetter":
+                case "IProjectedDecal":
+                case "IProjectedDecalInternal":
+                    obj.ProjectedDecals.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -3569,6 +3695,7 @@ namespace Mutagen.Bethesda.Starfield
                 case "IItemGetter":
                     Remove(obj, keys, typeof(ILegendaryItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IProjectedDecalGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IOutfitTarget":
                 case "IOutfitTargetGetter":
@@ -3673,6 +3800,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.ProjectedDecals is IAssetLinkContainer ProjectedDecalslinkCont)
+            {
+                foreach (var item in ProjectedDecalslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.StaticCollections is IAssetLinkContainer StaticCollectionslinkCont)
             {
                 foreach (var item in StaticCollectionslinkCont.EnumerateListedAssetLinks())
@@ -3755,6 +3889,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Races.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LandscapeTextures.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ProjectedDecals.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.StaticCollections.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BendableSplines.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LeveledItems.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -3827,7 +3962,9 @@ namespace Mutagen.Bethesda.Starfield
             ret.SoundEchoMarkers = MaskItemExt.Factory(item.SoundEchoMarkers.GetEqualsMask(rhs.SoundEchoMarkers, include), include);
             ret.AcousticSpaces = MaskItemExt.Factory(item.AcousticSpaces.GetEqualsMask(rhs.AcousticSpaces, include), include);
             ret.AudioOcclusionPrimitives = MaskItemExt.Factory(item.AudioOcclusionPrimitives.GetEqualsMask(rhs.AudioOcclusionPrimitives, include), include);
+            ret.MagicEffects = MaskItemExt.Factory(item.MagicEffects.GetEqualsMask(rhs.MagicEffects, include), include);
             ret.LandscapeTextures = MaskItemExt.Factory(item.LandscapeTextures.GetEqualsMask(rhs.LandscapeTextures, include), include);
+            ret.ProjectedDecals = MaskItemExt.Factory(item.ProjectedDecals.GetEqualsMask(rhs.ProjectedDecals, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
@@ -3963,9 +4100,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.AudioOcclusionPrimitives?.Print(sb, "AudioOcclusionPrimitives");
             }
+            if (printMask?.MagicEffects?.Overall ?? true)
+            {
+                item.MagicEffects?.Print(sb, "MagicEffects");
+            }
             if (printMask?.LandscapeTextures?.Overall ?? true)
             {
                 item.LandscapeTextures?.Print(sb, "LandscapeTextures");
+            }
+            if (printMask?.ProjectedDecals?.Overall ?? true)
+            {
+                item.ProjectedDecals?.Print(sb, "ProjectedDecals");
             }
             if (printMask?.StaticCollections?.Overall ?? true)
             {
@@ -4188,6 +4333,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isAudioOcclusionPrimitivesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MagicEffects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MagicEffects, rhs.MagicEffects, out var lhsMagicEffects, out var rhsMagicEffects, out var isMagicEffectsEqual))
+                {
+                    if (!object.Equals(lhsMagicEffects, rhsMagicEffects)) return false;
+                }
+                else if (!isMagicEffectsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LandscapeTextures) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LandscapeTextures, rhs.LandscapeTextures, out var lhsLandscapeTextures, out var rhsLandscapeTextures, out var isLandscapeTexturesEqual))
@@ -4195,6 +4348,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsLandscapeTextures, rhsLandscapeTextures)) return false;
                 }
                 else if (!isLandscapeTexturesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ProjectedDecals) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ProjectedDecals, rhs.ProjectedDecals, out var lhsProjectedDecals, out var rhsProjectedDecals, out var isProjectedDecalsEqual))
+                {
+                    if (!object.Equals(lhsProjectedDecals, rhsProjectedDecals)) return false;
+                }
+                else if (!isProjectedDecalsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.StaticCollections) ?? true))
             {
@@ -4341,7 +4502,9 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SoundEchoMarkers);
             hash.Add(item.AcousticSpaces);
             hash.Add(item.AudioOcclusionPrimitives);
+            hash.Add(item.MagicEffects);
             hash.Add(item.LandscapeTextures);
+            hash.Add(item.ProjectedDecals);
             hash.Add(item.StaticCollections);
             hash.Add(item.BendableSplines);
             hash.Add(item.LeveledItems);
@@ -4465,11 +4628,21 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAudioOcclusionPrimitive":
                 case "IAudioOcclusionPrimitiveInternal":
                     return obj.AudioOcclusionPrimitives;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    return obj.MagicEffects;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
                     return obj.LandscapeTextures;
+                case "ProjectedDecal":
+                case "IProjectedDecalGetter":
+                case "IProjectedDecal":
+                case "IProjectedDecalInternal":
+                    return obj.ProjectedDecals;
                 case "StaticCollection":
                 case "IStaticCollectionGetter":
                 case "IStaticCollection":
@@ -4570,7 +4743,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[34];
+            Stream[] outputStreams = new Stream[36];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -4590,22 +4763,24 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.SoundEchoMarkers, 15, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, 16, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.AudioOcclusionPrimitives, 17, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 18, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 19, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 20, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 21, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 22, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 23, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 24, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 25, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 18, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 19, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ProjectedDecals, 20, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 21, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 22, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 23, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 24, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 25, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 26, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 34, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 35, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4708,7 +4883,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.MagicEffects.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             foreach (var item in obj.LandscapeTextures.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ProjectedDecals.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -4835,7 +5018,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.MagicEffects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ProjectedDecals.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5096,11 +5287,29 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
                     foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ProjectedDecal":
+                case "IProjectedDecalGetter":
+                case "IProjectedDecal":
+                case "IProjectedDecalInternal":
+                    foreach (var item in obj.ProjectedDecals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -5426,12 +5635,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MagicEffect, IMagicEffectGetter>(
+                srcGroup: obj.MagicEffects,
+                type: typeof(IMagicEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MagicEffects,
+                groupGetter: (m) => m.MagicEffects))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, LandscapeTexture, ILandscapeTextureGetter>(
                 srcGroup: obj.LandscapeTextures,
                 type: typeof(ILandscapeTextureGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.LandscapeTextures,
                 groupGetter: (m) => m.LandscapeTextures))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ProjectedDecal, IProjectedDecalGetter>(
+                srcGroup: obj.ProjectedDecals,
+                type: typeof(IProjectedDecalGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ProjectedDecals,
+                groupGetter: (m) => m.ProjectedDecals))
             {
                 yield return item;
             }
@@ -5853,6 +6080,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "MagicEffect":
+                case "IMagicEffectGetter":
+                case "IMagicEffect":
+                case "IMagicEffectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MagicEffect, IMagicEffectGetter>(
+                        srcGroup: obj.MagicEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MagicEffects,
+                        groupGetter: (m) => m.MagicEffects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
@@ -5863,6 +6104,20 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.LandscapeTextures,
                         groupGetter: (m) => m.LandscapeTextures))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ProjectedDecal":
+                case "IProjectedDecalGetter":
+                case "IProjectedDecal":
+                case "IProjectedDecalInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ProjectedDecal, IProjectedDecalGetter>(
+                        srcGroup: obj.ProjectedDecals,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ProjectedDecals,
+                        groupGetter: (m) => m.ProjectedDecals))
                     {
                         yield return item;
                     }
@@ -6156,6 +6411,13 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in obj.LandscapeTextures.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
+                }
+                if (obj.ProjectedDecals is IAssetLinkContainerGetter ProjectedDecalslinkCont)
+                {
+                    foreach (var item in ProjectedDecalslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
                 if (obj.StaticCollections is IAssetLinkContainerGetter StaticCollectionslinkCont)
                 {
@@ -6610,6 +6872,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MagicEffects) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.MagicEffects);
+                try
+                {
+                    item.MagicEffects.DeepCopyIn(
+                        rhs: rhs.MagicEffects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.MagicEffects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LandscapeTextures) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.LandscapeTextures);
@@ -6619,6 +6901,26 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.LandscapeTextures,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.LandscapeTextures));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ProjectedDecals) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ProjectedDecals);
+                try
+                {
+                    item.ProjectedDecals.DeepCopyIn(
+                        rhs: rhs.ProjectedDecals,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ProjectedDecals));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -7038,7 +7340,9 @@ namespace Mutagen.Bethesda.Starfield
         public bool SoundEchoMarkers;
         public bool AcousticSpaces;
         public bool AudioOcclusionPrimitives;
+        public bool MagicEffects;
         public bool LandscapeTextures;
+        public bool ProjectedDecals;
         public bool StaticCollections;
         public bool BendableSplines;
         public bool LeveledItems;
@@ -7077,7 +7381,9 @@ namespace Mutagen.Bethesda.Starfield
             SoundEchoMarkers = defaultValue;
             AcousticSpaces = defaultValue;
             AudioOcclusionPrimitives = defaultValue;
+            MagicEffects = defaultValue;
             LandscapeTextures = defaultValue;
+            ProjectedDecals = defaultValue;
             StaticCollections = defaultValue;
             BendableSplines = defaultValue;
             LeveledItems = defaultValue;
@@ -7322,6 +7628,17 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.MagicEffects ?? true)
+            {
+                var MagicEffectsItem = item.MagicEffects;
+                if (MagicEffectsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)MagicEffectsItem).BinaryWriteTranslator).Write<IMagicEffectGetter>(
+                        item: MagicEffectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.LandscapeTextures ?? true)
             {
                 var LandscapeTexturesItem = item.LandscapeTextures;
@@ -7329,6 +7646,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)LandscapeTexturesItem).BinaryWriteTranslator).Write<ILandscapeTextureGetter>(
                         item: LandscapeTexturesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ProjectedDecals ?? true)
+            {
+                var ProjectedDecalsItem = item.ProjectedDecals;
+                if (ProjectedDecalsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ProjectedDecalsItem).BinaryWriteTranslator).Write<IProjectedDecalGetter>(
+                        item: ProjectedDecalsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -7810,6 +8138,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives;
                 }
+                case RecordTypeInts.MGEF:
+                {
+                    if (importMask?.MagicEffects ?? true)
+                    {
+                        item.MagicEffects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.MagicEffects;
+                }
                 case RecordTypeInts.LTEX:
                 {
                     if (importMask?.LandscapeTextures ?? true)
@@ -7823,6 +8165,20 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.PDCL:
+                {
+                    if (importMask?.ProjectedDecals ?? true)
+                    {
+                        item.ProjectedDecals.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ProjectedDecals;
                 }
                 case RecordTypeInts.SCOL:
                 {
@@ -8294,10 +8650,20 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter>? _AudioOcclusionPrimitives => _AudioOcclusionPrimitivesLocations != null ? StarfieldGroupBinaryOverlay<IAudioOcclusionPrimitiveGetter>.StarfieldGroupFactory(_stream, _AudioOcclusionPrimitivesLocations, _package) : default;
         public IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> AudioOcclusionPrimitives => _AudioOcclusionPrimitives ?? new StarfieldGroup<AudioOcclusionPrimitive>(this);
         #endregion
+        #region MagicEffects
+        private List<RangeInt64>? _MagicEffectsLocations;
+        private IStarfieldGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? StarfieldGroupBinaryOverlay<IMagicEffectGetter>.StarfieldGroupFactory(_stream, _MagicEffectsLocations, _package) : default;
+        public IStarfieldGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new StarfieldGroup<MagicEffect>(this);
+        #endregion
         #region LandscapeTextures
         private List<RangeInt64>? _LandscapeTexturesLocations;
         private IStarfieldGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? StarfieldGroupBinaryOverlay<ILandscapeTextureGetter>.StarfieldGroupFactory(_stream, _LandscapeTexturesLocations, _package) : default;
         public IStarfieldGroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new StarfieldGroup<LandscapeTexture>(this);
+        #endregion
+        #region ProjectedDecals
+        private List<RangeInt64>? _ProjectedDecalsLocations;
+        private IStarfieldGroupGetter<IProjectedDecalGetter>? _ProjectedDecals => _ProjectedDecalsLocations != null ? StarfieldGroupBinaryOverlay<IProjectedDecalGetter>.StarfieldGroupFactory(_stream, _ProjectedDecalsLocations, _package) : default;
+        public IStarfieldGroupGetter<IProjectedDecalGetter> ProjectedDecals => _ProjectedDecals ?? new StarfieldGroup<ProjectedDecal>(this);
         #endregion
         #region StaticCollections
         private List<RangeInt64>? _StaticCollectionsLocations;
@@ -8570,11 +8936,23 @@ namespace Mutagen.Bethesda.Starfield
                     _AudioOcclusionPrimitivesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.AudioOcclusionPrimitives;
                 }
+                case RecordTypeInts.MGEF:
+                {
+                    _MagicEffectsLocations ??= new();
+                    _MagicEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.MagicEffects;
+                }
                 case RecordTypeInts.LTEX:
                 {
                     _LandscapeTexturesLocations ??= new();
                     _LandscapeTexturesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.LandscapeTextures;
+                }
+                case RecordTypeInts.PDCL:
+                {
+                    _ProjectedDecalsLocations ??= new();
+                    _ProjectedDecalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ProjectedDecals;
                 }
                 case RecordTypeInts.SCOL:
                 {

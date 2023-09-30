@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Transforms" recordType="PTT2" objType="Subrecord" >
+    <Fields>
+      <FormLink name="InventoryIcon" refName="Transform" />
+      <FormLink name="Outpost" refName="Transform" />
+      <FormLink name="Ship" refName="Transform" />
+      <FormLink name="Preview" refName="Transform" />
+      <FormLink name="Inventory" refName="Transform" />
+      <FormLink name="Workbench" refName="Transform" />
+      <FormLink name="MainGameUI" refName="Transform" />
+      <FormLink name="Unknown" refName="Transform" />
+    </Fields>
+  </Object>
+</Loqui>

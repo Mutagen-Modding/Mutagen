@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Strings;
 
@@ -23,6 +24,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
+        AddDynamicProcessing(RecordTypes.PDCL, ProcessProjectedDecals);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -52,6 +54,20 @@ public class StarfieldProcessor : Processor
         {
             int offset = 8;
             ProcessColorFloat(frame, fileOffset, ref offset, alpha: false);
+        }
+    }
+
+    private void ProcessProjectedDecals(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.OPDS, out var frame))
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                int offset = 0;
+                ProcessZeroFloat(frame, fileOffset, ref offset);
+            }
         }
     }
 

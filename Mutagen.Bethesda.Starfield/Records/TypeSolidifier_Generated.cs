@@ -2412,9 +2412,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MagicEffect</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter> MagicEffect(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter> MagicEffect(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2424,9 +2424,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on MagicEffect</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter> MagicEffect(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter> MagicEffect(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IMagicEffect, IMagicEffectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3132,9 +3132,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ProjectedDecal</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter> ProjectedDecal(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter> ProjectedDecal(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IProjectedDecalGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3144,9 +3144,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on ProjectedDecal</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter> ProjectedDecal(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter> ProjectedDecal(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IProjectedDecalGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IProjectedDecal, IProjectedDecalGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

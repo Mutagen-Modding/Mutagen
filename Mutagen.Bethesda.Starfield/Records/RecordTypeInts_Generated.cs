@@ -107,6 +107,7 @@ public partial class RecordTypeInts
     public const int ENAM = 0x4D414E45;
     public const int ENCH = 0x48434E45;
     public const int EQUP = 0x50555145;
+    public const int ESSH = 0x48535345;
     public const int EXPL = 0x4C505845;
     public const int FACT = 0x54434146;
     public const int FDSI = 0x49534446;
@@ -260,6 +261,7 @@ public partial class RecordTypeInts
     public const int PRPS = 0x53505250;
     public const int PSDC = 0x43445350;
     public const int PTST = 0x54535450;
+    public const int PTT2 = 0x32545450;
     public const int QNAM = 0x4D414E51;
     public const int QUST = 0x54535551;
     public const int RACE = 0x45434152;
@@ -286,6 +288,7 @@ public partial class RecordTypeInts
     public const int SFTR = 0x52544653;
     public const int SMLS = 0x534C4D53;
     public const int SNAM = 0x4D414E53;
+    public const int SNBH = 0x48424E53;
     public const int SNTP = 0x50544E53;
     public const int SOUN = 0x4E554F53;
     public const int SPCH = 0x48435053;

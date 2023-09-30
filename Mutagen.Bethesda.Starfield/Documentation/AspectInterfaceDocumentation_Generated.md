@@ -5,10 +5,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IHaveVirtualMachineAdapter
 - LeveledItem
+- MagicEffect
 ### IKeywordCommon
 - Keyword
 ### IKeyworded
 - KeywordFormComponent
+- MagicEffect
 - Race
 - SoundMarker
 - Weather
@@ -34,6 +36,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FullNameComponent
 - HeadPart
 - Keyword
+- MagicEffect
 - MorphGroup
 - Planet
 - ProgressionEvaluatorArgument
@@ -61,6 +64,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BendableSpline
 - LegendaryItem
 - LeveledItem
+- ProjectedDecal
 - SoundEchoMarker
 - SoundMarker
 - StaticCollection
@@ -70,6 +74,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Transform
 ### IScripted
 - LeveledItem
+- MagicEffect
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -113,6 +118,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - IObjectBounded
 - IScripted
+### MagicEffect
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- INamed
+- IScripted
 ### ModelComponent
 - IModeled
 ### MorphGroup
@@ -123,6 +133,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 ### ProgressionEvaluatorArgument
 - INamed
+### ProjectedDecal
+- IObjectBounded
 ### Race
 - IKeyworded
 - INamed

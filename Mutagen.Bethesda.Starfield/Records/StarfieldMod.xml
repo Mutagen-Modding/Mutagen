@@ -21,7 +21,9 @@
       <Group name="SoundEchoMarkers" refName="SoundEchoMarker" />
       <Group name="AcousticSpaces" refName="AcousticSpace" />
       <Group name="AudioOcclusionPrimitives" refName="AudioOcclusionPrimitive" />
+      <Group name="MagicEffects" refName="MagicEffect" />
       <Group name="LandscapeTextures" refName="LandscapeTexture" />
+      <Group name="ProjectedDecals" refName="ProjectedDecal" />
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />

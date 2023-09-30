@@ -109,6 +109,7 @@ public partial class RecordTypes
     public static readonly RecordType ENAM = new(0x4D414E45);
     public static readonly RecordType ENCH = new(0x48434E45);
     public static readonly RecordType EQUP = new(0x50555145);
+    public static readonly RecordType ESSH = new(0x48535345);
     public static readonly RecordType EXPL = new(0x4C505845);
     public static readonly RecordType FACT = new(0x54434146);
     public static readonly RecordType FDSI = new(0x49534446);
@@ -262,6 +263,7 @@ public partial class RecordTypes
     public static readonly RecordType PRPS = new(0x53505250);
     public static readonly RecordType PSDC = new(0x43445350);
     public static readonly RecordType PTST = new(0x54535450);
+    public static readonly RecordType PTT2 = new(0x32545450);
     public static readonly RecordType QNAM = new(0x4D414E51);
     public static readonly RecordType QUST = new(0x54535551);
     public static readonly RecordType RACE = new(0x45434152);
@@ -288,6 +290,7 @@ public partial class RecordTypes
     public static readonly RecordType SFTR = new(0x52544653);
     public static readonly RecordType SMLS = new(0x534C4D53);
     public static readonly RecordType SNAM = new(0x4D414E53);
+    public static readonly RecordType SNBH = new(0x48424E53);
     public static readonly RecordType SNTP = new(0x50544E53);
     public static readonly RecordType SOUN = new(0x4E554F53);
     public static readonly RecordType SPCH = new(0x48435053);
