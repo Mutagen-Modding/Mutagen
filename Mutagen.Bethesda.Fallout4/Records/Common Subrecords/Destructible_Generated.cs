@@ -888,22 +888,17 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
-                RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS);
+                RecordTypes.DSTD);
             var all = RecordCollection.Factory(
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
+                RecordTypes.DSTF,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.DMDC,
                 RecordTypes.DMDT,
-                RecordTypes.DMDS,
-                RecordTypes.DSTF);
+                RecordTypes.DMDC,
+                RecordTypes.DMDS);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
@@ -1440,11 +1435,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Destructible_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     item.Stages.SetTo(
@@ -1613,11 +1603,6 @@ namespace Mutagen.Bethesda.Fallout4
                     return (int)Destructible_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Stages, translationParams)) return ParseResult.Stop;
                     this.Stages = this.ParseRepeatedTypelessSubrecord<IDestructionStageGetter>(

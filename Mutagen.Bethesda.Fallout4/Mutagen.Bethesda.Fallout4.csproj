@@ -1042,9 +1042,6 @@
     <Compile Include="Records\Common Subrecords\DestructionStage_Generated.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\DestructionStageData_Generated.cs">
-      <DependentUpon>Destructible.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\AVirtualMachineAdapter_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>

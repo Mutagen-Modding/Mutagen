@@ -1339,11 +1339,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.DEST,
                 RecordTypes.DAMC,
                 RecordTypes.DSTD,
-                RecordTypes.DSTA,
-                RecordTypes.DMDL,
-                RecordTypes.DMDC,
-                RecordTypes.DMDT,
-                RecordTypes.DMDS,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.PNAM,
@@ -2407,11 +2402,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     item.Destructible = Mutagen.Bethesda.Fallout4.Destructible.CreateFromBinary(
                         frame: frame,
@@ -2668,11 +2658,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DAMC:
                 case RecordTypeInts.DSTD:
-                case RecordTypeInts.DSTA:
-                case RecordTypeInts.DMDL:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.DMDT:
-                case RecordTypeInts.DMDS:
                 {
                     this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,

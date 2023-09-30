@@ -23,7 +23,18 @@
   </Object>
   <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF">
     <Fields>
-      <RefDirect name="Data" refName="DestructionStageData" />
+      <Data recordType="DSTD" >
+        <Fields>
+          <UInt8 name="HealthPercent" />
+          <UInt8 name="Index" />
+          <UInt8 name="ModelDamageStage" />
+          <Enum name="Flags" enumName="Destructible.DestructionStageDataFlag" byteLength="1" />
+          <Int32 name="SelfDamagePerSecond" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <FormLink name="Debris" refName="Debris" />
+          <Int32 name="DebrisCount" />
+        </Fields>
+      </Data>
       <String name="SequenceName" recordType="DSTA" nullable="True" />
       <RefDirect name="Model" refName="Model">
         <RecordTypeOverrides>
@@ -33,18 +44,6 @@
           <Mapping From="MODS" To="DMDS" />
         </RecordTypeOverrides>
       </RefDirect>
-    </Fields>
-  </Object>
-  <Object name="DestructionStageData" objType="Subrecord" recordType="DSTD">
-    <Fields>
-      <UInt8 name="HealthPercent" />
-      <UInt8 name="Index" />
-      <UInt8 name="ModelDamageStage" />
-      <Enum name="Flags" enumName="Destructible.DestructionStageDataFlag" byteLength="1" />
-      <Int32 name="SelfDamagePerSecond" />
-      <FormLink name="Explosion" refName="Explosion" />
-      <FormLink name="Debris" refName="Debris" />
-      <Int32 name="DebrisCount" />
     </Fields>
   </Object>
 </Loqui>

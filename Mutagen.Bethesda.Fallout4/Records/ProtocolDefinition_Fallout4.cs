@@ -125,7 +125,6 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             DestructableData_Registration.Instance,
             Destructible_Registration.Instance,
             DestructionStage_Registration.Instance,
-            DestructionStageData_Registration.Instance,
             DialogBranch_Registration.Instance,
             DialogResponse_Registration.Instance,
             DialogResponseFlags_Registration.Instance,
