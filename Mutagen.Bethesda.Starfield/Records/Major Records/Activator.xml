@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Activator" recordType="ACTI" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Activator" recordType="ACTI" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
+      <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
+      <List name="ForcedLocations" recordType="FTYP" >
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <FormLink name="NativeTerminal" recordType="NTRM" refName="TerminalMenu" />
+      <Color name="MarkerColor" recordType="PNAM" />
+      <String name="WaterMaterial" recordType="WMAT" />
+      <FormLink name="Water" refName="Water" recordType="WTFM" />
+      <RefDirect name="LoopingSound" refName="SoundReference" recordType="ALSH" />
+      <RefDirect name="ActivateSound" refName="SoundReference" recordType="ACSH" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <Enum name="Flags" byteLength="2" enumName="Activator.Flag" recordType="FNAM" />
+      <UInt16 name="ActivationAngle" recordType="JNAM" />
+      <ByteArray name="INAM" recordType="INAM" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
+      <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

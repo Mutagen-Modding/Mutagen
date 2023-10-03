@@ -22,6 +22,7 @@ namespace Mutagen.Bethesda.Starfield
             var dict = new Dictionary<Type, InterfaceMappingResult>();
             dict[typeof(IHaveVirtualMachineAdapterGetter)] = new InterfaceMappingResult(false, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
             });
@@ -32,6 +33,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IKeywordCommonGetter)] = dict[typeof(IKeywordCommon)] with { Setter = false };
             dict[typeof(IKeyworded<IKeywordGetter>)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 KeywordFormComponent_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 Race_Registration.Instance,
@@ -42,8 +44,10 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
             dict[typeof(IModeled)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 AnimatedObject_Registration.Instance,
                 BodyData_Registration.Instance,
+                DestructionStage_Registration.Instance,
                 HeadPart_Registration.Instance,
                 LegendaryItem_Registration.Instance,
                 LeveledItem_Registration.Instance,
@@ -56,6 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
             dict[typeof(INamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
@@ -76,6 +81,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 ActorValueModulation_Registration.Instance,
                 BipedObjectData_Registration.Instance,
@@ -114,6 +120,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
@@ -131,6 +138,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
@@ -149,6 +157,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 AcousticSpace_Registration.Instance,
+                Activator_Registration.Instance,
                 AudioOcclusionPrimitive_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 ObjectEffect_Registration.Instance,
@@ -174,6 +183,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IPositionRotationGetter)] = dict[typeof(IPositionRotation)] with { Setter = false };
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                Activator_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
             });

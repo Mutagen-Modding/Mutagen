@@ -4,11 +4,13 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
 ### IHaveVirtualMachineAdapter
+- Activator
 - LeveledItem
 - MagicEffect
 ### IKeywordCommon
 - Keyword
 ### IKeyworded
+- Activator
 - KeywordFormComponent
 - MagicEffect
 - Race
@@ -16,8 +18,10 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Spell
 - Weather
 ### IModeled
+- Activator
 - AnimatedObject
 - BodyData
+- DestructionStage
 - HeadPart
 - LegendaryItem
 - LeveledItem
@@ -27,6 +31,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StaticCollection
 - Weapon
 ### INamed
+- Activator
 - Activity
 - ActorValueModulation
 - BipedObjectData
@@ -63,6 +68,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StaticCollection
 ### IObjectBounded
 - AcousticSpace
+- Activator
 - AudioOcclusionPrimitive
 - BendableSpline
 - LegendaryItem
@@ -78,11 +84,19 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - StaticPlacement
 - Transform
 ### IScripted
+- Activator
 - LeveledItem
 - MagicEffect
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
+### Activator
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
 ### Activity
 - INamed
 ### ActorValueModulation
@@ -101,6 +115,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### DamageType
 - INamed
+### DestructionStage
+- IModeled
 ### FaceMorphItem
 - INamed
 ### Faction

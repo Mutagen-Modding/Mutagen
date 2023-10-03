@@ -26,6 +26,10 @@ public partial class AComponent
         HoudiniData_Component,
         BGSSkinForm_Component,
         BGSBodyPartInfo_Component,
+        LightAttachmentFormComponent,
+        LightAnimFormComponent,
+        ParticleSystem_Component,
+        BGSLodOwner_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -74,8 +78,16 @@ public partial class AComponent
                 return HoudiniDataComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSSkinForm_Component:
                 return SkinFormComponent.CreateFromBinary(frame, translationParams);
-            case ComponentType.BGSBodyPartInfo_Component:
+            case ComponentType.BGSBodyPartInfo_Component: 
                 return BodyPartInfoComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.LightAttachmentFormComponent:
+                return LightAttachmentFormComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.LightAnimFormComponent:
+                return LightAnimFormComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.ParticleSystem_Component:
+                return ParticleSystemComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSLodOwner_Component:
+                return BGSLodOwnerComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -133,6 +145,10 @@ partial class AComponentBinaryWriteTranslation
             IHoudiniDataComponentGetter _ => AComponent.ComponentType.HoudiniData_Component,
             ISkinFormComponentGetter _ => AComponent.ComponentType.BGSSkinForm_Component,
             IBodyPartInfoComponentGetter _ => AComponent.ComponentType.BGSBodyPartInfo_Component,
+            ILightAttachmentFormComponentGetter _ => AComponent.ComponentType.LightAttachmentFormComponent,
+            ILightAnimFormComponentGetter _ => AComponent.ComponentType.LightAnimFormComponent,
+            IParticleSystemComponentGetter _ => AComponent.ComponentType.ParticleSystem_Component,
+            IBGSLodOwnerComponentGetter _ => AComponent.ComponentType.BGSLodOwner_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -181,6 +197,14 @@ partial class AComponentBinaryOverlay
                 return SkinFormComponentBinaryOverlay.SkinFormComponentFactory(stream, package);
             case AComponent.ComponentType.BGSBodyPartInfo_Component:
                 return BodyPartInfoComponentBinaryOverlay.BodyPartInfoComponentFactory(stream, package);
+            case AComponent.ComponentType.LightAttachmentFormComponent:
+                return LightAttachmentFormComponentBinaryOverlay.LightAttachmentFormComponentFactory(stream, package);
+            case AComponent.ComponentType.LightAnimFormComponent:
+                return LightAnimFormComponentBinaryOverlay.LightAnimFormComponentFactory(stream, package);
+            case AComponent.ComponentType.ParticleSystem_Component:
+                return ParticleSystemComponentBinaryOverlay.ParticleSystemComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSLodOwner_Component:
+                return BGSLodOwnerComponentBinaryOverlay.BGSLodOwnerComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

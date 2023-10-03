@@ -7,15 +7,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -39,30 +36,33 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent, LightAttachmentFormComponent, LightAnimFormComponent, ParticleSystemComponent, BGSLodOwnerComponent]
-    /// </summary>
-    public abstract partial class AComponent :
-        IAComponent,
-        IEquatable<IAComponentGetter>,
-        ILoquiObjectSetter<AComponent>
+    public partial class NavmeshVertex :
+        IEquatable<INavmeshVertexGetter>,
+        ILoquiObjectSetter<NavmeshVertex>,
+        INavmeshVertex
     {
         #region Ctor
-        public AComponent()
+        public NavmeshVertex()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Point
+        public P3Float Point { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
+        #endregion
 
         #region To String
 
-        public virtual void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AComponentMixIn.Print(
+            NavmeshVertexMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -73,16 +73,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IAComponentGetter rhs) return false;
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not INavmeshVertexGetter rhs) return false;
+            return ((NavmeshVertexCommon)((INavmeshVertexGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAComponentGetter? obj)
+        public bool Equals(INavmeshVertexGetter? obj)
         {
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((NavmeshVertexCommon)((INavmeshVertexGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavmeshVertexCommon)((INavmeshVertexGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -94,8 +94,17 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Point = initialValue;
+                this.Unknown = initialValue;
             }
 
+            public Mask(
+                TItem Point,
+                TItem Unknown)
+            {
+                this.Point = Point;
+                this.Unknown = Unknown;
+            }
 
             #pragma warning disable CS8618
             protected Mask()
@@ -103,6 +112,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Point;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -115,26 +129,34 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Point, rhs.Point)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Point);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public virtual bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Point)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public virtual bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Point)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -142,31 +164,41 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new AComponent.Mask<R>();
+                var ret = new NavmeshVertex.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Point = eval(this.Point);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(AComponent.Mask<bool>? printMask = null)
+            public string Print(NavmeshVertex.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, AComponent.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, NavmeshVertex.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(AComponent.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(NavmeshVertex.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Point ?? true)
+                    {
+                        sb.AppendItem(Point, "Point");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
                 }
             }
             #endregion
@@ -191,42 +223,62 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
+            public Exception? Point;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
-            public virtual object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
-                AComponent_FieldIndex enu = (AComponent_FieldIndex)index;
+                NavmeshVertex_FieldIndex enu = (NavmeshVertex_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavmeshVertex_FieldIndex.Point:
+                        return Point;
+                    case NavmeshVertex_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
-                AComponent_FieldIndex enu = (AComponent_FieldIndex)index;
+                NavmeshVertex_FieldIndex enu = (NavmeshVertex_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavmeshVertex_FieldIndex.Point:
+                        this.Point = ex;
+                        break;
+                    case NavmeshVertex_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
-                AComponent_FieldIndex enu = (AComponent_FieldIndex)index;
+                NavmeshVertex_FieldIndex enu = (NavmeshVertex_FieldIndex)index;
                 switch (enu)
                 {
+                    case NavmeshVertex_FieldIndex.Point:
+                        this.Point = (Exception?)obj;
+                        break;
+                    case NavmeshVertex_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Point != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -234,7 +286,7 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public virtual void Print(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -250,8 +302,14 @@ namespace Mutagen.Bethesda.Starfield
                     PrintFillInternal(sb);
                 }
             }
-            protected virtual void PrintFillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
+                {
+                    sb.AppendItem(Point, "Point");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
             }
             #endregion
 
@@ -260,6 +318,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Point = this.Point.Combine(rhs.Point);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -283,6 +343,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Point;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -292,6 +354,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Point = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -305,8 +369,10 @@ namespace Mutagen.Bethesda.Starfield
                 return _crystal;
             }
 
-            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Point, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -317,28 +383,45 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
-        #region Mutagen
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AComponentCommon.Instance.EnumerateFormLinks(this);
-        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AComponentSetterCommon.Instance.RemapLinks(this, mapping);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AComponentSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public virtual void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AComponentSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AComponentSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => AComponentBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => NavmeshVertexBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavmeshVertexBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
+        }
+        #region Binary Create
+        public static NavmeshVertex CreateFromBinary(
+            MutagenFrame frame,
+            TypedParseParams translationParams = default)
+        {
+            var ret = new NavmeshVertex();
+            ((NavmeshVertexSetterCommon)((INavmeshVertexGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                translationParams: translationParams);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out NavmeshVertex item,
+            TypedParseParams translationParams = default)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(
+                frame: frame,
+                translationParams: translationParams);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -346,38 +429,30 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((AComponentSetterCommon)((IAComponentGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NavmeshVertexSetterCommon)((INavmeshVertexGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static AComponent GetNew()
+        internal static NavmeshVertex GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new NavmeshVertex();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent, LightAttachmentFormComponent, LightAnimFormComponent, ParticleSystemComponent, BGSLodOwnerComponent]
-    /// </summary>
-    public partial interface IAComponent :
-        IAComponentGetter,
-        IAssetLinkContainer,
-        IFormLinkContainer,
-        ILoquiObjectSetter<IAComponent>
+    public partial interface INavmeshVertex :
+        ILoquiObjectSetter<INavmeshVertex>,
+        INavmeshVertexGetter
     {
+        new P3Float Point { get; set; }
+        new Int32 Unknown { get; set; }
     }
 
-    /// <summary>
-    /// Implemented by: [Activity, AnimationGraphComponent, AttachParentArrayComponent, ActivityTrackerComponent, ScannableComponent, KeywordFormComponent, ObjectWindowFilterComponent, ContactShadowComponent, FullNameComponent, ModelComponent, PlanetModelComponent, HoudiniDataComponent, SkinFormComponent, BodyPartInfoComponent, EffectSequenceComponent, LightAttachmentFormComponent, LightAnimFormComponent, ParticleSystemComponent, BGSLodOwnerComponent]
-    /// </summary>
-    public partial interface IAComponentGetter :
+    public partial interface INavmeshVertexGetter :
         ILoquiObject,
-        IAssetLinkContainerGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        ILoquiObject<IAComponentGetter>
+        ILoquiObject<INavmeshVertexGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -385,49 +460,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => AComponent_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => NavmeshVertex_Registration.Instance;
+        P3Float Point { get; }
+        Int32 Unknown { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AComponentMixIn
+    public static partial class NavmeshVertexMixIn
     {
-        public static void Clear(this IAComponent item)
+        public static void Clear(this INavmeshVertex item)
         {
-            ((AComponentSetterCommon)((IAComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NavmeshVertexSetterCommon)((INavmeshVertexGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AComponent.Mask<bool> GetEqualsMask(
-            this IAComponentGetter item,
-            IAComponentGetter rhs,
+        public static NavmeshVertex.Mask<bool> GetEqualsMask(
+            this INavmeshVertexGetter item,
+            INavmeshVertexGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IAComponentGetter item,
+            this INavmeshVertexGetter item,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            NavmeshVertex.Mask<bool>? printMask = null)
         {
-            return ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).Print(
+            return ((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IAComponentGetter item,
+            this INavmeshVertexGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            NavmeshVertex.Mask<bool>? printMask = null)
         {
-            ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).Print(
+            ((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -435,21 +512,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IAComponentGetter item,
-            IAComponentGetter rhs,
-            AComponent.TranslationMask? equalsMask = null)
+            this INavmeshVertexGetter item,
+            INavmeshVertexGetter rhs,
+            NavmeshVertex.TranslationMask? equalsMask = null)
         {
-            return ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).Equals(
+            return ((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs)
+            this INavmeshVertex lhs,
+            INavmeshVertexGetter rhs)
         {
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -458,11 +535,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs,
-            AComponent.TranslationMask? copyMask = null)
+            this INavmeshVertex lhs,
+            INavmeshVertexGetter rhs,
+            NavmeshVertex.TranslationMask? copyMask = null)
         {
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -471,28 +548,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs,
-            out AComponent.ErrorMask errorMask,
-            AComponent.TranslationMask? copyMask = null)
+            this INavmeshVertex lhs,
+            INavmeshVertexGetter rhs,
+            out NavmeshVertex.ErrorMask errorMask,
+            NavmeshVertex.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = AComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavmeshVertex.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAComponent lhs,
-            IAComponentGetter rhs,
+            this INavmeshVertex lhs,
+            INavmeshVertexGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -500,32 +577,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static AComponent DeepCopy(
-            this IAComponentGetter item,
-            AComponent.TranslationMask? copyMask = null)
+        public static NavmeshVertex DeepCopy(
+            this INavmeshVertexGetter item,
+            NavmeshVertex.TranslationMask? copyMask = null)
         {
-            return ((AComponentSetterTranslationCommon)((IAComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static AComponent DeepCopy(
-            this IAComponentGetter item,
-            out AComponent.ErrorMask errorMask,
-            AComponent.TranslationMask? copyMask = null)
+        public static NavmeshVertex DeepCopy(
+            this INavmeshVertexGetter item,
+            out NavmeshVertex.ErrorMask errorMask,
+            NavmeshVertex.TranslationMask? copyMask = null)
         {
-            return ((AComponentSetterTranslationCommon)((IAComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static AComponent DeepCopy(
-            this IAComponentGetter item,
+        public static NavmeshVertex DeepCopy(
+            this INavmeshVertexGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AComponentSetterTranslationCommon)((IAComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -533,11 +610,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IAComponent item,
+            this INavmeshVertex item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((AComponentSetterCommon)((IAComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NavmeshVertexSetterCommon)((INavmeshVertexGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -553,39 +630,41 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum AComponent_FieldIndex
+    internal enum NavmeshVertex_FieldIndex
     {
+        Point = 0,
+        Unknown = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class AComponent_Registration : ILoquiRegistration
+    internal partial class NavmeshVertex_Registration : ILoquiRegistration
     {
-        public static readonly AComponent_Registration Instance = new AComponent_Registration();
+        public static readonly NavmeshVertex_Registration Instance = new NavmeshVertex_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(AComponent.Mask<>);
+        public static readonly Type MaskType = typeof(NavmeshVertex.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AComponent.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NavmeshVertex.ErrorMask);
 
-        public static readonly Type ClassType = typeof(AComponent);
+        public static readonly Type ClassType = typeof(NavmeshVertex);
 
-        public static readonly Type GetterType = typeof(IAComponentGetter);
+        public static readonly Type GetterType = typeof(INavmeshVertexGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAComponent);
+        public static readonly Type SetterType = typeof(INavmeshVertex);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.AComponent";
+        public const string FullName = "Mutagen.Bethesda.Starfield.NavmeshVertex";
 
-        public const string Name = "AComponent";
+        public const string Name = "NavmeshVertex";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -593,17 +672,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BFCB;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var triggers = RecordCollection.Factory(RecordTypes.BFCB);
-            var all = RecordCollection.Factory(
-                RecordTypes.BFCB,
-                RecordTypes.BFCE);
-            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
-        });
-        public static readonly Type BinaryWriteTranslation = typeof(AComponentBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NavmeshVertexBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -634,32 +703,21 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class AComponentSetterCommon
+    internal partial class NavmeshVertexSetterCommon
     {
-        public static readonly AComponentSetterCommon Instance = new AComponentSetterCommon();
+        public static readonly NavmeshVertexSetterCommon Instance = new NavmeshVertexSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IAComponent item)
+        public void Clear(INavmeshVertex item)
         {
             ClearPartial();
+            item.Point = default;
+            item.Unknown = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IAComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
-        {
-        }
-        
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAComponent obj)
-        {
-            yield break;
-        }
-        
-        public void RemapAssetLinks(
-            IAComponent obj,
-            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
-            AssetLinkQuery queryCategories)
+        public void RemapLinks(INavmeshVertex obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -667,7 +725,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAComponent item,
+            INavmeshVertex item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -675,23 +733,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: AComponentBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: NavmeshVertexBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class AComponentCommon
+    internal partial class NavmeshVertexCommon
     {
-        public static readonly AComponentCommon Instance = new AComponentCommon();
+        public static readonly NavmeshVertexCommon Instance = new NavmeshVertexCommon();
 
-        public AComponent.Mask<bool> GetEqualsMask(
-            IAComponentGetter item,
-            IAComponentGetter rhs,
+        public NavmeshVertex.Mask<bool> GetEqualsMask(
+            INavmeshVertexGetter item,
+            INavmeshVertexGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AComponent.Mask<bool>(false);
-            ((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new NavmeshVertex.Mask<bool>(false);
+            ((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -700,17 +758,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IAComponentGetter item,
-            IAComponentGetter rhs,
-            AComponent.Mask<bool> ret,
+            INavmeshVertexGetter item,
+            INavmeshVertexGetter rhs,
+            NavmeshVertex.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Point = item.Point.Equals(rhs.Point);
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string Print(
-            IAComponentGetter item,
+            INavmeshVertexGetter item,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            NavmeshVertex.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -722,18 +782,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IAComponentGetter item,
+            INavmeshVertexGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AComponent.Mask<bool>? printMask = null)
+            NavmeshVertex.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"AComponent =>");
+                sb.AppendLine($"NavmeshVertex =>");
             }
             else
             {
-                sb.AppendLine($"{name} (AComponent) =>");
+                sb.AppendLine($"{name} (NavmeshVertex) =>");
             }
             using (sb.Brace())
             {
@@ -745,43 +805,56 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IAComponentGetter item,
+            INavmeshVertexGetter item,
             StructuredStringBuilder sb,
-            AComponent.Mask<bool>? printMask = null)
+            NavmeshVertex.Mask<bool>? printMask = null)
         {
+            if (printMask?.Point ?? true)
+            {
+                sb.AppendItem(item.Point, "Point");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAComponentGetter? lhs,
-            IAComponentGetter? rhs,
+            INavmeshVertexGetter? lhs,
+            INavmeshVertexGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshVertex_FieldIndex.Point) ?? true))
+            {
+                if (!lhs.Point.Equals(rhs.Point)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshVertex_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
             return true;
         }
         
-        public virtual int GetHashCode(IAComponentGetter item)
+        public virtual int GetHashCode(INavmeshVertexGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Point);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
         #endregion
         
         
-        public virtual object GetNew()
+        public object GetNew()
         {
-            return AComponent.GetNew();
+            return NavmeshVertex.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAComponentGetter obj)
-        {
-            yield break;
-        }
-        
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAComponentGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavmeshVertexGetter obj)
         {
             yield break;
         }
@@ -789,28 +862,36 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class AComponentSetterTranslationCommon
+    internal partial class NavmeshVertexSetterTranslationCommon
     {
-        public static readonly AComponentSetterTranslationCommon Instance = new AComponentSetterTranslationCommon();
+        public static readonly NavmeshVertexSetterTranslationCommon Instance = new NavmeshVertexSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            IAComponent item,
-            IAComponentGetter rhs,
+        public void DeepCopyIn(
+            INavmeshVertex item,
+            INavmeshVertexGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)NavmeshVertex_FieldIndex.Point) ?? true))
+            {
+                item.Point = rhs.Point;
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavmeshVertex_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
         }
         
         #endregion
         
-        public AComponent DeepCopy(
-            IAComponentGetter item,
-            AComponent.TranslationMask? copyMask = null)
+        public NavmeshVertex DeepCopy(
+            INavmeshVertexGetter item,
+            NavmeshVertex.TranslationMask? copyMask = null)
         {
-            AComponent ret = (AComponent)((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetNew();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavmeshVertex ret = (NavmeshVertex)((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).GetNew();
+            ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -819,30 +900,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public AComponent DeepCopy(
-            IAComponentGetter item,
-            out AComponent.ErrorMask errorMask,
-            AComponent.TranslationMask? copyMask = null)
+        public NavmeshVertex DeepCopy(
+            INavmeshVertexGetter item,
+            out NavmeshVertex.ErrorMask errorMask,
+            NavmeshVertex.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AComponent ret = (AComponent)((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetNew();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavmeshVertex ret = (NavmeshVertex)((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).GetNew();
+            ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = AComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NavmeshVertex.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public AComponent DeepCopy(
-            IAComponentGetter item,
+        public NavmeshVertex DeepCopy(
+            INavmeshVertexGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            AComponent ret = (AComponent)((AComponentCommon)((IAComponentGetter)item).CommonInstance()!).GetNew();
-            ((AComponentSetterTranslationCommon)((IAComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            NavmeshVertex ret = (NavmeshVertex)((NavmeshVertexCommon)((INavmeshVertexGetter)item).CommonInstance()!).GetNew();
+            ((NavmeshVertexSetterTranslationCommon)((INavmeshVertexGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -858,27 +939,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AComponent
+    public partial class NavmeshVertex
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AComponent_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => AComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavmeshVertex_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshVertex_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => AComponentCommon.Instance;
+        protected object CommonInstance() => NavmeshVertexCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
-            return AComponentSetterCommon.Instance;
+            return NavmeshVertexSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => AComponentSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => NavmeshVertexSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonInstance() => this.CommonInstance();
+        object INavmeshVertexGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object INavmeshVertexGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object INavmeshVertexGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -889,95 +970,54 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AComponentBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class NavmeshVertexBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AComponentBinaryWriteTranslation Instance = new();
+        public static readonly NavmeshVertexBinaryWriteTranslation Instance = new();
 
-        public static void WriteRecordTypes(
-            IAComponentGetter item,
-            MutagenWriter writer,
-            TypedWriteParams translationParams)
+        public static void WriteEmbedded(
+            INavmeshVertexGetter item,
+            MutagenWriter writer)
         {
-            AComponentBinaryWriteTranslation.WriteBinaryBFCBString(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item);
+                item: item.Point);
+            writer.Write(item.Unknown);
         }
 
-        public static partial void WriteBinaryBFCBStringCustom(
+        public void Write(
             MutagenWriter writer,
-            IAComponentGetter item);
-
-        public static void WriteBinaryBFCBString(
-            MutagenWriter writer,
-            IAComponentGetter item)
-        {
-            WriteBinaryBFCBStringCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public virtual void Write(
-            MutagenWriter writer,
-            IAComponentGetter item,
+            INavmeshVertexGetter item,
             TypedWriteParams translationParams)
         {
-            WriteRecordTypes(
+            WriteEmbedded(
                 item: item,
-                writer: writer,
-                translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, RecordTypes.BFCE)) { } // End Marker
+                writer: writer);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IAComponentGetter)item,
+                item: (INavmeshVertexGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class AComponentBinaryCreateTranslation
+    internal partial class NavmeshVertexBinaryCreateTranslation
     {
-        public static readonly AComponentBinaryCreateTranslation Instance = new AComponentBinaryCreateTranslation();
+        public static readonly NavmeshVertexBinaryCreateTranslation Instance = new NavmeshVertexBinaryCreateTranslation();
 
-        public static ParseResult FillBinaryRecordTypes(
-            IAComponent item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
+        public static void FillBinaryStructs(
+            INavmeshVertex item,
+            MutagenFrame frame)
         {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.BFCB:
-                {
-                    return AComponentBinaryCreateTranslation.FillBinaryBFCBStringCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
-                }
-                case RecordTypeInts.BFCE: // End Marker
-                {
-                    frame.ReadSubrecord();
-                    return ParseResult.Stop;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
+            item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown = frame.ReadInt32();
         }
-
-        public static partial ParseResult FillBinaryBFCBStringCustom(
-            MutagenFrame frame,
-            IAComponent item,
-            PreviousParse lastParsed);
 
     }
 
@@ -985,14 +1025,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class AComponentBinaryTranslationMixIn
+    public static class NavmeshVertexBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IAComponentGetter item,
+            this INavmeshVertexGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AComponentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((NavmeshVertexBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1005,58 +1045,52 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal abstract partial class AComponentBinaryOverlay :
+    internal partial class NavmeshVertexBinaryOverlay :
         PluginBinaryOverlay,
-        IAComponentGetter
+        INavmeshVertexGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AComponent_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => AComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NavmeshVertex_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => NavmeshVertex_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => AComponentCommon.Instance;
+        protected object CommonInstance() => NavmeshVertexCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => AComponentSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => NavmeshVertexSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonInstance() => this.CommonInstance();
+        object INavmeshVertexGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IAComponentGetter.CommonSetterInstance() => null;
+        object? INavmeshVertexGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IAComponentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object INavmeshVertexGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AComponentCommon.Instance.EnumerateFormLinks(this);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => AComponentBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => NavmeshVertexBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NavmeshVertexBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region BFCBString
-        public partial ParseResult BFCBStringCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
-        #endregion
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected AComponentBinaryOverlay(
+        protected NavmeshVertexBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1066,42 +1100,47 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-
-        public virtual ParseResult FillRecordType(
+        public static INavmeshVertexGetter NavmeshVertexFactory(
             OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
+            BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.BFCB:
-                {
-                    return BFCBStringCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
-                }
-                case RecordTypeInts.BFCE: // End Marker
-                {
-                    stream.ReadSubrecord();
-                    return ParseResult.Stop;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
+            stream = ExtractTypelessSubrecordStructMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                translationParams: translationParams,
+                length: 0x10,
+                memoryPair: out var memoryPair,
+                offset: out var offset);
+            var ret = new NavmeshVertexBinaryOverlay(
+                memoryPair: memoryPair,
+                package: package);
+            stream.Position += 0x10;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
+            return ret;
         }
+
+        public static INavmeshVertexGetter NavmeshVertexFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams translationParams = default)
+        {
+            return NavmeshVertexFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                translationParams: translationParams);
+        }
+
         #region To String
 
-        public virtual void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AComponentMixIn.Print(
+            NavmeshVertexMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1112,16 +1151,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IAComponentGetter rhs) return false;
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not INavmeshVertexGetter rhs) return false;
+            return ((NavmeshVertexCommon)((INavmeshVertexGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAComponentGetter? obj)
+        public bool Equals(INavmeshVertexGetter? obj)
         {
-            return ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((NavmeshVertexCommon)((INavmeshVertexGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AComponentCommon)((IAComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NavmeshVertexCommon)((INavmeshVertexGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

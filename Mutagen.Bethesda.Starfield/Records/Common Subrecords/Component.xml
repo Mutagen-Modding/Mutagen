@@ -108,4 +108,24 @@
       <ByteArray name="REFL" recordType="REFL" unknown="true" />
     </Fields>
   </Object>
+  <Object name="LightAttachmentFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="LightAnimFormComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="PTCL" recordType="PTCL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="ParticleSystemComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="PTCL" recordType="PTCL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="BGSLodOwnerComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
 </Loqui>
