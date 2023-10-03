@@ -25,7 +25,7 @@
   <Object name="NavigationMeshData" objType="Subrecord" recordType="NVNM">
     <Fields>
       <UInt32 name="NavmeshVersion" default="12" />
-      <UInt32 name="Magic" default="0xA5E9A03C" />
+      <UInt32 name="CrcHash" default="0xA5E9A03C" />
       <RefDirect name="Parent" refName="ANavmeshParent" binary="Custom" byteLength="8" />
       <List name="Vertices" counterLength="4">
         <P3Float />

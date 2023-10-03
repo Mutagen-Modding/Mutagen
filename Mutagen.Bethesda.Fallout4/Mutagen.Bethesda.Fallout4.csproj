@@ -2476,6 +2476,12 @@
     <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshCover_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NavmeshCoverTriangleMap_Generated.cs">
+      <DependentUpon>NavmeshGeometry.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

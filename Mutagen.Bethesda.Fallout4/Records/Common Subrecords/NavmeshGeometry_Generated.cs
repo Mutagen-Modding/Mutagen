@@ -55,9 +55,9 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly UInt32 NavmeshVersionDefault = 15;
         public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
-        #region Magic
-        public static readonly UInt32 MagicDefault = 0xA5E9A03C;
-        public UInt32 Magic { get; set; } = MagicDefault;
+        #region CrcHash
+        public static readonly UInt32 CrcHashDefault = 0xA5E9A03C;
+        public UInt32 CrcHash { get; set; } = CrcHashDefault;
         #endregion
         #region Parent
         public ANavmeshParent Parent { get; set; } = default!;
@@ -120,31 +120,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #endregion
-        #region Unknown
+        #region Cover
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<UInt64> _Unknown = new ExtendedList<UInt64>();
-        public ExtendedList<UInt64> Unknown
+        private ExtendedList<NavmeshCover> _Cover = new ExtendedList<NavmeshCover>();
+        public ExtendedList<NavmeshCover> Cover
         {
-            get => this._Unknown;
-            init => this._Unknown = value;
+            get => this._Cover;
+            init => this._Cover = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<UInt64> INavmeshGeometryGetter.Unknown => _Unknown;
+        IReadOnlyList<INavmeshCoverGetter> INavmeshGeometryGetter.Cover => _Cover;
         #endregion
 
         #endregion
-        #region Unknown2
+        #region CoverTriangleMappings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<UInt32> _Unknown2 = new ExtendedList<UInt32>();
-        public ExtendedList<UInt32> Unknown2
+        private ExtendedList<NavmeshCoverTriangleMap> _CoverTriangleMappings = new ExtendedList<NavmeshCoverTriangleMap>();
+        public ExtendedList<NavmeshCoverTriangleMap> CoverTriangleMappings
         {
-            get => this._Unknown2;
-            init => this._Unknown2 = value;
+            get => this._CoverTriangleMappings;
+            init => this._CoverTriangleMappings = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<UInt32> INavmeshGeometryGetter.Unknown2 => _Unknown2;
+        IReadOnlyList<INavmeshCoverTriangleMapGetter> INavmeshGeometryGetter.CoverTriangleMappings => _CoverTriangleMappings;
         #endregion
 
         #endregion
@@ -220,14 +220,14 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.NavmeshVersion = initialValue;
-                this.Magic = initialValue;
+                this.CrcHash = initialValue;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(initialValue, new ANavmeshParent.Mask<TItem>(initialValue));
                 this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
                 this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
                 this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
-                this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>());
+                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>());
                 this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
                 this.GridSize = initialValue;
                 this.GridMaxDistance = initialValue;
@@ -238,14 +238,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             public Mask(
                 TItem NavmeshVersion,
-                TItem Magic,
+                TItem CrcHash,
                 TItem Parent,
                 TItem Vertices,
                 TItem Triangles,
                 TItem EdgeLinks,
                 TItem DoorTriangles,
-                TItem Unknown,
-                TItem Unknown2,
+                TItem Cover,
+                TItem CoverTriangleMappings,
                 TItem Waypoints,
                 TItem GridSize,
                 TItem GridMaxDistance,
@@ -254,14 +254,14 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem GridArrays)
             {
                 this.NavmeshVersion = NavmeshVersion;
-                this.Magic = Magic;
+                this.CrcHash = CrcHash;
                 this.Parent = new MaskItem<TItem, ANavmeshParent.Mask<TItem>?>(Parent, new ANavmeshParent.Mask<TItem>(Parent));
                 this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Vertices, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>());
                 this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>(EdgeLinks, Enumerable.Empty<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>());
                 this.DoorTriangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>(DoorTriangles, Enumerable.Empty<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>());
-                this.Unknown = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Unknown, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Unknown2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Unknown2, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Cover = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>(Cover, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>());
+                this.CoverTriangleMappings = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>(CoverTriangleMappings, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>());
                 this.Waypoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>(Waypoints, Enumerable.Empty<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>());
                 this.GridSize = GridSize;
                 this.GridMaxDistance = GridMaxDistance;
@@ -280,14 +280,14 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem NavmeshVersion;
-            public TItem Magic;
+            public TItem CrcHash;
             public MaskItem<TItem, ANavmeshParent.Mask<TItem>?>? Parent { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Vertices;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>? Triangles;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EdgeLink.Mask<TItem>?>>?>? EdgeLinks;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DoorTriangle.Mask<TItem>?>>?>? DoorTriangles;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Unknown;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Unknown2;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCover.Mask<TItem>?>>?>? Cover;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshCoverTriangleMap.Mask<TItem>?>>?>? CoverTriangleMappings;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshWaypoint.Mask<TItem>?>>?>? Waypoints;
             public TItem GridSize;
             public TItem GridMaxDistance;
@@ -307,14 +307,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.NavmeshVersion, rhs.NavmeshVersion)) return false;
-                if (!object.Equals(this.Magic, rhs.Magic)) return false;
+                if (!object.Equals(this.CrcHash, rhs.CrcHash)) return false;
                 if (!object.Equals(this.Parent, rhs.Parent)) return false;
                 if (!object.Equals(this.Vertices, rhs.Vertices)) return false;
                 if (!object.Equals(this.Triangles, rhs.Triangles)) return false;
                 if (!object.Equals(this.EdgeLinks, rhs.EdgeLinks)) return false;
                 if (!object.Equals(this.DoorTriangles, rhs.DoorTriangles)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Cover, rhs.Cover)) return false;
+                if (!object.Equals(this.CoverTriangleMappings, rhs.CoverTriangleMappings)) return false;
                 if (!object.Equals(this.Waypoints, rhs.Waypoints)) return false;
                 if (!object.Equals(this.GridSize, rhs.GridSize)) return false;
                 if (!object.Equals(this.GridMaxDistance, rhs.GridMaxDistance)) return false;
@@ -327,14 +327,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 var hash = new HashCode();
                 hash.Add(this.NavmeshVersion);
-                hash.Add(this.Magic);
+                hash.Add(this.CrcHash);
                 hash.Add(this.Parent);
                 hash.Add(this.Vertices);
                 hash.Add(this.Triangles);
                 hash.Add(this.EdgeLinks);
                 hash.Add(this.DoorTriangles);
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
+                hash.Add(this.Cover);
+                hash.Add(this.CoverTriangleMappings);
                 hash.Add(this.Waypoints);
                 hash.Add(this.GridSize);
                 hash.Add(this.GridMaxDistance);
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.NavmeshVersion)) return false;
-                if (!eval(this.Magic)) return false;
+                if (!eval(this.CrcHash)) return false;
                 if (Parent != null)
                 {
                     if (!eval(this.Parent.Overall)) return false;
@@ -403,25 +403,27 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (this.Unknown != null)
+                if (this.Cover != null)
                 {
-                    if (!eval(this.Unknown.Overall)) return false;
-                    if (this.Unknown.Specific != null)
+                    if (!eval(this.Cover.Overall)) return false;
+                    if (this.Cover.Specific != null)
                     {
-                        foreach (var item in this.Unknown.Specific)
+                        foreach (var item in this.Cover.Specific)
                         {
-                            if (!eval(item.Value)) return false;
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.Unknown2 != null)
+                if (this.CoverTriangleMappings != null)
                 {
-                    if (!eval(this.Unknown2.Overall)) return false;
-                    if (this.Unknown2.Specific != null)
+                    if (!eval(this.CoverTriangleMappings.Overall)) return false;
+                    if (this.CoverTriangleMappings.Specific != null)
                     {
-                        foreach (var item in this.Unknown2.Specific)
+                        foreach (var item in this.CoverTriangleMappings.Specific)
                         {
-                            if (!eval(item.Value)) return false;
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -454,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.NavmeshVersion)) return true;
-                if (eval(this.Magic)) return true;
+                if (eval(this.CrcHash)) return true;
                 if (Parent != null)
                 {
                     if (eval(this.Parent.Overall)) return true;
@@ -507,25 +509,27 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (this.Unknown != null)
+                if (this.Cover != null)
                 {
-                    if (eval(this.Unknown.Overall)) return true;
-                    if (this.Unknown.Specific != null)
+                    if (eval(this.Cover.Overall)) return true;
+                    if (this.Cover.Specific != null)
                     {
-                        foreach (var item in this.Unknown.Specific)
+                        foreach (var item in this.Cover.Specific)
                         {
-                            if (!eval(item.Value)) return false;
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.Unknown2 != null)
+                if (this.CoverTriangleMappings != null)
                 {
-                    if (eval(this.Unknown2.Overall)) return true;
-                    if (this.Unknown2.Specific != null)
+                    if (eval(this.CoverTriangleMappings.Overall)) return true;
+                    if (this.CoverTriangleMappings.Specific != null)
                     {
-                        foreach (var item in this.Unknown2.Specific)
+                        foreach (var item in this.CoverTriangleMappings.Specific)
                         {
-                            if (!eval(item.Value)) return false;
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
@@ -565,7 +569,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.NavmeshVersion = eval(this.NavmeshVersion);
-                obj.Magic = eval(this.Magic);
+                obj.CrcHash = eval(this.CrcHash);
                 obj.Parent = this.Parent == null ? null : new MaskItem<R, ANavmeshParent.Mask<R>?>(eval(this.Parent.Overall), this.Parent.Specific?.Translate(eval));
                 if (Vertices != null)
                 {
@@ -626,31 +630,33 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (Unknown != null)
+                if (Cover != null)
                 {
-                    obj.Unknown = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Unknown.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (Unknown.Specific != null)
+                    obj.Cover = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>?>(eval(this.Cover.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>());
+                    if (Cover.Specific != null)
                     {
-                        var l = new List<(int Index, R Item)>();
-                        obj.Unknown.Specific = l;
-                        foreach (var item in Unknown.Specific)
+                        var l = new List<MaskItemIndexed<R, NavmeshCover.Mask<R>?>>();
+                        obj.Cover.Specific = l;
+                        foreach (var item in Cover.Specific)
                         {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
+                            MaskItemIndexed<R, NavmeshCover.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshCover.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
                         }
                     }
                 }
-                if (Unknown2 != null)
+                if (CoverTriangleMappings != null)
                 {
-                    obj.Unknown2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Unknown2.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (Unknown2.Specific != null)
+                    obj.CoverTriangleMappings = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>?>(eval(this.CoverTriangleMappings.Overall), Enumerable.Empty<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>());
+                    if (CoverTriangleMappings.Specific != null)
                     {
-                        var l = new List<(int Index, R Item)>();
-                        obj.Unknown2.Specific = l;
-                        foreach (var item in Unknown2.Specific)
+                        var l = new List<MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>>();
+                        obj.CoverTriangleMappings.Specific = l;
+                        foreach (var item in CoverTriangleMappings.Specific)
                         {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
+                            MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshCoverTriangleMap.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
                         }
                     }
                 }
@@ -696,9 +702,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(NavmeshVersion, "NavmeshVersion");
                     }
-                    if (printMask?.Magic ?? true)
+                    if (printMask?.CrcHash ?? true)
                     {
-                        sb.AppendItem(Magic, "Magic");
+                        sb.AppendItem(CrcHash, "CrcHash");
                     }
                     if (printMask?.Parent?.Overall ?? true)
                     {
@@ -782,43 +788,39 @@ namespace Mutagen.Bethesda.Fallout4
                             }
                         }
                     }
-                    if ((printMask?.Unknown?.Overall ?? true)
-                        && Unknown is {} UnknownItem)
+                    if ((printMask?.Cover?.Overall ?? true)
+                        && Cover is {} CoverItem)
                     {
-                        sb.AppendLine("Unknown =>");
+                        sb.AppendLine("Cover =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(UnknownItem.Overall);
-                            if (UnknownItem.Specific != null)
+                            sb.AppendItem(CoverItem.Overall);
+                            if (CoverItem.Specific != null)
                             {
-                                foreach (var subItem in UnknownItem.Specific)
+                                foreach (var subItem in CoverItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
+                                        subItem?.Print(sb);
                                     }
                                 }
                             }
                         }
                     }
-                    if ((printMask?.Unknown2?.Overall ?? true)
-                        && Unknown2 is {} Unknown2Item)
+                    if ((printMask?.CoverTriangleMappings?.Overall ?? true)
+                        && CoverTriangleMappings is {} CoverTriangleMappingsItem)
                     {
-                        sb.AppendLine("Unknown2 =>");
+                        sb.AppendLine("CoverTriangleMappings =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(Unknown2Item.Overall);
-                            if (Unknown2Item.Specific != null)
+                            sb.AppendItem(CoverTriangleMappingsItem.Overall);
+                            if (CoverTriangleMappingsItem.Specific != null)
                             {
-                                foreach (var subItem in Unknown2Item.Specific)
+                                foreach (var subItem in CoverTriangleMappingsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
+                                        subItem?.Print(sb);
                                     }
                                 }
                             }
@@ -888,14 +890,14 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? NavmeshVersion;
-            public Exception? Magic;
+            public Exception? CrcHash;
             public MaskItem<Exception?, ANavmeshParent.ErrorMask?>? Parent;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Vertices;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>? Triangles;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>? EdgeLinks;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>? DoorTriangles;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Unknown;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Unknown2;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>? Cover;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>? CoverTriangleMappings;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>? Waypoints;
             public Exception? GridSize;
             public Exception? GridMaxDistance;
@@ -912,8 +914,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case NavmeshGeometry_FieldIndex.NavmeshVersion:
                         return NavmeshVersion;
-                    case NavmeshGeometry_FieldIndex.Magic:
-                        return Magic;
+                    case NavmeshGeometry_FieldIndex.CrcHash:
+                        return CrcHash;
                     case NavmeshGeometry_FieldIndex.Parent:
                         return Parent;
                     case NavmeshGeometry_FieldIndex.Vertices:
@@ -924,10 +926,10 @@ namespace Mutagen.Bethesda.Fallout4
                         return EdgeLinks;
                     case NavmeshGeometry_FieldIndex.DoorTriangles:
                         return DoorTriangles;
-                    case NavmeshGeometry_FieldIndex.Unknown:
-                        return Unknown;
-                    case NavmeshGeometry_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case NavmeshGeometry_FieldIndex.Cover:
+                        return Cover;
+                    case NavmeshGeometry_FieldIndex.CoverTriangleMappings:
+                        return CoverTriangleMappings;
                     case NavmeshGeometry_FieldIndex.Waypoints:
                         return Waypoints;
                     case NavmeshGeometry_FieldIndex.GridSize:
@@ -953,8 +955,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavmeshGeometry_FieldIndex.NavmeshVersion:
                         this.NavmeshVersion = ex;
                         break;
-                    case NavmeshGeometry_FieldIndex.Magic:
-                        this.Magic = ex;
+                    case NavmeshGeometry_FieldIndex.CrcHash:
+                        this.CrcHash = ex;
                         break;
                     case NavmeshGeometry_FieldIndex.Parent:
                         this.Parent = new MaskItem<Exception?, ANavmeshParent.ErrorMask?>(ex, null);
@@ -971,11 +973,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavmeshGeometry_FieldIndex.DoorTriangles:
                         this.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(ex, null);
                         break;
-                    case NavmeshGeometry_FieldIndex.Unknown:
-                        this.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case NavmeshGeometry_FieldIndex.Cover:
+                        this.Cover = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>(ex, null);
                         break;
-                    case NavmeshGeometry_FieldIndex.Unknown2:
-                        this.Unknown2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case NavmeshGeometry_FieldIndex.CoverTriangleMappings:
+                        this.CoverTriangleMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>(ex, null);
                         break;
                     case NavmeshGeometry_FieldIndex.Waypoints:
                         this.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(ex, null);
@@ -1008,8 +1010,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavmeshGeometry_FieldIndex.NavmeshVersion:
                         this.NavmeshVersion = (Exception?)obj;
                         break;
-                    case NavmeshGeometry_FieldIndex.Magic:
-                        this.Magic = (Exception?)obj;
+                    case NavmeshGeometry_FieldIndex.CrcHash:
+                        this.CrcHash = (Exception?)obj;
                         break;
                     case NavmeshGeometry_FieldIndex.Parent:
                         this.Parent = (MaskItem<Exception?, ANavmeshParent.ErrorMask?>?)obj;
@@ -1026,11 +1028,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case NavmeshGeometry_FieldIndex.DoorTriangles:
                         this.DoorTriangles = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>)obj;
                         break;
-                    case NavmeshGeometry_FieldIndex.Unknown:
-                        this.Unknown = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case NavmeshGeometry_FieldIndex.Cover:
+                        this.Cover = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>)obj;
                         break;
-                    case NavmeshGeometry_FieldIndex.Unknown2:
-                        this.Unknown2 = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case NavmeshGeometry_FieldIndex.CoverTriangleMappings:
+                        this.CoverTriangleMappings = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>)obj;
                         break;
                     case NavmeshGeometry_FieldIndex.Waypoints:
                         this.Waypoints = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>)obj;
@@ -1059,14 +1061,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (NavmeshVersion != null) return true;
-                if (Magic != null) return true;
+                if (CrcHash != null) return true;
                 if (Parent != null) return true;
                 if (Vertices != null) return true;
                 if (Triangles != null) return true;
                 if (EdgeLinks != null) return true;
                 if (DoorTriangles != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
+                if (Cover != null) return true;
+                if (CoverTriangleMappings != null) return true;
                 if (Waypoints != null) return true;
                 if (GridSize != null) return true;
                 if (GridMaxDistance != null) return true;
@@ -1102,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(NavmeshVersion, "NavmeshVersion");
                 }
                 {
-                    sb.AppendItem(Magic, "Magic");
+                    sb.AppendItem(CrcHash, "CrcHash");
                 }
                 Parent?.Print(sb);
                 if (Vertices is {} VerticesItem)
@@ -1179,41 +1181,37 @@ namespace Mutagen.Bethesda.Fallout4
                         }
                     }
                 }
-                if (Unknown is {} UnknownItem)
+                if (Cover is {} CoverItem)
                 {
-                    sb.AppendLine("Unknown =>");
+                    sb.AppendLine("Cover =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(UnknownItem.Overall);
-                        if (UnknownItem.Specific != null)
+                        sb.AppendItem(CoverItem.Overall);
+                        if (CoverItem.Specific != null)
                         {
-                            foreach (var subItem in UnknownItem.Specific)
+                            foreach (var subItem in CoverItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
+                                    subItem?.Print(sb);
                                 }
                             }
                         }
                     }
                 }
-                if (Unknown2 is {} Unknown2Item)
+                if (CoverTriangleMappings is {} CoverTriangleMappingsItem)
                 {
-                    sb.AppendLine("Unknown2 =>");
+                    sb.AppendLine("CoverTriangleMappings =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(Unknown2Item.Overall);
-                        if (Unknown2Item.Specific != null)
+                        sb.AppendItem(CoverTriangleMappingsItem.Overall);
+                        if (CoverTriangleMappingsItem.Specific != null)
                         {
-                            foreach (var subItem in Unknown2Item.Specific)
+                            foreach (var subItem in CoverTriangleMappingsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
+                                    subItem?.Print(sb);
                                 }
                             }
                         }
@@ -1259,14 +1257,14 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.NavmeshVersion = this.NavmeshVersion.Combine(rhs.NavmeshVersion);
-                ret.Magic = this.Magic.Combine(rhs.Magic);
+                ret.CrcHash = this.CrcHash.Combine(rhs.CrcHash);
                 ret.Parent = this.Parent.Combine(rhs.Parent, (l, r) => l.Combine(r));
                 ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), Noggog.ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
                 ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
                 ret.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EdgeLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EdgeLinks?.Overall, rhs.EdgeLinks?.Overall), Noggog.ExceptionExt.Combine(this.EdgeLinks?.Specific, rhs.EdgeLinks?.Specific));
                 ret.DoorTriangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DoorTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DoorTriangles?.Overall, rhs.DoorTriangles?.Overall), Noggog.ExceptionExt.Combine(this.DoorTriangles?.Specific, rhs.DoorTriangles?.Specific));
-                ret.Unknown = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Unknown?.Overall, rhs.Unknown?.Overall), Noggog.ExceptionExt.Combine(this.Unknown?.Specific, rhs.Unknown?.Specific));
-                ret.Unknown2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Unknown2?.Overall, rhs.Unknown2?.Overall), Noggog.ExceptionExt.Combine(this.Unknown2?.Specific, rhs.Unknown2?.Specific));
+                ret.Cover = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCover.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Cover?.Overall, rhs.Cover?.Overall), Noggog.ExceptionExt.Combine(this.Cover?.Specific, rhs.Cover?.Specific));
+                ret.CoverTriangleMappings = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshCoverTriangleMap.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CoverTriangleMappings?.Overall, rhs.CoverTriangleMappings?.Overall), Noggog.ExceptionExt.Combine(this.CoverTriangleMappings?.Specific, rhs.CoverTriangleMappings?.Specific));
                 ret.Waypoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshWaypoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Waypoints?.Overall, rhs.Waypoints?.Overall), Noggog.ExceptionExt.Combine(this.Waypoints?.Specific, rhs.Waypoints?.Specific));
                 ret.GridSize = this.GridSize.Combine(rhs.GridSize);
                 ret.GridMaxDistance = this.GridMaxDistance.Combine(rhs.GridMaxDistance);
@@ -1297,14 +1295,14 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool NavmeshVersion;
-            public bool Magic;
+            public bool CrcHash;
             public ANavmeshParent.TranslationMask? Parent;
             public bool Vertices;
             public NavmeshTriangle.TranslationMask? Triangles;
             public EdgeLink.TranslationMask? EdgeLinks;
             public DoorTriangle.TranslationMask? DoorTriangles;
-            public bool Unknown;
-            public bool Unknown2;
+            public NavmeshCover.TranslationMask? Cover;
+            public NavmeshCoverTriangleMap.TranslationMask? CoverTriangleMappings;
             public NavmeshWaypoint.TranslationMask? Waypoints;
             public bool GridSize;
             public bool GridMaxDistance;
@@ -1321,10 +1319,8 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.NavmeshVersion = defaultOn;
-                this.Magic = defaultOn;
+                this.CrcHash = defaultOn;
                 this.Vertices = defaultOn;
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
                 this.GridSize = defaultOn;
                 this.GridMaxDistance = defaultOn;
                 this.GridMin = defaultOn;
@@ -1345,14 +1341,14 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((NavmeshVersion, null));
-                ret.Add((Magic, null));
+                ret.Add((CrcHash, null));
                 ret.Add((Parent != null ? Parent.OnOverall : DefaultOn, Parent?.GetCrystal()));
                 ret.Add((Vertices, null));
                 ret.Add((Triangles == null ? DefaultOn : !Triangles.GetCrystal().CopyNothing, Triangles?.GetCrystal()));
                 ret.Add((EdgeLinks == null ? DefaultOn : !EdgeLinks.GetCrystal().CopyNothing, EdgeLinks?.GetCrystal()));
                 ret.Add((DoorTriangles == null ? DefaultOn : !DoorTriangles.GetCrystal().CopyNothing, DoorTriangles?.GetCrystal()));
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
+                ret.Add((Cover == null ? DefaultOn : !Cover.GetCrystal().CopyNothing, Cover?.GetCrystal()));
+                ret.Add((CoverTriangleMappings == null ? DefaultOn : !CoverTriangleMappings.GetCrystal().CopyNothing, CoverTriangleMappings?.GetCrystal()));
                 ret.Add((Waypoints == null ? DefaultOn : !Waypoints.GetCrystal().CopyNothing, Waypoints?.GetCrystal()));
                 ret.Add((GridSize, null));
                 ret.Add((GridMaxDistance, null));
@@ -1438,14 +1434,14 @@ namespace Mutagen.Bethesda.Fallout4
         INavmeshGeometryGetter
     {
         new UInt32 NavmeshVersion { get; set; }
-        new UInt32 Magic { get; set; }
+        new UInt32 CrcHash { get; set; }
         new ANavmeshParent Parent { get; set; }
         new ExtendedList<P3Float> Vertices { get; }
         new ExtendedList<NavmeshTriangle> Triangles { get; }
         new ExtendedList<EdgeLink> EdgeLinks { get; }
         new ExtendedList<DoorTriangle> DoorTriangles { get; }
-        new ExtendedList<UInt64> Unknown { get; }
-        new ExtendedList<UInt32> Unknown2 { get; }
+        new ExtendedList<NavmeshCover> Cover { get; }
+        new ExtendedList<NavmeshCoverTriangleMap> CoverTriangleMappings { get; }
         new ExtendedList<NavmeshWaypoint> Waypoints { get; }
         new UInt32 GridSize { get; set; }
         new P2Float GridMaxDistance { get; set; }
@@ -1468,14 +1464,14 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavmeshGeometry_Registration.Instance;
         UInt32 NavmeshVersion { get; }
-        UInt32 Magic { get; }
+        UInt32 CrcHash { get; }
         IANavmeshParentGetter Parent { get; }
         IReadOnlyList<P3Float> Vertices { get; }
         IReadOnlyList<INavmeshTriangleGetter> Triangles { get; }
         IReadOnlyList<IEdgeLinkGetter> EdgeLinks { get; }
         IReadOnlyList<IDoorTriangleGetter> DoorTriangles { get; }
-        IReadOnlyList<UInt64> Unknown { get; }
-        IReadOnlyList<UInt32> Unknown2 { get; }
+        IReadOnlyList<INavmeshCoverGetter> Cover { get; }
+        IReadOnlyList<INavmeshCoverTriangleMapGetter> CoverTriangleMappings { get; }
         IReadOnlyList<INavmeshWaypointGetter> Waypoints { get; }
         UInt32 GridSize { get; }
         P2Float GridMaxDistance { get; }
@@ -1652,14 +1648,14 @@ namespace Mutagen.Bethesda.Fallout4
     internal enum NavmeshGeometry_FieldIndex
     {
         NavmeshVersion = 0,
-        Magic = 1,
+        CrcHash = 1,
         Parent = 2,
         Vertices = 3,
         Triangles = 4,
         EdgeLinks = 5,
         DoorTriangles = 6,
-        Unknown = 7,
-        Unknown2 = 8,
+        Cover = 7,
+        CoverTriangleMappings = 8,
         Waypoints = 9,
         GridSize = 10,
         GridMaxDistance = 11,
@@ -1752,14 +1748,14 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.NavmeshVersion = NavmeshGeometry.NavmeshVersionDefault;
-            item.Magic = NavmeshGeometry.MagicDefault;
+            item.CrcHash = NavmeshGeometry.CrcHashDefault;
             item.Parent.Clear();
             item.Vertices.Clear();
             item.Triangles.Clear();
             item.EdgeLinks.Clear();
             item.DoorTriangles.Clear();
-            item.Unknown.Clear();
-            item.Unknown2.Clear();
+            item.Cover.Clear();
+            item.CoverTriangleMappings.Clear();
             item.Waypoints.Clear();
             item.GridSize = default;
             item.GridMaxDistance = default;
@@ -1823,7 +1819,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.NavmeshVersion = item.NavmeshVersion == rhs.NavmeshVersion;
-            ret.Magic = item.Magic == rhs.Magic;
+            ret.CrcHash = item.CrcHash == rhs.CrcHash;
             ret.Parent = MaskItemExt.Factory(item.Parent.GetEqualsMask(rhs.Parent, include), include);
             ret.Vertices = item.Vertices.CollectionEqualsHelper(
                 rhs.Vertices,
@@ -1841,13 +1837,13 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.DoorTriangles,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Unknown = item.Unknown.CollectionEqualsHelper(
-                rhs.Unknown,
-                (l, r) => l == r,
+            ret.Cover = item.Cover.CollectionEqualsHelper(
+                rhs.Cover,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Unknown2 = item.Unknown2.CollectionEqualsHelper(
-                rhs.Unknown2,
-                (l, r) => l == r,
+            ret.CoverTriangleMappings = item.CoverTriangleMappings.CollectionEqualsHelper(
+                rhs.CoverTriangleMappings,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Waypoints = item.Waypoints.CollectionEqualsHelper(
                 rhs.Waypoints,
@@ -1906,9 +1902,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.NavmeshVersion, "NavmeshVersion");
             }
-            if (printMask?.Magic ?? true)
+            if (printMask?.CrcHash ?? true)
             {
-                sb.AppendItem(item.Magic, "Magic");
+                sb.AppendItem(item.CrcHash, "CrcHash");
             }
             if (printMask?.Parent?.Overall ?? true)
             {
@@ -1970,30 +1966,30 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.Unknown?.Overall ?? true)
+            if (printMask?.Cover?.Overall ?? true)
             {
-                sb.AppendLine("Unknown =>");
+                sb.AppendLine("Cover =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Unknown)
+                    foreach (var subItem in item.Cover)
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem);
+                            subItem?.Print(sb, "Item");
                         }
                     }
                 }
             }
-            if (printMask?.Unknown2?.Overall ?? true)
+            if (printMask?.CoverTriangleMappings?.Overall ?? true)
             {
-                sb.AppendLine("Unknown2 =>");
+                sb.AppendLine("CoverTriangleMappings =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Unknown2)
+                    foreach (var subItem in item.CoverTriangleMappings)
                     {
                         using (sb.Brace())
                         {
-                            sb.AppendItem(subItem);
+                            subItem?.Print(sb, "Item");
                         }
                     }
                 }
@@ -2045,9 +2041,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (lhs.NavmeshVersion != rhs.NavmeshVersion) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Magic) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.CrcHash) ?? true))
             {
-                if (lhs.Magic != rhs.Magic) return false;
+                if (lhs.CrcHash != rhs.CrcHash) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Parent) ?? true))
             {
@@ -2073,13 +2069,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.DoorTriangles.SequenceEqual(rhs.DoorTriangles, (l, r) => ((DoorTriangleCommon)((IDoorTriangleGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.DoorTriangles)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Cover) ?? true))
             {
-                if (!lhs.Unknown.SequenceEqualNullable(rhs.Unknown)) return false;
+                if (!lhs.Cover.SequenceEqual(rhs.Cover, (l, r) => ((NavmeshCoverCommon)((INavmeshCoverGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.Cover)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings) ?? true))
             {
-                if (!lhs.Unknown2.SequenceEqualNullable(rhs.Unknown2)) return false;
+                if (!lhs.CoverTriangleMappings.SequenceEqual(rhs.CoverTriangleMappings, (l, r) => ((NavmeshCoverTriangleMapCommon)((INavmeshCoverTriangleMapGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Waypoints) ?? true))
             {
@@ -2116,14 +2112,14 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.NavmeshVersion);
-            hash.Add(item.Magic);
+            hash.Add(item.CrcHash);
             hash.Add(item.Parent);
             hash.Add(item.Vertices);
             hash.Add(item.Triangles);
             hash.Add(item.EdgeLinks);
             hash.Add(item.DoorTriangles);
-            hash.Add(item.Unknown);
-            hash.Add(item.Unknown2);
+            hash.Add(item.Cover);
+            hash.Add(item.CoverTriangleMappings);
             hash.Add(item.Waypoints);
             hash.Add(item.GridSize);
             hash.Add(item.GridMaxDistance);
@@ -2181,9 +2177,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.NavmeshVersion = rhs.NavmeshVersion;
             }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Magic) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.CrcHash) ?? true))
             {
-                item.Magic = rhs.Magic;
+                item.CrcHash = rhs.CrcHash;
             }
             if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Parent) ?? true))
             {
@@ -2296,12 +2292,19 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Cover) ?? true))
             {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.Unknown);
+                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.Cover);
                 try
                 {
-                    item.Unknown.SetTo(rhs.Unknown);
+                    item.Cover.SetTo(
+                        rhs.Cover
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2313,12 +2316,19 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings) ?? true))
             {
-                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.Unknown2);
+                errorMask?.PushIndex((int)NavmeshGeometry_FieldIndex.CoverTriangleMappings);
                 try
                 {
-                    item.Unknown2.SetTo(rhs.Unknown2);
+                    item.CoverTriangleMappings.SetTo(
+                        rhs.CoverTriangleMappings
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2489,7 +2499,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenWriter writer)
         {
             writer.Write(item.NavmeshVersion);
-            writer.Write(item.Magic);
+            writer.Write(item.CrcHash);
             NavmeshGeometryBinaryWriteTranslation.WriteBinaryParent(
                 writer: writer,
                 item: item);
@@ -2534,16 +2544,30 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt64>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshCoverGetter>.Instance.Write(
                 writer: writer,
-                items: item.Unknown,
+                items: item.Cover,
                 countLengthLength: 4,
-                transl: UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Write(
+                transl: (MutagenWriter subWriter, INavmeshCoverGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavmeshCoverBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshCoverTriangleMapGetter>.Instance.Write(
                 writer: writer,
-                items: item.Unknown2,
+                items: item.CoverTriangleMappings,
                 countLengthLength: 4,
-                transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                transl: (MutagenWriter subWriter, INavmeshCoverTriangleMapGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavmeshCoverTriangleMapBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshWaypointGetter>.Instance.Write(
                 writer: writer,
                 items: item.Waypoints,
@@ -2624,7 +2648,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame)
         {
             item.NavmeshVersion = frame.ReadUInt32();
-            item.Magic = frame.ReadUInt32();
+            item.CrcHash = frame.ReadUInt32();
             NavmeshGeometryBinaryCreateTranslation.FillBinaryParentCustom(
                 frame: frame,
                 item: item);
@@ -2648,16 +2672,16 @@ namespace Mutagen.Bethesda.Fallout4
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: DoorTriangle.TryCreateFromBinary));
-            item.Unknown.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt64>.Instance.Parse(
+            item.Cover.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshCover>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
-            item.Unknown2.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
+                    transl: NavmeshCover.TryCreateFromBinary));
+            item.CoverTriangleMappings.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshCoverTriangleMap>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+                    transl: NavmeshCoverTriangleMap.TryCreateFromBinary));
             item.Waypoints.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshWaypoint>.Instance.Parse(
                     amount: frame.ReadInt32(),
@@ -2739,7 +2763,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public UInt32 NavmeshVersion => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public UInt32 Magic => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public UInt32 CrcHash => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         #region Parent
         public partial IANavmeshParentGetter GetParentCustom(int location);
         public IANavmeshParentGetter Parent => GetParentCustom(location: 0x8);
@@ -2760,16 +2784,16 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IDoorTriangleGetter> DoorTriangles => BinaryOverlayList.FactoryByCountLength<IDoorTriangleGetter>(_structData.Slice(EdgeLinksEndingPos), _package, 10, countLength: 4, (s, p) => DoorTriangleBinaryOverlay.DoorTriangleFactory(s, p));
         protected int DoorTrianglesEndingPos;
         #endregion
-        #region Unknown
-        public IReadOnlyList<UInt64> Unknown => BinaryOverlayList.FactoryByCountLength<UInt64>(_structData.Slice(DoorTrianglesEndingPos), _package, 8, countLength: 4, (s, p) => BinaryPrimitives.ReadUInt64LittleEndian(s));
-        protected int UnknownEndingPos;
+        #region Cover
+        public IReadOnlyList<INavmeshCoverGetter> Cover => BinaryOverlayList.FactoryByCountLength<INavmeshCoverGetter>(_structData.Slice(DoorTrianglesEndingPos), _package, 8, countLength: 4, (s, p) => NavmeshCoverBinaryOverlay.NavmeshCoverFactory(s, p));
+        protected int CoverEndingPos;
         #endregion
-        #region Unknown2
-        public IReadOnlyList<UInt32> Unknown2 => BinaryOverlayList.FactoryByCountLength<UInt32>(_structData.Slice(UnknownEndingPos), _package, 4, countLength: 4, (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
-        protected int Unknown2EndingPos;
+        #region CoverTriangleMappings
+        public IReadOnlyList<INavmeshCoverTriangleMapGetter> CoverTriangleMappings => BinaryOverlayList.FactoryByCountLength<INavmeshCoverTriangleMapGetter>(_structData.Slice(CoverEndingPos), _package, 4, countLength: 4, (s, p) => NavmeshCoverTriangleMapBinaryOverlay.NavmeshCoverTriangleMapFactory(s, p));
+        protected int CoverTriangleMappingsEndingPos;
         #endregion
         #region Waypoints
-        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<INavmeshWaypointGetter>(_structData.Slice(Unknown2EndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
+        public IReadOnlyList<INavmeshWaypointGetter> Waypoints => BinaryOverlayList.FactoryByCountLength<INavmeshWaypointGetter>(_structData.Slice(CoverTriangleMappingsEndingPos), _package, 18, countLength: 4, (s, p) => NavmeshWaypointBinaryOverlay.NavmeshWaypointFactory(s, p));
         protected int WaypointsEndingPos;
         #endregion
         public UInt32 GridSize => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(WaypointsEndingPos, 0x4));
@@ -2815,9 +2839,9 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CustomTrianglesEndPos();
             ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 11 + 4;
             ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;
-            ret.UnknownEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DoorTrianglesEndingPos)) * 8 + 4;
-            ret.Unknown2EndingPos = ret.UnknownEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.UnknownEndingPos)) * 4 + 4;
-            ret.WaypointsEndingPos = ret.Unknown2EndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.Unknown2EndingPos)) * 18 + 4;
+            ret.CoverEndingPos = ret.DoorTrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DoorTrianglesEndingPos)) * 8 + 4;
+            ret.CoverTriangleMappingsEndingPos = ret.CoverEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverEndingPos)) * 4 + 4;
+            ret.WaypointsEndingPos = ret.CoverTriangleMappingsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.CoverTriangleMappingsEndingPos)) * 18 + 4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

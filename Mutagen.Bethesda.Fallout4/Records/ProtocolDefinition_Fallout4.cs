@@ -294,6 +294,8 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             NavigationMeshInfoMap_Registration.Instance,
             NavigationMeshObstacleManager_Registration.Instance,
             NavigationMeshObstacleManagerSubObject_Registration.Instance,
+            NavmeshCover_Registration.Instance,
+            NavmeshCoverTriangleMap_Registration.Instance,
             NavmeshGeometry_Registration.Instance,
             NavmeshGridArray_Registration.Instance,
             NavmeshNode_Registration.Instance,
