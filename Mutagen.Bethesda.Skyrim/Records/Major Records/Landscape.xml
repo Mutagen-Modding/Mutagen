@@ -23,7 +23,7 @@
   </Object>
   <Object name="AlphaLayer" objType="Subrecord" baseClass="BaseLayer">
     <Fields>
-      <ByteArray name="AlphaLayerData" recordType="VTXT" />
+      <RefList name="AlphaLayerData" refName="AlphaLayerData" recordType="VTXT" />
     </Fields>
     <BaseRecordTypeOverrides>
       <Mapping From="BTXT" To="ATXT" />
@@ -32,7 +32,7 @@
   <Object name="LayerHeader" recordType="BTXT" objType="Subrecord">
     <Fields>
       <FormLink name="Texture" refName="LandscapeTexture" />
-      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />1
+      <Enum name="Quadrant" enumName="Quadrant" byteLength="1" />
       <UInt8 name="Unused" /><UInt16 name="LayerNumber" /></Fields>
   </Object>
   <Object name="LandscapeVertexHeightMap" recordType="VHGT" objType="Subrecord">
@@ -42,6 +42,13 @@
         <UInt8 />
       </Array2d>
       <P3UInt8 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="AlphaLayerData" objType="Subrecord">
+    <Fields>
+      <UInt16 name="Position" />
+      <UInt16 name="Unused" />
+      <Float name="Opacity" />
     </Fields>
   </Object>
 </Loqui>
