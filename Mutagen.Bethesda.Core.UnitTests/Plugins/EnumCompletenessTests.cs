@@ -127,6 +127,14 @@ public class EnumCompletenessTests
             cat.HasFormVersion();
         }
     }
+    
+    public void IncludesMasterReferenceDataSubrecords()
+    {
+        foreach (var cat in Enums<GameCategory>.Values)
+        {
+            cat.IncludesMasterReferenceDataSubrecords();
+        }
+    }
     #endregion
 
     #region MyDocumentsString

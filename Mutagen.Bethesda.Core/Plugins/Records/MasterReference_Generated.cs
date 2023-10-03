@@ -52,7 +52,9 @@ namespace Mutagen.Bethesda.Plugins.Records
         public ModKey Master { get; set; } = ModKey.Null;
         #endregion
         #region FileSize
-        public UInt64 FileSize { get; set; } = default;
+        public UInt64? FileSize { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt64? IMasterReferenceGetter.FileSize => this.FileSize;
         #endregion
 
         #region To String
@@ -445,7 +447,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         IMasterReferenceGetter
     {
         new ModKey Master { get; set; }
-        new UInt64 FileSize { get; set; }
+        new UInt64? FileSize { get; set; }
     }
 
     public partial interface IMasterReferenceGetter :
@@ -461,7 +463,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MasterReference_Registration.Instance;
         ModKey Master { get; }
-        UInt64 FileSize { get; }
+        UInt64? FileSize { get; }
 
     }
 
@@ -822,9 +824,10 @@ namespace Mutagen.Bethesda.Plugins.Records
             {
                 sb.AppendItem(item.Master, "Master");
             }
-            if (printMask?.FileSize ?? true)
+            if ((printMask?.FileSize ?? true)
+                && item.FileSize is {} FileSizeItem)
             {
-                sb.AppendItem(item.FileSize, "FileSize");
+                sb.AppendItem(FileSizeItem, "FileSize");
             }
         }
         
@@ -850,7 +853,10 @@ namespace Mutagen.Bethesda.Plugins.Records
         {
             var hash = new HashCode();
             hash.Add(item.Master);
-            hash.Add(item.FileSize);
+            if (item.FileSize is {} FileSizeitem)
+            {
+                hash.Add(FileSizeitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -992,7 +998,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 writer: writer,
                 item: item.Master,
                 header: translationParams.ConvertToCustom(RecordTypes.MAST));
-            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileSize,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
@@ -1125,7 +1131,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         #endregion
         #region FileSize
         private int? _FileSizeLocation;
-        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileSizeLocation.Value, _package.MetaData.Constants)) : default;
+        public UInt64? FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileSizeLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

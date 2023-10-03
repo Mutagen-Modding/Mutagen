@@ -92,7 +92,8 @@ public sealed class ModHeaderWriteLogic
         SortMasters(modKeysList);
         ret.SetTo(modKeysList.Select(m => new MasterReference()
         {
-            Master = m
+            Master = m,
+            FileSize = mod.GameRelease.ToCategory().IncludesMasterReferenceDataSubrecords() ? 0 : null
         }));
         return ret;
     }

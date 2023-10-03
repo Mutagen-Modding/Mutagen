@@ -3,7 +3,7 @@
   <Object name="MasterReference" objType="Subrecord">
     <Fields>
       <ModKey name="Master" recordType="MAST" nullable="False" />
-      <UInt64 name="FileSize" recordType="DATA" nullable="False" />
+      <UInt64 name="FileSize" recordType="DATA" />
     </Fields>
   </Object>
 </Loqui>

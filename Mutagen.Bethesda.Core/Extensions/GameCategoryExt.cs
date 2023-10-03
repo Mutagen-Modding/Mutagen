@@ -64,4 +64,16 @@ public static class GameCategoryExt
                 return true;
         }
     }
+    
+    public static bool IncludesMasterReferenceDataSubrecords(this GameCategory release)
+    {
+        return release switch
+        {
+            GameCategory.Oblivion => true,
+            GameCategory.Skyrim => true,
+            GameCategory.Fallout4 => true,
+            GameCategory.Starfield => false,
+        };
+    }
+
 }
