@@ -120,7 +120,7 @@ public sealed class StringsWriter : IDisposable
         {
             var encoding = EncodingProvider.GetEncoding(_release, language.Key);
             using var writer = new MutagenWriter(
-                FileSystem.FileStream.Create(
+                FileSystem.FileStream.New(
                     Path.Combine(WriteDir.Path, StringsUtility.GetFileName(LanguageFormat, ModKey, language.Key, source)), 
                     FileMode.Create, FileAccess.Write),
                 meta: null!);

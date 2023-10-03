@@ -7336,7 +7336,7 @@ namespace Mutagen.Bethesda.Fallout4
                 path: path);
             param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
             bool disposeStrings = param.StringsWriter != null;
-            using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 Fallout4ModCommon.WriteParallel(
                     item: item,
@@ -24354,7 +24354,7 @@ namespace Mutagen.Bethesda.Fallout4
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
+            using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);

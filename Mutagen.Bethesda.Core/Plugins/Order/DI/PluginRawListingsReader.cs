@@ -27,7 +27,7 @@ public sealed class PluginRawListingsReader : IPluginRawListingsReader
         {
             throw new FileNotFoundException($"Could not locate plugins file: {pluginPath}", pluginPath);
         }
-        using var stream = _fileSystem.FileStream.Create(pluginPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var stream = _fileSystem.FileStream.New(pluginPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
         return Parser.Parse(stream).ToList();
     }
 }

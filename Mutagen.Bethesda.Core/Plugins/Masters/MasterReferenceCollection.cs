@@ -138,7 +138,7 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
 
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
     {
-        var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Open, FileAccess.Read);
+        var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Open, FileAccess.Read);
         using var stream = new MutagenBinaryReadStream(fs, new ParsingBundle(release, masterReferences: null!)
         {
             ModKey = path.ModKey

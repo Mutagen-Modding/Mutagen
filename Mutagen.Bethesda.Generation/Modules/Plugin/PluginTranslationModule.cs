@@ -434,7 +434,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             internalToDo(MainAPI.PublicMembers(obj, TranslationDirection.Writer).ToArray());
         }
-        sb.AppendLine($"using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
+        sb.AppendLine($"using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))");
         using (sb.CurlyBrace())
         {
             sb.AppendLine($"memStream.Position = 0;");

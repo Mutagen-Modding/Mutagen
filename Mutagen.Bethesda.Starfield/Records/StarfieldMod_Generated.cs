@@ -2898,7 +2898,7 @@ namespace Mutagen.Bethesda.Starfield
                 path: path);
             param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Starfield, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
             bool disposeStrings = param.StringsWriter != null;
-            using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 StarfieldModCommon.WriteParallel(
                     item: item,
@@ -8989,7 +8989,7 @@ namespace Mutagen.Bethesda.Starfield
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
+            using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);

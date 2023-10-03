@@ -3740,7 +3740,7 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 OblivionModCommon.WriteParallel(
                     item: item,
@@ -11959,7 +11959,7 @@ namespace Mutagen.Bethesda.Oblivion
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
+            using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);

@@ -56,7 +56,7 @@ public sealed class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
     {
         InternalState ret = new();
         if (!_fileSystem.File.Exists(_saveLocation)) return ret;
-        using var streamReader = new StreamReader(_fileSystem.FileStream.Create(_saveLocation, FileMode.Open));
+        using var streamReader = new StreamReader(_fileSystem.FileStream.New(_saveLocation, FileMode.Open));
         while (true)
         {
             var edidStr = streamReader.ReadLine();
@@ -127,7 +127,7 @@ public sealed class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
         fileSystem ??= IFileSystemExt.DefaultFilesystem;
         var tempFile = saveLocation + ".tmp";
         {
-            using var fs = fileSystem.FileStream.Create(tempFile, FileMode.Create);
+            using var fs = fileSystem.FileStream.New(tempFile, FileMode.Create);
             using var streamWriter = new StreamWriter(fs);
             foreach (var pair in data)
             {
