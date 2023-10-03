@@ -4672,6 +4672,9 @@
     <Compile Include="Records\Major Records\LensFlareSpriteData_Generated.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AlphaLayerData_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

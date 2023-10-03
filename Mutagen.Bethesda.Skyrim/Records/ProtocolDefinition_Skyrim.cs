@@ -24,6 +24,7 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             ALocationTarget_Registration.Instance,
             Alpha_Registration.Instance,
             AlphaLayer_Registration.Instance,
+            AlphaLayerData_Registration.Instance,
             AlternateTexture_Registration.Instance,
             AMagicEffectArchetype_Registration.Instance,
             AmbientColors_Registration.Instance,

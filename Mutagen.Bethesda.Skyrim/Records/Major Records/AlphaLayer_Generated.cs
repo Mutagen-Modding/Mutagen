@@ -53,14 +53,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region AlphaLayerData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _AlphaLayerData;
-        public MemorySlice<Byte>? AlphaLayerData
+        private ExtendedList<AlphaLayerData>? _AlphaLayerData;
+        public ExtendedList<AlphaLayerData>? AlphaLayerData
         {
             get => this._AlphaLayerData;
             set => this._AlphaLayerData = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAlphaLayerGetter.AlphaLayerData => this.AlphaLayerData;
+        IReadOnlyList<IAlphaLayerDataGetter>? IAlphaLayerGetter.AlphaLayerData => _AlphaLayerData;
+        #endregion
+
         #endregion
 
         #region To String
@@ -103,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.AlphaLayerData = initialValue;
+                this.AlphaLayerData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -111,7 +114,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem AlphaLayerData)
             : base(Header: Header)
             {
-                this.AlphaLayerData = AlphaLayerData;
+                this.AlphaLayerData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>?>(AlphaLayerData, Enumerable.Empty<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -123,7 +126,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem AlphaLayerData;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AlphaLayerData.Mask<TItem>?>>?>? AlphaLayerData;
             #endregion
 
             #region Equals
@@ -154,7 +157,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.AlphaLayerData)) return false;
+                if (this.AlphaLayerData != null)
+                {
+                    if (!eval(this.AlphaLayerData.Overall)) return false;
+                    if (this.AlphaLayerData.Specific != null)
+                    {
+                        foreach (var item in this.AlphaLayerData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -163,7 +177,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.AlphaLayerData)) return true;
+                if (this.AlphaLayerData != null)
+                {
+                    if (eval(this.AlphaLayerData.Overall)) return true;
+                    if (this.AlphaLayerData.Specific != null)
+                    {
+                        foreach (var item in this.AlphaLayerData.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -179,7 +204,21 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.AlphaLayerData = eval(this.AlphaLayerData);
+                if (AlphaLayerData != null)
+                {
+                    obj.AlphaLayerData = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AlphaLayerData.Mask<R>?>>?>(eval(this.AlphaLayerData.Overall), Enumerable.Empty<MaskItemIndexed<R, AlphaLayerData.Mask<R>?>>());
+                    if (AlphaLayerData.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AlphaLayerData.Mask<R>?>>();
+                        obj.AlphaLayerData.Specific = l;
+                        foreach (var item in AlphaLayerData.Specific)
+                        {
+                            MaskItemIndexed<R, AlphaLayerData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AlphaLayerData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -198,9 +237,24 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(AlphaLayer.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.AlphaLayerData ?? true)
+                    if ((printMask?.AlphaLayerData?.Overall ?? true)
+                        && AlphaLayerData is {} AlphaLayerDataItem)
                     {
-                        sb.AppendItem(AlphaLayerData, "AlphaLayerData");
+                        sb.AppendLine("AlphaLayerData =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AlphaLayerDataItem.Overall);
+                            if (AlphaLayerDataItem.Specific != null)
+                            {
+                                foreach (var subItem in AlphaLayerDataItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -213,7 +267,7 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? AlphaLayerData;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlphaLayerData.ErrorMask?>>?>? AlphaLayerData;
             #endregion
 
             #region IErrorMask
@@ -235,7 +289,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case AlphaLayer_FieldIndex.AlphaLayerData:
-                        this.AlphaLayerData = ex;
+                        this.AlphaLayerData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlphaLayerData.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -249,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case AlphaLayer_FieldIndex.AlphaLayerData:
-                        this.AlphaLayerData = (Exception?)obj;
+                        this.AlphaLayerData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlphaLayerData.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -287,8 +341,23 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (AlphaLayerData is {} AlphaLayerDataItem)
                 {
-                    sb.AppendItem(AlphaLayerData, "AlphaLayerData");
+                    sb.AppendLine("AlphaLayerData =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AlphaLayerDataItem.Overall);
+                        if (AlphaLayerDataItem.Specific != null)
+                        {
+                            foreach (var subItem in AlphaLayerDataItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -298,7 +367,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.AlphaLayerData = this.AlphaLayerData.Combine(rhs.AlphaLayerData);
+                ret.AlphaLayerData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AlphaLayerData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AlphaLayerData?.Overall, rhs.AlphaLayerData?.Overall), Noggog.ExceptionExt.Combine(this.AlphaLayerData?.Specific, rhs.AlphaLayerData?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -321,7 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool AlphaLayerData;
+            public AlphaLayerData.TranslationMask? AlphaLayerData;
             #endregion
 
             #region Ctors
@@ -330,7 +399,6 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.AlphaLayerData = defaultOn;
             }
 
             #endregion
@@ -338,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((AlphaLayerData, null));
+                ret.Add((AlphaLayerData == null ? DefaultOn : !AlphaLayerData.GetCrystal().CopyNothing, AlphaLayerData?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -410,7 +478,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBaseLayer,
         ILoquiObjectSetter<IAlphaLayer>
     {
-        new MemorySlice<Byte>? AlphaLayerData { get; set; }
+        new ExtendedList<AlphaLayerData>? AlphaLayerData { get; set; }
     }
 
     public partial interface IAlphaLayerGetter :
@@ -419,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IAlphaLayerGetter>
     {
         static new ILoquiRegistration StaticRegistration => AlphaLayer_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? AlphaLayerData { get; }
+        IReadOnlyList<IAlphaLayerDataGetter>? AlphaLayerData { get; }
 
     }
 
@@ -658,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(IAlphaLayer item)
         {
             ClearPartial();
-            item.AlphaLayerData = default;
+            item.AlphaLayerData = null;
             base.Clear(item);
         }
         
@@ -726,7 +794,10 @@ namespace Mutagen.Bethesda.Skyrim
             AlphaLayer.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.AlphaLayerData = MemorySliceExt.SequenceEqual(item.AlphaLayerData, rhs.AlphaLayerData);
+            ret.AlphaLayerData = item.AlphaLayerData.CollectionEqualsHelper(
+                rhs.AlphaLayerData,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -776,10 +847,20 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.AlphaLayerData ?? true)
+            if ((printMask?.AlphaLayerData?.Overall ?? true)
                 && item.AlphaLayerData is {} AlphaLayerDataItem)
             {
-                sb.AppendLine($"AlphaLayerData => {SpanExt.ToHexString(AlphaLayerDataItem)}");
+                sb.AppendLine("AlphaLayerData =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in AlphaLayerDataItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
         }
         
@@ -804,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+                if (!lhs.AlphaLayerData.SequenceEqualNullable(rhs.AlphaLayerData, (l, r) => ((AlphaLayerDataCommon)((IAlphaLayerDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AlphaLayer_FieldIndex.AlphaLayerData)))) return false;
             }
             return true;
         }
@@ -823,10 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(IAlphaLayerGetter item)
         {
             var hash = new HashCode();
-            if (item.AlphaLayerData is {} AlphaLayerDataItem)
-            {
-                hash.Add(AlphaLayerDataItem);
-            }
+            hash.Add(item.AlphaLayerData);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -877,13 +955,34 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {
-                if(rhs.AlphaLayerData is {} AlphaLayerDatarhs)
+                errorMask?.PushIndex((int)AlphaLayer_FieldIndex.AlphaLayerData);
+                try
                 {
-                    item.AlphaLayerData = AlphaLayerDatarhs.ToArray();
+                    if ((rhs.AlphaLayerData != null))
+                    {
+                        item.AlphaLayerData = 
+                            rhs.AlphaLayerData
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<AlphaLayerData>();
+                    }
+                    else
+                    {
+                        item.AlphaLayerData = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.AlphaLayerData = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
         }
@@ -999,10 +1098,18 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams.Combine(AlphaLayer_Registration.BaseConverter));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAlphaLayerDataGetter>.Instance.Write(
                 writer: writer,
-                item: item.AlphaLayerData,
-                header: translationParams.ConvertToCustom(RecordTypes.VTXT));
+                items: item.AlphaLayerData,
+                recordType: translationParams.ConvertToCustom(RecordTypes.VTXT),
+                transl: (MutagenWriter subWriter, IAlphaLayerDataGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AlphaLayerDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
         }
 
         public void Write(
@@ -1059,7 +1166,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VTXT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlphaLayerData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.AlphaLayerData = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AlphaLayerData>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: AlphaLayerData.TryCreateFromBinary)
+                        .CastExtendedList<AlphaLayerData>();
                     return (int)AlphaLayer_FieldIndex.AlphaLayerData;
                 }
                 default:
@@ -1118,10 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        #region AlphaLayerData
-        private int? _AlphaLayerDataLocation;
-        public ReadOnlyMemorySlice<Byte>? AlphaLayerData => _AlphaLayerDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlphaLayerDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<IAlphaLayerDataGetter>? AlphaLayerData { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1187,7 +1295,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.VTXT:
                 {
-                    _AlphaLayerDataLocation = (stream.Position - offset);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.AlphaLayerData = BinaryOverlayList.FactoryByStartIndex<IAlphaLayerDataGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 8,
+                        getter: (s, p) => AlphaLayerDataBinaryOverlay.AlphaLayerDataFactory(s, p));
+                    stream.Position += subLen;
                     return (int)AlphaLayer_FieldIndex.AlphaLayerData;
                 }
                 default:
