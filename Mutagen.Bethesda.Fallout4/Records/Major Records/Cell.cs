@@ -292,11 +292,6 @@ partial class CellBinaryWriteTranslation
     {
         try
         {
-            if (obj.FormKey.ID == 0xDB41)
-            {
-                int wer = 23;
-                wer++;
-            }
             var navMeshes = obj.NavigationMeshes;
             var landscape = obj.Landscape;
             if ((obj.Persistent?.Count ?? 0) == 0
@@ -496,7 +491,10 @@ partial class CellBinaryOverlay
         return ret;
     }
 
-    partial void CustomEnd(OverlayStream stream, int finalPos, int _)
+    partial void CustomEnd(
+        OverlayStream stream,
+        int finalPos,
+        int offset)
     {
         if (stream.Complete) return;
         var startPos = stream.Position;
