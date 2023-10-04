@@ -27,6 +27,7 @@
       <Group name="ObjectEffects" refName="ObjectEffect" />
       <Group name="Spells" refName="Spell" />
       <Group name="Activators" refName="Activator" />
+      <Group name="CurveTables" refName="CurveTable" />
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />

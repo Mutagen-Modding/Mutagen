@@ -83,6 +83,7 @@ public partial class RecordTypeInts
     public const int CSTY = 0x59545343;
     public const int CTDA = 0x41445443;
     public const int CUR3 = 0x33525543;
+    public const int CURV = 0x56525543;
     public const int DALC = 0x434C4144;
     public const int DAMC = 0x434D4144;
     public const int DAT2 = 0x32544144;

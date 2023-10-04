@@ -1020,9 +1020,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CurveTable</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter> CurveTable(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter> CurveTable(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICurveTableGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1032,9 +1032,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on CurveTable</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter> CurveTable(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter> CurveTable(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICurveTableGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ICurveTable, ICurveTableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
