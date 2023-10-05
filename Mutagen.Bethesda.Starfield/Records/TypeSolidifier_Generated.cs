@@ -996,9 +996,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Curve3D</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter> Curve3D(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter> Curve3D(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICurve3DGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1008,9 +1008,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Curve3D</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter> Curve3D(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter> Curve3D(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICurve3DGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ICurve3D, ICurve3DGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
