@@ -102,6 +102,7 @@ public class StarfieldProcessor : Processor
                 return new AStringsAlignment[]
                 {
                     new RecordType[] { "SPEL", "DESC" },
+                    new RecordType[] { "COBJ", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

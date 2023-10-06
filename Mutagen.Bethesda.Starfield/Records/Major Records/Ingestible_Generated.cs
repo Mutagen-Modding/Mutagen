@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IIngestible :
+        IConstructibleObjectTarget,
         IIngestibleGetter,
         IItem,
         ILoquiObjectSetter<IIngestibleInternal>,
@@ -436,6 +437,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IIngestibleGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IItemGetter,
         ILoquiObject<IIngestibleGetter>,
         IMapsToGetter<IIngestibleGetter>,

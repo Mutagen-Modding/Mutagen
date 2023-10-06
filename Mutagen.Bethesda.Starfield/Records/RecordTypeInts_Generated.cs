@@ -84,6 +84,7 @@ public partial class RecordTypeInts
     public const int CTDA = 0x41445443;
     public const int CUR3 = 0x33525543;
     public const int CURV = 0x56525543;
+    public const int CUSH = 0x48535543;
     public const int DALC = 0x434C4144;
     public const int DAMC = 0x434D4144;
     public const int DAT2 = 0x32544144;
@@ -150,6 +151,7 @@ public partial class RecordTypeInts
     public const int FTYP = 0x50595446;
     public const int FULL = 0x4C4C5546;
     public const int FURN = 0x4E525546;
+    public const int FVPA = 0x41505646;
     public const int GBFM = 0x4D464247;
     public const int GBFT = 0x54464247;
     public const int GCVR = 0x52564347;
@@ -199,6 +201,7 @@ public partial class RecordTypeInts
     public const int LLKC = 0x434B4C4C;
     public const int LMSW = 0x57534D4C;
     public const int LNAM = 0x4D414E4C;
+    public const int LRNM = 0x4D4E524C;
     public const int LSCR = 0x5243534C;
     public const int LTEX = 0x5845544C;
     public const int LVLB = 0x424C564C;
@@ -289,6 +292,7 @@ public partial class RecordTypeInts
     public const int QUST = 0x54535551;
     public const int RACE = 0x45434152;
     public const int RBPC = 0x43504252;
+    public const int RECF = 0x46434552;
     public const int REFL = 0x4C464552;
     public const int REFR = 0x52464552;
     public const int REGN = 0x4E474552;
@@ -297,6 +301,7 @@ public partial class RecordTypeInts
     public const int RNAM = 0x4D414E52;
     public const int RPRF = 0x46525052;
     public const int RPRM = 0x4D525052;
+    public const int RQPK = 0x4B505152;
     public const int RSCS = 0x53435352;
     public const int RSGD = 0x44475352;
     public const int RSPJ = 0x4A505352;

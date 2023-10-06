@@ -4,5 +4,6 @@
     <Fields>
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
 </Loqui>

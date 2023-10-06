@@ -36,5 +36,6 @@
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
 </Loqui>

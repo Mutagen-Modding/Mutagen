@@ -474,6 +474,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface INpc :
+        IConstructibleObjectTarget,
         IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
         INpcGetter,
@@ -493,6 +494,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface INpcGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         ILoquiObject<INpcGetter>,
         IMapsToGetter<INpcGetter>

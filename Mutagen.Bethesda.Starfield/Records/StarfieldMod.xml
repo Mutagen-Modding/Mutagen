@@ -29,6 +29,7 @@
       <Group name="Activators" refName="Activator" />
       <Group name="CurveTables" refName="CurveTable" />
       <Group name="Curve3Ds" refName="Curve3D" />
+      <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="StaticCollections" refName="StaticCollection" />
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />

@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMiscItem :
+        IConstructibleObjectTarget,
         IItem,
         ILoquiObjectSetter<IMiscItemInternal>,
         IMiscItemGetter,
@@ -436,6 +437,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IMiscItemGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         IItemGetter,
         ILoquiObject<IMiscItemGetter>,
         IMapsToGetter<IMiscItemGetter>,

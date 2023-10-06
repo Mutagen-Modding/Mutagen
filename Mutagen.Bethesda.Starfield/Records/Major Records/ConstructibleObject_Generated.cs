@@ -7,12 +7,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +25,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +57,176 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IConstructibleObjectGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IConstructibleObjectGetter.Description => this.Description;
+        #endregion
+        #region WorkbenchKeyword
+        private readonly IFormLinkNullable<IKeywordGetter> _WorkbenchKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> WorkbenchKeyword
+        {
+            get => _WorkbenchKeyword;
+            set => _WorkbenchKeyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IConstructibleObjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IConstructibleObjectGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region ConstructableComponents
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ConstructibleObjectComponent>? _ConstructableComponents;
+        public ExtendedList<ConstructibleObjectComponent>? ConstructableComponents
+        {
+            get => this._ConstructableComponents;
+            set => this._ConstructableComponents = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConstructibleObjectComponentGetter>? IConstructibleObjectGetter.ConstructableComponents => _ConstructableComponents;
+        #endregion
+
+        #endregion
+        #region RequiredPerks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ConstructibleRequiredPerk>? _RequiredPerks;
+        public ExtendedList<ConstructibleRequiredPerk>? RequiredPerks
+        {
+            get => this._RequiredPerks;
+            set => this._RequiredPerks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConstructibleRequiredPerkGetter>? IConstructibleObjectGetter.RequiredPerks => _RequiredPerks;
+        #endregion
+
+        #endregion
+        #region CreatedObject
+        private readonly IFormLinkNullable<IConstructibleObjectTargetGetter> _CreatedObject = new FormLinkNullable<IConstructibleObjectTargetGetter>();
+        public IFormLinkNullable<IConstructibleObjectTargetGetter> CreatedObject
+        {
+            get => _CreatedObject;
+            set => _CreatedObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IConstructibleObjectTargetGetter> IConstructibleObjectGetter.CreatedObject => this.CreatedObject;
+        #endregion
+        #region AmountProduced
+        public UInt16 AmountProduced { get; set; } = default;
+        #endregion
+        #region MenuSortOrder
+        public Single MenuSortOrder { get; set; } = default;
+        #endregion
+        #region TNAM
+        public Byte TNAM { get; set; } = default;
+        #endregion
+        #region CraftingSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _CraftingSound;
+        public SoundReference? CraftingSound
+        {
+            get => _CraftingSound;
+            set => _CraftingSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IConstructibleObjectGetter.CraftingSound => this.CraftingSound;
+        #endregion
+        #region PickupSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _PickupSound;
+        public SoundReference? PickupSound
+        {
+            get => _PickupSound;
+            set => _PickupSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IConstructibleObjectGetter.PickupSound => this.PickupSound;
+        #endregion
+        #region DropdownSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _DropdownSound;
+        public SoundReference? DropdownSound
+        {
+            get => _DropdownSound;
+            set => _DropdownSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IConstructibleObjectGetter.DropdownSound => this.DropdownSound;
+        #endregion
+        #region LearnMethod
+        public ConstructibleObject.LearnMethodEnum? LearnMethod { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ConstructibleObject.LearnMethodEnum? IConstructibleObjectGetter.LearnMethod => this.LearnMethod;
+        #endregion
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region MenuArtObject
+        private readonly IFormLinkNullable<IArtObjectGetter> _MenuArtObject = new FormLinkNullable<IArtObjectGetter>();
+        public IFormLinkNullable<IArtObjectGetter> MenuArtObject
+        {
+            get => _MenuArtObject;
+            set => _MenuArtObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArtObjectGetter> IConstructibleObjectGetter.MenuArtObject => this.MenuArtObject;
+        #endregion
+        #region BuildLimit
+        private readonly IFormLinkNullable<IGlobalGetter> _BuildLimit = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> BuildLimit
+        {
+            get => _BuildLimit;
+            set => _BuildLimit.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IConstructibleObjectGetter.BuildLimit => this.BuildLimit;
+        #endregion
+        #region Categories
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Categories;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Categories
+        {
+            get => this._Categories;
+            set => this._Categories = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IConstructibleObjectGetter.Categories => _Categories;
+        #endregion
+
+        #endregion
+        #region RECF
+        public UInt64? RECF { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt64? IConstructibleObjectGetter.RECF => this.RECF;
+        #endregion
 
         #region To String
 
@@ -78,6 +252,25 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Description = initialValue;
+                this.WorkbenchKeyword = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>());
+                this.CreatedObject = initialValue;
+                this.AmountProduced = initialValue;
+                this.MenuSortOrder = initialValue;
+                this.TNAM = initialValue;
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.LearnMethod = initialValue;
+                this.Value = initialValue;
+                this.MenuArtObject = initialValue;
+                this.BuildLimit = initialValue;
+                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RECF = initialValue;
             }
 
             public Mask(
@@ -87,7 +280,26 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem Description,
+                TItem WorkbenchKeyword,
+                TItem Conditions,
+                TItem ConstructableComponents,
+                TItem RequiredPerks,
+                TItem CreatedObject,
+                TItem AmountProduced,
+                TItem MenuSortOrder,
+                TItem TNAM,
+                TItem CraftingSound,
+                TItem PickupSound,
+                TItem DropdownSound,
+                TItem LearnMethod,
+                TItem Value,
+                TItem MenuArtObject,
+                TItem BuildLimit,
+                TItem Categories,
+                TItem RECF)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +309,25 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Description = Description;
+                this.WorkbenchKeyword = WorkbenchKeyword;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(ConstructableComponents, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
+                this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(RequiredPerks, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>());
+                this.CreatedObject = CreatedObject;
+                this.AmountProduced = AmountProduced;
+                this.MenuSortOrder = MenuSortOrder;
+                this.TNAM = TNAM;
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
+                this.LearnMethod = LearnMethod;
+                this.Value = Value;
+                this.MenuArtObject = MenuArtObject;
+                this.BuildLimit = BuildLimit;
+                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Categories, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RECF = RECF;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +336,28 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Description;
+            public TItem WorkbenchKeyword;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>? ConstructableComponents;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>? RequiredPerks;
+            public TItem CreatedObject;
+            public TItem AmountProduced;
+            public TItem MenuSortOrder;
+            public TItem TNAM;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? CraftingSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
+            public TItem LearnMethod;
+            public TItem Value;
+            public TItem MenuArtObject;
+            public TItem BuildLimit;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Categories;
+            public TItem RECF;
             #endregion
 
             #region Equals
@@ -118,11 +371,49 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.WorkbenchKeyword, rhs.WorkbenchKeyword)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.ConstructableComponents, rhs.ConstructableComponents)) return false;
+                if (!object.Equals(this.RequiredPerks, rhs.RequiredPerks)) return false;
+                if (!object.Equals(this.CreatedObject, rhs.CreatedObject)) return false;
+                if (!object.Equals(this.AmountProduced, rhs.AmountProduced)) return false;
+                if (!object.Equals(this.MenuSortOrder, rhs.MenuSortOrder)) return false;
+                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
+                if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
+                if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
+                if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
+                if (!object.Equals(this.LearnMethod, rhs.LearnMethod)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.MenuArtObject, rhs.MenuArtObject)) return false;
+                if (!object.Equals(this.BuildLimit, rhs.BuildLimit)) return false;
+                if (!object.Equals(this.Categories, rhs.Categories)) return false;
+                if (!object.Equals(this.RECF, rhs.RECF)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.Description);
+                hash.Add(this.WorkbenchKeyword);
+                hash.Add(this.Conditions);
+                hash.Add(this.ConstructableComponents);
+                hash.Add(this.RequiredPerks);
+                hash.Add(this.CreatedObject);
+                hash.Add(this.AmountProduced);
+                hash.Add(this.MenuSortOrder);
+                hash.Add(this.TNAM);
+                hash.Add(this.CraftingSound);
+                hash.Add(this.PickupSound);
+                hash.Add(this.DropdownSound);
+                hash.Add(this.LearnMethod);
+                hash.Add(this.Value);
+                hash.Add(this.MenuArtObject);
+                hash.Add(this.BuildLimit);
+                hash.Add(this.Categories);
+                hash.Add(this.RECF);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +424,91 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Description)) return false;
+                if (!eval(this.WorkbenchKeyword)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ConstructableComponents != null)
+                {
+                    if (!eval(this.ConstructableComponents.Overall)) return false;
+                    if (this.ConstructableComponents.Specific != null)
+                    {
+                        foreach (var item in this.ConstructableComponents.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RequiredPerks != null)
+                {
+                    if (!eval(this.RequiredPerks.Overall)) return false;
+                    if (this.RequiredPerks.Specific != null)
+                    {
+                        foreach (var item in this.RequiredPerks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.CreatedObject)) return false;
+                if (!eval(this.AmountProduced)) return false;
+                if (!eval(this.MenuSortOrder)) return false;
+                if (!eval(this.TNAM)) return false;
+                if (CraftingSound != null)
+                {
+                    if (!eval(this.CraftingSound.Overall)) return false;
+                    if (this.CraftingSound.Specific != null && !this.CraftingSound.Specific.All(eval)) return false;
+                }
+                if (PickupSound != null)
+                {
+                    if (!eval(this.PickupSound.Overall)) return false;
+                    if (this.PickupSound.Specific != null && !this.PickupSound.Specific.All(eval)) return false;
+                }
+                if (DropdownSound != null)
+                {
+                    if (!eval(this.DropdownSound.Overall)) return false;
+                    if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LearnMethod)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.MenuArtObject)) return false;
+                if (!eval(this.BuildLimit)) return false;
+                if (this.Categories != null)
+                {
+                    if (!eval(this.Categories.Overall)) return false;
+                    if (this.Categories.Specific != null)
+                    {
+                        foreach (var item in this.Categories.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.RECF)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +517,91 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Description)) return true;
+                if (eval(this.WorkbenchKeyword)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ConstructableComponents != null)
+                {
+                    if (eval(this.ConstructableComponents.Overall)) return true;
+                    if (this.ConstructableComponents.Specific != null)
+                    {
+                        foreach (var item in this.ConstructableComponents.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RequiredPerks != null)
+                {
+                    if (eval(this.RequiredPerks.Overall)) return true;
+                    if (this.RequiredPerks.Specific != null)
+                    {
+                        foreach (var item in this.RequiredPerks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.CreatedObject)) return true;
+                if (eval(this.AmountProduced)) return true;
+                if (eval(this.MenuSortOrder)) return true;
+                if (eval(this.TNAM)) return true;
+                if (CraftingSound != null)
+                {
+                    if (eval(this.CraftingSound.Overall)) return true;
+                    if (this.CraftingSound.Specific != null && this.CraftingSound.Specific.Any(eval)) return true;
+                }
+                if (PickupSound != null)
+                {
+                    if (eval(this.PickupSound.Overall)) return true;
+                    if (this.PickupSound.Specific != null && this.PickupSound.Specific.Any(eval)) return true;
+                }
+                if (DropdownSound != null)
+                {
+                    if (eval(this.DropdownSound.Overall)) return true;
+                    if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LearnMethod)) return true;
+                if (eval(this.Value)) return true;
+                if (eval(this.MenuArtObject)) return true;
+                if (eval(this.BuildLimit)) return true;
+                if (this.Categories != null)
+                {
+                    if (eval(this.Categories.Overall)) return true;
+                    if (this.Categories.Specific != null)
+                    {
+                        foreach (var item in this.Categories.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.RECF)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +617,94 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Description = eval(this.Description);
+                obj.WorkbenchKeyword = eval(this.WorkbenchKeyword);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ConstructableComponents != null)
+                {
+                    obj.ConstructableComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.ConstructableComponents.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>());
+                    if (ConstructableComponents.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>();
+                        obj.ConstructableComponents.Specific = l;
+                        foreach (var item in ConstructableComponents.Specific)
+                        {
+                            MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RequiredPerks != null)
+                {
+                    obj.RequiredPerks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>>?>(eval(this.RequiredPerks.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>>());
+                    if (RequiredPerks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>>();
+                        obj.RequiredPerks.Specific = l;
+                        foreach (var item in RequiredPerks.Specific)
+                        {
+                            MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ConstructibleRequiredPerk.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.CreatedObject = eval(this.CreatedObject);
+                obj.AmountProduced = eval(this.AmountProduced);
+                obj.MenuSortOrder = eval(this.MenuSortOrder);
+                obj.TNAM = eval(this.TNAM);
+                obj.CraftingSound = this.CraftingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CraftingSound.Overall), this.CraftingSound.Specific?.Translate(eval));
+                obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
+                obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
+                obj.LearnMethod = eval(this.LearnMethod);
+                obj.Value = eval(this.Value);
+                obj.MenuArtObject = eval(this.MenuArtObject);
+                obj.BuildLimit = eval(this.BuildLimit);
+                if (Categories != null)
+                {
+                    obj.Categories = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Categories.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Categories.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Categories.Specific = l;
+                        foreach (var item in Categories.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.RECF = eval(this.RECF);
             }
             #endregion
 
@@ -174,6 +723,159 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ConstructibleObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.WorkbenchKeyword ?? true)
+                    {
+                        sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ConstructableComponents?.Overall ?? true)
+                        && ConstructableComponents is {} ConstructableComponentsItem)
+                    {
+                        sb.AppendLine("ConstructableComponents =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConstructableComponentsItem.Overall);
+                            if (ConstructableComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConstructableComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.RequiredPerks?.Overall ?? true)
+                        && RequiredPerks is {} RequiredPerksItem)
+                    {
+                        sb.AppendLine("RequiredPerks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RequiredPerksItem.Overall);
+                            if (RequiredPerksItem.Specific != null)
+                            {
+                                foreach (var subItem in RequiredPerksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.CreatedObject ?? true)
+                    {
+                        sb.AppendItem(CreatedObject, "CreatedObject");
+                    }
+                    if (printMask?.AmountProduced ?? true)
+                    {
+                        sb.AppendItem(AmountProduced, "AmountProduced");
+                    }
+                    if (printMask?.MenuSortOrder ?? true)
+                    {
+                        sb.AppendItem(MenuSortOrder, "MenuSortOrder");
+                    }
+                    if (printMask?.TNAM ?? true)
+                    {
+                        sb.AppendItem(TNAM, "TNAM");
+                    }
+                    if (printMask?.CraftingSound?.Overall ?? true)
+                    {
+                        CraftingSound?.Print(sb);
+                    }
+                    if (printMask?.PickupSound?.Overall ?? true)
+                    {
+                        PickupSound?.Print(sb);
+                    }
+                    if (printMask?.DropdownSound?.Overall ?? true)
+                    {
+                        DropdownSound?.Print(sb);
+                    }
+                    if (printMask?.LearnMethod ?? true)
+                    {
+                        sb.AppendItem(LearnMethod, "LearnMethod");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        sb.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.MenuArtObject ?? true)
+                    {
+                        sb.AppendItem(MenuArtObject, "MenuArtObject");
+                    }
+                    if (printMask?.BuildLimit ?? true)
+                    {
+                        sb.AppendItem(BuildLimit, "BuildLimit");
+                    }
+                    if ((printMask?.Categories?.Overall ?? true)
+                        && Categories is {} CategoriesItem)
+                    {
+                        sb.AppendLine("Categories =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CategoriesItem.Overall);
+                            if (CategoriesItem.Specific != null)
+                            {
+                                foreach (var subItem in CategoriesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.RECF ?? true)
+                    {
+                        sb.AppendItem(RECF, "RECF");
+                    }
                 }
             }
             #endregion
@@ -184,12 +886,72 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Description;
+            public Exception? WorkbenchKeyword;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>? ConstructableComponents;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>? RequiredPerks;
+            public Exception? CreatedObject;
+            public Exception? AmountProduced;
+            public Exception? MenuSortOrder;
+            public Exception? TNAM;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? CraftingSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
+            public Exception? LearnMethod;
+            public Exception? Value;
+            public Exception? MenuArtObject;
+            public Exception? BuildLimit;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Categories;
+            public Exception? RECF;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConstructibleObject_FieldIndex.Components:
+                        return Components;
+                    case ConstructibleObject_FieldIndex.Description:
+                        return Description;
+                    case ConstructibleObject_FieldIndex.WorkbenchKeyword:
+                        return WorkbenchKeyword;
+                    case ConstructibleObject_FieldIndex.Conditions:
+                        return Conditions;
+                    case ConstructibleObject_FieldIndex.ConstructableComponents:
+                        return ConstructableComponents;
+                    case ConstructibleObject_FieldIndex.RequiredPerks:
+                        return RequiredPerks;
+                    case ConstructibleObject_FieldIndex.CreatedObject:
+                        return CreatedObject;
+                    case ConstructibleObject_FieldIndex.AmountProduced:
+                        return AmountProduced;
+                    case ConstructibleObject_FieldIndex.MenuSortOrder:
+                        return MenuSortOrder;
+                    case ConstructibleObject_FieldIndex.TNAM:
+                        return TNAM;
+                    case ConstructibleObject_FieldIndex.CraftingSound:
+                        return CraftingSound;
+                    case ConstructibleObject_FieldIndex.PickupSound:
+                        return PickupSound;
+                    case ConstructibleObject_FieldIndex.DropdownSound:
+                        return DropdownSound;
+                    case ConstructibleObject_FieldIndex.LearnMethod:
+                        return LearnMethod;
+                    case ConstructibleObject_FieldIndex.Value:
+                        return Value;
+                    case ConstructibleObject_FieldIndex.MenuArtObject:
+                        return MenuArtObject;
+                    case ConstructibleObject_FieldIndex.BuildLimit:
+                        return BuildLimit;
+                    case ConstructibleObject_FieldIndex.Categories:
+                        return Categories;
+                    case ConstructibleObject_FieldIndex.RECF:
+                        return RECF;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +962,63 @@ namespace Mutagen.Bethesda.Starfield
                 ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConstructibleObject_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.WorkbenchKeyword:
+                        this.WorkbenchKeyword = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.ConstructableComponents:
+                        this.ConstructableComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.RequiredPerks:
+                        this.RequiredPerks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.CreatedObject:
+                        this.CreatedObject = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.AmountProduced:
+                        this.AmountProduced = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.MenuSortOrder:
+                        this.MenuSortOrder = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.TNAM:
+                        this.TNAM = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.CraftingSound:
+                        this.CraftingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.PickupSound:
+                        this.PickupSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.DropdownSound:
+                        this.DropdownSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.LearnMethod:
+                        this.LearnMethod = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.MenuArtObject:
+                        this.MenuArtObject = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.BuildLimit:
+                        this.BuildLimit = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.Categories:
+                        this.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.RECF:
+                        this.RECF = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +1030,63 @@ namespace Mutagen.Bethesda.Starfield
                 ConstructibleObject_FieldIndex enu = (ConstructibleObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConstructibleObject_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.WorkbenchKeyword:
+                        this.WorkbenchKeyword = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.ConstructableComponents:
+                        this.ConstructableComponents = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.RequiredPerks:
+                        this.RequiredPerks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.CreatedObject:
+                        this.CreatedObject = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.AmountProduced:
+                        this.AmountProduced = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.MenuSortOrder:
+                        this.MenuSortOrder = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.TNAM:
+                        this.TNAM = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.CraftingSound:
+                        this.CraftingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.PickupSound:
+                        this.PickupSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.DropdownSound:
+                        this.DropdownSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.LearnMethod:
+                        this.LearnMethod = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.MenuArtObject:
+                        this.MenuArtObject = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.BuildLimit:
+                        this.BuildLimit = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.Categories:
+                        this.Categories = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.RECF:
+                        this.RECF = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +1096,25 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (Description != null) return true;
+                if (WorkbenchKeyword != null) return true;
+                if (Conditions != null) return true;
+                if (ConstructableComponents != null) return true;
+                if (RequiredPerks != null) return true;
+                if (CreatedObject != null) return true;
+                if (AmountProduced != null) return true;
+                if (MenuSortOrder != null) return true;
+                if (TNAM != null) return true;
+                if (CraftingSound != null) return true;
+                if (PickupSound != null) return true;
+                if (DropdownSound != null) return true;
+                if (LearnMethod != null) return true;
+                if (Value != null) return true;
+                if (MenuArtObject != null) return true;
+                if (BuildLimit != null) return true;
+                if (Categories != null) return true;
+                if (RECF != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +1141,134 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ConstructableComponents is {} ConstructableComponentsItem)
+                {
+                    sb.AppendLine("ConstructableComponents =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConstructableComponentsItem.Overall);
+                        if (ConstructableComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConstructableComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (RequiredPerks is {} RequiredPerksItem)
+                {
+                    sb.AppendLine("RequiredPerks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RequiredPerksItem.Overall);
+                        if (RequiredPerksItem.Specific != null)
+                        {
+                            foreach (var subItem in RequiredPerksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(CreatedObject, "CreatedObject");
+                }
+                {
+                    sb.AppendItem(AmountProduced, "AmountProduced");
+                }
+                {
+                    sb.AppendItem(MenuSortOrder, "MenuSortOrder");
+                }
+                {
+                    sb.AppendItem(TNAM, "TNAM");
+                }
+                CraftingSound?.Print(sb);
+                PickupSound?.Print(sb);
+                DropdownSound?.Print(sb);
+                {
+                    sb.AppendItem(LearnMethod, "LearnMethod");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(MenuArtObject, "MenuArtObject");
+                }
+                {
+                    sb.AppendItem(BuildLimit, "BuildLimit");
+                }
+                if (Categories is {} CategoriesItem)
+                {
+                    sb.AppendLine("Categories =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CategoriesItem.Overall);
+                        if (CategoriesItem.Specific != null)
+                        {
+                            foreach (var subItem in CategoriesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(RECF, "RECF");
+                }
             }
             #endregion
 
@@ -254,6 +1277,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.WorkbenchKeyword = this.WorkbenchKeyword.Combine(rhs.WorkbenchKeyword);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.ConstructableComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ConstructableComponents?.Overall, rhs.ConstructableComponents?.Overall), Noggog.ExceptionExt.Combine(this.ConstructableComponents?.Specific, rhs.ConstructableComponents?.Specific));
+                ret.RequiredPerks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RequiredPerks?.Overall, rhs.RequiredPerks?.Overall), Noggog.ExceptionExt.Combine(this.RequiredPerks?.Specific, rhs.RequiredPerks?.Specific));
+                ret.CreatedObject = this.CreatedObject.Combine(rhs.CreatedObject);
+                ret.AmountProduced = this.AmountProduced.Combine(rhs.AmountProduced);
+                ret.MenuSortOrder = this.MenuSortOrder.Combine(rhs.MenuSortOrder);
+                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
+                ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound, (l, r) => l.Combine(r));
+                ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
+                ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
+                ret.LearnMethod = this.LearnMethod.Combine(rhs.LearnMethod);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.MenuArtObject = this.MenuArtObject.Combine(rhs.MenuArtObject);
+                ret.BuildLimit = this.BuildLimit.Combine(rhs.BuildLimit);
+                ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), Noggog.ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
+                ret.RECF = this.RECF.Combine(rhs.RECF);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +1317,73 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool Description;
+            public bool WorkbenchKeyword;
+            public Condition.TranslationMask? Conditions;
+            public ConstructibleObjectComponent.TranslationMask? ConstructableComponents;
+            public ConstructibleRequiredPerk.TranslationMask? RequiredPerks;
+            public bool CreatedObject;
+            public bool AmountProduced;
+            public bool MenuSortOrder;
+            public bool TNAM;
+            public SoundReference.TranslationMask? CraftingSound;
+            public SoundReference.TranslationMask? PickupSound;
+            public SoundReference.TranslationMask? DropdownSound;
+            public bool LearnMethod;
+            public bool Value;
+            public bool MenuArtObject;
+            public bool BuildLimit;
+            public bool Categories;
+            public bool RECF;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Description = defaultOn;
+                this.WorkbenchKeyword = defaultOn;
+                this.CreatedObject = defaultOn;
+                this.AmountProduced = defaultOn;
+                this.MenuSortOrder = defaultOn;
+                this.TNAM = defaultOn;
+                this.LearnMethod = defaultOn;
+                this.Value = defaultOn;
+                this.MenuArtObject = defaultOn;
+                this.BuildLimit = defaultOn;
+                this.Categories = defaultOn;
+                this.RECF = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Description, null));
+                ret.Add((WorkbenchKeyword, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((ConstructableComponents == null ? DefaultOn : !ConstructableComponents.GetCrystal().CopyNothing, ConstructableComponents?.GetCrystal()));
+                ret.Add((RequiredPerks == null ? DefaultOn : !RequiredPerks.GetCrystal().CopyNothing, RequiredPerks?.GetCrystal()));
+                ret.Add((CreatedObject, null));
+                ret.Add((AmountProduced, null));
+                ret.Add((MenuSortOrder, null));
+                ret.Add((TNAM, null));
+                ret.Add((CraftingSound != null ? CraftingSound.OnOverall : DefaultOn, CraftingSound?.GetCrystal()));
+                ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
+                ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
+                ret.Add((LearnMethod, null));
+                ret.Add((Value, null));
+                ret.Add((MenuArtObject, null));
+                ret.Add((BuildLimit, null));
+                ret.Add((Categories, null));
+                ret.Add((RECF, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +1395,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ConstructibleObject_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConstructibleObjectCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConstructibleObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public ConstructibleObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -338,6 +1440,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IConstructibleObject);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ConstructibleObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ConstructibleObjectSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ConstructibleObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ConstructibleObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -417,10 +1523,31 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IConstructibleObject :
+        IAssetLinkContainer,
         IConstructibleObjectGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<AComponent> Components { get; }
+        new TranslatedString? Description { get; set; }
+        new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
+        new ExtendedList<ConstructibleObjectComponent>? ConstructableComponents { get; set; }
+        new ExtendedList<ConstructibleRequiredPerk>? RequiredPerks { get; set; }
+        new IFormLinkNullable<IConstructibleObjectTargetGetter> CreatedObject { get; set; }
+        new UInt16 AmountProduced { get; set; }
+        new Single MenuSortOrder { get; set; }
+        new Byte TNAM { get; set; }
+        new SoundReference? CraftingSound { get; set; }
+        new SoundReference? PickupSound { get; set; }
+        new SoundReference? DropdownSound { get; set; }
+        new ConstructibleObject.LearnMethodEnum? LearnMethod { get; set; }
+        new UInt32 Value { get; set; }
+        new IFormLinkNullable<IArtObjectGetter> MenuArtObject { get; set; }
+        new IFormLinkNullable<IGlobalGetter> BuildLimit { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Categories { get; set; }
+        new UInt64? RECF { get; set; }
     }
 
     public partial interface IConstructibleObjectInternal :
@@ -433,11 +1560,32 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.COBJ)]
     public partial interface IConstructibleObjectGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>
     {
         static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        ITranslatedStringGetter? Description { get; }
+        IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
+        IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructableComponents { get; }
+        IReadOnlyList<IConstructibleRequiredPerkGetter>? RequiredPerks { get; }
+        IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject { get; }
+        UInt16 AmountProduced { get; }
+        Single MenuSortOrder { get; }
+        Byte TNAM { get; }
+        ISoundReferenceGetter? CraftingSound { get; }
+        ISoundReferenceGetter? PickupSound { get; }
+        ISoundReferenceGetter? DropdownSound { get; }
+        ConstructibleObject.LearnMethodEnum? LearnMethod { get; }
+        UInt32 Value { get; }
+        IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject { get; }
+        IFormLinkNullableGetter<IGlobalGetter> BuildLimit { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; }
+        UInt64? RECF { get; }
 
     }
 
@@ -614,6 +1762,25 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        Description = 8,
+        WorkbenchKeyword = 9,
+        Conditions = 10,
+        ConstructableComponents = 11,
+        RequiredPerks = 12,
+        CreatedObject = 13,
+        AmountProduced = 14,
+        MenuSortOrder = 15,
+        TNAM = 16,
+        CraftingSound = 17,
+        PickupSound = 18,
+        DropdownSound = 19,
+        LearnMethod = 20,
+        Value = 21,
+        MenuArtObject = 22,
+        BuildLimit = 23,
+        Categories = 24,
+        RECF = 25,
     }
     #endregion
 
@@ -624,9 +1791,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(ConstructibleObject.Mask<>);
 
@@ -656,8 +1823,33 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.COBJ);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.COBJ);
+            var all = RecordCollection.Factory(
+                RecordTypes.COBJ,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.DESC,
+                RecordTypes.BNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.FVPA,
+                RecordTypes.RQPK,
+                RecordTypes.CNAM,
+                RecordTypes.NNAM,
+                RecordTypes.SNAM,
+                RecordTypes.TNAM,
+                RecordTypes.CUSH,
+                RecordTypes.PUSH,
+                RecordTypes.PDSH,
+                RecordTypes.LRNM,
+                RecordTypes.DATA,
+                RecordTypes.ANAM,
+                RecordTypes.JNAM,
+                RecordTypes.FNAM,
+                RecordTypes.RECF);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ConstructibleObjectBinaryWriteTranslation);
         #region Interface
@@ -699,6 +1891,25 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IConstructibleObjectInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.Description = default;
+            item.WorkbenchKeyword.Clear();
+            item.Conditions.Clear();
+            item.ConstructableComponents = null;
+            item.RequiredPerks = null;
+            item.CreatedObject.Clear();
+            item.AmountProduced = default;
+            item.MenuSortOrder = default;
+            item.TNAM = default;
+            item.CraftingSound = null;
+            item.PickupSound = null;
+            item.DropdownSound = null;
+            item.LearnMethod = default;
+            item.Value = default;
+            item.MenuArtObject.Clear();
+            item.BuildLimit.Clear();
+            item.Categories = null;
+            item.RECF = default;
             base.Clear(item);
         }
         
@@ -716,6 +1927,42 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IConstructibleObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.WorkbenchKeyword.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
+            obj.ConstructableComponents?.RemapLinks(mapping);
+            obj.RequiredPerks?.RemapLinks(mapping);
+            obj.CreatedObject.Relink(mapping);
+            obj.CraftingSound?.RemapLinks(mapping);
+            obj.PickupSound?.RemapLinks(mapping);
+            obj.DropdownSound?.RemapLinks(mapping);
+            obj.MenuArtObject.Relink(mapping);
+            obj.BuildLimit.Relink(mapping);
+            obj.Categories?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IConstructibleObject obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IConstructibleObject obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -783,6 +2030,52 @@ namespace Mutagen.Bethesda.Starfield
             ConstructibleObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ConstructableComponents = item.ConstructableComponents.CollectionEqualsHelper(
+                rhs.ConstructableComponents,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RequiredPerks = item.RequiredPerks.CollectionEqualsHelper(
+                rhs.RequiredPerks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CreatedObject = item.CreatedObject.Equals(rhs.CreatedObject);
+            ret.AmountProduced = item.AmountProduced == rhs.AmountProduced;
+            ret.MenuSortOrder = item.MenuSortOrder.EqualsWithin(rhs.MenuSortOrder);
+            ret.TNAM = item.TNAM == rhs.TNAM;
+            ret.CraftingSound = EqualsMaskHelper.EqualsHelper(
+                item.CraftingSound,
+                rhs.CraftingSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PickupSound = EqualsMaskHelper.EqualsHelper(
+                item.PickupSound,
+                rhs.PickupSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DropdownSound = EqualsMaskHelper.EqualsHelper(
+                item.DropdownSound,
+                rhs.DropdownSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LearnMethod = item.LearnMethod == rhs.LearnMethod;
+            ret.Value = item.Value == rhs.Value;
+            ret.MenuArtObject = item.MenuArtObject.Equals(rhs.MenuArtObject);
+            ret.BuildLimit = item.BuildLimit.Equals(rhs.BuildLimit);
+            ret.Categories = item.Categories.CollectionEqualsHelper(
+                rhs.Categories,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.RECF = item.RECF == rhs.RECF;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -832,6 +2125,141 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.WorkbenchKeyword ?? true)
+            {
+                sb.AppendItem(item.WorkbenchKeyword.FormKeyNullable, "WorkbenchKeyword");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ConstructableComponents?.Overall ?? true)
+                && item.ConstructableComponents is {} ConstructableComponentsItem)
+            {
+                sb.AppendLine("ConstructableComponents =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ConstructableComponentsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.RequiredPerks?.Overall ?? true)
+                && item.RequiredPerks is {} RequiredPerksItem)
+            {
+                sb.AppendLine("RequiredPerks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RequiredPerksItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.CreatedObject ?? true)
+            {
+                sb.AppendItem(item.CreatedObject.FormKeyNullable, "CreatedObject");
+            }
+            if (printMask?.AmountProduced ?? true)
+            {
+                sb.AppendItem(item.AmountProduced, "AmountProduced");
+            }
+            if (printMask?.MenuSortOrder ?? true)
+            {
+                sb.AppendItem(item.MenuSortOrder, "MenuSortOrder");
+            }
+            if (printMask?.TNAM ?? true)
+            {
+                sb.AppendItem(item.TNAM, "TNAM");
+            }
+            if ((printMask?.CraftingSound?.Overall ?? true)
+                && item.CraftingSound is {} CraftingSoundItem)
+            {
+                CraftingSoundItem?.Print(sb, "CraftingSound");
+            }
+            if ((printMask?.PickupSound?.Overall ?? true)
+                && item.PickupSound is {} PickupSoundItem)
+            {
+                PickupSoundItem?.Print(sb, "PickupSound");
+            }
+            if ((printMask?.DropdownSound?.Overall ?? true)
+                && item.DropdownSound is {} DropdownSoundItem)
+            {
+                DropdownSoundItem?.Print(sb, "DropdownSound");
+            }
+            if ((printMask?.LearnMethod ?? true)
+                && item.LearnMethod is {} LearnMethodItem)
+            {
+                sb.AppendItem(LearnMethodItem, "LearnMethod");
+            }
+            if (printMask?.Value ?? true)
+            {
+                sb.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.MenuArtObject ?? true)
+            {
+                sb.AppendItem(item.MenuArtObject.FormKeyNullable, "MenuArtObject");
+            }
+            if (printMask?.BuildLimit ?? true)
+            {
+                sb.AppendItem(item.BuildLimit.FormKeyNullable, "BuildLimit");
+            }
+            if ((printMask?.Categories?.Overall ?? true)
+                && item.Categories is {} CategoriesItem)
+            {
+                sb.AppendLine("Categories =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in CategoriesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.RECF ?? true)
+                && item.RECF is {} RECFItem)
+            {
+                sb.AppendItem(RECFItem, "RECF");
+            }
         }
         
         public static ConstructibleObject_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -882,6 +2310,94 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
+            {
+                if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.ConstructableComponents) ?? true))
+            {
+                if (!lhs.ConstructableComponents.SequenceEqualNullable(rhs.ConstructableComponents, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.ConstructableComponents)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RequiredPerks) ?? true))
+            {
+                if (!lhs.RequiredPerks.SequenceEqualNullable(rhs.RequiredPerks, (l, r) => ((ConstructibleRequiredPerkCommon)((IConstructibleRequiredPerkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.RequiredPerks)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
+            {
+                if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.AmountProduced) ?? true))
+            {
+                if (lhs.AmountProduced != rhs.AmountProduced) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuSortOrder) ?? true))
+            {
+                if (!lhs.MenuSortOrder.EqualsWithin(rhs.MenuSortOrder)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.TNAM) ?? true))
+            {
+                if (lhs.TNAM != rhs.TNAM) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CraftingSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CraftingSound, rhs.CraftingSound, out var lhsCraftingSound, out var rhsCraftingSound, out var isCraftingSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsCraftingSound).CommonInstance()!).Equals(lhsCraftingSound, rhsCraftingSound, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.CraftingSound))) return false;
+                }
+                else if (!isCraftingSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickupSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PickupSound, rhs.PickupSound, out var lhsPickupSound, out var rhsPickupSound, out var isPickupSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPickupSound).CommonInstance()!).Equals(lhsPickupSound, rhsPickupSound, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.PickupSound))) return false;
+                }
+                else if (!isPickupSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.DropdownSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DropdownSound, rhs.DropdownSound, out var lhsDropdownSound, out var rhsDropdownSound, out var isDropdownSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDropdownSound).CommonInstance()!).Equals(lhsDropdownSound, rhsDropdownSound, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.DropdownSound))) return false;
+                }
+                else if (!isDropdownSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnMethod) ?? true))
+            {
+                if (lhs.LearnMethod != rhs.LearnMethod) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
+            {
+                if (!lhs.MenuArtObject.Equals(rhs.MenuArtObject)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.BuildLimit) ?? true))
+            {
+                if (!lhs.BuildLimit.Equals(rhs.BuildLimit)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            {
+                if (!lhs.Categories.SequenceEqualNullable(rhs.Categories)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RECF) ?? true))
+            {
+                if (lhs.RECF != rhs.RECF) return false;
+            }
             return true;
         }
         
@@ -910,6 +2426,43 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IConstructibleObjectGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
+            hash.Add(item.WorkbenchKeyword);
+            hash.Add(item.Conditions);
+            hash.Add(item.ConstructableComponents);
+            hash.Add(item.RequiredPerks);
+            hash.Add(item.CreatedObject);
+            hash.Add(item.AmountProduced);
+            hash.Add(item.MenuSortOrder);
+            hash.Add(item.TNAM);
+            if (item.CraftingSound is {} CraftingSounditem)
+            {
+                hash.Add(CraftingSounditem);
+            }
+            if (item.PickupSound is {} PickupSounditem)
+            {
+                hash.Add(PickupSounditem);
+            }
+            if (item.DropdownSound is {} DropdownSounditem)
+            {
+                hash.Add(DropdownSounditem);
+            }
+            if (item.LearnMethod is {} LearnMethoditem)
+            {
+                hash.Add(LearnMethoditem);
+            }
+            hash.Add(item.Value);
+            hash.Add(item.MenuArtObject);
+            hash.Add(item.BuildLimit);
+            hash.Add(item.Categories);
+            if (item.RECF is {} RECFitem)
+            {
+                hash.Add(RECFitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -938,6 +2491,90 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.WorkbenchKeyword, out var WorkbenchKeywordInfo))
+            {
+                yield return WorkbenchKeywordInfo;
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.ConstructableComponents is {} ConstructableComponentsItem)
+            {
+                foreach (var item in ConstructableComponentsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.RequiredPerks is {} RequiredPerksItem)
+            {
+                foreach (var item in RequiredPerksItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.CreatedObject, out var CreatedObjectInfo))
+            {
+                yield return CreatedObjectInfo;
+            }
+            if (obj.CraftingSound is {} CraftingSoundItems)
+            {
+                foreach (var item in CraftingSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PickupSound is {} PickupSoundItems)
+            {
+                foreach (var item in PickupSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DropdownSound is {} DropdownSoundItems)
+            {
+                foreach (var item in DropdownSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.MenuArtObject, out var MenuArtObjectInfo))
+            {
+                yield return MenuArtObjectInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.BuildLimit, out var BuildLimitInfo))
+            {
+                yield return BuildLimitInfo;
+            }
+            if (obj.Categories is {} CategoriesItem)
+            {
+                foreach (var item in CategoriesItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IConstructibleObjectGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1013,6 +2650,267 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
+            {
+                item.WorkbenchKeyword.SetTo(rhs.WorkbenchKeyword.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.ConstructableComponents) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.ConstructableComponents);
+                try
+                {
+                    if ((rhs.ConstructableComponents != null))
+                    {
+                        item.ConstructableComponents = 
+                            rhs.ConstructableComponents
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ConstructibleObjectComponent>();
+                    }
+                    else
+                    {
+                        item.ConstructableComponents = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RequiredPerks) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.RequiredPerks);
+                try
+                {
+                    if ((rhs.RequiredPerks != null))
+                    {
+                        item.RequiredPerks = 
+                            rhs.RequiredPerks
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ConstructibleRequiredPerk>();
+                    }
+                    else
+                    {
+                        item.RequiredPerks = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
+            {
+                item.CreatedObject.SetTo(rhs.CreatedObject.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.AmountProduced) ?? true))
+            {
+                item.AmountProduced = rhs.AmountProduced;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuSortOrder) ?? true))
+            {
+                item.MenuSortOrder = rhs.MenuSortOrder;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.TNAM) ?? true))
+            {
+                item.TNAM = rhs.TNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CraftingSound) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.CraftingSound);
+                try
+                {
+                    if(rhs.CraftingSound is {} rhsCraftingSound)
+                    {
+                        item.CraftingSound = rhsCraftingSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.CraftingSound));
+                    }
+                    else
+                    {
+                        item.CraftingSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.PickupSound) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.PickupSound);
+                try
+                {
+                    if(rhs.PickupSound is {} rhsPickupSound)
+                    {
+                        item.PickupSound = rhsPickupSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.PickupSound));
+                    }
+                    else
+                    {
+                        item.PickupSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.DropdownSound) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.DropdownSound);
+                try
+                {
+                    if(rhs.DropdownSound is {} rhsDropdownSound)
+                    {
+                        item.DropdownSound = rhsDropdownSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.DropdownSound));
+                    }
+                    else
+                    {
+                        item.DropdownSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnMethod) ?? true))
+            {
+                item.LearnMethod = rhs.LearnMethod;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MenuArtObject) ?? true))
+            {
+                item.MenuArtObject.SetTo(rhs.MenuArtObject.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.BuildLimit) ?? true))
+            {
+                item.BuildLimit.SetTo(rhs.BuildLimit.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Categories);
+                try
+                {
+                    if ((rhs.Categories != null))
+                    {
+                        item.Categories = 
+                            rhs.Categories
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Categories = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RECF) ?? true))
+            {
+                item.RECF = rhs.RECF;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1161,6 +3059,150 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ConstructibleObjectBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IConstructibleObjectGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WorkbenchKeyword,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConstructibleObjectComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.ConstructableComponents,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FVPA),
+                transl: (MutagenWriter subWriter, IConstructibleObjectComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConstructibleObjectComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConstructibleRequiredPerkGetter>.Instance.Write(
+                writer: writer,
+                items: item.RequiredPerks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.RQPK),
+                transl: (MutagenWriter subWriter, IConstructibleRequiredPerkGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConstructibleRequiredPerkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.CreatedObject,
+                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.AmountProduced,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.MenuSortOrder,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.TNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            if (item.CraftingSound is {} CraftingSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.CUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)CraftingSoundItem).BinaryWriteTranslator).Write(
+                        item: CraftingSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.PickupSound is {} PickupSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PickupSoundItem).BinaryWriteTranslator).Write(
+                        item: PickupSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.DropdownSound is {} DropdownSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PDSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DropdownSoundItem).BinaryWriteTranslator).Write(
+                        item: DropdownSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            EnumBinaryTranslation<ConstructibleObject.LearnMethodEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.LearnMethod,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.LRNM));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Value,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MenuArtObject,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BuildLimit,
+                header: translationParams.ConvertToCustom(RecordTypes.JNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Categories,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.RECF,
+                header: translationParams.ConvertToCustom(RecordTypes.RECF));
+        }
+
         public void Write(
             MutagenWriter writer,
             IConstructibleObjectGetter item,
@@ -1177,10 +3219,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1230,6 +3274,169 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ConstructibleObjectBinaryCreateTranslation Instance = new ConstructibleObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.COBJ;
+        public static ParseResult FillBinaryRecordTypes(
+            IConstructibleObjectInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)ConstructibleObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ConstructibleObject_FieldIndex.Description;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)ConstructibleObject_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.FVPA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ConstructableComponents = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ConstructibleObjectComponent>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ConstructibleObjectComponent.TryCreateFromBinary)
+                        .CastExtendedList<ConstructibleObjectComponent>();
+                    return (int)ConstructibleObject_FieldIndex.ConstructableComponents;
+                }
+                case RecordTypeInts.RQPK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RequiredPerks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ConstructibleRequiredPerk>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ConstructibleRequiredPerk.TryCreateFromBinary)
+                        .CastExtendedList<ConstructibleRequiredPerk>();
+                    return (int)ConstructibleObject_FieldIndex.RequiredPerks;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CreatedObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.CreatedObject;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AmountProduced = frame.ReadUInt16();
+                    return (int)ConstructibleObject_FieldIndex.AmountProduced;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MenuSortOrder = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ConstructibleObject_FieldIndex.MenuSortOrder;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TNAM = frame.ReadUInt8();
+                    return (int)ConstructibleObject_FieldIndex.TNAM;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.CraftingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)ConstructibleObject_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)ConstructibleObject_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)ConstructibleObject_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.LRNM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LearnMethod = EnumBinaryTranslation<ConstructibleObject.LearnMethodEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ConstructibleObject_FieldIndex.LearnMethod;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Value = frame.ReadUInt32();
+                    return (int)ConstructibleObject_FieldIndex.Value;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MenuArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.MenuArtObject;
+                }
+                case RecordTypeInts.JNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BuildLimit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.BuildLimit;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Categories = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)ConstructibleObject_FieldIndex.Categories;
+                }
+                case RecordTypeInts.RECF:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RECF = frame.ReadUInt64();
+                    return (int)ConstructibleObject_FieldIndex.RECF;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1262,6 +3469,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ConstructibleObjectCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ConstructibleObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConstructibleObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1276,6 +3485,58 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IConstructibleObject);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region WorkbenchKeyword
+        private int? _WorkbenchKeywordLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        public IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructableComponents { get; private set; }
+        public IReadOnlyList<IConstructibleRequiredPerkGetter>? RequiredPerks { get; private set; }
+        #region CreatedObject
+        private int? _CreatedObjectLocation;
+        public IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject => _CreatedObjectLocation.HasValue ? new FormLinkNullable<IConstructibleObjectTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CreatedObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IConstructibleObjectTargetGetter>.Null;
+        #endregion
+        #region AmountProduced
+        private int? _AmountProducedLocation;
+        public UInt16 AmountProduced => _AmountProducedLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmountProducedLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
+        #region MenuSortOrder
+        private int? _MenuSortOrderLocation;
+        public Single MenuSortOrder => _MenuSortOrderLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuSortOrderLocation.Value, _package.MetaData.Constants).Float() : default;
+        #endregion
+        #region TNAM
+        private int? _TNAMLocation;
+        public Byte TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        #endregion
+        public ISoundReferenceGetter? CraftingSound { get; private set; }
+        public ISoundReferenceGetter? PickupSound { get; private set; }
+        public ISoundReferenceGetter? DropdownSound { get; private set; }
+        #region LearnMethod
+        private int? _LearnMethodLocation;
+        public ConstructibleObject.LearnMethodEnum? LearnMethod => _LearnMethodLocation.HasValue ? (ConstructibleObject.LearnMethodEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _LearnMethodLocation!.Value, _package.MetaData.Constants)[0] : default(ConstructibleObject.LearnMethodEnum?);
+        #endregion
+        #region Value
+        private int? _ValueLocation;
+        public UInt32 Value => _ValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
+        #region MenuArtObject
+        private int? _MenuArtObjectLocation;
+        public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => _MenuArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        #endregion
+        #region BuildLimit
+        private int? _BuildLimitLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> BuildLimit => _BuildLimitLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BuildLimitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; private set; }
+        #region RECF
+        private int? _RECFLocation;
+        public UInt64? RECF => _RECFLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RECFLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1333,6 +3594,171 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)ConstructibleObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.Description;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _WorkbenchKeywordLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)ConstructibleObject_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.FVPA:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.ConstructableComponents = BinaryOverlayList.FactoryByStartIndex<IConstructibleObjectComponentGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ConstructibleObjectComponentBinaryOverlay.ConstructibleObjectComponentFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)ConstructibleObject_FieldIndex.ConstructableComponents;
+                }
+                case RecordTypeInts.RQPK:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.RequiredPerks = BinaryOverlayList.FactoryByStartIndex<IConstructibleRequiredPerkGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ConstructibleRequiredPerkBinaryOverlay.ConstructibleRequiredPerkFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)ConstructibleObject_FieldIndex.RequiredPerks;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _CreatedObjectLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.CreatedObject;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _AmountProducedLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.AmountProduced;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _MenuSortOrderLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.MenuSortOrder;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _TNAMLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.TNAM;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.CraftingSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)ConstructibleObject_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.PickupSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)ConstructibleObject_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.DropdownSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)ConstructibleObject_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.LRNM:
+                {
+                    _LearnMethodLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.LearnMethod;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _ValueLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.Value;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _MenuArtObjectLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.MenuArtObject;
+                }
+                case RecordTypeInts.JNAM:
+                {
+                    _BuildLimitLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.BuildLimit;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Categories = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)ConstructibleObject_FieldIndex.Categories;
+                }
+                case RecordTypeInts.RECF:
+                {
+                    _RECFLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.RECF;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

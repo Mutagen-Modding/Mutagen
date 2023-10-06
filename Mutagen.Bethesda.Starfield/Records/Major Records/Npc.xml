@@ -4,5 +4,6 @@
     <Fields>
       <FormLink name="Race" refName="Race" recordType="RNAM" nullable="False" />
     </Fields>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
 </Loqui>

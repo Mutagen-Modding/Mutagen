@@ -1949,6 +1949,9 @@
     <Compile Include="Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ConstructibleObject.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\DefaultObject.cs">
       <DependentUpon>DefaultObject.xml</DependentUpon>
     </Compile>
@@ -5038,5 +5041,12 @@
     <Compile Include="Records\Major Records\Zoom_Generated.cs">
       <DependentUpon>Zoom.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ConstructibleObjectComponent_Generated.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ConstructibleRequiredPerk_Generated.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IConstructibleObjectTarget_Generated.cs" />
   </ItemGroup>
 </Project>

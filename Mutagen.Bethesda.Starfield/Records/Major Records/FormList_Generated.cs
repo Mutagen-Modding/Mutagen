@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IFormList :
+        IConstructibleObjectTarget,
         IFormListGetter,
         ILoquiObjectSetter<IFormListInternal>,
         IStarfieldMajorRecordInternal,
@@ -435,6 +436,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFormListGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         ILoquiObject<IFormListGetter>,
         IMapsToGetter<IFormListGetter>,
         IVoiceTypeOrListGetter

@@ -3,5 +3,6 @@
   <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
   </Object>
 </Loqui>

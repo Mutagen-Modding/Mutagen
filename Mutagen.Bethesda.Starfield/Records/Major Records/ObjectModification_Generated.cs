@@ -417,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IObjectModification :
+        IConstructibleObjectTarget,
         ILoquiObjectSetter<IObjectModificationInternal>,
         IObjectModificationGetter,
         IStarfieldMajorRecordInternal
@@ -434,6 +435,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IObjectModificationGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IConstructibleObjectTargetGetter,
         ILoquiObject<IObjectModificationGetter>,
         IMapsToGetter<IObjectModificationGetter>
     {

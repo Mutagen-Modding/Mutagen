@@ -24,6 +24,24 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             ActionRecord_Registration.Instance,
         });
         dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
+        dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            ActionRecord_Registration.Instance,
+            Activator_Registration.Instance,
+            Container_Registration.Instance,
+            FormList_Registration.Instance,
+            Furniture_Registration.Instance,
+            GenericBaseForm_Registration.Instance,
+            Ingestible_Registration.Instance,
+            MiscItem_Registration.Instance,
+            MoveableStatic_Registration.Instance,
+            Npc_Registration.Instance,
+            ObjectModification_Registration.Instance,
+            PackIn_Registration.Instance,
+            Static_Registration.Instance,
+            Terminal_Registration.Instance,
+        });
+        dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
         dict[typeof(IStaticTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Activator_Registration.Instance,

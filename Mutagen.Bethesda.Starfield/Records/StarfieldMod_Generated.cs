@@ -87,6 +87,7 @@ namespace Mutagen.Bethesda.Starfield
             _Activators_Object = new StarfieldGroup<Activator>(this);
             _CurveTables_Object = new StarfieldGroup<CurveTable>(this);
             _Curve3Ds_Object = new StarfieldGroup<Curve3D>(this);
+            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
@@ -296,6 +297,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<ICurve3DGetter> IStarfieldModGetter.Curve3Ds => _Curve3Ds_Object;
         #endregion
+        #region ConstructibleObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ConstructibleObject> _ConstructibleObjects_Object;
+        public StarfieldGroup<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IConstructibleObjectGetter> IStarfieldModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
+        #endregion
         #region StaticCollections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<StaticCollection> _StaticCollections_Object;
@@ -467,6 +475,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Activators = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.CurveTables = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Curve3Ds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -512,6 +521,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Activators,
                 TItem CurveTables,
                 TItem Curve3Ds,
+                TItem ConstructibleObjects,
                 TItem StaticCollections,
                 TItem BendableSplines,
                 TItem LeveledItems,
@@ -555,6 +565,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Activators = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Activators, new StarfieldGroup.Mask<TItem>(Activators));
                 this.CurveTables = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CurveTables, new StarfieldGroup.Mask<TItem>(CurveTables));
                 this.Curve3Ds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Curve3Ds, new StarfieldGroup.Mask<TItem>(Curve3Ds));
+                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollections, new StarfieldGroup.Mask<TItem>(StaticCollections));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledItems, new StarfieldGroup.Mask<TItem>(LeveledItems));
@@ -608,6 +619,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Activators { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CurveTables { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Curve3Ds { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollections { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledItems { get; set; }
@@ -662,6 +674,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Activators, rhs.Activators)) return false;
                 if (!object.Equals(this.CurveTables, rhs.CurveTables)) return false;
                 if (!object.Equals(this.Curve3Ds, rhs.Curve3Ds)) return false;
+                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
@@ -709,6 +722,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Activators);
                 hash.Add(this.CurveTables);
                 hash.Add(this.Curve3Ds);
+                hash.Add(this.ConstructibleObjects);
                 hash.Add(this.StaticCollections);
                 hash.Add(this.BendableSplines);
                 hash.Add(this.LeveledItems);
@@ -866,6 +880,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Curve3Ds.Overall)) return false;
                     if (this.Curve3Ds.Specific != null && !this.Curve3Ds.Specific.All(eval)) return false;
+                }
+                if (ConstructibleObjects != null)
+                {
+                    if (!eval(this.ConstructibleObjects.Overall)) return false;
+                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
                 }
                 if (StaticCollections != null)
                 {
@@ -1084,6 +1103,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Curve3Ds.Overall)) return true;
                     if (this.Curve3Ds.Specific != null && this.Curve3Ds.Specific.Any(eval)) return true;
                 }
+                if (ConstructibleObjects != null)
+                {
+                    if (eval(this.ConstructibleObjects.Overall)) return true;
+                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
+                }
                 if (StaticCollections != null)
                 {
                     if (eval(this.StaticCollections.Overall)) return true;
@@ -1200,6 +1224,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Activators = this.Activators == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
                 obj.CurveTables = this.CurveTables == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CurveTables.Overall), this.CurveTables.Specific?.Translate(eval));
                 obj.Curve3Ds = this.Curve3Ds == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Curve3Ds.Overall), this.Curve3Ds.Specific?.Translate(eval));
+                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
@@ -1341,6 +1366,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Curve3Ds?.Print(sb);
                     }
+                    if (printMask?.ConstructibleObjects?.Overall ?? true)
+                    {
+                        ConstructibleObjects?.Print(sb);
+                    }
                     if (printMask?.StaticCollections?.Overall ?? true)
                     {
                         StaticCollections?.Print(sb);
@@ -1452,6 +1481,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Activator.ErrorMask>?>? Activators;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<CurveTable.ErrorMask>?>? CurveTables;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Curve3D.ErrorMask>?>? Curve3Ds;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
@@ -1529,6 +1559,8 @@ namespace Mutagen.Bethesda.Starfield
                         return CurveTables;
                     case StarfieldMod_FieldIndex.Curve3Ds:
                         return Curve3Ds;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        return ConstructibleObjects;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         return StaticCollections;
                     case StarfieldMod_FieldIndex.BendableSplines:
@@ -1649,6 +1681,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Curve3Ds:
                         this.Curve3Ds = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Curve3D.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = new MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>(ex, null);
@@ -1786,6 +1821,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Curve3Ds:
                         this.Curve3Ds = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Curve3D.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = (MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>?)obj;
                         break;
@@ -1866,6 +1904,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Activators != null) return true;
                 if (CurveTables != null) return true;
                 if (Curve3Ds != null) return true;
+                if (ConstructibleObjects != null) return true;
                 if (StaticCollections != null) return true;
                 if (BendableSplines != null) return true;
                 if (LeveledItems != null) return true;
@@ -1933,6 +1972,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activators?.Print(sb);
                 CurveTables?.Print(sb);
                 Curve3Ds?.Print(sb);
+                ConstructibleObjects?.Print(sb);
                 StaticCollections?.Print(sb);
                 BendableSplines?.Print(sb);
                 LeveledItems?.Print(sb);
@@ -1983,6 +2023,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Activators = this.Activators.Combine(rhs.Activators, (l, r) => l.Combine(r));
                 ret.CurveTables = this.CurveTables.Combine(rhs.CurveTables, (l, r) => l.Combine(r));
                 ret.Curve3Ds = this.Curve3Ds.Combine(rhs.Curve3Ds, (l, r) => l.Combine(r));
+                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
@@ -2048,6 +2089,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Activator.TranslationMask>? Activators;
             public StarfieldGroup.TranslationMask<CurveTable.TranslationMask>? CurveTables;
             public StarfieldGroup.TranslationMask<Curve3D.TranslationMask>? Curve3Ds;
+            public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
             public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
             public StarfieldGroup.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
@@ -2114,6 +2156,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Activators != null ? Activators.OnOverall : DefaultOn, Activators?.GetCrystal()));
                 ret.Add((CurveTables != null ? CurveTables.OnOverall : DefaultOn, CurveTables?.GetCrystal()));
                 ret.Add((Curve3Ds != null ? Curve3Ds.OnOverall : DefaultOn, Curve3Ds?.GetCrystal()));
+                ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
                 ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
@@ -2198,6 +2241,7 @@ namespace Mutagen.Bethesda.Starfield
             _Activators_Object = new StarfieldGroup<Activator>(this);
             _CurveTables_Object = new StarfieldGroup<CurveTable>(this);
             _Curve3Ds_Object = new StarfieldGroup<Curve3D>(this);
+            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
@@ -2323,6 +2367,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Curve3Ds.RecordCache.Set(rhsMod.Curve3Ds.RecordCache.Items);
             }
+            if (mask?.ConstructibleObjects ?? true)
+            {
+                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
+            }
             if (mask?.StaticCollections ?? true)
             {
                 this.StaticCollections.RecordCache.Set(rhsMod.StaticCollections.RecordCache.Items);
@@ -2419,6 +2467,7 @@ namespace Mutagen.Bethesda.Starfield
             count += Activators.RecordCache.Count > 0 ? 1 : default(uint);
             count += CurveTables.RecordCache.Count > 0 ? 1 : default(uint);
             count += Curve3Ds.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
             count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
@@ -2716,6 +2765,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Activator> Activators { get; }
         new StarfieldGroup<CurveTable> CurveTables { get; }
         new StarfieldGroup<Curve3D> Curve3Ds { get; }
+        new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
         new StarfieldGroup<StaticCollection> StaticCollections { get; }
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
         new StarfieldGroup<LeveledItem> LeveledItems { get; }
@@ -2777,6 +2827,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IActivatorGetter> Activators { get; }
         IStarfieldGroupGetter<ICurveTableGetter> CurveTables { get; }
         IStarfieldGroupGetter<ICurve3DGetter> Curve3Ds { get; }
+        IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
         IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections { get; }
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
         IStarfieldGroupGetter<ILeveledItemGetter> LeveledItems { get; }
@@ -3389,21 +3440,22 @@ namespace Mutagen.Bethesda.Starfield
         Activators = 24,
         CurveTables = 25,
         Curve3Ds = 26,
-        StaticCollections = 27,
-        BendableSplines = 28,
-        LeveledItems = 29,
-        Weathers = 30,
-        AnimatedObjects = 31,
-        Debris = 32,
-        DefaultObjects = 33,
-        Outfits = 34,
-        AimModels = 35,
-        AttractionRules = 36,
-        BiomeSwaps = 37,
-        Planets = 38,
-        SurfacePatternStyles = 39,
-        LegendaryItems = 40,
-        ActorValueModulations = 41,
+        ConstructibleObjects = 27,
+        StaticCollections = 28,
+        BendableSplines = 29,
+        LeveledItems = 30,
+        Weathers = 31,
+        AnimatedObjects = 32,
+        Debris = 33,
+        DefaultObjects = 34,
+        Outfits = 35,
+        AimModels = 36,
+        AttractionRules = 37,
+        BiomeSwaps = 38,
+        Planets = 39,
+        SurfacePatternStyles = 40,
+        LegendaryItems = 41,
+        ActorValueModulations = 42,
     }
     #endregion
 
@@ -3414,9 +3466,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 42;
+        public const ushort AdditionalFieldCount = 43;
 
-        public const ushort FieldCount = 42;
+        public const ushort FieldCount = 43;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -3509,6 +3561,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Activators.Clear();
             item.CurveTables.Clear();
             item.Curve3Ds.Clear();
+            item.ConstructibleObjects.Clear();
             item.StaticCollections.Clear();
             item.BendableSplines.Clear();
             item.LeveledItems.Clear();
@@ -3548,6 +3601,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ObjectEffects.RemapLinks(mapping);
             obj.Spells.RemapLinks(mapping);
             obj.Activators.RemapLinks(mapping);
+            obj.ConstructibleObjects.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
             obj.LeveledItems.RemapLinks(mapping);
@@ -3618,6 +3672,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Activators.Remove(keys);
             obj.CurveTables.Remove(keys);
             obj.Curve3Ds.Remove(keys);
+            obj.ConstructibleObjects.Remove(keys);
             obj.StaticCollections.Remove(keys);
             obj.BendableSplines.Remove(keys);
             obj.LeveledItems.Remove(keys);
@@ -3880,6 +3935,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    obj.ConstructibleObjects.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "StaticCollection":
                 case "IStaticCollectionGetter":
                 case "IStaticCollection":
@@ -4003,6 +4066,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IConstructibleObjectTarget":
+                case "IConstructibleObjectTargetGetter":
+                    Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IStaticTarget":
                 case "IStaticTargetGetter":
@@ -4136,6 +4204,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.ConstructibleObjects is IAssetLinkContainer ConstructibleObjectslinkCont)
+            {
+                foreach (var item in ConstructibleObjectslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.StaticCollections is IAssetLinkContainer StaticCollectionslinkCont)
             {
                 foreach (var item in StaticCollectionslinkCont.EnumerateListedAssetLinks())
@@ -4220,6 +4295,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LandscapeTextures.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ProjectedDecals.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Activators.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.StaticCollections.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BendableSplines.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LeveledItems.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -4300,6 +4376,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Activators = MaskItemExt.Factory(item.Activators.GetEqualsMask(rhs.Activators, include), include);
             ret.CurveTables = MaskItemExt.Factory(item.CurveTables.GetEqualsMask(rhs.CurveTables, include), include);
             ret.Curve3Ds = MaskItemExt.Factory(item.Curve3Ds.GetEqualsMask(rhs.Curve3Ds, include), include);
+            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
@@ -4466,6 +4543,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Curve3Ds?.Overall ?? true)
             {
                 item.Curve3Ds?.Print(sb, "Curve3Ds");
+            }
+            if (printMask?.ConstructibleObjects?.Overall ?? true)
+            {
+                item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
             }
             if (printMask?.StaticCollections?.Overall ?? true)
             {
@@ -4752,6 +4833,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isCurve3DsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
+                {
+                    if (!object.Equals(lhsConstructibleObjects, rhsConstructibleObjects)) return false;
+                }
+                else if (!isConstructibleObjectsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.StaticCollections) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.StaticCollections, rhs.StaticCollections, out var lhsStaticCollections, out var rhsStaticCollections, out var isStaticCollectionsEqual))
@@ -4905,6 +4994,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Activators);
             hash.Add(item.CurveTables);
             hash.Add(item.Curve3Ds);
+            hash.Add(item.ConstructibleObjects);
             hash.Add(item.StaticCollections);
             hash.Add(item.BendableSplines);
             hash.Add(item.LeveledItems);
@@ -5068,6 +5158,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "ICurve3D":
                 case "ICurve3DInternal":
                     return obj.Curve3Ds;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    return obj.ConstructibleObjects;
                 case "StaticCollection":
                 case "IStaticCollectionGetter":
                 case "IStaticCollection":
@@ -5168,7 +5263,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[41];
+            Stream[] outputStreams = new Stream[42];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5196,21 +5291,22 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Activators, 23, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.CurveTables, 24, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Curve3Ds, 25, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 33, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 34, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 35, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 36, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 37, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 38, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 39, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 26, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 34, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 35, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 36, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 38, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 39, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 41, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5334,6 +5430,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Activators.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -5489,6 +5589,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Curve3Ds.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5817,6 +5921,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "ICurve3D":
                 case "ICurve3DInternal":
                     foreach (var item in obj.Curve3Ds.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -6211,6 +6324,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Curve3Ds,
                 groupGetter: (m) => m.Curve3Ds))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                srcGroup: obj.ConstructibleObjects,
+                type: typeof(IConstructibleObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ConstructibleObjects,
+                groupGetter: (m) => m.ConstructibleObjects))
             {
                 yield return item;
             }
@@ -6744,6 +6866,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                        srcGroup: obj.ConstructibleObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ConstructibleObjects,
+                        groupGetter: (m) => m.ConstructibleObjects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "StaticCollection":
                 case "IStaticCollectionGetter":
                 case "IStaticCollection":
@@ -7044,6 +7180,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.Activators is IAssetLinkContainerGetter ActivatorslinkCont)
                 {
                     foreach (var item in ActivatorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
+                {
+                    foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -7661,6 +7804,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ConstructibleObjects);
+                try
+                {
+                    item.ConstructibleObjects.DeepCopyIn(
+                        rhs: rhs.ConstructibleObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ConstructibleObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.StaticCollections) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.StaticCollections);
@@ -8077,6 +8240,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool Activators;
         public bool CurveTables;
         public bool Curve3Ds;
+        public bool ConstructibleObjects;
         public bool StaticCollections;
         public bool BendableSplines;
         public bool LeveledItems;
@@ -8123,6 +8287,7 @@ namespace Mutagen.Bethesda.Starfield
             Activators = defaultValue;
             CurveTables = defaultValue;
             Curve3Ds = defaultValue;
+            ConstructibleObjects = defaultValue;
             StaticCollections = defaultValue;
             BendableSplines = defaultValue;
             LeveledItems = defaultValue;
@@ -8451,6 +8616,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)Curve3DsItem).BinaryWriteTranslator).Write<ICurve3DGetter>(
                         item: Curve3DsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ConstructibleObjects ?? true)
+            {
+                var ConstructibleObjectsItem = item.ConstructibleObjects;
+                if (ConstructibleObjectsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
+                        item: ConstructibleObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9044,6 +9220,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Curve3Ds;
                 }
+                case RecordTypeInts.COBJ:
+                {
+                    if (importMask?.ConstructibleObjects ?? true)
+                    {
+                        item.ConstructibleObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
+                }
                 case RecordTypeInts.SCOL:
                 {
                     if (importMask?.StaticCollections ?? true)
@@ -9554,6 +9744,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<ICurve3DGetter>? _Curve3Ds => _Curve3DsLocations != null ? StarfieldGroupBinaryOverlay<ICurve3DGetter>.StarfieldGroupFactory(_stream, _Curve3DsLocations, _package) : default;
         public IStarfieldGroupGetter<ICurve3DGetter> Curve3Ds => _Curve3Ds ?? new StarfieldGroup<Curve3D>(this);
         #endregion
+        #region ConstructibleObjects
+        private List<RangeInt64>? _ConstructibleObjectsLocations;
+        private IStarfieldGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? StarfieldGroupBinaryOverlay<IConstructibleObjectGetter>.StarfieldGroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
+        public IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new StarfieldGroup<ConstructibleObject>(this);
+        #endregion
         #region StaticCollections
         private List<RangeInt64>? _StaticCollectionsLocations;
         private IStarfieldGroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? StarfieldGroupBinaryOverlay<IStaticCollectionGetter>.StarfieldGroupFactory(_stream, _StaticCollectionsLocations, _package) : default;
@@ -9872,6 +10067,12 @@ namespace Mutagen.Bethesda.Starfield
                     _Curve3DsLocations ??= new();
                     _Curve3DsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Curve3Ds;
+                }
+                case RecordTypeInts.COBJ:
+                {
+                    _ConstructibleObjectsLocations ??= new();
+                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.SCOL:
                 {

@@ -91,6 +91,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ConditionGlobal_Registration.Instance,
             ConditionRecord_Registration.Instance,
             ConstructibleObject_Registration.Instance,
+            ConstructibleObjectComponent_Registration.Instance,
+            ConstructibleRequiredPerk_Registration.Instance,
             ContactShadowComponent_Registration.Instance,
             ContactShadowComponentItem_Registration.Instance,
             Container_Registration.Instance,
