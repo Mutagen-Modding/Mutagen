@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Version
-        public static readonly Single VersionDefault = 1f;
+        public static readonly Single VersionDefault = 0.96f;
         public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords
