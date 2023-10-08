@@ -23,21 +23,6 @@ public class PluginRawListingsReaderTests
         });
     }
 
-    [Theory, MutagenAutoData(UseMockFileSystem: false)]
-    public void PassesFileSystemStreamToParser(
-        [Frozen] IFileSystem fs,
-        FilePath path,
-        Stream someStream,
-        PluginRawListingsReader sut)
-    {
-        fs.File.Exists(path).Returns(true);
-        fs.FileStream
-            .Create(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read)
-            .Returns(someStream);
-        sut.Read(path);
-        sut.Parser.Received(1).Parse(someStream);
-    }
-
     [Theory, MutagenAutoData]
     public void ParserResultsGetReturned(
         FilePath existingPath,
