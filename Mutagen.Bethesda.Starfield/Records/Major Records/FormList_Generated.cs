@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -22,6 +26,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -53,6 +58,84 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IFormListGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IFormListGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> _Items = new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items
+        {
+            get => this._Items;
+            init => this._Items = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> IFormListGetter.Items => _Items;
+        #endregion
+
+        #endregion
+        #region ConditionalEntries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<FormListConditionalEntry> _ConditionalEntries = new ExtendedList<FormListConditionalEntry>();
+        public ExtendedList<FormListConditionalEntry> ConditionalEntries
+        {
+            get => this._ConditionalEntries;
+            init => this._ConditionalEntries = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormListConditionalEntryGetter> IFormListGetter.ConditionalEntries => _ConditionalEntries;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -78,6 +161,10 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -87,7 +174,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem Name,
+                TItem Items,
+                TItem ConditionalEntries)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +188,10 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Items = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Items, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ConditionalEntries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>(ConditionalEntries, Enumerable.Empty<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -105,6 +200,13 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Items;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FormListConditionalEntry.Mask<TItem>?>>?>? ConditionalEntries;
             #endregion
 
             #region Equals
@@ -118,11 +220,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
+                if (!object.Equals(this.ConditionalEntries, rhs.ConditionalEntries)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.Items);
+                hash.Add(this.ConditionalEntries);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +243,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ConditionalEntries != null)
+                {
+                    if (!eval(this.ConditionalEntries.Overall)) return false;
+                    if (this.ConditionalEntries.Specific != null)
+                    {
+                        foreach (var item in this.ConditionalEntries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -141,6 +287,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ConditionalEntries != null)
+                {
+                    if (eval(this.ConditionalEntries.Overall)) return true;
+                    if (this.ConditionalEntries.Specific != null)
+                    {
+                        foreach (var item in this.ConditionalEntries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -156,6 +338,51 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Items.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ConditionalEntries != null)
+                {
+                    obj.ConditionalEntries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>>?>(eval(this.ConditionalEntries.Overall), Enumerable.Empty<MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>>());
+                    if (ConditionalEntries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>>();
+                        obj.ConditionalEntries.Specific = l;
+                        foreach (var item in ConditionalEntries.Specific)
+                        {
+                            MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FormListConditionalEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -174,6 +401,69 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(FormList.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
+                    {
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ConditionalEntries?.Overall ?? true)
+                        && ConditionalEntries is {} ConditionalEntriesItem)
+                    {
+                        sb.AppendLine("ConditionalEntries =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionalEntriesItem.Overall);
+                            if (ConditionalEntriesItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionalEntriesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -184,12 +474,27 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Items;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>? ConditionalEntries;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Components:
+                        return Components;
+                    case FormList_FieldIndex.Name:
+                        return Name;
+                    case FormList_FieldIndex.Items:
+                        return Items;
+                    case FormList_FieldIndex.ConditionalEntries:
+                        return ConditionalEntries;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +505,18 @@ namespace Mutagen.Bethesda.Starfield
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case FormList_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case FormList_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FormList_FieldIndex.ConditionalEntries:
+                        this.ConditionalEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +528,18 @@ namespace Mutagen.Bethesda.Starfield
                 FormList_FieldIndex enu = (FormList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormList_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case FormList_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case FormList_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FormList_FieldIndex.ConditionalEntries:
+                        this.ConditionalEntries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +549,10 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (Items != null) return true;
+                if (ConditionalEntries != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +579,65 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                if (Items is {} ItemsItem)
+                {
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ConditionalEntries is {} ConditionalEntriesItem)
+                {
+                    sb.AppendLine("ConditionalEntries =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionalEntriesItem.Overall);
+                        if (ConditionalEntriesItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionalEntriesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -254,6 +646,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Items = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.ConditionalEntries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FormListConditionalEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ConditionalEntries?.Overall, rhs.ConditionalEntries?.Overall), Noggog.ExceptionExt.Combine(this.ConditionalEntries?.Specific, rhs.ConditionalEntries?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +671,33 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public bool Items;
+            public FormListConditionalEntry.TranslationMask? ConditionalEntries;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Items = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Items, null));
+                ret.Add((ConditionalEntries == null ? DefaultOn : !ConditionalEntries.GetCrystal().CopyNothing, ConditionalEntries?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -295,6 +709,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = FormList_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FormListCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FormListSetterCommon.Instance.RemapLinks(this, mapping);
         public FormList(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -338,6 +754,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IFormList);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => FormListCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => FormListSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => FormListSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => FormListSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -417,12 +837,25 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IFormList :
+        IAssetLinkContainer,
         IConstructibleObjectTarget,
+        IFormLinkContainer,
         IFormListGetter,
         ILoquiObjectSetter<IFormListInternal>,
+        INamed,
+        INamedRequired,
         IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
         IVoiceTypeOrList
     {
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new ExtendedList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; }
+        new ExtendedList<FormListConditionalEntry> ConditionalEntries { get; }
     }
 
     public partial interface IFormListInternal :
@@ -435,13 +868,28 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.FLST)]
     public partial interface IFormListGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
+        IFormLinkContainerGetter,
         ILoquiObject<IFormListGetter>,
         IMapsToGetter<IFormListGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
         IVoiceTypeOrListGetter
     {
         static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; }
+        IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; }
 
     }
 
@@ -618,6 +1066,10 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        Name = 8,
+        Items = 9,
+        ConditionalEntries = 10,
     }
     #endregion
 
@@ -628,9 +1080,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(FormList.Mask<>);
 
@@ -660,8 +1112,19 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.FLST);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.FLST);
+            var all = RecordCollection.Factory(
+                RecordTypes.FLST,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.LNAM,
+                RecordTypes.INAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FormListBinaryWriteTranslation);
         #region Interface
@@ -703,6 +1166,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFormListInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.Name = default;
+            item.Items.Clear();
+            item.ConditionalEntries.Clear();
             base.Clear(item);
         }
         
@@ -720,6 +1187,33 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IFormList obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Items.RemapLinks(mapping);
+            obj.ConditionalEntries.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFormList obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IFormList obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -787,6 +1281,19 @@ namespace Mutagen.Bethesda.Starfield
             FormList.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ConditionalEntries = item.ConditionalEntries.CollectionEqualsHelper(
+                rhs.ConditionalEntries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -836,6 +1343,53 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Items?.Overall ?? true)
+            {
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Items)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.ConditionalEntries?.Overall ?? true)
+            {
+                sb.AppendLine("ConditionalEntries =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.ConditionalEntries)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static FormList_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -886,6 +1440,22 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)FormList_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)FormList_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FormList_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FormList_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FormList_FieldIndex.ConditionalEntries) ?? true))
+            {
+                if (!lhs.ConditionalEntries.SequenceEqual(rhs.ConditionalEntries, (l, r) => ((FormListConditionalEntryCommon)((IFormListConditionalEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)FormList_FieldIndex.ConditionalEntries)))) return false;
+            }
             return true;
         }
         
@@ -914,6 +1484,13 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IFormListGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Items);
+            hash.Add(item.ConditionalEntries);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -942,6 +1519,36 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Items)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.ConditionalEntries.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFormListGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1017,6 +1624,77 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)FormList_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.Items) ?? true))
+            {
+                errorMask?.PushIndex((int)FormList_FieldIndex.Items);
+                try
+                {
+                    item.Items.SetTo(
+                        rhs.Items
+                        .Select(r => (IFormLinkGetter<IStarfieldMajorRecordGetter>)new FormLink<IStarfieldMajorRecordGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FormList_FieldIndex.ConditionalEntries) ?? true))
+            {
+                errorMask?.PushIndex((int)FormList_FieldIndex.ConditionalEntries);
+                try
+                {
+                    item.ConditionalEntries.SetTo(
+                        rhs.ConditionalEntries
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1165,6 +1843,55 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly FormListBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IFormListGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IStarfieldMajorRecordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Items,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IStarfieldMajorRecordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormListConditionalEntryGetter>.Instance.Write(
+                writer: writer,
+                items: item.ConditionalEntries,
+                transl: (MutagenWriter subWriter, IFormListConditionalEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((FormListConditionalEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IFormListGetter item,
@@ -1181,10 +1908,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1234,6 +1963,70 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly FormListBinaryCreateTranslation Instance = new FormListBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FLST;
+        public static ParseResult FillBinaryRecordTypes(
+            IFormListInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)FormList_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)FormList_FieldIndex.Name;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    item.Items.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IStarfieldMajorRecordGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.LNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)FormList_FieldIndex.Items;
+                }
+                case RecordTypeInts.INAM:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    item.ConditionalEntries.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FormListConditionalEntry>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: FormListConditionalEntry_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: FormListConditionalEntry.TryCreateFromBinary));
+                    return (int)FormList_FieldIndex.ConditionalEntries;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1266,6 +2059,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => FormListCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => FormListCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FormListBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1280,6 +2075,21 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFormList);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Items { get; private set; } = Array.Empty<IFormLinkGetter<IStarfieldMajorRecordGetter>>();
+        public IReadOnlyList<IFormListConditionalEntryGetter> ConditionalEntries { get; private set; } = Array.Empty<IFormListConditionalEntryGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1337,6 +2147,68 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)FormList_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)FormList_FieldIndex.Name;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    this.Items = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IStarfieldMajorRecordGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)FormList_FieldIndex.Items;
+                }
+                case RecordTypeInts.INAM:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    this.ConditionalEntries = this.ParseRepeatedTypelessSubrecord<IFormListConditionalEntryGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: FormListConditionalEntry_Registration.TriggerSpecs,
+                        factory: FormListConditionalEntryBinaryOverlay.FormListConditionalEntryFactory);
+                    return (int)FormList_FieldIndex.ConditionalEntries;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

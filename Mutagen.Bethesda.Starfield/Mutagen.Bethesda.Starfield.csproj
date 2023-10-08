@@ -5048,5 +5048,8 @@
       <DependentUpon>ConstructibleObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IConstructibleObjectTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\FormListConditionalEntry_Generated.cs">
+      <DependentUpon>FormList.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

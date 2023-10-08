@@ -39,6 +39,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DamageType
 - FaceMorphItem
 - Faction
+- FormList
 - FullNameComponent
 - HeadPart
 - Keyword
@@ -120,6 +121,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### FaceMorphItem
 - INamed
 ### Faction
+- INamed
+### FormList
 - INamed
 ### FullNameComponent
 - INamed

@@ -92,6 +92,7 @@ namespace Mutagen.Bethesda.Starfield
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
+            _FormLists_Object = new StarfieldGroup<FormList>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -332,6 +333,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IWeatherGetter> IStarfieldModGetter.Weathers => _Weathers_Object;
         #endregion
+        #region FormLists
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<FormList> _FormLists_Object;
+        public StarfieldGroup<FormList> FormLists => _FormLists_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IFormListGetter> IStarfieldModGetter.FormLists => _FormLists_Object;
+        #endregion
         #region AnimatedObjects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StarfieldGroup<AnimatedObject> _AnimatedObjects_Object;
@@ -480,6 +488,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -526,6 +535,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem BendableSplines,
                 TItem LeveledItems,
                 TItem Weathers,
+                TItem FormLists,
                 TItem AnimatedObjects,
                 TItem Debris,
                 TItem DefaultObjects,
@@ -570,6 +580,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledItems, new StarfieldGroup.Mask<TItem>(LeveledItems));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weathers, new StarfieldGroup.Mask<TItem>(Weathers));
+                this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FormLists, new StarfieldGroup.Mask<TItem>(FormLists));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObjects, new StarfieldGroup.Mask<TItem>(AnimatedObjects));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
@@ -624,6 +635,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weathers { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
@@ -679,6 +691,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
                 if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+                if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 if (!object.Equals(this.Debris, rhs.Debris)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
@@ -727,6 +740,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.BendableSplines);
                 hash.Add(this.LeveledItems);
                 hash.Add(this.Weathers);
+                hash.Add(this.FormLists);
                 hash.Add(this.AnimatedObjects);
                 hash.Add(this.Debris);
                 hash.Add(this.DefaultObjects);
@@ -905,6 +919,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Weathers.Overall)) return false;
                     if (this.Weathers.Specific != null && !this.Weathers.Specific.All(eval)) return false;
+                }
+                if (FormLists != null)
+                {
+                    if (!eval(this.FormLists.Overall)) return false;
+                    if (this.FormLists.Specific != null && !this.FormLists.Specific.All(eval)) return false;
                 }
                 if (AnimatedObjects != null)
                 {
@@ -1128,6 +1147,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Weathers.Overall)) return true;
                     if (this.Weathers.Specific != null && this.Weathers.Specific.Any(eval)) return true;
                 }
+                if (FormLists != null)
+                {
+                    if (eval(this.FormLists.Overall)) return true;
+                    if (this.FormLists.Specific != null && this.FormLists.Specific.Any(eval)) return true;
+                }
                 if (AnimatedObjects != null)
                 {
                     if (eval(this.AnimatedObjects.Overall)) return true;
@@ -1229,6 +1253,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
                 obj.Weathers = this.Weathers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
+                obj.FormLists = this.FormLists == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
                 obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
@@ -1386,6 +1411,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Weathers?.Print(sb);
                     }
+                    if (printMask?.FormLists?.Overall ?? true)
+                    {
+                        FormLists?.Print(sb);
+                    }
                     if (printMask?.AnimatedObjects?.Overall ?? true)
                     {
                         AnimatedObjects?.Print(sb);
@@ -1486,6 +1515,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
@@ -1569,6 +1599,8 @@ namespace Mutagen.Bethesda.Starfield
                         return LeveledItems;
                     case StarfieldMod_FieldIndex.Weathers:
                         return Weathers;
+                    case StarfieldMod_FieldIndex.FormLists:
+                        return FormLists;
                     case StarfieldMod_FieldIndex.AnimatedObjects:
                         return AnimatedObjects;
                     case StarfieldMod_FieldIndex.Debris:
@@ -1696,6 +1728,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.FormLists:
+                        this.FormLists = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>(ex, null);
@@ -1836,6 +1871,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.FormLists:
+                        this.FormLists = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.AnimatedObjects:
                         this.AnimatedObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>?)obj;
                         break;
@@ -1909,6 +1947,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (BendableSplines != null) return true;
                 if (LeveledItems != null) return true;
                 if (Weathers != null) return true;
+                if (FormLists != null) return true;
                 if (AnimatedObjects != null) return true;
                 if (Debris != null) return true;
                 if (DefaultObjects != null) return true;
@@ -1977,6 +2016,7 @@ namespace Mutagen.Bethesda.Starfield
                 BendableSplines?.Print(sb);
                 LeveledItems?.Print(sb);
                 Weathers?.Print(sb);
+                FormLists?.Print(sb);
                 AnimatedObjects?.Print(sb);
                 Debris?.Print(sb);
                 DefaultObjects?.Print(sb);
@@ -2028,6 +2068,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
                 ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
+                ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
@@ -2094,6 +2135,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
             public StarfieldGroup.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
             public StarfieldGroup.TranslationMask<Weather.TranslationMask>? Weathers;
+            public StarfieldGroup.TranslationMask<FormList.TranslationMask>? FormLists;
             public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
@@ -2161,6 +2203,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
                 ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
                 ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
+                ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
                 ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
@@ -2246,6 +2289,7 @@ namespace Mutagen.Bethesda.Starfield
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
+            _FormLists_Object = new StarfieldGroup<FormList>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
@@ -2387,6 +2431,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
             }
+            if (mask?.FormLists ?? true)
+            {
+                this.FormLists.RecordCache.Set(rhsMod.FormLists.RecordCache.Items);
+            }
             if (mask?.AnimatedObjects ?? true)
             {
                 this.AnimatedObjects.RecordCache.Set(rhsMod.AnimatedObjects.RecordCache.Items);
@@ -2472,6 +2520,7 @@ namespace Mutagen.Bethesda.Starfield
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
             count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
@@ -2770,6 +2819,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
         new StarfieldGroup<LeveledItem> LeveledItems { get; }
         new StarfieldGroup<Weather> Weathers { get; }
+        new StarfieldGroup<FormList> FormLists { get; }
         new StarfieldGroup<AnimatedObject> AnimatedObjects { get; }
         new StarfieldGroup<Debris> Debris { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
@@ -2832,6 +2882,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
         IStarfieldGroupGetter<ILeveledItemGetter> LeveledItems { get; }
         IStarfieldGroupGetter<IWeatherGetter> Weathers { get; }
+        IStarfieldGroupGetter<IFormListGetter> FormLists { get; }
         IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
@@ -3445,17 +3496,18 @@ namespace Mutagen.Bethesda.Starfield
         BendableSplines = 29,
         LeveledItems = 30,
         Weathers = 31,
-        AnimatedObjects = 32,
-        Debris = 33,
-        DefaultObjects = 34,
-        Outfits = 35,
-        AimModels = 36,
-        AttractionRules = 37,
-        BiomeSwaps = 38,
-        Planets = 39,
-        SurfacePatternStyles = 40,
-        LegendaryItems = 41,
-        ActorValueModulations = 42,
+        FormLists = 32,
+        AnimatedObjects = 33,
+        Debris = 34,
+        DefaultObjects = 35,
+        Outfits = 36,
+        AimModels = 37,
+        AttractionRules = 38,
+        BiomeSwaps = 39,
+        Planets = 40,
+        SurfacePatternStyles = 41,
+        LegendaryItems = 42,
+        ActorValueModulations = 43,
     }
     #endregion
 
@@ -3466,9 +3518,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 43;
+        public const ushort AdditionalFieldCount = 44;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -3566,6 +3618,7 @@ namespace Mutagen.Bethesda.Starfield
             item.BendableSplines.Clear();
             item.LeveledItems.Clear();
             item.Weathers.Clear();
+            item.FormLists.Clear();
             item.AnimatedObjects.Clear();
             item.Debris.Clear();
             item.DefaultObjects.Clear();
@@ -3606,6 +3659,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.BendableSplines.RemapLinks(mapping);
             obj.LeveledItems.RemapLinks(mapping);
             obj.Weathers.RemapLinks(mapping);
+            obj.FormLists.RemapLinks(mapping);
             obj.AnimatedObjects.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
             obj.Outfits.RemapLinks(mapping);
@@ -3677,6 +3731,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.BendableSplines.Remove(keys);
             obj.LeveledItems.Remove(keys);
             obj.Weathers.Remove(keys);
+            obj.FormLists.Remove(keys);
             obj.AnimatedObjects.Remove(keys);
             obj.Debris.Remove(keys);
             obj.DefaultObjects.Remove(keys);
@@ -3975,6 +4030,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    obj.FormLists.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
@@ -4071,6 +4134,7 @@ namespace Mutagen.Bethesda.Starfield
                 case "IConstructibleObjectTargetGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IStaticTarget":
                 case "IStaticTargetGetter":
@@ -4104,6 +4168,10 @@ namespace Mutagen.Bethesda.Starfield
                 case "IAliasVoiceType":
                 case "IAliasVoiceTypeGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "IVoiceTypeOrList":
+                case "IVoiceTypeOrListGetter":
+                    Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
@@ -4238,6 +4306,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.FormLists is IAssetLinkContainer FormListslinkCont)
+            {
+                foreach (var item in FormListslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.AnimatedObjects is IAssetLinkContainer AnimatedObjectslinkCont)
             {
                 foreach (var item in AnimatedObjectslinkCont.EnumerateListedAssetLinks())
@@ -4300,6 +4375,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.BendableSplines.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LeveledItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.FormLists.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -4381,6 +4457,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
             ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
+            ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
             ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
@@ -4563,6 +4640,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Weathers?.Overall ?? true)
             {
                 item.Weathers?.Print(sb, "Weathers");
+            }
+            if (printMask?.FormLists?.Overall ?? true)
+            {
+                item.FormLists?.Print(sb, "FormLists");
             }
             if (printMask?.AnimatedObjects?.Overall ?? true)
             {
@@ -4873,6 +4954,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isWeathersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FormLists) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FormLists, rhs.FormLists, out var lhsFormLists, out var rhsFormLists, out var isFormListsEqual))
+                {
+                    if (!object.Equals(lhsFormLists, rhsFormLists)) return false;
+                }
+                else if (!isFormListsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
@@ -4999,6 +5088,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.BendableSplines);
             hash.Add(item.LeveledItems);
             hash.Add(item.Weathers);
+            hash.Add(item.FormLists);
             hash.Add(item.AnimatedObjects);
             hash.Add(item.Debris);
             hash.Add(item.DefaultObjects);
@@ -5183,6 +5273,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     return obj.Weathers;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    return obj.FormLists;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
@@ -5263,7 +5358,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[42];
+            Stream[] outputStreams = new Stream[43];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5296,17 +5391,18 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.BendableSplines, 28, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LeveledItems, 29, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Weathers, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 33, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 34, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 35, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 36, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 37, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 38, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 39, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 40, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 34, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 35, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 36, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 38, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 39, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 42, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5450,6 +5546,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Weathers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FormLists.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -5609,6 +5709,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Weathers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FormLists.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5966,6 +6070,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in obj.FormLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -6369,6 +6482,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Weathers,
                 groupGetter: (m) => m.Weathers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FormList, IFormListGetter>(
+                srcGroup: obj.FormLists,
+                type: typeof(IFormListGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.FormLists,
+                groupGetter: (m) => m.FormLists))
             {
                 yield return item;
             }
@@ -6936,6 +7058,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "FormList":
+                case "IFormListGetter":
+                case "IFormList":
+                case "IFormListInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FormList, IFormListGetter>(
+                        srcGroup: obj.FormLists,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.FormLists,
+                        groupGetter: (m) => m.FormLists))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
@@ -7215,6 +7351,13 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
+                }
+                if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
+                {
+                    foreach (var item in FormListslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
                 }
                 if (obj.AnimatedObjects is IAssetLinkContainerGetter AnimatedObjectslinkCont)
                 {
@@ -7904,6 +8047,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FormLists) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.FormLists);
+                try
+                {
+                    item.FormLists.DeepCopyIn(
+                        rhs: rhs.FormLists,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.FormLists));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.AnimatedObjects) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.AnimatedObjects);
@@ -8245,6 +8408,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool BendableSplines;
         public bool LeveledItems;
         public bool Weathers;
+        public bool FormLists;
         public bool AnimatedObjects;
         public bool Debris;
         public bool DefaultObjects;
@@ -8292,6 +8456,7 @@ namespace Mutagen.Bethesda.Starfield
             BendableSplines = defaultValue;
             LeveledItems = defaultValue;
             Weathers = defaultValue;
+            FormLists = defaultValue;
             AnimatedObjects = defaultValue;
             Debris = defaultValue;
             DefaultObjects = defaultValue;
@@ -8671,6 +8836,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
                         item: WeathersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.FormLists ?? true)
+            {
+                var FormListsItem = item.FormLists;
+                if (FormListsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FormListsItem).BinaryWriteTranslator).Write<IFormListGetter>(
+                        item: FormListsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -9290,6 +9466,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Weathers;
                 }
+                case RecordTypeInts.FLST:
+                {
+                    if (importMask?.FormLists ?? true)
+                    {
+                        item.FormLists.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.FormLists;
+                }
                 case RecordTypeInts.ANIO:
                 {
                     if (importMask?.AnimatedObjects ?? true)
@@ -9769,6 +9959,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package) : default;
         public IStarfieldGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new StarfieldGroup<Weather>(this);
         #endregion
+        #region FormLists
+        private List<RangeInt64>? _FormListsLocations;
+        private IStarfieldGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? StarfieldGroupBinaryOverlay<IFormListGetter>.StarfieldGroupFactory(_stream, _FormListsLocations, _package) : default;
+        public IStarfieldGroupGetter<IFormListGetter> FormLists => _FormLists ?? new StarfieldGroup<FormList>(this);
+        #endregion
         #region AnimatedObjects
         private List<RangeInt64>? _AnimatedObjectsLocations;
         private IStarfieldGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? StarfieldGroupBinaryOverlay<IAnimatedObjectGetter>.StarfieldGroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
@@ -10097,6 +10292,12 @@ namespace Mutagen.Bethesda.Starfield
                     _WeathersLocations ??= new();
                     _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Weathers;
+                }
+                case RecordTypeInts.FLST:
+                {
+                    _FormListsLocations ??= new();
+                    _FormListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.ANIO:
                 {

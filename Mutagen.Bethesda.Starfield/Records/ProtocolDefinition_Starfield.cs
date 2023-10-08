@@ -157,6 +157,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             ForceData_Registration.Instance,
             FormFolderKeywordList_Registration.Instance,
             FormList_Registration.Instance,
+            FormListConditionalEntry_Registration.Instance,
             FullNameComponent_Registration.Instance,
             Furniture_Registration.Instance,
             GalaxyStarData_Registration.Instance,

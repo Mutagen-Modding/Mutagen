@@ -34,6 +34,7 @@
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />
       <Group name="Weathers" refName="Weather" />
+      <Group name="FormLists" refName="FormList" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Debris" refName="Debris" />
       <Group name="DefaultObjects" refName="DefaultObject" />
