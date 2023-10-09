@@ -29,8 +29,8 @@ public class LiveLoadOrderIntegrationTests
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {
         var implicitKey = Implicits.Get(GameRelease.SkyrimSE).Listings.First();
-        var lightMasterPath = Path.Combine(dataDir.Path, TestConstants.LightMasterModKey.FileName);
-        var lightMaster2Path = Path.Combine(dataDir.Path, TestConstants.LightMasterModKey2.FileName);
+        var lightMasterPath = Path.Combine(dataDir.Path, TestConstants.LightModKey.FileName);
+        var lightMaster2Path = Path.Combine(dataDir.Path, TestConstants.LightModKey2.FileName);
         var master2Path = Path.Combine(dataDir.Path, TestConstants.MasterModKey2.FileName);
             
         fs.File.WriteAllText(lightMasterPath, string.Empty);
@@ -45,8 +45,8 @@ public class LiveLoadOrderIntegrationTests
         fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
-                TestConstants.LightMasterModKey.ToString(),
-                TestConstants.LightMasterModKey2.ToString(),
+                TestConstants.LightModKey.ToString(),
+                TestConstants.LightModKey2.ToString(),
             });
         var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE,
@@ -65,7 +65,7 @@ public class LiveLoadOrderIntegrationTests
         list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
         {
             implicitKey,
-            TestConstants.LightMasterModKey,
+            TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
             TestConstants.PluginModKey,
@@ -85,7 +85,7 @@ public class LiveLoadOrderIntegrationTests
         list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
         {
             implicitKey,
-            TestConstants.LightMasterModKey2,
+            TestConstants.LightModKey2,
             TestConstants.MasterModKey,
             TestConstants.PluginModKey,
         });
@@ -100,7 +100,7 @@ public class LiveLoadOrderIntegrationTests
         list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
         {
             implicitKey,
-            TestConstants.LightMasterModKey2,
+            TestConstants.LightModKey2,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
         });
@@ -148,7 +148,7 @@ public class LiveLoadOrderIntegrationTests
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {
         var implicitKey = Implicits.Get(GameRelease.SkyrimSE).Listings.First();
-        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightMasterModKey.FileName), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightModKey.FileName), string.Empty);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, implicitKey.FileName), string.Empty);
         fs.File.WriteAllLines(pluginPath.Path,
             new string[]
@@ -161,8 +161,8 @@ public class LiveLoadOrderIntegrationTests
         fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
-                TestConstants.LightMasterModKey.ToString(),
-                TestConstants.LightMasterModKey2.ToString(),
+                TestConstants.LightModKey.ToString(),
+                TestConstants.LightModKey2.ToString(),
             });
         var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE,
@@ -177,7 +177,7 @@ public class LiveLoadOrderIntegrationTests
         list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
         {
             implicitKey,
-            TestConstants.LightMasterModKey,
+            TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
             TestConstants.MasterModKey3,
@@ -196,7 +196,7 @@ public class LiveLoadOrderIntegrationTests
         list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
         {
             implicitKey,
-            TestConstants.LightMasterModKey,
+            TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey3,
             TestConstants.PluginModKey,
@@ -215,7 +215,7 @@ public class LiveLoadOrderIntegrationTests
         list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
         {
             implicitKey,
-            TestConstants.LightMasterModKey,
+            TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
             TestConstants.MasterModKey3,
@@ -241,8 +241,8 @@ public class LiveLoadOrderIntegrationTests
         {
             fs.File.WriteAllText(Path.Combine(dataDir.Path, implicitListing.FileName), string.Empty);
         }
-        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightMasterModKey.FileName), string.Empty);
-        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightMasterModKey2.FileName), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightModKey.FileName), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightModKey2.FileName), string.Empty);
         fs.File.WriteAllLines(pluginPath.Path,
             new string[]
             {
@@ -252,8 +252,8 @@ public class LiveLoadOrderIntegrationTests
         fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
-                TestConstants.LightMasterModKey.ToString(),
-                TestConstants.LightMasterModKey2.ToString(),
+                TestConstants.LightModKey.ToString(),
+                TestConstants.LightModKey2.ToString(),
             });
         var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE, 
@@ -269,8 +269,8 @@ public class LiveLoadOrderIntegrationTests
             implicitKeys.Concat(
                 new ModKey[]
                 {
-                    TestConstants.LightMasterModKey,
-                    TestConstants.LightMasterModKey2,
+                    TestConstants.LightModKey,
+                    TestConstants.LightModKey2,
                     TestConstants.MasterModKey,
                     TestConstants.PluginModKey,
                 }));
@@ -280,14 +280,14 @@ public class LiveLoadOrderIntegrationTests
             {
                 $"*{TestConstants.MasterModKey}",
                 $"*{TestConstants.PluginModKey}",
-                $"{TestConstants.LightMasterModKey}",
+                $"{TestConstants.LightModKey}",
             });
         watcher.MarkChanged(pluginPath.Path);
         list.Items.Select(x => x.ModKey).Should().Equal(
             implicitKeys.Concat(
                 new ModKey[] {
-                    TestConstants.LightMasterModKey2,
-                    TestConstants.LightMasterModKey,
+                    TestConstants.LightModKey2,
+                    TestConstants.LightModKey,
                     TestConstants.MasterModKey,
                     TestConstants.PluginModKey,
                 }));
@@ -297,16 +297,16 @@ public class LiveLoadOrderIntegrationTests
             {
                 $"*{TestConstants.MasterModKey}",
                 $"*{TestConstants.PluginModKey}",
-                $"{TestConstants.LightMasterModKey}",
-                $"{TestConstants.LightMasterModKey2}",
+                $"{TestConstants.LightModKey}",
+                $"{TestConstants.LightModKey2}",
             });
         watcher.MarkChanged(pluginPath.Path);
         list.Items.Select(x => x.ModKey).Should().Equal(
             implicitKeys.Concat(
                 new ModKey[]
                 {
-                    TestConstants.LightMasterModKey,
-                    TestConstants.LightMasterModKey2,
+                    TestConstants.LightModKey,
+                    TestConstants.LightModKey2,
                     TestConstants.MasterModKey,
                     TestConstants.PluginModKey,
                 }));
@@ -322,7 +322,7 @@ public class LiveLoadOrderIntegrationTests
         [Frozen]ICreationClubListingsPathProvider cccPath)
     {
         fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.Skyrim.FileName), string.Empty);
-        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightMasterModKey.FileName), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightModKey.FileName), string.Empty);
         fs.File.WriteAllLines(pluginPath.Path,
             new string[]
             {
@@ -333,8 +333,8 @@ public class LiveLoadOrderIntegrationTests
         fs.File.WriteAllLines(cccPath.Path!,
             new string[]
             {
-                TestConstants.LightMasterModKey.ToString(),
-                TestConstants.LightMasterModKey2.ToString(),
+                TestConstants.LightModKey.ToString(),
+                TestConstants.LightModKey2.ToString(),
             });
         var live = LoadOrder.GetLiveLoadOrderListings(
             GameRelease.SkyrimSE,
@@ -349,7 +349,7 @@ public class LiveLoadOrderIntegrationTests
         list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
         {
             TestConstants.Skyrim,
-            TestConstants.LightMasterModKey,
+            TestConstants.LightModKey,
             TestConstants.PluginModKey,
             TestConstants.MasterModKey,
             TestConstants.PluginModKey2,

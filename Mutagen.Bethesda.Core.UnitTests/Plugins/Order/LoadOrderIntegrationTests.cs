@@ -54,25 +54,25 @@ public class LoadOrderIntegrationTests
         File.WriteAllLines(cccPath,
             new string[]
             {
-                TestConstants.LightMasterModKey.FileName,
-                TestConstants.LightMasterModKey2.FileName,
+                TestConstants.LightModKey.FileName,
+                TestConstants.LightModKey2.FileName,
             });
         File.WriteAllLines(pluginsPath,
             new string[]
             {
                 $"*{TestConstants.MasterModKey.FileName}",
                 $"{TestConstants.MasterModKey2.FileName}",
-                $"*{TestConstants.LightMasterModKey3.FileName}",
-                $"{TestConstants.LightMasterModKey4.FileName}",
+                $"*{TestConstants.LightModKey3.FileName}",
+                $"{TestConstants.LightModKey4.FileName}",
                 $"*{TestConstants.PluginModKey.FileName}",
                 $"{TestConstants.PluginModKey2.FileName}",
             });
         Directory.CreateDirectory(dataPath);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey2.FileName), string.Empty);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey3.FileName), string.Empty);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey3.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey4.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
         var results = LoadOrder.GetLoadOrderListings(
@@ -85,11 +85,11 @@ public class LoadOrderIntegrationTests
         results.Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
             .Should().Equal(new LoadOrderListing[]
         {
-            new LoadOrderListing(TestConstants.LightMasterModKey, enabled: true),
+            new LoadOrderListing(TestConstants.LightModKey, enabled: true),
             new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
             new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, enabled: true),
-            new LoadOrderListing(TestConstants.LightMasterModKey4, enabled: false),
+            new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
+            new LoadOrderListing(TestConstants.LightModKey4, enabled: false),
             new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
             new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
         });
@@ -107,16 +107,16 @@ public class LoadOrderIntegrationTests
             {
                 $"*{TestConstants.MasterModKey.FileName}",
                 $"{TestConstants.MasterModKey2.FileName}",
-                $"*{TestConstants.LightMasterModKey3.FileName}",
-                $"{TestConstants.LightMasterModKey4.FileName}",
+                $"*{TestConstants.LightModKey3.FileName}",
+                $"{TestConstants.LightModKey4.FileName}",
                 $"*{TestConstants.PluginModKey.FileName}",
                 $"{TestConstants.PluginModKey2.FileName}",
             });
         Directory.CreateDirectory(dataPath);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey2.FileName), string.Empty);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey3.FileName), string.Empty);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey3.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey4.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
         var results = LoadOrder.GetLoadOrderListings(
@@ -130,8 +130,8 @@ public class LoadOrderIntegrationTests
         {
             new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
             new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, enabled: true),
-            new LoadOrderListing(TestConstants.LightMasterModKey4, enabled: false),
+            new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
+            new LoadOrderListing(TestConstants.LightModKey4, enabled: false),
             new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
             new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
         });
@@ -180,28 +180,28 @@ public class LoadOrderIntegrationTests
         File.WriteAllLines(cccPath,
             new string[]
             {
-                TestConstants.LightMasterModKey.FileName,
-                TestConstants.LightMasterModKey2.FileName,
+                TestConstants.LightModKey.FileName,
+                TestConstants.LightModKey2.FileName,
             });
         File.WriteAllLines(pluginsPath,
             new string[]
             {
-                TestConstants.LightMasterModKey2.FileName,
-                TestConstants.LightMasterModKey.FileName,
+                TestConstants.LightModKey2.FileName,
+                TestConstants.LightModKey.FileName,
                 $"*{TestConstants.MasterModKey.FileName}",
                 $"{TestConstants.MasterModKey2.FileName}",
-                $"*{TestConstants.LightMasterModKey3.FileName}",
-                $"{TestConstants.LightMasterModKey4.FileName}",
+                $"*{TestConstants.LightModKey3.FileName}",
+                $"{TestConstants.LightModKey4.FileName}",
                 $"*{TestConstants.PluginModKey.FileName}",
                 $"{TestConstants.PluginModKey2.FileName}",
             });
         Directory.CreateDirectory(dataPath);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey.FileName), string.Empty);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey2.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey2.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey2.FileName), string.Empty);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey3.FileName), string.Empty);
-        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey3.FileName), string.Empty);
+        File.WriteAllText(Path.Combine(dataPath, TestConstants.LightModKey4.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
         File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
         var results = LoadOrder.GetLoadOrderListings(
@@ -215,12 +215,12 @@ public class LoadOrderIntegrationTests
             .Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
             .Should().Equal(new LoadOrderListing[]
             {
-                new LoadOrderListing(TestConstants.LightMasterModKey2, enabled: true),
-                new LoadOrderListing(TestConstants.LightMasterModKey, enabled: true),
+                new LoadOrderListing(TestConstants.LightModKey2, enabled: true),
+                new LoadOrderListing(TestConstants.LightModKey, enabled: true),
                 new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
                 new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
-                new LoadOrderListing(TestConstants.LightMasterModKey3, enabled: true),
-                new LoadOrderListing(TestConstants.LightMasterModKey4, enabled: false),
+                new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
+                new LoadOrderListing(TestConstants.LightModKey4, enabled: false),
                 new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
                 new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
             });
@@ -233,12 +233,12 @@ public class LoadOrderIntegrationTests
         ModKey baseEsm2 = new ModKey("Base2", ModType.Master);
         ModKey ccEsm = new ModKey("CC", ModType.Master);
         ModKey ccEsm2 = new ModKey("CC2", ModType.Master);
-        ModKey ccEsl = new ModKey("CC", ModType.LightMaster);
-        ModKey ccEsl2 = new ModKey("CC2", ModType.LightMaster);
+        ModKey ccEsl = new ModKey("CC", ModType.Light);
+        ModKey ccEsl2 = new ModKey("CC2", ModType.Light);
         ModKey esm = new ModKey("Normal", ModType.Master);
         ModKey esm2 = new ModKey("Normal2", ModType.Master);
-        ModKey esl = new ModKey("Normal", ModType.LightMaster);
-        ModKey esl2 = new ModKey("Normal2", ModType.LightMaster);
+        ModKey esl = new ModKey("Normal", ModType.Light);
+        ModKey esl2 = new ModKey("Normal2", ModType.Light);
         ModKey esp = new ModKey("Normal", ModType.Plugin);
         ModKey esp2 = new ModKey("Normal2", ModType.Plugin);
 
@@ -409,7 +409,7 @@ public class LoadOrderIntegrationTests
     public void HasMod_Empty()
     {
         Enumerable.Empty<LoadOrderListing>()
-            .ListsMod(TestConstants.LightMasterModKey)
+            .ListsMod(TestConstants.LightModKey)
             .Should().BeFalse();
     }
 
@@ -418,21 +418,21 @@ public class LoadOrderIntegrationTests
     {
         var listings = new LoadOrderListing[]
         {
-            new LoadOrderListing(TestConstants.LightMasterModKey, true),
-            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightModKey, true),
+            new LoadOrderListing(TestConstants.LightModKey2, false),
+            new LoadOrderListing(TestConstants.LightModKey3, true),
         };
         listings
-            .ListsMod(TestConstants.LightMasterModKey)
+            .ListsMod(TestConstants.LightModKey)
             .Should().BeTrue();
         listings
-            .ListsMod(TestConstants.LightMasterModKey2)
+            .ListsMod(TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ListsMod(TestConstants.LightMasterModKey3)
+            .ListsMod(TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ListsMod(TestConstants.LightMasterModKey4)
+            .ListsMod(TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -441,27 +441,27 @@ public class LoadOrderIntegrationTests
     {
         var listings = new LoadOrderListing[]
         {
-            new LoadOrderListing(TestConstants.LightMasterModKey, true),
-            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightModKey, true),
+            new LoadOrderListing(TestConstants.LightModKey2, false),
+            new LoadOrderListing(TestConstants.LightModKey3, true),
         };
         listings
-            .ListsMod(TestConstants.LightMasterModKey, enabled: true)
+            .ListsMod(TestConstants.LightModKey, enabled: true)
             .Should().BeTrue();
         listings
-            .ListsMod(TestConstants.LightMasterModKey, enabled: false)
+            .ListsMod(TestConstants.LightModKey, enabled: false)
             .Should().BeFalse();
         listings
-            .ListsMod(TestConstants.LightMasterModKey2, enabled: false)
+            .ListsMod(TestConstants.LightModKey2, enabled: false)
             .Should().BeTrue();
         listings
-            .ListsMod(TestConstants.LightMasterModKey2, enabled: true)
+            .ListsMod(TestConstants.LightModKey2, enabled: true)
             .Should().BeFalse();
         listings
-            .ListsMod(TestConstants.LightMasterModKey3, enabled: true)
+            .ListsMod(TestConstants.LightModKey3, enabled: true)
             .Should().BeTrue();
         listings
-            .ListsMod(TestConstants.LightMasterModKey3, enabled: false)
+            .ListsMod(TestConstants.LightModKey3, enabled: false)
             .Should().BeFalse();
     }
 
@@ -469,7 +469,7 @@ public class LoadOrderIntegrationTests
     public void ListsMods_EmptyListings()
     {
         Enumerable.Empty<LoadOrderListing>()
-            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeFalse();
     }
 
@@ -486,21 +486,21 @@ public class LoadOrderIntegrationTests
     {
         var listings = new LoadOrderListing[]
         {
-            new LoadOrderListing(TestConstants.LightMasterModKey, true),
-            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightModKey, true),
+            new LoadOrderListing(TestConstants.LightModKey2, false),
+            new LoadOrderListing(TestConstants.LightModKey3, true),
         };
         listings
-            .ListsMods(TestConstants.LightMasterModKey)
+            .ListsMods(TestConstants.LightModKey)
             .Should().BeTrue();
         listings
-            .ListsMods(TestConstants.LightMasterModKey2)
+            .ListsMods(TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ListsMods(TestConstants.LightMasterModKey3)
+            .ListsMods(TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ListsMods(TestConstants.LightMasterModKey4)
+            .ListsMods(TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -509,18 +509,18 @@ public class LoadOrderIntegrationTests
     {
         var listings = new LoadOrderListing[]
         {
-            new LoadOrderListing(TestConstants.LightMasterModKey, true),
-            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightModKey, true),
+            new LoadOrderListing(TestConstants.LightModKey2, false),
+            new LoadOrderListing(TestConstants.LightModKey3, true),
         };
         listings
-            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
+            .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ListsMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
+            .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -528,10 +528,10 @@ public class LoadOrderIntegrationTests
     public void ListsMods_Enabled_EmptyListings()
     {
         Enumerable.Empty<LoadOrderListing>()
-            .ListsMods(true, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ListsMods(true, TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeFalse();
         Enumerable.Empty<LoadOrderListing>()
-            .ListsMods(false, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ListsMods(false, TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeFalse();
     }
 
@@ -551,33 +551,33 @@ public class LoadOrderIntegrationTests
     {
         var listings = new LoadOrderListing[]
         {
-            new LoadOrderListing(TestConstants.LightMasterModKey, true),
-            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightModKey, true),
+            new LoadOrderListing(TestConstants.LightModKey2, false),
+            new LoadOrderListing(TestConstants.LightModKey3, true),
         };
         listings
-            .ListsMods(true, TestConstants.LightMasterModKey)
+            .ListsMods(true, TestConstants.LightModKey)
             .Should().BeTrue();
         listings
-            .ListsMods(false, TestConstants.LightMasterModKey)
+            .ListsMods(false, TestConstants.LightModKey)
             .Should().BeFalse();
         listings
-            .ListsMods(false, TestConstants.LightMasterModKey2)
+            .ListsMods(false, TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ListsMods(true, TestConstants.LightMasterModKey2)
+            .ListsMods(true, TestConstants.LightModKey2)
             .Should().BeFalse();
         listings
-            .ListsMods(true, TestConstants.LightMasterModKey3)
+            .ListsMods(true, TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ListsMods(false, TestConstants.LightMasterModKey3)
+            .ListsMods(false, TestConstants.LightModKey3)
             .Should().BeFalse();
         listings
-            .ListsMods(true, TestConstants.LightMasterModKey4)
+            .ListsMods(true, TestConstants.LightModKey4)
             .Should().BeFalse();
         listings
-            .ListsMods(false, TestConstants.LightMasterModKey4)
+            .ListsMods(false, TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -586,27 +586,27 @@ public class LoadOrderIntegrationTests
     {
         var listings = new LoadOrderListing[]
         {
-            new LoadOrderListing(TestConstants.LightMasterModKey, true),
-            new LoadOrderListing(TestConstants.LightMasterModKey2, false),
-            new LoadOrderListing(TestConstants.LightMasterModKey3, true),
+            new LoadOrderListing(TestConstants.LightModKey, true),
+            new LoadOrderListing(TestConstants.LightModKey2, false),
+            new LoadOrderListing(TestConstants.LightModKey3, true),
         };
         listings
             .ListsMods(
                 true,
-                TestConstants.LightMasterModKey, TestConstants.LightMasterModKey3)
+                TestConstants.LightModKey, TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ListsMods(false, TestConstants.LightMasterModKey2)
+            .ListsMods(false, TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
             .ListsMods(
                 true,
-                TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
+                TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
             .Should().BeFalse();
         listings
             .ListsMods(
                 true,
-                TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
+                TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
             .Should().BeFalse();
     }
     #endregion

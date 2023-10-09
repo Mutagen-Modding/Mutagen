@@ -56,7 +56,7 @@ public sealed class ModHeaderWriteLogic
         AddRecordCount();
         AddNextFormIDActions();
         AddFormIDUniqueness();
-        AddLightMasterFormLimit(modHeader);
+        AddLightFormLimit(modHeader);
         AddCompressionCheck();
     }
 
@@ -113,7 +113,7 @@ public sealed class ModHeaderWriteLogic
         {
             modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : modHeader.MinimumCustomFormID;
         }
-        if (Enums.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.LightMaster)
+        if (Enums.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Light)
             && _uniqueRecordsFromMod > Constants.LightMasterLimit)
         {
             throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
@@ -267,9 +267,9 @@ public sealed class ModHeaderWriteLogic
                 {
                     throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");
                 }
-                if ((_modKey.Type == ModType.LightMaster) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster))
+                if ((_modKey.Type == ModType.Light) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Light))
                 {
-                    throw new ArgumentException($"LightMaster flag did not match ModKey type. ({_modKey})");
+                    throw new ArgumentException($"Light flag did not match ModKey type. ({_modKey})");
                 }
                 break;
             default:
@@ -279,9 +279,9 @@ public sealed class ModHeaderWriteLogic
     #endregion
 
     #region Light Master Form Limit
-    private void AddLightMasterFormLimit(IModHeaderCommon header)
+    private void AddLightFormLimit(IModHeaderCommon header)
     {
-        if (!Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.LightMaster)) return;
+        if (!Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Light)) return;
         _recordIterationActions.Add(maj =>
         {
             if (maj.FormKey.ModKey == _modKey)

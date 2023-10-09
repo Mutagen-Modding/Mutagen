@@ -11,7 +11,7 @@ public class HasModsMixInTests
     public void HasMod_Empty()
     {
         Enumerable.Empty<ModListing>()
-            .ModExists(TestConstants.LightMasterModKey)
+            .ModExists(TestConstants.LightModKey)
             .Should().BeFalse();
     }
 
@@ -20,21 +20,21 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
         };
         listings
-            .ModExists(TestConstants.LightMasterModKey)
+            .ModExists(TestConstants.LightModKey)
             .Should().BeTrue();
         listings
-            .ModExists(TestConstants.LightMasterModKey2)
+            .ModExists(TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ModExists(TestConstants.LightMasterModKey3)
+            .ModExists(TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ModExists(TestConstants.LightMasterModKey4)
+            .ModExists(TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -43,27 +43,27 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
         };
         listings
-            .ModExists(TestConstants.LightMasterModKey, enabled: true)
+            .ModExists(TestConstants.LightModKey, enabled: true)
             .Should().BeTrue();
         listings
-            .ModExists(TestConstants.LightMasterModKey, enabled: false)
+            .ModExists(TestConstants.LightModKey, enabled: false)
             .Should().BeFalse();
         listings
-            .ModExists(TestConstants.LightMasterModKey2, enabled: false)
+            .ModExists(TestConstants.LightModKey2, enabled: false)
             .Should().BeTrue();
         listings
-            .ModExists(TestConstants.LightMasterModKey2, enabled: true)
+            .ModExists(TestConstants.LightModKey2, enabled: true)
             .Should().BeFalse();
         listings
-            .ModExists(TestConstants.LightMasterModKey3, enabled: true)
+            .ModExists(TestConstants.LightModKey3, enabled: true)
             .Should().BeTrue();
         listings
-            .ModExists(TestConstants.LightMasterModKey3, enabled: false)
+            .ModExists(TestConstants.LightModKey3, enabled: false)
             .Should().BeFalse();
     }
 
@@ -71,7 +71,7 @@ public class HasModsMixInTests
     public void EmptyListings()
     {
         Enumerable.Empty<ModListing>()
-            .ModsExist(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeFalse();
     }
 
@@ -88,21 +88,21 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
         };
         listings
-            .ModsExist(TestConstants.LightMasterModKey)
+            .ModsExist(TestConstants.LightModKey)
             .Should().BeTrue();
         listings
-            .ModsExist(TestConstants.LightMasterModKey2)
+            .ModsExist(TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ModsExist(TestConstants.LightMasterModKey3)
+            .ModsExist(TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ModsExist(TestConstants.LightMasterModKey4)
+            .ModsExist(TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -111,18 +111,18 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
         };
         listings
-            .ModsExist(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
+            .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ModsExist(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ModsExist(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
+            .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -130,10 +130,10 @@ public class HasModsMixInTests
     public void Enabled_EmptyListings()
     {
         Enumerable.Empty<ModListing>()
-            .ModsExist(true, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ModsExist(true, TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeFalse();
         Enumerable.Empty<ModListing>()
-            .ModsExist(false, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
+            .ModsExist(false, TestConstants.LightModKey, TestConstants.LightModKey2)
             .Should().BeFalse();
     }
 
@@ -153,33 +153,33 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
         };
         listings
-            .ModsExist(true, TestConstants.LightMasterModKey)
+            .ModsExist(true, TestConstants.LightModKey)
             .Should().BeTrue();
         listings
-            .ModsExist(false, TestConstants.LightMasterModKey)
+            .ModsExist(false, TestConstants.LightModKey)
             .Should().BeFalse();
         listings
-            .ModsExist(false, TestConstants.LightMasterModKey2)
+            .ModsExist(false, TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
-            .ModsExist(true, TestConstants.LightMasterModKey2)
+            .ModsExist(true, TestConstants.LightModKey2)
             .Should().BeFalse();
         listings
-            .ModsExist(true, TestConstants.LightMasterModKey3)
+            .ModsExist(true, TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ModsExist(false, TestConstants.LightMasterModKey3)
+            .ModsExist(false, TestConstants.LightModKey3)
             .Should().BeFalse();
         listings
-            .ModsExist(true, TestConstants.LightMasterModKey4)
+            .ModsExist(true, TestConstants.LightModKey4)
             .Should().BeFalse();
         listings
-            .ModsExist(false, TestConstants.LightMasterModKey4)
+            .ModsExist(false, TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -188,21 +188,21 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey2, false, existsOnDisk: false),
-            new ModListing(TestConstants.LightMasterModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: false),
+            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
         };
         listings
-            .ModsExist(TestConstants.LightMasterModKey)
+            .ModsExist(TestConstants.LightModKey)
             .Should().BeTrue();
         listings
-            .ModsExist(TestConstants.LightMasterModKey2)
+            .ModsExist(TestConstants.LightModKey2)
             .Should().BeFalse();
         listings
-            .ModsExist(TestConstants.LightMasterModKey3)
+            .ModsExist(TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ModsExist(TestConstants.LightMasterModKey4)
+            .ModsExist(TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 
@@ -211,27 +211,27 @@ public class HasModsMixInTests
     {
         var listings = new ModListing[]
         {
-            new ModListing(TestConstants.LightMasterModKey, true, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey2, false, existsOnDisk: true),
-            new ModListing(TestConstants.LightMasterModKey3, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey, true, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey2, false, existsOnDisk: true),
+            new ModListing(TestConstants.LightModKey3, true, existsOnDisk: true),
         };
         listings
             .ModsExist(
                 true,
-                TestConstants.LightMasterModKey, TestConstants.LightMasterModKey3)
+                TestConstants.LightModKey, TestConstants.LightModKey3)
             .Should().BeTrue();
         listings
-            .ModsExist(false, TestConstants.LightMasterModKey2)
+            .ModsExist(false, TestConstants.LightModKey2)
             .Should().BeTrue();
         listings
             .ModsExist(
                 true,
-                TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
+                TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
             .Should().BeFalse();
         listings
             .ModsExist(
                 true,
-                TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
+                TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
             .Should().BeFalse();
     }
 }

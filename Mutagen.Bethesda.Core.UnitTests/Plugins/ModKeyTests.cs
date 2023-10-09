@@ -22,7 +22,7 @@ public class ModKeyTests
         Assert.True(ModKey.TryFromNameAndExtension("Oblivion.esl", out var modKey));
         Assert.Equal("Oblivion", modKey.Name);
         Assert.Equal("Oblivion.esl", modKey.FileName);
-        Assert.Equal(ModType.LightMaster, modKey.Type);
+        Assert.Equal(ModType.Light, modKey.Type);
     }
 
     [Fact]
@@ -308,7 +308,7 @@ public class ModKeyTests
     [Fact]
     public void ToString_Esl()
     {
-        Assert.Equal("Oblivion.esl", new ModKey("Oblivion", type: ModType.LightMaster).ToString());
+        Assert.Equal("Oblivion.esl", new ModKey("Oblivion", type: ModType.Light).ToString());
     }
 
     [Fact]

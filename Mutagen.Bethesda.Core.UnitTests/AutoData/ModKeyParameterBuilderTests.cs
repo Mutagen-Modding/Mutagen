@@ -130,7 +130,7 @@ public class ModKeyParameterBuilderTests
         {
             var param = method.GetParameters().First();
             ModKey mk = (ModKey)sut.Create(param, context);
-            mk.Type.Should().Be(ModType.LightMaster);
+            mk.Type.Should().Be(ModType.Light);
         }
     }
 }

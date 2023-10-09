@@ -649,7 +649,7 @@ public class JsonConverterTests
         settings.Converters.Add(new ModKeyJsonConverter());
         var toSerialize = new ModKeyClass()
         {
-            Member = TestConstants.LightMasterModKey3
+            Member = TestConstants.LightModKey3
         };
         JsonConvert.SerializeObject(toSerialize, settings)
             .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -662,7 +662,7 @@ public class JsonConverterTests
         settings.Converters.Add(new ModKeyJsonConverter());
         var target = new ModKeyClass()
         {
-            Member = TestConstants.LightMasterModKey3
+            Member = TestConstants.LightModKey3
         };
         var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
         JsonConvert.DeserializeObject<ModKeyClass>(toDeserialize, settings)!
@@ -694,7 +694,7 @@ public class JsonConverterTests
         settings.Converters.Add(new ModKeyJsonConverter());
         var toSerialize = new NullableModKeyClass()
         {
-            Member = TestConstants.LightMasterModKey3
+            Member = TestConstants.LightModKey3
         };
         JsonConvert.SerializeObject(toSerialize, settings)
             .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -720,7 +720,7 @@ public class JsonConverterTests
         settings.Converters.Add(new ModKeyJsonConverter());
         var target = new NullableModKeyClass()
         {
-            Member = TestConstants.LightMasterModKey3
+            Member = TestConstants.LightModKey3
         };
         var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
         JsonConvert.DeserializeObject<NullableModKeyClass>(toDeserialize, settings)!

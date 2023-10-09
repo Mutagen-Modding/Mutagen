@@ -379,7 +379,7 @@ public readonly struct ModKey : IEquatable<ModKey>
         }
         else if (str.Equals(Constants.Esl.AsSpan(), StringComparison.OrdinalIgnoreCase))
         {
-            modType = ModType.LightMaster;
+            modType = ModType.Light;
         }
         else
         {

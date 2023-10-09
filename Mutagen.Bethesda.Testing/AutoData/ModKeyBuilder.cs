@@ -24,7 +24,7 @@ public class ModKeyBuilder : ISpecimenBuilder
                     return new object[]
                     {
                         GetRandomModKey(ModType.Master),
-                        GetRandomModKey(ModType.LightMaster),
+                        GetRandomModKey(ModType.Light),
                         GetRandomModKey(ModType.Plugin),
                     };
                 }

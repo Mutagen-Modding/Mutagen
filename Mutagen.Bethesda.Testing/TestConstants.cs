@@ -12,10 +12,10 @@ public static class TestConstants
     public static readonly ModKey MasterModKey2 = new ModKey("MutagenMasterKey2", ModType.Master);
     public static readonly ModKey MasterModKey3 = new ModKey("MutagenMasterKey3", ModType.Master);
     public static readonly ModKey MasterModKey4 = new ModKey("MutagenMasterKey4", ModType.Master);
-    public static readonly ModKey LightMasterModKey = new ModKey("MutagenLightMasterKey", ModType.LightMaster);
-    public static readonly ModKey LightMasterModKey2 = new ModKey("MutagenLightMasterKey2", ModType.LightMaster);
-    public static readonly ModKey LightMasterModKey3 = new ModKey("MutagenLightMasterKey3", ModType.LightMaster);
-    public static readonly ModKey LightMasterModKey4 = new ModKey("MutagenLightMasterKey4", ModType.LightMaster);
+    public static readonly ModKey LightModKey = new ModKey("MutagenLightMasterKey", ModType.Light);
+    public static readonly ModKey LightModKey2 = new ModKey("MutagenLightMasterKey2", ModType.Light);
+    public static readonly ModKey LightModKey3 = new ModKey("MutagenLightMasterKey3", ModType.Light);
+    public static readonly ModKey LightModKey4 = new ModKey("MutagenLightMasterKey4", ModType.Light);
     public static readonly string Edid1 = "AnEdid1";
     public static readonly string Edid2 = "AnEdid2";
     public static readonly string Edid3 = "AnEdid2";
