@@ -2613,7 +2613,7 @@ namespace Mutagen.Bethesda.Starfield
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Starfield, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -2650,7 +2650,7 @@ namespace Mutagen.Bethesda.Starfield
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Starfield, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -3100,7 +3100,7 @@ namespace Mutagen.Bethesda.Starfield
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Starfield, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(GameRelease.Starfield, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
             bool disposeStrings = param.StringsWriter != null;
             using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
@@ -3408,7 +3408,7 @@ namespace Mutagen.Bethesda.Starfield
                         throw new ArgumentException("File stream was too short to parse flags");
                     }
                     var flags = reader.GetInt32(offset: 8);
-                    if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                     {
                         frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Starfield, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                     }
@@ -9674,7 +9674,7 @@ namespace Mutagen.Bethesda.Starfield
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= (Enums.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Starfield, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null);
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)StarfieldModHeader.HeaderFlag.Localized) ? new StringsWriter(GameRelease.Starfield, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
             bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(GameRelease.Starfield)
             {
@@ -10051,7 +10051,7 @@ namespace Mutagen.Bethesda.Starfield
                     throw new ArgumentException("File stream was too short to parse flags");
                 }
                 var flags = stream.GetInt32(offset: 8);
-                if (Enums.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                if (Enums.HasFlag(flags, (int)StarfieldModHeader.HeaderFlag.Localized))
                 {
                     meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Starfield, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
                 }

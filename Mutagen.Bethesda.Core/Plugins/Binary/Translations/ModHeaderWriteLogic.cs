@@ -20,6 +20,7 @@ public sealed class ModHeaderWriteLogic
     private uint? _nextFormID;
     private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
+    private readonly GameCategory _category;
 
     private ModHeaderWriteLogic(
         BinaryWriteParameters? param,
@@ -28,6 +29,7 @@ public sealed class ModHeaderWriteLogic
     {
         _params = param ?? BinaryWriteParameters.Default;
         _modKey = mod.ModKey;
+        _category = mod.GameRelease.ToCategory();
     }
 
     public static void WriteHeader(
@@ -113,7 +115,10 @@ public sealed class ModHeaderWriteLogic
         {
             modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : modHeader.MinimumCustomFormID;
         }
-        if (Enums.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Light)
+
+        var lightIndex = _category.GetLightFlagIndex();
+        if (lightIndex.HasValue 
+            && Enums.HasFlag(modHeader.RawFlags, lightIndex.Value)
             && _uniqueRecordsFromMod > Constants.LightMasterLimit)
         {
             throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
@@ -256,21 +261,24 @@ public sealed class ModHeaderWriteLogic
             case MasterFlagOption.NoCheck:
                 break;
             case MasterFlagOption.ChangeToMatchModKey:
-                header.RawFlags = Enums.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, _modKey.Type == ModType.Master);
+                header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), _modKey.Type == ModType.Master);
                 if (_modKey.Type != ModType.Plugin)
                 {
-                    header.RawFlags = Enums.SetFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master, true);
+                    header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), true);
                 }
                 break;
             case MasterFlagOption.ExceptionOnMismatch:
-                if ((_modKey.Type == ModType.Master) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Master))
+                if ((_modKey.Type == ModType.Master) != Enums.HasFlag(header.RawFlags, _category.GetMasterFlagIndex()))
                 {
                     throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");
                 }
-                if ((_modKey.Type == ModType.Light) != Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Light))
+
+                var lightIndex = _category.GetLightFlagIndex();
+                if (lightIndex.HasValue && (_modKey.Type == ModType.Light) != Enums.HasFlag(header.RawFlags, lightIndex.Value))
                 {
                     throw new ArgumentException($"Light flag did not match ModKey type. ({_modKey})");
                 }
+                
                 break;
             default:
                 break;
@@ -281,7 +289,8 @@ public sealed class ModHeaderWriteLogic
     #region Light Master Form Limit
     private void AddLightFormLimit(IModHeaderCommon header)
     {
-        if (!Enums.HasFlag(header.RawFlags, (int)ModHeaderCommonFlag.Light)) return;
+        var lightIndex = _category.GetLightFlagIndex();
+        if (!lightIndex.HasValue || !Enums.HasFlag(header.RawFlags, lightIndex.Value)) return;
         _recordIterationActions.Add(maj =>
         {
             if (maj.FormKey.ModKey == _modKey)

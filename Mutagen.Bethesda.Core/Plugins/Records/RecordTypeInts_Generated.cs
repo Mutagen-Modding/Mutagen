@@ -54,6 +54,7 @@ public partial class RecordTypeInts
     public const int CSTY = 0x59545343;
     public const int CTDA = 0x41445443;
     public const int CUR3 = 0x33525543;
+    public const int CURV = 0x56525543;
     public const int DATA = 0x41544144;
     public const int DEBR = 0x52424544;
     public const int DFOB = 0x424F4644;

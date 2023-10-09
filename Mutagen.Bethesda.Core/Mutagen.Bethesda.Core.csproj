@@ -548,7 +548,6 @@
     <Compile Include="Translations\Binary\Int64BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Int8BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ListBinaryTranslation.cs" />
-    <Compile Include="Plugins\Records\ModHeaderCommonFlag.cs" />
     <Compile Include="Plugins\Records\Quadrant.cs" />
     <Compile Include="Strings\StringsLanguageFormat.cs" />
     <Compile Include="Strings\StringsFileFormat.cs" />

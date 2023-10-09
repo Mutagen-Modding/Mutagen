@@ -857,7 +857,8 @@ public abstract class Processor
 
         stream.Position = 0;
         var mod = stream.ReadModHeader();
-        if (!Enums.HasFlag(mod.Flags, (int)ModHeaderCommonFlag.Localized)) return Array.Empty<StringEntry>();
+        var localizedIndex = stream.MetaData.Constants.Release.ToCategory().GetLocalizedFlagIndex();
+        if (!localizedIndex.HasValue || !Enums.HasFlag(mod.Flags, localizedIndex.Value)) return Array.Empty<StringEntry>();
 
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(

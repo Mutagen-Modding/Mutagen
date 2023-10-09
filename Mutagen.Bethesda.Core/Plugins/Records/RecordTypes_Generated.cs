@@ -56,6 +56,7 @@ public partial class RecordTypes
     public static readonly RecordType CSTY = new(0x59545343);
     public static readonly RecordType CTDA = new(0x41445443);
     public static readonly RecordType CUR3 = new(0x33525543);
+    public static readonly RecordType CURV = new(0x56525543);
     public static readonly RecordType DATA = new(0x41544144);
     public static readonly RecordType DEBR = new(0x52424544);
     public static readonly RecordType DFOB = new(0x424F4644);
