@@ -50,6 +50,8 @@ public sealed record GameConstants
     
     public ushort? DefaultFormVersion { get; init; }
     
+    public string? MyDocumentsString { get; init; }
+    
     /// <summary> 
     /// Constructor 
     /// </summary> 
@@ -70,7 +72,8 @@ public sealed record GameConstants
         Language[] languages,
         EncodingBundle encodings,
         bool hasEnabledMarkers,
-        ushort? defaultFormVersion)
+        ushort? defaultFormVersion,
+        string? myDocumentsString)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -82,6 +85,7 @@ public sealed record GameConstants
         Encodings = encodings;
         HasEnabledMarkers = hasEnabledMarkers;
         DefaultFormVersion = defaultFormVersion;
+        MyDocumentsString = myDocumentsString;
     }
 
     /// <summary> 
@@ -139,6 +143,7 @@ public sealed record GameConstants
         languages: Array.Empty<Language>(),
         hasEnabledMarkers: false,
         defaultFormVersion: null,
+        myDocumentsString: "Oblivion",
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
@@ -203,8 +208,15 @@ public sealed record GameConstants
         },
         hasEnabledMarkers: false,
         defaultFormVersion: 43,
+        myDocumentsString: "Skyrim",
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
+    public static readonly GameConstants EnderalLE = SkyrimLE with
+    {
+        Release = GameRelease.EnderalLE,
+        MyDocumentsString = "Enderal"
+    };
+    
     /// <summary> 
     /// Readonly singleton of Skyrim SE game constants 
     /// </summary> 
@@ -213,12 +225,32 @@ public sealed record GameConstants
         Release = GameRelease.SkyrimSE,
         HasEnabledMarkers = true,
         DefaultFormVersion = 44,
+        MyDocumentsString = "Skyrim Special Edition",
+    };
+    
+    /// <summary> 
+    /// Readonly singleton of Skyrim SE game constants 
+    /// </summary> 
+    public static readonly GameConstants SkyrimSEGog = SkyrimSE with
+    {
+        Release = GameRelease.SkyrimSEGog,
+        MyDocumentsString = "Skyrim Special Edition GOG",
     };
 
     /// <summary> 
     /// Readonly singleton of Skyrim SE game constants 
     /// </summary> 
-    public static readonly GameConstants SkyrimVR = SkyrimSE with { Release = GameRelease.SkyrimVR };
+    public static readonly GameConstants SkyrimVR = SkyrimSE with
+    {
+        Release = GameRelease.SkyrimVR,
+        MyDocumentsString = "Skyrim VR"
+    };
+
+    public static readonly GameConstants EnderalSE = SkyrimSE with
+    {
+        Release = GameRelease.EnderalSE,
+        MyDocumentsString = "Enderal Special Edition"
+    };
 
     /// <summary> 
     /// Readonly singleton of Fallout4 game constants 
@@ -289,6 +321,7 @@ public sealed record GameConstants
         },
         hasEnabledMarkers: true,
         defaultFormVersion: 131,
+        myDocumentsString: "Fallout4",
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
 
@@ -361,6 +394,7 @@ public sealed record GameConstants
         },
         hasEnabledMarkers: true,
         defaultFormVersion: 555,
+        myDocumentsString: null,
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
@@ -386,26 +420,19 @@ public sealed record GameConstants
     /// <returns>GameConstant readonly singleton associated with mode</returns> 
     public static GameConstants Get(GameRelease release)
     {
-        switch (release)
+        return release switch
         {
-            case GameRelease.Oblivion:
-                return Oblivion;
-            case GameRelease.SkyrimLE:
-            case GameRelease.EnderalLE:
-                return SkyrimLE;
-            case GameRelease.SkyrimSE:
-            case GameRelease.SkyrimSEGog:
-            case GameRelease.EnderalSE:
-                return SkyrimSE;
-            case GameRelease.SkyrimVR:
-                return SkyrimVR;
-            case GameRelease.Fallout4:
-                return Fallout4;
-            case GameRelease.Starfield:
-                return Starfield;
-            default:
-                throw new NotImplementedException();
-        }
+            GameRelease.Oblivion => Oblivion,
+            GameRelease.SkyrimLE => SkyrimLE,
+            GameRelease.EnderalLE => EnderalLE,
+            GameRelease.SkyrimSE => SkyrimSE,
+            GameRelease.SkyrimSEGog => SkyrimSEGog,
+            GameRelease.EnderalSE => EnderalSE,
+            GameRelease.SkyrimVR => SkyrimVR,
+            GameRelease.Fallout4 => Fallout4,
+            GameRelease.Starfield => Starfield,
+            _ => throw new NotImplementedException()
+        };
     }
 
     public static implicit operator GameConstants(GameRelease mode)

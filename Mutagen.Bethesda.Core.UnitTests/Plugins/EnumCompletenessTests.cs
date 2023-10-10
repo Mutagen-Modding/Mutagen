@@ -119,24 +119,6 @@ public class EnumCompletenessTests
     }
     #endregion
 
-    #region MyDocumentsString
-    [Fact]
-    public void MyDocumentsString()
-    {
-        foreach (var release in Enums<GameRelease>.Values)
-        {
-            try
-            {
-                IniPathLookup.ToMyDocumentsString(release);
-            }
-            catch (ArgumentException)
-            {
-                // Acceptable
-            }
-        }
-    }
-    #endregion
-
     #region ToIniName
     [Fact]
     public void ToIniName()

@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
 namespace Mutagen.Bethesda.Inis.DI;
@@ -23,29 +24,17 @@ public class IniPathLookup : IIniPathLookup
         {
             return Path.Combine(_gameDirectoryLookup.Get(release), ToIniFileName(release));
         }
-        var docsString = ToMyDocumentsString(release);
+        var docsString = GameConstants.Get(release).MyDocumentsString;
+        if (docsString == null)
+        {
+            throw new ArgumentException($"{release} does not have ini in My Documents");
+        }
+        
         return Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             "My Games",
             docsString, 
             ToIniFileName(release));
-    }
-
-    public static string ToMyDocumentsString(GameRelease release)
-    {
-        return release switch
-        {
-            GameRelease.Oblivion => "Oblivion",
-            GameRelease.SkyrimLE => "Skyrim",
-            GameRelease.EnderalLE => "Enderal",
-            GameRelease.SkyrimSE => "Skyrim Special Edition",
-            GameRelease.SkyrimSEGog => "Skyrim Special Edition GOG",
-            GameRelease.EnderalSE => "Enderal Special Edition",
-            GameRelease.SkyrimVR => "Skyrim VR",
-            GameRelease.Fallout4 => "Fallout4",
-            GameRelease.Starfield => throw new ArgumentException("Starfield does not have ini in My Documents"),
-            _ => throw new NotImplementedException(),
-        };
     }
 
     public static string ToIniName(GameRelease release)
