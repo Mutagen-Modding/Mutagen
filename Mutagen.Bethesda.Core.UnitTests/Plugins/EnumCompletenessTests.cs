@@ -119,17 +119,6 @@ public class EnumCompletenessTests
     }
     #endregion
 
-    #region ToIniName
-    [Fact]
-    public void ToIniName()
-    {
-        foreach (var release in Enums<GameRelease>.Values)
-        {
-            IniPathLookup.ToIniName(release);
-        }
-    }
-    #endregion
-
     #region PluginListingsPathProvider
 
     [Theory, DefaultAutoData]

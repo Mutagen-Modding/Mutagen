@@ -52,6 +52,8 @@ public sealed record GameConstants
     
     public string? MyDocumentsString { get; init; }
     
+    public string IniName { get; init; }
+    
     /// <summary> 
     /// Constructor 
     /// </summary> 
@@ -73,7 +75,8 @@ public sealed record GameConstants
         EncodingBundle encodings,
         bool hasEnabledMarkers,
         ushort? defaultFormVersion,
-        string? myDocumentsString)
+        string? myDocumentsString,
+        string iniName)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -86,6 +89,7 @@ public sealed record GameConstants
         HasEnabledMarkers = hasEnabledMarkers;
         DefaultFormVersion = defaultFormVersion;
         MyDocumentsString = myDocumentsString;
+        IniName = iniName;
     }
 
     /// <summary> 
@@ -144,6 +148,7 @@ public sealed record GameConstants
         hasEnabledMarkers: false,
         defaultFormVersion: null,
         myDocumentsString: "Oblivion",
+        iniName: "Oblivion",
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
@@ -209,12 +214,14 @@ public sealed record GameConstants
         hasEnabledMarkers: false,
         defaultFormVersion: 43,
         myDocumentsString: "Skyrim",
+        iniName: "Skyrim",
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     public static readonly GameConstants EnderalLE = SkyrimLE with
     {
         Release = GameRelease.EnderalLE,
-        MyDocumentsString = "Enderal"
+        MyDocumentsString = "Enderal",
+        IniName = "Enderal",
     };
     
     /// <summary> 
@@ -243,13 +250,15 @@ public sealed record GameConstants
     public static readonly GameConstants SkyrimVR = SkyrimSE with
     {
         Release = GameRelease.SkyrimVR,
-        MyDocumentsString = "Skyrim VR"
+        MyDocumentsString = "Skyrim VR",
+        IniName = "Skyrim VR",
     };
 
     public static readonly GameConstants EnderalSE = SkyrimSE with
     {
         Release = GameRelease.EnderalSE,
-        MyDocumentsString = "Enderal Special Edition"
+        MyDocumentsString = "Enderal Special Edition",
+        IniName = "Enderal",
     };
 
     /// <summary> 
@@ -322,6 +331,7 @@ public sealed record GameConstants
         hasEnabledMarkers: true,
         defaultFormVersion: 131,
         myDocumentsString: "Fallout4",
+        iniName: "Fallout4",
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
 
@@ -395,6 +405,7 @@ public sealed record GameConstants
         hasEnabledMarkers: true,
         defaultFormVersion: 555,
         myDocumentsString: null,
+        iniName: "Starfield",
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 

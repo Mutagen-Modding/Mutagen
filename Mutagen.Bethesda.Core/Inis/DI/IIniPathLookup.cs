@@ -37,25 +37,8 @@ public class IniPathLookup : IIniPathLookup
             ToIniFileName(release));
     }
 
-    public static string ToIniName(GameRelease release)
-    {
-        return release switch
-        {
-            GameRelease.Oblivion => "Oblivion",
-            GameRelease.SkyrimLE => "Skyrim",
-            GameRelease.SkyrimSE => "Skyrim",
-            GameRelease.SkyrimSEGog => "Skyrim",
-            GameRelease.EnderalLE => "Enderal",
-            GameRelease.EnderalSE => "Enderal",
-            GameRelease.SkyrimVR => "SkyrimVR",
-            GameRelease.Fallout4 => "Fallout4",
-            GameRelease.Starfield => "Starfield",
-            _ => throw new NotImplementedException(),
-        };
-    }
-
     public static string ToIniFileName(GameRelease release)
     {
-        return $"{ToIniName(release)}.ini";
+        return $"{GameConstants.Get(release).IniName}.ini";
     }
 }
