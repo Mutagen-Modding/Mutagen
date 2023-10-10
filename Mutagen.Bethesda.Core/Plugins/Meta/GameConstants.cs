@@ -46,6 +46,10 @@ public sealed record GameConstants
 
     public IReadOnlyCollection<RecordType> HeaderOverflow { get; } = new SingleCollection<RecordType>(RecordTypes.XXXX);
 
+    public bool HasEnabledMarkers { get; init; }
+    
+    public ushort? DefaultFormVersion { get; init; }
+    
     /// <summary> 
     /// Constructor 
     /// </summary> 
@@ -64,7 +68,9 @@ public sealed record GameConstants
         MajorRecordConstants majorConstants,
         RecordHeaderConstants subConstants,
         Language[] languages,
-        EncodingBundle encodings)
+        EncodingBundle encodings,
+        bool hasEnabledMarkers,
+        ushort? defaultFormVersion)
     {
         Release = release;
         ModHeaderLength = modHeaderLength;
@@ -74,6 +80,8 @@ public sealed record GameConstants
         SubConstants = subConstants;
         Languages = languages;
         Encodings = encodings;
+        HasEnabledMarkers = hasEnabledMarkers;
+        DefaultFormVersion = defaultFormVersion;
     }
 
     /// <summary> 
@@ -129,6 +137,8 @@ public sealed record GameConstants
             headerLength: 6,
             lengthLength: 2),
         languages: Array.Empty<Language>(),
+        hasEnabledMarkers: false,
+        defaultFormVersion: null,
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
@@ -191,17 +201,24 @@ public sealed record GameConstants
             Language.Chinese,
             Language.Russian,
         },
+        hasEnabledMarkers: false,
+        defaultFormVersion: 43,
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 
     /// Readonly singleton of Skyrim SE game constants 
     /// </summary> 
-    public static readonly GameConstants SkyrimSE = SkyrimLE with { Release = GameRelease.SkyrimSE };
+    public static readonly GameConstants SkyrimSE = SkyrimLE with
+    {
+        Release = GameRelease.SkyrimSE,
+        HasEnabledMarkers = true,
+        DefaultFormVersion = 44,
+    };
 
     /// <summary> 
     /// Readonly singleton of Skyrim SE game constants 
     /// </summary> 
-    public static readonly GameConstants SkyrimVR = SkyrimLE with { Release = GameRelease.SkyrimVR };
+    public static readonly GameConstants SkyrimVR = SkyrimSE with { Release = GameRelease.SkyrimVR };
 
     /// <summary> 
     /// Readonly singleton of Fallout4 game constants 
@@ -270,6 +287,8 @@ public sealed record GameConstants
             Language.Russian,
             Language.Japanese,
         },
+        hasEnabledMarkers: true,
+        defaultFormVersion: 131,
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
 
@@ -340,6 +359,8 @@ public sealed record GameConstants
             Language.Russian,
             Language.Japanese,
         },
+        hasEnabledMarkers: true,
+        defaultFormVersion: 555,
         encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
 
     /// <summary> 

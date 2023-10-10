@@ -147,12 +147,6 @@ public static class PluginListings
                 gameReleaseInjection).Path);
     }
 
-    public static bool HasEnabledMarkers(GameRelease game)
-    {
-        return new HasEnabledMarkersProvider(
-            new GameReleaseInjection(game)).HasEnabledMarkers;
-    }
-
     private static PluginListingsProvider PluginListingsProvider(
         IDataDirectoryProvider dataDirectory,
         IGameReleaseContext gameContext,

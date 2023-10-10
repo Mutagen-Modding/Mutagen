@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Plugins.Assets;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Starfield;
@@ -10,7 +11,7 @@ public partial class StarfieldMod : AMod
 
     partial void CustomCtor()
     {
-        this.ModHeader.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
+        this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 }
 

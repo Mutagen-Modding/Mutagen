@@ -19,7 +19,7 @@ public partial class SkyrimMod : AMod
 
     partial void CustomCtor()
     {
-        this.ModHeader.FormVersion = this.SkyrimRelease.ToGameRelease().GetDefaultFormVersion()!.Value;
+        this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 }
 

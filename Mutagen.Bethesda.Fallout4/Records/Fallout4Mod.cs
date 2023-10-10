@@ -17,7 +17,7 @@ public partial class Fallout4Mod : AMod
 
     partial void CustomCtor()
     {
-        this.ModHeader.FormVersion = GameRelease.Fallout4.GetDefaultFormVersion()!.Value;
+        this.ModHeader.FormVersion = GameConstants.Get(GameRelease).DefaultFormVersion!.Value;
     }
 }
 

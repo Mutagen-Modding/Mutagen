@@ -36,23 +36,6 @@ public static class GameReleaseKernelExt
         };
     }
     
-    public static ushort? GetDefaultFormVersion(this GameRelease release)
-    {
-        return release switch
-        {
-            GameRelease.Oblivion => default,
-            GameRelease.SkyrimLE => 43,
-            GameRelease.EnderalLE => 43,
-            GameRelease.SkyrimSE => 44,
-            GameRelease.SkyrimSEGog => 44,
-            GameRelease.EnderalSE => 44,
-            GameRelease.SkyrimVR => 44,
-            GameRelease.Fallout4 => 131,
-            GameRelease.Starfield => 555,
-            _ => throw new NotImplementedException(),
-        };
-    }
-    
     public static int GetMasterFlagIndex(this GameCategory release)
     {
         return 0x0000_0001;

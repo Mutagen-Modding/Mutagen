@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -981,7 +982,7 @@ namespace Mutagen.Bethesda.Starfield
         public Spell(FormKey formKey)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameRelease.Starfield.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Starfield.DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -990,7 +991,7 @@ namespace Mutagen.Bethesda.Starfield
             GameRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = gameRelease.GetDefaultFormVersion()!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease).DefaultFormVersion!.Value;
             CustomCtor();
         }
 

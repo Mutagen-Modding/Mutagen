@@ -29,29 +29,11 @@ public class EnumCompletenessTests
     }
 
     [Fact]
-    public void HasEnabledMarkers()
-    {
-        foreach (var release in Enums<GameRelease>.Values)
-        {
-            PluginListings.HasEnabledMarkers(release);
-        }
-    }
-
-    [Fact]
     public void GameConstants()
     {
         foreach (var release in Enums<GameRelease>.Values)
         {
             Mutagen.Bethesda.Plugins.Meta.GameConstants.Get(release);
-        }
-    }
-
-    [Fact]
-    public void DefaultFormVersion()
-    {
-        foreach (var release in Enums<GameRelease>.Values)
-        {
-            release.GetDefaultFormVersion();
         }
     }
 

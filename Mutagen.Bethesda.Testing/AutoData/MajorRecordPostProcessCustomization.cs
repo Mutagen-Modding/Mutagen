@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Plugins.Records;
+﻿using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
@@ -14,7 +15,7 @@ public class MajorRecordPostProcessCustomization : PostProcessWhereIsACustomizat
         rec.MajorRecordFlagsRaw = 0;
         if (rec is IFormVersionSetter formVersionSetter)
         {
-            var formVersion = release.GetDefaultFormVersion();
+            var formVersion = GameConstants.Get(release).DefaultFormVersion;
             if (formVersion != null)
             {
                 formVersionSetter.FormVersion = formVersion.Value;
