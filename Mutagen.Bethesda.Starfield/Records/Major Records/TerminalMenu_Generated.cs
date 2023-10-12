@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +25,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +57,88 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapterIndexed? _VirtualMachineAdapter;
+        public VirtualMachineAdapterIndexed? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterIndexedGetter? ITerminalMenuGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITerminalMenuGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region TMVT
+        public String? TMVT { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ITerminalMenuGetter.TMVT => this.TMVT;
+        #endregion
+        #region DNAM
+        public String? DNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ITerminalMenuGetter.DNAM => this.DNAM;
+        #endregion
+        #region SNAM
+        public String? SNAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ITerminalMenuGetter.SNAM => this.SNAM;
+        #endregion
+        #region INAM
+        public TranslatedString? INAM { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITerminalMenuGetter.INAM => this.INAM;
+        #endregion
+        #region BodyTexts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<TerminalMenuBodyText>? _BodyTexts;
+        public ExtendedList<TerminalMenuBodyText>? BodyTexts
+        {
+            get => this._BodyTexts;
+            set => this._BodyTexts = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ITerminalMenuBodyTextGetter>? ITerminalMenuGetter.BodyTexts => _BodyTexts;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +164,13 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapterIndexed.Mask<TItem>?>(initialValue, new VirtualMachineAdapterIndexed.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.TMVT = initialValue;
+                this.DNAM = initialValue;
+                this.SNAM = initialValue;
+                this.INAM = initialValue;
+                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -88,7 +180,14 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem Name,
+                TItem TMVT,
+                TItem DNAM,
+                TItem SNAM,
+                TItem INAM,
+                TItem BodyTexts)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +197,13 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapterIndexed.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapterIndexed.Mask<TItem>(VirtualMachineAdapter));
+                this.Name = Name;
+                this.TMVT = TMVT;
+                this.DNAM = DNAM;
+                this.SNAM = SNAM;
+                this.INAM = INAM;
+                this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(BodyTexts, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +212,16 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapterIndexed.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Name;
+            public TItem TMVT;
+            public TItem DNAM;
+            public TItem SNAM;
+            public TItem INAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>? BodyTexts;
             #endregion
 
             #region Equals
@@ -119,11 +235,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.TMVT, rhs.TMVT)) return false;
+                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
+                if (!object.Equals(this.SNAM, rhs.SNAM)) return false;
+                if (!object.Equals(this.INAM, rhs.INAM)) return false;
+                if (!object.Equals(this.BodyTexts, rhs.BodyTexts)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Name);
+                hash.Add(this.TMVT);
+                hash.Add(this.DNAM);
+                hash.Add(this.SNAM);
+                hash.Add(this.INAM);
+                hash.Add(this.BodyTexts);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +264,28 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.TMVT)) return false;
+                if (!eval(this.DNAM)) return false;
+                if (!eval(this.SNAM)) return false;
+                if (!eval(this.INAM)) return false;
+                if (this.BodyTexts != null)
+                {
+                    if (!eval(this.BodyTexts.Overall)) return false;
+                    if (this.BodyTexts.Specific != null)
+                    {
+                        foreach (var item in this.BodyTexts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +294,28 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.TMVT)) return true;
+                if (eval(this.DNAM)) return true;
+                if (eval(this.SNAM)) return true;
+                if (eval(this.INAM)) return true;
+                if (this.BodyTexts != null)
+                {
+                    if (eval(this.BodyTexts.Overall)) return true;
+                    if (this.BodyTexts.Specific != null)
+                    {
+                        foreach (var item in this.BodyTexts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +331,27 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapterIndexed.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.TMVT = eval(this.TMVT);
+                obj.DNAM = eval(this.DNAM);
+                obj.SNAM = eval(this.SNAM);
+                obj.INAM = eval(this.INAM);
+                if (BodyTexts != null)
+                {
+                    obj.BodyTexts = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>>?>(eval(this.BodyTexts.Overall), Enumerable.Empty<MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>>());
+                    if (BodyTexts.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>>();
+                        obj.BodyTexts.Specific = l;
+                        foreach (var item in BodyTexts.Specific)
+                        {
+                            MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +370,49 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(TerminalMenu.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.TMVT ?? true)
+                    {
+                        sb.AppendItem(TMVT, "TMVT");
+                    }
+                    if (printMask?.DNAM ?? true)
+                    {
+                        sb.AppendItem(DNAM, "DNAM");
+                    }
+                    if (printMask?.SNAM ?? true)
+                    {
+                        sb.AppendItem(SNAM, "SNAM");
+                    }
+                    if (printMask?.INAM ?? true)
+                    {
+                        sb.AppendItem(INAM, "INAM");
+                    }
+                    if ((printMask?.BodyTexts?.Overall ?? true)
+                        && BodyTexts is {} BodyTextsItem)
+                    {
+                        sb.AppendLine("BodyTexts =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(BodyTextsItem.Overall);
+                            if (BodyTextsItem.Specific != null)
+                            {
+                                foreach (var subItem in BodyTextsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +423,36 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapterIndexed.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Name;
+            public Exception? TMVT;
+            public Exception? DNAM;
+            public Exception? SNAM;
+            public Exception? INAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>? BodyTexts;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 TerminalMenu_FieldIndex enu = (TerminalMenu_FieldIndex)index;
                 switch (enu)
                 {
+                    case TerminalMenu_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case TerminalMenu_FieldIndex.Name:
+                        return Name;
+                    case TerminalMenu_FieldIndex.TMVT:
+                        return TMVT;
+                    case TerminalMenu_FieldIndex.DNAM:
+                        return DNAM;
+                    case TerminalMenu_FieldIndex.SNAM:
+                        return SNAM;
+                    case TerminalMenu_FieldIndex.INAM:
+                        return INAM;
+                    case TerminalMenu_FieldIndex.BodyTexts:
+                        return BodyTexts;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +463,27 @@ namespace Mutagen.Bethesda.Starfield
                 TerminalMenu_FieldIndex enu = (TerminalMenu_FieldIndex)index;
                 switch (enu)
                 {
+                    case TerminalMenu_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapterIndexed.ErrorMask?>(ex, null);
+                        break;
+                    case TerminalMenu_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case TerminalMenu_FieldIndex.TMVT:
+                        this.TMVT = ex;
+                        break;
+                    case TerminalMenu_FieldIndex.DNAM:
+                        this.DNAM = ex;
+                        break;
+                    case TerminalMenu_FieldIndex.SNAM:
+                        this.SNAM = ex;
+                        break;
+                    case TerminalMenu_FieldIndex.INAM:
+                        this.INAM = ex;
+                        break;
+                    case TerminalMenu_FieldIndex.BodyTexts:
+                        this.BodyTexts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +495,27 @@ namespace Mutagen.Bethesda.Starfield
                 TerminalMenu_FieldIndex enu = (TerminalMenu_FieldIndex)index;
                 switch (enu)
                 {
+                    case TerminalMenu_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapterIndexed.ErrorMask?>?)obj;
+                        break;
+                    case TerminalMenu_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case TerminalMenu_FieldIndex.TMVT:
+                        this.TMVT = (Exception?)obj;
+                        break;
+                    case TerminalMenu_FieldIndex.DNAM:
+                        this.DNAM = (Exception?)obj;
+                        break;
+                    case TerminalMenu_FieldIndex.SNAM:
+                        this.SNAM = (Exception?)obj;
+                        break;
+                    case TerminalMenu_FieldIndex.INAM:
+                        this.INAM = (Exception?)obj;
+                        break;
+                    case TerminalMenu_FieldIndex.BodyTexts:
+                        this.BodyTexts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +525,13 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Name != null) return true;
+                if (TMVT != null) return true;
+                if (DNAM != null) return true;
+                if (SNAM != null) return true;
+                if (INAM != null) return true;
+                if (BodyTexts != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +558,40 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(TMVT, "TMVT");
+                }
+                {
+                    sb.AppendItem(DNAM, "DNAM");
+                }
+                {
+                    sb.AppendItem(SNAM, "SNAM");
+                }
+                {
+                    sb.AppendItem(INAM, "INAM");
+                }
+                if (BodyTexts is {} BodyTextsItem)
+                {
+                    sb.AppendLine("BodyTexts =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(BodyTextsItem.Overall);
+                        if (BodyTextsItem.Specific != null)
+                        {
+                            foreach (var subItem in BodyTextsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +600,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.TMVT = this.TMVT.Combine(rhs.TMVT);
+                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
+                ret.SNAM = this.SNAM.Combine(rhs.SNAM);
+                ret.INAM = this.INAM.Combine(rhs.INAM);
+                ret.BodyTexts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BodyTexts?.Overall, rhs.BodyTexts?.Overall), Noggog.ExceptionExt.Combine(this.BodyTexts?.Specific, rhs.BodyTexts?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +628,42 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapterIndexed.TranslationMask? VirtualMachineAdapter;
+            public bool Name;
+            public bool TMVT;
+            public bool DNAM;
+            public bool SNAM;
+            public bool INAM;
+            public TerminalMenuBodyText.TranslationMask? BodyTexts;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.TMVT = defaultOn;
+                this.DNAM = defaultOn;
+                this.SNAM = defaultOn;
+                this.INAM = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((TMVT, null));
+                ret.Add((DNAM, null));
+                ret.Add((SNAM, null));
+                ret.Add((INAM, null));
+                ret.Add((BodyTexts == null ? DefaultOn : !BodyTexts.GetCrystal().CopyNothing, BodyTexts?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +675,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = TerminalMenu_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TerminalMenuCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TerminalMenuSetterCommon.Instance.RemapLinks(this, mapping);
         public TerminalMenu(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -418,10 +799,25 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ITerminalMenu :
+        IFormLinkContainer,
         ILoquiObjectSetter<ITerminalMenuInternal>,
+        INamed,
+        INamedRequired,
         IStarfieldMajorRecordInternal,
-        ITerminalMenuGetter
+        ITerminalMenuGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new VirtualMachineAdapterIndexed? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new String? TMVT { get; set; }
+        new String? DNAM { get; set; }
+        new String? SNAM { get; set; }
+        new TranslatedString? INAM { get; set; }
+        new ExtendedList<TerminalMenuBodyText>? BodyTexts { get; set; }
     }
 
     public partial interface ITerminalMenuInternal :
@@ -435,10 +831,33 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ITerminalMenuGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<ITerminalMenuGetter>,
-        IMapsToGetter<ITerminalMenuGetter>
+        IMapsToGetter<ITerminalMenuGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => TerminalMenu_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
+        IVirtualMachineAdapterIndexedGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        String? TMVT { get; }
+        String? DNAM { get; }
+        String? SNAM { get; }
+        ITranslatedStringGetter? INAM { get; }
+        IReadOnlyList<ITerminalMenuBodyTextGetter>? BodyTexts { get; }
 
     }
 
@@ -615,6 +1034,13 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        TMVT = 9,
+        DNAM = 10,
+        SNAM = 11,
+        INAM = 12,
+        BodyTexts = 13,
     }
     #endregion
 
@@ -625,9 +1051,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(TerminalMenu.Mask<>);
 
@@ -657,8 +1083,23 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.TMLM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.TMLM);
+            var all = RecordCollection.Factory(
+                RecordTypes.TMLM,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.FULL,
+                RecordTypes.TMVT,
+                RecordTypes.DNAM,
+                RecordTypes.SNAM,
+                RecordTypes.INAM,
+                RecordTypes.BSIZ,
+                RecordTypes.BTXT,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TerminalMenuBinaryWriteTranslation);
         #region Interface
@@ -700,6 +1141,13 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ITerminalMenuInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Name = default;
+            item.TMVT = default;
+            item.DNAM = default;
+            item.SNAM = default;
+            item.INAM = default;
+            item.BodyTexts = null;
             base.Clear(item);
         }
         
@@ -717,6 +1165,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ITerminalMenu obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.BodyTexts?.RemapLinks(mapping);
         }
         
         #endregion
@@ -784,6 +1234,20 @@ namespace Mutagen.Bethesda.Starfield
             TerminalMenu.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.TMVT = string.Equals(item.TMVT, rhs.TMVT);
+            ret.DNAM = string.Equals(item.DNAM, rhs.DNAM);
+            ret.SNAM = string.Equals(item.SNAM, rhs.SNAM);
+            ret.INAM = object.Equals(item.INAM, rhs.INAM);
+            ret.BodyTexts = item.BodyTexts.CollectionEqualsHelper(
+                rhs.BodyTexts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -833,6 +1297,51 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.TMVT ?? true)
+                && item.TMVT is {} TMVTItem)
+            {
+                sb.AppendItem(TMVTItem, "TMVT");
+            }
+            if ((printMask?.DNAM ?? true)
+                && item.DNAM is {} DNAMItem)
+            {
+                sb.AppendItem(DNAMItem, "DNAM");
+            }
+            if ((printMask?.SNAM ?? true)
+                && item.SNAM is {} SNAMItem)
+            {
+                sb.AppendItem(SNAMItem, "SNAM");
+            }
+            if ((printMask?.INAM ?? true)
+                && item.INAM is {} INAMItem)
+            {
+                sb.AppendItem(INAMItem, "INAM");
+            }
+            if ((printMask?.BodyTexts?.Overall ?? true)
+                && item.BodyTexts is {} BodyTextsItem)
+            {
+                sb.AppendLine("BodyTexts =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in BodyTextsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static TerminalMenu_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -883,6 +1392,38 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterIndexedCommon)((IVirtualMachineAdapterIndexedGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)TerminalMenu_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.TMVT) ?? true))
+            {
+                if (!string.Equals(lhs.TMVT, rhs.TMVT)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.DNAM) ?? true))
+            {
+                if (!string.Equals(lhs.DNAM, rhs.DNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.SNAM) ?? true))
+            {
+                if (!string.Equals(lhs.SNAM, rhs.SNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.INAM) ?? true))
+            {
+                if (!object.Equals(lhs.INAM, rhs.INAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.BodyTexts) ?? true))
+            {
+                if (!lhs.BodyTexts.SequenceEqualNullable(rhs.BodyTexts, (l, r) => ((TerminalMenuBodyTextCommon)((ITerminalMenuBodyTextGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TerminalMenu_FieldIndex.BodyTexts)))) return false;
+            }
             return true;
         }
         
@@ -911,6 +1452,31 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ITerminalMenuGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.TMVT is {} TMVTitem)
+            {
+                hash.Add(TMVTitem);
+            }
+            if (item.DNAM is {} DNAMitem)
+            {
+                hash.Add(DNAMitem);
+            }
+            if (item.SNAM is {} SNAMitem)
+            {
+                hash.Add(SNAMitem);
+            }
+            if (item.INAM is {} INAMitem)
+            {
+                hash.Add(INAMitem);
+            }
+            hash.Add(item.BodyTexts);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -939,6 +1505,20 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.BodyTexts is {} BodyTextsItem)
+            {
+                foreach (var item in BodyTextsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1014,6 +1594,84 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)TerminalMenu_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)TerminalMenu_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.TMVT) ?? true))
+            {
+                item.TMVT = rhs.TMVT;
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.DNAM) ?? true))
+            {
+                item.DNAM = rhs.DNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.SNAM) ?? true))
+            {
+                item.SNAM = rhs.SNAM;
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.INAM) ?? true))
+            {
+                item.INAM = rhs.INAM?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.BodyTexts) ?? true))
+            {
+                errorMask?.PushIndex((int)TerminalMenu_FieldIndex.BodyTexts);
+                try
+                {
+                    if ((rhs.BodyTexts != null))
+                    {
+                        item.BodyTexts = 
+                            rhs.BodyTexts
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<TerminalMenuBodyText>();
+                    }
+                    else
+                    {
+                        item.BodyTexts = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1162,6 +1820,64 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly TerminalMenuBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            ITerminalMenuGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterIndexedBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TMVT,
+                header: translationParams.ConvertToCustom(RecordTypes.TMVT),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.INAM,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITerminalMenuBodyTextGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.BodyTexts,
+                counterType: RecordTypes.BSIZ,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, ITerminalMenuBodyTextGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((TerminalMenuBodyTextBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ITerminalMenuGetter item,
@@ -1178,10 +1894,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1231,6 +1949,97 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly TerminalMenuBinaryCreateTranslation Instance = new TerminalMenuBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.TMLM;
+        public static ParseResult FillBinaryRecordTypes(
+            ITerminalMenuInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapterIndexed.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)TerminalMenu_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)TerminalMenu_FieldIndex.Name;
+                }
+                case RecordTypeInts.TMVT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TMVT = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)TerminalMenu_FieldIndex.TMVT;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DNAM = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)TerminalMenu_FieldIndex.DNAM;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SNAM = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)TerminalMenu_FieldIndex.SNAM;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.INAM = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)TerminalMenu_FieldIndex.INAM;
+                }
+                case RecordTypeInts.BSIZ:
+                {
+                    item.BodyTexts = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TerminalMenuBodyText>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.BSIZ,
+                            triggeringRecord: TerminalMenuBodyText_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: TerminalMenuBodyText.TryCreateFromBinary)
+                        .CastExtendedList<TerminalMenuBodyText>();
+                    return (int)TerminalMenu_FieldIndex.BodyTexts;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1263,6 +2072,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => TerminalMenuCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TerminalMenuBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1277,6 +2087,41 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(ITerminalMenu);
 
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterIndexedGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterIndexedBinaryOverlay.VirtualMachineAdapterIndexedFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region TMVT
+        private int? _TMVTLocation;
+        public String? TMVT => _TMVTLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TMVTLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region DNAM
+        private int? _DNAMLocation;
+        public String? DNAM => _DNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SNAM
+        private int? _SNAMLocation;
+        public String? SNAM => _SNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region INAM
+        private int? _INAMLocation;
+        public ITranslatedStringGetter? INAM => _INAMLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        public IReadOnlyList<ITerminalMenuBodyTextGetter>? BodyTexts { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1334,6 +2179,82 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)TerminalMenu_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.Name;
+                }
+                case RecordTypeInts.TMVT:
+                {
+                    _TMVTLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.TMVT;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.DNAM;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _SNAMLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.SNAM;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _INAMLocation = (stream.Position - offset);
+                    return (int)TerminalMenu_FieldIndex.INAM;
+                }
+                case RecordTypeInts.BSIZ:
+                {
+                    this.BodyTexts = BinaryOverlayList.FactoryByCountPerItem<ITerminalMenuBodyTextGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: TerminalMenuBodyText_Registration.TriggerSpecs,
+                        countType: RecordTypes.BSIZ,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => TerminalMenuBodyTextBinaryOverlay.TerminalMenuBodyTextFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)TerminalMenu_FieldIndex.BodyTexts;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

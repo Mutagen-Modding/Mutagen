@@ -7,6 +7,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - LeveledItem
 - MagicEffect
+- TerminalMenu
 ### IKeywordCommon
 - Keyword
 ### IKeyworded
@@ -67,6 +68,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptVariableProperty
 - Spell
 - StaticCollection
+- TerminalMenu
 ### IObjectBounded
 - AcousticSpace
 - Activator
@@ -214,6 +216,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### StaticPlacement
 - IPositionRotation
+### TerminalMenu
+- IHaveVirtualMachineAdapter
+- INamed
 ### TextureSet
 - IObjectBounded
 ### Transform

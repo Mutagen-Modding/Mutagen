@@ -59,7 +59,9 @@ public partial class RecordTypes
     public static readonly RecordType BOLV = new(0x564C4F42);
     public static readonly RecordType BOOK = new(0x4B4F4F42);
     public static readonly RecordType BPTD = new(0x44545042);
+    public static readonly RecordType BSIZ = new(0x5A495342);
     public static readonly RecordType BSTT = new(0x54545342);
+    public static readonly RecordType BTXT = new(0x54585442);
     public static readonly RecordType CAMS = new(0x534D4143);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CHAL = new(0x4C414843);
@@ -338,6 +340,7 @@ public partial class RecordTypes
     public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TMLM = new(0x4D4C4D54);
+    public static readonly RecordType TMVT = new(0x54564D54);
     public static readonly RecordType TNAM = new(0x4D414E54);
     public static readonly RecordType TODD = new(0x44444F54);
     public static readonly RecordType TRAV = new(0x56415254);

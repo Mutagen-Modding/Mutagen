@@ -902,6 +902,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             SystemHasKeywordConditionData_Registration.Instance,
             Terminal_Registration.Instance,
             TerminalMenu_Registration.Instance,
+            TerminalMenuBodyText_Registration.Instance,
             TextureSet_Registration.Instance,
             TimeOfDayData_Registration.Instance,
             Transform_Registration.Instance,

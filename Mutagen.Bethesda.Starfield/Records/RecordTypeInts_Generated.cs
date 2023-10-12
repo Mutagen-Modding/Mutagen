@@ -57,7 +57,9 @@ public partial class RecordTypeInts
     public const int BOLV = 0x564C4F42;
     public const int BOOK = 0x4B4F4F42;
     public const int BPTD = 0x44545042;
+    public const int BSIZ = 0x5A495342;
     public const int BSTT = 0x54545342;
+    public const int BTXT = 0x54585442;
     public const int CAMS = 0x534D4143;
     public const int CELL = 0x4C4C4543;
     public const int CHAL = 0x4C414843;
@@ -336,6 +338,7 @@ public partial class RecordTypeInts
     public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
     public const int TMLM = 0x4D4C4D54;
+    public const int TMVT = 0x54564D54;
     public const int TNAM = 0x4D414E54;
     public const int TODD = 0x44444F54;
     public const int TRAV = 0x56415254;

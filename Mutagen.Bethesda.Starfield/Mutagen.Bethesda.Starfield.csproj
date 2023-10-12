@@ -5051,5 +5051,8 @@
     <Compile Include="Records\Major Records\FormListConditionalEntry_Generated.cs">
       <DependentUpon>FormList.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuBodyText_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
