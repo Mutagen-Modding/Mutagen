@@ -183,7 +183,12 @@ public partial class RecordTypeInts
     public const int IPCT = 0x54435049;
     public const int IPDS = 0x53445049;
     public const int IRES = 0x53455249;
+    public const int ISET = 0x54455349;
+    public const int ISIZ = 0x5A495349;
+    public const int ISTX = 0x58545349;
+    public const int ITID = 0x44495449;
     public const int ITMC = 0x434D5449;
+    public const int ITXT = 0x54585449;
     public const int JNAM = 0x4D414E4A;
     public const int KEYM = 0x4D59454B;
     public const int KNAM = 0x4D414E4B;
@@ -341,6 +346,7 @@ public partial class RecordTypeInts
     public const int TMVT = 0x54564D54;
     public const int TNAM = 0x4D414E54;
     public const int TODD = 0x44444F54;
+    public const int TPLT = 0x544C5054;
     public const int TRAV = 0x56415254;
     public const int TRNS = 0x534E5254;
     public const int TX00 = 0x30305854;
@@ -377,6 +383,7 @@ public partial class RecordTypeInts
     public const int XALG = 0x474C4158;
     public const int XFLG = 0x474C4658;
     public const int XLMS = 0x534D4C58;
+    public const int XLOC = 0x434F4C58;
     public const int XMPM = 0x4D504D58;
     public const int XMSP = 0x50534D58;
     public const int XNAM = 0x4D414E58;

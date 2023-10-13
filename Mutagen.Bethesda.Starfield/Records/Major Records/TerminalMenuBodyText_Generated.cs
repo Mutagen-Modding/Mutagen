@@ -71,6 +71,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region UseTemplatedText
+        public Boolean? UseTemplatedText { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? ITerminalMenuBodyTextGetter.UseTemplatedText => this.UseTemplatedText;
+        #endregion
 
         #region To String
 
@@ -112,14 +117,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Text = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UseTemplatedText = initialValue;
             }
 
             public Mask(
                 TItem Text,
-                TItem Conditions)
+                TItem Conditions,
+                TItem UseTemplatedText)
             {
                 this.Text = Text;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UseTemplatedText = UseTemplatedText;
             }
 
             #pragma warning disable CS8618
@@ -133,6 +141,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem Text;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem UseTemplatedText;
             #endregion
 
             #region Equals
@@ -147,6 +156,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!object.Equals(this.Text, rhs.Text)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.UseTemplatedText, rhs.UseTemplatedText)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -154,6 +164,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Text);
                 hash.Add(this.Conditions);
+                hash.Add(this.UseTemplatedText);
                 return hash.ToHashCode();
             }
 
@@ -175,6 +186,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.UseTemplatedText)) return false;
                 return true;
             }
             #endregion
@@ -195,6 +207,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.UseTemplatedText)) return true;
                 return false;
             }
             #endregion
@@ -225,6 +238,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.UseTemplatedText = eval(this.UseTemplatedText);
             }
             #endregion
 
@@ -266,6 +280,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.UseTemplatedText ?? true)
+                    {
+                        sb.AppendItem(UseTemplatedText, "UseTemplatedText");
+                    }
                 }
             }
             #endregion
@@ -292,6 +310,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             public Exception? Text;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? UseTemplatedText;
             #endregion
 
             #region IErrorMask
@@ -304,6 +323,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Text;
                     case TerminalMenuBodyText_FieldIndex.Conditions:
                         return Conditions;
+                    case TerminalMenuBodyText_FieldIndex.UseTemplatedText:
+                        return UseTemplatedText;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -319,6 +340,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case TerminalMenuBodyText_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case TerminalMenuBodyText_FieldIndex.UseTemplatedText:
+                        this.UseTemplatedText = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -336,6 +360,9 @@ namespace Mutagen.Bethesda.Starfield
                     case TerminalMenuBodyText_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
+                    case TerminalMenuBodyText_FieldIndex.UseTemplatedText:
+                        this.UseTemplatedText = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -346,6 +373,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Text != null) return true;
                 if (Conditions != null) return true;
+                if (UseTemplatedText != null) return true;
                 return false;
             }
             #endregion
@@ -392,6 +420,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(UseTemplatedText, "UseTemplatedText");
+                }
             }
             #endregion
 
@@ -402,6 +433,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Text = this.Text.Combine(rhs.Text);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.UseTemplatedText = this.UseTemplatedText.Combine(rhs.UseTemplatedText);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,6 +459,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool OnOverall;
             public bool Text;
             public Condition.TranslationMask? Conditions;
+            public bool UseTemplatedText;
             #endregion
 
             #region Ctors
@@ -437,6 +470,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Text = defaultOn;
+                this.UseTemplatedText = defaultOn;
             }
 
             #endregion
@@ -454,6 +488,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ret.Add((Text, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((UseTemplatedText, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -534,6 +569,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         new TranslatedString Text { get; set; }
         new ExtendedList<Condition> Conditions { get; }
+        new Boolean? UseTemplatedText { get; set; }
     }
 
     public partial interface ITerminalMenuBodyTextGetter :
@@ -551,6 +587,7 @@ namespace Mutagen.Bethesda.Starfield
         static ILoquiRegistration StaticRegistration => TerminalMenuBodyText_Registration.Instance;
         ITranslatedStringGetter Text { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
+        Boolean? UseTemplatedText { get; }
 
     }
 
@@ -722,6 +759,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         Text = 0,
         Conditions = 1,
+        UseTemplatedText = 2,
     }
     #endregion
 
@@ -732,9 +770,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(TerminalMenuBodyText.Mask<>);
 
@@ -770,7 +808,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.TPLT);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TerminalMenuBodyTextBinaryWriteTranslation);
@@ -815,6 +854,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Text.Clear();
             item.Conditions.Clear();
+            item.UseTemplatedText = default;
         }
         
         #region Mutagen
@@ -870,6 +910,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.UseTemplatedText = item.UseTemplatedText == rhs.UseTemplatedText;
         }
         
         public string Print(
@@ -932,6 +973,11 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if ((printMask?.UseTemplatedText ?? true)
+                && item.UseTemplatedText is {} UseTemplatedTextItem)
+            {
+                sb.AppendItem(UseTemplatedTextItem, "UseTemplatedText");
+            }
         }
         
         #region Equals and Hash
@@ -949,6 +995,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TerminalMenuBodyText_FieldIndex.Conditions)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenuBodyText_FieldIndex.UseTemplatedText) ?? true))
+            {
+                if (lhs.UseTemplatedText != rhs.UseTemplatedText) return false;
+            }
             return true;
         }
         
@@ -957,6 +1007,10 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.Text);
             hash.Add(item.Conditions);
+            if (item.UseTemplatedText is {} UseTemplatedTextitem)
+            {
+                hash.Add(UseTemplatedTextitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1020,6 +1074,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenuBodyText_FieldIndex.UseTemplatedText) ?? true))
+            {
+                item.UseTemplatedText = rhs.UseTemplatedText;
             }
         }
         
@@ -1135,6 +1193,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
+                writer: writer,
+                item: item.UseTemplatedText,
+                header: translationParams.ConvertToCustom(RecordTypes.TPLT));
         }
 
         public void Write(
@@ -1196,6 +1258,12 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams,
                             transl: Condition.TryCreateFromBinary));
                     return (int)TerminalMenuBodyText_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.TPLT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.UseTemplatedText = frame.ReadBoolean();
+                    return (int)TerminalMenuBodyText_FieldIndex.UseTemplatedText;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1271,6 +1339,10 @@ namespace Mutagen.Bethesda.Starfield
         public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
+        #region UseTemplatedText
+        private int? _UseTemplatedTextLocation;
+        public Boolean? UseTemplatedText => _UseTemplatedTextLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UseTemplatedTextLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1354,6 +1426,11 @@ namespace Mutagen.Bethesda.Starfield
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)TerminalMenuBodyText_FieldIndex.Conditions;
+                }
+                case RecordTypeInts.TPLT:
+                {
+                    _UseTemplatedTextLocation = (stream.Position - offset);
+                    return (int)TerminalMenuBodyText_FieldIndex.UseTemplatedText;
                 }
                 default:
                     return ParseResult.Stop;

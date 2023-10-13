@@ -106,19 +106,37 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         #region TMVT
-        public String? TMVT { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITerminalMenuGetter.TMVT => this.TMVT;
+        protected MemorySlice<Byte>? _TMVT;
+        public MemorySlice<Byte>? TMVT
+        {
+            get => this._TMVT;
+            set => this._TMVT = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ITerminalMenuGetter.TMVT => this.TMVT;
         #endregion
         #region DNAM
-        public String? DNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITerminalMenuGetter.DNAM => this.DNAM;
+        protected MemorySlice<Byte>? _DNAM;
+        public MemorySlice<Byte>? DNAM
+        {
+            get => this._DNAM;
+            set => this._DNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ITerminalMenuGetter.DNAM => this.DNAM;
         #endregion
         #region SNAM
-        public String? SNAM { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITerminalMenuGetter.SNAM => this.SNAM;
+        protected MemorySlice<Byte>? _SNAM;
+        public MemorySlice<Byte>? SNAM
+        {
+            get => this._SNAM;
+            set => this._SNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ITerminalMenuGetter.SNAM => this.SNAM;
         #endregion
         #region INAM
         public TranslatedString? INAM { get; set; }
@@ -136,6 +154,20 @@ namespace Mutagen.Bethesda.Starfield
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IReadOnlyList<ITerminalMenuBodyTextGetter>? ITerminalMenuGetter.BodyTexts => _BodyTexts;
+        #endregion
+
+        #endregion
+        #region MenuItems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<TerminalMenuItem>? _MenuItems;
+        public ExtendedList<TerminalMenuItem>? MenuItems
+        {
+            get => this._MenuItems;
+            set => this._MenuItems = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ITerminalMenuItemGetter>? ITerminalMenuGetter.MenuItems => _MenuItems;
         #endregion
 
         #endregion
@@ -171,6 +203,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SNAM = initialValue;
                 this.INAM = initialValue;
                 this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
+                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -187,7 +220,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem DNAM,
                 TItem SNAM,
                 TItem INAM,
-                TItem BodyTexts)
+                TItem BodyTexts,
+                TItem MenuItems)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -204,6 +238,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SNAM = SNAM;
                 this.INAM = INAM;
                 this.BodyTexts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>(BodyTexts, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>());
+                this.MenuItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>(MenuItems, Enumerable.Empty<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -222,6 +257,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem SNAM;
             public TItem INAM;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuBodyText.Mask<TItem>?>>?>? BodyTexts;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TerminalMenuItem.Mask<TItem>?>>?>? MenuItems;
             #endregion
 
             #region Equals
@@ -242,6 +278,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SNAM, rhs.SNAM)) return false;
                 if (!object.Equals(this.INAM, rhs.INAM)) return false;
                 if (!object.Equals(this.BodyTexts, rhs.BodyTexts)) return false;
+                if (!object.Equals(this.MenuItems, rhs.MenuItems)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -254,6 +291,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SNAM);
                 hash.Add(this.INAM);
                 hash.Add(this.BodyTexts);
+                hash.Add(this.MenuItems);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -286,6 +324,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (this.MenuItems != null)
+                {
+                    if (!eval(this.MenuItems.Overall)) return false;
+                    if (this.MenuItems.Specific != null)
+                    {
+                        foreach (var item in this.MenuItems.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -310,6 +360,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.BodyTexts.Specific != null)
                     {
                         foreach (var item in this.BodyTexts.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.MenuItems != null)
+                {
+                    if (eval(this.MenuItems.Overall)) return true;
+                    if (this.MenuItems.Specific != null)
+                    {
+                        foreach (var item in this.MenuItems.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -347,6 +409,21 @@ namespace Mutagen.Bethesda.Starfield
                         foreach (var item in BodyTexts.Specific)
                         {
                             MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TerminalMenuBodyText.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (MenuItems != null)
+                {
+                    obj.MenuItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>?>(eval(this.MenuItems.Overall), Enumerable.Empty<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>());
+                    if (MenuItems.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>>();
+                        obj.MenuItems.Specific = l;
+                        foreach (var item in MenuItems.Specific)
+                        {
+                            MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, TerminalMenuItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -413,6 +490,25 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if ((printMask?.MenuItems?.Overall ?? true)
+                        && MenuItems is {} MenuItemsItem)
+                    {
+                        sb.AppendLine("MenuItems =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MenuItemsItem.Overall);
+                            if (MenuItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in MenuItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -431,6 +527,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? SNAM;
             public Exception? INAM;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>? BodyTexts;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>? MenuItems;
             #endregion
 
             #region IErrorMask
@@ -453,6 +550,8 @@ namespace Mutagen.Bethesda.Starfield
                         return INAM;
                     case TerminalMenu_FieldIndex.BodyTexts:
                         return BodyTexts;
+                    case TerminalMenu_FieldIndex.MenuItems:
+                        return MenuItems;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -483,6 +582,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case TerminalMenu_FieldIndex.BodyTexts:
                         this.BodyTexts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>(ex, null);
+                        break;
+                    case TerminalMenu_FieldIndex.MenuItems:
+                        this.MenuItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -516,6 +618,9 @@ namespace Mutagen.Bethesda.Starfield
                     case TerminalMenu_FieldIndex.BodyTexts:
                         this.BodyTexts = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>)obj;
                         break;
+                    case TerminalMenu_FieldIndex.MenuItems:
+                        this.MenuItems = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -532,6 +637,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (SNAM != null) return true;
                 if (INAM != null) return true;
                 if (BodyTexts != null) return true;
+                if (MenuItems != null) return true;
                 return false;
             }
             #endregion
@@ -592,6 +698,24 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (MenuItems is {} MenuItemsItem)
+                {
+                    sb.AppendLine("MenuItems =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MenuItemsItem.Overall);
+                        if (MenuItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in MenuItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -607,6 +731,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SNAM = this.SNAM.Combine(rhs.SNAM);
                 ret.INAM = this.INAM.Combine(rhs.INAM);
                 ret.BodyTexts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuBodyText.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BodyTexts?.Overall, rhs.BodyTexts?.Overall), Noggog.ExceptionExt.Combine(this.BodyTexts?.Specific, rhs.BodyTexts?.Specific));
+                ret.MenuItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TerminalMenuItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MenuItems?.Overall, rhs.MenuItems?.Overall), Noggog.ExceptionExt.Combine(this.MenuItems?.Specific, rhs.MenuItems?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -636,6 +761,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool SNAM;
             public bool INAM;
             public TerminalMenuBodyText.TranslationMask? BodyTexts;
+            public TerminalMenuItem.TranslationMask? MenuItems;
             #endregion
 
             #region Ctors
@@ -663,6 +789,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SNAM, null));
                 ret.Add((INAM, null));
                 ret.Add((BodyTexts == null ? DefaultOn : !BodyTexts.GetCrystal().CopyNothing, BodyTexts?.GetCrystal()));
+                ret.Add((MenuItems == null ? DefaultOn : !MenuItems.GetCrystal().CopyNothing, MenuItems?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -813,11 +940,12 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new String? TMVT { get; set; }
-        new String? DNAM { get; set; }
-        new String? SNAM { get; set; }
+        new MemorySlice<Byte>? TMVT { get; set; }
+        new MemorySlice<Byte>? DNAM { get; set; }
+        new MemorySlice<Byte>? SNAM { get; set; }
         new TranslatedString? INAM { get; set; }
         new ExtendedList<TerminalMenuBodyText>? BodyTexts { get; set; }
+        new ExtendedList<TerminalMenuItem>? MenuItems { get; set; }
     }
 
     public partial interface ITerminalMenuInternal :
@@ -853,11 +981,12 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        String? TMVT { get; }
-        String? DNAM { get; }
-        String? SNAM { get; }
+        ReadOnlyMemorySlice<Byte>? TMVT { get; }
+        ReadOnlyMemorySlice<Byte>? DNAM { get; }
+        ReadOnlyMemorySlice<Byte>? SNAM { get; }
         ITranslatedStringGetter? INAM { get; }
         IReadOnlyList<ITerminalMenuBodyTextGetter>? BodyTexts { get; }
+        IReadOnlyList<ITerminalMenuItemGetter>? MenuItems { get; }
 
     }
 
@@ -1041,6 +1170,7 @@ namespace Mutagen.Bethesda.Starfield
         SNAM = 11,
         INAM = 12,
         BodyTexts = 13,
+        MenuItems = 14,
     }
     #endregion
 
@@ -1051,9 +1181,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(TerminalMenu.Mask<>);
 
@@ -1098,7 +1228,16 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.TPLT,
+                RecordTypes.ISIZ,
+                RecordTypes.ITXT,
+                RecordTypes.ISTX,
+                RecordTypes.ISET,
+                RecordTypes.ITID,
+                RecordTypes.XLOC,
+                RecordTypes.TNAM,
+                RecordTypes.UNAM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TerminalMenuBinaryWriteTranslation);
@@ -1148,6 +1287,7 @@ namespace Mutagen.Bethesda.Starfield
             item.SNAM = default;
             item.INAM = default;
             item.BodyTexts = null;
+            item.MenuItems = null;
             base.Clear(item);
         }
         
@@ -1167,6 +1307,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.BodyTexts?.RemapLinks(mapping);
+            obj.MenuItems?.RemapLinks(mapping);
         }
         
         #endregion
@@ -1240,12 +1381,16 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.TMVT = string.Equals(item.TMVT, rhs.TMVT);
-            ret.DNAM = string.Equals(item.DNAM, rhs.DNAM);
-            ret.SNAM = string.Equals(item.SNAM, rhs.SNAM);
+            ret.TMVT = MemorySliceExt.SequenceEqual(item.TMVT, rhs.TMVT);
+            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
+            ret.SNAM = MemorySliceExt.SequenceEqual(item.SNAM, rhs.SNAM);
             ret.INAM = object.Equals(item.INAM, rhs.INAM);
             ret.BodyTexts = item.BodyTexts.CollectionEqualsHelper(
                 rhs.BodyTexts,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.MenuItems = item.MenuItems.CollectionEqualsHelper(
+                rhs.MenuItems,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1310,17 +1455,17 @@ namespace Mutagen.Bethesda.Starfield
             if ((printMask?.TMVT ?? true)
                 && item.TMVT is {} TMVTItem)
             {
-                sb.AppendItem(TMVTItem, "TMVT");
+                sb.AppendLine($"TMVT => {SpanExt.ToHexString(TMVTItem)}");
             }
             if ((printMask?.DNAM ?? true)
                 && item.DNAM is {} DNAMItem)
             {
-                sb.AppendItem(DNAMItem, "DNAM");
+                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
             }
             if ((printMask?.SNAM ?? true)
                 && item.SNAM is {} SNAMItem)
             {
-                sb.AppendItem(SNAMItem, "SNAM");
+                sb.AppendLine($"SNAM => {SpanExt.ToHexString(SNAMItem)}");
             }
             if ((printMask?.INAM ?? true)
                 && item.INAM is {} INAMItem)
@@ -1334,6 +1479,21 @@ namespace Mutagen.Bethesda.Starfield
                 using (sb.Brace())
                 {
                     foreach (var subItem in BodyTextsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.MenuItems?.Overall ?? true)
+                && item.MenuItems is {} MenuItemsItem)
+            {
+                sb.AppendLine("MenuItems =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in MenuItemsItem)
                     {
                         using (sb.Brace())
                         {
@@ -1406,15 +1566,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.TMVT) ?? true))
             {
-                if (!string.Equals(lhs.TMVT, rhs.TMVT)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.TMVT, rhs.TMVT)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.DNAM) ?? true))
             {
-                if (!string.Equals(lhs.DNAM, rhs.DNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.SNAM) ?? true))
             {
-                if (!string.Equals(lhs.SNAM, rhs.SNAM)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SNAM, rhs.SNAM)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.INAM) ?? true))
             {
@@ -1423,6 +1583,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.BodyTexts) ?? true))
             {
                 if (!lhs.BodyTexts.SequenceEqualNullable(rhs.BodyTexts, (l, r) => ((TerminalMenuBodyTextCommon)((ITerminalMenuBodyTextGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TerminalMenu_FieldIndex.BodyTexts)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.MenuItems) ?? true))
+            {
+                if (!lhs.MenuItems.SequenceEqualNullable(rhs.MenuItems, (l, r) => ((TerminalMenuItemCommon)((ITerminalMenuItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)TerminalMenu_FieldIndex.MenuItems)))) return false;
             }
             return true;
         }
@@ -1460,23 +1624,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Nameitem);
             }
-            if (item.TMVT is {} TMVTitem)
+            if (item.TMVT is {} TMVTItem)
             {
-                hash.Add(TMVTitem);
+                hash.Add(TMVTItem);
             }
-            if (item.DNAM is {} DNAMitem)
+            if (item.DNAM is {} DNAMItem)
             {
-                hash.Add(DNAMitem);
+                hash.Add(DNAMItem);
             }
-            if (item.SNAM is {} SNAMitem)
+            if (item.SNAM is {} SNAMItem)
             {
-                hash.Add(SNAMitem);
+                hash.Add(SNAMItem);
             }
             if (item.INAM is {} INAMitem)
             {
                 hash.Add(INAMitem);
             }
             hash.Add(item.BodyTexts);
+            hash.Add(item.MenuItems);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1516,6 +1681,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.BodyTexts is {} BodyTextsItem)
             {
                 foreach (var item in BodyTextsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.MenuItems is {} MenuItemsItem)
+            {
+                foreach (var item in MenuItemsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1626,15 +1798,36 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.TMVT) ?? true))
             {
-                item.TMVT = rhs.TMVT;
+                if(rhs.TMVT is {} TMVTrhs)
+                {
+                    item.TMVT = TMVTrhs.ToArray();
+                }
+                else
+                {
+                    item.TMVT = default;
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.DNAM) ?? true))
             {
-                item.DNAM = rhs.DNAM;
+                if(rhs.DNAM is {} DNAMrhs)
+                {
+                    item.DNAM = DNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.DNAM = default;
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.SNAM) ?? true))
             {
-                item.SNAM = rhs.SNAM;
+                if(rhs.SNAM is {} SNAMrhs)
+                {
+                    item.SNAM = SNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.SNAM = default;
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.INAM) ?? true))
             {
@@ -1660,6 +1853,38 @@ namespace Mutagen.Bethesda.Starfield
                     else
                     {
                         item.BodyTexts = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)TerminalMenu_FieldIndex.MenuItems) ?? true))
+            {
+                errorMask?.PushIndex((int)TerminalMenu_FieldIndex.MenuItems);
+                try
+                {
+                    if ((rhs.MenuItems != null))
+                    {
+                        item.MenuItems = 
+                            rhs.MenuItems
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<TerminalMenuItem>();
+                    }
+                    else
+                    {
+                        item.MenuItems = null;
                     }
                 }
                 catch (Exception ex)
@@ -1842,27 +2067,24 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            StringBinaryTranslation.Instance.WriteNullable(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TMVT,
-                header: translationParams.ConvertToCustom(RecordTypes.TMVT),
-                binaryType: StringBinaryType.NullTerminate);
-            StringBinaryTranslation.Instance.WriteNullable(
+                header: translationParams.ConvertToCustom(RecordTypes.TMVT));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                binaryType: StringBinaryType.NullTerminate);
-            StringBinaryTranslation.Instance.WriteNullable(
+                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.SNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.INAM,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM),
                 binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITerminalMenuBodyTextGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.BodyTexts,
@@ -1872,6 +2094,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     var Item = subItem;
                     ((TerminalMenuBodyTextBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITerminalMenuItemGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.MenuItems,
+                counterType: RecordTypes.ISIZ,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, ITerminalMenuItemGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((TerminalMenuItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1980,25 +2215,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TMVT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TMVT = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.TMVT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)TerminalMenu_FieldIndex.TMVT;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)TerminalMenu_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SNAM = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                    item.SNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)TerminalMenu_FieldIndex.SNAM;
                 }
                 case RecordTypeInts.INAM:
@@ -2006,7 +2235,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        source: StringsSource.DL,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TerminalMenu_FieldIndex.INAM;
                 }
@@ -2022,6 +2251,19 @@ namespace Mutagen.Bethesda.Starfield
                             transl: TerminalMenuBodyText.TryCreateFromBinary)
                         .CastExtendedList<TerminalMenuBodyText>();
                     return (int)TerminalMenu_FieldIndex.BodyTexts;
+                }
+                case RecordTypeInts.ISIZ:
+                {
+                    item.MenuItems = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TerminalMenuItem>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.ISIZ,
+                            triggeringRecord: TerminalMenuItem_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: TerminalMenuItem.TryCreateFromBinary)
+                        .CastExtendedList<TerminalMenuItem>();
+                    return (int)TerminalMenu_FieldIndex.MenuItems;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -2107,21 +2349,22 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region TMVT
         private int? _TMVTLocation;
-        public String? TMVT => _TMVTLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TMVTLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ReadOnlyMemorySlice<Byte>? TMVT => _TMVTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TMVTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region DNAM
         private int? _DNAMLocation;
-        public String? DNAM => _DNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region SNAM
         private int? _SNAMLocation;
-        public String? SNAM => _SNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ReadOnlyMemorySlice<Byte>? SNAM => _SNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public ITranslatedStringGetter? INAM => _INAMLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? INAM => _INAMLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<ITerminalMenuBodyTextGetter>? BodyTexts { get; private set; }
+        public IReadOnlyList<ITerminalMenuItemGetter>? MenuItems { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2238,6 +2481,19 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => TerminalMenuBodyTextBinaryOverlay.TerminalMenuBodyTextFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)TerminalMenu_FieldIndex.BodyTexts;
+                }
+                case RecordTypeInts.ISIZ:
+                {
+                    this.MenuItems = BinaryOverlayList.FactoryByCountPerItem<ITerminalMenuItemGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: TerminalMenuItem_Registration.TriggerSpecs,
+                        countType: RecordTypes.ISIZ,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => TerminalMenuItemBinaryOverlay.TerminalMenuItemFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)TerminalMenu_FieldIndex.MenuItems;
                 }
                 case RecordTypeInts.XXXX:
                 {

@@ -4,34 +4,39 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapterIndexed" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="TMVT" recordType="TMVT" unknown="true" />
-      <String name="DNAM" recordType="DNAM" unknown="true" />
-      <String name="SNAM" recordType="SNAM" unknown="true" />
+      <ByteArray name="TMVT" recordType="TMVT" unknown="true" />
+      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+      <ByteArray name="SNAM" recordType="SNAM" unknown="true" />
       <String name="INAM" recordType="INAM" unknown="true" translated="Normal"/>
       <RefList name="BodyTexts" counterRecType="BSIZ" refName="TerminalMenuBodyText" allowNoCounter="false"/>
+      <RefList name="MenuItems" counterRecType="ISIZ" refName="TerminalMenuItem" allowNoCounter="false"/>
     </Fields>
   </Object>
   <Object name="TerminalMenuBodyText" objType="Subrecord">
     <Fields>
       <String name="Text" translated="Normal" recordType="BTXT" nullable="False" />
       <RefList name="Conditions" refName="Condition" />
-      <Bool name="UseTemplatedText" recordType="TPLT" byteLength="1" />
+      <Bool name="UseTemplatedText" recordType="TPLT" />
     </Fields>
   </Object>
   <Object name="TerminalMenuItem" objType="Subrecord">
     <Fields>
       <String name="ItemText" translated="Normal" recordType="ITXT" nullable="False" />
       <String name="ItemShortText" translated="Normal" recordType="ISTX" />
-      <ByteArray name="ISET" recordType="ISET" unknown="true" byteLength="8" />
+      <ByteArray name="ISET" recordType="ISET" unknown="true" />
       <UInt16 name="ItemId" recordType="ITID" nullable="False" />
-
-      
-      <String name="ResponseText" translated="Normal" recordType="RNAM" />
-      <Enum name="Type" enumName="TerminalMenuItem.Types" recordType="ANAM" byteLength="1" nullable="False" />
-      <String name="DisplayText" translated="Normal" recordType="UNAM" />
-      <String name="ImageFile" recordType="VNAM" />
+      <RefDirect name="Lock" refName="LockData" />
       <FormLink name="Submenu" recordType="TNAM" refName="Terminal" />
+      <String name="DisplayText" translated="Normal" recordType="UNAM" />
       <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="LockData" objType="Subrecord" recordType="XLOC">
+    <Fields>
+      <Enum name="Level" enumName="LockLevel" byteLength="4" />
+      <FormLink name="Key" refName="Key" />
+      <Enum name="Flags" enumName="LockData.Flag" byteLength="4" />
+      <Int32 name="Unused" unknown="true" />
     </Fields>
   </Object>
 </Loqui>
