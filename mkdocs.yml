@@ -94,13 +94,7 @@ nav:
     # - Has Mod Assertions
     # - Live File Monitoring
   - Archives (BSAs): Archives.md
-  - Strings:
-    - Translated Strings: strings/Translated-Strings.md
-    # - Strings Overlays
-  - Examples:
-    - Print Some Content: examples/Print-Some-Content.md
-    # - Record Overrides and Duplication
-    - Low Level Examples: examples/Low-Level-Examples.md
+  - Strings: Strings.md
   - Getting Familiar with C#:
     - Namespaces: familiar/Namespaces.md
     # - Intellisense

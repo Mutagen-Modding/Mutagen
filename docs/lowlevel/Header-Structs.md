@@ -1,5 +1,4 @@
 # Header Structs
-## General Concept
 Header Structs are lightweight overlays that "lay" on top of some bytes and offers API to retrieve the various header fields or content bytes they contain.  They are extremely cheap to create, as they do no parsing unless asked.  They are aware of any differences in data alignments from game to game, so the same systems can be applied even if alignments change slightly.
 
 Using Header Structs, very performant and low level parsing is possible while retaining a large degree of safety and usability.  
@@ -16,11 +15,11 @@ They still require a lot of knowledge of the underlying binary structures of a m
 ## Example Usage
 The following code will print all EditorIDs of all npcs from any game type.
 ```csharp
-var modPath = ModPath.FromPath("SomeFolder/Skyrim.esm");
-var release = GameRelease.SkyrimSE;
+string filePath = ...;
+GameRelease release = ...;
 var encoding = MutagenEncodingProvider.Instance.GetEncoding(release, Language.English);
 
-using var stream = new MutagenBinaryReadStream(modPath, release);
+using var stream = new MutagenBinaryReadStream(filePath, release);
 
 // Skip mod header
 stream.ReadModHeaderFrame();

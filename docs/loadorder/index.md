@@ -81,6 +81,11 @@ loadOrder.Add(listing);
 ```
 
 ## Construction
+### Via Environment
+Typically you will not construct a Load Order object yourself.  Using a [Game Environment](../environment/index.md) will have a Load Order for you to use based on the game installation you point to.
+
+[:octicons-arrow-right-24: Environments](../environment/index.md)
+
 ### Create and Fill
 `LoadOrder` is just a normal object that you could declare and fill yourself.
 
@@ -92,38 +97,43 @@ loadOrder.Add(someObj);
 
 ```
 
-### By Environment
-Typically you will not construct a Load Order object yourself.  Using a [Game Environment](../environment/index.md) will have a Load Order for you to use based on the game installation you point to.
+### Import
+If you don't want a whole environment, and just want some convenience for importing a Load Order, this exists as well.
 
-[:octicons-arrow-right-24: Environments](../environment/index.md)
+=== "Simple"
+    ```cs
+    var loadOrder = LoadOrder.Import<ISkyrimModGetter>(GameRelease.SkyrimSE);
+    ```
+=== "Data Folder Overridden"
+    ```cs
+    var loadOrder = LoadOrder.Import<ISkyrimModGetter>(dataFolderPath, GameRelease.SkyrimSE);
+    ```
+=== "Explicit Listings"
+    ```cs
+    var listings = new List<LoadOrderListing>()
+    {
+       new LoadOrderListing(ModKey.FromFileName("Skyrim.esm"), enabled: true)
+    };
 
-### Manual Import
-Usually you want more than just the list of `ModListings` in order; You want the associated mods as accessible objects to use.
-
-`LoadOrder` is just a normal object that you could declare and fill yourself, but there are a few convenience methods to do this for you:
-
-```csharp
-LoadOrder<IModListing<ISkyrimModGetter>> loadOrder = LoadOrder.Import<ISkyrimModGetter>(
-   dataFolder: pathToDataFolder,
-   loadOrder: LoadOrder.GetListings(GameRelease.SkyrimSE, pathToDataFolder),
-   gameRelease: GameRelease.SkyrimSE);
-```
-
-#### Specifying Getter vs Setter
-The choice of specifying Getter or Setter interfaces (`ISkyrimMod` vs `ISkyrimModGetter`) is important, as that will drive the style that the mods are imported with.  If the Getter is specified, then the more optimized [Binary Overlay](../plugins/Binary-Overlay.md) systems will be used.  If Setter is specified, then all the import work will need to be done up front into a mutable object.
+    var loadOrder = LoadOrder.Import<ISkyrimModGetter>(listings, GameRelease.SkyrimSE);
+    ```
+!!! tip "Prefer Getter Generic"
+    The choice of specifying Getter or Setter interfaces (`ISkyrimMod` vs `ISkyrimModGetter`) is important, as that will drive the style that the mods are imported with.  If the Getter is specified, then the more optimized [Binary Overlay](../plugins/Binary-Overlay.md) systems will be used.  If Setter is specified, then all the import work will need to be done up front into a mutable object.
 
 ## Writing a Load Order
 A `LoadOrder` can also export its contents to a file.
 ```cs
-IEnumerable<ModListing> myListings = ...;
+ILoadOrderGetter<IModListingGetter> loadOrder = ...;
+
 LoadOrder.Write(
    somePath, 
    GameRelease.SkyrimSE,
-   myListings);
+   loadOrder,
+   removeImplicitMods: true);
 ```
 
 ## PluginListings and CreationClubListings
-The above API abstracts away the complications that a Load Order is driven from a few sources:
+The Load Order API often abstracts away the complications that a Load Order is driven from a few sources:
 
 - Implicit Listings (Mods that don't need to be listed, but are assumed)
 - Normal Plugins File (Plugins.txt)

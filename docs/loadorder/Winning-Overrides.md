@@ -1,31 +1,61 @@
 # Winning Override Iteration
+It is very common task to retrieve the "winning override" version of each record on a Load Order.  Winning Overrides are the versions of each record as they exist in the mod with the highest priority, and will thus be what's used by the game when running.
+
+There are extension methods to streamline these operations.
+
+!!! info "How To Override a Record"
+    This page outlines how to see the winning overrides in an existing load order.  If you then want to modify them further with your own override, this topic is covered more in depth [here](../plugins/Create,-Duplicate,-and-Override.md#getoraddasoverride).
+
+    [:octicons-arrow-right-24: Overriding Records](../plugins/Create,-Duplicate,-and-Override.md#getoraddasoverride)
+
+
 ## Winning Overrides
-It is very common task to retrieve the "winning override" version of each record.  These are the versions of each record as they exist in the mod with the highest priority, and will thus be what's used by the game when running.
+=== "By Load Order"
+    ``` { .cs hl_lines=3 }
+    LoadOrder<ModListing<ISkyrimModGetter>> loadOrder = ...;
 
-There are extension methods to streamline this:
-```csharp
-LoadOrder<ModListing<ISkyrimModGetter>> loadOrder = ...;
-foreach (var npc in loadOrder.PriorityOrder.Npc().WinningOverrides())
-{
-   // Code to process the winning override version each NPC that appears on the loadorder
-   Console.WriteLine($"Processed {npc.EditorID}");
-}
-```
+    foreach (var npc in loadOrder.PriorityOrder.Npc().WinningOverrides())
+    {
+       Console.WriteLine($"Processed {npc.EditorID}");
+    }
+    ```
 
-If you then want to take winning overrides and add them to your mod with some modifications, this topic is covered more in depth [here](../plugins/Create,-Duplicate,-and-Override.md#getoraddasoverride).
+=== "Arbitrary Mods"
+    ``` { .cs hl_lines=3 }
+    IEnumerable<IModGetter> mods = ...;
+
+    foreach (var npc in mods.WinningOverrides<INpcGetter>())
+    {
+       Console.WriteLine($"Processed {npc.EditorID}");
+    }
+    ```
+
 
 ## Winning Context Overrides
-The above loop will just give you each record in the game with it's "winning" content.  Sometimes more information is needed, though.
+You can also iterate over Mod Context objects, which give more information and have more features that just looping the raw records.
 
-You can instead opt to iterate over [ModContexts](../linkcache/ModContexts.md) which is a wrapper object containing the record of interest PLUS other useful information and features.
+[:octicons-arrow-right-24: Mod Contexts](../linkcache/ModContexts.md)
 
-```csharp
-LoadOrder<ModListing<ISkyrimModGetter>> loadOrder = ...;
-foreach (var npcContext in loadOrder.PriorityOrder.Npc().WinningContextOverrides())
-{
-   // Code to process the winning override version each NPC that appears on the loadorder
-   Console.WriteLine($"Processed {npcContext.Record.EditorID} as defined in mod {npcContext.ModKey}");
-}
-```
+[:octicons-arrow-right-24: Link Caches](../linkcache/index.md)
 
-You can read more about [ModContexts](../linkcache/ModContexts.md) to see all the features they offer.
+=== "By Load Order"
+    ``` { .cs hl_lines=4 }
+    LoadOrder<ModListing<ISkyrimModGetter>> loadOrder = ...;
+    ILinkCache linkCache = ...;
+
+    foreach (var context in loadOrder.PriorityOrder.PlacedObjects().WinningContextOverrides(linkCache))
+    {
+       Console.WriteLine($"Processed {context.Record.EditorID}");
+    }
+    ```
+
+=== "Arbitrary Mods"
+    ``` { .cs hl_lines=4 }
+    IEnumerable<ISkyrimModGetter> mods = ...;
+    ILinkCache linkCache = ...;
+
+    foreach (var context in mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IPlacedObject, IPlacedObjectGetter>(linkCache))
+    {
+       Console.WriteLine($"Processed {context.Record.EditorID}");
+    }
+    ```
