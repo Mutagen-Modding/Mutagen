@@ -83,6 +83,7 @@ public static class LoadOrder
             startDate: startDate,
             interval: interval);
     }
+
     #endregion
 
     /// <summary>
@@ -461,7 +462,7 @@ public static class LoadOrder
             new TimestampedPluginListingsProvider(
                 fs,
                 new TimestampAligner(fs),
-                new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = throwOnMissingMods},
+                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = throwOnMissingMods },
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),
@@ -500,7 +501,8 @@ public interface ILoadOrderGetter : IDisposable
     bool ContainsKey(ModKey key);
 }
 
-public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>, IReadOnlyCache<TListing, ModKey>
+public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>,
+    IReadOnlyCache<TListing, ModKey>
     where TListing : IModKeyed
 {
     new TListing this[int index] { get; }
@@ -600,7 +602,8 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
     public IEnumerable<TListing> ListedOrder => _byLoadOrder.Select(i => i.Item);
 
     /// <inheritdoc />
-    public IEnumerable<TListing> PriorityOrder => ((IEnumerable<ItemContainer>)_byLoadOrder).Reverse().Select(i => i.Item);
+    public IEnumerable<TListing> PriorityOrder =>
+        ((IEnumerable<ItemContainer>)_byLoadOrder).Reverse().Select(i => i.Item);
 
     IEnumerable<ModKey> ILoadOrderGetter.ListedOrder => _byLoadOrder.Select(x => x.Item.ModKey);
 
@@ -667,6 +670,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
             value = container.Item;
             return true;
         }
+
         value = default;
         return false;
     }
@@ -682,6 +686,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             return container.Item;
         }
+
         return default;
     }
 
@@ -713,6 +718,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             throw new ArgumentException($"ModKey was already present: {item.ModKey}");
         }
+
         _byLoadOrder.Add(container);
     }
 
@@ -732,6 +738,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             throw new ArgumentException("Tried to insert at an out of range index.");
         }
+
         var container = new ItemContainer(item, index);
         try
         {
@@ -741,6 +748,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             throw new ArgumentException($"ModKey was already present: {item.ModKey}");
         }
+
         _byLoadOrder.Add(container);
         for (int i = index + 1; i < _byLoadOrder.Count; i++)
         {
@@ -761,6 +769,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             return -1;
         }
+
         return container.Index;
     }
 
@@ -828,7 +837,8 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
 
     IEnumerator<Noggog.IKeyValue<ModKey, TListing>> IEnumerable<Noggog.IKeyValue<ModKey, TListing>>.GetEnumerator()
     {
-        return ListedOrder.Select(x => (Noggog.IKeyValue<ModKey, TListing>)new KeyValue<ModKey, TListing>(x.ModKey, x)).GetEnumerator();
+        return ListedOrder.Select(x => (Noggog.IKeyValue<ModKey, TListing>)new KeyValue<ModKey, TListing>(x.ModKey, x))
+            .GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
