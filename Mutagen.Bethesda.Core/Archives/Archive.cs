@@ -21,7 +21,7 @@ public static class Archive
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
-                        new GameLocator()))),
+                        GameLocator.Instance))),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(dataFolderPath),
@@ -164,7 +164,7 @@ public static class Archive
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
-                        new GameLocator())))
+                        GameLocator.Instance)))
             .Get();
     }
 
@@ -181,7 +181,7 @@ public static class Archive
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
-                        new GameLocator())))
+                        GameLocator.Instance)))
             .Get(path);
     }
 
@@ -198,7 +198,7 @@ public static class Archive
                 new IniPathProvider(
                     new GameReleaseInjection(release),
                     new IniPathLookup(
-                        new GameLocator())))
+                        GameLocator.Instance)))
             .Get(iniStream);
     }
 }

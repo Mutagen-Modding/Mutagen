@@ -9,6 +9,8 @@ namespace Mutagen.Bethesda.Installs.DI;
 
 public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
 {
+    internal static readonly GameLocator Instance = new();
+    
     private readonly Lazy<SteamHandler> _steamHandler;
     private readonly Lazy<GOGHandler> _gogHandler;
         
