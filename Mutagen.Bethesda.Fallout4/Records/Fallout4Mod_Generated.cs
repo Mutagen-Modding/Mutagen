@@ -7334,7 +7334,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default) : null;
             bool disposeStrings = param.StringsWriter != null;
             using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
@@ -24329,7 +24329,7 @@ namespace Mutagen.Bethesda.Fallout4
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)Fallout4ModHeader.HeaderFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)Fallout4ModHeader.HeaderFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default) : null;
             bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(GameRelease.Fallout4)
             {

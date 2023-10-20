@@ -5,8 +5,9 @@ If you are more interested in Mutagen-specific concepts, you can skip this secti
 
 ## Spans are Sub-Sections of Arrays
 A `Span<T>` is very similar to a `T[]`.  It points to a spot in memory where T objects reside, like an array.  Consider using a typical array, however, where you wanted some logic to process just a subsection of it.  You would either have to:
-1) Pass the array to a function, with `start` and `end` indices of where you wanted to process.
-2) Make a new smaller array, and copy the data over, using that array with just the interesting data to represent a "subsection" of the original array.
+
+* Pass the array to a function, with `start` and `end` indices of where you wanted to process.
+* Make a new smaller array, and copy the data over, using that array with just the interesting data to represent a "subsection" of the original array.
 
 `Span<T>` would be an alternate way of handling the above problem.  It lets you "scope" to a small subsection of an array, without actually creating a new array.
 ```cs

@@ -1,43 +1,49 @@
 # Link Cache
-The LinkCache is the record lookup engine.  It powers a lot of functionality, such as:
+The LinkCache is the record lookup engine.  It is made relative to any number of mods, and does complex lookups to find records.
 
-- Looking up records by [FormKey/FormLink](../plugins/ModKey,-FormKey,-FormLink.md#resolves)
-- Finding the [Winning Override](Winning-Overrides) in a [Load Order](../loadorder/index.md)
-- [Iterating over all versions of a record](Previous-Override-Iteration) within a [Load Order](../loadorder/index.md)
 
-## Context
-Every LinkCache is created from a context:
+It powers a lot of functionality, such as:
 
-- A single mod
-- A [Load Order](../loadorder/index.md)
-- Any arbitrary enumeration of mods
+- Looking up records by [FormKey/FormLink](Record-Resolves.md)
+- Finding the [Winning Override](../loadorder/Winning-Overrides.md) in a [Load Order](../loadorder/index.md)
+- [Iterating over all versions of a record](Previous-Override-Iteration.md) within a [Load Order](../loadorder/index.md)
 
-```cs
-// Can attach to a single mod
-ISkyrimModGetter aSingleMod = ...;
-var linkCacheConnectedToMod = aSingleMod.ToImmutableLinkCache();
+## Construction
+Every LinkCache is created relative to some mods.  It will look up and return records relative to these mods.
 
-// Or a load order of mods
-ILoadOrderGetter<ISkyrimModGetter> someLoadOrder = ...;
-var linkCacheConnectedToLoadOrder = someLoadOrder.ToImmutableLinkCache();
+=== "Single"
+    ``` { .cs hl_lines=2 }
+    ISkyrimModGetter aSingleMod = ...;
+    var linkCacheConnectedToMod = aSingleMod.ToImmutableLinkCache();
+    ```
+=== "Many"
+    ``` { .cs hl_lines=2 }
+    IEnumerable<ISkyrimModGetter> anyListOfMods = ...;
+    var linkCacheConnectedToThoseMods = anyListOfMods.ToImmutableLinkCache();
+    ```
+=== "Load Order"
+    ``` { .cs hl_lines=2 }
+    ILoadOrderGetter<ISkyrimModGetter> someLoadOrder = ...;
+    var linkCacheConnectedToLoadOrder = someLoadOrder.ToImmutableLinkCache();
+    ```
 
-// Or any random list of mods you provide
-IEnumerable<ISkyrimModGetter> anyListOfMods = ...;
-var linkCacheConnectedToThoseMods = anyListOfMods.ToImmutableLinkCache();
-```
-
-Each of the above link caches will look up and return records relative to their contexts.
+    [:octicons-arrow-right-24: Load Order](../loadorder/index.md)
 
 ## Mutability
-## Immutable Link Caches
-A LinkCache will look up records from a given context.  Being that this is a costly operation, it is preferable to cache information so that future lookups can happen faster.  However, one of the requirements for this optimization is that the presence of records in mods cannot be modified, or the link cache will potentially return faulty information.  
+It can often be a costly operation to look up records.   It is preferable to cache information so that future lookups can happen faster.   Depending on whether you want to mutate the mods a Link Cache looks to, you will need to choose the correct type of Link Cache with the correct caching patterns.
 
-Important Note:  When using Immutable Link Caches, it is safe to modify content ON records (Name of an Npc, Items in a Container, etc).  It is NOT safe to add new records to a Mod, or remove from a Mod.
+### Immutable Link Caches
+If you do not plan to add/remove records from the Mods, it is always recommended to use Immutable Link Caches, as they will be much more optimized.  
 
-If you do not plan to add/remove records from the Mods, it is always recommended to use Immutable Link Caches, as they will be much more optimized.
+!!! bug "No Adds or Removes"
+    It is not safe to add or remove records from backing mods of Immutable Link Caches.  This can corrupt a cache.
+
+!!! tip "Record Content Modification is Safe"
+    It is safe to modify content ON records (Name of an Npc, Items in a Container, etc)
+
 
 ### Mutable Link Caches
-Sometimes it is desirable to have a mod on a Link Cache that you are allowed to modify.  [Synthesis](https://github.com/Mutagen-Modding/Synthesis), for example, needs to be able to modify the outgoing Patch Mod object.
+Sometimes it is desirable to have a mod on a Link Cache that you are allowed to modify.  A common use case is having an outgoing mod file that will eventually be exported.  This mod would both like to be able to be modified while also being able to resolve its content from the Link Cache.
 
 In these scenarios, we can create a Mutable Link Cache.  This is a combination of an Immutable Link Cache for most of the mods in a load order, PLUS a mutable component for the final mods at the end that we want to modify.  As such there are a few things to consider:
 
@@ -59,6 +65,17 @@ var npc = mod.Npcs.AddNew();
 ```
 
 The result will be a mostly immutable Link Cache, with a mutable component at the end for `mod`.  It it safe to add/remove records from `mod`, as the Link Cache will react and continue to return accurate results even after the changes.
+
+!!! warning "Slower"
+    Mutable link caches are slower, so always use Immutable variants when possible
+
+## Resolve Target
+|  Target | Direction  |  Intention |
+| ----- | ----- | ----- |
+| Winning | Later mods first | Locates the version of a record that the game will utilize |
+| Origin | Earlier mods first | Locates the initial version of the record as it was originally defined |
+
+By default all interactions with a Link Cache have the Resolve Target of "Winning".
 
 ## Memory Usage
 When using Immutable Link Caches, references to records will be kept inside the cache.  This can lead to memory growth as records are queried.

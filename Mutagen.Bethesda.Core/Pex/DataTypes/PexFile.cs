@@ -26,9 +26,9 @@ public partial class PexFile
         file.MinorVersion = br.ReadUInt8();
         file.GameId = br.ReadUInt16();
         file.CompilationTime = br.ReadUInt64().ToDateTime();
-        file.SourceFileName = br.ReadPrependedString(2, MutagenEncodingProvider._1252);
-        file.Username = br.ReadPrependedString(2, MutagenEncodingProvider._1252);
-        file.MachineName = br.ReadPrependedString(2, MutagenEncodingProvider._1252);
+        file.SourceFileName = br.ReadPrependedString(2, MutagenEncoding._1252);
+        file.Username = br.ReadPrependedString(2, MutagenEncoding._1252);
+        file.MachineName = br.ReadPrependedString(2, MutagenEncoding._1252);
 
         var stringsCount = br.ReadUInt16();
 
@@ -38,7 +38,7 @@ public partial class PexFile
             new Dictionary<ushort, string>());
         for (var i = 0; i < stringsCount; i++)
         {
-            bundle.Strings.Add((ushort)i, br.ReadPrependedString(2, MutagenEncodingProvider._1252));
+            bundle.Strings.Add((ushort)i, br.ReadPrependedString(2, MutagenEncoding._1252));
         }
 
         var hasDebugInfo = bundle.Reader.ReadUInt8() == 1;

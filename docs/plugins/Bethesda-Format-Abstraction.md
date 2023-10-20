@@ -2,21 +2,21 @@
 Bethesda's binary format contains a lot implementation complexities that are unrelated to the actual content of the records.  A lot of times the exposure of these details are a source of confusion, and don't add much upside in the way of flexibility or power into the hands of the user.  Mutagen attempts to abstract these complexities away so that the end user is dealing with the distilled record content more directly, rather than wading through the gritty specifics that only matter in the context of their binary format on disk.
 
 ## FormKeys and FormLinks
-This topic was covered in detail in the [ModKey, FormKey, FormLink](ModKey,-FormKey,-FormLink.md#formkeys) section, and so will not be covered here.
+This topic was covered in detail in the [ModKey, FormKey, FormLink](ModKey,%20FormKey,%20FormLink.md#formkeys) section, and so will not be covered here.
 
 ## Record Types
-### Four Character Headers
 Most seasoned modders are familiar with the 4 character record headers. `EDID` is `Editor ID`.  `FULL` is `Name`.  `MODL` is `Model`.  
 
-Most of these concepts are unnecessary in Mutagen.  Any member is exposed via its readable name: `npc.EditorID`, `npc.Name`, and `npc.Model`.  As such, there is no possibility of typos or misqueries, no need to remember the more obscure header strings, and no possibility of type mishandling.  Any typo or attempt to access a non-existent member will be caught by the compiler, instead of a failed string query at runtime.
+These concepts are not exposed in Mutagen's generated classes.   Members are exposed their readable name: `npc.EditorID`, `npc.Name`, and `npc.Model`
+
+### Type Safety
+By not using a string based lookup, there is no possibility of typos or misqueries, no need to remember the more obscure header strings, and no possibility of type mishandling.  Because everything is exposed via normal members, any typo or attempt to access a non-existent member will be caught by the compiler, instead of a failed string query at runtime.
 
 ### Alternate Headers
-Additionally, some common Record Types have alternate versions to denote different fields.  A common example of this is the `Model` Record Type `MODL`.
-
-(finish writing)
+Some common Record Types have alternate versions to denote different fields.  A common example of this is the `Model` Record Type `MODL`, which on Armor WorldModel records is `MOD2` for males, and `MOD4`.   Mutagen deals with these alternative record types under the hood, exposing the various fields as it would normally.
 
 ## List Mechanics
-## Item Storage
+### Item Storage
 There are a lot of varying ways that lists are stored in the binary format:
 
 - Repeated subrecords, with their Record Header as the delimiter.  Unknown amount.
@@ -26,10 +26,10 @@ There are a lot of varying ways that lists are stored in the binary format:
   _(Keyword lists in Skyrim)_
 
 - A Record Header for the list itself, followed immediately by a uint count, followed by undelimited content of known length. _(Skyrim Model's Alternate Textures)_
-- Probably others
+- Same as above, but with an extra set of bytes to denote the contained structure length
 
 No matter what pattern is used for a specific set of records, they are all exposed via straight up lists in the API:
-```
+```cs
 // Oblivion spells
 IList<FormLink<Spell>> Spells { get; set; }
 
@@ -41,60 +41,7 @@ IList<AlternateTexture> AlternateTextures { get; set; }
 ```
 
 ### Count Subrecords
-(finish writing)
-
-## Global/Gamesetting types
-The Global and Gamesetting records contain many different types of data while each having their own unique rules of communicating what type of data they contain.  For example, `Global` records have a special subrecord `FNAM` with a single char `i`, `f`, `s` to symbolize the float field it contains should be interpreted as an `int`, `float`, or `short`.  `GameSetting` on the other hand prepends a character to its EditorID to communicate what type of data is stored in its `DATA` subrecord.
-
-This complexity is abstracted away by Mutagen by offering strongly typed subclasses for Globals and Gamesettings.  `GlobalInt`, `GlobalFloat`, `GameSettingInt`, `GameSettingString`, `GameSettingBool`, etc.  These subclasses expose a strongly typed member of the correct type to the user while internally handling the most of the details.
-
-Creating a new Global/Gamesetting might look like:
-```cs
-mod.Globals.Add(
-    new GlobalInt(mod.GetNextFormKey())
-    {
-        EditorID = "AnIntGlobal",
-        Data = 1234
-    });
-mod.Globals.Add(
-    new GlobalFloat(mod.GetNextFormKey())
-    {
-        EditorID = "AFloatGlobal",
-        Data = 1234.5
-    });
-mod.GameSettings.Add(
-    new GameSettingString(mod.GetNextFormKey())
-    {
-        EditorID = "AStringGameSetting",
-        Data = "HelloWorld"
-    });
-mod.GameSettings.Add(
-    new GameSettingFloat(mod.GetNextFormKey())
-    {
-        EditorID = "AFloatGameSetting",
-        Data = 1234.5
-    });
-```
-
-Note: For GameSettings, the EditorID stores the type data as its first character.  Any EditorID you set will automatically be processed to have the correct starting character.  As such, all GameSettings should have their EditorIDs set.
-
-Reading Globals/GameSettings consists of checking/casting the records to their correct subtype.  One easy way to do this is to use a switch:
-```cs
-foreach (GameSetting setting in mod.GameSettings.Records)
-{
-   switch (setting)
-   {
-       case GameSettingString stringSetting:
-           System.Console.WriteLine($"Found a string setting: {stringSetting.EditorID}");
-           System.Console.WriteLine($"   Value: {stringSetting.Data}");
-           break;
-       case GameSettingBool boolSetting:
-           System.Console.WriteLine($"Found a bool setting: {stringSetting.EditorID}");
-           System.Console.WriteLine($"   Value: {(stringSetting.Data ? "ON!" : "OFF!")}");
-           break;
-   }
-}
-```
+Some lists have a preceding extra record that contains the count of a given list.  For example `KSIZ` is the counter type for Keywords, which has a number for how many `KWDA` records are expected to follow containing keyword formIDs.   Mutagen handles these counter records internally, so you can just modify any list to contain the desired content, and the correct count will be written automatically.
 
 ## Markers
 Some subrecords have specialized "marker" subrecords that precede them.  Sometimes they just mark the location of a section of subrecords, while other times they affect the context of the following subrecords.

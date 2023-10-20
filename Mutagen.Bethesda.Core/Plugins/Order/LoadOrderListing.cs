@@ -31,7 +31,7 @@ public interface ILoadOrderListingGetter : IModKeyed
     string GhostSuffix { get; }
     
     /// <summary>
-    /// File name with ghost concepts considered.
+    /// File name with ghost concepts included.
     /// </summary>
     string FileName { get; }
         

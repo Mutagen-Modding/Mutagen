@@ -22,7 +22,7 @@ public static class LoadOrder
 {
     private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
     private static OrderListings Orderer = new();
-        
+
     #region Timestamps
 
     /// <summary>
@@ -83,6 +83,7 @@ public static class LoadOrder
             startDate: startDate,
             interval: interval);
     }
+
     #endregion
 
     /// <summary>
@@ -429,9 +430,405 @@ public static class LoadOrder
             .Import();
     }
 
+    /// <summary>
+    /// Constructs a load order filled with mods constructed
+    /// </summary>
+    /// <param name="loadOrder">Unique list of listings to import</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        IEnumerable<ILoadOrderListingGetter> loadOrder,
+        GameRelease gameRelease,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
+            GameLocator.Instance);
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                new LoadOrderListingsInjection(loadOrder),
+                new ModImporter<TMod>(
+                    fileSystem,
+                    gameReleaseInjection))
+            .Import();
+    }
+
+    /// <summary>
+    /// Constructs a load order filled with mods constructed
+    /// </summary>
+    /// <param name="loadOrder">Unique list of mod keys to import</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        IEnumerable<ModKey> loadOrder,
+        GameRelease gameRelease,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
+            GameLocator.Instance);
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                new LoadOrderListingsInjection(
+                    loadOrder.Select(x => new LoadOrderListing(x, true))),
+                new ModImporter<TMod>(
+                    fileSystem,
+                    gameReleaseInjection))
+            .Import();
+    }
+
+    /// <summary>
+    /// Constructs a load order filled with mods constructed by given importer func
+    /// </summary>
+    /// <param name="loadOrder">Unique list of mod keys to import</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="factory">Func to use to create a new mod from a path</param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        IEnumerable<ModKey> loadOrder,
+        GameRelease gameRelease,
+        Func<ModPath, TMod> factory,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
+            GameLocator.Instance);
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                new LoadOrderListingsInjection(
+                    loadOrder.Select(x => new LoadOrderListing(x, true))),
+                new ModImporterWrapper<TMod>(factory))
+            .Import();
+    }
+
+    /// <summary>
+    /// Constructs a load order filled with mods constructed by given importer func
+    /// </summary>
+    /// <param name="loadOrder">Unique list of listings to import</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="factory">Func to use to create a new mod from a path</param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        IEnumerable<ILoadOrderListingGetter> loadOrder,
+        GameRelease gameRelease,
+        Func<ModPath, TMod> factory,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
+            GameLocator.Instance);
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                new LoadOrderListingsInjection(loadOrder),
+                new ModImporterWrapper<TMod>(factory))
+            .Import();
+    }
+
+    /// <summary>
+    /// Constructs a load order filled with mods constructed
+    /// </summary>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        GameRelease gameRelease,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var category = new GameCategoryContext(gameReleaseInjection);
+
+        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
+            GameLocator.Instance);
+        var pluginRawListingsReader = new PluginRawListingsReader(
+            IFileSystemExt.DefaultFilesystem,
+            new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
+                new LoadOrderListingParser(
+                    new HasEnabledMarkersProvider(
+                        gameReleaseInjection))));
+
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
+            category,
+            new CreationClubEnabledProvider(
+                category),
+            gameDirLocator);
+        var loadOrderProvider = new LoadOrderListingsProvider(
+            new OrderListings(),
+            new ImplicitListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                new ImplicitListingModKeyProvider(
+                    gameReleaseInjection)),
+            new PluginListingsProvider(
+                gameReleaseInjection,
+                new TimestampedPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                    pluginRawListingsReader,
+                    dataDirectory,
+                    pluginListingsPathProvider),
+                new EnabledPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginRawListingsReader,
+                    pluginListingsPathProvider)),
+            new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                creationClubListingsPathProvider,
+                new CreationClubRawListingsReader()));
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                loadOrderProvider,
+                new ModImporter<TMod>(
+                    fileSystem,
+                    gameReleaseInjection))
+            .Import();
+    }
+
+    /// <summary>
+    /// Constructs a load order filled with mods constructed by given importer func
+    /// </summary>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="factory">Func to use to create a new mod from a path</param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        GameRelease gameRelease,
+        Func<ModPath, TMod> factory,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var category = new GameCategoryContext(gameReleaseInjection);
+
+        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
+            GameLocator.Instance);
+        var pluginRawListingsReader = new PluginRawListingsReader(
+            IFileSystemExt.DefaultFilesystem,
+            new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
+                new LoadOrderListingParser(
+                    new HasEnabledMarkersProvider(
+                        gameReleaseInjection))));
+
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
+            category,
+            new CreationClubEnabledProvider(
+                category),
+            gameDirLocator);
+        var loadOrderProvider = new LoadOrderListingsProvider(
+            new OrderListings(),
+            new ImplicitListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                new ImplicitListingModKeyProvider(
+                    gameReleaseInjection)),
+            new PluginListingsProvider(
+                gameReleaseInjection,
+                new TimestampedPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                    pluginRawListingsReader,
+                    dataDirectory,
+                    pluginListingsPathProvider),
+                new EnabledPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginRawListingsReader,
+                    pluginListingsPathProvider)),
+            new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                creationClubListingsPathProvider,
+                new CreationClubRawListingsReader()));
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                loadOrderProvider,
+        new ModImporterWrapper<TMod>(factory))
+            .Import();
+    }
+
+    /// <summary>
+    /// Constructs a load order filled with mods constructed
+    /// </summary>
+    /// <param name="dataFolder">Path data folder containing mods</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        DirectoryPath dataFolder,
+        GameRelease gameRelease,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var category = new GameCategoryContext(gameReleaseInjection);
+
+        var dataDirectory = new DataDirectoryInjection(dataFolder);
+        var pluginRawListingsReader = new PluginRawListingsReader(
+            IFileSystemExt.DefaultFilesystem,
+            new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
+                new LoadOrderListingParser(
+                    new HasEnabledMarkersProvider(
+                        gameReleaseInjection))));
+
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
+            category,
+            new CreationClubEnabledProvider(
+                category),
+            gameDirLocator);
+        var loadOrderProvider = new LoadOrderListingsProvider(
+            new OrderListings(),
+            new ImplicitListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                new ImplicitListingModKeyProvider(
+                    gameReleaseInjection)),
+            new PluginListingsProvider(
+                gameReleaseInjection,
+                new TimestampedPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                    pluginRawListingsReader,
+                    dataDirectory,
+                    pluginListingsPathProvider),
+                new EnabledPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginRawListingsReader,
+                    pluginListingsPathProvider)),
+            new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                creationClubListingsPathProvider,
+                new CreationClubRawListingsReader()));
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                loadOrderProvider,
+                new ModImporter<TMod>(
+                    fileSystem,
+                    gameReleaseInjection))
+            .Import();
+    }
+
+    /// <summary>
+    /// Constructs a load order filled with mods constructed by given importer func
+    /// </summary>
+    /// <param name="dataFolder">Path data folder containing mods</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// This may be unapplicable to some games with only one release, but should still be passed in.
+    /// </param>
+    /// <param name="factory">Func to use to create a new mod from a path</param>
+    /// <param name="fileSystem">Filesystem to use</param>
+    public static ILoadOrder<IModListing<TMod>> Import<TMod>(
+        DirectoryPath dataFolder,
+        GameRelease gameRelease,
+        Func<ModPath, TMod> factory,
+        IFileSystem? fileSystem = null)
+        where TMod : class, IModGetter
+    {
+        fileSystem ??= IFileSystemExt.DefaultFilesystem;
+        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
+        var category = new GameCategoryContext(gameReleaseInjection);
+
+        var dataDirectory = new DataDirectoryInjection(dataFolder);
+        var pluginRawListingsReader = new PluginRawListingsReader(
+            IFileSystemExt.DefaultFilesystem,
+            new PluginListingsParser(
+                new PluginListingCommentTrimmer(),
+                new LoadOrderListingParser(
+                    new HasEnabledMarkersProvider(
+                        gameReleaseInjection))));
+
+        var pluginListingsPathProvider = new PluginListingsPathContext(
+            new PluginListingsPathProvider(),
+            gameReleaseInjection);
+        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocator.Instance);
+        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
+            category,
+            new CreationClubEnabledProvider(
+                category),
+            gameDirLocator);
+        var loadOrderProvider = new LoadOrderListingsProvider(
+            new OrderListings(),
+            new ImplicitListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                new ImplicitListingModKeyProvider(
+                    gameReleaseInjection)),
+            new PluginListingsProvider(
+                gameReleaseInjection,
+                new TimestampedPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                    pluginRawListingsReader,
+                    dataDirectory,
+                    pluginListingsPathProvider),
+                new EnabledPluginListingsProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginRawListingsReader,
+                    pluginListingsPathProvider)),
+            new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDirectory,
+                creationClubListingsPathProvider,
+                new CreationClubRawListingsReader()));
+        return new LoadOrderImporter<TMod>(
+                fileSystem,
+                dataDirectory,
+                loadOrderProvider,
+        new ModImporterWrapper<TMod>(factory))
+            .Import();
+    }
+
     public static void Write(
-        FilePath path, 
-        GameRelease release, 
+        FilePath path,
+        GameRelease release,
         IEnumerable<ILoadOrderListingGetter> loadOrder,
         bool removeImplicitMods = true,
         IFileSystem? fileSystem = null)
@@ -444,11 +841,26 @@ public static class LoadOrder
                 new ImplicitListingModKeyProvider(rel))
             .Write(path, loadOrder, removeImplicitMods);
     }
-        
+
+    public static void Write(
+        FilePath path,
+        GameRelease release,
+        ILoadOrderGetter<IModListingGetter> loadOrder,
+        bool removeImplicitMods = true,
+        IFileSystem? fileSystem = null)
+    {
+        Write(
+            path: path,
+            release: release,
+            loadOrder: loadOrder.ListedOrder,
+            removeImplicitMods: removeImplicitMods,
+            fileSystem: fileSystem);
+    }
+
     private static PluginListingsProvider PluginListingsProvider(
         IDataDirectoryProvider dataDirectory,
         IGameReleaseContext gameContext,
-        IPluginListingsPathContext listingsPathContext, 
+        IPluginListingsPathContext listingsPathContext,
         bool throwOnMissingMods,
         IFileSystem fs)
     {
@@ -461,7 +873,7 @@ public static class LoadOrder
             new TimestampedPluginListingsProvider(
                 fs,
                 new TimestampAligner(fs),
-                new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = throwOnMissingMods},
+                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = throwOnMissingMods },
                 new PluginRawListingsReader(
                     fs,
                     pluginListingParser),
@@ -500,11 +912,12 @@ public interface ILoadOrderGetter : IDisposable
     bool ContainsKey(ModKey key);
 }
 
-public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>, IReadOnlyCache<TListing, ModKey>
+public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<ModKey, TListing>>,
+    IReadOnlyCache<TListing, ModKey>
     where TListing : IModKeyed
 {
     new TListing this[int index] { get; }
-        
+
     TListing? TryGetAtIndex(int index);
 
     /// <summary>
@@ -600,7 +1013,8 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
     public IEnumerable<TListing> ListedOrder => _byLoadOrder.Select(i => i.Item);
 
     /// <inheritdoc />
-    public IEnumerable<TListing> PriorityOrder => ((IEnumerable<ItemContainer>)_byLoadOrder).Reverse().Select(i => i.Item);
+    public IEnumerable<TListing> PriorityOrder =>
+        ((IEnumerable<ItemContainer>)_byLoadOrder).Reverse().Select(i => i.Item);
 
     IEnumerable<ModKey> ILoadOrderGetter.ListedOrder => _byLoadOrder.Select(x => x.Item.ModKey);
 
@@ -667,6 +1081,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
             value = container.Item;
             return true;
         }
+
         value = default;
         return false;
     }
@@ -682,6 +1097,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             return container.Item;
         }
+
         return default;
     }
 
@@ -713,6 +1129,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             throw new ArgumentException($"ModKey was already present: {item.ModKey}");
         }
+
         _byLoadOrder.Add(container);
     }
 
@@ -732,6 +1149,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             throw new ArgumentException("Tried to insert at an out of range index.");
         }
+
         var container = new ItemContainer(item, index);
         try
         {
@@ -741,6 +1159,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             throw new ArgumentException($"ModKey was already present: {item.ModKey}");
         }
+
         _byLoadOrder.Add(container);
         for (int i = index + 1; i < _byLoadOrder.Count; i++)
         {
@@ -761,6 +1180,7 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
         {
             return -1;
         }
+
         return container.Index;
     }
 
@@ -828,7 +1248,8 @@ public sealed class LoadOrder<TListing> : ILoadOrder<TListing>
 
     IEnumerator<Noggog.IKeyValue<ModKey, TListing>> IEnumerable<Noggog.IKeyValue<ModKey, TListing>>.GetEnumerator()
     {
-        return ListedOrder.Select(x => (Noggog.IKeyValue<ModKey, TListing>)new KeyValue<ModKey, TListing>(x.ModKey, x)).GetEnumerator();
+        return ListedOrder.Select(x => (Noggog.IKeyValue<ModKey, TListing>)new KeyValue<ModKey, TListing>(x.ModKey, x))
+            .GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

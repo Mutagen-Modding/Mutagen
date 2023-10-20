@@ -168,7 +168,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         Warmup.Init();
         var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
 
-        var gameLocator = new Lazy<GameLocator>(() => new GameLocator());
+        var gameLocator = new Lazy<GameLocator>(() => GameLocator.Instance);
         var dataDirectory = Resolve<IDataDirectoryProvider>(
             () => new DataDirectoryProvider(
                 Release,
@@ -419,7 +419,7 @@ public sealed record GameEnvironmentBuilder
         Warmup.Init();
         var fs = Resolve<IFileSystem>(() => IFileSystemExt.DefaultFilesystem, FileSystem);
         
-        var gameLocator = new Lazy<GameLocator>(() => new GameLocator());
+        var gameLocator = new Lazy<GameLocator>(() => GameLocator.Instance);
         var dataDirectory = Resolve<IDataDirectoryProvider>(
             () => new DataDirectoryProvider(
                 Release,

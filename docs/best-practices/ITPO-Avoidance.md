@@ -2,14 +2,6 @@
 ## What is an ITPO
 A very typical thing that can happen during processing mods is exporting a record that doesn't have any changes compared to the original.  This is known as an ITPO (Identical to Previous Override), or sometimes ITM (Idential to Master).
 
-Mutagen may or may not get ITPO removal tooling in the future.  This would be powered by Equality/HashCode concepts, which already exist, but are not heavily tested for accuracy yet.  If/when ITPO removal calls do get implemented, it will mostly be for feature completeness, rather than necessity.
-
-How does one avoid/deal with ITPOs in the meantime, then?
-
-## Avoiding ITPOs
-
-Typically, the best patterns avoid making ITPOs in the first place, rather than cleaning them up after they exist.
-
 For example, this code can make some ITPOs:
 ```cs
 foreach (var weapon in loadOrder.PriorityOrder.Weapon().WinningOverrides())
@@ -18,9 +10,15 @@ foreach (var weapon in loadOrder.PriorityOrder.Weapon().WinningOverrides())
    weaponOverride.Weight = 0;
 }
 ```
-If a weapon already has a weight of zero, this will cause an ITPO.  We could add some code after to clean them up by looping over our outgoing mod, finding the previous override, checking equality, and then removing them from the outgoing patch if they're identical.
+If a weapon already has a weight of zero, this will cause an ITPO, as nothing has changed.
 
-Alternatively, we can adjust the logic to just never make an ITPO in the first place:
+## Avoiding ITPOs
+
+Typically, the best patterns avoid making ITPOs in the first place, rather than cleaning them up after they exist.
+
+Alternatively, we can adjust the logic to just never make an ITPO in the first place.  There are two general patterns for doing this.
+
+### Late GetOrAddAsOverride
 ```cs
 foreach (var weapon in loadOrder.PriorityOrder.Weapon().WinningOverrides())
 {
@@ -33,7 +31,7 @@ foreach (var weapon in loadOrder.PriorityOrder.Weapon().WinningOverrides())
 ```
 As you can see, the call to `GetOrAddAsOverride` is delayed until we know there's a meaningful modification to do.
 
-Another common pattern for doing this looks like this:
+### DeepCopy With Late Add
 ```cs
 foreach (var weapon in loadOrder.PriorityOrder.Weapon().WinningOverrides())
 {
@@ -61,4 +59,9 @@ foreach (var weapon in loadOrder.PriorityOrder.Weapon().WinningOverrides())
 }
 ```
 
-There are many ways to achieve the same goal.  The important takeaway is that code should first try to not make any ITPOs in the first place by only adding it to the outgoing mod once/if modifications have been made to the record.  Depending on the complexity of what you're doing, it may require different patterns than the ones outlined above.  No matter what though, if you find yourself reaching for ITPO tooling, take a step back and see if you can refactor it to process a different way to avoid them altogether.
+There are many ways to achieve the same goal.  The important takeaway is that code should first try to not make any ITPOs in the first place by only adding it to the outgoing mod once/if modifications have been made to the record.  Depending on the complexity of what you're doing, it may require different patterns than the ones outlined above.
+
+## Late ITPO Removal
+While it's preferable to avoid making ITPOs in the first place, they theoretically can be removed after the fact.
+
+Mutagen may or may not get ITPO removal tooling in the future.  This would be powered by Equality/HashCode concepts, which already exist, but are not heavily tested for accuracy yet.  If/when ITPO removal calls do get implemented, it will mostly be for feature completeness, rather than necessity.

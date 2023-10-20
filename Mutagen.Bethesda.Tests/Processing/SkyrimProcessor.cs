@@ -601,7 +601,7 @@ public class SkyrimProcessor : Processor
                         majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength + finalLoc));
                 var dataSlice = majorFrame.Content.Slice(anamPos.Value,
                     anamRecord.TotalLength + finalLoc + finalRec.TotalLength);
-                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncodingProvider._1252) ==
+                if (BinaryStringUtility.ProcessWholeToZString(anamRecord.Content, MutagenEncoding._1252) ==
                     "Bool"
                     && recs[1] != null)
                 {

@@ -1,3 +1,6 @@
+---
+order: 150
+---
 # WPF Library
 If you are making a C# WPF UI application with Mutagen, you can import `Mutagen.Bethesda.WPF` to get some tooling related to Bethesda specific content.
 

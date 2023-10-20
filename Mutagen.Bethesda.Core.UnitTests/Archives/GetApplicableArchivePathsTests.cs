@@ -45,7 +45,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
                 new IniPathProvider(
                     gameReleaseInjection,
                     new IniPathLookup(
-                        new GameLocator()))),
+                        GameLocator.Instance))),
             new CheckArchiveApplicability(
                 ext),
             new DataDirectoryInjection(BaseFolder),

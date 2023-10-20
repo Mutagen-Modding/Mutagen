@@ -25,12 +25,12 @@ public class StringParsing
     [Benchmark]
     public string ReadSpan()
     {
-        return BinaryStringUtility.ToZString(stream.GetSpan(data.Length), MutagenEncodingProvider._1252);
+        return BinaryStringUtility.ToZString(stream.GetSpan(data.Length), MutagenEncoding._1252);
     }
 
     [Benchmark]
     public string ReadMemory()
     {
-        return BinaryStringUtility.ToZString(stream.GetMemory(data.Length), MutagenEncodingProvider._1252);
+        return BinaryStringUtility.ToZString(stream.GetMemory(data.Length), MutagenEncoding._1252);
     }
 }

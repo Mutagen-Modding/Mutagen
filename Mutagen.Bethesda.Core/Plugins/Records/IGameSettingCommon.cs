@@ -154,7 +154,7 @@ public static class GameSettingUtility
     {
         var majorMeta = meta.MajorRecord(span);
         var edidFrame = majorMeta.FindSubrecord(RecordTypes.EDID);
-        var edid = edidFrame.AsString(MutagenEncodingProvider._1252);
+        var edid = edidFrame.AsString(MutagenEncoding._1252);
         if (edid.Length == 0)
         {
             return GetResponse<GameSettingType>.Fail("No EDID parsed.");

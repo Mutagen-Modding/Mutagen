@@ -6748,7 +6748,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default) : null;
             bool disposeStrings = param.StringsWriter != null;
             using (var stream = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
@@ -22822,7 +22822,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)SkyrimModHeader.HeaderFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncodingProvider.Instance) : null;
+            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)SkyrimModHeader.HeaderFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default) : null;
             bool disposeStrings = param.StringsWriter != null;
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {

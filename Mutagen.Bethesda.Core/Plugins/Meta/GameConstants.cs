@@ -149,7 +149,7 @@ public sealed record GameConstants
         defaultFormVersion: null,
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
     /// Readonly singleton of Skyrim LE game constants 
@@ -215,7 +215,7 @@ public sealed record GameConstants
         defaultFormVersion: 43,
         myDocumentsString: "Skyrim",
         iniName: "Skyrim",
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     public static readonly GameConstants EnderalLE = SkyrimLE with
     {
@@ -332,7 +332,7 @@ public sealed record GameConstants
         defaultFormVersion: 131,
         myDocumentsString: "Fallout4",
         iniName: "Fallout4",
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
 
     /// <summary> 
@@ -406,7 +406,7 @@ public sealed record GameConstants
         defaultFormVersion: 555,
         myDocumentsString: null,
         iniName: "Starfield",
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
     /// Returns record constants related to a certain ObjectType 

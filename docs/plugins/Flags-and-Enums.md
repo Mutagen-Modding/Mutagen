@@ -16,12 +16,15 @@ public enum CreatureTypeEnum
 }
 ```
 
-As a user, you can set the desired value by referencing this enum
+### Setting a Normal Enum
+
 ```cs
 creature.CreatureType = CreatureTypeEnum.Undead;
 ```
 
-You can also read the enum and do things like switch:
+### Switching an Enum
+If you want to do different things depending on the value of an enum, you can do a switch
+
 ```cs
 switch (creature.CreatureType)
 {
@@ -44,11 +47,13 @@ Enums only list the values that are known and have "nicknames".  Sometimes mods 
 
 You can still get at and set these values, though.  Enums in C# are backed by `int` (or other numeric primitives), and so you can write code like this:
 ```cs
+// Set an enum to an unknown value
 CreatureType e = (CreatureType)13; 
 
+// Check if it's that unknown value
 if (e == (CreatureType)13)
 {
-
+    // Will enter this statement
 }
 ```
 
@@ -89,4 +94,5 @@ if (npc.Flags.HasFlag(NPCFlag.AutoCalcStats))
 {
 }
 ```
-These aren't included in C# by default, but are part of the Mutagen ecosystem.
+!!! info Added Functionality
+    HasFlag and SetFlag aren't included in C# by default, but are part of the Mutagen ecosystem.

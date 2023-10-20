@@ -51,7 +51,7 @@ public sealed class ParsingBundle
     /// </summary>
     public ModKey ModKey { get; set; }
 
-    public EncodingBundle Encodings { get; set; } = new(MutagenEncodingProvider._1252, MutagenEncodingProvider._1252);
+    public EncodingBundle Encodings { get; set; } = new(MutagenEncoding._1252, MutagenEncoding._1252);
 
     public Language TranslatedTargetLanguage { get; set; } = Language.English;
 
@@ -81,7 +81,7 @@ public sealed class ParsingBundle
 
         if (stringsReadParameters.NonLocalizedEncodingOverride == null)
         {
-            var encodingProv = stringsReadParameters.EncodingProvider ?? MutagenEncodingProvider.Instance;
+            var encodingProv = stringsReadParameters.EncodingProvider ?? MutagenEncoding.Default;
             Encodings = Encodings with
             {
                 NonLocalized = encodingProv.GetEncoding(Constants.Release, TranslatedTargetLanguage)

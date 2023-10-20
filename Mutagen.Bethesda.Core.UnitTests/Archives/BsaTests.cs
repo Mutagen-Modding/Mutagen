@@ -32,7 +32,7 @@ public class BsaTests
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
-        BinaryStringUtility.ProcessWholeToZString(file.GetBytes(), MutagenEncodingProvider._1252)
+        BinaryStringUtility.ProcessWholeToZString(file.GetBytes(), MutagenEncoding._1252)
             .Should().Be("Found me");
     }
         
@@ -44,7 +44,7 @@ public class BsaTests
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
-        BinaryStringUtility.ProcessWholeToZString(file.GetSpan(), MutagenEncodingProvider._1252)
+        BinaryStringUtility.ProcessWholeToZString(file.GetSpan(), MutagenEncoding._1252)
             .Should().Be("Found me");
     }
         
@@ -56,7 +56,7 @@ public class BsaTests
             .Should().BeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
-        BinaryStringUtility.ProcessWholeToZString(file.GetMemorySlice(), MutagenEncodingProvider._1252)
+        BinaryStringUtility.ProcessWholeToZString(file.GetMemorySlice(), MutagenEncoding._1252)
             .Should().Be("Found me");
     }
         
@@ -73,7 +73,7 @@ public class BsaTests
         stream.Remaining().Should().Be(8);
         stream.Read(b);
         stream.Remaining().Should().Be(0);
-        BinaryStringUtility.ProcessWholeToZString(b, MutagenEncodingProvider._1252)
+        BinaryStringUtility.ProcessWholeToZString(b, MutagenEncoding._1252)
             .Should().Be("Found me");
     }
 }
