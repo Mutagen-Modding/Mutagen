@@ -102,17 +102,15 @@ public class EnumCompletenessTests
         }
     }
 
-    [Theory]
-    [MutagenAutoData]
-    public void MutagenEncodingProvider(
-        MutagenEncodingProvider sut)
+    [Fact]
+    public void MutagenEncodingProvider()
     {
         foreach (var release in Enums<GameRelease>.Values
                      .Where(x => x != GameRelease.Oblivion))
         {
             foreach (var lang in Enums<Language>.Values)
             {
-                sut.GetEncoding(release, lang).Should().NotBeNull();
+                MutagenEncoding.GetEncoding(release, lang).Should().NotBeNull();
             }
         }
     }

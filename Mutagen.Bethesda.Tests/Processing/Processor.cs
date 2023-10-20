@@ -763,7 +763,7 @@ public abstract class Processor
         if (!Enums.HasFlag(modHeader.Flags, Constants.Localized)) return;
         var outFolder = Path.Combine(TempFolder, "Strings/Processed");
         var language = Language.English;
-        using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncodingProvider.Instance);
+        using var writer = new StringsWriter(GameRelease, ModKey.FromNameAndExtension(Path.GetFileName(SourcePath)), outFolder, MutagenEncoding.Default);
         var stringEntries = Enums<StringsSource>.Values
             .SelectMany(source =>
             {

@@ -129,7 +129,7 @@ public sealed record GameConstants
             headerLength: 6,
             lengthLength: 2),
         languages: Array.Empty<Language>(),
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
     /// Readonly singleton of Skyrim LE game constants 
@@ -191,7 +191,7 @@ public sealed record GameConstants
             Language.Chinese,
             Language.Russian,
         },
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
     /// Readonly singleton of Skyrim SE game constants 
@@ -270,7 +270,7 @@ public sealed record GameConstants
             Language.Russian,
             Language.Japanese,
         },
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
 
     /// <summary> 
@@ -340,7 +340,7 @@ public sealed record GameConstants
             Language.Russian,
             Language.Japanese,
         },
-        encodings: new(NonTranslated: MutagenEncodingProvider._1252, NonLocalized: MutagenEncodingProvider._1252));
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     /// <summary> 
     /// Returns record constants related to a certain ObjectType 

@@ -83,7 +83,7 @@ public partial class AComponent
 
     public static ComponentType GetComponentType(SubrecordFrame bfcb)
     {
-        return Enum.Parse<ComponentType>(bfcb.AsString(MutagenEncodingProvider._1252));
+        return Enum.Parse<ComponentType>(bfcb.AsString(MutagenEncoding._1252));
     }
 }
 
@@ -138,7 +138,7 @@ partial class AComponentBinaryWriteTranslation
 
         using (HeaderExport.Subrecord(writer, RecordTypes.BFCB))
         {
-            writer.Write(type.ToStringFast(), StringBinaryType.NullTerminate, MutagenEncodingProvider._1252);
+            writer.Write(type.ToStringFast(), StringBinaryType.NullTerminate, MutagenEncoding._1252);
         }
     }
 }

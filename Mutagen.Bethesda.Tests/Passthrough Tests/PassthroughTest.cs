@@ -262,7 +262,7 @@ public abstract class PassthroughTest
                         record.IsCompressed = false;
                     }
 
-                    var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, mod.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
+                    var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, mod.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
                     var outputPath = Path.Combine(tmp.Dir.Path, $"{Nickname}_NormalImport_NormalExport");
                     mod.WriteToBinary(outputPath, writeParam);
                     GC.Collect();
@@ -295,7 +295,7 @@ public abstract class PassthroughTest
                             record.IsCompressed = false;
                         }
 
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, mod.ModKey, strsParallelWriteDir, MutagenEncodingProvider.Instance) : null);
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, mod.ModKey, strsParallelWriteDir, MutagenEncoding.Default) : null);
                         var outputPath = Path.Combine(tmp.Dir.Path, $"{Nickname}_NormalImport_ParallelExport");
                         mod.WriteToBinaryParallel(outputPath, writeParam, parallelWriteParameters: new ParallelWriteParameters() { MaxDegreeOfParallelism = 1 });
                         GC.Collect();
@@ -348,7 +348,7 @@ public abstract class PassthroughTest
                     using (var wrapper = await ImportBinaryOverlay(trimmedPath, StringsParams))
                     {
                         doStrings = wrapper.UsingLocalization;
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
+                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
                         wrapper.WriteToBinary(binaryOverlayPath, writeParam);
                         writeParam.StringsWriter?.Dispose();
                     }
@@ -387,7 +387,7 @@ public abstract class PassthroughTest
                     o.OnNext(FilePath.ToString());
                     var copyIn = await ImportCopyIn(trimmedPath);
                     doStrings = copyIn.UsingLocalization;
-                    var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, copyIn.ModKey, strsWriteDir, MutagenEncodingProvider.Instance) : null);
+                    var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, copyIn.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
                     copyIn.WriteToBinary(copyInPath, writeParam);
                     writeParam.StringsWriter?.Dispose();
 
