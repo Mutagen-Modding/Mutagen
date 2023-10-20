@@ -14,7 +14,7 @@ int hash = npc1.GetHashCode();
 ## Equals Mask
 Mutagen generates additional helper classes called Translation Masks.  These can be used to help specify what fields a user wants to check for equality, or hash with.
 
-[:octicons-arrow-right-24: Translation Mask](plugins/Translation-Masks.md)
+[:octicons-arrow-right-24: Translation Mask](Translation-Masks.md)
 
 ```cs
 // Create a mask that will only check EditorID and Name

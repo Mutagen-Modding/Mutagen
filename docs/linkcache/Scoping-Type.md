@@ -15,8 +15,6 @@ To scope a call, simply provide a type that is the most specific for your needs,
         // Found the Npc
     }
     ```
-
-
 === "Scoped By Generic"
     ```cs
     ILinkCache myLinkCache = ...;
@@ -53,6 +51,12 @@ To scope a call, simply provide a type that is the most specific for your needs,
 
     !!! warning "Not Recommended"
         This type of untyped query is allowed, but should only be used as a last resort
+
+!!! tip "Best Practices"
+    It is recommended to use "Getter" interfaces when specifying scoping types
+
+    [:octicons-arrow-right-24: Prefer Getters](../best-practices/FormLinks-Target-Getter-Interfaces.md)
+
         
 ## Situations to Scope
 ### Link Interfaces

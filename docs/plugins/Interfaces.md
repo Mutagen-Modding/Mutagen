@@ -145,4 +145,4 @@ However, over time they can/could take on more of an Aspect Interface role, wher
 ## List of Interfaces
 Mutagen autogenerates some documentation on what Aspect/Link interfaces exist, and what implements what.
 
-[:octicons-arrow-right-24: List of Interfaces](game-specific/oblivion/Oblivion-Aspect-Interfaces.md)
+[:octicons-arrow-right-24: List of Interfaces](../game-specific/oblivion/Oblivion-Aspect-Interfaces.md)

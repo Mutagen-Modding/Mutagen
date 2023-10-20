@@ -47,7 +47,7 @@ Duplicating a record is the equivalent of creating a fresh record, and then copy
     !!! Bug "Extra Requirements"
         If the supplied EditorID is not unique, it will throw an exception.
 
-        [:octicons-arrow-right-24: FormID Allocation](plugins/FormKey-Allocation-and-Persistence.md#keep-editorids-unique)
+        [:octicons-arrow-right-24: FormID Allocation](FormKey-Allocation-and-Persistence.md#keep-editorids-unique)
 
 
 

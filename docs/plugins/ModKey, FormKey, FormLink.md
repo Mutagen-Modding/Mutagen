@@ -100,16 +100,16 @@ A `FormLink<T>` is generic, where T is a Major Record type.
 
 A `FormLink` adds type safety to the concept of a `FormKey`.  Consider an NPC's `Race` member, which is of type: `FormLink<IRaceGetter>`.  This link is not allowed to point to or link against any record that is not a `Race`.  It is hard to accidentally set a `FormLink<IRaceGetter>` link to point to an `IPotionGetter` record, as attempting to do so would typically result in a compiler error.
 
-!!! tip
-    FormLinks should generally always target the Getter interface of a record
-	
-    [:octicons-arrow-right-24: Use Getter interfaces for `FormLink<T>`](best-practices/FormLinks-Always-Target-Getter-Interfaces.md)
+!!! tip "Best Practices"
+    It is recommended to use "Getter" interfaces when specifying generic types
+
+    [:octicons-arrow-right-24: Prefer Getters](../best-practices/FormLinks-Target-Getter-Interfaces.md)
 
 
 
 ### Resolves
 
-FormLinks can be combined with [LinkCaches](linkcache/index.md) to easily look up a record. 
+FormLinks can be combined with [LinkCaches](../linkcache/index.md) to easily look up a record. 
 
 ``` { .cs hl_lines=3 }
 IFormLinkGetter<IItemGetter> someItemLink = ...;
@@ -122,7 +122,7 @@ if (someItemLink.TryResolve(myLinkCache, out var itemRecord))
 }
 ```
 
-[:octicons-arrow-right-24: Record Lookups](../linkcache/Record-Lookup.md)
+[:octicons-arrow-right-24: Record Lookups](../linkcache/Record-Resolves.md)
 
 ### SetTo
 Generated records will have FormLinks that point to records.  You can change the record they point to by modifying the FormLink
@@ -189,7 +189,7 @@ Note that usually FormLinks work best when they point to getter interfaces, rath
     var myOtherLink2 = armor.AsLink();
 	```
 
-!!! tip
-    FormLinks should generally always target the Getter interface of a record
-	
-    [:octicons-arrow-right-24: Use Getter interfaces for `FormLink<T>`](best-practices/FormLinks-Always-Target-Getter-Interfaces.md)
+!!! tip "Best Practices"
+    It is recommended to use "Getter" interfaces when specifying scoping types
+
+    [:octicons-arrow-right-24: Prefer Getters](../best-practices/FormLinks-Target-Getter-Interfaces.md)

@@ -101,10 +101,10 @@ nav:
     - Nullability to Indicate Record Presence: familiar/Nullability-to-Indicate-Record-Presence.md
     # - Inspect Class Definitions
     # - Debugging
-  - Best Practices and Optimizations:
-    - Getters Everywhere: best-practices/Getters-Everywhere.md
+  - Best Practices:
+    - Prefer Readonly Types: best-practices/Read-Only.md
     - Accessing Known Records: best-practices/Accessing-Known-Records.md
-    - FormLinks Always Target Getter Interfaces: best-practices/FormLinks-Always-Target-Getter-Interfaces.md
+    - FormLinks Target Getter Interfaces: best-practices/FormLinks-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: best-practices/FormLinks-vs-EditorID-as-Identifiers.md
     - FormLink vs FormLinkNullable: best-practices/FormLink-vs-FormLinkNullable.md
     # - FormLinks vs FormID/FormKey as Identifiers:

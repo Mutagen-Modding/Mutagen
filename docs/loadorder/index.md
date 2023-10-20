@@ -118,7 +118,7 @@ If you don't want a whole environment, and just want some convenience for import
     var loadOrder = LoadOrder.Import<ISkyrimModGetter>(listings, GameRelease.SkyrimSE);
     ```
 !!! tip "Prefer Getter Generic"
-    The choice of specifying Getter or Setter interfaces (`ISkyrimMod` vs `ISkyrimModGetter`) is important, as that will drive the style that the mods are imported with.  If the Getter is specified, then the more optimized [Binary Overlay](../plugins/Binary-Overlay.md) systems will be used.  If Setter is specified, then all the import work will need to be done up front into a mutable object.
+    The choice of specifying Getter or Setter interfaces (`ISkyrimMod` vs `ISkyrimModGetter`) is important, as that will drive the style that the mods are imported with.  If the Getter is specified, then the more optimized [Binary Overlay](../plugins/Binary-Importing.md#read-only-mod-importing) systems will be used.  If Setter is specified, then all the import work will need to be done up front into a mutable object.
 
 ## Writing a Load Order
 A `LoadOrder` can also export its contents to a file.

@@ -32,7 +32,7 @@ var mod = OblivionMod.CreateFromBinary(
 This import call will only process and import Potions and NPCs.
 
 !!! info "Generally Unused"
-    Generally this feature is unused, as [Binary Overlays](plugins/Binary-Overlay.md) handle the situation of selectively accessing data much better.
+    Generally this feature is unused, as [Binary Overlays](Binary-Importing.md#read-only-mod-importing) handle the situation of selectively accessing data much better.
 	
 ## Read Only Mod Importing
 The Binary Overlay imports mods in a readonly, on-demand fashion.  Only fields that are accessed get parsed, which saves a lot of time and work.
@@ -45,7 +45,7 @@ using var mod = OblivionMod.CreateFromBinaryOverlay(pathToMod);
 !!! tip "Preferred"
     Use Binary Overlays when possible, up until you want to mutate records.
 	
-	[:octicons-arrow-right-24: Mutation Patterns](best-practices/late-mutation)
+	[:octicons-arrow-right-24: Mutation Patterns](../best-practices/Read-Only.md)
 
 ### No Up Front Work
 With the overlay pattern, a mod object is returned almost immediately for use after having done almost no parsing.  As the user accesses members of the `Mod`, the parsing is done on demand for only the members accessed.
@@ -64,4 +64,4 @@ Binary Overlays keep reference to an open stream internally, so they can read wh
 !!! warning "Avoid Repeated Access"
     The Overlay pattern has the downside that repeated access of properties means repeated parsing of the same data.  
 
-[:octicons-arrow-right-24: Overlay Best Practices](best-practices/overlays-single-access.md)
+[:octicons-arrow-right-24: Overlay Best Practices](../best-practices/Overlays-Single-Access.md)

@@ -1,11 +1,8 @@
----
-order: 275
----
 # Binary Format Complexity Abstraction
 Bethesda's binary format contains a lot implementation complexities that are unrelated to the actual content of the records.  A lot of times the exposure of these details are a source of confusion, and don't add much upside in the way of flexibility or power into the hands of the user.  Mutagen attempts to abstract these complexities away so that the end user is dealing with the distilled record content more directly, rather than wading through the gritty specifics that only matter in the context of their binary format on disk.
 
 ## FormKeys and FormLinks
-This topic was covered in detail in the [ModKey, FormKey, FormLink](plugins/ModKey,-FormKey,-FormLink.md#formkeys) section, and so will not be covered here.
+This topic was covered in detail in the [ModKey, FormKey, FormLink](ModKey,%20FormKey,%20FormLink.md#formkeys) section, and so will not be covered here.
 
 ## Record Types
 Most seasoned modders are familiar with the 4 character record headers. `EDID` is `Editor ID`.  `FULL` is `Name`.  `MODL` is `Model`.  

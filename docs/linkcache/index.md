@@ -4,9 +4,9 @@ The LinkCache is the record lookup engine.  It is made relative to any number of
 
 It powers a lot of functionality, such as:
 
-- Looking up records by [FormKey/FormLink](Record-Lookup.md)
-- Finding the [Winning Override](Winning-Overrides) in a [Load Order](../loadorder/index.md)
-- [Iterating over all versions of a record](Previous-Override-Iteration) within a [Load Order](../loadorder/index.md)
+- Looking up records by [FormKey/FormLink](Record-Resolves.md)
+- Finding the [Winning Override](../loadorder/Winning-Overrides.md) in a [Load Order](../loadorder/index.md)
+- [Iterating over all versions of a record](Previous-Override-Iteration.md) within a [Load Order](../loadorder/index.md)
 
 ## Construction
 Every LinkCache is created relative to some mods.  It will look up and return records relative to these mods.

@@ -1,4 +1,4 @@
-# Getters Everywhere
+# Prefer Readonly Types
 ## Overview
 Mutagen offers up records in several ways.  Consider dealing with an Npc, it would offer:
 
@@ -6,29 +6,13 @@ Mutagen offers up records in several ways.  Consider dealing with an Npc, it wou
 - `INpc` interface.   An interface with all the fields an Npc has.  The class implements this.
 - `INpcGetter` interface.  An interface with all the fields an Npc has, but only gettable.  Cannot be modified.
 
-In most example code and projects you look at, most of the code will be dealing with `INpcGetter`, and you should too.
+In most example code, APIs, and projects you look at the code will mostly be dealing with `INpcGetter`, and you should too.
 
-## Best Practices
-The best practice is to have your code interact with Getter interfaces as much as possible.  Only at the last moment when you're sure you want to override a record and export it would you convert it to a settable version.
+## Late Mutation
+The best practice is to convert from readonly interfaces to mutable version as late as possible.  This allows the systems to avoid parsing the whole record when it's not applicable.
 
-A typical example:
-```cs
-// Not using `var`, just for clarity in this example
-foreach (INpcGetter npcGetter in env.LoadOrder.PriorityOrder.Npc().WinningOverrides())
-{
-    // Do all your filters on the getter version
-    if (npcGetter.Configuration.Level < 5) continue;
-
-    // Found an Npc we want to modify.
-    // Add to the outgoing mod and get a settable version as late as possible
-    INpc npc = myPatchMod.Npcs.GetOrAddAsOverride(npcGetter);
-    npc.Level = 5;  
-}
-```
-
-## Reasoning
 ### Readonly Increases Speed
-A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](../plugins/Binary-Overlay.md).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
+A lot of Mutagen's speed comes from short circuiting unnecessary work.  A big way it does this is by exposing records via [Binary Overlays](../plugins/Binary-Importing.md).  These are record objects that are very lightweight and fast.   But one of their downsides is they are read only.
 
 As soon as you want to modify something, you have to first convert it to a settable version of the record.  This means creating a more "normal" settable `Npc` class, and reading ALL the data within that record to fill out each field one by one.  This is often a waste of time.
 

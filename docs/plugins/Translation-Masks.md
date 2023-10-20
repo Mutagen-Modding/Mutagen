@@ -16,7 +16,7 @@ npc.DeepCopyIn(npc2, mask);
 
 The above would copy in the values of the `Height`, `Weight`, and `Destructible` subobject from `npc2` into `npc`.  All other members of `npc` would be left untouched.
 
-[:octicons-arrow-right-24: Copy Functionality](plugins/Copy-Functionality.md)
+[:octicons-arrow-right-24: Copy Functionality](Copy-Functionality.md)
 
 ## Equality
 Providing a translation mask to an Equality call will control what members are compared when determining equality.
@@ -33,7 +33,7 @@ npc.Equals(npc2, mask);
 
 The above would compare equality of the Height and Weight of the two Npcs.  All other members would not be considered.
 
-[:octicons-arrow-right-24: Equality](plugins/Translation-Masks.md)
+[:octicons-arrow-right-24: Equality](Translation-Masks.md)
 
 !!! bug "Work in Progress"
     Equality functionality exists, but has not been thoroughly tested.  Bugs within may exist.  Please report if you see any.

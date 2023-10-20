@@ -11,7 +11,7 @@ When `...` is seen, that generally means the example will not cover how that obj
 ### Missing Namespaces
 If you're just copy pasting code, often it will not compile because some required namespaces are missing.  You can have the IDE import them by clicking on the red object in question and activating quick fixes (`Ctrl - .` in Visual Studio).
 
-[:octicons-arrow-right-24: Namespaces](Namespaces.md)
+[:octicons-arrow-right-24: Namespaces](familiar/Namespaces.md)
 
 ## Construct an Environment
 
@@ -138,7 +138,7 @@ var npcLink = npcGetter.ToLink();
     IFormLinkGetter<INpcGetter> npcLink3 = npcSetter.ToLink();
     ```
 	
-    [:octicons-arrow-right-24: Use Getter Interfaces in FormLinks](best-practices/FormLinks-Always-Target-Getter-Interfaces.md)
+    [:octicons-arrow-right-24: Use Getter Interfaces in FormLinks](best-practices/FormLinks-Target-Getter-Interfaces.md)
 	
 	
 
