@@ -128,6 +128,7 @@
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\EquipType.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="Enums\LockLevel.cs" />
     <Compile Include="Enums\Pronoun.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TimeOfDay.cs" />
@@ -1990,6 +1991,9 @@
     </Compile>
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LockData.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Planet.cs">
       <DependentUpon>Planet.xml</DependentUpon>
@@ -5050,6 +5054,15 @@
     <Compile Include="Interfaces\Link\IConstructibleObjectTarget_Generated.cs" />
     <Compile Include="Records\Major Records\FormListConditionalEntry_Generated.cs">
       <DependentUpon>FormList.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuBodyText_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItem_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LockData_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

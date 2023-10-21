@@ -3852,9 +3852,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on TerminalMenu</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter> TerminalMenu(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter> TerminalMenu(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ITerminalMenuGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3864,9 +3864,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on TerminalMenu</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter> TerminalMenu(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter> TerminalMenu(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ITerminalMenuGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, ITerminalMenu, ITerminalMenuGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

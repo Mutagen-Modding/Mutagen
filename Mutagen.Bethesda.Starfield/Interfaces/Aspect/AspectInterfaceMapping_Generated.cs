@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
+                TerminalMenu_Registration.Instance,
             });
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
@@ -78,6 +79,7 @@ namespace Mutagen.Bethesda.Starfield
                 Race_Registration.Instance,
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
+                TerminalMenu_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -118,6 +120,7 @@ namespace Mutagen.Bethesda.Starfield
                 ScriptVariableProperty_Registration.Instance,
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
+                TerminalMenu_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -137,6 +140,7 @@ namespace Mutagen.Bethesda.Starfield
                 Race_Registration.Instance,
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
+                TerminalMenu_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -156,6 +160,7 @@ namespace Mutagen.Bethesda.Starfield
                 Race_Registration.Instance,
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
+                TerminalMenu_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
