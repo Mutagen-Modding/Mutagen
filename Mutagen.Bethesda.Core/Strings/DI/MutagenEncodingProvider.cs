@@ -169,6 +169,6 @@ internal sealed class MutagenEncodingProvider : IMutagenEncodingProvider
 {
     public IMutagenEncoding GetEncoding(GameRelease release, Language language)
     {
-        return MutagenEncoding.Default.GetEncoding(release, language);
+        return MutagenEncoding.GetEncoding(release, language);
     }
 }
