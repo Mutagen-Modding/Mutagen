@@ -457,6 +457,7 @@ public class Fallout4PassthroughTest : PassthroughTest
     {
         return Fallout4ModBinaryOverlay.Fallout4ModFactory(
             new ModPath(ModKey, path),
+            Fallout4Release.Fallout4,
             stringsParams);
     }
 
@@ -464,14 +465,17 @@ public class Fallout4PassthroughTest : PassthroughTest
     {
         return Fallout4Mod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
+            Fallout4Release.Fallout4,
             parallel: Settings.ParallelProcessingSteps, 
             stringsParam: stringsParams);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
     {
-        var wrapper = Fallout4Mod.CreateFromBinaryOverlay(file.Path);
-        var ret = new Fallout4Mod(ModKey);
+        var wrapper = Fallout4Mod.CreateFromBinaryOverlay(file.Path,
+        Fallout4Release.Fallout4);
+        var ret = new Fallout4Mod(ModKey,
+            Fallout4Release.Fallout4);
         ret.DeepCopyIn(wrapper);
         return ret;
     }

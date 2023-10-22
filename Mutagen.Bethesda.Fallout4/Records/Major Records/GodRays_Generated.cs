@@ -608,10 +608,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GodRays_Registration.TriggeringRecordType;
-        public GodRays(FormKey formKey)
+        public GodRays(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -634,12 +636,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public GodRays(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public GodRays(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1390,7 +1396,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new GodRays(formKey);
+            var newRec = new GodRays(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

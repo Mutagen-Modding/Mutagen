@@ -657,10 +657,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = DialogView_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => DialogViewCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogViewSetterCommon.Instance.RemapLinks(this, mapping);
-        public DialogView(FormKey formKey)
+        public DialogView(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -683,12 +685,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public DialogView(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public DialogView(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1430,7 +1436,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new DialogView(formKey);
+            var newRec = new DialogView(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

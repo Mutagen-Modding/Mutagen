@@ -296,10 +296,12 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledSpell_Registration.TriggeringRecordType;
-        public LeveledSpell(FormKey formKey)
+        public LeveledSpell(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -322,12 +324,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public LeveledSpell(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public LeveledSpell(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -957,7 +963,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new LeveledSpell(formKey);
+            var newRec = new LeveledSpell(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

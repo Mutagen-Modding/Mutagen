@@ -42,6 +42,7 @@ public static class GameCategoryExt
                 yield break;
             case GameCategory.Fallout4:
                 yield return GameRelease.Fallout4;
+                yield return GameRelease.Fallout4VR;
                 yield break;
             case GameCategory.Starfield:
                 yield return GameRelease.Starfield;

@@ -334,6 +334,12 @@ public sealed record GameConstants
         iniName: "Fallout4",
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
+    public static readonly GameConstants Fallout4VR = Fallout4 with
+    {
+        Release = GameRelease.Fallout4VR,
+        MyDocumentsString = "Fallout4 VR",
+        IniName = "Fallout4 VR",
+    };
 
     /// <summary> 
     /// Readonly singleton of Starfield game constants 

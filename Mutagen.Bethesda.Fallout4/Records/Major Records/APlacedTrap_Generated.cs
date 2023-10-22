@@ -1692,10 +1692,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => APlacedTrapCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APlacedTrapSetterCommon.Instance.RemapLinks(this, mapping);
-        public APlacedTrap(FormKey formKey)
+        public APlacedTrap(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1718,12 +1720,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public APlacedTrap(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public APlacedTrap(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }

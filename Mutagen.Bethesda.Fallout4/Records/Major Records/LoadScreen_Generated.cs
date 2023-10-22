@@ -664,10 +664,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LoadScreenCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenSetterCommon.Instance.RemapLinks(this, mapping);
-        public LoadScreen(FormKey formKey)
+        public LoadScreen(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -690,12 +692,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public LoadScreen(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public LoadScreen(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1495,7 +1501,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new LoadScreen(formKey);
+            var newRec = new LoadScreen(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

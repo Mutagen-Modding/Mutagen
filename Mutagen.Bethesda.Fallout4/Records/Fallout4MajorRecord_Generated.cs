@@ -406,10 +406,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout4MajorRecordCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
-        public Fallout4MajorRecord(FormKey formKey)
+        public Fallout4MajorRecord(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -432,12 +434,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Fallout4MajorRecord(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Fallout4MajorRecord(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }

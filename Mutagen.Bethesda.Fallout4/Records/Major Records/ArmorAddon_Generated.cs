@@ -989,10 +989,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonSetterCommon.Instance.RemapLinks(this, mapping);
-        public ArmorAddon(FormKey formKey)
+        public ArmorAddon(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1015,12 +1017,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public ArmorAddon(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public ArmorAddon(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -2105,7 +2111,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ArmorAddon(formKey);
+            var newRec = new ArmorAddon(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

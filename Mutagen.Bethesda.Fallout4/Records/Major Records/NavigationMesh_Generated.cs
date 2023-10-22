@@ -549,10 +549,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = NavigationMesh_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NavigationMeshCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshSetterCommon.Instance.RemapLinks(this, mapping);
-        public NavigationMesh(FormKey formKey)
+        public NavigationMesh(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -575,12 +577,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public NavigationMesh(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public NavigationMesh(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1331,7 +1337,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new NavigationMesh(formKey);
+            var newRec = new NavigationMesh(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

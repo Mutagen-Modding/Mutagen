@@ -986,10 +986,12 @@ namespace Mutagen.Bethesda.Fallout4
         public static readonly RecordType GrupRecordType = Hazard_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HazardCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardSetterCommon.Instance.RemapLinks(this, mapping);
-        public Hazard(FormKey formKey)
+        public Hazard(
+            FormKey formKey,
+            Fallout4Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout4.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -1012,12 +1014,16 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public Hazard(IFallout4Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout4Release)
         {
         }
 
         public Hazard(IFallout4Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout4Release)
         {
             this.EditorID = editorID;
         }
@@ -1974,7 +1980,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Hazard(formKey);
+            var newRec = new Hazard(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

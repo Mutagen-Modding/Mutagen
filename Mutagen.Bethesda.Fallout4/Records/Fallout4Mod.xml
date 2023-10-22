@@ -134,5 +134,7 @@
       <Group name="GodRays" refName="GodRays" />
       <Group name="ObjectVisibilityManagers" refName="ObjectVisibilityManager" />
     </Fields>
+    <GameReleaseOptions>Fallout4</GameReleaseOptions>
+    <GameReleaseOptions>Fallout4VR</GameReleaseOptions>
   </Object>
 </Loqui>

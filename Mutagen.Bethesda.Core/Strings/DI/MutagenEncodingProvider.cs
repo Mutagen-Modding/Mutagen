@@ -79,6 +79,7 @@ public static class MutagenEncoding
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalSE:
             case GameRelease.Fallout4:
+            case GameRelease.Fallout4VR:
             case GameRelease.Starfield:
                 return GetSkyrimSeEncoding(language);
             default:
