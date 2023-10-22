@@ -819,10 +819,12 @@ namespace Mutagen.Bethesda.Starfield
         public static readonly RecordType GrupRecordType = StaticCollection_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => StaticCollectionCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StaticCollectionSetterCommon.Instance.RemapLinks(this, mapping);
-        public StaticCollection(FormKey formKey)
+        public StaticCollection(
+            FormKey formKey,
+            StarfieldRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Starfield.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -845,12 +847,16 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public StaticCollection(IStarfieldMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.StarfieldRelease)
         {
         }
 
         public StaticCollection(IStarfieldMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.StarfieldRelease)
         {
             this.EditorID = editorID;
         }
@@ -1769,7 +1775,7 @@ namespace Mutagen.Bethesda.Starfield
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new StaticCollection(formKey);
+            var newRec = new StaticCollection(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

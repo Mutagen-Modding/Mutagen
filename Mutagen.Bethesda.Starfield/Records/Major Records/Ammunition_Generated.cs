@@ -296,10 +296,12 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;
-        public Ammunition(FormKey formKey)
+        public Ammunition(
+            FormKey formKey,
+            StarfieldRelease gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Starfield.DefaultFormVersion!.Value;
+            this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -322,12 +324,16 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public Ammunition(IStarfieldMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.StarfieldRelease)
         {
         }
 
         public Ammunition(IStarfieldMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.StarfieldRelease)
         {
             this.EditorID = editorID;
         }
@@ -953,7 +959,7 @@ namespace Mutagen.Bethesda.Starfield
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Ammunition(formKey);
+            var newRec = new Ammunition(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

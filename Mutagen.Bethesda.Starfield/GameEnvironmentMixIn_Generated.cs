@@ -8,9 +8,10 @@ namespace Mutagen.Bethesda
     {
         public static IGameEnvironment<IStarfieldMod, IStarfieldModGetter> Starfield(
             this GameEnvironment env,
+            StarfieldRelease gameRelease,
             LinkCachePreferences? linkCachePrefs = null)
         {
-            return env.Construct<IStarfieldMod, IStarfieldModGetter>(GameRelease.Starfield, linkCachePrefs);
+            return env.Construct<IStarfieldMod, IStarfieldModGetter>(gameRelease.ToGameRelease(), linkCachePrefs);
         }
 
     }

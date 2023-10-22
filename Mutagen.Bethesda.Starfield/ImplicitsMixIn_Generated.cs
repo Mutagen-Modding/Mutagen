@@ -7,19 +7,25 @@ namespace Mutagen.Bethesda
 {
     public static class ImplicitsMixIn
     {
-        public static IReadOnlyCollection<ModKey> Starfield(this ImplicitBaseMasters _)
+        public static IReadOnlyCollection<ModKey> Starfield(
+            this ImplicitBaseMasters _,
+            StarfieldRelease release)
         {
-            return Implicits.Get(GameRelease.Starfield).BaseMasters;
+            return Implicits.Get(release.ToGameRelease()).BaseMasters;
         }
 
-        public static IReadOnlyCollection<ModKey> Starfield(this ImplicitListings _)
+        public static IReadOnlyCollection<ModKey> Starfield(
+            this ImplicitListings _,
+            StarfieldRelease release)
         {
-            return Implicits.Get(GameRelease.Starfield).Listings;
+            return Implicits.Get(release.ToGameRelease()).Listings;
         }
 
-        public static IReadOnlyCollection<FormKey> Starfield(this ImplicitRecordFormKeys _)
+        public static IReadOnlyCollection<FormKey> Starfield(
+            this ImplicitRecordFormKeys _,
+            StarfieldRelease release)
         {
-            return Implicits.Get(GameRelease.Starfield).RecordFormKeys;
+            return Implicits.Get(release.ToGameRelease()).RecordFormKeys;
         }
     }
 }

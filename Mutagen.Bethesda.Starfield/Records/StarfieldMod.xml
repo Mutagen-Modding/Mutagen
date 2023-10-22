@@ -48,5 +48,6 @@
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
     </Fields>
+    <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>
 </Loqui>

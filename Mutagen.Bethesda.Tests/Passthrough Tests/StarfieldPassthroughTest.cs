@@ -22,6 +22,7 @@ public class StarfieldPassthroughTest : PassthroughTest
     {
         return StarfieldModBinaryOverlay.StarfieldModFactory(
             new ModPath(ModKey, path),
+            StarfieldRelease.Starfield,
             stringsParams);
     }
 
@@ -29,14 +30,17 @@ public class StarfieldPassthroughTest : PassthroughTest
     {
         return StarfieldMod.CreateFromBinary(
             new ModPath(ModKey, path.Path),
+            StarfieldRelease.Starfield,
             parallel: Settings.ParallelProcessingSteps,
             stringsParam: stringsParams);
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
     {
-        var wrapper = StarfieldMod.CreateFromBinaryOverlay(file.Path);
-        var ret = new StarfieldMod(ModKey);
+        var wrapper = StarfieldMod.CreateFromBinaryOverlay(file.Path,
+            StarfieldRelease.Starfield);
+        var ret = new StarfieldMod(ModKey,
+            StarfieldRelease.Starfield);
         ret.DeepCopyIn(wrapper);
         return ret;
     }
