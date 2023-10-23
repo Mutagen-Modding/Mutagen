@@ -396,8 +396,17 @@ public class TriggeringRecordModule : GenerationModule
         if (field is LoquiType loqui
             && field is not FormLinkType)
         {
-            if (field.GetFieldData().Circular) return;
-            IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
+            var fieldData = field.GetFieldData();
+            if (fieldData.Circular) return;
+            IEnumerable<RecordType>? trigRecTypes;
+            if (fieldData.RecordType.HasValue)
+            {
+                trigRecTypes = null;
+            }
+            else
+            {
+                trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
+            }
             if (loqui.TargetObjectGeneration != null
                 && loqui.RefType == LoquiType.LoquiRefType.Direct
                 && (loqui.TargetObjectGeneration.TryGetRecordType(out var recType)

@@ -706,7 +706,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         public bool Handled;
     }
 
-    private Dictionary<RecordType, DoubleTracker> DoubleSingleTriggerUsages(
+    private Dictionary<RecordType, DoubleTracker> DoubleTriggerUsages(
         List<(int PublicIndex, int InternalIndex, TypeGeneration Field)> fields)
     {
         var doubleUsages = new Dictionary<RecordType, DoubleTracker>();
@@ -716,15 +716,15 @@ public class PluginTranslationModule : BinaryTranslationModule
             var doIt = () =>
             {
                 var fieldData = field.Field.GetFieldData();
-                if (fieldData.GenerationTypes.Count() > 1) return;
-                foreach (var gen in fieldData.GenerationTypes)
+                foreach (var gen in fieldData.GenerationTypes.Where(f => !f.Value.GetFieldData().HasVersioning))
                 {
-                    if (gen.Key.Count() > 1) continue;
                     LoquiType loqui = gen.Value as LoquiType;
                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                    doubleUsages.GetOrAdd(gen.Key.First(), () => new DoubleTracker(gen.Key.First()))
-                        .Fields
-                        .Add((field.Item1, field.Item2, field.Field, lastIntegratedField));
+                    foreach (var k in gen.Key)
+                    {
+                        doubleUsages.GetOrAdd(k, () => new(k))
+                            .Fields.Add((field.PublicIndex, field.InternalIndex, field.Field, lastIntegratedField));
+                    }
                 }
             };
             doIt();
@@ -899,7 +899,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = DoubleSingleTriggerUsages(fields);
+                    var doubleUsages = DoubleTriggerUsages(fields);
                     var duplicateTriggers = DuplicateTriggers(fields.Select(f => f.Field));
 
                     foreach (var field in fields)
@@ -913,17 +913,12 @@ public class PluginTranslationModule : BinaryTranslationModule
                         foreach (var gen in fieldData.GenerationTypes)
                         {
                             var loqui = gen.Value as LoquiType;
-                            if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
+                            var valFieldData = gen.Value.GetFieldData();
+                            if (valFieldData.BinaryOverlayFallback != BinaryGenerationType.Custom
                                 && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
-                            DoubleTracker? doubles = null;
-                            if (gen.Key.Count() == 1)
-                            {
-                                if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
-                                {
-                                    if (doubles.Handled) continue;
-                                }
-                            }
+                            var doubledToProcess = GetDoubledToProcess(gen, doubleUsages);
+                            var nonDoubledKeys = gen.Key.Where(x => !doubleUsages.ContainsKey(x)).ToArray();
 
                             if (gen.Value.GetFieldData().HasVersioning
                                 && gen.Key.Any(x => duplicateTriggers.Contains(x)))
@@ -934,20 +929,22 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     using (sb.IncreaseDepth())
                                     {
                                         sb.AppendLine(
-                                            $"when {VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "frame.MetaData.FormVersion")}:");
+                                            $"when {VersioningModule.GetVersionIfCheck(valFieldData, "frame.MetaData.FormVersion")}:");
                                     }
                                 }
                             }
                             else
                             {
-                                foreach (var trigger in gen.Key)
+                                foreach (var trigger in nonDoubledKeys.And(doubledToProcess.EmptyIfNull()
+                                             .Select(x => x.RecordType)))
                                 {
                                     sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                                 }
                             }
-                            using (sb.CurlyBrace())
+
+                            if (doubledToProcess == null && nonDoubledKeys.Length > 0)
                             {
-                                if (doubles == null)
+                                using (sb.CurlyBrace())
                                 {
                                     await GenerateLastParsedShortCircuit(
                                         obj: obj,
@@ -958,15 +955,20 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         nextRecAccessor: "nextRecordType",
                                         toDo: async () =>
                                         {
-                                            var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                            var groupMask = data.ObjectType == ObjectType.Mod &&
+                                                            (loqui?.TargetObjectGeneration?.GetObjectType() ==
+                                                             ObjectType.Group);
                                             if (groupMask)
                                             {
                                                 sb.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
                                             }
+
                                             using (sb.CurlyBrace(doIt: groupMask))
                                             {
-                                                await GenerateFillSnippet(obj, sb, gen.Value, generator, ReaderMemberName);
+                                                await GenerateFillSnippet(obj, sb, gen.Value, generator,
+                                                    ReaderMemberName);
                                             }
+
                                             if (groupMask)
                                             {
                                                 sb.AppendLine("else");
@@ -977,15 +979,22 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         });
                                 }
-                                else
+                            }
+                            else if (doubledToProcess != null && doubledToProcess.Length > 0)
+                            {
+                                using (sb.CurlyBrace())
                                 {
                                     bool first = true;
-                                    foreach (var doublesField in doubles.Fields)
+                                    foreach (var doublesField in doubledToProcess
+                                                 .SelectMany(f => f.Fields)
+                                                 .Distinct(x => x.InternalIndex))
                                     {
                                         if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
-                                            throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                            throw new ArgumentException("Unsupported type generator: " +
+                                                                        doublesField.Field);
                                         }
+
                                         using (var i = sb.If(ands: false, first: first))
                                         {
                                             if (first)
@@ -993,11 +1002,14 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 i.Add("!lastParsed.ParsedIndex.HasValue");
                                                 first = false;
                                             }
+
                                             if (doublesField.LastIntegratedField != null)
                                             {
-                                                i.Add($"lastParsed.ParsedIndex.Value <= {doublesField.LastIntegratedField.IndexEnumInt}");
+                                                i.Add(
+                                                    $"lastParsed.ParsedIndex.Value <= {doublesField.LastIntegratedField.IndexEnumInt}");
                                             }
                                         }
+
                                         using (sb.CurlyBrace())
                                         {
                                             await GenerateLastParsedShortCircuit(
@@ -1005,30 +1017,39 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                 sb: sb,
                                                 field: (doublesField.Item1, doublesField.Item2, doublesField.Field),
                                                 doublesPotential: true,
-                                                lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
+                                                lastRequiredIndex: obj.GetObjectData()
+                                                    .GetLastRequiredFieldIndexToUse(),
                                                 nextRecAccessor: "nextRecordType",
                                                 toDo: async () =>
                                                 {
-                                                    var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                                    var groupMask = data.ObjectType == ObjectType.Mod &&
+                                                                    (loqui?.TargetObjectGeneration
+                                                                        ?.GetObjectType() == ObjectType.Group);
                                                     if (groupMask)
                                                     {
-                                                        sb.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
+                                                        sb.AppendLine(
+                                                            $"if (importMask?.{doublesField.Field.Name} ?? true)");
                                                     }
+
                                                     using (sb.CurlyBrace(doIt: groupMask))
                                                     {
-                                                        await GenerateFillSnippet(obj, sb, doublesField.Field, doubleGen, ReaderMemberName);
+                                                        await GenerateFillSnippet(obj, sb, doublesField.Field,
+                                                            doubleGen, ReaderMemberName);
                                                     }
+
                                                     if (groupMask)
                                                     {
                                                         sb.AppendLine("else");
                                                         using (sb.CurlyBrace())
                                                         {
-                                                            sb.AppendLine($"{ReaderMemberName}.Position += contentLength;");
+                                                            sb.AppendLine(
+                                                                $"{ReaderMemberName}.Position += contentLength;");
                                                         }
                                                     }
                                                 });
                                         }
                                     }
+
                                     sb.AppendLine("else");
                                     using (sb.CurlyBrace())
                                     {
@@ -1036,39 +1057,55 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         using (sb.CurlyBrace())
                                         {
                                             int count = 0;
-                                            foreach (var doublesField in doubles.Fields)
+                                            foreach (var doublesField in doubledToProcess
+                                                         .SelectMany(f => f.Fields)
+                                                         .Distinct(x => x.InternalIndex))
                                             {
-                                                if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                                if (!TryGetTypeGeneration(doublesField.Field.GetType(),
+                                                        out var doubleGen))
                                                 {
-                                                    throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                                    throw new ArgumentException("Unsupported type generator: " +
+                                                        doublesField.Field);
                                                 }
+
                                                 sb.AppendLine($"case {count++}:");
                                                 using (sb.IncreaseDepth())
                                                 {
                                                     await GenerateLastParsedShortCircuit(
                                                         obj: obj,
                                                         sb: sb,
-                                                        field: (doublesField.Item1, doublesField.Item2, doublesField.Field),
+                                                        field: (doublesField.Item1, doublesField.Item2,
+                                                            doublesField.Field),
                                                         doublesPotential: true,
-                                                        lastRequiredIndex: obj.GetObjectData().GetLastRequiredFieldIndexToUse(),
+                                                        lastRequiredIndex: obj.GetObjectData()
+                                                            .GetLastRequiredFieldIndexToUse(),
                                                         nextRecAccessor: "nextRecordType",
                                                         toDo: async () =>
                                                         {
-                                                            var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                                            var groupMask = data.ObjectType == ObjectType.Mod &&
+                                                                            (loqui?.TargetObjectGeneration
+                                                                                 ?.GetObjectType() ==
+                                                                             ObjectType.Group);
                                                             if (groupMask)
                                                             {
-                                                                sb.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
+                                                                sb.AppendLine(
+                                                                    $"if (importMask?.{doublesField.Field.Name} ?? true)");
                                                             }
+
                                                             using (sb.CurlyBrace(doIt: groupMask))
                                                             {
-                                                                await GenerateFillSnippet(obj, sb, doublesField.Field, doubleGen, ReaderMemberName);
+                                                                await GenerateFillSnippet(obj, sb,
+                                                                    doublesField.Field, doubleGen,
+                                                                    ReaderMemberName);
                                                             }
+
                                                             if (groupMask)
                                                             {
                                                                 sb.AppendLine("else");
                                                                 using (sb.CurlyBrace())
                                                                 {
-                                                                    sb.AppendLine($"{ReaderMemberName}.Position += contentLength;");
+                                                                    sb.AppendLine(
+                                                                        $"{ReaderMemberName}.Position += contentLength;");
                                                                 }
                                                             }
                                                         });
@@ -1082,9 +1119,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         }
                                     }
-
-                                    doubles.Handled = true;
                                 }
+
+                                doubledToProcess.EmptyIfNull().ForEach(x => x.Handled = true);
                             }
                         }
                     }
@@ -1579,7 +1616,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                         fields.Add(field);
                     }
 
-                    var doubleUsages = DoubleSingleTriggerUsages(fields);
+                    var doubleUsages = DoubleTriggerUsages(fields);
                     var duplicateTriggers = DuplicateTriggers(fields.Select(f => f.Field));
 
                     foreach (var field in fields)
@@ -1593,17 +1630,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                         foreach (var gen in fieldData.GenerationTypes)
                         {
                             LoquiType loqui = gen.Value as LoquiType;
-                            if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
+                            if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom
                                 && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
-                            DoubleTracker? doubles = null;
-                            if (gen.Key.Count() == 1)
-                            {
-                                if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
-                                {
-                                    if (doubles.Handled) continue;
-                                }
-                            }
+                            var doubledToProcess = GetDoubledToProcess(gen, doubleUsages);
+                            var nonDoubledKeys = gen.Key.Where(x => !doubleUsages.ContainsKey(x)).ToArray();
 
                             if (gen.Value.GetFieldData().HasVersioning
                                 && gen.Key.Any(x => duplicateTriggers.Contains(x)))
@@ -1620,14 +1651,16 @@ public class PluginTranslationModule : BinaryTranslationModule
                             }
                             else
                             {
-                                foreach (var trigger in gen.Key)
+                                foreach (var trigger in nonDoubledKeys.And(doubledToProcess.EmptyIfNull()
+                                             .Select(x => x.RecordType)))
                                 {
                                     sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                                 }
                             }
-                            using (sb.CurlyBrace())
+
+                            if (doubledToProcess == null && nonDoubledKeys.Length > 0)
                             {
-                                if (doubles == null)
+                                using (sb.CurlyBrace())
                                 {
                                     await GenerateLastParsedShortCircuit(
                                         obj: obj,
@@ -1642,8 +1675,10 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             if (fieldData?.RecordTypeConverter != null
                                                 && fieldData.RecordTypeConverter.FromConversions.Count > 0)
                                             {
-                                                recConverter = $"translationParams.With({obj.RegistrationName}.{field.Field.Name}Converter)";
+                                                recConverter =
+                                                    $"translationParams.With({obj.RegistrationName}.{field.Field.Name}Converter)";
                                             }
+
                                             await generator.GenerateWrapperRecordTypeParse(
                                                 sb: sb,
                                                 objGen: obj,
@@ -1662,7 +1697,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
                                                         using (subFg.IncreaseDepth())
                                                         {
-                                                            subFg.AppendLine($"master => new {nameof(MasterReference)}()");
+                                                            subFg.AppendLine(
+                                                                $"master => new {nameof(MasterReference)}()");
                                                             using (subFg.CurlyBrace(appendParenthesis: true))
                                                             {
                                                                 subFg.AppendLine("Master = master.Master,");
@@ -1674,10 +1710,15 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         });
                                 }
-                                else
+                            }
+                            else if (doubledToProcess != null && doubledToProcess.Length > 0)
+                            {
+                                using (sb.CurlyBrace())
                                 {
                                     bool first = true;
-                                    foreach (var doublesField in doubles.Fields)
+                                    foreach (var doublesField in doubledToProcess
+                                                 .SelectMany(f => f.Fields)
+                                                 .Distinct(x => x.InternalIndex))
                                     {
                                         if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
@@ -1686,7 +1727,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         }
 
                                         var doublesFieldData = doublesField.Field.GetFieldData();
-                                        
+
                                         using (var i = sb.If(ands: false, first: first))
                                         {
                                             if (first)
@@ -1707,7 +1748,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             await GenerateLastParsedShortCircuit(
                                                 obj: obj,
                                                 sb: sb,
-                                                field: (doublesField.Item1, doublesField.Item2,
+                                                field: (doublesField.PublicIndex, doublesField.InternalIndex,
                                                     doublesField.Field),
                                                 doublesPotential: true,
                                                 lastRequiredIndex: obj.GetObjectData()
@@ -1742,7 +1783,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         using (sb.CurlyBrace())
                                         {
                                             int count = 0;
-                                            foreach (var doublesField in doubles.Fields)
+                                            foreach (var doublesField in doubledToProcess
+                                                         .SelectMany(f => f.Fields)
+                                                         .Distinct(x => x.InternalIndex))
                                             {
                                                 if (!TryGetTypeGeneration(doublesField.Field.GetType(),
                                                         out var doubleGen))
@@ -1758,7 +1801,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                     await GenerateLastParsedShortCircuit(
                                                         obj: obj,
                                                         sb: sb,
-                                                        field: (doublesField.Item1, doublesField.Item2,
+                                                        field: (doublesField.PublicIndex,
+                                                            doublesField.InternalIndex,
                                                             doublesField.Field),
                                                         doublesPotential: true,
                                                         lastRequiredIndex: obj.GetObjectData()
@@ -1768,7 +1812,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         {
                                                             string recConverter = "translationParams";
                                                             if (doublesFieldData.RecordTypeConverter != null
-                                                                && doublesFieldData.RecordTypeConverter.FromConversions
+                                                                && doublesFieldData.RecordTypeConverter
+                                                                    .FromConversions
                                                                     .Count > 0)
                                                             {
                                                                 recConverter =
@@ -1819,7 +1864,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         }
 
-                                        doubles.Handled = true;
+                                        doubledToProcess.EmptyIfNull().ForEach(x => x.Handled = true);
                                     }
                                 }
                             }
@@ -1897,6 +1942,26 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                 }
             }
+        }
+    }
+
+    private static DoubleTracker[]? GetDoubledToProcess(
+        KeyValuePair<IEnumerable<RecordType>, TypeGeneration> gen, 
+        Dictionary<RecordType, DoubleTracker> doubleUsages)
+    {
+        var doubled = gen.Key.Select(k =>
+        {
+            if (doubleUsages.TryGetValue(k, out var doubles)) return doubles;
+            return null;
+        }).NotNull().ToArray();
+
+        if (doubled.All(x => x.Handled))
+        {
+            return null;
+        }
+        else
+        {
+            return doubled.Where(x => !x.Handled).ToArray();
         }
     }
 
