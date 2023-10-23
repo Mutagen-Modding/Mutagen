@@ -114,7 +114,7 @@
   <Object name="WeaponDamageType" objType="Subrecord">
     <Fields>
       <FormLink name="DamageType" refName="DamageType" />
-      <UInt32 name="Amount" />
+      <UInt32 name="Value" />
     </Fields>
   </Object>
   <Object name="WeaponExtraData" recordType="FNAM" objType="Subrecord">

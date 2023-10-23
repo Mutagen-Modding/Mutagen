@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IDamageTypeGetter> IWeaponDamageTypeGetter.DamageType => this.DamageType;
         #endregion
-        #region Amount
-        public UInt32 Amount { get; set; } = default;
+        #region Value
+        public UInt32 Value { get; set; } = default;
         #endregion
 
         #region To String
@@ -104,15 +104,15 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.DamageType = initialValue;
-                this.Amount = initialValue;
+                this.Value = initialValue;
             }
 
             public Mask(
                 TItem DamageType,
-                TItem Amount)
+                TItem Value)
             {
                 this.DamageType = DamageType;
-                this.Amount = Amount;
+                this.Value = Value;
             }
 
             #pragma warning disable CS8618
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem DamageType;
-            public TItem Amount;
+            public TItem Value;
             #endregion
 
             #region Equals
@@ -139,14 +139,14 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.DamageType, rhs.DamageType)) return false;
-                if (!object.Equals(this.Amount, rhs.Amount)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.DamageType);
-                hash.Add(this.Amount);
+                hash.Add(this.Value);
                 return hash.ToHashCode();
             }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.DamageType)) return false;
-                if (!eval(this.Amount)) return false;
+                if (!eval(this.Value)) return false;
                 return true;
             }
             #endregion
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.DamageType)) return true;
-                if (eval(this.Amount)) return true;
+                if (eval(this.Value)) return true;
                 return false;
             }
             #endregion
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.DamageType = eval(this.DamageType);
-                obj.Amount = eval(this.Amount);
+                obj.Value = eval(this.Value);
             }
             #endregion
 
@@ -204,9 +204,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(DamageType, "DamageType");
                     }
-                    if (printMask?.Amount ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        sb.AppendItem(Amount, "Amount");
+                        sb.AppendItem(Value, "Value");
                     }
                 }
             }
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? DamageType;
-            public Exception? Amount;
+            public Exception? Value;
             #endregion
 
             #region IErrorMask
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     case WeaponDamageType_FieldIndex.DamageType:
                         return DamageType;
-                    case WeaponDamageType_FieldIndex.Amount:
-                        return Amount;
+                    case WeaponDamageType_FieldIndex.Value:
+                        return Value;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -259,8 +259,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case WeaponDamageType_FieldIndex.DamageType:
                         this.DamageType = ex;
                         break;
-                    case WeaponDamageType_FieldIndex.Amount:
-                        this.Amount = ex;
+                    case WeaponDamageType_FieldIndex.Value:
+                        this.Value = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -275,8 +275,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case WeaponDamageType_FieldIndex.DamageType:
                         this.DamageType = (Exception?)obj;
                         break;
-                    case WeaponDamageType_FieldIndex.Amount:
-                        this.Amount = (Exception?)obj;
+                    case WeaponDamageType_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (DamageType != null) return true;
-                if (Amount != null) return true;
+                if (Value != null) return true;
                 return false;
             }
             #endregion
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(DamageType, "DamageType");
                 }
                 {
-                    sb.AppendItem(Amount, "Amount");
+                    sb.AppendItem(Value, "Value");
                 }
             }
             #endregion
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.DamageType = this.DamageType.Combine(rhs.DamageType);
-                ret.Amount = this.Amount.Combine(rhs.Amount);
+                ret.Value = this.Value.Combine(rhs.Value);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool DamageType;
-            public bool Amount;
+            public bool Value;
             #endregion
 
             #region Ctors
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.DamageType = defaultOn;
-                this.Amount = defaultOn;
+                this.Value = defaultOn;
             }
 
             #endregion
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((DamageType, null));
-                ret.Add((Amount, null));
+                ret.Add((Value, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Fallout4
         IWeaponDamageTypeGetter
     {
         new IFormLink<IDamageTypeGetter> DamageType { get; set; }
-        new UInt32 Amount { get; set; }
+        new UInt32 Value { get; set; }
     }
 
     public partial interface IWeaponDamageTypeGetter :
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WeaponDamageType_Registration.Instance;
         IFormLinkGetter<IDamageTypeGetter> DamageType { get; }
-        UInt32 Amount { get; }
+        UInt32 Value { get; }
 
     }
 
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Fallout4
     internal enum WeaponDamageType_FieldIndex
     {
         DamageType = 0,
-        Amount = 1,
+        Value = 1,
     }
     #endregion
 
@@ -729,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.DamageType.Clear();
-            item.Amount = default;
+            item.Value = default;
         }
         
         #region Mutagen
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.DamageType = item.DamageType.Equals(rhs.DamageType);
-            ret.Amount = item.Amount == rhs.Amount;
+            ret.Value = item.Value == rhs.Value;
         }
         
         public string Print(
@@ -830,9 +830,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.DamageType.FormKey, "DamageType");
             }
-            if (printMask?.Amount ?? true)
+            if (printMask?.Value ?? true)
             {
-                sb.AppendItem(item.Amount, "Amount");
+                sb.AppendItem(item.Value, "Value");
             }
         }
         
@@ -847,9 +847,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.DamageType.Equals(rhs.DamageType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.Amount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.Value) ?? true))
             {
-                if (lhs.Amount != rhs.Amount) return false;
+                if (lhs.Value != rhs.Value) return false;
             }
             return true;
         }
@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var hash = new HashCode();
             hash.Add(item.DamageType);
-            hash.Add(item.Amount);
+            hash.Add(item.Value);
             return hash.ToHashCode();
         }
         
@@ -896,9 +896,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DamageType.SetTo(rhs.DamageType.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.Amount) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.Value) ?? true))
             {
-                item.Amount = rhs.Amount;
+                item.Value = rhs.Value;
             }
         }
         
@@ -999,7 +999,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DamageType);
-            writer.Write(item.Amount);
+            writer.Write(item.Value);
         }
 
         public void Write(
@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame)
         {
             item.DamageType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Amount = frame.ReadUInt32();
+            item.Value = frame.ReadUInt32();
         }
 
     }
@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public IFormLinkGetter<IDamageTypeGetter> DamageType => new FormLink<IDamageTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public UInt32 Amount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
