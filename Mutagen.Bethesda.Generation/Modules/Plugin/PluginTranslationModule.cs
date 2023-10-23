@@ -691,10 +691,25 @@ public class PluginTranslationModule : BinaryTranslationModule
         await base.GenerateInTranslationCreateClass(obj, sb);
     }
 
-    private Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>> DoubleSingleTriggerUsages(
-        List<(int, int, TypeGeneration Field)> fields)
+    class DoubleTracker
     {
-        var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration, TypeGeneration? LastIntegratedField)>>();
+        public RecordType RecordType { get; }
+
+        public DoubleTracker(RecordType recordType)
+        {
+            RecordType = recordType;
+        }
+        
+        public List<(int PublicIndex, int InternalIndex, TypeGeneration Field, TypeGeneration? LastIntegratedField)>
+            Fields = new();
+
+        public bool Handled;
+    }
+
+    private Dictionary<RecordType, DoubleTracker> DoubleSingleTriggerUsages(
+        List<(int PublicIndex, int InternalIndex, TypeGeneration Field)> fields)
+    {
+        var doubleUsages = new Dictionary<RecordType, DoubleTracker>();
         TypeGeneration? lastIntegratedField = null;
         foreach (var field in fields)
         {
@@ -707,7 +722,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                     if (gen.Key.Count() > 1) continue;
                     LoquiType loqui = gen.Value as LoquiType;
                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
-                    doubleUsages.GetOrAdd(gen.Key.First()).Add((field.Item1, field.Item2, field.Field, lastIntegratedField));
+                    doubleUsages.GetOrAdd(gen.Key.First(), () => new DoubleTracker(gen.Key.First()))
+                        .Fields
+                        .Add((field.Item1, field.Item2, field.Field, lastIntegratedField));
                 }
             };
             doIt();
@@ -722,7 +739,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         }
         foreach (var item in doubleUsages.ToList())
         {
-            if (item.Value.Count <= 1)
+            if (item.Value.Fields.Count <= 1)
             {
                 doubleUsages.Remove(item.Key);
             }
@@ -731,13 +748,13 @@ public class PluginTranslationModule : BinaryTranslationModule
         return doubleUsages;
     }
 
-    private HashSet<RecordType> DuplicateTriggers(List<(int, int, TypeGeneration Field)> fields)
+    private HashSet<RecordType> DuplicateTriggers(IEnumerable<TypeGeneration> fields)
     {
         var duplicated = new HashSet<RecordType>();
         var passed = new HashSet<RecordType>();
         foreach (var field in fields)
         {
-            var fieldData = field.Field.GetFieldData();
+            var fieldData = field.GetFieldData();
             foreach (var gen in fieldData.GenerationTypes)
             {
                 foreach (var trigger in gen.Key)
@@ -863,7 +880,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine("switch (nextRecordType.TypeInt)");
                 using (sb.CurlyBrace())
                 {
-                    var fields = new List<(int, int, TypeGeneration Field)>();
+                    var fields = new List<(int PublicIndex, int InternalIndex, TypeGeneration Field)>();
                     foreach (var field in obj.IterateFieldIndices(
                                  expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                                  nonIntegrated: true))
@@ -883,7 +900,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
 
                     var doubleUsages = DoubleSingleTriggerUsages(fields);
-                    var duplicateTriggers = DuplicateTriggers(fields);
+                    var duplicateTriggers = DuplicateTriggers(fields.Select(f => f.Field));
 
                     foreach (var field in fields)
                     {
@@ -892,19 +909,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             throw new ArgumentException("Unsupported type generator: " + field.Field);
                         }
+
                         foreach (var gen in fieldData.GenerationTypes)
                         {
                             var loqui = gen.Value as LoquiType;
                             if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
                                 && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
-                            List<(int, int, TypeGeneration Field, TypeGeneration? LastIntegratedField)> doubles = null;
+                            DoubleTracker? doubles = null;
                             if (gen.Key.Count() == 1)
                             {
                                 if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
                                 {
-                                    // Means we handled earlier, break out 
-                                    if (doubles.Count == 0) continue;
+                                    if (doubles.Handled) continue;
                                 }
                             }
 
@@ -963,7 +980,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 else
                                 {
                                     bool first = true;
-                                    foreach (var doublesField in doubles)
+                                    foreach (var doublesField in doubles.Fields)
                                     {
                                         if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
@@ -1019,7 +1036,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         using (sb.CurlyBrace())
                                         {
                                             int count = 0;
-                                            foreach (var doublesField in doubles)
+                                            foreach (var doublesField in doubles.Fields)
                                             {
                                                 if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                                 {
@@ -1057,6 +1074,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                                         });
                                                 }
                                             }
+
                                             sb.AppendLine($"default:");
                                             using (sb.IncreaseDepth())
                                             {
@@ -1064,7 +1082,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         }
                                     }
-                                    doubles.Clear();
+
+                                    doubles.Handled = true;
                                 }
                             }
                         }
@@ -1561,7 +1580,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
 
                     var doubleUsages = DoubleSingleTriggerUsages(fields);
-                    var duplicateTriggers = DuplicateTriggers(fields);
+                    var duplicateTriggers = DuplicateTriggers(fields.Select(f => f.Field));
 
                     foreach (var field in fields)
                     {
@@ -1570,19 +1589,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             throw new ArgumentException("Unsupported type generator: " + field.Field);
                         }
+
                         foreach (var gen in fieldData.GenerationTypes)
                         {
                             LoquiType loqui = gen.Value as LoquiType;
                             if (gen.Value.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.Custom 
                                 && (loqui?.TargetObjectGeneration?.Abstract ?? false)) continue;
 
-                            List<(int, int, TypeGeneration Field, TypeGeneration? LastIntegratedField)> doubles = null;
+                            DoubleTracker? doubles = null;
                             if (gen.Key.Count() == 1)
                             {
                                 if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
                                 {
-                                    // Means we handled earlier, break out 
-                                    if (doubles.Count == 0) continue;
+                                    if (doubles.Handled) continue;
                                 }
                             }
 
@@ -1658,7 +1677,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 else
                                 {
                                     bool first = true;
-                                    foreach (var doublesField in doubles)
+                                    foreach (var doublesField in doubles.Fields)
                                     {
                                         if (!TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
                                         {
@@ -1723,7 +1742,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         using (sb.CurlyBrace())
                                         {
                                             int count = 0;
-                                            foreach (var doublesField in doubles)
+                                            foreach (var doublesField in doubles.Fields)
                                             {
                                                 if (!TryGetTypeGeneration(doublesField.Field.GetType(),
                                                         out var doubleGen))
@@ -1800,7 +1819,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             }
                                         }
 
-                                        doubles.Clear();
+                                        doubles.Handled = true;
                                     }
                                 }
                             }
