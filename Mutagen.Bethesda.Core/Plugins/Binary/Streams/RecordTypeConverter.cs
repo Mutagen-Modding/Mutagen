@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+
 namespace Mutagen.Bethesda.Plugins.Binary.Streams;
 
 /// <summary>
@@ -81,5 +83,11 @@ public static class RecordTypeConverterExt
         if (lhs == null) return rhs;
         if (rhs == null) return null;
         throw new NotImplementedException();
+    }
+
+    public static TypedParseParams DoNotShortCircuit(this RecordTypeConverter? lhs)
+    {
+        TypedParseParams typedParseParams = lhs;
+        return typedParseParams.DoNotShortCircuit();
     }
 }
