@@ -458,6 +458,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="alwaysWriteEndMarker" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to write the end marker, even if list is empty
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -513,6 +520,13 @@
             <xs:annotation>
               <xs:documentation>
                 RecordType of an ending marker
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="alwaysWriteEndMarker" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to write the end marker, even if list is empty
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

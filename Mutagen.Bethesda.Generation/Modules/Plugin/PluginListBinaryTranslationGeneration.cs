@@ -23,6 +23,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
     public const string NullIfCounterZero = "NullIfCounterZero";
     public const string AllowNoCounter = "AllowNoCounter";
     public const string EndMarker = "EndMarker";
+    public const string AlwaysWriteEndMarker = "AlwaysWriteEndMarker";
     public const string Additive = "Additive";
     public const string ExpectedLengthLength = "ExpectedLengthLength";
     public const string ItemStartMarker = "ItemStartMarker";
@@ -38,6 +39,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
         listType.CustomData[NullIfCounterZero] = node.GetAttribute("nullIfCounterZero", false);
         listType.CustomData[AllowNoCounter] = node.GetAttribute("allowNoCounter", true);
         listType.CustomData[EndMarker] = node.GetAttribute("endMarker", null);
+        listType.CustomData[AlwaysWriteEndMarker] = node.GetAttribute("alwaysWriteEndMarker", false);
         listType.CustomData[Additive] = node.GetAttribute("additive", false);
         listType.CustomData[ItemStartMarker] = node.GetAttribute("itemMarkerType", null);
         listType.CustomData[ItemEndMarker] = node.GetAttribute("itemEndMarkerType", null);
@@ -229,6 +231,12 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
             if (list.CustomData.TryGetValue(EndMarker, out var endMarkerObj) && endMarkerObj is string endMarker)
             {
                 args.Add($"endMarker: RecordTypes.{endMarker}");
+            }
+            if (list.CustomData.TryGetValue(AlwaysWriteEndMarker, out var alwaysWriteEndMarkerObj)
+                && alwaysWriteEndMarkerObj is bool alwaysWriteEndMarker
+                && alwaysWriteEndMarker)
+            {
+                args.Add($"alwaysWriteEndMarker: true");
             }
             if (list.CustomData.TryGetValue(ItemStartMarker, out var itemStartMarkerObj) && itemStartMarkerObj is string itemStartMarker)
             {

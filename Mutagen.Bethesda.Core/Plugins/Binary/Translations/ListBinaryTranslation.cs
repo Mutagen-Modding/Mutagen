@@ -1295,20 +1295,16 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         BinaryMasterWriteDelegate<T> transl, 
         byte counterLength, 
         bool writeCounterIfNull = false, 
+        bool alwaysWriteEndMarker = false,
         RecordType? endMarker = null, 
         RecordTypeConverter? recordTypeConverter = null) 
     { 
         try 
         { 
-            if (items == null) 
+            if (items != null || writeCounterIfNull) 
             { 
-                if (writeCounterIfNull) 
-                { 
-                    WriteCounter(writer, 0, counterLength: counterLength, counterType);
-                } 
-                return; 
+                WriteCounter(writer, items?.Count ?? 0, counterLength: counterLength, counterType);
             } 
-            WriteCounter(writer, items.Count, counterLength: counterLength, counterType);
         } 
         catch (OverflowException overflow)
         {
@@ -1319,14 +1315,17 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         catch (Exception ex) 
         { 
             throw SubrecordException.Enrich(ex, counterType); 
-        } 
+        }
+
+        if (items != null)
+        {
+            foreach (var item in items) 
+            { 
+                transl(writer, item, recordTypeConverter); 
+            } 
+        }
         
-        foreach (var item in items) 
-        { 
-            transl(writer, item, recordTypeConverter); 
-        } 
-        
-        if (endMarker != null && items.Count > 0) 
+        if (endMarker != null && (alwaysWriteEndMarker || items?.Count > 0)) 
         { 
             using (HeaderExport.Subrecord(writer, endMarker.Value)) { } 
         } 
