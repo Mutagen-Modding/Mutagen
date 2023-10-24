@@ -41,14 +41,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ObjectModification :
+    public partial class WeaponModification :
         AObjectModification,
-        IEquatable<IObjectModificationGetter>,
-        ILoquiObjectSetter<ObjectModification>,
-        IObjectModificationInternal
+        IEquatable<IWeaponModificationGetter>,
+        ILoquiObjectSetter<WeaponModification>,
+        IWeaponModificationInternal
     {
         #region Ctor
-        protected ObjectModification()
+        protected WeaponModification()
         {
             CustomCtor();
         }
@@ -57,15 +57,15 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> _Properties = new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>>();
-        public ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties
+        private ExtendedList<AObjectModProperty<Weapon.Property>> _Properties = new ExtendedList<AObjectModProperty<Weapon.Property>>();
+        public ExtendedList<AObjectModProperty<Weapon.Property>> Properties
         {
             get => this._Properties;
             init => this._Properties = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> IObjectModificationGetter.Properties => _Properties;
+        IReadOnlyList<IAObjectModPropertyGetter<Weapon.Property>> IWeaponModificationGetter.Properties => _Properties;
         #endregion
 
         #endregion
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModificationMixIn.Print(
+            WeaponModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ObjectModification.Mask<R>();
+                var ret = new WeaponModification.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -226,16 +226,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ObjectModification.Mask<bool>? printMask = null)
+            public string Print(WeaponModification.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ObjectModification.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeaponModification.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ObjectModification.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(WeaponModification.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if ((printMask?.Properties?.Overall ?? true)
@@ -274,10 +274,10 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                WeaponModification_FieldIndex enu = (WeaponModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case WeaponModification_FieldIndex.Properties:
                         return Properties;
                     default:
                         return base.GetNthMask(index);
@@ -286,10 +286,10 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                WeaponModification_FieldIndex enu = (WeaponModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case WeaponModification_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -300,10 +300,10 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                ObjectModification_FieldIndex enu = (ObjectModification_FieldIndex)index;
+                WeaponModification_FieldIndex enu = (WeaponModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case ObjectModification_FieldIndex.Properties:
+                    case WeaponModification_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -419,10 +419,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ObjectModification_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModificationCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectModificationSetterCommon.Instance.RemapLinks(this, mapping);
-        public ObjectModification(
+        public static readonly RecordType GrupRecordType = WeaponModification_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponModificationCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponModificationSetterCommon.Instance.RemapLinks(this, mapping);
+        public WeaponModification(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private ObjectModification(
+        private WeaponModification(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal ObjectModification(
+        internal WeaponModification(
             FormKey formKey,
             ushort formVersion)
         {
@@ -449,14 +449,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public ObjectModification(IStarfieldMod mod)
+        public WeaponModification(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public ObjectModification(IStarfieldMod mod, string editorID)
+        public WeaponModification(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -466,10 +466,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ObjectModification>.ToString(this);
+            return MajorRecordPrinter<WeaponModification>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IObjectModification);
+        protected override Type LinkType => typeof(IWeaponModification);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -478,16 +478,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IObjectModificationGetter rhs) return false;
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWeaponModificationGetter rhs) return false;
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IObjectModificationGetter? obj)
+        public bool Equals(IWeaponModificationGetter? obj)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -495,23 +495,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WeaponModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static ObjectModification CreateFromBinary(
+        public new static WeaponModification CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ObjectModification();
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WeaponModification();
+            ((WeaponModificationSetterCommon)((IWeaponModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ObjectModification item,
+            out WeaponModification item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -537,86 +537,86 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WeaponModificationSetterCommon)((IWeaponModificationGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ObjectModification GetNew()
+        internal static new WeaponModification GetNew()
         {
-            return new ObjectModification();
+            return new WeaponModification();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IObjectModification :
+    public partial interface IWeaponModification :
         IAObjectModificationInternal,
         IFormLinkContainer,
-        ILoquiObjectSetter<IObjectModificationInternal>,
-        IObjectModificationGetter
+        ILoquiObjectSetter<IWeaponModificationInternal>,
+        IWeaponModificationGetter
     {
-        new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties { get; }
+        new ExtendedList<AObjectModProperty<Weapon.Property>> Properties { get; }
     }
 
-    public partial interface IObjectModificationInternal :
+    public partial interface IWeaponModificationInternal :
         IAObjectModificationInternal,
-        IObjectModification,
-        IObjectModificationGetter
+        IWeaponModification,
+        IWeaponModificationGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.OMOD)]
-    public partial interface IObjectModificationGetter :
+    public partial interface IWeaponModificationGetter :
         IAObjectModificationGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IObjectModificationGetter>,
-        IMapsToGetter<IObjectModificationGetter>
+        ILoquiObject<IWeaponModificationGetter>,
+        IMapsToGetter<IWeaponModificationGetter>
     {
-        static new ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> Properties { get; }
+        static new ILoquiRegistration StaticRegistration => WeaponModification_Registration.Instance;
+        IReadOnlyList<IAObjectModPropertyGetter<Weapon.Property>> Properties { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ObjectModificationMixIn
+    public static partial class WeaponModificationMixIn
     {
-        public static void Clear(this IObjectModificationInternal item)
+        public static void Clear(this IWeaponModificationInternal item)
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WeaponModificationSetterCommon)((IWeaponModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ObjectModification.Mask<bool> GetEqualsMask(
-            this IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
+        public static WeaponModification.Mask<bool> GetEqualsMask(
+            this IWeaponModificationGetter item,
+            IWeaponModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IObjectModificationGetter item,
+            this IWeaponModificationGetter item,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            WeaponModification.Mask<bool>? printMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Print(
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IObjectModificationGetter item,
+            this IWeaponModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            WeaponModification.Mask<bool>? printMask = null)
         {
-            ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Print(
+            ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -624,39 +624,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
-            ObjectModification.TranslationMask? equalsMask = null)
+            this IWeaponModificationGetter item,
+            IWeaponModificationGetter rhs,
+            WeaponModification.TranslationMask? equalsMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Equals(
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IObjectModificationInternal lhs,
-            IObjectModificationGetter rhs,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+            this IWeaponModificationInternal lhs,
+            IWeaponModificationGetter rhs,
+            out WeaponModification.ErrorMask errorMask,
+            WeaponModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponModification.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IObjectModificationInternal lhs,
-            IObjectModificationGetter rhs,
+            this IWeaponModificationInternal lhs,
+            IWeaponModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -664,55 +664,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
-            ObjectModification.TranslationMask? copyMask = null)
+        public static WeaponModification DeepCopy(
+            this IWeaponModificationGetter item,
+            WeaponModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+        public static WeaponModification DeepCopy(
+            this IWeaponModificationGetter item,
+            out WeaponModification.ErrorMask errorMask,
+            WeaponModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ObjectModification DeepCopy(
-            this IObjectModificationGetter item,
+        public static WeaponModification DeepCopy(
+            this IWeaponModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static ObjectModification Duplicate(
-            this IObjectModificationGetter item,
+        public static WeaponModification Duplicate(
+            this IWeaponModificationGetter item,
             FormKey formKey,
-            ObjectModification.TranslationMask? copyMask = null)
+            WeaponModification.TranslationMask? copyMask = null)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Duplicate(
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static ObjectModification Duplicate(
-            this IObjectModificationGetter item,
+        public static WeaponModification Duplicate(
+            this IWeaponModificationGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).Duplicate(
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -722,11 +722,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IObjectModificationInternal item,
+            this IWeaponModificationInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ObjectModificationSetterCommon)((IObjectModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WeaponModificationSetterCommon)((IWeaponModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -742,7 +742,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ObjectModification_FieldIndex
+    internal enum WeaponModification_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class ObjectModification_Registration : ILoquiRegistration
+    internal partial class WeaponModification_Registration : ILoquiRegistration
     {
-        public static readonly ObjectModification_Registration Instance = new ObjectModification_Registration();
+        public static readonly WeaponModification_Registration Instance = new WeaponModification_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -766,23 +766,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(ObjectModification.Mask<>);
+        public static readonly Type MaskType = typeof(WeaponModification.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ObjectModification.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WeaponModification.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ObjectModification);
+        public static readonly Type ClassType = typeof(WeaponModification);
 
-        public static readonly Type GetterType = typeof(IObjectModificationGetter);
+        public static readonly Type GetterType = typeof(IWeaponModificationGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IObjectModification);
+        public static readonly Type SetterType = typeof(IWeaponModification);
 
-        public static readonly Type? InternalSetterType = typeof(IObjectModificationInternal);
+        public static readonly Type? InternalSetterType = typeof(IWeaponModificationInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ObjectModification";
+        public const string FullName = "Mutagen.Bethesda.Starfield.WeaponModification";
 
-        public const string Name = "ObjectModification";
+        public const string Name = "WeaponModification";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.OMOD);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ObjectModificationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WeaponModificationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -828,13 +828,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ObjectModificationSetterCommon : AObjectModificationSetterCommon
+    internal partial class WeaponModificationSetterCommon : AObjectModificationSetterCommon
     {
-        public new static readonly ObjectModificationSetterCommon Instance = new ObjectModificationSetterCommon();
+        public new static readonly WeaponModificationSetterCommon Instance = new WeaponModificationSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IObjectModificationInternal item)
+        public void Clear(IWeaponModificationInternal item)
         {
             ClearPartial();
             item.Properties.Clear();
@@ -843,21 +843,21 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IAObjectModificationInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (IWeaponModificationInternal)item);
         }
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (IWeaponModificationInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IObjectModificationInternal)item);
+            Clear(item: (IWeaponModificationInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IObjectModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWeaponModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Properties.RemapLinks(mapping);
@@ -867,16 +867,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IObjectModificationInternal item,
+            IWeaponModificationInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IObjectModificationInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IWeaponModificationInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ObjectModificationBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ObjectModificationBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: WeaponModificationBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: WeaponModificationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -885,7 +885,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (WeaponModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (WeaponModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (ObjectModification)item,
+                item: (WeaponModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -915,17 +915,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ObjectModificationCommon : AObjectModificationCommon
+    internal partial class WeaponModificationCommon : AObjectModificationCommon
     {
-        public new static readonly ObjectModificationCommon Instance = new ObjectModificationCommon();
+        public new static readonly WeaponModificationCommon Instance = new WeaponModificationCommon();
 
-        public ObjectModification.Mask<bool> GetEqualsMask(
-            IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
+        public WeaponModification.Mask<bool> GetEqualsMask(
+            IWeaponModificationGetter item,
+            IWeaponModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ObjectModification.Mask<bool>(false);
-            ((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WeaponModification.Mask<bool>(false);
+            ((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -934,9 +934,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IObjectModificationGetter item,
-            IObjectModificationGetter rhs,
-            ObjectModification.Mask<bool> ret,
+            IWeaponModificationGetter item,
+            IWeaponModificationGetter rhs,
+            WeaponModification.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Properties = item.Properties.CollectionEqualsHelper(
@@ -947,9 +947,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IObjectModificationGetter item,
+            IWeaponModificationGetter item,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            WeaponModification.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -961,18 +961,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IObjectModificationGetter item,
+            IWeaponModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ObjectModification.Mask<bool>? printMask = null)
+            WeaponModification.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ObjectModification =>");
+                sb.AppendLine($"WeaponModification =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ObjectModification) =>");
+                sb.AppendLine($"{name} (WeaponModification) =>");
             }
             using (sb.Brace())
             {
@@ -984,9 +984,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IObjectModificationGetter item,
+            IWeaponModificationGetter item,
             StructuredStringBuilder sb,
-            ObjectModification.Mask<bool>? printMask = null)
+            WeaponModification.Mask<bool>? printMask = null)
         {
             AObjectModificationCommon.ToStringFields(
                 item: item,
@@ -1008,64 +1008,64 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static ObjectModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
+        public static WeaponModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
         {
             switch (index)
             {
                 case AObjectModification_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormVersion:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Version2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.StarfieldMajorRecordFlags:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new ObjectModification_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static new WeaponModification_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new ObjectModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new WeaponModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ObjectModification_FieldIndex)((int)index);
+                    return (WeaponModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1073,15 +1073,15 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IObjectModificationGetter? lhs,
-            IObjectModificationGetter? rhs,
+            IWeaponModificationGetter? lhs,
+            IWeaponModificationGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)ObjectModification_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, equalsMask?.GetSubCrystal((int)ObjectModification_FieldIndex.Properties)))) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Weapon.Property>)((IAObjectModPropertyGetter<Weapon.Property>)l).CommonInstance(typeof(Weapon.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)WeaponModification_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1092,8 +1092,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (IWeaponModificationGetter?)lhs,
+                rhs: rhs as IWeaponModificationGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1103,8 +1103,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (IWeaponModificationGetter?)lhs,
+                rhs: rhs as IWeaponModificationGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1114,12 +1114,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IObjectModificationGetter?)lhs,
-                rhs: rhs as IObjectModificationGetter,
+                lhs: (IWeaponModificationGetter?)lhs,
+                rhs: rhs as IWeaponModificationGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IObjectModificationGetter item)
+        public virtual int GetHashCode(IWeaponModificationGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Properties);
@@ -1129,17 +1129,17 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IAObjectModificationGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (IWeaponModificationGetter)item);
         }
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (IWeaponModificationGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IObjectModificationGetter)item);
+            return GetHashCode(item: (IWeaponModificationGetter)item);
         }
         
         #endregion
@@ -1147,17 +1147,17 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return ObjectModification.GetNew();
+            return WeaponModification.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectModificationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponModificationGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<AObjectModification.NoneProperty>, IFormLinkContainerGetter>()
+            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<Weapon.Property>, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1166,12 +1166,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public ObjectModification Duplicate(
-            IObjectModificationGetter item,
+        public WeaponModification Duplicate(
+            IWeaponModificationGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ObjectModification(formKey, item.FormVersion);
+            var newRec = new WeaponModification(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (IWeaponModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (IWeaponModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectModificationGetter)item,
+                item: (IWeaponModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1214,14 +1214,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ObjectModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
+    internal partial class WeaponModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
     {
-        public new static readonly ObjectModificationSetterTranslationCommon Instance = new ObjectModificationSetterTranslationCommon();
+        public new static readonly WeaponModificationSetterTranslationCommon Instance = new WeaponModificationSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IObjectModificationInternal item,
-            IObjectModificationGetter rhs,
+            IWeaponModificationInternal item,
+            IWeaponModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1235,8 +1235,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IObjectModification item,
-            IObjectModificationGetter rhs,
+            IWeaponModification item,
+            IWeaponModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1247,16 +1247,16 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ObjectModification_FieldIndex.Properties) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeaponModification_FieldIndex.Properties) ?? true))
             {
-                errorMask?.PushIndex((int)ObjectModification_FieldIndex.Properties);
+                errorMask?.PushIndex((int)WeaponModification_FieldIndex.Properties);
                 try
                 {
                     item.Properties.SetTo(
                         rhs.Properties
                         .Select(r =>
                         {
-                            return r.DeepCopy<AObjectModification.NoneProperty>(
+                            return r.DeepCopy<Weapon.Property>(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
@@ -1281,8 +1281,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IWeaponModificationInternal)item,
+                rhs: (IWeaponModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1296,8 +1296,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IWeaponModification)item,
+                rhs: (IWeaponModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1311,8 +1311,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IWeaponModificationInternal)item,
+                rhs: (IWeaponModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1326,8 +1326,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IWeaponModification)item,
+                rhs: (IWeaponModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1341,8 +1341,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModificationInternal)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IWeaponModificationInternal)item,
+                rhs: (IWeaponModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1356,8 +1356,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IObjectModification)item,
-                rhs: (IObjectModificationGetter)rhs,
+                item: (IWeaponModification)item,
+                rhs: (IWeaponModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1365,12 +1365,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
-            ObjectModification.TranslationMask? copyMask = null)
+        public WeaponModification DeepCopy(
+            IWeaponModificationGetter item,
+            WeaponModification.TranslationMask? copyMask = null)
         {
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponModification ret = (WeaponModification)((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).GetNew();
+            ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1379,30 +1379,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
-            out ObjectModification.ErrorMask errorMask,
-            ObjectModification.TranslationMask? copyMask = null)
+        public WeaponModification DeepCopy(
+            IWeaponModificationGetter item,
+            out WeaponModification.ErrorMask errorMask,
+            WeaponModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponModification ret = (WeaponModification)((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).GetNew();
+            ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponModification.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ObjectModification DeepCopy(
-            IObjectModificationGetter item,
+        public WeaponModification DeepCopy(
+            IWeaponModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ObjectModification ret = (ObjectModification)((ObjectModificationCommon)((IObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((ObjectModificationSetterTranslationCommon)((IObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponModification ret = (WeaponModification)((WeaponModificationCommon)((IWeaponModificationGetter)item).CommonInstance()!).GetNew();
+            ((WeaponModificationSetterTranslationCommon)((IWeaponModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1418,21 +1418,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ObjectModification
+    public partial class WeaponModification
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WeaponModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ObjectModificationCommon.Instance;
+        protected override object CommonInstance() => WeaponModificationCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ObjectModificationSetterCommon.Instance;
+            return WeaponModificationSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WeaponModificationSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1443,14 +1443,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ObjectModificationBinaryWriteTranslation :
+    public partial class WeaponModificationBinaryWriteTranslation :
         AObjectModificationBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly ObjectModificationBinaryWriteTranslation Instance = new();
+        public new static readonly WeaponModificationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IObjectModificationGetter item,
+            IWeaponModificationGetter item,
             MutagenWriter writer)
         {
             StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IObjectModificationGetter item,
+            IWeaponModificationGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IWeaponModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1504,7 +1504,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IWeaponModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IWeaponModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1526,20 +1526,20 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IObjectModificationGetter)item,
+                item: (IWeaponModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ObjectModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
+    internal partial class WeaponModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
     {
-        public new static readonly ObjectModificationBinaryCreateTranslation Instance = new ObjectModificationBinaryCreateTranslation();
+        public new static readonly WeaponModificationBinaryCreateTranslation Instance = new WeaponModificationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OMOD;
         public static void FillBinaryStructs(
-            IObjectModificationInternal item,
+            IWeaponModificationInternal item,
             MutagenFrame frame)
         {
             AObjectModificationBinaryCreateTranslation.FillBinaryStructs(
@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ObjectModificationBinaryTranslationMixIn
+    public static class WeaponModificationBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1562,36 +1562,36 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ObjectModificationBinaryOverlay :
+    internal partial class WeaponModificationBinaryOverlay :
         AObjectModificationBinaryOverlay,
-        IObjectModificationGetter
+        IWeaponModificationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => ObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WeaponModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ObjectModificationCommon.Instance;
+        protected override object CommonInstance() => WeaponModificationCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WeaponModificationSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ObjectModificationCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponModificationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WeaponModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IObjectModification);
+        protected override Type LinkType => typeof(IWeaponModification);
 
 
         partial void CustomFactoryEnd(
@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected ObjectModificationBinaryOverlay(
+        protected WeaponModificationBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1610,7 +1610,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IObjectModificationGetter ObjectModificationFactory(
+        public static IWeaponModificationGetter WeaponModificationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1622,7 +1622,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ObjectModificationBinaryOverlay(
+            var ret = new WeaponModificationBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1640,12 +1640,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IObjectModificationGetter ObjectModificationFactory(
+        public static IWeaponModificationGetter WeaponModificationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ObjectModificationFactory(
+            return WeaponModificationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1657,7 +1657,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ObjectModificationMixIn.Print(
+            WeaponModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1667,7 +1667,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<ObjectModification>.ToString(this);
+            return MajorRecordPrinter<WeaponModification>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1677,16 +1677,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IObjectModificationGetter rhs) return false;
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWeaponModificationGetter rhs) return false;
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IObjectModificationGetter? obj)
+        public bool Equals(IWeaponModificationGetter? obj)
         {
-            return ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ObjectModificationCommon)((IObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponModificationCommon)((IWeaponModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

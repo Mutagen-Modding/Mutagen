@@ -8,15 +8,18 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledItem
 - MagicEffect
 - TerminalMenu
+- Weapon
 ### IKeywordCommon
 - Keyword
 ### IKeyworded
 - Activator
 - KeywordFormComponent
 - MagicEffect
+- ObjectTemplate
 - Race
 - SoundMarker
 - Spell
+- Weapon
 - Weather
 ### IModeled
 - Activator
@@ -47,6 +50,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MorphGroup
 - ObjectEffect
+- ObjectTemplate
 - Planet
 - ProgressionEvaluatorArgument
 - Race
@@ -69,6 +73,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Spell
 - StaticCollection
 - TerminalMenu
+- Weapon
 ### IObjectBounded
 - AcousticSpace
 - Activator
@@ -83,6 +88,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Spell
 - StaticCollection
 - TextureSet
+- Weapon
 ### IPositionRotation
 - StaticPlacement
 - Transform
@@ -90,6 +96,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - LeveledItem
 - MagicEffect
+- Weapon
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -156,6 +163,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ObjectEffect
 - INamed
 - IObjectBounded
+### ObjectTemplate
+- IKeyworded
+- INamed
 ### Planet
 - INamed
 ### PlanetModelComponent
@@ -224,6 +234,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Transform
 - IPositionRotation
 ### Weapon
+- IHaveVirtualMachineAdapter
+- IKeyworded
 - IModeled
+- INamed
+- IObjectBounded
+- IScripted
 ### Weather
 - IKeyworded

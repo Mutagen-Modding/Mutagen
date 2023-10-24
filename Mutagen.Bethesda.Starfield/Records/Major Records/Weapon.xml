@@ -1,10 +1,205 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Weapon" recordType="WEAP" baseClass="StarfieldMajorRecord" objType="Record">
+  <Object name="Weapon" recordType="WEAP" baseClass="StarfieldMajorRecord" majorFlag="true" objType="Record">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
+      <FormLink name="ObjectEffect" recordType="EITM">
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <UInt16 name="EnchantmentAmount" recordType="EAMT" />
+      <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
+      <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
+      <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
+      <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
+      <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="Description" recordType="DESC" translated="DL" />
+      <FormLink name="InstanceNaming" recordType="INRD" refName="InstanceNamingRules" />
+      <List name="AttachParentSlots" recordType="APPR">
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" alwaysWriteEndMarker="true">
+        <Ref>
+          <Direct refName="ObjectTemplate">
+            <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <FormLink name="EmbeddedWeaponMod" refName="AObjectModification" recordType="NNAM" />
+      <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
+      <Data recordType="WAIM" >
+        <Fields>
+          <Float name="WAIMUnknown1" unknown="true" />
+          <FormLink name="Zoom" refName="Zoom" />
+          <FormLink name="AimModel" refName="AimModel" />
+          <UInt16 name="WAIMUnknown2" unknown="true" />
+          <FormLink name="AimAssistModelData" refName="AimAssistModelData" />
+          <FormLink name="AimOpticalSightMarker" refName="AimOpticalSightMarker" />
+          <FormLink name="MeleeAimAssistModel" refName="MeleeAimAssistModel" />
+          <ByteArray name="WAIMUnknown3" byteLength="9" nullable="false" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="WAM2" >
+        <Fields>
+          <FormLink name="AmmoType" refName="Ammunition" />
+          <UInt32 name="MagazineSize" />
+          <FormLink name="AmmoList" refName="LeveledItem" />
+          <FormLink name="Projectile" refName="Projectile" />
+          <FormLink name="Ejections" refName="ArtObject" />
+          <ByteArray name="WAM2Unknown" byteLength="3" nullable="false" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="WAUD" >
+        <Fields>
+          <RefDirect name="MeleeOrCreature" refName="SoundReference" />
+          <RefDirect name="PrimedExplosive" refName="SoundReference" />
+          <RefDirect name="DryFire" refName="SoundReference" />
+          <RefDirect name="Idle" refName="SoundReference" />
+          <RefDirect name="Equip" refName="SoundReference" />
+          <RefDirect name="Unequip" refName="SoundReference" />
+          <RefDirect name="FastEquip" refName="SoundReference" />
+          <Int32 name="WAUDUnknown1" unknown="true" />
+          <Int32 name="WAUDUnknown2" unknown="true" />
+        </Fields>
+      </Data>
+      <ByteArray name="WTUR" recordType="WTUR" unknown="true" />
+      <ByteArray name="WCHG" recordType="WCHG" unknown="true" />
+      <Data recordType="WDMG" >
+        <Fields>
+          <Float name="PhysicalDamage" />
+          <Float name="OptimalRange" />
+          <Float name="MaxRange" />
+          <Float name="WDMGUnknown1" unknown="true" />
+          <Float name="WDMGUnknown2" unknown="true" />
+          <FormLink name="CriticalHitSpell" refName="Spell" />
+          <ByteArray name="WDMGUnknown3" byteLength="10" nullable="false" />
+          <Float name="WDMGUnknown4" unknown="true" />
+          <Float name="WDMGUnknown5" unknown="true" />
+          <Float name="WDMGUnknown6" unknown="true" />
+          <Float name="WDMGUnknown7" unknown="true" />
+          <Float name="WDMGUnknown8" unknown="true" />
+          <Float name="WDMGUnknown9" unknown="true" />
+          <Float name="WDMGUnknown10" unknown="true" />
+        </Fields>
+      </Data>
+      <RefList name="DamageTypes" refName="WeaponDamageType" recordType="DAMA" />
+      <Data recordType="WFIR" >
+        <Fields>
+          <Enum name="FiringType" enumName="Weapon.FiringTypeEnum" byteLength="1" />
+          <UInt8 name="BurstCount" />
+          <UInt8 name="WFIRUnknown1" unknown="true" />
+          <Float name="WFIRUnknown2" unknown="true" />
+          <Float name="WFIRUnknown3" unknown="true" />
+          <Float name="WFIRUnknown4" unknown="true" />
+          <Float name="WFIRUnknown5" unknown="true" />
+          <UInt16 name="WFIRUnknown6" unknown="true" />
+          <Float name="FireRate" />
+          <Float name="WFIRUnknown7" unknown="true" />
+          <UInt8 name="WFIRUnknown8" unknown="true" />
+          <Float name="WFIRUnknown9" unknown="true" />
+          <UInt8 name="WFIRUnknown10" unknown="true" />
+          <Float name="WFIRUnknown11" unknown="true" />
+          <UInt16 name="WFIRUnknown12" unknown="true" />
+          <Float name="WFIRUnknown13" unknown="true" />
+        </Fields>
+      </Data>
+      <ByteArray name="WFLG" recordType="WFLG" unknown="true" />
+      <Data recordType="WGEN" >
+        <Fields>
+          <UInt32 name="WGENUnknown1" unknown="true" />
+          <Float name="BaseWeight" />
+          <UInt32 name="BaseValue" />
+          <Float name="WGENUnknown2" unknown="true" />
+          <Float name="WGENUnknown3" unknown="true" />
+          <FormLink name="WeaponBarrel" refName="WeaponBarrelModel" />
+        </Fields>
+      </Data>
+      <String name="WABB" recordType="WABB" unknown="true" translate="Normal" />
+      <Data recordType="WMEL">
+        <Fields>
+          <UInt8 name="WMELUnknown1" unknown="true" />
+          <Float name="WMELUnknown2" unknown="true" />
+          <Float name="WMELUnknown3" unknown="true" />
+          <UInt32 name="WMELUnknown4" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="QNAM" >
+        <Fields>
+          <UInt32 name="QNAMUnknown1" unknown="true" />
+          <Float name="RechargeTime" />
+          <Float name="RechargeDelay" />
+          <UInt32 name="QNAMUnknown2" unknown="true" />
+          <UInt32 name="QNAMUnknown3" unknown="true" />
+          <UInt32 name="QNAMUnknown4" unknown="true" />
+          <UInt32 name="QNAMUnknown5" unknown="true" />
+          <Float name="QNAMUnknown6" unknown="true" />
+          <UInt32 name="QNAMUnknown7" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="WRLO" >
+        <Fields>
+          <Float name="WRLOUnknown1" unknown="true" />
+          <Float name="WRLOUnknown2" unknown="true" />
+          <UInt16 name="WRLOUnknown3" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="WVAR" >
+        <Fields>
+          <UInt32 name="WVARUnknown1" unknown="true" />
+          <Float name="WVARUnknown2" unknown="true" />
+          <UInt32 name="WVARUnknown3" unknown="true" />
+          <Float name="WVARUnknown4" unknown="true" />
+          <Float name="WVARUnknown5" unknown="true" />
+          <Float name="WVARUnknown6" unknown="true" />
+          <Float name="WVARUnknown7" unknown="true" />
+          <Float name="WVARUnknown8" unknown="true" />
+          <UInt32 name="WVARUnknown9" unknown="true" />
+          <Float name="WVARUnknown10" unknown="true" />
+          <Float name="WVARUnknown11" unknown="true" />
+          <Float name="WVARUnknown12" unknown="true" />
+          <UInt8 name="WVARUnknown13" unknown="true" />
+        </Fields>
+      </Data>
+      <RefDirect name="FirstPersonModel" refName="FirstPersonModel" />
+      <Data recordType="WVIS" >
+        <Fields>
+          <UInt32 name="WVISUnknown1" unknown="true" />
+          <UInt32 name="WVISUnknown2" unknown="true" />
+          <UInt32 name="WVISUnknown3" unknown="true" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <UInt32 name="WVISUnknown4" unknown="true" />
+          <UInt32 name="WVISUnknown5" unknown="true" />
+        </Fields>
+      </Data>
+      <Data recordType="WTRM">
+        <Fields>
+          <Float name="WTRMUnknown1" unknown="true" />
+          <UInt8 name="WTRMUnknown2" unknown="true" />
+          <Float name="WTRMUnknown3" unknown="true" />
+          <Float name="WTRMUnknown4" unknown="true" />
+          <Float name="WTRMUnknown5" unknown="true" />
+        </Fields>
+      </Data>
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+  </Object>
+  <Object name="WeaponDamageType" objType="Subrecord">
+    <Fields>
+      <FormLink name="DamageType" refName="DamageType" />
+      <UInt32 name="Value" />
+      <FormLink name="CurveTable" refName="CurveTable" >
+        <Versioning formVersion="152" action="Add" />
+      </FormLink>
+    </Fields>
   </Object>
 </Loqui>

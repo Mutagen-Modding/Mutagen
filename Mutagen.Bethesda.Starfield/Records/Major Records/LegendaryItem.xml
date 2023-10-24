@@ -17,7 +17,7 @@
   <Object name="LegendaryMod" objType="Subrecord">
     <Fields>
       <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
-      <FormLink name="LegendaryModifier" refName="ObjectModification" />
+      <FormLink name="LegendaryModifier" refName="AObjectModification" />
     </Fields>
   </Object>
   <Object name="LegendaryFilter" objType="Subrecord">

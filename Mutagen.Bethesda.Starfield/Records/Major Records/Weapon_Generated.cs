@@ -27,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -58,6 +59,122 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IWeaponGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IWeaponGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IWeaponGetter.ODTY => this.ODTY;
+        #endregion
+        #region ObjectPlacementDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        {
+            get => _ObjectPlacementDefaults;
+            set => _ObjectPlacementDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? IWeaponGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? IWeaponGetter.Transforms => this.Transforms;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IWeaponGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IWeaponGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
@@ -75,6 +192,640 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
+        #endregion
+        #region ObjectEffect
+        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
+        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
+        {
+            get => _ObjectEffect;
+            set => _ObjectEffect.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEffectRecordGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect;
+        #endregion
+        #region EnchantmentAmount
+        public UInt16? EnchantmentAmount { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IWeaponGetter.EnchantmentAmount => this.EnchantmentAmount;
+        #endregion
+        #region EquipmentType
+        private readonly IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        public IFormLinkNullable<IEquipTypeGetter> EquipmentType
+        {
+            get => _EquipmentType;
+            set => _EquipmentType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEquipTypeGetter> IWeaponGetter.EquipmentType => this.EquipmentType;
+        #endregion
+        #region BlockBashImpactDataSet
+        private readonly IFormLinkNullable<IImpactDataSetGetter> _BlockBashImpactDataSet = new FormLinkNullable<IImpactDataSetGetter>();
+        public IFormLinkNullable<IImpactDataSetGetter> BlockBashImpactDataSet
+        {
+            get => _BlockBashImpactDataSet;
+            set => _BlockBashImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImpactDataSetGetter> IWeaponGetter.BlockBashImpactDataSet => this.BlockBashImpactDataSet;
+        #endregion
+        #region AlternateBlockMaterial
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>();
+        public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial
+        {
+            get => _AlternateBlockMaterial;
+            set => _AlternateBlockMaterial.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialTypeGetter> IWeaponGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
+        #endregion
+        #region PickupSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _PickupSound;
+        public SoundReference? PickupSound
+        {
+            get => _PickupSound;
+            set => _PickupSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IWeaponGetter.PickupSound => this.PickupSound;
+        #endregion
+        #region DropdownSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _DropdownSound;
+        public SoundReference? DropdownSound
+        {
+            get => _DropdownSound;
+            set => _DropdownSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IWeaponGetter.DropdownSound => this.DropdownSound;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IWeaponGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IWeaponGetter.Description => this.Description;
+        #endregion
+        #region InstanceNaming
+        private readonly IFormLinkNullable<IInstanceNamingRulesGetter> _InstanceNaming = new FormLinkNullable<IInstanceNamingRulesGetter>();
+        public IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming
+        {
+            get => _InstanceNaming;
+            set => _InstanceNaming.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> IWeaponGetter.InstanceNaming => this.InstanceNaming;
+        #endregion
+        #region AttachParentSlots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _AttachParentSlots;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots
+        {
+            get => this._AttachParentSlots;
+            set => this._AttachParentSlots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IWeaponGetter.AttachParentSlots => _AttachParentSlots;
+        #endregion
+
+        #endregion
+        #region ObjectTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectTemplate<Weapon.Property>>? _ObjectTemplates;
+        public ExtendedList<ObjectTemplate<Weapon.Property>>? ObjectTemplates
+        {
+            get => this._ObjectTemplates;
+            set => this._ObjectTemplates = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? IWeaponGetter.ObjectTemplates => _ObjectTemplates;
+        #endregion
+
+        #endregion
+        #region EmbeddedWeaponMod
+        private readonly IFormLinkNullable<IAObjectModificationGetter> _EmbeddedWeaponMod = new FormLinkNullable<IAObjectModificationGetter>();
+        public IFormLinkNullable<IAObjectModificationGetter> EmbeddedWeaponMod
+        {
+            get => _EmbeddedWeaponMod;
+            set => _EmbeddedWeaponMod.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAObjectModificationGetter> IWeaponGetter.EmbeddedWeaponMod => this.EmbeddedWeaponMod;
+        #endregion
+        #region BNAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _BNAM;
+        public MemorySlice<Byte>? BNAM
+        {
+            get => this._BNAM;
+            set => this._BNAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWeaponGetter.BNAM => this.BNAM;
+        #endregion
+        #region WAIMUnknown1
+        public Single WAIMUnknown1 { get; set; } = default;
+        #endregion
+        #region Zoom
+        private readonly IFormLink<IZoomGetter> _Zoom = new FormLink<IZoomGetter>();
+        public IFormLink<IZoomGetter> Zoom
+        {
+            get => _Zoom;
+            set => _Zoom.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IZoomGetter> IWeaponGetter.Zoom => this.Zoom;
+        #endregion
+        #region AimModel
+        private readonly IFormLink<IAimModelGetter> _AimModel = new FormLink<IAimModelGetter>();
+        public IFormLink<IAimModelGetter> AimModel
+        {
+            get => _AimModel;
+            set => _AimModel.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IAimModelGetter> IWeaponGetter.AimModel => this.AimModel;
+        #endregion
+        #region WAIMUnknown2
+        public UInt16 WAIMUnknown2 { get; set; } = default;
+        #endregion
+        #region AimAssistModelData
+        private readonly IFormLink<IAimAssistModelDataGetter> _AimAssistModelData = new FormLink<IAimAssistModelDataGetter>();
+        public IFormLink<IAimAssistModelDataGetter> AimAssistModelData
+        {
+            get => _AimAssistModelData;
+            set => _AimAssistModelData.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IAimAssistModelDataGetter> IWeaponGetter.AimAssistModelData => this.AimAssistModelData;
+        #endregion
+        #region AimOpticalSightMarker
+        private readonly IFormLink<IAimOpticalSightMarkerGetter> _AimOpticalSightMarker = new FormLink<IAimOpticalSightMarkerGetter>();
+        public IFormLink<IAimOpticalSightMarkerGetter> AimOpticalSightMarker
+        {
+            get => _AimOpticalSightMarker;
+            set => _AimOpticalSightMarker.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IAimOpticalSightMarkerGetter> IWeaponGetter.AimOpticalSightMarker => this.AimOpticalSightMarker;
+        #endregion
+        #region MeleeAimAssistModel
+        private readonly IFormLink<IMeleeAimAssistModelGetter> _MeleeAimAssistModel = new FormLink<IMeleeAimAssistModelGetter>();
+        public IFormLink<IMeleeAimAssistModelGetter> MeleeAimAssistModel
+        {
+            get => _MeleeAimAssistModel;
+            set => _MeleeAimAssistModel.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IMeleeAimAssistModelGetter> IWeaponGetter.MeleeAimAssistModel => this.MeleeAimAssistModel;
+        #endregion
+        #region WAIMUnknown3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _WAIMUnknown3 = new byte[9];
+        public MemorySlice<Byte> WAIMUnknown3
+        {
+            get => _WAIMUnknown3;
+            set => this._WAIMUnknown3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IWeaponGetter.WAIMUnknown3 => this.WAIMUnknown3;
+        #endregion
+        #region AmmoType
+        private readonly IFormLink<IAmmunitionGetter> _AmmoType = new FormLink<IAmmunitionGetter>();
+        public IFormLink<IAmmunitionGetter> AmmoType
+        {
+            get => _AmmoType;
+            set => _AmmoType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IAmmunitionGetter> IWeaponGetter.AmmoType => this.AmmoType;
+        #endregion
+        #region MagazineSize
+        public UInt32 MagazineSize { get; set; } = default;
+        #endregion
+        #region AmmoList
+        private readonly IFormLink<ILeveledItemGetter> _AmmoList = new FormLink<ILeveledItemGetter>();
+        public IFormLink<ILeveledItemGetter> AmmoList
+        {
+            get => _AmmoList;
+            set => _AmmoList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILeveledItemGetter> IWeaponGetter.AmmoList => this.AmmoList;
+        #endregion
+        #region Projectile
+        private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IWeaponGetter.Projectile => this.Projectile;
+        #endregion
+        #region Ejections
+        private readonly IFormLink<IArtObjectGetter> _Ejections = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> Ejections
+        {
+            get => _Ejections;
+            set => _Ejections.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IWeaponGetter.Ejections => this.Ejections;
+        #endregion
+        #region WAM2Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _WAM2Unknown = new byte[3];
+        public MemorySlice<Byte> WAM2Unknown
+        {
+            get => _WAM2Unknown;
+            set => this._WAM2Unknown = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IWeaponGetter.WAM2Unknown => this.WAM2Unknown;
+        #endregion
+        #region MeleeOrCreature
+        public SoundReference MeleeOrCreature { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IWeaponGetter.MeleeOrCreature => MeleeOrCreature;
+        #endregion
+        #region PrimedExplosive
+        public SoundReference PrimedExplosive { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IWeaponGetter.PrimedExplosive => PrimedExplosive;
+        #endregion
+        #region DryFire
+        public SoundReference DryFire { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IWeaponGetter.DryFire => DryFire;
+        #endregion
+        #region Idle
+        public SoundReference Idle { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IWeaponGetter.Idle => Idle;
+        #endregion
+        #region Equip
+        public SoundReference Equip { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IWeaponGetter.Equip => Equip;
+        #endregion
+        #region Unequip
+        public SoundReference Unequip { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IWeaponGetter.Unequip => Unequip;
+        #endregion
+        #region FastEquip
+        public SoundReference FastEquip { get; set; } = new SoundReference();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter IWeaponGetter.FastEquip => FastEquip;
+        #endregion
+        #region WAUDUnknown1
+        public Int32 WAUDUnknown1 { get; set; } = default;
+        #endregion
+        #region WAUDUnknown2
+        public Int32 WAUDUnknown2 { get; set; } = default;
+        #endregion
+        #region WTUR
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _WTUR;
+        public MemorySlice<Byte>? WTUR
+        {
+            get => this._WTUR;
+            set => this._WTUR = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWeaponGetter.WTUR => this.WTUR;
+        #endregion
+        #region WCHG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _WCHG;
+        public MemorySlice<Byte>? WCHG
+        {
+            get => this._WCHG;
+            set => this._WCHG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWeaponGetter.WCHG => this.WCHG;
+        #endregion
+        #region PhysicalDamage
+        public Single PhysicalDamage { get; set; } = default;
+        #endregion
+        #region OptimalRange
+        public Single OptimalRange { get; set; } = default;
+        #endregion
+        #region MaxRange
+        public Single MaxRange { get; set; } = default;
+        #endregion
+        #region WDMGUnknown1
+        public Single WDMGUnknown1 { get; set; } = default;
+        #endregion
+        #region WDMGUnknown2
+        public Single WDMGUnknown2 { get; set; } = default;
+        #endregion
+        #region CriticalHitSpell
+        private readonly IFormLink<ISpellGetter> _CriticalHitSpell = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> CriticalHitSpell
+        {
+            get => _CriticalHitSpell;
+            set => _CriticalHitSpell.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> IWeaponGetter.CriticalHitSpell => this.CriticalHitSpell;
+        #endregion
+        #region WDMGUnknown3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _WDMGUnknown3 = new byte[10];
+        public MemorySlice<Byte> WDMGUnknown3
+        {
+            get => _WDMGUnknown3;
+            set => this._WDMGUnknown3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IWeaponGetter.WDMGUnknown3 => this.WDMGUnknown3;
+        #endregion
+        #region WDMGUnknown4
+        public Single WDMGUnknown4 { get; set; } = default;
+        #endregion
+        #region WDMGUnknown5
+        public Single WDMGUnknown5 { get; set; } = default;
+        #endregion
+        #region WDMGUnknown6
+        public Single WDMGUnknown6 { get; set; } = default;
+        #endregion
+        #region WDMGUnknown7
+        public Single WDMGUnknown7 { get; set; } = default;
+        #endregion
+        #region WDMGUnknown8
+        public Single WDMGUnknown8 { get; set; } = default;
+        #endregion
+        #region WDMGUnknown9
+        public Single WDMGUnknown9 { get; set; } = default;
+        #endregion
+        #region WDMGUnknown10
+        public Single WDMGUnknown10 { get; set; } = default;
+        #endregion
+        #region DamageTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<WeaponDamageType>? _DamageTypes;
+        public ExtendedList<WeaponDamageType>? DamageTypes
+        {
+            get => this._DamageTypes;
+            set => this._DamageTypes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IWeaponDamageTypeGetter>? IWeaponGetter.DamageTypes => _DamageTypes;
+        #endregion
+
+        #endregion
+        #region FiringType
+        public Weapon.FiringTypeEnum FiringType { get; set; } = default;
+        #endregion
+        #region BurstCount
+        public Byte BurstCount { get; set; } = default;
+        #endregion
+        #region WFIRUnknown1
+        public Byte WFIRUnknown1 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown2
+        public Single WFIRUnknown2 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown3
+        public Single WFIRUnknown3 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown4
+        public Single WFIRUnknown4 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown5
+        public Single WFIRUnknown5 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown6
+        public UInt16 WFIRUnknown6 { get; set; } = default;
+        #endregion
+        #region FireRate
+        public Single FireRate { get; set; } = default;
+        #endregion
+        #region WFIRUnknown7
+        public Single WFIRUnknown7 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown8
+        public Byte WFIRUnknown8 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown9
+        public Single WFIRUnknown9 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown10
+        public Byte WFIRUnknown10 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown11
+        public Single WFIRUnknown11 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown12
+        public UInt16 WFIRUnknown12 { get; set; } = default;
+        #endregion
+        #region WFIRUnknown13
+        public Single WFIRUnknown13 { get; set; } = default;
+        #endregion
+        #region WFLG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _WFLG;
+        public MemorySlice<Byte>? WFLG
+        {
+            get => this._WFLG;
+            set => this._WFLG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IWeaponGetter.WFLG => this.WFLG;
+        #endregion
+        #region WGENUnknown1
+        public UInt32 WGENUnknown1 { get; set; } = default;
+        #endregion
+        #region BaseWeight
+        public Single BaseWeight { get; set; } = default;
+        #endregion
+        #region BaseValue
+        public UInt32 BaseValue { get; set; } = default;
+        #endregion
+        #region WGENUnknown2
+        public Single WGENUnknown2 { get; set; } = default;
+        #endregion
+        #region WGENUnknown3
+        public Single WGENUnknown3 { get; set; } = default;
+        #endregion
+        #region WeaponBarrel
+        private readonly IFormLink<IWeaponBarrelModelGetter> _WeaponBarrel = new FormLink<IWeaponBarrelModelGetter>();
+        public IFormLink<IWeaponBarrelModelGetter> WeaponBarrel
+        {
+            get => _WeaponBarrel;
+            set => _WeaponBarrel.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWeaponBarrelModelGetter> IWeaponGetter.WeaponBarrel => this.WeaponBarrel;
+        #endregion
+        #region WABB
+        public String? WABB { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWeaponGetter.WABB => this.WABB;
+        #endregion
+        #region WMELUnknown1
+        public Byte WMELUnknown1 { get; set; } = default;
+        #endregion
+        #region WMELUnknown2
+        public Single WMELUnknown2 { get; set; } = default;
+        #endregion
+        #region WMELUnknown3
+        public Single WMELUnknown3 { get; set; } = default;
+        #endregion
+        #region WMELUnknown4
+        public UInt32 WMELUnknown4 { get; set; } = default;
+        #endregion
+        #region QNAMUnknown1
+        public UInt32 QNAMUnknown1 { get; set; } = default;
+        #endregion
+        #region RechargeTime
+        public Single RechargeTime { get; set; } = default;
+        #endregion
+        #region RechargeDelay
+        public Single RechargeDelay { get; set; } = default;
+        #endregion
+        #region QNAMUnknown2
+        public UInt32 QNAMUnknown2 { get; set; } = default;
+        #endregion
+        #region QNAMUnknown3
+        public UInt32 QNAMUnknown3 { get; set; } = default;
+        #endregion
+        #region QNAMUnknown4
+        public UInt32 QNAMUnknown4 { get; set; } = default;
+        #endregion
+        #region QNAMUnknown5
+        public UInt32 QNAMUnknown5 { get; set; } = default;
+        #endregion
+        #region QNAMUnknown6
+        public Single QNAMUnknown6 { get; set; } = default;
+        #endregion
+        #region QNAMUnknown7
+        public UInt32 QNAMUnknown7 { get; set; } = default;
+        #endregion
+        #region WRLOUnknown1
+        public Single WRLOUnknown1 { get; set; } = default;
+        #endregion
+        #region WRLOUnknown2
+        public Single WRLOUnknown2 { get; set; } = default;
+        #endregion
+        #region WRLOUnknown3
+        public UInt16 WRLOUnknown3 { get; set; } = default;
+        #endregion
+        #region WVARUnknown1
+        public UInt32 WVARUnknown1 { get; set; } = default;
+        #endregion
+        #region WVARUnknown2
+        public Single WVARUnknown2 { get; set; } = default;
+        #endregion
+        #region WVARUnknown3
+        public UInt32 WVARUnknown3 { get; set; } = default;
+        #endregion
+        #region WVARUnknown4
+        public Single WVARUnknown4 { get; set; } = default;
+        #endregion
+        #region WVARUnknown5
+        public Single WVARUnknown5 { get; set; } = default;
+        #endregion
+        #region WVARUnknown6
+        public Single WVARUnknown6 { get; set; } = default;
+        #endregion
+        #region WVARUnknown7
+        public Single WVARUnknown7 { get; set; } = default;
+        #endregion
+        #region WVARUnknown8
+        public Single WVARUnknown8 { get; set; } = default;
+        #endregion
+        #region WVARUnknown9
+        public UInt32 WVARUnknown9 { get; set; } = default;
+        #endregion
+        #region WVARUnknown10
+        public Single WVARUnknown10 { get; set; } = default;
+        #endregion
+        #region WVARUnknown11
+        public Single WVARUnknown11 { get; set; } = default;
+        #endregion
+        #region WVARUnknown12
+        public Single WVARUnknown12 { get; set; } = default;
+        #endregion
+        #region WVARUnknown13
+        public Byte WVARUnknown13 { get; set; } = default;
+        #endregion
+        #region FirstPersonModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private FirstPersonModel? _FirstPersonModel;
+        public FirstPersonModel? FirstPersonModel
+        {
+            get => _FirstPersonModel;
+            set => _FirstPersonModel = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFirstPersonModelGetter? IWeaponGetter.FirstPersonModel => this.FirstPersonModel;
+        #endregion
+        #region WVISUnknown1
+        public UInt32 WVISUnknown1 { get; set; } = default;
+        #endregion
+        #region WVISUnknown2
+        public UInt32 WVISUnknown2 { get; set; } = default;
+        #endregion
+        #region WVISUnknown3
+        public UInt32 WVISUnknown3 { get; set; } = default;
+        #endregion
+        #region ImpactDataSet
+        private readonly IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IWeaponGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region WVISUnknown4
+        public UInt32 WVISUnknown4 { get; set; } = default;
+        #endregion
+        #region WVISUnknown5
+        public UInt32 WVISUnknown5 { get; set; } = default;
+        #endregion
+        #region WTRMUnknown1
+        public Single WTRMUnknown1 { get; set; } = default;
+        #endregion
+        #region WTRMUnknown2
+        public Byte WTRMUnknown2 { get; set; } = default;
+        #endregion
+        #region WTRMUnknown3
+        public Single WTRMUnknown3 { get; set; } = default;
+        #endregion
+        #region WTRMUnknown4
+        public Single WTRMUnknown4 { get; set; } = default;
+        #endregion
+        #region WTRMUnknown5
+        public Single WTRMUnknown5 { get; set; } = default;
         #endregion
 
         #region To String
@@ -101,7 +852,133 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.ObjectEffect = initialValue;
+                this.EnchantmentAmount = initialValue;
+                this.EquipmentType = initialValue;
+                this.BlockBashImpactDataSet = initialValue;
+                this.AlternateBlockMaterial = initialValue;
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Description = initialValue;
+                this.InstanceNaming = initialValue;
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.EmbeddedWeaponMod = initialValue;
+                this.BNAM = initialValue;
+                this.WAIMUnknown1 = initialValue;
+                this.Zoom = initialValue;
+                this.AimModel = initialValue;
+                this.WAIMUnknown2 = initialValue;
+                this.AimAssistModelData = initialValue;
+                this.AimOpticalSightMarker = initialValue;
+                this.MeleeAimAssistModel = initialValue;
+                this.WAIMUnknown3 = initialValue;
+                this.AmmoType = initialValue;
+                this.MagazineSize = initialValue;
+                this.AmmoList = initialValue;
+                this.Projectile = initialValue;
+                this.Ejections = initialValue;
+                this.WAM2Unknown = initialValue;
+                this.MeleeOrCreature = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.PrimedExplosive = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DryFire = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Idle = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Equip = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Unequip = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.FastEquip = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.WAUDUnknown1 = initialValue;
+                this.WAUDUnknown2 = initialValue;
+                this.WTUR = initialValue;
+                this.WCHG = initialValue;
+                this.PhysicalDamage = initialValue;
+                this.OptimalRange = initialValue;
+                this.MaxRange = initialValue;
+                this.WDMGUnknown1 = initialValue;
+                this.WDMGUnknown2 = initialValue;
+                this.CriticalHitSpell = initialValue;
+                this.WDMGUnknown3 = initialValue;
+                this.WDMGUnknown4 = initialValue;
+                this.WDMGUnknown5 = initialValue;
+                this.WDMGUnknown6 = initialValue;
+                this.WDMGUnknown7 = initialValue;
+                this.WDMGUnknown8 = initialValue;
+                this.WDMGUnknown9 = initialValue;
+                this.WDMGUnknown10 = initialValue;
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
+                this.FiringType = initialValue;
+                this.BurstCount = initialValue;
+                this.WFIRUnknown1 = initialValue;
+                this.WFIRUnknown2 = initialValue;
+                this.WFIRUnknown3 = initialValue;
+                this.WFIRUnknown4 = initialValue;
+                this.WFIRUnknown5 = initialValue;
+                this.WFIRUnknown6 = initialValue;
+                this.FireRate = initialValue;
+                this.WFIRUnknown7 = initialValue;
+                this.WFIRUnknown8 = initialValue;
+                this.WFIRUnknown9 = initialValue;
+                this.WFIRUnknown10 = initialValue;
+                this.WFIRUnknown11 = initialValue;
+                this.WFIRUnknown12 = initialValue;
+                this.WFIRUnknown13 = initialValue;
+                this.WFLG = initialValue;
+                this.WGENUnknown1 = initialValue;
+                this.BaseWeight = initialValue;
+                this.BaseValue = initialValue;
+                this.WGENUnknown2 = initialValue;
+                this.WGENUnknown3 = initialValue;
+                this.WeaponBarrel = initialValue;
+                this.WABB = initialValue;
+                this.WMELUnknown1 = initialValue;
+                this.WMELUnknown2 = initialValue;
+                this.WMELUnknown3 = initialValue;
+                this.WMELUnknown4 = initialValue;
+                this.QNAMUnknown1 = initialValue;
+                this.RechargeTime = initialValue;
+                this.RechargeDelay = initialValue;
+                this.QNAMUnknown2 = initialValue;
+                this.QNAMUnknown3 = initialValue;
+                this.QNAMUnknown4 = initialValue;
+                this.QNAMUnknown5 = initialValue;
+                this.QNAMUnknown6 = initialValue;
+                this.QNAMUnknown7 = initialValue;
+                this.WRLOUnknown1 = initialValue;
+                this.WRLOUnknown2 = initialValue;
+                this.WRLOUnknown3 = initialValue;
+                this.WVARUnknown1 = initialValue;
+                this.WVARUnknown2 = initialValue;
+                this.WVARUnknown3 = initialValue;
+                this.WVARUnknown4 = initialValue;
+                this.WVARUnknown5 = initialValue;
+                this.WVARUnknown6 = initialValue;
+                this.WVARUnknown7 = initialValue;
+                this.WVARUnknown8 = initialValue;
+                this.WVARUnknown9 = initialValue;
+                this.WVARUnknown10 = initialValue;
+                this.WVARUnknown11 = initialValue;
+                this.WVARUnknown12 = initialValue;
+                this.WVARUnknown13 = initialValue;
+                this.FirstPersonModel = new MaskItem<TItem, FirstPersonModel.Mask<TItem>?>(initialValue, new FirstPersonModel.Mask<TItem>(initialValue));
+                this.WVISUnknown1 = initialValue;
+                this.WVISUnknown2 = initialValue;
+                this.WVISUnknown3 = initialValue;
+                this.ImpactDataSet = initialValue;
+                this.WVISUnknown4 = initialValue;
+                this.WVISUnknown5 = initialValue;
+                this.WTRMUnknown1 = initialValue;
+                this.WTRMUnknown2 = initialValue;
+                this.WTRMUnknown3 = initialValue;
+                this.WTRMUnknown4 = initialValue;
+                this.WTRMUnknown5 = initialValue;
             }
 
             public Mask(
@@ -112,7 +989,133 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem Model)
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem ObjectPlacementDefaults,
+                TItem Transforms,
+                TItem Components,
+                TItem Name,
+                TItem Model,
+                TItem ObjectEffect,
+                TItem EnchantmentAmount,
+                TItem EquipmentType,
+                TItem BlockBashImpactDataSet,
+                TItem AlternateBlockMaterial,
+                TItem PickupSound,
+                TItem DropdownSound,
+                TItem Keywords,
+                TItem Description,
+                TItem InstanceNaming,
+                TItem AttachParentSlots,
+                TItem ObjectTemplates,
+                TItem EmbeddedWeaponMod,
+                TItem BNAM,
+                TItem WAIMUnknown1,
+                TItem Zoom,
+                TItem AimModel,
+                TItem WAIMUnknown2,
+                TItem AimAssistModelData,
+                TItem AimOpticalSightMarker,
+                TItem MeleeAimAssistModel,
+                TItem WAIMUnknown3,
+                TItem AmmoType,
+                TItem MagazineSize,
+                TItem AmmoList,
+                TItem Projectile,
+                TItem Ejections,
+                TItem WAM2Unknown,
+                TItem MeleeOrCreature,
+                TItem PrimedExplosive,
+                TItem DryFire,
+                TItem Idle,
+                TItem Equip,
+                TItem Unequip,
+                TItem FastEquip,
+                TItem WAUDUnknown1,
+                TItem WAUDUnknown2,
+                TItem WTUR,
+                TItem WCHG,
+                TItem PhysicalDamage,
+                TItem OptimalRange,
+                TItem MaxRange,
+                TItem WDMGUnknown1,
+                TItem WDMGUnknown2,
+                TItem CriticalHitSpell,
+                TItem WDMGUnknown3,
+                TItem WDMGUnknown4,
+                TItem WDMGUnknown5,
+                TItem WDMGUnknown6,
+                TItem WDMGUnknown7,
+                TItem WDMGUnknown8,
+                TItem WDMGUnknown9,
+                TItem WDMGUnknown10,
+                TItem DamageTypes,
+                TItem FiringType,
+                TItem BurstCount,
+                TItem WFIRUnknown1,
+                TItem WFIRUnknown2,
+                TItem WFIRUnknown3,
+                TItem WFIRUnknown4,
+                TItem WFIRUnknown5,
+                TItem WFIRUnknown6,
+                TItem FireRate,
+                TItem WFIRUnknown7,
+                TItem WFIRUnknown8,
+                TItem WFIRUnknown9,
+                TItem WFIRUnknown10,
+                TItem WFIRUnknown11,
+                TItem WFIRUnknown12,
+                TItem WFIRUnknown13,
+                TItem WFLG,
+                TItem WGENUnknown1,
+                TItem BaseWeight,
+                TItem BaseValue,
+                TItem WGENUnknown2,
+                TItem WGENUnknown3,
+                TItem WeaponBarrel,
+                TItem WABB,
+                TItem WMELUnknown1,
+                TItem WMELUnknown2,
+                TItem WMELUnknown3,
+                TItem WMELUnknown4,
+                TItem QNAMUnknown1,
+                TItem RechargeTime,
+                TItem RechargeDelay,
+                TItem QNAMUnknown2,
+                TItem QNAMUnknown3,
+                TItem QNAMUnknown4,
+                TItem QNAMUnknown5,
+                TItem QNAMUnknown6,
+                TItem QNAMUnknown7,
+                TItem WRLOUnknown1,
+                TItem WRLOUnknown2,
+                TItem WRLOUnknown3,
+                TItem WVARUnknown1,
+                TItem WVARUnknown2,
+                TItem WVARUnknown3,
+                TItem WVARUnknown4,
+                TItem WVARUnknown5,
+                TItem WVARUnknown6,
+                TItem WVARUnknown7,
+                TItem WVARUnknown8,
+                TItem WVARUnknown9,
+                TItem WVARUnknown10,
+                TItem WVARUnknown11,
+                TItem WVARUnknown12,
+                TItem WVARUnknown13,
+                TItem FirstPersonModel,
+                TItem WVISUnknown1,
+                TItem WVISUnknown2,
+                TItem WVISUnknown3,
+                TItem ImpactDataSet,
+                TItem WVISUnknown4,
+                TItem WVISUnknown5,
+                TItem WTRMUnknown1,
+                TItem WTRMUnknown2,
+                TItem WTRMUnknown3,
+                TItem WTRMUnknown4,
+                TItem WTRMUnknown5)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -122,7 +1125,133 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.ObjectEffect = ObjectEffect;
+                this.EnchantmentAmount = EnchantmentAmount;
+                this.EquipmentType = EquipmentType;
+                this.BlockBashImpactDataSet = BlockBashImpactDataSet;
+                this.AlternateBlockMaterial = AlternateBlockMaterial;
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Description = Description;
+                this.InstanceNaming = InstanceNaming;
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.EmbeddedWeaponMod = EmbeddedWeaponMod;
+                this.BNAM = BNAM;
+                this.WAIMUnknown1 = WAIMUnknown1;
+                this.Zoom = Zoom;
+                this.AimModel = AimModel;
+                this.WAIMUnknown2 = WAIMUnknown2;
+                this.AimAssistModelData = AimAssistModelData;
+                this.AimOpticalSightMarker = AimOpticalSightMarker;
+                this.MeleeAimAssistModel = MeleeAimAssistModel;
+                this.WAIMUnknown3 = WAIMUnknown3;
+                this.AmmoType = AmmoType;
+                this.MagazineSize = MagazineSize;
+                this.AmmoList = AmmoList;
+                this.Projectile = Projectile;
+                this.Ejections = Ejections;
+                this.WAM2Unknown = WAM2Unknown;
+                this.MeleeOrCreature = new MaskItem<TItem, SoundReference.Mask<TItem>?>(MeleeOrCreature, new SoundReference.Mask<TItem>(MeleeOrCreature));
+                this.PrimedExplosive = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PrimedExplosive, new SoundReference.Mask<TItem>(PrimedExplosive));
+                this.DryFire = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DryFire, new SoundReference.Mask<TItem>(DryFire));
+                this.Idle = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Idle, new SoundReference.Mask<TItem>(Idle));
+                this.Equip = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Equip, new SoundReference.Mask<TItem>(Equip));
+                this.Unequip = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Unequip, new SoundReference.Mask<TItem>(Unequip));
+                this.FastEquip = new MaskItem<TItem, SoundReference.Mask<TItem>?>(FastEquip, new SoundReference.Mask<TItem>(FastEquip));
+                this.WAUDUnknown1 = WAUDUnknown1;
+                this.WAUDUnknown2 = WAUDUnknown2;
+                this.WTUR = WTUR;
+                this.WCHG = WCHG;
+                this.PhysicalDamage = PhysicalDamage;
+                this.OptimalRange = OptimalRange;
+                this.MaxRange = MaxRange;
+                this.WDMGUnknown1 = WDMGUnknown1;
+                this.WDMGUnknown2 = WDMGUnknown2;
+                this.CriticalHitSpell = CriticalHitSpell;
+                this.WDMGUnknown3 = WDMGUnknown3;
+                this.WDMGUnknown4 = WDMGUnknown4;
+                this.WDMGUnknown5 = WDMGUnknown5;
+                this.WDMGUnknown6 = WDMGUnknown6;
+                this.WDMGUnknown7 = WDMGUnknown7;
+                this.WDMGUnknown8 = WDMGUnknown8;
+                this.WDMGUnknown9 = WDMGUnknown9;
+                this.WDMGUnknown10 = WDMGUnknown10;
+                this.DamageTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>(DamageTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>());
+                this.FiringType = FiringType;
+                this.BurstCount = BurstCount;
+                this.WFIRUnknown1 = WFIRUnknown1;
+                this.WFIRUnknown2 = WFIRUnknown2;
+                this.WFIRUnknown3 = WFIRUnknown3;
+                this.WFIRUnknown4 = WFIRUnknown4;
+                this.WFIRUnknown5 = WFIRUnknown5;
+                this.WFIRUnknown6 = WFIRUnknown6;
+                this.FireRate = FireRate;
+                this.WFIRUnknown7 = WFIRUnknown7;
+                this.WFIRUnknown8 = WFIRUnknown8;
+                this.WFIRUnknown9 = WFIRUnknown9;
+                this.WFIRUnknown10 = WFIRUnknown10;
+                this.WFIRUnknown11 = WFIRUnknown11;
+                this.WFIRUnknown12 = WFIRUnknown12;
+                this.WFIRUnknown13 = WFIRUnknown13;
+                this.WFLG = WFLG;
+                this.WGENUnknown1 = WGENUnknown1;
+                this.BaseWeight = BaseWeight;
+                this.BaseValue = BaseValue;
+                this.WGENUnknown2 = WGENUnknown2;
+                this.WGENUnknown3 = WGENUnknown3;
+                this.WeaponBarrel = WeaponBarrel;
+                this.WABB = WABB;
+                this.WMELUnknown1 = WMELUnknown1;
+                this.WMELUnknown2 = WMELUnknown2;
+                this.WMELUnknown3 = WMELUnknown3;
+                this.WMELUnknown4 = WMELUnknown4;
+                this.QNAMUnknown1 = QNAMUnknown1;
+                this.RechargeTime = RechargeTime;
+                this.RechargeDelay = RechargeDelay;
+                this.QNAMUnknown2 = QNAMUnknown2;
+                this.QNAMUnknown3 = QNAMUnknown3;
+                this.QNAMUnknown4 = QNAMUnknown4;
+                this.QNAMUnknown5 = QNAMUnknown5;
+                this.QNAMUnknown6 = QNAMUnknown6;
+                this.QNAMUnknown7 = QNAMUnknown7;
+                this.WRLOUnknown1 = WRLOUnknown1;
+                this.WRLOUnknown2 = WRLOUnknown2;
+                this.WRLOUnknown3 = WRLOUnknown3;
+                this.WVARUnknown1 = WVARUnknown1;
+                this.WVARUnknown2 = WVARUnknown2;
+                this.WVARUnknown3 = WVARUnknown3;
+                this.WVARUnknown4 = WVARUnknown4;
+                this.WVARUnknown5 = WVARUnknown5;
+                this.WVARUnknown6 = WVARUnknown6;
+                this.WVARUnknown7 = WVARUnknown7;
+                this.WVARUnknown8 = WVARUnknown8;
+                this.WVARUnknown9 = WVARUnknown9;
+                this.WVARUnknown10 = WVARUnknown10;
+                this.WVARUnknown11 = WVARUnknown11;
+                this.WVARUnknown12 = WVARUnknown12;
+                this.WVARUnknown13 = WVARUnknown13;
+                this.FirstPersonModel = new MaskItem<TItem, FirstPersonModel.Mask<TItem>?>(FirstPersonModel, new FirstPersonModel.Mask<TItem>(FirstPersonModel));
+                this.WVISUnknown1 = WVISUnknown1;
+                this.WVISUnknown2 = WVISUnknown2;
+                this.WVISUnknown3 = WVISUnknown3;
+                this.ImpactDataSet = ImpactDataSet;
+                this.WVISUnknown4 = WVISUnknown4;
+                this.WVISUnknown5 = WVISUnknown5;
+                this.WTRMUnknown1 = WTRMUnknown1;
+                this.WTRMUnknown2 = WTRMUnknown2;
+                this.WTRMUnknown3 = WTRMUnknown3;
+                this.WTRMUnknown4 = WTRMUnknown4;
+                this.WTRMUnknown5 = WTRMUnknown5;
             }
 
             #pragma warning disable CS8618
@@ -134,7 +1263,133 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem ObjectEffect;
+            public TItem EnchantmentAmount;
+            public TItem EquipmentType;
+            public TItem BlockBashImpactDataSet;
+            public TItem AlternateBlockMaterial;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem Description;
+            public TItem InstanceNaming;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
+            public TItem EmbeddedWeaponMod;
+            public TItem BNAM;
+            public TItem WAIMUnknown1;
+            public TItem Zoom;
+            public TItem AimModel;
+            public TItem WAIMUnknown2;
+            public TItem AimAssistModelData;
+            public TItem AimOpticalSightMarker;
+            public TItem MeleeAimAssistModel;
+            public TItem WAIMUnknown3;
+            public TItem AmmoType;
+            public TItem MagazineSize;
+            public TItem AmmoList;
+            public TItem Projectile;
+            public TItem Ejections;
+            public TItem WAM2Unknown;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? MeleeOrCreature { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PrimedExplosive { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DryFire { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Idle { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Equip { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Unequip { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? FastEquip { get; set; }
+            public TItem WAUDUnknown1;
+            public TItem WAUDUnknown2;
+            public TItem WTUR;
+            public TItem WCHG;
+            public TItem PhysicalDamage;
+            public TItem OptimalRange;
+            public TItem MaxRange;
+            public TItem WDMGUnknown1;
+            public TItem WDMGUnknown2;
+            public TItem CriticalHitSpell;
+            public TItem WDMGUnknown3;
+            public TItem WDMGUnknown4;
+            public TItem WDMGUnknown5;
+            public TItem WDMGUnknown6;
+            public TItem WDMGUnknown7;
+            public TItem WDMGUnknown8;
+            public TItem WDMGUnknown9;
+            public TItem WDMGUnknown10;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeaponDamageType.Mask<TItem>?>>?>? DamageTypes;
+            public TItem FiringType;
+            public TItem BurstCount;
+            public TItem WFIRUnknown1;
+            public TItem WFIRUnknown2;
+            public TItem WFIRUnknown3;
+            public TItem WFIRUnknown4;
+            public TItem WFIRUnknown5;
+            public TItem WFIRUnknown6;
+            public TItem FireRate;
+            public TItem WFIRUnknown7;
+            public TItem WFIRUnknown8;
+            public TItem WFIRUnknown9;
+            public TItem WFIRUnknown10;
+            public TItem WFIRUnknown11;
+            public TItem WFIRUnknown12;
+            public TItem WFIRUnknown13;
+            public TItem WFLG;
+            public TItem WGENUnknown1;
+            public TItem BaseWeight;
+            public TItem BaseValue;
+            public TItem WGENUnknown2;
+            public TItem WGENUnknown3;
+            public TItem WeaponBarrel;
+            public TItem WABB;
+            public TItem WMELUnknown1;
+            public TItem WMELUnknown2;
+            public TItem WMELUnknown3;
+            public TItem WMELUnknown4;
+            public TItem QNAMUnknown1;
+            public TItem RechargeTime;
+            public TItem RechargeDelay;
+            public TItem QNAMUnknown2;
+            public TItem QNAMUnknown3;
+            public TItem QNAMUnknown4;
+            public TItem QNAMUnknown5;
+            public TItem QNAMUnknown6;
+            public TItem QNAMUnknown7;
+            public TItem WRLOUnknown1;
+            public TItem WRLOUnknown2;
+            public TItem WRLOUnknown3;
+            public TItem WVARUnknown1;
+            public TItem WVARUnknown2;
+            public TItem WVARUnknown3;
+            public TItem WVARUnknown4;
+            public TItem WVARUnknown5;
+            public TItem WVARUnknown6;
+            public TItem WVARUnknown7;
+            public TItem WVARUnknown8;
+            public TItem WVARUnknown9;
+            public TItem WVARUnknown10;
+            public TItem WVARUnknown11;
+            public TItem WVARUnknown12;
+            public TItem WVARUnknown13;
+            public MaskItem<TItem, FirstPersonModel.Mask<TItem>?>? FirstPersonModel { get; set; }
+            public TItem WVISUnknown1;
+            public TItem WVISUnknown2;
+            public TItem WVISUnknown3;
+            public TItem ImpactDataSet;
+            public TItem WVISUnknown4;
+            public TItem WVISUnknown5;
+            public TItem WTRMUnknown1;
+            public TItem WTRMUnknown2;
+            public TItem WTRMUnknown3;
+            public TItem WTRMUnknown4;
+            public TItem WTRMUnknown5;
             #endregion
 
             #region Equals
@@ -148,13 +1403,265 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.ObjectEffect, rhs.ObjectEffect)) return false;
+                if (!object.Equals(this.EnchantmentAmount, rhs.EnchantmentAmount)) return false;
+                if (!object.Equals(this.EquipmentType, rhs.EquipmentType)) return false;
+                if (!object.Equals(this.BlockBashImpactDataSet, rhs.BlockBashImpactDataSet)) return false;
+                if (!object.Equals(this.AlternateBlockMaterial, rhs.AlternateBlockMaterial)) return false;
+                if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
+                if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.InstanceNaming, rhs.InstanceNaming)) return false;
+                if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
+                if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
+                if (!object.Equals(this.EmbeddedWeaponMod, rhs.EmbeddedWeaponMod)) return false;
+                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(this.WAIMUnknown1, rhs.WAIMUnknown1)) return false;
+                if (!object.Equals(this.Zoom, rhs.Zoom)) return false;
+                if (!object.Equals(this.AimModel, rhs.AimModel)) return false;
+                if (!object.Equals(this.WAIMUnknown2, rhs.WAIMUnknown2)) return false;
+                if (!object.Equals(this.AimAssistModelData, rhs.AimAssistModelData)) return false;
+                if (!object.Equals(this.AimOpticalSightMarker, rhs.AimOpticalSightMarker)) return false;
+                if (!object.Equals(this.MeleeAimAssistModel, rhs.MeleeAimAssistModel)) return false;
+                if (!object.Equals(this.WAIMUnknown3, rhs.WAIMUnknown3)) return false;
+                if (!object.Equals(this.AmmoType, rhs.AmmoType)) return false;
+                if (!object.Equals(this.MagazineSize, rhs.MagazineSize)) return false;
+                if (!object.Equals(this.AmmoList, rhs.AmmoList)) return false;
+                if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
+                if (!object.Equals(this.Ejections, rhs.Ejections)) return false;
+                if (!object.Equals(this.WAM2Unknown, rhs.WAM2Unknown)) return false;
+                if (!object.Equals(this.MeleeOrCreature, rhs.MeleeOrCreature)) return false;
+                if (!object.Equals(this.PrimedExplosive, rhs.PrimedExplosive)) return false;
+                if (!object.Equals(this.DryFire, rhs.DryFire)) return false;
+                if (!object.Equals(this.Idle, rhs.Idle)) return false;
+                if (!object.Equals(this.Equip, rhs.Equip)) return false;
+                if (!object.Equals(this.Unequip, rhs.Unequip)) return false;
+                if (!object.Equals(this.FastEquip, rhs.FastEquip)) return false;
+                if (!object.Equals(this.WAUDUnknown1, rhs.WAUDUnknown1)) return false;
+                if (!object.Equals(this.WAUDUnknown2, rhs.WAUDUnknown2)) return false;
+                if (!object.Equals(this.WTUR, rhs.WTUR)) return false;
+                if (!object.Equals(this.WCHG, rhs.WCHG)) return false;
+                if (!object.Equals(this.PhysicalDamage, rhs.PhysicalDamage)) return false;
+                if (!object.Equals(this.OptimalRange, rhs.OptimalRange)) return false;
+                if (!object.Equals(this.MaxRange, rhs.MaxRange)) return false;
+                if (!object.Equals(this.WDMGUnknown1, rhs.WDMGUnknown1)) return false;
+                if (!object.Equals(this.WDMGUnknown2, rhs.WDMGUnknown2)) return false;
+                if (!object.Equals(this.CriticalHitSpell, rhs.CriticalHitSpell)) return false;
+                if (!object.Equals(this.WDMGUnknown3, rhs.WDMGUnknown3)) return false;
+                if (!object.Equals(this.WDMGUnknown4, rhs.WDMGUnknown4)) return false;
+                if (!object.Equals(this.WDMGUnknown5, rhs.WDMGUnknown5)) return false;
+                if (!object.Equals(this.WDMGUnknown6, rhs.WDMGUnknown6)) return false;
+                if (!object.Equals(this.WDMGUnknown7, rhs.WDMGUnknown7)) return false;
+                if (!object.Equals(this.WDMGUnknown8, rhs.WDMGUnknown8)) return false;
+                if (!object.Equals(this.WDMGUnknown9, rhs.WDMGUnknown9)) return false;
+                if (!object.Equals(this.WDMGUnknown10, rhs.WDMGUnknown10)) return false;
+                if (!object.Equals(this.DamageTypes, rhs.DamageTypes)) return false;
+                if (!object.Equals(this.FiringType, rhs.FiringType)) return false;
+                if (!object.Equals(this.BurstCount, rhs.BurstCount)) return false;
+                if (!object.Equals(this.WFIRUnknown1, rhs.WFIRUnknown1)) return false;
+                if (!object.Equals(this.WFIRUnknown2, rhs.WFIRUnknown2)) return false;
+                if (!object.Equals(this.WFIRUnknown3, rhs.WFIRUnknown3)) return false;
+                if (!object.Equals(this.WFIRUnknown4, rhs.WFIRUnknown4)) return false;
+                if (!object.Equals(this.WFIRUnknown5, rhs.WFIRUnknown5)) return false;
+                if (!object.Equals(this.WFIRUnknown6, rhs.WFIRUnknown6)) return false;
+                if (!object.Equals(this.FireRate, rhs.FireRate)) return false;
+                if (!object.Equals(this.WFIRUnknown7, rhs.WFIRUnknown7)) return false;
+                if (!object.Equals(this.WFIRUnknown8, rhs.WFIRUnknown8)) return false;
+                if (!object.Equals(this.WFIRUnknown9, rhs.WFIRUnknown9)) return false;
+                if (!object.Equals(this.WFIRUnknown10, rhs.WFIRUnknown10)) return false;
+                if (!object.Equals(this.WFIRUnknown11, rhs.WFIRUnknown11)) return false;
+                if (!object.Equals(this.WFIRUnknown12, rhs.WFIRUnknown12)) return false;
+                if (!object.Equals(this.WFIRUnknown13, rhs.WFIRUnknown13)) return false;
+                if (!object.Equals(this.WFLG, rhs.WFLG)) return false;
+                if (!object.Equals(this.WGENUnknown1, rhs.WGENUnknown1)) return false;
+                if (!object.Equals(this.BaseWeight, rhs.BaseWeight)) return false;
+                if (!object.Equals(this.BaseValue, rhs.BaseValue)) return false;
+                if (!object.Equals(this.WGENUnknown2, rhs.WGENUnknown2)) return false;
+                if (!object.Equals(this.WGENUnknown3, rhs.WGENUnknown3)) return false;
+                if (!object.Equals(this.WeaponBarrel, rhs.WeaponBarrel)) return false;
+                if (!object.Equals(this.WABB, rhs.WABB)) return false;
+                if (!object.Equals(this.WMELUnknown1, rhs.WMELUnknown1)) return false;
+                if (!object.Equals(this.WMELUnknown2, rhs.WMELUnknown2)) return false;
+                if (!object.Equals(this.WMELUnknown3, rhs.WMELUnknown3)) return false;
+                if (!object.Equals(this.WMELUnknown4, rhs.WMELUnknown4)) return false;
+                if (!object.Equals(this.QNAMUnknown1, rhs.QNAMUnknown1)) return false;
+                if (!object.Equals(this.RechargeTime, rhs.RechargeTime)) return false;
+                if (!object.Equals(this.RechargeDelay, rhs.RechargeDelay)) return false;
+                if (!object.Equals(this.QNAMUnknown2, rhs.QNAMUnknown2)) return false;
+                if (!object.Equals(this.QNAMUnknown3, rhs.QNAMUnknown3)) return false;
+                if (!object.Equals(this.QNAMUnknown4, rhs.QNAMUnknown4)) return false;
+                if (!object.Equals(this.QNAMUnknown5, rhs.QNAMUnknown5)) return false;
+                if (!object.Equals(this.QNAMUnknown6, rhs.QNAMUnknown6)) return false;
+                if (!object.Equals(this.QNAMUnknown7, rhs.QNAMUnknown7)) return false;
+                if (!object.Equals(this.WRLOUnknown1, rhs.WRLOUnknown1)) return false;
+                if (!object.Equals(this.WRLOUnknown2, rhs.WRLOUnknown2)) return false;
+                if (!object.Equals(this.WRLOUnknown3, rhs.WRLOUnknown3)) return false;
+                if (!object.Equals(this.WVARUnknown1, rhs.WVARUnknown1)) return false;
+                if (!object.Equals(this.WVARUnknown2, rhs.WVARUnknown2)) return false;
+                if (!object.Equals(this.WVARUnknown3, rhs.WVARUnknown3)) return false;
+                if (!object.Equals(this.WVARUnknown4, rhs.WVARUnknown4)) return false;
+                if (!object.Equals(this.WVARUnknown5, rhs.WVARUnknown5)) return false;
+                if (!object.Equals(this.WVARUnknown6, rhs.WVARUnknown6)) return false;
+                if (!object.Equals(this.WVARUnknown7, rhs.WVARUnknown7)) return false;
+                if (!object.Equals(this.WVARUnknown8, rhs.WVARUnknown8)) return false;
+                if (!object.Equals(this.WVARUnknown9, rhs.WVARUnknown9)) return false;
+                if (!object.Equals(this.WVARUnknown10, rhs.WVARUnknown10)) return false;
+                if (!object.Equals(this.WVARUnknown11, rhs.WVARUnknown11)) return false;
+                if (!object.Equals(this.WVARUnknown12, rhs.WVARUnknown12)) return false;
+                if (!object.Equals(this.WVARUnknown13, rhs.WVARUnknown13)) return false;
+                if (!object.Equals(this.FirstPersonModel, rhs.FirstPersonModel)) return false;
+                if (!object.Equals(this.WVISUnknown1, rhs.WVISUnknown1)) return false;
+                if (!object.Equals(this.WVISUnknown2, rhs.WVISUnknown2)) return false;
+                if (!object.Equals(this.WVISUnknown3, rhs.WVISUnknown3)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.WVISUnknown4, rhs.WVISUnknown4)) return false;
+                if (!object.Equals(this.WVISUnknown5, rhs.WVISUnknown5)) return false;
+                if (!object.Equals(this.WTRMUnknown1, rhs.WTRMUnknown1)) return false;
+                if (!object.Equals(this.WTRMUnknown2, rhs.WTRMUnknown2)) return false;
+                if (!object.Equals(this.WTRMUnknown3, rhs.WTRMUnknown3)) return false;
+                if (!object.Equals(this.WTRMUnknown4, rhs.WTRMUnknown4)) return false;
+                if (!object.Equals(this.WTRMUnknown5, rhs.WTRMUnknown5)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.Transforms);
+                hash.Add(this.Components);
+                hash.Add(this.Name);
                 hash.Add(this.Model);
+                hash.Add(this.ObjectEffect);
+                hash.Add(this.EnchantmentAmount);
+                hash.Add(this.EquipmentType);
+                hash.Add(this.BlockBashImpactDataSet);
+                hash.Add(this.AlternateBlockMaterial);
+                hash.Add(this.PickupSound);
+                hash.Add(this.DropdownSound);
+                hash.Add(this.Keywords);
+                hash.Add(this.Description);
+                hash.Add(this.InstanceNaming);
+                hash.Add(this.AttachParentSlots);
+                hash.Add(this.ObjectTemplates);
+                hash.Add(this.EmbeddedWeaponMod);
+                hash.Add(this.BNAM);
+                hash.Add(this.WAIMUnknown1);
+                hash.Add(this.Zoom);
+                hash.Add(this.AimModel);
+                hash.Add(this.WAIMUnknown2);
+                hash.Add(this.AimAssistModelData);
+                hash.Add(this.AimOpticalSightMarker);
+                hash.Add(this.MeleeAimAssistModel);
+                hash.Add(this.WAIMUnknown3);
+                hash.Add(this.AmmoType);
+                hash.Add(this.MagazineSize);
+                hash.Add(this.AmmoList);
+                hash.Add(this.Projectile);
+                hash.Add(this.Ejections);
+                hash.Add(this.WAM2Unknown);
+                hash.Add(this.MeleeOrCreature);
+                hash.Add(this.PrimedExplosive);
+                hash.Add(this.DryFire);
+                hash.Add(this.Idle);
+                hash.Add(this.Equip);
+                hash.Add(this.Unequip);
+                hash.Add(this.FastEquip);
+                hash.Add(this.WAUDUnknown1);
+                hash.Add(this.WAUDUnknown2);
+                hash.Add(this.WTUR);
+                hash.Add(this.WCHG);
+                hash.Add(this.PhysicalDamage);
+                hash.Add(this.OptimalRange);
+                hash.Add(this.MaxRange);
+                hash.Add(this.WDMGUnknown1);
+                hash.Add(this.WDMGUnknown2);
+                hash.Add(this.CriticalHitSpell);
+                hash.Add(this.WDMGUnknown3);
+                hash.Add(this.WDMGUnknown4);
+                hash.Add(this.WDMGUnknown5);
+                hash.Add(this.WDMGUnknown6);
+                hash.Add(this.WDMGUnknown7);
+                hash.Add(this.WDMGUnknown8);
+                hash.Add(this.WDMGUnknown9);
+                hash.Add(this.WDMGUnknown10);
+                hash.Add(this.DamageTypes);
+                hash.Add(this.FiringType);
+                hash.Add(this.BurstCount);
+                hash.Add(this.WFIRUnknown1);
+                hash.Add(this.WFIRUnknown2);
+                hash.Add(this.WFIRUnknown3);
+                hash.Add(this.WFIRUnknown4);
+                hash.Add(this.WFIRUnknown5);
+                hash.Add(this.WFIRUnknown6);
+                hash.Add(this.FireRate);
+                hash.Add(this.WFIRUnknown7);
+                hash.Add(this.WFIRUnknown8);
+                hash.Add(this.WFIRUnknown9);
+                hash.Add(this.WFIRUnknown10);
+                hash.Add(this.WFIRUnknown11);
+                hash.Add(this.WFIRUnknown12);
+                hash.Add(this.WFIRUnknown13);
+                hash.Add(this.WFLG);
+                hash.Add(this.WGENUnknown1);
+                hash.Add(this.BaseWeight);
+                hash.Add(this.BaseValue);
+                hash.Add(this.WGENUnknown2);
+                hash.Add(this.WGENUnknown3);
+                hash.Add(this.WeaponBarrel);
+                hash.Add(this.WABB);
+                hash.Add(this.WMELUnknown1);
+                hash.Add(this.WMELUnknown2);
+                hash.Add(this.WMELUnknown3);
+                hash.Add(this.WMELUnknown4);
+                hash.Add(this.QNAMUnknown1);
+                hash.Add(this.RechargeTime);
+                hash.Add(this.RechargeDelay);
+                hash.Add(this.QNAMUnknown2);
+                hash.Add(this.QNAMUnknown3);
+                hash.Add(this.QNAMUnknown4);
+                hash.Add(this.QNAMUnknown5);
+                hash.Add(this.QNAMUnknown6);
+                hash.Add(this.QNAMUnknown7);
+                hash.Add(this.WRLOUnknown1);
+                hash.Add(this.WRLOUnknown2);
+                hash.Add(this.WRLOUnknown3);
+                hash.Add(this.WVARUnknown1);
+                hash.Add(this.WVARUnknown2);
+                hash.Add(this.WVARUnknown3);
+                hash.Add(this.WVARUnknown4);
+                hash.Add(this.WVARUnknown5);
+                hash.Add(this.WVARUnknown6);
+                hash.Add(this.WVARUnknown7);
+                hash.Add(this.WVARUnknown8);
+                hash.Add(this.WVARUnknown9);
+                hash.Add(this.WVARUnknown10);
+                hash.Add(this.WVARUnknown11);
+                hash.Add(this.WVARUnknown12);
+                hash.Add(this.WVARUnknown13);
+                hash.Add(this.FirstPersonModel);
+                hash.Add(this.WVISUnknown1);
+                hash.Add(this.WVISUnknown2);
+                hash.Add(this.WVISUnknown3);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.WVISUnknown4);
+                hash.Add(this.WVISUnknown5);
+                hash.Add(this.WTRMUnknown1);
+                hash.Add(this.WTRMUnknown2);
+                hash.Add(this.WTRMUnknown3);
+                hash.Add(this.WTRMUnknown4);
+                hash.Add(this.WTRMUnknown5);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -165,11 +1672,246 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
+                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
+                if (!eval(this.ObjectEffect)) return false;
+                if (!eval(this.EnchantmentAmount)) return false;
+                if (!eval(this.EquipmentType)) return false;
+                if (!eval(this.BlockBashImpactDataSet)) return false;
+                if (!eval(this.AlternateBlockMaterial)) return false;
+                if (PickupSound != null)
+                {
+                    if (!eval(this.PickupSound.Overall)) return false;
+                    if (this.PickupSound.Specific != null && !this.PickupSound.Specific.All(eval)) return false;
+                }
+                if (DropdownSound != null)
+                {
+                    if (!eval(this.DropdownSound.Overall)) return false;
+                    if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Description)) return false;
+                if (!eval(this.InstanceNaming)) return false;
+                if (this.AttachParentSlots != null)
+                {
+                    if (!eval(this.AttachParentSlots.Overall)) return false;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (!eval(this.ObjectTemplates.Overall)) return false;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.EmbeddedWeaponMod)) return false;
+                if (!eval(this.BNAM)) return false;
+                if (!eval(this.WAIMUnknown1)) return false;
+                if (!eval(this.Zoom)) return false;
+                if (!eval(this.AimModel)) return false;
+                if (!eval(this.WAIMUnknown2)) return false;
+                if (!eval(this.AimAssistModelData)) return false;
+                if (!eval(this.AimOpticalSightMarker)) return false;
+                if (!eval(this.MeleeAimAssistModel)) return false;
+                if (!eval(this.WAIMUnknown3)) return false;
+                if (!eval(this.AmmoType)) return false;
+                if (!eval(this.MagazineSize)) return false;
+                if (!eval(this.AmmoList)) return false;
+                if (!eval(this.Projectile)) return false;
+                if (!eval(this.Ejections)) return false;
+                if (!eval(this.WAM2Unknown)) return false;
+                if (MeleeOrCreature != null)
+                {
+                    if (!eval(this.MeleeOrCreature.Overall)) return false;
+                    if (this.MeleeOrCreature.Specific != null && !this.MeleeOrCreature.Specific.All(eval)) return false;
+                }
+                if (PrimedExplosive != null)
+                {
+                    if (!eval(this.PrimedExplosive.Overall)) return false;
+                    if (this.PrimedExplosive.Specific != null && !this.PrimedExplosive.Specific.All(eval)) return false;
+                }
+                if (DryFire != null)
+                {
+                    if (!eval(this.DryFire.Overall)) return false;
+                    if (this.DryFire.Specific != null && !this.DryFire.Specific.All(eval)) return false;
+                }
+                if (Idle != null)
+                {
+                    if (!eval(this.Idle.Overall)) return false;
+                    if (this.Idle.Specific != null && !this.Idle.Specific.All(eval)) return false;
+                }
+                if (Equip != null)
+                {
+                    if (!eval(this.Equip.Overall)) return false;
+                    if (this.Equip.Specific != null && !this.Equip.Specific.All(eval)) return false;
+                }
+                if (Unequip != null)
+                {
+                    if (!eval(this.Unequip.Overall)) return false;
+                    if (this.Unequip.Specific != null && !this.Unequip.Specific.All(eval)) return false;
+                }
+                if (FastEquip != null)
+                {
+                    if (!eval(this.FastEquip.Overall)) return false;
+                    if (this.FastEquip.Specific != null && !this.FastEquip.Specific.All(eval)) return false;
+                }
+                if (!eval(this.WAUDUnknown1)) return false;
+                if (!eval(this.WAUDUnknown2)) return false;
+                if (!eval(this.WTUR)) return false;
+                if (!eval(this.WCHG)) return false;
+                if (!eval(this.PhysicalDamage)) return false;
+                if (!eval(this.OptimalRange)) return false;
+                if (!eval(this.MaxRange)) return false;
+                if (!eval(this.WDMGUnknown1)) return false;
+                if (!eval(this.WDMGUnknown2)) return false;
+                if (!eval(this.CriticalHitSpell)) return false;
+                if (!eval(this.WDMGUnknown3)) return false;
+                if (!eval(this.WDMGUnknown4)) return false;
+                if (!eval(this.WDMGUnknown5)) return false;
+                if (!eval(this.WDMGUnknown6)) return false;
+                if (!eval(this.WDMGUnknown7)) return false;
+                if (!eval(this.WDMGUnknown8)) return false;
+                if (!eval(this.WDMGUnknown9)) return false;
+                if (!eval(this.WDMGUnknown10)) return false;
+                if (this.DamageTypes != null)
+                {
+                    if (!eval(this.DamageTypes.Overall)) return false;
+                    if (this.DamageTypes.Specific != null)
+                    {
+                        foreach (var item in this.DamageTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.FiringType)) return false;
+                if (!eval(this.BurstCount)) return false;
+                if (!eval(this.WFIRUnknown1)) return false;
+                if (!eval(this.WFIRUnknown2)) return false;
+                if (!eval(this.WFIRUnknown3)) return false;
+                if (!eval(this.WFIRUnknown4)) return false;
+                if (!eval(this.WFIRUnknown5)) return false;
+                if (!eval(this.WFIRUnknown6)) return false;
+                if (!eval(this.FireRate)) return false;
+                if (!eval(this.WFIRUnknown7)) return false;
+                if (!eval(this.WFIRUnknown8)) return false;
+                if (!eval(this.WFIRUnknown9)) return false;
+                if (!eval(this.WFIRUnknown10)) return false;
+                if (!eval(this.WFIRUnknown11)) return false;
+                if (!eval(this.WFIRUnknown12)) return false;
+                if (!eval(this.WFIRUnknown13)) return false;
+                if (!eval(this.WFLG)) return false;
+                if (!eval(this.WGENUnknown1)) return false;
+                if (!eval(this.BaseWeight)) return false;
+                if (!eval(this.BaseValue)) return false;
+                if (!eval(this.WGENUnknown2)) return false;
+                if (!eval(this.WGENUnknown3)) return false;
+                if (!eval(this.WeaponBarrel)) return false;
+                if (!eval(this.WABB)) return false;
+                if (!eval(this.WMELUnknown1)) return false;
+                if (!eval(this.WMELUnknown2)) return false;
+                if (!eval(this.WMELUnknown3)) return false;
+                if (!eval(this.WMELUnknown4)) return false;
+                if (!eval(this.QNAMUnknown1)) return false;
+                if (!eval(this.RechargeTime)) return false;
+                if (!eval(this.RechargeDelay)) return false;
+                if (!eval(this.QNAMUnknown2)) return false;
+                if (!eval(this.QNAMUnknown3)) return false;
+                if (!eval(this.QNAMUnknown4)) return false;
+                if (!eval(this.QNAMUnknown5)) return false;
+                if (!eval(this.QNAMUnknown6)) return false;
+                if (!eval(this.QNAMUnknown7)) return false;
+                if (!eval(this.WRLOUnknown1)) return false;
+                if (!eval(this.WRLOUnknown2)) return false;
+                if (!eval(this.WRLOUnknown3)) return false;
+                if (!eval(this.WVARUnknown1)) return false;
+                if (!eval(this.WVARUnknown2)) return false;
+                if (!eval(this.WVARUnknown3)) return false;
+                if (!eval(this.WVARUnknown4)) return false;
+                if (!eval(this.WVARUnknown5)) return false;
+                if (!eval(this.WVARUnknown6)) return false;
+                if (!eval(this.WVARUnknown7)) return false;
+                if (!eval(this.WVARUnknown8)) return false;
+                if (!eval(this.WVARUnknown9)) return false;
+                if (!eval(this.WVARUnknown10)) return false;
+                if (!eval(this.WVARUnknown11)) return false;
+                if (!eval(this.WVARUnknown12)) return false;
+                if (!eval(this.WVARUnknown13)) return false;
+                if (FirstPersonModel != null)
+                {
+                    if (!eval(this.FirstPersonModel.Overall)) return false;
+                    if (this.FirstPersonModel.Specific != null && !this.FirstPersonModel.Specific.All(eval)) return false;
+                }
+                if (!eval(this.WVISUnknown1)) return false;
+                if (!eval(this.WVISUnknown2)) return false;
+                if (!eval(this.WVISUnknown3)) return false;
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.WVISUnknown4)) return false;
+                if (!eval(this.WVISUnknown5)) return false;
+                if (!eval(this.WTRMUnknown1)) return false;
+                if (!eval(this.WTRMUnknown2)) return false;
+                if (!eval(this.WTRMUnknown3)) return false;
+                if (!eval(this.WTRMUnknown4)) return false;
+                if (!eval(this.WTRMUnknown5)) return false;
                 return true;
             }
             #endregion
@@ -178,11 +1920,246 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
+                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
                 if (Model != null)
                 {
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
+                if (eval(this.ObjectEffect)) return true;
+                if (eval(this.EnchantmentAmount)) return true;
+                if (eval(this.EquipmentType)) return true;
+                if (eval(this.BlockBashImpactDataSet)) return true;
+                if (eval(this.AlternateBlockMaterial)) return true;
+                if (PickupSound != null)
+                {
+                    if (eval(this.PickupSound.Overall)) return true;
+                    if (this.PickupSound.Specific != null && this.PickupSound.Specific.Any(eval)) return true;
+                }
+                if (DropdownSound != null)
+                {
+                    if (eval(this.DropdownSound.Overall)) return true;
+                    if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Description)) return true;
+                if (eval(this.InstanceNaming)) return true;
+                if (this.AttachParentSlots != null)
+                {
+                    if (eval(this.AttachParentSlots.Overall)) return true;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (eval(this.ObjectTemplates.Overall)) return true;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.EmbeddedWeaponMod)) return true;
+                if (eval(this.BNAM)) return true;
+                if (eval(this.WAIMUnknown1)) return true;
+                if (eval(this.Zoom)) return true;
+                if (eval(this.AimModel)) return true;
+                if (eval(this.WAIMUnknown2)) return true;
+                if (eval(this.AimAssistModelData)) return true;
+                if (eval(this.AimOpticalSightMarker)) return true;
+                if (eval(this.MeleeAimAssistModel)) return true;
+                if (eval(this.WAIMUnknown3)) return true;
+                if (eval(this.AmmoType)) return true;
+                if (eval(this.MagazineSize)) return true;
+                if (eval(this.AmmoList)) return true;
+                if (eval(this.Projectile)) return true;
+                if (eval(this.Ejections)) return true;
+                if (eval(this.WAM2Unknown)) return true;
+                if (MeleeOrCreature != null)
+                {
+                    if (eval(this.MeleeOrCreature.Overall)) return true;
+                    if (this.MeleeOrCreature.Specific != null && this.MeleeOrCreature.Specific.Any(eval)) return true;
+                }
+                if (PrimedExplosive != null)
+                {
+                    if (eval(this.PrimedExplosive.Overall)) return true;
+                    if (this.PrimedExplosive.Specific != null && this.PrimedExplosive.Specific.Any(eval)) return true;
+                }
+                if (DryFire != null)
+                {
+                    if (eval(this.DryFire.Overall)) return true;
+                    if (this.DryFire.Specific != null && this.DryFire.Specific.Any(eval)) return true;
+                }
+                if (Idle != null)
+                {
+                    if (eval(this.Idle.Overall)) return true;
+                    if (this.Idle.Specific != null && this.Idle.Specific.Any(eval)) return true;
+                }
+                if (Equip != null)
+                {
+                    if (eval(this.Equip.Overall)) return true;
+                    if (this.Equip.Specific != null && this.Equip.Specific.Any(eval)) return true;
+                }
+                if (Unequip != null)
+                {
+                    if (eval(this.Unequip.Overall)) return true;
+                    if (this.Unequip.Specific != null && this.Unequip.Specific.Any(eval)) return true;
+                }
+                if (FastEquip != null)
+                {
+                    if (eval(this.FastEquip.Overall)) return true;
+                    if (this.FastEquip.Specific != null && this.FastEquip.Specific.Any(eval)) return true;
+                }
+                if (eval(this.WAUDUnknown1)) return true;
+                if (eval(this.WAUDUnknown2)) return true;
+                if (eval(this.WTUR)) return true;
+                if (eval(this.WCHG)) return true;
+                if (eval(this.PhysicalDamage)) return true;
+                if (eval(this.OptimalRange)) return true;
+                if (eval(this.MaxRange)) return true;
+                if (eval(this.WDMGUnknown1)) return true;
+                if (eval(this.WDMGUnknown2)) return true;
+                if (eval(this.CriticalHitSpell)) return true;
+                if (eval(this.WDMGUnknown3)) return true;
+                if (eval(this.WDMGUnknown4)) return true;
+                if (eval(this.WDMGUnknown5)) return true;
+                if (eval(this.WDMGUnknown6)) return true;
+                if (eval(this.WDMGUnknown7)) return true;
+                if (eval(this.WDMGUnknown8)) return true;
+                if (eval(this.WDMGUnknown9)) return true;
+                if (eval(this.WDMGUnknown10)) return true;
+                if (this.DamageTypes != null)
+                {
+                    if (eval(this.DamageTypes.Overall)) return true;
+                    if (this.DamageTypes.Specific != null)
+                    {
+                        foreach (var item in this.DamageTypes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.FiringType)) return true;
+                if (eval(this.BurstCount)) return true;
+                if (eval(this.WFIRUnknown1)) return true;
+                if (eval(this.WFIRUnknown2)) return true;
+                if (eval(this.WFIRUnknown3)) return true;
+                if (eval(this.WFIRUnknown4)) return true;
+                if (eval(this.WFIRUnknown5)) return true;
+                if (eval(this.WFIRUnknown6)) return true;
+                if (eval(this.FireRate)) return true;
+                if (eval(this.WFIRUnknown7)) return true;
+                if (eval(this.WFIRUnknown8)) return true;
+                if (eval(this.WFIRUnknown9)) return true;
+                if (eval(this.WFIRUnknown10)) return true;
+                if (eval(this.WFIRUnknown11)) return true;
+                if (eval(this.WFIRUnknown12)) return true;
+                if (eval(this.WFIRUnknown13)) return true;
+                if (eval(this.WFLG)) return true;
+                if (eval(this.WGENUnknown1)) return true;
+                if (eval(this.BaseWeight)) return true;
+                if (eval(this.BaseValue)) return true;
+                if (eval(this.WGENUnknown2)) return true;
+                if (eval(this.WGENUnknown3)) return true;
+                if (eval(this.WeaponBarrel)) return true;
+                if (eval(this.WABB)) return true;
+                if (eval(this.WMELUnknown1)) return true;
+                if (eval(this.WMELUnknown2)) return true;
+                if (eval(this.WMELUnknown3)) return true;
+                if (eval(this.WMELUnknown4)) return true;
+                if (eval(this.QNAMUnknown1)) return true;
+                if (eval(this.RechargeTime)) return true;
+                if (eval(this.RechargeDelay)) return true;
+                if (eval(this.QNAMUnknown2)) return true;
+                if (eval(this.QNAMUnknown3)) return true;
+                if (eval(this.QNAMUnknown4)) return true;
+                if (eval(this.QNAMUnknown5)) return true;
+                if (eval(this.QNAMUnknown6)) return true;
+                if (eval(this.QNAMUnknown7)) return true;
+                if (eval(this.WRLOUnknown1)) return true;
+                if (eval(this.WRLOUnknown2)) return true;
+                if (eval(this.WRLOUnknown3)) return true;
+                if (eval(this.WVARUnknown1)) return true;
+                if (eval(this.WVARUnknown2)) return true;
+                if (eval(this.WVARUnknown3)) return true;
+                if (eval(this.WVARUnknown4)) return true;
+                if (eval(this.WVARUnknown5)) return true;
+                if (eval(this.WVARUnknown6)) return true;
+                if (eval(this.WVARUnknown7)) return true;
+                if (eval(this.WVARUnknown8)) return true;
+                if (eval(this.WVARUnknown9)) return true;
+                if (eval(this.WVARUnknown10)) return true;
+                if (eval(this.WVARUnknown11)) return true;
+                if (eval(this.WVARUnknown12)) return true;
+                if (eval(this.WVARUnknown13)) return true;
+                if (FirstPersonModel != null)
+                {
+                    if (eval(this.FirstPersonModel.Overall)) return true;
+                    if (this.FirstPersonModel.Specific != null && this.FirstPersonModel.Specific.Any(eval)) return true;
+                }
+                if (eval(this.WVISUnknown1)) return true;
+                if (eval(this.WVISUnknown2)) return true;
+                if (eval(this.WVISUnknown3)) return true;
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.WVISUnknown4)) return true;
+                if (eval(this.WVISUnknown5)) return true;
+                if (eval(this.WTRMUnknown1)) return true;
+                if (eval(this.WTRMUnknown2)) return true;
+                if (eval(this.WTRMUnknown3)) return true;
+                if (eval(this.WTRMUnknown4)) return true;
+                if (eval(this.WTRMUnknown5)) return true;
                 return false;
             }
             #endregion
@@ -198,7 +2175,201 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.ObjectEffect = eval(this.ObjectEffect);
+                obj.EnchantmentAmount = eval(this.EnchantmentAmount);
+                obj.EquipmentType = eval(this.EquipmentType);
+                obj.BlockBashImpactDataSet = eval(this.BlockBashImpactDataSet);
+                obj.AlternateBlockMaterial = eval(this.AlternateBlockMaterial);
+                obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
+                obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Description = eval(this.Description);
+                obj.InstanceNaming = eval(this.InstanceNaming);
+                if (AttachParentSlots != null)
+                {
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AttachParentSlots.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AttachParentSlots.Specific = l;
+                        foreach (var item in AttachParentSlots.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ObjectTemplates != null)
+                {
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    if (ObjectTemplates.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();
+                        obj.ObjectTemplates.Specific = l;
+                        foreach (var item in ObjectTemplates.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectTemplate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectTemplate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.EmbeddedWeaponMod = eval(this.EmbeddedWeaponMod);
+                obj.BNAM = eval(this.BNAM);
+                obj.WAIMUnknown1 = eval(this.WAIMUnknown1);
+                obj.Zoom = eval(this.Zoom);
+                obj.AimModel = eval(this.AimModel);
+                obj.WAIMUnknown2 = eval(this.WAIMUnknown2);
+                obj.AimAssistModelData = eval(this.AimAssistModelData);
+                obj.AimOpticalSightMarker = eval(this.AimOpticalSightMarker);
+                obj.MeleeAimAssistModel = eval(this.MeleeAimAssistModel);
+                obj.WAIMUnknown3 = eval(this.WAIMUnknown3);
+                obj.AmmoType = eval(this.AmmoType);
+                obj.MagazineSize = eval(this.MagazineSize);
+                obj.AmmoList = eval(this.AmmoList);
+                obj.Projectile = eval(this.Projectile);
+                obj.Ejections = eval(this.Ejections);
+                obj.WAM2Unknown = eval(this.WAM2Unknown);
+                obj.MeleeOrCreature = this.MeleeOrCreature == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.MeleeOrCreature.Overall), this.MeleeOrCreature.Specific?.Translate(eval));
+                obj.PrimedExplosive = this.PrimedExplosive == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PrimedExplosive.Overall), this.PrimedExplosive.Specific?.Translate(eval));
+                obj.DryFire = this.DryFire == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DryFire.Overall), this.DryFire.Specific?.Translate(eval));
+                obj.Idle = this.Idle == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Idle.Overall), this.Idle.Specific?.Translate(eval));
+                obj.Equip = this.Equip == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Equip.Overall), this.Equip.Specific?.Translate(eval));
+                obj.Unequip = this.Unequip == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Unequip.Overall), this.Unequip.Specific?.Translate(eval));
+                obj.FastEquip = this.FastEquip == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.FastEquip.Overall), this.FastEquip.Specific?.Translate(eval));
+                obj.WAUDUnknown1 = eval(this.WAUDUnknown1);
+                obj.WAUDUnknown2 = eval(this.WAUDUnknown2);
+                obj.WTUR = eval(this.WTUR);
+                obj.WCHG = eval(this.WCHG);
+                obj.PhysicalDamage = eval(this.PhysicalDamage);
+                obj.OptimalRange = eval(this.OptimalRange);
+                obj.MaxRange = eval(this.MaxRange);
+                obj.WDMGUnknown1 = eval(this.WDMGUnknown1);
+                obj.WDMGUnknown2 = eval(this.WDMGUnknown2);
+                obj.CriticalHitSpell = eval(this.CriticalHitSpell);
+                obj.WDMGUnknown3 = eval(this.WDMGUnknown3);
+                obj.WDMGUnknown4 = eval(this.WDMGUnknown4);
+                obj.WDMGUnknown5 = eval(this.WDMGUnknown5);
+                obj.WDMGUnknown6 = eval(this.WDMGUnknown6);
+                obj.WDMGUnknown7 = eval(this.WDMGUnknown7);
+                obj.WDMGUnknown8 = eval(this.WDMGUnknown8);
+                obj.WDMGUnknown9 = eval(this.WDMGUnknown9);
+                obj.WDMGUnknown10 = eval(this.WDMGUnknown10);
+                if (DamageTypes != null)
+                {
+                    obj.DamageTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeaponDamageType.Mask<R>?>>?>(eval(this.DamageTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, WeaponDamageType.Mask<R>?>>());
+                    if (DamageTypes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, WeaponDamageType.Mask<R>?>>();
+                        obj.DamageTypes.Specific = l;
+                        foreach (var item in DamageTypes.Specific)
+                        {
+                            MaskItemIndexed<R, WeaponDamageType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, WeaponDamageType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.FiringType = eval(this.FiringType);
+                obj.BurstCount = eval(this.BurstCount);
+                obj.WFIRUnknown1 = eval(this.WFIRUnknown1);
+                obj.WFIRUnknown2 = eval(this.WFIRUnknown2);
+                obj.WFIRUnknown3 = eval(this.WFIRUnknown3);
+                obj.WFIRUnknown4 = eval(this.WFIRUnknown4);
+                obj.WFIRUnknown5 = eval(this.WFIRUnknown5);
+                obj.WFIRUnknown6 = eval(this.WFIRUnknown6);
+                obj.FireRate = eval(this.FireRate);
+                obj.WFIRUnknown7 = eval(this.WFIRUnknown7);
+                obj.WFIRUnknown8 = eval(this.WFIRUnknown8);
+                obj.WFIRUnknown9 = eval(this.WFIRUnknown9);
+                obj.WFIRUnknown10 = eval(this.WFIRUnknown10);
+                obj.WFIRUnknown11 = eval(this.WFIRUnknown11);
+                obj.WFIRUnknown12 = eval(this.WFIRUnknown12);
+                obj.WFIRUnknown13 = eval(this.WFIRUnknown13);
+                obj.WFLG = eval(this.WFLG);
+                obj.WGENUnknown1 = eval(this.WGENUnknown1);
+                obj.BaseWeight = eval(this.BaseWeight);
+                obj.BaseValue = eval(this.BaseValue);
+                obj.WGENUnknown2 = eval(this.WGENUnknown2);
+                obj.WGENUnknown3 = eval(this.WGENUnknown3);
+                obj.WeaponBarrel = eval(this.WeaponBarrel);
+                obj.WABB = eval(this.WABB);
+                obj.WMELUnknown1 = eval(this.WMELUnknown1);
+                obj.WMELUnknown2 = eval(this.WMELUnknown2);
+                obj.WMELUnknown3 = eval(this.WMELUnknown3);
+                obj.WMELUnknown4 = eval(this.WMELUnknown4);
+                obj.QNAMUnknown1 = eval(this.QNAMUnknown1);
+                obj.RechargeTime = eval(this.RechargeTime);
+                obj.RechargeDelay = eval(this.RechargeDelay);
+                obj.QNAMUnknown2 = eval(this.QNAMUnknown2);
+                obj.QNAMUnknown3 = eval(this.QNAMUnknown3);
+                obj.QNAMUnknown4 = eval(this.QNAMUnknown4);
+                obj.QNAMUnknown5 = eval(this.QNAMUnknown5);
+                obj.QNAMUnknown6 = eval(this.QNAMUnknown6);
+                obj.QNAMUnknown7 = eval(this.QNAMUnknown7);
+                obj.WRLOUnknown1 = eval(this.WRLOUnknown1);
+                obj.WRLOUnknown2 = eval(this.WRLOUnknown2);
+                obj.WRLOUnknown3 = eval(this.WRLOUnknown3);
+                obj.WVARUnknown1 = eval(this.WVARUnknown1);
+                obj.WVARUnknown2 = eval(this.WVARUnknown2);
+                obj.WVARUnknown3 = eval(this.WVARUnknown3);
+                obj.WVARUnknown4 = eval(this.WVARUnknown4);
+                obj.WVARUnknown5 = eval(this.WVARUnknown5);
+                obj.WVARUnknown6 = eval(this.WVARUnknown6);
+                obj.WVARUnknown7 = eval(this.WVARUnknown7);
+                obj.WVARUnknown8 = eval(this.WVARUnknown8);
+                obj.WVARUnknown9 = eval(this.WVARUnknown9);
+                obj.WVARUnknown10 = eval(this.WVARUnknown10);
+                obj.WVARUnknown11 = eval(this.WVARUnknown11);
+                obj.WVARUnknown12 = eval(this.WVARUnknown12);
+                obj.WVARUnknown13 = eval(this.WVARUnknown13);
+                obj.FirstPersonModel = this.FirstPersonModel == null ? null : new MaskItem<R, FirstPersonModel.Mask<R>?>(eval(this.FirstPersonModel.Overall), this.FirstPersonModel.Specific?.Translate(eval));
+                obj.WVISUnknown1 = eval(this.WVISUnknown1);
+                obj.WVISUnknown2 = eval(this.WVISUnknown2);
+                obj.WVISUnknown3 = eval(this.WVISUnknown3);
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.WVISUnknown4 = eval(this.WVISUnknown4);
+                obj.WVISUnknown5 = eval(this.WVISUnknown5);
+                obj.WTRMUnknown1 = eval(this.WTRMUnknown1);
+                obj.WTRMUnknown2 = eval(this.WTRMUnknown2);
+                obj.WTRMUnknown3 = eval(this.WTRMUnknown3);
+                obj.WTRMUnknown4 = eval(this.WTRMUnknown4);
+                obj.WTRMUnknown5 = eval(this.WTRMUnknown5);
             }
             #endregion
 
@@ -217,9 +2388,592 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Weapon.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                    {
+                        ObjectPlacementDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
                     if (printMask?.Model?.Overall ?? true)
                     {
                         Model?.Print(sb);
+                    }
+                    if (printMask?.ObjectEffect ?? true)
+                    {
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
+                    }
+                    if (printMask?.EnchantmentAmount ?? true)
+                    {
+                        sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                    }
+                    if (printMask?.EquipmentType ?? true)
+                    {
+                        sb.AppendItem(EquipmentType, "EquipmentType");
+                    }
+                    if (printMask?.BlockBashImpactDataSet ?? true)
+                    {
+                        sb.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
+                    }
+                    if (printMask?.AlternateBlockMaterial ?? true)
+                    {
+                        sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                    }
+                    if (printMask?.PickupSound?.Overall ?? true)
+                    {
+                        PickupSound?.Print(sb);
+                    }
+                    if (printMask?.DropdownSound?.Overall ?? true)
+                    {
+                        DropdownSound?.Print(sb);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.InstanceNaming ?? true)
+                    {
+                        sb.AppendItem(InstanceNaming, "InstanceNaming");
+                    }
+                    if ((printMask?.AttachParentSlots?.Overall ?? true)
+                        && AttachParentSlots is {} AttachParentSlotsItem)
+                    {
+                        sb.AppendLine("AttachParentSlots =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AttachParentSlotsItem.Overall);
+                            if (AttachParentSlotsItem.Specific != null)
+                            {
+                                foreach (var subItem in AttachParentSlotsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ObjectTemplates?.Overall ?? true)
+                        && ObjectTemplates is {} ObjectTemplatesItem)
+                    {
+                        sb.AppendLine("ObjectTemplates =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ObjectTemplatesItem.Overall);
+                            if (ObjectTemplatesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectTemplatesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.EmbeddedWeaponMod ?? true)
+                    {
+                        sb.AppendItem(EmbeddedWeaponMod, "EmbeddedWeaponMod");
+                    }
+                    if (printMask?.BNAM ?? true)
+                    {
+                        sb.AppendItem(BNAM, "BNAM");
+                    }
+                    if (printMask?.WAIMUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WAIMUnknown1, "WAIMUnknown1");
+                    }
+                    if (printMask?.Zoom ?? true)
+                    {
+                        sb.AppendItem(Zoom, "Zoom");
+                    }
+                    if (printMask?.AimModel ?? true)
+                    {
+                        sb.AppendItem(AimModel, "AimModel");
+                    }
+                    if (printMask?.WAIMUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WAIMUnknown2, "WAIMUnknown2");
+                    }
+                    if (printMask?.AimAssistModelData ?? true)
+                    {
+                        sb.AppendItem(AimAssistModelData, "AimAssistModelData");
+                    }
+                    if (printMask?.AimOpticalSightMarker ?? true)
+                    {
+                        sb.AppendItem(AimOpticalSightMarker, "AimOpticalSightMarker");
+                    }
+                    if (printMask?.MeleeAimAssistModel ?? true)
+                    {
+                        sb.AppendItem(MeleeAimAssistModel, "MeleeAimAssistModel");
+                    }
+                    if (printMask?.WAIMUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WAIMUnknown3, "WAIMUnknown3");
+                    }
+                    if (printMask?.AmmoType ?? true)
+                    {
+                        sb.AppendItem(AmmoType, "AmmoType");
+                    }
+                    if (printMask?.MagazineSize ?? true)
+                    {
+                        sb.AppendItem(MagazineSize, "MagazineSize");
+                    }
+                    if (printMask?.AmmoList ?? true)
+                    {
+                        sb.AppendItem(AmmoList, "AmmoList");
+                    }
+                    if (printMask?.Projectile ?? true)
+                    {
+                        sb.AppendItem(Projectile, "Projectile");
+                    }
+                    if (printMask?.Ejections ?? true)
+                    {
+                        sb.AppendItem(Ejections, "Ejections");
+                    }
+                    if (printMask?.WAM2Unknown ?? true)
+                    {
+                        sb.AppendItem(WAM2Unknown, "WAM2Unknown");
+                    }
+                    if (printMask?.MeleeOrCreature?.Overall ?? true)
+                    {
+                        MeleeOrCreature?.Print(sb);
+                    }
+                    if (printMask?.PrimedExplosive?.Overall ?? true)
+                    {
+                        PrimedExplosive?.Print(sb);
+                    }
+                    if (printMask?.DryFire?.Overall ?? true)
+                    {
+                        DryFire?.Print(sb);
+                    }
+                    if (printMask?.Idle?.Overall ?? true)
+                    {
+                        Idle?.Print(sb);
+                    }
+                    if (printMask?.Equip?.Overall ?? true)
+                    {
+                        Equip?.Print(sb);
+                    }
+                    if (printMask?.Unequip?.Overall ?? true)
+                    {
+                        Unequip?.Print(sb);
+                    }
+                    if (printMask?.FastEquip?.Overall ?? true)
+                    {
+                        FastEquip?.Print(sb);
+                    }
+                    if (printMask?.WAUDUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WAUDUnknown1, "WAUDUnknown1");
+                    }
+                    if (printMask?.WAUDUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WAUDUnknown2, "WAUDUnknown2");
+                    }
+                    if (printMask?.WTUR ?? true)
+                    {
+                        sb.AppendItem(WTUR, "WTUR");
+                    }
+                    if (printMask?.WCHG ?? true)
+                    {
+                        sb.AppendItem(WCHG, "WCHG");
+                    }
+                    if (printMask?.PhysicalDamage ?? true)
+                    {
+                        sb.AppendItem(PhysicalDamage, "PhysicalDamage");
+                    }
+                    if (printMask?.OptimalRange ?? true)
+                    {
+                        sb.AppendItem(OptimalRange, "OptimalRange");
+                    }
+                    if (printMask?.MaxRange ?? true)
+                    {
+                        sb.AppendItem(MaxRange, "MaxRange");
+                    }
+                    if (printMask?.WDMGUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown1, "WDMGUnknown1");
+                    }
+                    if (printMask?.WDMGUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown2, "WDMGUnknown2");
+                    }
+                    if (printMask?.CriticalHitSpell ?? true)
+                    {
+                        sb.AppendItem(CriticalHitSpell, "CriticalHitSpell");
+                    }
+                    if (printMask?.WDMGUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown3, "WDMGUnknown3");
+                    }
+                    if (printMask?.WDMGUnknown4 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown4, "WDMGUnknown4");
+                    }
+                    if (printMask?.WDMGUnknown5 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown5, "WDMGUnknown5");
+                    }
+                    if (printMask?.WDMGUnknown6 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown6, "WDMGUnknown6");
+                    }
+                    if (printMask?.WDMGUnknown7 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown7, "WDMGUnknown7");
+                    }
+                    if (printMask?.WDMGUnknown8 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown8, "WDMGUnknown8");
+                    }
+                    if (printMask?.WDMGUnknown9 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown9, "WDMGUnknown9");
+                    }
+                    if (printMask?.WDMGUnknown10 ?? true)
+                    {
+                        sb.AppendItem(WDMGUnknown10, "WDMGUnknown10");
+                    }
+                    if ((printMask?.DamageTypes?.Overall ?? true)
+                        && DamageTypes is {} DamageTypesItem)
+                    {
+                        sb.AppendLine("DamageTypes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DamageTypesItem.Overall);
+                            if (DamageTypesItem.Specific != null)
+                            {
+                                foreach (var subItem in DamageTypesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.FiringType ?? true)
+                    {
+                        sb.AppendItem(FiringType, "FiringType");
+                    }
+                    if (printMask?.BurstCount ?? true)
+                    {
+                        sb.AppendItem(BurstCount, "BurstCount");
+                    }
+                    if (printMask?.WFIRUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown1, "WFIRUnknown1");
+                    }
+                    if (printMask?.WFIRUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown2, "WFIRUnknown2");
+                    }
+                    if (printMask?.WFIRUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown3, "WFIRUnknown3");
+                    }
+                    if (printMask?.WFIRUnknown4 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown4, "WFIRUnknown4");
+                    }
+                    if (printMask?.WFIRUnknown5 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown5, "WFIRUnknown5");
+                    }
+                    if (printMask?.WFIRUnknown6 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown6, "WFIRUnknown6");
+                    }
+                    if (printMask?.FireRate ?? true)
+                    {
+                        sb.AppendItem(FireRate, "FireRate");
+                    }
+                    if (printMask?.WFIRUnknown7 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown7, "WFIRUnknown7");
+                    }
+                    if (printMask?.WFIRUnknown8 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown8, "WFIRUnknown8");
+                    }
+                    if (printMask?.WFIRUnknown9 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown9, "WFIRUnknown9");
+                    }
+                    if (printMask?.WFIRUnknown10 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown10, "WFIRUnknown10");
+                    }
+                    if (printMask?.WFIRUnknown11 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown11, "WFIRUnknown11");
+                    }
+                    if (printMask?.WFIRUnknown12 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown12, "WFIRUnknown12");
+                    }
+                    if (printMask?.WFIRUnknown13 ?? true)
+                    {
+                        sb.AppendItem(WFIRUnknown13, "WFIRUnknown13");
+                    }
+                    if (printMask?.WFLG ?? true)
+                    {
+                        sb.AppendItem(WFLG, "WFLG");
+                    }
+                    if (printMask?.WGENUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WGENUnknown1, "WGENUnknown1");
+                    }
+                    if (printMask?.BaseWeight ?? true)
+                    {
+                        sb.AppendItem(BaseWeight, "BaseWeight");
+                    }
+                    if (printMask?.BaseValue ?? true)
+                    {
+                        sb.AppendItem(BaseValue, "BaseValue");
+                    }
+                    if (printMask?.WGENUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WGENUnknown2, "WGENUnknown2");
+                    }
+                    if (printMask?.WGENUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WGENUnknown3, "WGENUnknown3");
+                    }
+                    if (printMask?.WeaponBarrel ?? true)
+                    {
+                        sb.AppendItem(WeaponBarrel, "WeaponBarrel");
+                    }
+                    if (printMask?.WABB ?? true)
+                    {
+                        sb.AppendItem(WABB, "WABB");
+                    }
+                    if (printMask?.WMELUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WMELUnknown1, "WMELUnknown1");
+                    }
+                    if (printMask?.WMELUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WMELUnknown2, "WMELUnknown2");
+                    }
+                    if (printMask?.WMELUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WMELUnknown3, "WMELUnknown3");
+                    }
+                    if (printMask?.WMELUnknown4 ?? true)
+                    {
+                        sb.AppendItem(WMELUnknown4, "WMELUnknown4");
+                    }
+                    if (printMask?.QNAMUnknown1 ?? true)
+                    {
+                        sb.AppendItem(QNAMUnknown1, "QNAMUnknown1");
+                    }
+                    if (printMask?.RechargeTime ?? true)
+                    {
+                        sb.AppendItem(RechargeTime, "RechargeTime");
+                    }
+                    if (printMask?.RechargeDelay ?? true)
+                    {
+                        sb.AppendItem(RechargeDelay, "RechargeDelay");
+                    }
+                    if (printMask?.QNAMUnknown2 ?? true)
+                    {
+                        sb.AppendItem(QNAMUnknown2, "QNAMUnknown2");
+                    }
+                    if (printMask?.QNAMUnknown3 ?? true)
+                    {
+                        sb.AppendItem(QNAMUnknown3, "QNAMUnknown3");
+                    }
+                    if (printMask?.QNAMUnknown4 ?? true)
+                    {
+                        sb.AppendItem(QNAMUnknown4, "QNAMUnknown4");
+                    }
+                    if (printMask?.QNAMUnknown5 ?? true)
+                    {
+                        sb.AppendItem(QNAMUnknown5, "QNAMUnknown5");
+                    }
+                    if (printMask?.QNAMUnknown6 ?? true)
+                    {
+                        sb.AppendItem(QNAMUnknown6, "QNAMUnknown6");
+                    }
+                    if (printMask?.QNAMUnknown7 ?? true)
+                    {
+                        sb.AppendItem(QNAMUnknown7, "QNAMUnknown7");
+                    }
+                    if (printMask?.WRLOUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WRLOUnknown1, "WRLOUnknown1");
+                    }
+                    if (printMask?.WRLOUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WRLOUnknown2, "WRLOUnknown2");
+                    }
+                    if (printMask?.WRLOUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WRLOUnknown3, "WRLOUnknown3");
+                    }
+                    if (printMask?.WVARUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown1, "WVARUnknown1");
+                    }
+                    if (printMask?.WVARUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown2, "WVARUnknown2");
+                    }
+                    if (printMask?.WVARUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown3, "WVARUnknown3");
+                    }
+                    if (printMask?.WVARUnknown4 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown4, "WVARUnknown4");
+                    }
+                    if (printMask?.WVARUnknown5 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown5, "WVARUnknown5");
+                    }
+                    if (printMask?.WVARUnknown6 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown6, "WVARUnknown6");
+                    }
+                    if (printMask?.WVARUnknown7 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown7, "WVARUnknown7");
+                    }
+                    if (printMask?.WVARUnknown8 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown8, "WVARUnknown8");
+                    }
+                    if (printMask?.WVARUnknown9 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown9, "WVARUnknown9");
+                    }
+                    if (printMask?.WVARUnknown10 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown10, "WVARUnknown10");
+                    }
+                    if (printMask?.WVARUnknown11 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown11, "WVARUnknown11");
+                    }
+                    if (printMask?.WVARUnknown12 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown12, "WVARUnknown12");
+                    }
+                    if (printMask?.WVARUnknown13 ?? true)
+                    {
+                        sb.AppendItem(WVARUnknown13, "WVARUnknown13");
+                    }
+                    if (printMask?.FirstPersonModel?.Overall ?? true)
+                    {
+                        FirstPersonModel?.Print(sb);
+                    }
+                    if (printMask?.WVISUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WVISUnknown1, "WVISUnknown1");
+                    }
+                    if (printMask?.WVISUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WVISUnknown2, "WVISUnknown2");
+                    }
+                    if (printMask?.WVISUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WVISUnknown3, "WVISUnknown3");
+                    }
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.WVISUnknown4 ?? true)
+                    {
+                        sb.AppendItem(WVISUnknown4, "WVISUnknown4");
+                    }
+                    if (printMask?.WVISUnknown5 ?? true)
+                    {
+                        sb.AppendItem(WVISUnknown5, "WVISUnknown5");
+                    }
+                    if (printMask?.WTRMUnknown1 ?? true)
+                    {
+                        sb.AppendItem(WTRMUnknown1, "WTRMUnknown1");
+                    }
+                    if (printMask?.WTRMUnknown2 ?? true)
+                    {
+                        sb.AppendItem(WTRMUnknown2, "WTRMUnknown2");
+                    }
+                    if (printMask?.WTRMUnknown3 ?? true)
+                    {
+                        sb.AppendItem(WTRMUnknown3, "WTRMUnknown3");
+                    }
+                    if (printMask?.WTRMUnknown4 ?? true)
+                    {
+                        sb.AppendItem(WTRMUnknown4, "WTRMUnknown4");
+                    }
+                    if (printMask?.WTRMUnknown5 ?? true)
+                    {
+                        sb.AppendItem(WTRMUnknown5, "WTRMUnknown5");
                     }
                 }
             }
@@ -232,7 +2986,133 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? ObjectEffect;
+            public Exception? EnchantmentAmount;
+            public Exception? EquipmentType;
+            public Exception? BlockBashImpactDataSet;
+            public Exception? AlternateBlockMaterial;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? Description;
+            public Exception? InstanceNaming;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
+            public Exception? EmbeddedWeaponMod;
+            public Exception? BNAM;
+            public Exception? WAIMUnknown1;
+            public Exception? Zoom;
+            public Exception? AimModel;
+            public Exception? WAIMUnknown2;
+            public Exception? AimAssistModelData;
+            public Exception? AimOpticalSightMarker;
+            public Exception? MeleeAimAssistModel;
+            public Exception? WAIMUnknown3;
+            public Exception? AmmoType;
+            public Exception? MagazineSize;
+            public Exception? AmmoList;
+            public Exception? Projectile;
+            public Exception? Ejections;
+            public Exception? WAM2Unknown;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? MeleeOrCreature;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? PrimedExplosive;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? DryFire;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Idle;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Equip;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Unequip;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? FastEquip;
+            public Exception? WAUDUnknown1;
+            public Exception? WAUDUnknown2;
+            public Exception? WTUR;
+            public Exception? WCHG;
+            public Exception? PhysicalDamage;
+            public Exception? OptimalRange;
+            public Exception? MaxRange;
+            public Exception? WDMGUnknown1;
+            public Exception? WDMGUnknown2;
+            public Exception? CriticalHitSpell;
+            public Exception? WDMGUnknown3;
+            public Exception? WDMGUnknown4;
+            public Exception? WDMGUnknown5;
+            public Exception? WDMGUnknown6;
+            public Exception? WDMGUnknown7;
+            public Exception? WDMGUnknown8;
+            public Exception? WDMGUnknown9;
+            public Exception? WDMGUnknown10;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>? DamageTypes;
+            public Exception? FiringType;
+            public Exception? BurstCount;
+            public Exception? WFIRUnknown1;
+            public Exception? WFIRUnknown2;
+            public Exception? WFIRUnknown3;
+            public Exception? WFIRUnknown4;
+            public Exception? WFIRUnknown5;
+            public Exception? WFIRUnknown6;
+            public Exception? FireRate;
+            public Exception? WFIRUnknown7;
+            public Exception? WFIRUnknown8;
+            public Exception? WFIRUnknown9;
+            public Exception? WFIRUnknown10;
+            public Exception? WFIRUnknown11;
+            public Exception? WFIRUnknown12;
+            public Exception? WFIRUnknown13;
+            public Exception? WFLG;
+            public Exception? WGENUnknown1;
+            public Exception? BaseWeight;
+            public Exception? BaseValue;
+            public Exception? WGENUnknown2;
+            public Exception? WGENUnknown3;
+            public Exception? WeaponBarrel;
+            public Exception? WABB;
+            public Exception? WMELUnknown1;
+            public Exception? WMELUnknown2;
+            public Exception? WMELUnknown3;
+            public Exception? WMELUnknown4;
+            public Exception? QNAMUnknown1;
+            public Exception? RechargeTime;
+            public Exception? RechargeDelay;
+            public Exception? QNAMUnknown2;
+            public Exception? QNAMUnknown3;
+            public Exception? QNAMUnknown4;
+            public Exception? QNAMUnknown5;
+            public Exception? QNAMUnknown6;
+            public Exception? QNAMUnknown7;
+            public Exception? WRLOUnknown1;
+            public Exception? WRLOUnknown2;
+            public Exception? WRLOUnknown3;
+            public Exception? WVARUnknown1;
+            public Exception? WVARUnknown2;
+            public Exception? WVARUnknown3;
+            public Exception? WVARUnknown4;
+            public Exception? WVARUnknown5;
+            public Exception? WVARUnknown6;
+            public Exception? WVARUnknown7;
+            public Exception? WVARUnknown8;
+            public Exception? WVARUnknown9;
+            public Exception? WVARUnknown10;
+            public Exception? WVARUnknown11;
+            public Exception? WVARUnknown12;
+            public Exception? WVARUnknown13;
+            public MaskItem<Exception?, FirstPersonModel.ErrorMask?>? FirstPersonModel;
+            public Exception? WVISUnknown1;
+            public Exception? WVISUnknown2;
+            public Exception? WVISUnknown3;
+            public Exception? ImpactDataSet;
+            public Exception? WVISUnknown4;
+            public Exception? WVISUnknown5;
+            public Exception? WTRMUnknown1;
+            public Exception? WTRMUnknown2;
+            public Exception? WTRMUnknown3;
+            public Exception? WTRMUnknown4;
+            public Exception? WTRMUnknown5;
             #endregion
 
             #region IErrorMask
@@ -241,8 +3121,260 @@ namespace Mutagen.Bethesda.Starfield
                 Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
                 switch (enu)
                 {
+                    case Weapon_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Weapon_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Weapon_FieldIndex.ODTY:
+                        return ODTY;
+                    case Weapon_FieldIndex.ObjectPlacementDefaults:
+                        return ObjectPlacementDefaults;
+                    case Weapon_FieldIndex.Transforms:
+                        return Transforms;
+                    case Weapon_FieldIndex.Components:
+                        return Components;
+                    case Weapon_FieldIndex.Name:
+                        return Name;
                     case Weapon_FieldIndex.Model:
                         return Model;
+                    case Weapon_FieldIndex.ObjectEffect:
+                        return ObjectEffect;
+                    case Weapon_FieldIndex.EnchantmentAmount:
+                        return EnchantmentAmount;
+                    case Weapon_FieldIndex.EquipmentType:
+                        return EquipmentType;
+                    case Weapon_FieldIndex.BlockBashImpactDataSet:
+                        return BlockBashImpactDataSet;
+                    case Weapon_FieldIndex.AlternateBlockMaterial:
+                        return AlternateBlockMaterial;
+                    case Weapon_FieldIndex.PickupSound:
+                        return PickupSound;
+                    case Weapon_FieldIndex.DropdownSound:
+                        return DropdownSound;
+                    case Weapon_FieldIndex.Keywords:
+                        return Keywords;
+                    case Weapon_FieldIndex.Description:
+                        return Description;
+                    case Weapon_FieldIndex.InstanceNaming:
+                        return InstanceNaming;
+                    case Weapon_FieldIndex.AttachParentSlots:
+                        return AttachParentSlots;
+                    case Weapon_FieldIndex.ObjectTemplates:
+                        return ObjectTemplates;
+                    case Weapon_FieldIndex.EmbeddedWeaponMod:
+                        return EmbeddedWeaponMod;
+                    case Weapon_FieldIndex.BNAM:
+                        return BNAM;
+                    case Weapon_FieldIndex.WAIMUnknown1:
+                        return WAIMUnknown1;
+                    case Weapon_FieldIndex.Zoom:
+                        return Zoom;
+                    case Weapon_FieldIndex.AimModel:
+                        return AimModel;
+                    case Weapon_FieldIndex.WAIMUnknown2:
+                        return WAIMUnknown2;
+                    case Weapon_FieldIndex.AimAssistModelData:
+                        return AimAssistModelData;
+                    case Weapon_FieldIndex.AimOpticalSightMarker:
+                        return AimOpticalSightMarker;
+                    case Weapon_FieldIndex.MeleeAimAssistModel:
+                        return MeleeAimAssistModel;
+                    case Weapon_FieldIndex.WAIMUnknown3:
+                        return WAIMUnknown3;
+                    case Weapon_FieldIndex.AmmoType:
+                        return AmmoType;
+                    case Weapon_FieldIndex.MagazineSize:
+                        return MagazineSize;
+                    case Weapon_FieldIndex.AmmoList:
+                        return AmmoList;
+                    case Weapon_FieldIndex.Projectile:
+                        return Projectile;
+                    case Weapon_FieldIndex.Ejections:
+                        return Ejections;
+                    case Weapon_FieldIndex.WAM2Unknown:
+                        return WAM2Unknown;
+                    case Weapon_FieldIndex.MeleeOrCreature:
+                        return MeleeOrCreature;
+                    case Weapon_FieldIndex.PrimedExplosive:
+                        return PrimedExplosive;
+                    case Weapon_FieldIndex.DryFire:
+                        return DryFire;
+                    case Weapon_FieldIndex.Idle:
+                        return Idle;
+                    case Weapon_FieldIndex.Equip:
+                        return Equip;
+                    case Weapon_FieldIndex.Unequip:
+                        return Unequip;
+                    case Weapon_FieldIndex.FastEquip:
+                        return FastEquip;
+                    case Weapon_FieldIndex.WAUDUnknown1:
+                        return WAUDUnknown1;
+                    case Weapon_FieldIndex.WAUDUnknown2:
+                        return WAUDUnknown2;
+                    case Weapon_FieldIndex.WTUR:
+                        return WTUR;
+                    case Weapon_FieldIndex.WCHG:
+                        return WCHG;
+                    case Weapon_FieldIndex.PhysicalDamage:
+                        return PhysicalDamage;
+                    case Weapon_FieldIndex.OptimalRange:
+                        return OptimalRange;
+                    case Weapon_FieldIndex.MaxRange:
+                        return MaxRange;
+                    case Weapon_FieldIndex.WDMGUnknown1:
+                        return WDMGUnknown1;
+                    case Weapon_FieldIndex.WDMGUnknown2:
+                        return WDMGUnknown2;
+                    case Weapon_FieldIndex.CriticalHitSpell:
+                        return CriticalHitSpell;
+                    case Weapon_FieldIndex.WDMGUnknown3:
+                        return WDMGUnknown3;
+                    case Weapon_FieldIndex.WDMGUnknown4:
+                        return WDMGUnknown4;
+                    case Weapon_FieldIndex.WDMGUnknown5:
+                        return WDMGUnknown5;
+                    case Weapon_FieldIndex.WDMGUnknown6:
+                        return WDMGUnknown6;
+                    case Weapon_FieldIndex.WDMGUnknown7:
+                        return WDMGUnknown7;
+                    case Weapon_FieldIndex.WDMGUnknown8:
+                        return WDMGUnknown8;
+                    case Weapon_FieldIndex.WDMGUnknown9:
+                        return WDMGUnknown9;
+                    case Weapon_FieldIndex.WDMGUnknown10:
+                        return WDMGUnknown10;
+                    case Weapon_FieldIndex.DamageTypes:
+                        return DamageTypes;
+                    case Weapon_FieldIndex.FiringType:
+                        return FiringType;
+                    case Weapon_FieldIndex.BurstCount:
+                        return BurstCount;
+                    case Weapon_FieldIndex.WFIRUnknown1:
+                        return WFIRUnknown1;
+                    case Weapon_FieldIndex.WFIRUnknown2:
+                        return WFIRUnknown2;
+                    case Weapon_FieldIndex.WFIRUnknown3:
+                        return WFIRUnknown3;
+                    case Weapon_FieldIndex.WFIRUnknown4:
+                        return WFIRUnknown4;
+                    case Weapon_FieldIndex.WFIRUnknown5:
+                        return WFIRUnknown5;
+                    case Weapon_FieldIndex.WFIRUnknown6:
+                        return WFIRUnknown6;
+                    case Weapon_FieldIndex.FireRate:
+                        return FireRate;
+                    case Weapon_FieldIndex.WFIRUnknown7:
+                        return WFIRUnknown7;
+                    case Weapon_FieldIndex.WFIRUnknown8:
+                        return WFIRUnknown8;
+                    case Weapon_FieldIndex.WFIRUnknown9:
+                        return WFIRUnknown9;
+                    case Weapon_FieldIndex.WFIRUnknown10:
+                        return WFIRUnknown10;
+                    case Weapon_FieldIndex.WFIRUnknown11:
+                        return WFIRUnknown11;
+                    case Weapon_FieldIndex.WFIRUnknown12:
+                        return WFIRUnknown12;
+                    case Weapon_FieldIndex.WFIRUnknown13:
+                        return WFIRUnknown13;
+                    case Weapon_FieldIndex.WFLG:
+                        return WFLG;
+                    case Weapon_FieldIndex.WGENUnknown1:
+                        return WGENUnknown1;
+                    case Weapon_FieldIndex.BaseWeight:
+                        return BaseWeight;
+                    case Weapon_FieldIndex.BaseValue:
+                        return BaseValue;
+                    case Weapon_FieldIndex.WGENUnknown2:
+                        return WGENUnknown2;
+                    case Weapon_FieldIndex.WGENUnknown3:
+                        return WGENUnknown3;
+                    case Weapon_FieldIndex.WeaponBarrel:
+                        return WeaponBarrel;
+                    case Weapon_FieldIndex.WABB:
+                        return WABB;
+                    case Weapon_FieldIndex.WMELUnknown1:
+                        return WMELUnknown1;
+                    case Weapon_FieldIndex.WMELUnknown2:
+                        return WMELUnknown2;
+                    case Weapon_FieldIndex.WMELUnknown3:
+                        return WMELUnknown3;
+                    case Weapon_FieldIndex.WMELUnknown4:
+                        return WMELUnknown4;
+                    case Weapon_FieldIndex.QNAMUnknown1:
+                        return QNAMUnknown1;
+                    case Weapon_FieldIndex.RechargeTime:
+                        return RechargeTime;
+                    case Weapon_FieldIndex.RechargeDelay:
+                        return RechargeDelay;
+                    case Weapon_FieldIndex.QNAMUnknown2:
+                        return QNAMUnknown2;
+                    case Weapon_FieldIndex.QNAMUnknown3:
+                        return QNAMUnknown3;
+                    case Weapon_FieldIndex.QNAMUnknown4:
+                        return QNAMUnknown4;
+                    case Weapon_FieldIndex.QNAMUnknown5:
+                        return QNAMUnknown5;
+                    case Weapon_FieldIndex.QNAMUnknown6:
+                        return QNAMUnknown6;
+                    case Weapon_FieldIndex.QNAMUnknown7:
+                        return QNAMUnknown7;
+                    case Weapon_FieldIndex.WRLOUnknown1:
+                        return WRLOUnknown1;
+                    case Weapon_FieldIndex.WRLOUnknown2:
+                        return WRLOUnknown2;
+                    case Weapon_FieldIndex.WRLOUnknown3:
+                        return WRLOUnknown3;
+                    case Weapon_FieldIndex.WVARUnknown1:
+                        return WVARUnknown1;
+                    case Weapon_FieldIndex.WVARUnknown2:
+                        return WVARUnknown2;
+                    case Weapon_FieldIndex.WVARUnknown3:
+                        return WVARUnknown3;
+                    case Weapon_FieldIndex.WVARUnknown4:
+                        return WVARUnknown4;
+                    case Weapon_FieldIndex.WVARUnknown5:
+                        return WVARUnknown5;
+                    case Weapon_FieldIndex.WVARUnknown6:
+                        return WVARUnknown6;
+                    case Weapon_FieldIndex.WVARUnknown7:
+                        return WVARUnknown7;
+                    case Weapon_FieldIndex.WVARUnknown8:
+                        return WVARUnknown8;
+                    case Weapon_FieldIndex.WVARUnknown9:
+                        return WVARUnknown9;
+                    case Weapon_FieldIndex.WVARUnknown10:
+                        return WVARUnknown10;
+                    case Weapon_FieldIndex.WVARUnknown11:
+                        return WVARUnknown11;
+                    case Weapon_FieldIndex.WVARUnknown12:
+                        return WVARUnknown12;
+                    case Weapon_FieldIndex.WVARUnknown13:
+                        return WVARUnknown13;
+                    case Weapon_FieldIndex.FirstPersonModel:
+                        return FirstPersonModel;
+                    case Weapon_FieldIndex.WVISUnknown1:
+                        return WVISUnknown1;
+                    case Weapon_FieldIndex.WVISUnknown2:
+                        return WVISUnknown2;
+                    case Weapon_FieldIndex.WVISUnknown3:
+                        return WVISUnknown3;
+                    case Weapon_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case Weapon_FieldIndex.WVISUnknown4:
+                        return WVISUnknown4;
+                    case Weapon_FieldIndex.WVISUnknown5:
+                        return WVISUnknown5;
+                    case Weapon_FieldIndex.WTRMUnknown1:
+                        return WTRMUnknown1;
+                    case Weapon_FieldIndex.WTRMUnknown2:
+                        return WTRMUnknown2;
+                    case Weapon_FieldIndex.WTRMUnknown3:
+                        return WTRMUnknown3;
+                    case Weapon_FieldIndex.WTRMUnknown4:
+                        return WTRMUnknown4;
+                    case Weapon_FieldIndex.WTRMUnknown5:
+                        return WTRMUnknown5;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -253,8 +3385,386 @@ namespace Mutagen.Bethesda.Starfield
                 Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
                 switch (enu)
                 {
+                    case Weapon_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case Weapon_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
                     case Weapon_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = ex;
+                        break;
+                    case Weapon_FieldIndex.EnchantmentAmount:
+                        this.EnchantmentAmount = ex;
+                        break;
+                    case Weapon_FieldIndex.EquipmentType:
+                        this.EquipmentType = ex;
+                        break;
+                    case Weapon_FieldIndex.BlockBashImpactDataSet:
+                        this.BlockBashImpactDataSet = ex;
+                        break;
+                    case Weapon_FieldIndex.AlternateBlockMaterial:
+                        this.AlternateBlockMaterial = ex;
+                        break;
+                    case Weapon_FieldIndex.PickupSound:
+                        this.PickupSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.DropdownSound:
+                        this.DropdownSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Weapon_FieldIndex.InstanceNaming:
+                        this.InstanceNaming = ex;
+                        break;
+                    case Weapon_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.EmbeddedWeaponMod:
+                        this.EmbeddedWeaponMod = ex;
+                        break;
+                    case Weapon_FieldIndex.BNAM:
+                        this.BNAM = ex;
+                        break;
+                    case Weapon_FieldIndex.WAIMUnknown1:
+                        this.WAIMUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.Zoom:
+                        this.Zoom = ex;
+                        break;
+                    case Weapon_FieldIndex.AimModel:
+                        this.AimModel = ex;
+                        break;
+                    case Weapon_FieldIndex.WAIMUnknown2:
+                        this.WAIMUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.AimAssistModelData:
+                        this.AimAssistModelData = ex;
+                        break;
+                    case Weapon_FieldIndex.AimOpticalSightMarker:
+                        this.AimOpticalSightMarker = ex;
+                        break;
+                    case Weapon_FieldIndex.MeleeAimAssistModel:
+                        this.MeleeAimAssistModel = ex;
+                        break;
+                    case Weapon_FieldIndex.WAIMUnknown3:
+                        this.WAIMUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.AmmoType:
+                        this.AmmoType = ex;
+                        break;
+                    case Weapon_FieldIndex.MagazineSize:
+                        this.MagazineSize = ex;
+                        break;
+                    case Weapon_FieldIndex.AmmoList:
+                        this.AmmoList = ex;
+                        break;
+                    case Weapon_FieldIndex.Projectile:
+                        this.Projectile = ex;
+                        break;
+                    case Weapon_FieldIndex.Ejections:
+                        this.Ejections = ex;
+                        break;
+                    case Weapon_FieldIndex.WAM2Unknown:
+                        this.WAM2Unknown = ex;
+                        break;
+                    case Weapon_FieldIndex.MeleeOrCreature:
+                        this.MeleeOrCreature = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.PrimedExplosive:
+                        this.PrimedExplosive = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.DryFire:
+                        this.DryFire = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Idle:
+                        this.Idle = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Equip:
+                        this.Equip = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.Unequip:
+                        this.Unequip = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.FastEquip:
+                        this.FastEquip = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.WAUDUnknown1:
+                        this.WAUDUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WAUDUnknown2:
+                        this.WAUDUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WTUR:
+                        this.WTUR = ex;
+                        break;
+                    case Weapon_FieldIndex.WCHG:
+                        this.WCHG = ex;
+                        break;
+                    case Weapon_FieldIndex.PhysicalDamage:
+                        this.PhysicalDamage = ex;
+                        break;
+                    case Weapon_FieldIndex.OptimalRange:
+                        this.OptimalRange = ex;
+                        break;
+                    case Weapon_FieldIndex.MaxRange:
+                        this.MaxRange = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown1:
+                        this.WDMGUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown2:
+                        this.WDMGUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.CriticalHitSpell:
+                        this.CriticalHitSpell = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown3:
+                        this.WDMGUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown4:
+                        this.WDMGUnknown4 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown5:
+                        this.WDMGUnknown5 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown6:
+                        this.WDMGUnknown6 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown7:
+                        this.WDMGUnknown7 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown8:
+                        this.WDMGUnknown8 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown9:
+                        this.WDMGUnknown9 = ex;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown10:
+                        this.WDMGUnknown10 = ex;
+                        break;
+                    case Weapon_FieldIndex.DamageTypes:
+                        this.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.FiringType:
+                        this.FiringType = ex;
+                        break;
+                    case Weapon_FieldIndex.BurstCount:
+                        this.BurstCount = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown1:
+                        this.WFIRUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown2:
+                        this.WFIRUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown3:
+                        this.WFIRUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown4:
+                        this.WFIRUnknown4 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown5:
+                        this.WFIRUnknown5 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown6:
+                        this.WFIRUnknown6 = ex;
+                        break;
+                    case Weapon_FieldIndex.FireRate:
+                        this.FireRate = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown7:
+                        this.WFIRUnknown7 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown8:
+                        this.WFIRUnknown8 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown9:
+                        this.WFIRUnknown9 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown10:
+                        this.WFIRUnknown10 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown11:
+                        this.WFIRUnknown11 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown12:
+                        this.WFIRUnknown12 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown13:
+                        this.WFIRUnknown13 = ex;
+                        break;
+                    case Weapon_FieldIndex.WFLG:
+                        this.WFLG = ex;
+                        break;
+                    case Weapon_FieldIndex.WGENUnknown1:
+                        this.WGENUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.BaseWeight:
+                        this.BaseWeight = ex;
+                        break;
+                    case Weapon_FieldIndex.BaseValue:
+                        this.BaseValue = ex;
+                        break;
+                    case Weapon_FieldIndex.WGENUnknown2:
+                        this.WGENUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WGENUnknown3:
+                        this.WGENUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.WeaponBarrel:
+                        this.WeaponBarrel = ex;
+                        break;
+                    case Weapon_FieldIndex.WABB:
+                        this.WABB = ex;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown1:
+                        this.WMELUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown2:
+                        this.WMELUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown3:
+                        this.WMELUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown4:
+                        this.WMELUnknown4 = ex;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown1:
+                        this.QNAMUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.RechargeTime:
+                        this.RechargeTime = ex;
+                        break;
+                    case Weapon_FieldIndex.RechargeDelay:
+                        this.RechargeDelay = ex;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown2:
+                        this.QNAMUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown3:
+                        this.QNAMUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown4:
+                        this.QNAMUnknown4 = ex;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown5:
+                        this.QNAMUnknown5 = ex;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown6:
+                        this.QNAMUnknown6 = ex;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown7:
+                        this.QNAMUnknown7 = ex;
+                        break;
+                    case Weapon_FieldIndex.WRLOUnknown1:
+                        this.WRLOUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WRLOUnknown2:
+                        this.WRLOUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WRLOUnknown3:
+                        this.WRLOUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown1:
+                        this.WVARUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown2:
+                        this.WVARUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown3:
+                        this.WVARUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown4:
+                        this.WVARUnknown4 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown5:
+                        this.WVARUnknown5 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown6:
+                        this.WVARUnknown6 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown7:
+                        this.WVARUnknown7 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown8:
+                        this.WVARUnknown8 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown9:
+                        this.WVARUnknown9 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown10:
+                        this.WVARUnknown10 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown11:
+                        this.WVARUnknown11 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown12:
+                        this.WVARUnknown12 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown13:
+                        this.WVARUnknown13 = ex;
+                        break;
+                    case Weapon_FieldIndex.FirstPersonModel:
+                        this.FirstPersonModel = new MaskItem<Exception?, FirstPersonModel.ErrorMask?>(ex, null);
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown1:
+                        this.WVISUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown2:
+                        this.WVISUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown3:
+                        this.WVISUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown4:
+                        this.WVISUnknown4 = ex;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown5:
+                        this.WVISUnknown5 = ex;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown1:
+                        this.WTRMUnknown1 = ex;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown2:
+                        this.WTRMUnknown2 = ex;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown3:
+                        this.WTRMUnknown3 = ex;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown4:
+                        this.WTRMUnknown4 = ex;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown5:
+                        this.WTRMUnknown5 = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -267,8 +3777,386 @@ namespace Mutagen.Bethesda.Starfield
                 Weapon_FieldIndex enu = (Weapon_FieldIndex)index;
                 switch (enu)
                 {
+                    case Weapon_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Weapon_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
                     case Weapon_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.EnchantmentAmount:
+                        this.EnchantmentAmount = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.EquipmentType:
+                        this.EquipmentType = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.BlockBashImpactDataSet:
+                        this.BlockBashImpactDataSet = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.AlternateBlockMaterial:
+                        this.AlternateBlockMaterial = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.PickupSound:
+                        this.PickupSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.DropdownSound:
+                        this.DropdownSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Weapon_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.InstanceNaming:
+                        this.InstanceNaming = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Weapon_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>)obj;
+                        break;
+                    case Weapon_FieldIndex.EmbeddedWeaponMod:
+                        this.EmbeddedWeaponMod = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.BNAM:
+                        this.BNAM = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WAIMUnknown1:
+                        this.WAIMUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.Zoom:
+                        this.Zoom = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.AimModel:
+                        this.AimModel = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WAIMUnknown2:
+                        this.WAIMUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.AimAssistModelData:
+                        this.AimAssistModelData = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.AimOpticalSightMarker:
+                        this.AimOpticalSightMarker = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.MeleeAimAssistModel:
+                        this.MeleeAimAssistModel = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WAIMUnknown3:
+                        this.WAIMUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.AmmoType:
+                        this.AmmoType = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.MagazineSize:
+                        this.MagazineSize = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.AmmoList:
+                        this.AmmoList = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.Projectile:
+                        this.Projectile = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.Ejections:
+                        this.Ejections = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WAM2Unknown:
+                        this.WAM2Unknown = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.MeleeOrCreature:
+                        this.MeleeOrCreature = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.PrimedExplosive:
+                        this.PrimedExplosive = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.DryFire:
+                        this.DryFire = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.Idle:
+                        this.Idle = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.Equip:
+                        this.Equip = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.Unequip:
+                        this.Unequip = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.FastEquip:
+                        this.FastEquip = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.WAUDUnknown1:
+                        this.WAUDUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WAUDUnknown2:
+                        this.WAUDUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WTUR:
+                        this.WTUR = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WCHG:
+                        this.WCHG = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.PhysicalDamage:
+                        this.PhysicalDamage = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.OptimalRange:
+                        this.OptimalRange = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.MaxRange:
+                        this.MaxRange = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown1:
+                        this.WDMGUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown2:
+                        this.WDMGUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.CriticalHitSpell:
+                        this.CriticalHitSpell = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown3:
+                        this.WDMGUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown4:
+                        this.WDMGUnknown4 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown5:
+                        this.WDMGUnknown5 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown6:
+                        this.WDMGUnknown6 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown7:
+                        this.WDMGUnknown7 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown8:
+                        this.WDMGUnknown8 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown9:
+                        this.WDMGUnknown9 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WDMGUnknown10:
+                        this.WDMGUnknown10 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.DamageTypes:
+                        this.DamageTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>)obj;
+                        break;
+                    case Weapon_FieldIndex.FiringType:
+                        this.FiringType = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.BurstCount:
+                        this.BurstCount = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown1:
+                        this.WFIRUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown2:
+                        this.WFIRUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown3:
+                        this.WFIRUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown4:
+                        this.WFIRUnknown4 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown5:
+                        this.WFIRUnknown5 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown6:
+                        this.WFIRUnknown6 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.FireRate:
+                        this.FireRate = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown7:
+                        this.WFIRUnknown7 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown8:
+                        this.WFIRUnknown8 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown9:
+                        this.WFIRUnknown9 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown10:
+                        this.WFIRUnknown10 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown11:
+                        this.WFIRUnknown11 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown12:
+                        this.WFIRUnknown12 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFIRUnknown13:
+                        this.WFIRUnknown13 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WFLG:
+                        this.WFLG = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WGENUnknown1:
+                        this.WGENUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.BaseWeight:
+                        this.BaseWeight = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.BaseValue:
+                        this.BaseValue = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WGENUnknown2:
+                        this.WGENUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WGENUnknown3:
+                        this.WGENUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WeaponBarrel:
+                        this.WeaponBarrel = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WABB:
+                        this.WABB = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown1:
+                        this.WMELUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown2:
+                        this.WMELUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown3:
+                        this.WMELUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WMELUnknown4:
+                        this.WMELUnknown4 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown1:
+                        this.QNAMUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.RechargeTime:
+                        this.RechargeTime = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.RechargeDelay:
+                        this.RechargeDelay = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown2:
+                        this.QNAMUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown3:
+                        this.QNAMUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown4:
+                        this.QNAMUnknown4 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown5:
+                        this.QNAMUnknown5 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown6:
+                        this.QNAMUnknown6 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.QNAMUnknown7:
+                        this.QNAMUnknown7 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WRLOUnknown1:
+                        this.WRLOUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WRLOUnknown2:
+                        this.WRLOUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WRLOUnknown3:
+                        this.WRLOUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown1:
+                        this.WVARUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown2:
+                        this.WVARUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown3:
+                        this.WVARUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown4:
+                        this.WVARUnknown4 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown5:
+                        this.WVARUnknown5 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown6:
+                        this.WVARUnknown6 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown7:
+                        this.WVARUnknown7 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown8:
+                        this.WVARUnknown8 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown9:
+                        this.WVARUnknown9 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown10:
+                        this.WVARUnknown10 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown11:
+                        this.WVARUnknown11 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown12:
+                        this.WVARUnknown12 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVARUnknown13:
+                        this.WVARUnknown13 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.FirstPersonModel:
+                        this.FirstPersonModel = (MaskItem<Exception?, FirstPersonModel.ErrorMask?>?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown1:
+                        this.WVISUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown2:
+                        this.WVISUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown3:
+                        this.WVISUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown4:
+                        this.WVISUnknown4 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WVISUnknown5:
+                        this.WVISUnknown5 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown1:
+                        this.WTRMUnknown1 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown2:
+                        this.WTRMUnknown2 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown3:
+                        this.WTRMUnknown3 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown4:
+                        this.WTRMUnknown4 = (Exception?)obj;
+                        break;
+                    case Weapon_FieldIndex.WTRMUnknown5:
+                        this.WTRMUnknown5 = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -279,7 +4167,133 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (ObjectPlacementDefaults != null) return true;
+                if (Transforms != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
                 if (Model != null) return true;
+                if (ObjectEffect != null) return true;
+                if (EnchantmentAmount != null) return true;
+                if (EquipmentType != null) return true;
+                if (BlockBashImpactDataSet != null) return true;
+                if (AlternateBlockMaterial != null) return true;
+                if (PickupSound != null) return true;
+                if (DropdownSound != null) return true;
+                if (Keywords != null) return true;
+                if (Description != null) return true;
+                if (InstanceNaming != null) return true;
+                if (AttachParentSlots != null) return true;
+                if (ObjectTemplates != null) return true;
+                if (EmbeddedWeaponMod != null) return true;
+                if (BNAM != null) return true;
+                if (WAIMUnknown1 != null) return true;
+                if (Zoom != null) return true;
+                if (AimModel != null) return true;
+                if (WAIMUnknown2 != null) return true;
+                if (AimAssistModelData != null) return true;
+                if (AimOpticalSightMarker != null) return true;
+                if (MeleeAimAssistModel != null) return true;
+                if (WAIMUnknown3 != null) return true;
+                if (AmmoType != null) return true;
+                if (MagazineSize != null) return true;
+                if (AmmoList != null) return true;
+                if (Projectile != null) return true;
+                if (Ejections != null) return true;
+                if (WAM2Unknown != null) return true;
+                if (MeleeOrCreature != null) return true;
+                if (PrimedExplosive != null) return true;
+                if (DryFire != null) return true;
+                if (Idle != null) return true;
+                if (Equip != null) return true;
+                if (Unequip != null) return true;
+                if (FastEquip != null) return true;
+                if (WAUDUnknown1 != null) return true;
+                if (WAUDUnknown2 != null) return true;
+                if (WTUR != null) return true;
+                if (WCHG != null) return true;
+                if (PhysicalDamage != null) return true;
+                if (OptimalRange != null) return true;
+                if (MaxRange != null) return true;
+                if (WDMGUnknown1 != null) return true;
+                if (WDMGUnknown2 != null) return true;
+                if (CriticalHitSpell != null) return true;
+                if (WDMGUnknown3 != null) return true;
+                if (WDMGUnknown4 != null) return true;
+                if (WDMGUnknown5 != null) return true;
+                if (WDMGUnknown6 != null) return true;
+                if (WDMGUnknown7 != null) return true;
+                if (WDMGUnknown8 != null) return true;
+                if (WDMGUnknown9 != null) return true;
+                if (WDMGUnknown10 != null) return true;
+                if (DamageTypes != null) return true;
+                if (FiringType != null) return true;
+                if (BurstCount != null) return true;
+                if (WFIRUnknown1 != null) return true;
+                if (WFIRUnknown2 != null) return true;
+                if (WFIRUnknown3 != null) return true;
+                if (WFIRUnknown4 != null) return true;
+                if (WFIRUnknown5 != null) return true;
+                if (WFIRUnknown6 != null) return true;
+                if (FireRate != null) return true;
+                if (WFIRUnknown7 != null) return true;
+                if (WFIRUnknown8 != null) return true;
+                if (WFIRUnknown9 != null) return true;
+                if (WFIRUnknown10 != null) return true;
+                if (WFIRUnknown11 != null) return true;
+                if (WFIRUnknown12 != null) return true;
+                if (WFIRUnknown13 != null) return true;
+                if (WFLG != null) return true;
+                if (WGENUnknown1 != null) return true;
+                if (BaseWeight != null) return true;
+                if (BaseValue != null) return true;
+                if (WGENUnknown2 != null) return true;
+                if (WGENUnknown3 != null) return true;
+                if (WeaponBarrel != null) return true;
+                if (WABB != null) return true;
+                if (WMELUnknown1 != null) return true;
+                if (WMELUnknown2 != null) return true;
+                if (WMELUnknown3 != null) return true;
+                if (WMELUnknown4 != null) return true;
+                if (QNAMUnknown1 != null) return true;
+                if (RechargeTime != null) return true;
+                if (RechargeDelay != null) return true;
+                if (QNAMUnknown2 != null) return true;
+                if (QNAMUnknown3 != null) return true;
+                if (QNAMUnknown4 != null) return true;
+                if (QNAMUnknown5 != null) return true;
+                if (QNAMUnknown6 != null) return true;
+                if (QNAMUnknown7 != null) return true;
+                if (WRLOUnknown1 != null) return true;
+                if (WRLOUnknown2 != null) return true;
+                if (WRLOUnknown3 != null) return true;
+                if (WVARUnknown1 != null) return true;
+                if (WVARUnknown2 != null) return true;
+                if (WVARUnknown3 != null) return true;
+                if (WVARUnknown4 != null) return true;
+                if (WVARUnknown5 != null) return true;
+                if (WVARUnknown6 != null) return true;
+                if (WVARUnknown7 != null) return true;
+                if (WVARUnknown8 != null) return true;
+                if (WVARUnknown9 != null) return true;
+                if (WVARUnknown10 != null) return true;
+                if (WVARUnknown11 != null) return true;
+                if (WVARUnknown12 != null) return true;
+                if (WVARUnknown13 != null) return true;
+                if (FirstPersonModel != null) return true;
+                if (WVISUnknown1 != null) return true;
+                if (WVISUnknown2 != null) return true;
+                if (WVISUnknown3 != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (WVISUnknown4 != null) return true;
+                if (WVISUnknown5 != null) return true;
+                if (WTRMUnknown1 != null) return true;
+                if (WTRMUnknown2 != null) return true;
+                if (WTRMUnknown3 != null) return true;
+                if (WTRMUnknown4 != null) return true;
+                if (WTRMUnknown5 != null) return true;
                 return false;
             }
             #endregion
@@ -306,7 +4320,436 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                ObjectPlacementDefaults?.Print(sb);
+                Transforms?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
                 Model?.Print(sb);
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                {
+                    sb.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                }
+                {
+                    sb.AppendItem(EquipmentType, "EquipmentType");
+                }
+                {
+                    sb.AppendItem(BlockBashImpactDataSet, "BlockBashImpactDataSet");
+                }
+                {
+                    sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                }
+                PickupSound?.Print(sb);
+                DropdownSound?.Print(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(InstanceNaming, "InstanceNaming");
+                }
+                if (AttachParentSlots is {} AttachParentSlotsItem)
+                {
+                    sb.AppendLine("AttachParentSlots =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AttachParentSlotsItem.Overall);
+                        if (AttachParentSlotsItem.Specific != null)
+                        {
+                            foreach (var subItem in AttachParentSlotsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ObjectTemplates is {} ObjectTemplatesItem)
+                {
+                    sb.AppendLine("ObjectTemplates =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ObjectTemplatesItem.Overall);
+                        if (ObjectTemplatesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectTemplatesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(EmbeddedWeaponMod, "EmbeddedWeaponMod");
+                }
+                {
+                    sb.AppendItem(BNAM, "BNAM");
+                }
+                {
+                    sb.AppendItem(WAIMUnknown1, "WAIMUnknown1");
+                }
+                {
+                    sb.AppendItem(Zoom, "Zoom");
+                }
+                {
+                    sb.AppendItem(AimModel, "AimModel");
+                }
+                {
+                    sb.AppendItem(WAIMUnknown2, "WAIMUnknown2");
+                }
+                {
+                    sb.AppendItem(AimAssistModelData, "AimAssistModelData");
+                }
+                {
+                    sb.AppendItem(AimOpticalSightMarker, "AimOpticalSightMarker");
+                }
+                {
+                    sb.AppendItem(MeleeAimAssistModel, "MeleeAimAssistModel");
+                }
+                {
+                    sb.AppendItem(WAIMUnknown3, "WAIMUnknown3");
+                }
+                {
+                    sb.AppendItem(AmmoType, "AmmoType");
+                }
+                {
+                    sb.AppendItem(MagazineSize, "MagazineSize");
+                }
+                {
+                    sb.AppendItem(AmmoList, "AmmoList");
+                }
+                {
+                    sb.AppendItem(Projectile, "Projectile");
+                }
+                {
+                    sb.AppendItem(Ejections, "Ejections");
+                }
+                {
+                    sb.AppendItem(WAM2Unknown, "WAM2Unknown");
+                }
+                MeleeOrCreature?.Print(sb);
+                PrimedExplosive?.Print(sb);
+                DryFire?.Print(sb);
+                Idle?.Print(sb);
+                Equip?.Print(sb);
+                Unequip?.Print(sb);
+                FastEquip?.Print(sb);
+                {
+                    sb.AppendItem(WAUDUnknown1, "WAUDUnknown1");
+                }
+                {
+                    sb.AppendItem(WAUDUnknown2, "WAUDUnknown2");
+                }
+                {
+                    sb.AppendItem(WTUR, "WTUR");
+                }
+                {
+                    sb.AppendItem(WCHG, "WCHG");
+                }
+                {
+                    sb.AppendItem(PhysicalDamage, "PhysicalDamage");
+                }
+                {
+                    sb.AppendItem(OptimalRange, "OptimalRange");
+                }
+                {
+                    sb.AppendItem(MaxRange, "MaxRange");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown1, "WDMGUnknown1");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown2, "WDMGUnknown2");
+                }
+                {
+                    sb.AppendItem(CriticalHitSpell, "CriticalHitSpell");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown3, "WDMGUnknown3");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown4, "WDMGUnknown4");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown5, "WDMGUnknown5");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown6, "WDMGUnknown6");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown7, "WDMGUnknown7");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown8, "WDMGUnknown8");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown9, "WDMGUnknown9");
+                }
+                {
+                    sb.AppendItem(WDMGUnknown10, "WDMGUnknown10");
+                }
+                if (DamageTypes is {} DamageTypesItem)
+                {
+                    sb.AppendLine("DamageTypes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DamageTypesItem.Overall);
+                        if (DamageTypesItem.Specific != null)
+                        {
+                            foreach (var subItem in DamageTypesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(FiringType, "FiringType");
+                }
+                {
+                    sb.AppendItem(BurstCount, "BurstCount");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown1, "WFIRUnknown1");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown2, "WFIRUnknown2");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown3, "WFIRUnknown3");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown4, "WFIRUnknown4");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown5, "WFIRUnknown5");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown6, "WFIRUnknown6");
+                }
+                {
+                    sb.AppendItem(FireRate, "FireRate");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown7, "WFIRUnknown7");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown8, "WFIRUnknown8");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown9, "WFIRUnknown9");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown10, "WFIRUnknown10");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown11, "WFIRUnknown11");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown12, "WFIRUnknown12");
+                }
+                {
+                    sb.AppendItem(WFIRUnknown13, "WFIRUnknown13");
+                }
+                {
+                    sb.AppendItem(WFLG, "WFLG");
+                }
+                {
+                    sb.AppendItem(WGENUnknown1, "WGENUnknown1");
+                }
+                {
+                    sb.AppendItem(BaseWeight, "BaseWeight");
+                }
+                {
+                    sb.AppendItem(BaseValue, "BaseValue");
+                }
+                {
+                    sb.AppendItem(WGENUnknown2, "WGENUnknown2");
+                }
+                {
+                    sb.AppendItem(WGENUnknown3, "WGENUnknown3");
+                }
+                {
+                    sb.AppendItem(WeaponBarrel, "WeaponBarrel");
+                }
+                {
+                    sb.AppendItem(WABB, "WABB");
+                }
+                {
+                    sb.AppendItem(WMELUnknown1, "WMELUnknown1");
+                }
+                {
+                    sb.AppendItem(WMELUnknown2, "WMELUnknown2");
+                }
+                {
+                    sb.AppendItem(WMELUnknown3, "WMELUnknown3");
+                }
+                {
+                    sb.AppendItem(WMELUnknown4, "WMELUnknown4");
+                }
+                {
+                    sb.AppendItem(QNAMUnknown1, "QNAMUnknown1");
+                }
+                {
+                    sb.AppendItem(RechargeTime, "RechargeTime");
+                }
+                {
+                    sb.AppendItem(RechargeDelay, "RechargeDelay");
+                }
+                {
+                    sb.AppendItem(QNAMUnknown2, "QNAMUnknown2");
+                }
+                {
+                    sb.AppendItem(QNAMUnknown3, "QNAMUnknown3");
+                }
+                {
+                    sb.AppendItem(QNAMUnknown4, "QNAMUnknown4");
+                }
+                {
+                    sb.AppendItem(QNAMUnknown5, "QNAMUnknown5");
+                }
+                {
+                    sb.AppendItem(QNAMUnknown6, "QNAMUnknown6");
+                }
+                {
+                    sb.AppendItem(QNAMUnknown7, "QNAMUnknown7");
+                }
+                {
+                    sb.AppendItem(WRLOUnknown1, "WRLOUnknown1");
+                }
+                {
+                    sb.AppendItem(WRLOUnknown2, "WRLOUnknown2");
+                }
+                {
+                    sb.AppendItem(WRLOUnknown3, "WRLOUnknown3");
+                }
+                {
+                    sb.AppendItem(WVARUnknown1, "WVARUnknown1");
+                }
+                {
+                    sb.AppendItem(WVARUnknown2, "WVARUnknown2");
+                }
+                {
+                    sb.AppendItem(WVARUnknown3, "WVARUnknown3");
+                }
+                {
+                    sb.AppendItem(WVARUnknown4, "WVARUnknown4");
+                }
+                {
+                    sb.AppendItem(WVARUnknown5, "WVARUnknown5");
+                }
+                {
+                    sb.AppendItem(WVARUnknown6, "WVARUnknown6");
+                }
+                {
+                    sb.AppendItem(WVARUnknown7, "WVARUnknown7");
+                }
+                {
+                    sb.AppendItem(WVARUnknown8, "WVARUnknown8");
+                }
+                {
+                    sb.AppendItem(WVARUnknown9, "WVARUnknown9");
+                }
+                {
+                    sb.AppendItem(WVARUnknown10, "WVARUnknown10");
+                }
+                {
+                    sb.AppendItem(WVARUnknown11, "WVARUnknown11");
+                }
+                {
+                    sb.AppendItem(WVARUnknown12, "WVARUnknown12");
+                }
+                {
+                    sb.AppendItem(WVARUnknown13, "WVARUnknown13");
+                }
+                FirstPersonModel?.Print(sb);
+                {
+                    sb.AppendItem(WVISUnknown1, "WVISUnknown1");
+                }
+                {
+                    sb.AppendItem(WVISUnknown2, "WVISUnknown2");
+                }
+                {
+                    sb.AppendItem(WVISUnknown3, "WVISUnknown3");
+                }
+                {
+                    sb.AppendItem(ImpactDataSet, "ImpactDataSet");
+                }
+                {
+                    sb.AppendItem(WVISUnknown4, "WVISUnknown4");
+                }
+                {
+                    sb.AppendItem(WVISUnknown5, "WVISUnknown5");
+                }
+                {
+                    sb.AppendItem(WTRMUnknown1, "WTRMUnknown1");
+                }
+                {
+                    sb.AppendItem(WTRMUnknown2, "WTRMUnknown2");
+                }
+                {
+                    sb.AppendItem(WTRMUnknown3, "WTRMUnknown3");
+                }
+                {
+                    sb.AppendItem(WTRMUnknown4, "WTRMUnknown4");
+                }
+                {
+                    sb.AppendItem(WTRMUnknown5, "WTRMUnknown5");
+                }
             }
             #endregion
 
@@ -315,7 +4758,133 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
+                ret.EnchantmentAmount = this.EnchantmentAmount.Combine(rhs.EnchantmentAmount);
+                ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
+                ret.BlockBashImpactDataSet = this.BlockBashImpactDataSet.Combine(rhs.BlockBashImpactDataSet);
+                ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
+                ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
+                ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.InstanceNaming = this.InstanceNaming.Combine(rhs.InstanceNaming);
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.EmbeddedWeaponMod = this.EmbeddedWeaponMod.Combine(rhs.EmbeddedWeaponMod);
+                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
+                ret.WAIMUnknown1 = this.WAIMUnknown1.Combine(rhs.WAIMUnknown1);
+                ret.Zoom = this.Zoom.Combine(rhs.Zoom);
+                ret.AimModel = this.AimModel.Combine(rhs.AimModel);
+                ret.WAIMUnknown2 = this.WAIMUnknown2.Combine(rhs.WAIMUnknown2);
+                ret.AimAssistModelData = this.AimAssistModelData.Combine(rhs.AimAssistModelData);
+                ret.AimOpticalSightMarker = this.AimOpticalSightMarker.Combine(rhs.AimOpticalSightMarker);
+                ret.MeleeAimAssistModel = this.MeleeAimAssistModel.Combine(rhs.MeleeAimAssistModel);
+                ret.WAIMUnknown3 = this.WAIMUnknown3.Combine(rhs.WAIMUnknown3);
+                ret.AmmoType = this.AmmoType.Combine(rhs.AmmoType);
+                ret.MagazineSize = this.MagazineSize.Combine(rhs.MagazineSize);
+                ret.AmmoList = this.AmmoList.Combine(rhs.AmmoList);
+                ret.Projectile = this.Projectile.Combine(rhs.Projectile);
+                ret.Ejections = this.Ejections.Combine(rhs.Ejections);
+                ret.WAM2Unknown = this.WAM2Unknown.Combine(rhs.WAM2Unknown);
+                ret.MeleeOrCreature = this.MeleeOrCreature.Combine(rhs.MeleeOrCreature, (l, r) => l.Combine(r));
+                ret.PrimedExplosive = this.PrimedExplosive.Combine(rhs.PrimedExplosive, (l, r) => l.Combine(r));
+                ret.DryFire = this.DryFire.Combine(rhs.DryFire, (l, r) => l.Combine(r));
+                ret.Idle = this.Idle.Combine(rhs.Idle, (l, r) => l.Combine(r));
+                ret.Equip = this.Equip.Combine(rhs.Equip, (l, r) => l.Combine(r));
+                ret.Unequip = this.Unequip.Combine(rhs.Unequip, (l, r) => l.Combine(r));
+                ret.FastEquip = this.FastEquip.Combine(rhs.FastEquip, (l, r) => l.Combine(r));
+                ret.WAUDUnknown1 = this.WAUDUnknown1.Combine(rhs.WAUDUnknown1);
+                ret.WAUDUnknown2 = this.WAUDUnknown2.Combine(rhs.WAUDUnknown2);
+                ret.WTUR = this.WTUR.Combine(rhs.WTUR);
+                ret.WCHG = this.WCHG.Combine(rhs.WCHG);
+                ret.PhysicalDamage = this.PhysicalDamage.Combine(rhs.PhysicalDamage);
+                ret.OptimalRange = this.OptimalRange.Combine(rhs.OptimalRange);
+                ret.MaxRange = this.MaxRange.Combine(rhs.MaxRange);
+                ret.WDMGUnknown1 = this.WDMGUnknown1.Combine(rhs.WDMGUnknown1);
+                ret.WDMGUnknown2 = this.WDMGUnknown2.Combine(rhs.WDMGUnknown2);
+                ret.CriticalHitSpell = this.CriticalHitSpell.Combine(rhs.CriticalHitSpell);
+                ret.WDMGUnknown3 = this.WDMGUnknown3.Combine(rhs.WDMGUnknown3);
+                ret.WDMGUnknown4 = this.WDMGUnknown4.Combine(rhs.WDMGUnknown4);
+                ret.WDMGUnknown5 = this.WDMGUnknown5.Combine(rhs.WDMGUnknown5);
+                ret.WDMGUnknown6 = this.WDMGUnknown6.Combine(rhs.WDMGUnknown6);
+                ret.WDMGUnknown7 = this.WDMGUnknown7.Combine(rhs.WDMGUnknown7);
+                ret.WDMGUnknown8 = this.WDMGUnknown8.Combine(rhs.WDMGUnknown8);
+                ret.WDMGUnknown9 = this.WDMGUnknown9.Combine(rhs.WDMGUnknown9);
+                ret.WDMGUnknown10 = this.WDMGUnknown10.Combine(rhs.WDMGUnknown10);
+                ret.DamageTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeaponDamageType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DamageTypes?.Overall, rhs.DamageTypes?.Overall), Noggog.ExceptionExt.Combine(this.DamageTypes?.Specific, rhs.DamageTypes?.Specific));
+                ret.FiringType = this.FiringType.Combine(rhs.FiringType);
+                ret.BurstCount = this.BurstCount.Combine(rhs.BurstCount);
+                ret.WFIRUnknown1 = this.WFIRUnknown1.Combine(rhs.WFIRUnknown1);
+                ret.WFIRUnknown2 = this.WFIRUnknown2.Combine(rhs.WFIRUnknown2);
+                ret.WFIRUnknown3 = this.WFIRUnknown3.Combine(rhs.WFIRUnknown3);
+                ret.WFIRUnknown4 = this.WFIRUnknown4.Combine(rhs.WFIRUnknown4);
+                ret.WFIRUnknown5 = this.WFIRUnknown5.Combine(rhs.WFIRUnknown5);
+                ret.WFIRUnknown6 = this.WFIRUnknown6.Combine(rhs.WFIRUnknown6);
+                ret.FireRate = this.FireRate.Combine(rhs.FireRate);
+                ret.WFIRUnknown7 = this.WFIRUnknown7.Combine(rhs.WFIRUnknown7);
+                ret.WFIRUnknown8 = this.WFIRUnknown8.Combine(rhs.WFIRUnknown8);
+                ret.WFIRUnknown9 = this.WFIRUnknown9.Combine(rhs.WFIRUnknown9);
+                ret.WFIRUnknown10 = this.WFIRUnknown10.Combine(rhs.WFIRUnknown10);
+                ret.WFIRUnknown11 = this.WFIRUnknown11.Combine(rhs.WFIRUnknown11);
+                ret.WFIRUnknown12 = this.WFIRUnknown12.Combine(rhs.WFIRUnknown12);
+                ret.WFIRUnknown13 = this.WFIRUnknown13.Combine(rhs.WFIRUnknown13);
+                ret.WFLG = this.WFLG.Combine(rhs.WFLG);
+                ret.WGENUnknown1 = this.WGENUnknown1.Combine(rhs.WGENUnknown1);
+                ret.BaseWeight = this.BaseWeight.Combine(rhs.BaseWeight);
+                ret.BaseValue = this.BaseValue.Combine(rhs.BaseValue);
+                ret.WGENUnknown2 = this.WGENUnknown2.Combine(rhs.WGENUnknown2);
+                ret.WGENUnknown3 = this.WGENUnknown3.Combine(rhs.WGENUnknown3);
+                ret.WeaponBarrel = this.WeaponBarrel.Combine(rhs.WeaponBarrel);
+                ret.WABB = this.WABB.Combine(rhs.WABB);
+                ret.WMELUnknown1 = this.WMELUnknown1.Combine(rhs.WMELUnknown1);
+                ret.WMELUnknown2 = this.WMELUnknown2.Combine(rhs.WMELUnknown2);
+                ret.WMELUnknown3 = this.WMELUnknown3.Combine(rhs.WMELUnknown3);
+                ret.WMELUnknown4 = this.WMELUnknown4.Combine(rhs.WMELUnknown4);
+                ret.QNAMUnknown1 = this.QNAMUnknown1.Combine(rhs.QNAMUnknown1);
+                ret.RechargeTime = this.RechargeTime.Combine(rhs.RechargeTime);
+                ret.RechargeDelay = this.RechargeDelay.Combine(rhs.RechargeDelay);
+                ret.QNAMUnknown2 = this.QNAMUnknown2.Combine(rhs.QNAMUnknown2);
+                ret.QNAMUnknown3 = this.QNAMUnknown3.Combine(rhs.QNAMUnknown3);
+                ret.QNAMUnknown4 = this.QNAMUnknown4.Combine(rhs.QNAMUnknown4);
+                ret.QNAMUnknown5 = this.QNAMUnknown5.Combine(rhs.QNAMUnknown5);
+                ret.QNAMUnknown6 = this.QNAMUnknown6.Combine(rhs.QNAMUnknown6);
+                ret.QNAMUnknown7 = this.QNAMUnknown7.Combine(rhs.QNAMUnknown7);
+                ret.WRLOUnknown1 = this.WRLOUnknown1.Combine(rhs.WRLOUnknown1);
+                ret.WRLOUnknown2 = this.WRLOUnknown2.Combine(rhs.WRLOUnknown2);
+                ret.WRLOUnknown3 = this.WRLOUnknown3.Combine(rhs.WRLOUnknown3);
+                ret.WVARUnknown1 = this.WVARUnknown1.Combine(rhs.WVARUnknown1);
+                ret.WVARUnknown2 = this.WVARUnknown2.Combine(rhs.WVARUnknown2);
+                ret.WVARUnknown3 = this.WVARUnknown3.Combine(rhs.WVARUnknown3);
+                ret.WVARUnknown4 = this.WVARUnknown4.Combine(rhs.WVARUnknown4);
+                ret.WVARUnknown5 = this.WVARUnknown5.Combine(rhs.WVARUnknown5);
+                ret.WVARUnknown6 = this.WVARUnknown6.Combine(rhs.WVARUnknown6);
+                ret.WVARUnknown7 = this.WVARUnknown7.Combine(rhs.WVARUnknown7);
+                ret.WVARUnknown8 = this.WVARUnknown8.Combine(rhs.WVARUnknown8);
+                ret.WVARUnknown9 = this.WVARUnknown9.Combine(rhs.WVARUnknown9);
+                ret.WVARUnknown10 = this.WVARUnknown10.Combine(rhs.WVARUnknown10);
+                ret.WVARUnknown11 = this.WVARUnknown11.Combine(rhs.WVARUnknown11);
+                ret.WVARUnknown12 = this.WVARUnknown12.Combine(rhs.WVARUnknown12);
+                ret.WVARUnknown13 = this.WVARUnknown13.Combine(rhs.WVARUnknown13);
+                ret.FirstPersonModel = this.FirstPersonModel.Combine(rhs.FirstPersonModel, (l, r) => l.Combine(r));
+                ret.WVISUnknown1 = this.WVISUnknown1.Combine(rhs.WVISUnknown1);
+                ret.WVISUnknown2 = this.WVISUnknown2.Combine(rhs.WVISUnknown2);
+                ret.WVISUnknown3 = this.WVISUnknown3.Combine(rhs.WVISUnknown3);
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.WVISUnknown4 = this.WVISUnknown4.Combine(rhs.WVISUnknown4);
+                ret.WVISUnknown5 = this.WVISUnknown5.Combine(rhs.WVISUnknown5);
+                ret.WTRMUnknown1 = this.WTRMUnknown1.Combine(rhs.WTRMUnknown1);
+                ret.WTRMUnknown2 = this.WTRMUnknown2.Combine(rhs.WTRMUnknown2);
+                ret.WTRMUnknown3 = this.WTRMUnknown3.Combine(rhs.WTRMUnknown3);
+                ret.WTRMUnknown4 = this.WTRMUnknown4.Combine(rhs.WTRMUnknown4);
+                ret.WTRMUnknown5 = this.WTRMUnknown5.Combine(rhs.WTRMUnknown5);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -338,7 +4907,133 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public Transforms.TranslationMask? Transforms;
+            public AComponent.TranslationMask? Components;
+            public bool Name;
             public Model.TranslationMask? Model;
+            public bool ObjectEffect;
+            public bool EnchantmentAmount;
+            public bool EquipmentType;
+            public bool BlockBashImpactDataSet;
+            public bool AlternateBlockMaterial;
+            public SoundReference.TranslationMask? PickupSound;
+            public SoundReference.TranslationMask? DropdownSound;
+            public bool Keywords;
+            public bool Description;
+            public bool InstanceNaming;
+            public bool AttachParentSlots;
+            public ObjectTemplate.TranslationMask? ObjectTemplates;
+            public bool EmbeddedWeaponMod;
+            public bool BNAM;
+            public bool WAIMUnknown1;
+            public bool Zoom;
+            public bool AimModel;
+            public bool WAIMUnknown2;
+            public bool AimAssistModelData;
+            public bool AimOpticalSightMarker;
+            public bool MeleeAimAssistModel;
+            public bool WAIMUnknown3;
+            public bool AmmoType;
+            public bool MagazineSize;
+            public bool AmmoList;
+            public bool Projectile;
+            public bool Ejections;
+            public bool WAM2Unknown;
+            public SoundReference.TranslationMask? MeleeOrCreature;
+            public SoundReference.TranslationMask? PrimedExplosive;
+            public SoundReference.TranslationMask? DryFire;
+            public SoundReference.TranslationMask? Idle;
+            public SoundReference.TranslationMask? Equip;
+            public SoundReference.TranslationMask? Unequip;
+            public SoundReference.TranslationMask? FastEquip;
+            public bool WAUDUnknown1;
+            public bool WAUDUnknown2;
+            public bool WTUR;
+            public bool WCHG;
+            public bool PhysicalDamage;
+            public bool OptimalRange;
+            public bool MaxRange;
+            public bool WDMGUnknown1;
+            public bool WDMGUnknown2;
+            public bool CriticalHitSpell;
+            public bool WDMGUnknown3;
+            public bool WDMGUnknown4;
+            public bool WDMGUnknown5;
+            public bool WDMGUnknown6;
+            public bool WDMGUnknown7;
+            public bool WDMGUnknown8;
+            public bool WDMGUnknown9;
+            public bool WDMGUnknown10;
+            public WeaponDamageType.TranslationMask? DamageTypes;
+            public bool FiringType;
+            public bool BurstCount;
+            public bool WFIRUnknown1;
+            public bool WFIRUnknown2;
+            public bool WFIRUnknown3;
+            public bool WFIRUnknown4;
+            public bool WFIRUnknown5;
+            public bool WFIRUnknown6;
+            public bool FireRate;
+            public bool WFIRUnknown7;
+            public bool WFIRUnknown8;
+            public bool WFIRUnknown9;
+            public bool WFIRUnknown10;
+            public bool WFIRUnknown11;
+            public bool WFIRUnknown12;
+            public bool WFIRUnknown13;
+            public bool WFLG;
+            public bool WGENUnknown1;
+            public bool BaseWeight;
+            public bool BaseValue;
+            public bool WGENUnknown2;
+            public bool WGENUnknown3;
+            public bool WeaponBarrel;
+            public bool WABB;
+            public bool WMELUnknown1;
+            public bool WMELUnknown2;
+            public bool WMELUnknown3;
+            public bool WMELUnknown4;
+            public bool QNAMUnknown1;
+            public bool RechargeTime;
+            public bool RechargeDelay;
+            public bool QNAMUnknown2;
+            public bool QNAMUnknown3;
+            public bool QNAMUnknown4;
+            public bool QNAMUnknown5;
+            public bool QNAMUnknown6;
+            public bool QNAMUnknown7;
+            public bool WRLOUnknown1;
+            public bool WRLOUnknown2;
+            public bool WRLOUnknown3;
+            public bool WVARUnknown1;
+            public bool WVARUnknown2;
+            public bool WVARUnknown3;
+            public bool WVARUnknown4;
+            public bool WVARUnknown5;
+            public bool WVARUnknown6;
+            public bool WVARUnknown7;
+            public bool WVARUnknown8;
+            public bool WVARUnknown9;
+            public bool WVARUnknown10;
+            public bool WVARUnknown11;
+            public bool WVARUnknown12;
+            public bool WVARUnknown13;
+            public FirstPersonModel.TranslationMask? FirstPersonModel;
+            public bool WVISUnknown1;
+            public bool WVISUnknown2;
+            public bool WVISUnknown3;
+            public bool ImpactDataSet;
+            public bool WVISUnknown4;
+            public bool WVISUnknown5;
+            public bool WTRMUnknown1;
+            public bool WTRMUnknown2;
+            public bool WTRMUnknown3;
+            public bool WTRMUnknown4;
+            public bool WTRMUnknown5;
             #endregion
 
             #region Ctors
@@ -347,6 +5042,115 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.Name = defaultOn;
+                this.ObjectEffect = defaultOn;
+                this.EnchantmentAmount = defaultOn;
+                this.EquipmentType = defaultOn;
+                this.BlockBashImpactDataSet = defaultOn;
+                this.AlternateBlockMaterial = defaultOn;
+                this.Keywords = defaultOn;
+                this.Description = defaultOn;
+                this.InstanceNaming = defaultOn;
+                this.AttachParentSlots = defaultOn;
+                this.EmbeddedWeaponMod = defaultOn;
+                this.BNAM = defaultOn;
+                this.WAIMUnknown1 = defaultOn;
+                this.Zoom = defaultOn;
+                this.AimModel = defaultOn;
+                this.WAIMUnknown2 = defaultOn;
+                this.AimAssistModelData = defaultOn;
+                this.AimOpticalSightMarker = defaultOn;
+                this.MeleeAimAssistModel = defaultOn;
+                this.WAIMUnknown3 = defaultOn;
+                this.AmmoType = defaultOn;
+                this.MagazineSize = defaultOn;
+                this.AmmoList = defaultOn;
+                this.Projectile = defaultOn;
+                this.Ejections = defaultOn;
+                this.WAM2Unknown = defaultOn;
+                this.WAUDUnknown1 = defaultOn;
+                this.WAUDUnknown2 = defaultOn;
+                this.WTUR = defaultOn;
+                this.WCHG = defaultOn;
+                this.PhysicalDamage = defaultOn;
+                this.OptimalRange = defaultOn;
+                this.MaxRange = defaultOn;
+                this.WDMGUnknown1 = defaultOn;
+                this.WDMGUnknown2 = defaultOn;
+                this.CriticalHitSpell = defaultOn;
+                this.WDMGUnknown3 = defaultOn;
+                this.WDMGUnknown4 = defaultOn;
+                this.WDMGUnknown5 = defaultOn;
+                this.WDMGUnknown6 = defaultOn;
+                this.WDMGUnknown7 = defaultOn;
+                this.WDMGUnknown8 = defaultOn;
+                this.WDMGUnknown9 = defaultOn;
+                this.WDMGUnknown10 = defaultOn;
+                this.FiringType = defaultOn;
+                this.BurstCount = defaultOn;
+                this.WFIRUnknown1 = defaultOn;
+                this.WFIRUnknown2 = defaultOn;
+                this.WFIRUnknown3 = defaultOn;
+                this.WFIRUnknown4 = defaultOn;
+                this.WFIRUnknown5 = defaultOn;
+                this.WFIRUnknown6 = defaultOn;
+                this.FireRate = defaultOn;
+                this.WFIRUnknown7 = defaultOn;
+                this.WFIRUnknown8 = defaultOn;
+                this.WFIRUnknown9 = defaultOn;
+                this.WFIRUnknown10 = defaultOn;
+                this.WFIRUnknown11 = defaultOn;
+                this.WFIRUnknown12 = defaultOn;
+                this.WFIRUnknown13 = defaultOn;
+                this.WFLG = defaultOn;
+                this.WGENUnknown1 = defaultOn;
+                this.BaseWeight = defaultOn;
+                this.BaseValue = defaultOn;
+                this.WGENUnknown2 = defaultOn;
+                this.WGENUnknown3 = defaultOn;
+                this.WeaponBarrel = defaultOn;
+                this.WABB = defaultOn;
+                this.WMELUnknown1 = defaultOn;
+                this.WMELUnknown2 = defaultOn;
+                this.WMELUnknown3 = defaultOn;
+                this.WMELUnknown4 = defaultOn;
+                this.QNAMUnknown1 = defaultOn;
+                this.RechargeTime = defaultOn;
+                this.RechargeDelay = defaultOn;
+                this.QNAMUnknown2 = defaultOn;
+                this.QNAMUnknown3 = defaultOn;
+                this.QNAMUnknown4 = defaultOn;
+                this.QNAMUnknown5 = defaultOn;
+                this.QNAMUnknown6 = defaultOn;
+                this.QNAMUnknown7 = defaultOn;
+                this.WRLOUnknown1 = defaultOn;
+                this.WRLOUnknown2 = defaultOn;
+                this.WRLOUnknown3 = defaultOn;
+                this.WVARUnknown1 = defaultOn;
+                this.WVARUnknown2 = defaultOn;
+                this.WVARUnknown3 = defaultOn;
+                this.WVARUnknown4 = defaultOn;
+                this.WVARUnknown5 = defaultOn;
+                this.WVARUnknown6 = defaultOn;
+                this.WVARUnknown7 = defaultOn;
+                this.WVARUnknown8 = defaultOn;
+                this.WVARUnknown9 = defaultOn;
+                this.WVARUnknown10 = defaultOn;
+                this.WVARUnknown11 = defaultOn;
+                this.WVARUnknown12 = defaultOn;
+                this.WVARUnknown13 = defaultOn;
+                this.WVISUnknown1 = defaultOn;
+                this.WVISUnknown2 = defaultOn;
+                this.WVISUnknown3 = defaultOn;
+                this.ImpactDataSet = defaultOn;
+                this.WVISUnknown4 = defaultOn;
+                this.WVISUnknown5 = defaultOn;
+                this.WTRMUnknown1 = defaultOn;
+                this.WTRMUnknown2 = defaultOn;
+                this.WTRMUnknown3 = defaultOn;
+                this.WTRMUnknown4 = defaultOn;
+                this.WTRMUnknown5 = defaultOn;
             }
 
             #endregion
@@ -354,7 +5158,133 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((ObjectEffect, null));
+                ret.Add((EnchantmentAmount, null));
+                ret.Add((EquipmentType, null));
+                ret.Add((BlockBashImpactDataSet, null));
+                ret.Add((AlternateBlockMaterial, null));
+                ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
+                ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((Description, null));
+                ret.Add((InstanceNaming, null));
+                ret.Add((AttachParentSlots, null));
+                ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
+                ret.Add((EmbeddedWeaponMod, null));
+                ret.Add((BNAM, null));
+                ret.Add((WAIMUnknown1, null));
+                ret.Add((Zoom, null));
+                ret.Add((AimModel, null));
+                ret.Add((WAIMUnknown2, null));
+                ret.Add((AimAssistModelData, null));
+                ret.Add((AimOpticalSightMarker, null));
+                ret.Add((MeleeAimAssistModel, null));
+                ret.Add((WAIMUnknown3, null));
+                ret.Add((AmmoType, null));
+                ret.Add((MagazineSize, null));
+                ret.Add((AmmoList, null));
+                ret.Add((Projectile, null));
+                ret.Add((Ejections, null));
+                ret.Add((WAM2Unknown, null));
+                ret.Add((MeleeOrCreature != null ? MeleeOrCreature.OnOverall : DefaultOn, MeleeOrCreature?.GetCrystal()));
+                ret.Add((PrimedExplosive != null ? PrimedExplosive.OnOverall : DefaultOn, PrimedExplosive?.GetCrystal()));
+                ret.Add((DryFire != null ? DryFire.OnOverall : DefaultOn, DryFire?.GetCrystal()));
+                ret.Add((Idle != null ? Idle.OnOverall : DefaultOn, Idle?.GetCrystal()));
+                ret.Add((Equip != null ? Equip.OnOverall : DefaultOn, Equip?.GetCrystal()));
+                ret.Add((Unequip != null ? Unequip.OnOverall : DefaultOn, Unequip?.GetCrystal()));
+                ret.Add((FastEquip != null ? FastEquip.OnOverall : DefaultOn, FastEquip?.GetCrystal()));
+                ret.Add((WAUDUnknown1, null));
+                ret.Add((WAUDUnknown2, null));
+                ret.Add((WTUR, null));
+                ret.Add((WCHG, null));
+                ret.Add((PhysicalDamage, null));
+                ret.Add((OptimalRange, null));
+                ret.Add((MaxRange, null));
+                ret.Add((WDMGUnknown1, null));
+                ret.Add((WDMGUnknown2, null));
+                ret.Add((CriticalHitSpell, null));
+                ret.Add((WDMGUnknown3, null));
+                ret.Add((WDMGUnknown4, null));
+                ret.Add((WDMGUnknown5, null));
+                ret.Add((WDMGUnknown6, null));
+                ret.Add((WDMGUnknown7, null));
+                ret.Add((WDMGUnknown8, null));
+                ret.Add((WDMGUnknown9, null));
+                ret.Add((WDMGUnknown10, null));
+                ret.Add((DamageTypes == null ? DefaultOn : !DamageTypes.GetCrystal().CopyNothing, DamageTypes?.GetCrystal()));
+                ret.Add((FiringType, null));
+                ret.Add((BurstCount, null));
+                ret.Add((WFIRUnknown1, null));
+                ret.Add((WFIRUnknown2, null));
+                ret.Add((WFIRUnknown3, null));
+                ret.Add((WFIRUnknown4, null));
+                ret.Add((WFIRUnknown5, null));
+                ret.Add((WFIRUnknown6, null));
+                ret.Add((FireRate, null));
+                ret.Add((WFIRUnknown7, null));
+                ret.Add((WFIRUnknown8, null));
+                ret.Add((WFIRUnknown9, null));
+                ret.Add((WFIRUnknown10, null));
+                ret.Add((WFIRUnknown11, null));
+                ret.Add((WFIRUnknown12, null));
+                ret.Add((WFIRUnknown13, null));
+                ret.Add((WFLG, null));
+                ret.Add((WGENUnknown1, null));
+                ret.Add((BaseWeight, null));
+                ret.Add((BaseValue, null));
+                ret.Add((WGENUnknown2, null));
+                ret.Add((WGENUnknown3, null));
+                ret.Add((WeaponBarrel, null));
+                ret.Add((WABB, null));
+                ret.Add((WMELUnknown1, null));
+                ret.Add((WMELUnknown2, null));
+                ret.Add((WMELUnknown3, null));
+                ret.Add((WMELUnknown4, null));
+                ret.Add((QNAMUnknown1, null));
+                ret.Add((RechargeTime, null));
+                ret.Add((RechargeDelay, null));
+                ret.Add((QNAMUnknown2, null));
+                ret.Add((QNAMUnknown3, null));
+                ret.Add((QNAMUnknown4, null));
+                ret.Add((QNAMUnknown5, null));
+                ret.Add((QNAMUnknown6, null));
+                ret.Add((QNAMUnknown7, null));
+                ret.Add((WRLOUnknown1, null));
+                ret.Add((WRLOUnknown2, null));
+                ret.Add((WRLOUnknown3, null));
+                ret.Add((WVARUnknown1, null));
+                ret.Add((WVARUnknown2, null));
+                ret.Add((WVARUnknown3, null));
+                ret.Add((WVARUnknown4, null));
+                ret.Add((WVARUnknown5, null));
+                ret.Add((WVARUnknown6, null));
+                ret.Add((WVARUnknown7, null));
+                ret.Add((WVARUnknown8, null));
+                ret.Add((WVARUnknown9, null));
+                ret.Add((WVARUnknown10, null));
+                ret.Add((WVARUnknown11, null));
+                ret.Add((WVARUnknown12, null));
+                ret.Add((WVARUnknown13, null));
+                ret.Add((FirstPersonModel != null ? FirstPersonModel.OnOverall : DefaultOn, FirstPersonModel?.GetCrystal()));
+                ret.Add((WVISUnknown1, null));
+                ret.Add((WVISUnknown2, null));
+                ret.Add((WVISUnknown3, null));
+                ret.Add((ImpactDataSet, null));
+                ret.Add((WVISUnknown4, null));
+                ret.Add((WVISUnknown5, null));
+                ret.Add((WTRMUnknown1, null));
+                ret.Add((WTRMUnknown2, null));
+                ret.Add((WTRMUnknown3, null));
+                ret.Add((WTRMUnknown4, null));
+                ret.Add((WTRMUnknown5, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -418,6 +5348,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IWeapon);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeaponCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => WeaponSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => WeaponSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -504,16 +5439,165 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainer,
         IFormLinkContainer,
         IItem,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IWeaponInternal>,
         IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IScripted,
         IStarfieldMajorRecordInternal,
         IStaticTarget,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
         IWeaponGetter
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new UInt16? EnchantmentAmount { get; set; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
+        new IFormLinkNullable<IImpactDataSetGetter> BlockBashImpactDataSet { get; set; }
+        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
+        new SoundReference? PickupSound { get; set; }
+        new SoundReference? DropdownSound { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new TranslatedString? Description { get; set; }
+        new IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
+        new ExtendedList<ObjectTemplate<Weapon.Property>>? ObjectTemplates { get; set; }
+        new IFormLinkNullable<IAObjectModificationGetter> EmbeddedWeaponMod { get; set; }
+        new MemorySlice<Byte>? BNAM { get; set; }
+        new Single WAIMUnknown1 { get; set; }
+        new IFormLink<IZoomGetter> Zoom { get; set; }
+        new IFormLink<IAimModelGetter> AimModel { get; set; }
+        new UInt16 WAIMUnknown2 { get; set; }
+        new IFormLink<IAimAssistModelDataGetter> AimAssistModelData { get; set; }
+        new IFormLink<IAimOpticalSightMarkerGetter> AimOpticalSightMarker { get; set; }
+        new IFormLink<IMeleeAimAssistModelGetter> MeleeAimAssistModel { get; set; }
+        new MemorySlice<Byte> WAIMUnknown3 { get; set; }
+        new IFormLink<IAmmunitionGetter> AmmoType { get; set; }
+        new UInt32 MagazineSize { get; set; }
+        new IFormLink<ILeveledItemGetter> AmmoList { get; set; }
+        new IFormLink<IProjectileGetter> Projectile { get; set; }
+        new IFormLink<IArtObjectGetter> Ejections { get; set; }
+        new MemorySlice<Byte> WAM2Unknown { get; set; }
+        new SoundReference MeleeOrCreature { get; set; }
+        new SoundReference PrimedExplosive { get; set; }
+        new SoundReference DryFire { get; set; }
+        new SoundReference Idle { get; set; }
+        new SoundReference Equip { get; set; }
+        new SoundReference Unequip { get; set; }
+        new SoundReference FastEquip { get; set; }
+        new Int32 WAUDUnknown1 { get; set; }
+        new Int32 WAUDUnknown2 { get; set; }
+        new MemorySlice<Byte>? WTUR { get; set; }
+        new MemorySlice<Byte>? WCHG { get; set; }
+        new Single PhysicalDamage { get; set; }
+        new Single OptimalRange { get; set; }
+        new Single MaxRange { get; set; }
+        new Single WDMGUnknown1 { get; set; }
+        new Single WDMGUnknown2 { get; set; }
+        new IFormLink<ISpellGetter> CriticalHitSpell { get; set; }
+        new MemorySlice<Byte> WDMGUnknown3 { get; set; }
+        new Single WDMGUnknown4 { get; set; }
+        new Single WDMGUnknown5 { get; set; }
+        new Single WDMGUnknown6 { get; set; }
+        new Single WDMGUnknown7 { get; set; }
+        new Single WDMGUnknown8 { get; set; }
+        new Single WDMGUnknown9 { get; set; }
+        new Single WDMGUnknown10 { get; set; }
+        new ExtendedList<WeaponDamageType>? DamageTypes { get; set; }
+        new Weapon.FiringTypeEnum FiringType { get; set; }
+        new Byte BurstCount { get; set; }
+        new Byte WFIRUnknown1 { get; set; }
+        new Single WFIRUnknown2 { get; set; }
+        new Single WFIRUnknown3 { get; set; }
+        new Single WFIRUnknown4 { get; set; }
+        new Single WFIRUnknown5 { get; set; }
+        new UInt16 WFIRUnknown6 { get; set; }
+        new Single FireRate { get; set; }
+        new Single WFIRUnknown7 { get; set; }
+        new Byte WFIRUnknown8 { get; set; }
+        new Single WFIRUnknown9 { get; set; }
+        new Byte WFIRUnknown10 { get; set; }
+        new Single WFIRUnknown11 { get; set; }
+        new UInt16 WFIRUnknown12 { get; set; }
+        new Single WFIRUnknown13 { get; set; }
+        new MemorySlice<Byte>? WFLG { get; set; }
+        new UInt32 WGENUnknown1 { get; set; }
+        new Single BaseWeight { get; set; }
+        new UInt32 BaseValue { get; set; }
+        new Single WGENUnknown2 { get; set; }
+        new Single WGENUnknown3 { get; set; }
+        new IFormLink<IWeaponBarrelModelGetter> WeaponBarrel { get; set; }
+        new String? WABB { get; set; }
+        new Byte WMELUnknown1 { get; set; }
+        new Single WMELUnknown2 { get; set; }
+        new Single WMELUnknown3 { get; set; }
+        new UInt32 WMELUnknown4 { get; set; }
+        new UInt32 QNAMUnknown1 { get; set; }
+        new Single RechargeTime { get; set; }
+        new Single RechargeDelay { get; set; }
+        new UInt32 QNAMUnknown2 { get; set; }
+        new UInt32 QNAMUnknown3 { get; set; }
+        new UInt32 QNAMUnknown4 { get; set; }
+        new UInt32 QNAMUnknown5 { get; set; }
+        new Single QNAMUnknown6 { get; set; }
+        new UInt32 QNAMUnknown7 { get; set; }
+        new Single WRLOUnknown1 { get; set; }
+        new Single WRLOUnknown2 { get; set; }
+        new UInt16 WRLOUnknown3 { get; set; }
+        new UInt32 WVARUnknown1 { get; set; }
+        new Single WVARUnknown2 { get; set; }
+        new UInt32 WVARUnknown3 { get; set; }
+        new Single WVARUnknown4 { get; set; }
+        new Single WVARUnknown5 { get; set; }
+        new Single WVARUnknown6 { get; set; }
+        new Single WVARUnknown7 { get; set; }
+        new Single WVARUnknown8 { get; set; }
+        new UInt32 WVARUnknown9 { get; set; }
+        new Single WVARUnknown10 { get; set; }
+        new Single WVARUnknown11 { get; set; }
+        new Single WVARUnknown12 { get; set; }
+        new Byte WVARUnknown13 { get; set; }
+        new FirstPersonModel? FirstPersonModel { get; set; }
+        new UInt32 WVISUnknown1 { get; set; }
+        new UInt32 WVISUnknown2 { get; set; }
+        new UInt32 WVISUnknown3 { get; set; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new UInt32 WVISUnknown4 { get; set; }
+        new UInt32 WVISUnknown5 { get; set; }
+        new Single WTRMUnknown1 { get; set; }
+        new Byte WTRMUnknown2 { get; set; }
+        new Single WTRMUnknown3 { get; set; }
+        new Single WTRMUnknown4 { get; set; }
+        new Single WTRMUnknown5 { get; set; }
+        #region Mutagen
+        new Weapon.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IWeaponInternal :
@@ -529,18 +5613,176 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>,
         IModeledGetter,
-        IStaticTargetGetter
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IScriptedGetter,
+        IStaticTargetGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        ITransformsGetter? Transforms { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
+        #endregion
+        IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
+        UInt16? EnchantmentAmount { get; }
+        IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
+        IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpactDataSet { get; }
+        IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial { get; }
+        ISoundReferenceGetter? PickupSound { get; }
+        ISoundReferenceGetter? DropdownSound { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        ITranslatedStringGetter? Description { get; }
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
+        IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? ObjectTemplates { get; }
+        IFormLinkNullableGetter<IAObjectModificationGetter> EmbeddedWeaponMod { get; }
+        ReadOnlyMemorySlice<Byte>? BNAM { get; }
+        Single WAIMUnknown1 { get; }
+        IFormLinkGetter<IZoomGetter> Zoom { get; }
+        IFormLinkGetter<IAimModelGetter> AimModel { get; }
+        UInt16 WAIMUnknown2 { get; }
+        IFormLinkGetter<IAimAssistModelDataGetter> AimAssistModelData { get; }
+        IFormLinkGetter<IAimOpticalSightMarkerGetter> AimOpticalSightMarker { get; }
+        IFormLinkGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModel { get; }
+        ReadOnlyMemorySlice<Byte> WAIMUnknown3 { get; }
+        IFormLinkGetter<IAmmunitionGetter> AmmoType { get; }
+        UInt32 MagazineSize { get; }
+        IFormLinkGetter<ILeveledItemGetter> AmmoList { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
+        IFormLinkGetter<IArtObjectGetter> Ejections { get; }
+        ReadOnlyMemorySlice<Byte> WAM2Unknown { get; }
+        ISoundReferenceGetter MeleeOrCreature { get; }
+        ISoundReferenceGetter PrimedExplosive { get; }
+        ISoundReferenceGetter DryFire { get; }
+        ISoundReferenceGetter Idle { get; }
+        ISoundReferenceGetter Equip { get; }
+        ISoundReferenceGetter Unequip { get; }
+        ISoundReferenceGetter FastEquip { get; }
+        Int32 WAUDUnknown1 { get; }
+        Int32 WAUDUnknown2 { get; }
+        ReadOnlyMemorySlice<Byte>? WTUR { get; }
+        ReadOnlyMemorySlice<Byte>? WCHG { get; }
+        Single PhysicalDamage { get; }
+        Single OptimalRange { get; }
+        Single MaxRange { get; }
+        Single WDMGUnknown1 { get; }
+        Single WDMGUnknown2 { get; }
+        IFormLinkGetter<ISpellGetter> CriticalHitSpell { get; }
+        ReadOnlyMemorySlice<Byte> WDMGUnknown3 { get; }
+        Single WDMGUnknown4 { get; }
+        Single WDMGUnknown5 { get; }
+        Single WDMGUnknown6 { get; }
+        Single WDMGUnknown7 { get; }
+        Single WDMGUnknown8 { get; }
+        Single WDMGUnknown9 { get; }
+        Single WDMGUnknown10 { get; }
+        IReadOnlyList<IWeaponDamageTypeGetter>? DamageTypes { get; }
+        Weapon.FiringTypeEnum FiringType { get; }
+        Byte BurstCount { get; }
+        Byte WFIRUnknown1 { get; }
+        Single WFIRUnknown2 { get; }
+        Single WFIRUnknown3 { get; }
+        Single WFIRUnknown4 { get; }
+        Single WFIRUnknown5 { get; }
+        UInt16 WFIRUnknown6 { get; }
+        Single FireRate { get; }
+        Single WFIRUnknown7 { get; }
+        Byte WFIRUnknown8 { get; }
+        Single WFIRUnknown9 { get; }
+        Byte WFIRUnknown10 { get; }
+        Single WFIRUnknown11 { get; }
+        UInt16 WFIRUnknown12 { get; }
+        Single WFIRUnknown13 { get; }
+        ReadOnlyMemorySlice<Byte>? WFLG { get; }
+        UInt32 WGENUnknown1 { get; }
+        Single BaseWeight { get; }
+        UInt32 BaseValue { get; }
+        Single WGENUnknown2 { get; }
+        Single WGENUnknown3 { get; }
+        IFormLinkGetter<IWeaponBarrelModelGetter> WeaponBarrel { get; }
+        String? WABB { get; }
+        Byte WMELUnknown1 { get; }
+        Single WMELUnknown2 { get; }
+        Single WMELUnknown3 { get; }
+        UInt32 WMELUnknown4 { get; }
+        UInt32 QNAMUnknown1 { get; }
+        Single RechargeTime { get; }
+        Single RechargeDelay { get; }
+        UInt32 QNAMUnknown2 { get; }
+        UInt32 QNAMUnknown3 { get; }
+        UInt32 QNAMUnknown4 { get; }
+        UInt32 QNAMUnknown5 { get; }
+        Single QNAMUnknown6 { get; }
+        UInt32 QNAMUnknown7 { get; }
+        Single WRLOUnknown1 { get; }
+        Single WRLOUnknown2 { get; }
+        UInt16 WRLOUnknown3 { get; }
+        UInt32 WVARUnknown1 { get; }
+        Single WVARUnknown2 { get; }
+        UInt32 WVARUnknown3 { get; }
+        Single WVARUnknown4 { get; }
+        Single WVARUnknown5 { get; }
+        Single WVARUnknown6 { get; }
+        Single WVARUnknown7 { get; }
+        Single WVARUnknown8 { get; }
+        UInt32 WVARUnknown9 { get; }
+        Single WVARUnknown10 { get; }
+        Single WVARUnknown11 { get; }
+        Single WVARUnknown12 { get; }
+        Byte WVARUnknown13 { get; }
+        IFirstPersonModelGetter? FirstPersonModel { get; }
+        UInt32 WVISUnknown1 { get; }
+        UInt32 WVISUnknown2 { get; }
+        UInt32 WVISUnknown3 { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
+        UInt32 WVISUnknown4 { get; }
+        UInt32 WVISUnknown5 { get; }
+        Single WTRMUnknown1 { get; }
+        Byte WTRMUnknown2 { get; }
+        Single WTRMUnknown3 { get; }
+        Single WTRMUnknown4 { get; }
+        Single WTRMUnknown5 { get; }
+
+        #region Mutagen
+        Weapon.MajorFlag MajorFlags { get; }
         #endregion
 
     }
@@ -718,7 +5960,133 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Model = 7,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        ODTY = 9,
+        ObjectPlacementDefaults = 10,
+        Transforms = 11,
+        Components = 12,
+        Name = 13,
+        Model = 14,
+        ObjectEffect = 15,
+        EnchantmentAmount = 16,
+        EquipmentType = 17,
+        BlockBashImpactDataSet = 18,
+        AlternateBlockMaterial = 19,
+        PickupSound = 20,
+        DropdownSound = 21,
+        Keywords = 22,
+        Description = 23,
+        InstanceNaming = 24,
+        AttachParentSlots = 25,
+        ObjectTemplates = 26,
+        EmbeddedWeaponMod = 27,
+        BNAM = 28,
+        WAIMUnknown1 = 29,
+        Zoom = 30,
+        AimModel = 31,
+        WAIMUnknown2 = 32,
+        AimAssistModelData = 33,
+        AimOpticalSightMarker = 34,
+        MeleeAimAssistModel = 35,
+        WAIMUnknown3 = 36,
+        AmmoType = 37,
+        MagazineSize = 38,
+        AmmoList = 39,
+        Projectile = 40,
+        Ejections = 41,
+        WAM2Unknown = 42,
+        MeleeOrCreature = 43,
+        PrimedExplosive = 44,
+        DryFire = 45,
+        Idle = 46,
+        Equip = 47,
+        Unequip = 48,
+        FastEquip = 49,
+        WAUDUnknown1 = 50,
+        WAUDUnknown2 = 51,
+        WTUR = 52,
+        WCHG = 53,
+        PhysicalDamage = 54,
+        OptimalRange = 55,
+        MaxRange = 56,
+        WDMGUnknown1 = 57,
+        WDMGUnknown2 = 58,
+        CriticalHitSpell = 59,
+        WDMGUnknown3 = 60,
+        WDMGUnknown4 = 61,
+        WDMGUnknown5 = 62,
+        WDMGUnknown6 = 63,
+        WDMGUnknown7 = 64,
+        WDMGUnknown8 = 65,
+        WDMGUnknown9 = 66,
+        WDMGUnknown10 = 67,
+        DamageTypes = 68,
+        FiringType = 69,
+        BurstCount = 70,
+        WFIRUnknown1 = 71,
+        WFIRUnknown2 = 72,
+        WFIRUnknown3 = 73,
+        WFIRUnknown4 = 74,
+        WFIRUnknown5 = 75,
+        WFIRUnknown6 = 76,
+        FireRate = 77,
+        WFIRUnknown7 = 78,
+        WFIRUnknown8 = 79,
+        WFIRUnknown9 = 80,
+        WFIRUnknown10 = 81,
+        WFIRUnknown11 = 82,
+        WFIRUnknown12 = 83,
+        WFIRUnknown13 = 84,
+        WFLG = 85,
+        WGENUnknown1 = 86,
+        BaseWeight = 87,
+        BaseValue = 88,
+        WGENUnknown2 = 89,
+        WGENUnknown3 = 90,
+        WeaponBarrel = 91,
+        WABB = 92,
+        WMELUnknown1 = 93,
+        WMELUnknown2 = 94,
+        WMELUnknown3 = 95,
+        WMELUnknown4 = 96,
+        QNAMUnknown1 = 97,
+        RechargeTime = 98,
+        RechargeDelay = 99,
+        QNAMUnknown2 = 100,
+        QNAMUnknown3 = 101,
+        QNAMUnknown4 = 102,
+        QNAMUnknown5 = 103,
+        QNAMUnknown6 = 104,
+        QNAMUnknown7 = 105,
+        WRLOUnknown1 = 106,
+        WRLOUnknown2 = 107,
+        WRLOUnknown3 = 108,
+        WVARUnknown1 = 109,
+        WVARUnknown2 = 110,
+        WVARUnknown3 = 111,
+        WVARUnknown4 = 112,
+        WVARUnknown5 = 113,
+        WVARUnknown6 = 114,
+        WVARUnknown7 = 115,
+        WVARUnknown8 = 116,
+        WVARUnknown9 = 117,
+        WVARUnknown10 = 118,
+        WVARUnknown11 = 119,
+        WVARUnknown12 = 120,
+        WVARUnknown13 = 121,
+        FirstPersonModel = 122,
+        WVISUnknown1 = 123,
+        WVISUnknown2 = 124,
+        WVISUnknown3 = 125,
+        ImpactDataSet = 126,
+        WVISUnknown4 = 127,
+        WVISUnknown5 = 128,
+        WTRMUnknown1 = 129,
+        WTRMUnknown2 = 130,
+        WTRMUnknown3 = 131,
+        WTRMUnknown4 = 132,
+        WTRMUnknown5 = 133,
     }
     #endregion
 
@@ -729,9 +6097,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 127;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 134;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -764,10 +6132,56 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.WEAP);
             var all = RecordCollection.Factory(
                 RecordTypes.WEAP,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.PTT2,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
                 RecordTypes.MODL,
                 RecordTypes.MOLM,
                 RecordTypes.FLLD,
-                RecordTypes.XFLG);
+                RecordTypes.XFLG,
+                RecordTypes.EITM,
+                RecordTypes.EAMT,
+                RecordTypes.ETYP,
+                RecordTypes.BIDS,
+                RecordTypes.BAMT,
+                RecordTypes.PUSH,
+                RecordTypes.PDSH,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DESC,
+                RecordTypes.INRD,
+                RecordTypes.APPR,
+                RecordTypes.OBTE,
+                RecordTypes.OBTF,
+                RecordTypes.OBTS,
+                RecordTypes.STOP,
+                RecordTypes.NNAM,
+                RecordTypes.BNAM,
+                RecordTypes.WAIM,
+                RecordTypes.WAM2,
+                RecordTypes.WAUD,
+                RecordTypes.WTUR,
+                RecordTypes.WCHG,
+                RecordTypes.WDMG,
+                RecordTypes.DAMA,
+                RecordTypes.WFIR,
+                RecordTypes.WFLG,
+                RecordTypes.WGEN,
+                RecordTypes.WABB,
+                RecordTypes.WMEL,
+                RecordTypes.QNAM,
+                RecordTypes.WRLO,
+                RecordTypes.WVAR,
+                RecordTypes.MOD4,
+                RecordTypes.MO4S,
+                RecordTypes.WVIS,
+                RecordTypes.WTRM);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
@@ -810,7 +6224,133 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IWeaponInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.ObjectPlacementDefaults = null;
+            item.Transforms = null;
+            item.Components.Clear();
+            item.Name = default;
             item.Model = null;
+            item.ObjectEffect.Clear();
+            item.EnchantmentAmount = default;
+            item.EquipmentType.Clear();
+            item.BlockBashImpactDataSet.Clear();
+            item.AlternateBlockMaterial.Clear();
+            item.PickupSound = null;
+            item.DropdownSound = null;
+            item.Keywords = null;
+            item.Description = default;
+            item.InstanceNaming.Clear();
+            item.AttachParentSlots = null;
+            item.ObjectTemplates = null;
+            item.EmbeddedWeaponMod.Clear();
+            item.BNAM = default;
+            item.WAIMUnknown1 = default;
+            item.Zoom.Clear();
+            item.AimModel.Clear();
+            item.WAIMUnknown2 = default;
+            item.AimAssistModelData.Clear();
+            item.AimOpticalSightMarker.Clear();
+            item.MeleeAimAssistModel.Clear();
+            item.WAIMUnknown3 = new byte[9];
+            item.AmmoType.Clear();
+            item.MagazineSize = default;
+            item.AmmoList.Clear();
+            item.Projectile.Clear();
+            item.Ejections.Clear();
+            item.WAM2Unknown = new byte[3];
+            item.MeleeOrCreature.Clear();
+            item.PrimedExplosive.Clear();
+            item.DryFire.Clear();
+            item.Idle.Clear();
+            item.Equip.Clear();
+            item.Unequip.Clear();
+            item.FastEquip.Clear();
+            item.WAUDUnknown1 = default;
+            item.WAUDUnknown2 = default;
+            item.WTUR = default;
+            item.WCHG = default;
+            item.PhysicalDamage = default;
+            item.OptimalRange = default;
+            item.MaxRange = default;
+            item.WDMGUnknown1 = default;
+            item.WDMGUnknown2 = default;
+            item.CriticalHitSpell.Clear();
+            item.WDMGUnknown3 = new byte[10];
+            item.WDMGUnknown4 = default;
+            item.WDMGUnknown5 = default;
+            item.WDMGUnknown6 = default;
+            item.WDMGUnknown7 = default;
+            item.WDMGUnknown8 = default;
+            item.WDMGUnknown9 = default;
+            item.WDMGUnknown10 = default;
+            item.DamageTypes = null;
+            item.FiringType = default;
+            item.BurstCount = default;
+            item.WFIRUnknown1 = default;
+            item.WFIRUnknown2 = default;
+            item.WFIRUnknown3 = default;
+            item.WFIRUnknown4 = default;
+            item.WFIRUnknown5 = default;
+            item.WFIRUnknown6 = default;
+            item.FireRate = default;
+            item.WFIRUnknown7 = default;
+            item.WFIRUnknown8 = default;
+            item.WFIRUnknown9 = default;
+            item.WFIRUnknown10 = default;
+            item.WFIRUnknown11 = default;
+            item.WFIRUnknown12 = default;
+            item.WFIRUnknown13 = default;
+            item.WFLG = default;
+            item.WGENUnknown1 = default;
+            item.BaseWeight = default;
+            item.BaseValue = default;
+            item.WGENUnknown2 = default;
+            item.WGENUnknown3 = default;
+            item.WeaponBarrel.Clear();
+            item.WABB = default;
+            item.WMELUnknown1 = default;
+            item.WMELUnknown2 = default;
+            item.WMELUnknown3 = default;
+            item.WMELUnknown4 = default;
+            item.QNAMUnknown1 = default;
+            item.RechargeTime = default;
+            item.RechargeDelay = default;
+            item.QNAMUnknown2 = default;
+            item.QNAMUnknown3 = default;
+            item.QNAMUnknown4 = default;
+            item.QNAMUnknown5 = default;
+            item.QNAMUnknown6 = default;
+            item.QNAMUnknown7 = default;
+            item.WRLOUnknown1 = default;
+            item.WRLOUnknown2 = default;
+            item.WRLOUnknown3 = default;
+            item.WVARUnknown1 = default;
+            item.WVARUnknown2 = default;
+            item.WVARUnknown3 = default;
+            item.WVARUnknown4 = default;
+            item.WVARUnknown5 = default;
+            item.WVARUnknown6 = default;
+            item.WVARUnknown7 = default;
+            item.WVARUnknown8 = default;
+            item.WVARUnknown9 = default;
+            item.WVARUnknown10 = default;
+            item.WVARUnknown11 = default;
+            item.WVARUnknown12 = default;
+            item.WVARUnknown13 = default;
+            item.FirstPersonModel = null;
+            item.WVISUnknown1 = default;
+            item.WVISUnknown2 = default;
+            item.WVISUnknown3 = default;
+            item.ImpactDataSet.Clear();
+            item.WVISUnknown4 = default;
+            item.WVISUnknown5 = default;
+            item.WTRMUnknown1 = default;
+            item.WTRMUnknown2 = default;
+            item.WTRMUnknown3 = default;
+            item.WTRMUnknown4 = default;
+            item.WTRMUnknown5 = default;
             base.Clear(item);
         }
         
@@ -828,7 +6368,42 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IWeapon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
+            obj.ObjectEffect.Relink(mapping);
+            obj.EquipmentType.Relink(mapping);
+            obj.BlockBashImpactDataSet.Relink(mapping);
+            obj.AlternateBlockMaterial.Relink(mapping);
+            obj.PickupSound?.RemapLinks(mapping);
+            obj.DropdownSound?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.InstanceNaming.Relink(mapping);
+            obj.AttachParentSlots?.RemapLinks(mapping);
+            obj.ObjectTemplates?.RemapLinks(mapping);
+            obj.EmbeddedWeaponMod.Relink(mapping);
+            obj.Zoom.Relink(mapping);
+            obj.AimModel.Relink(mapping);
+            obj.AimAssistModelData.Relink(mapping);
+            obj.AimOpticalSightMarker.Relink(mapping);
+            obj.MeleeAimAssistModel.Relink(mapping);
+            obj.AmmoType.Relink(mapping);
+            obj.AmmoList.Relink(mapping);
+            obj.Projectile.Relink(mapping);
+            obj.Ejections.Relink(mapping);
+            obj.MeleeOrCreature.RemapLinks(mapping);
+            obj.PrimedExplosive.RemapLinks(mapping);
+            obj.DryFire.RemapLinks(mapping);
+            obj.Idle.RemapLinks(mapping);
+            obj.Equip.RemapLinks(mapping);
+            obj.Unequip.RemapLinks(mapping);
+            obj.FastEquip.RemapLinks(mapping);
+            obj.CriticalHitSpell.Relink(mapping);
+            obj.DamageTypes?.RemapLinks(mapping);
+            obj.WeaponBarrel.Relink(mapping);
+            obj.FirstPersonModel?.RemapLinks(mapping);
+            obj.ImpactDataSet.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWeapon obj)
@@ -837,9 +6412,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.FirstPersonModel is {} FirstPersonModelItems)
+            {
+                foreach (var item in FirstPersonModelItems.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -854,7 +6441,9 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.FirstPersonModel?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -922,11 +6511,176 @@ namespace Mutagen.Bethesda.Starfield
             Weapon.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults,
+                rhs.ObjectPlacementDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
+            ret.EnchantmentAmount = item.EnchantmentAmount == rhs.EnchantmentAmount;
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
+            ret.BlockBashImpactDataSet = item.BlockBashImpactDataSet.Equals(rhs.BlockBashImpactDataSet);
+            ret.AlternateBlockMaterial = item.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial);
+            ret.PickupSound = EqualsMaskHelper.EqualsHelper(
+                item.PickupSound,
+                rhs.PickupSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DropdownSound = EqualsMaskHelper.EqualsHelper(
+                item.DropdownSound,
+                rhs.DropdownSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.InstanceNaming = item.InstanceNaming.Equals(rhs.InstanceNaming);
+            ret.AttachParentSlots = item.AttachParentSlots.CollectionEqualsHelper(
+                rhs.AttachParentSlots,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ObjectTemplates = item.ObjectTemplates.CollectionEqualsHelper(
+                rhs.ObjectTemplates,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.EmbeddedWeaponMod = item.EmbeddedWeaponMod.Equals(rhs.EmbeddedWeaponMod);
+            ret.BNAM = MemorySliceExt.SequenceEqual(item.BNAM, rhs.BNAM);
+            ret.WAIMUnknown1 = item.WAIMUnknown1.EqualsWithin(rhs.WAIMUnknown1);
+            ret.Zoom = item.Zoom.Equals(rhs.Zoom);
+            ret.AimModel = item.AimModel.Equals(rhs.AimModel);
+            ret.WAIMUnknown2 = item.WAIMUnknown2 == rhs.WAIMUnknown2;
+            ret.AimAssistModelData = item.AimAssistModelData.Equals(rhs.AimAssistModelData);
+            ret.AimOpticalSightMarker = item.AimOpticalSightMarker.Equals(rhs.AimOpticalSightMarker);
+            ret.MeleeAimAssistModel = item.MeleeAimAssistModel.Equals(rhs.MeleeAimAssistModel);
+            ret.WAIMUnknown3 = MemoryExtensions.SequenceEqual(item.WAIMUnknown3.Span, rhs.WAIMUnknown3.Span);
+            ret.AmmoType = item.AmmoType.Equals(rhs.AmmoType);
+            ret.MagazineSize = item.MagazineSize == rhs.MagazineSize;
+            ret.AmmoList = item.AmmoList.Equals(rhs.AmmoList);
+            ret.Projectile = item.Projectile.Equals(rhs.Projectile);
+            ret.Ejections = item.Ejections.Equals(rhs.Ejections);
+            ret.WAM2Unknown = MemoryExtensions.SequenceEqual(item.WAM2Unknown.Span, rhs.WAM2Unknown.Span);
+            ret.MeleeOrCreature = MaskItemExt.Factory(item.MeleeOrCreature.GetEqualsMask(rhs.MeleeOrCreature, include), include);
+            ret.PrimedExplosive = MaskItemExt.Factory(item.PrimedExplosive.GetEqualsMask(rhs.PrimedExplosive, include), include);
+            ret.DryFire = MaskItemExt.Factory(item.DryFire.GetEqualsMask(rhs.DryFire, include), include);
+            ret.Idle = MaskItemExt.Factory(item.Idle.GetEqualsMask(rhs.Idle, include), include);
+            ret.Equip = MaskItemExt.Factory(item.Equip.GetEqualsMask(rhs.Equip, include), include);
+            ret.Unequip = MaskItemExt.Factory(item.Unequip.GetEqualsMask(rhs.Unequip, include), include);
+            ret.FastEquip = MaskItemExt.Factory(item.FastEquip.GetEqualsMask(rhs.FastEquip, include), include);
+            ret.WAUDUnknown1 = item.WAUDUnknown1 == rhs.WAUDUnknown1;
+            ret.WAUDUnknown2 = item.WAUDUnknown2 == rhs.WAUDUnknown2;
+            ret.WTUR = MemorySliceExt.SequenceEqual(item.WTUR, rhs.WTUR);
+            ret.WCHG = MemorySliceExt.SequenceEqual(item.WCHG, rhs.WCHG);
+            ret.PhysicalDamage = item.PhysicalDamage.EqualsWithin(rhs.PhysicalDamage);
+            ret.OptimalRange = item.OptimalRange.EqualsWithin(rhs.OptimalRange);
+            ret.MaxRange = item.MaxRange.EqualsWithin(rhs.MaxRange);
+            ret.WDMGUnknown1 = item.WDMGUnknown1.EqualsWithin(rhs.WDMGUnknown1);
+            ret.WDMGUnknown2 = item.WDMGUnknown2.EqualsWithin(rhs.WDMGUnknown2);
+            ret.CriticalHitSpell = item.CriticalHitSpell.Equals(rhs.CriticalHitSpell);
+            ret.WDMGUnknown3 = MemoryExtensions.SequenceEqual(item.WDMGUnknown3.Span, rhs.WDMGUnknown3.Span);
+            ret.WDMGUnknown4 = item.WDMGUnknown4.EqualsWithin(rhs.WDMGUnknown4);
+            ret.WDMGUnknown5 = item.WDMGUnknown5.EqualsWithin(rhs.WDMGUnknown5);
+            ret.WDMGUnknown6 = item.WDMGUnknown6.EqualsWithin(rhs.WDMGUnknown6);
+            ret.WDMGUnknown7 = item.WDMGUnknown7.EqualsWithin(rhs.WDMGUnknown7);
+            ret.WDMGUnknown8 = item.WDMGUnknown8.EqualsWithin(rhs.WDMGUnknown8);
+            ret.WDMGUnknown9 = item.WDMGUnknown9.EqualsWithin(rhs.WDMGUnknown9);
+            ret.WDMGUnknown10 = item.WDMGUnknown10.EqualsWithin(rhs.WDMGUnknown10);
+            ret.DamageTypes = item.DamageTypes.CollectionEqualsHelper(
+                rhs.DamageTypes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FiringType = item.FiringType == rhs.FiringType;
+            ret.BurstCount = item.BurstCount == rhs.BurstCount;
+            ret.WFIRUnknown1 = item.WFIRUnknown1 == rhs.WFIRUnknown1;
+            ret.WFIRUnknown2 = item.WFIRUnknown2.EqualsWithin(rhs.WFIRUnknown2);
+            ret.WFIRUnknown3 = item.WFIRUnknown3.EqualsWithin(rhs.WFIRUnknown3);
+            ret.WFIRUnknown4 = item.WFIRUnknown4.EqualsWithin(rhs.WFIRUnknown4);
+            ret.WFIRUnknown5 = item.WFIRUnknown5.EqualsWithin(rhs.WFIRUnknown5);
+            ret.WFIRUnknown6 = item.WFIRUnknown6 == rhs.WFIRUnknown6;
+            ret.FireRate = item.FireRate.EqualsWithin(rhs.FireRate);
+            ret.WFIRUnknown7 = item.WFIRUnknown7.EqualsWithin(rhs.WFIRUnknown7);
+            ret.WFIRUnknown8 = item.WFIRUnknown8 == rhs.WFIRUnknown8;
+            ret.WFIRUnknown9 = item.WFIRUnknown9.EqualsWithin(rhs.WFIRUnknown9);
+            ret.WFIRUnknown10 = item.WFIRUnknown10 == rhs.WFIRUnknown10;
+            ret.WFIRUnknown11 = item.WFIRUnknown11.EqualsWithin(rhs.WFIRUnknown11);
+            ret.WFIRUnknown12 = item.WFIRUnknown12 == rhs.WFIRUnknown12;
+            ret.WFIRUnknown13 = item.WFIRUnknown13.EqualsWithin(rhs.WFIRUnknown13);
+            ret.WFLG = MemorySliceExt.SequenceEqual(item.WFLG, rhs.WFLG);
+            ret.WGENUnknown1 = item.WGENUnknown1 == rhs.WGENUnknown1;
+            ret.BaseWeight = item.BaseWeight.EqualsWithin(rhs.BaseWeight);
+            ret.BaseValue = item.BaseValue == rhs.BaseValue;
+            ret.WGENUnknown2 = item.WGENUnknown2.EqualsWithin(rhs.WGENUnknown2);
+            ret.WGENUnknown3 = item.WGENUnknown3.EqualsWithin(rhs.WGENUnknown3);
+            ret.WeaponBarrel = item.WeaponBarrel.Equals(rhs.WeaponBarrel);
+            ret.WABB = string.Equals(item.WABB, rhs.WABB);
+            ret.WMELUnknown1 = item.WMELUnknown1 == rhs.WMELUnknown1;
+            ret.WMELUnknown2 = item.WMELUnknown2.EqualsWithin(rhs.WMELUnknown2);
+            ret.WMELUnknown3 = item.WMELUnknown3.EqualsWithin(rhs.WMELUnknown3);
+            ret.WMELUnknown4 = item.WMELUnknown4 == rhs.WMELUnknown4;
+            ret.QNAMUnknown1 = item.QNAMUnknown1 == rhs.QNAMUnknown1;
+            ret.RechargeTime = item.RechargeTime.EqualsWithin(rhs.RechargeTime);
+            ret.RechargeDelay = item.RechargeDelay.EqualsWithin(rhs.RechargeDelay);
+            ret.QNAMUnknown2 = item.QNAMUnknown2 == rhs.QNAMUnknown2;
+            ret.QNAMUnknown3 = item.QNAMUnknown3 == rhs.QNAMUnknown3;
+            ret.QNAMUnknown4 = item.QNAMUnknown4 == rhs.QNAMUnknown4;
+            ret.QNAMUnknown5 = item.QNAMUnknown5 == rhs.QNAMUnknown5;
+            ret.QNAMUnknown6 = item.QNAMUnknown6.EqualsWithin(rhs.QNAMUnknown6);
+            ret.QNAMUnknown7 = item.QNAMUnknown7 == rhs.QNAMUnknown7;
+            ret.WRLOUnknown1 = item.WRLOUnknown1.EqualsWithin(rhs.WRLOUnknown1);
+            ret.WRLOUnknown2 = item.WRLOUnknown2.EqualsWithin(rhs.WRLOUnknown2);
+            ret.WRLOUnknown3 = item.WRLOUnknown3 == rhs.WRLOUnknown3;
+            ret.WVARUnknown1 = item.WVARUnknown1 == rhs.WVARUnknown1;
+            ret.WVARUnknown2 = item.WVARUnknown2.EqualsWithin(rhs.WVARUnknown2);
+            ret.WVARUnknown3 = item.WVARUnknown3 == rhs.WVARUnknown3;
+            ret.WVARUnknown4 = item.WVARUnknown4.EqualsWithin(rhs.WVARUnknown4);
+            ret.WVARUnknown5 = item.WVARUnknown5.EqualsWithin(rhs.WVARUnknown5);
+            ret.WVARUnknown6 = item.WVARUnknown6.EqualsWithin(rhs.WVARUnknown6);
+            ret.WVARUnknown7 = item.WVARUnknown7.EqualsWithin(rhs.WVARUnknown7);
+            ret.WVARUnknown8 = item.WVARUnknown8.EqualsWithin(rhs.WVARUnknown8);
+            ret.WVARUnknown9 = item.WVARUnknown9 == rhs.WVARUnknown9;
+            ret.WVARUnknown10 = item.WVARUnknown10.EqualsWithin(rhs.WVARUnknown10);
+            ret.WVARUnknown11 = item.WVARUnknown11.EqualsWithin(rhs.WVARUnknown11);
+            ret.WVARUnknown12 = item.WVARUnknown12.EqualsWithin(rhs.WVARUnknown12);
+            ret.WVARUnknown13 = item.WVARUnknown13 == rhs.WVARUnknown13;
+            ret.FirstPersonModel = EqualsMaskHelper.EqualsHelper(
+                item.FirstPersonModel,
+                rhs.FirstPersonModel,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.WVISUnknown1 = item.WVISUnknown1 == rhs.WVISUnknown1;
+            ret.WVISUnknown2 = item.WVISUnknown2 == rhs.WVISUnknown2;
+            ret.WVISUnknown3 = item.WVISUnknown3 == rhs.WVISUnknown3;
+            ret.ImpactDataSet = item.ImpactDataSet.Equals(rhs.ImpactDataSet);
+            ret.WVISUnknown4 = item.WVISUnknown4 == rhs.WVISUnknown4;
+            ret.WVISUnknown5 = item.WVISUnknown5 == rhs.WVISUnknown5;
+            ret.WTRMUnknown1 = item.WTRMUnknown1.EqualsWithin(rhs.WTRMUnknown1);
+            ret.WTRMUnknown2 = item.WTRMUnknown2 == rhs.WTRMUnknown2;
+            ret.WTRMUnknown3 = item.WTRMUnknown3.EqualsWithin(rhs.WTRMUnknown3);
+            ret.WTRMUnknown4 = item.WTRMUnknown4.EqualsWithin(rhs.WTRMUnknown4);
+            ret.WTRMUnknown5 = item.WTRMUnknown5.EqualsWithin(rhs.WTRMUnknown5);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -976,10 +6730,583 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
                 ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.ObjectEffect ?? true)
+            {
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+            }
+            if ((printMask?.EnchantmentAmount ?? true)
+                && item.EnchantmentAmount is {} EnchantmentAmountItem)
+            {
+                sb.AppendItem(EnchantmentAmountItem, "EnchantmentAmount");
+            }
+            if (printMask?.EquipmentType ?? true)
+            {
+                sb.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
+            }
+            if (printMask?.BlockBashImpactDataSet ?? true)
+            {
+                sb.AppendItem(item.BlockBashImpactDataSet.FormKeyNullable, "BlockBashImpactDataSet");
+            }
+            if (printMask?.AlternateBlockMaterial ?? true)
+            {
+                sb.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
+            }
+            if ((printMask?.PickupSound?.Overall ?? true)
+                && item.PickupSound is {} PickupSoundItem)
+            {
+                PickupSoundItem?.Print(sb, "PickupSound");
+            }
+            if ((printMask?.DropdownSound?.Overall ?? true)
+                && item.DropdownSound is {} DropdownSoundItem)
+            {
+                DropdownSoundItem?.Print(sb, "DropdownSound");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.InstanceNaming ?? true)
+            {
+                sb.AppendItem(item.InstanceNaming.FormKeyNullable, "InstanceNaming");
+            }
+            if ((printMask?.AttachParentSlots?.Overall ?? true)
+                && item.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                sb.AppendLine("AttachParentSlots =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in AttachParentSlotsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ObjectTemplates?.Overall ?? true)
+                && item.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                sb.AppendLine("ObjectTemplates =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ObjectTemplatesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.EmbeddedWeaponMod ?? true)
+            {
+                sb.AppendItem(item.EmbeddedWeaponMod.FormKeyNullable, "EmbeddedWeaponMod");
+            }
+            if ((printMask?.BNAM ?? true)
+                && item.BNAM is {} BNAMItem)
+            {
+                sb.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
+            }
+            if (printMask?.WAIMUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WAIMUnknown1, "WAIMUnknown1");
+            }
+            if (printMask?.Zoom ?? true)
+            {
+                sb.AppendItem(item.Zoom.FormKey, "Zoom");
+            }
+            if (printMask?.AimModel ?? true)
+            {
+                sb.AppendItem(item.AimModel.FormKey, "AimModel");
+            }
+            if (printMask?.WAIMUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WAIMUnknown2, "WAIMUnknown2");
+            }
+            if (printMask?.AimAssistModelData ?? true)
+            {
+                sb.AppendItem(item.AimAssistModelData.FormKey, "AimAssistModelData");
+            }
+            if (printMask?.AimOpticalSightMarker ?? true)
+            {
+                sb.AppendItem(item.AimOpticalSightMarker.FormKey, "AimOpticalSightMarker");
+            }
+            if (printMask?.MeleeAimAssistModel ?? true)
+            {
+                sb.AppendItem(item.MeleeAimAssistModel.FormKey, "MeleeAimAssistModel");
+            }
+            if (printMask?.WAIMUnknown3 ?? true)
+            {
+                sb.AppendLine($"WAIMUnknown3 => {SpanExt.ToHexString(item.WAIMUnknown3)}");
+            }
+            if (printMask?.AmmoType ?? true)
+            {
+                sb.AppendItem(item.AmmoType.FormKey, "AmmoType");
+            }
+            if (printMask?.MagazineSize ?? true)
+            {
+                sb.AppendItem(item.MagazineSize, "MagazineSize");
+            }
+            if (printMask?.AmmoList ?? true)
+            {
+                sb.AppendItem(item.AmmoList.FormKey, "AmmoList");
+            }
+            if (printMask?.Projectile ?? true)
+            {
+                sb.AppendItem(item.Projectile.FormKey, "Projectile");
+            }
+            if (printMask?.Ejections ?? true)
+            {
+                sb.AppendItem(item.Ejections.FormKey, "Ejections");
+            }
+            if (printMask?.WAM2Unknown ?? true)
+            {
+                sb.AppendLine($"WAM2Unknown => {SpanExt.ToHexString(item.WAM2Unknown)}");
+            }
+            if (printMask?.MeleeOrCreature?.Overall ?? true)
+            {
+                item.MeleeOrCreature?.Print(sb, "MeleeOrCreature");
+            }
+            if (printMask?.PrimedExplosive?.Overall ?? true)
+            {
+                item.PrimedExplosive?.Print(sb, "PrimedExplosive");
+            }
+            if (printMask?.DryFire?.Overall ?? true)
+            {
+                item.DryFire?.Print(sb, "DryFire");
+            }
+            if (printMask?.Idle?.Overall ?? true)
+            {
+                item.Idle?.Print(sb, "Idle");
+            }
+            if (printMask?.Equip?.Overall ?? true)
+            {
+                item.Equip?.Print(sb, "Equip");
+            }
+            if (printMask?.Unequip?.Overall ?? true)
+            {
+                item.Unequip?.Print(sb, "Unequip");
+            }
+            if (printMask?.FastEquip?.Overall ?? true)
+            {
+                item.FastEquip?.Print(sb, "FastEquip");
+            }
+            if (printMask?.WAUDUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WAUDUnknown1, "WAUDUnknown1");
+            }
+            if (printMask?.WAUDUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WAUDUnknown2, "WAUDUnknown2");
+            }
+            if ((printMask?.WTUR ?? true)
+                && item.WTUR is {} WTURItem)
+            {
+                sb.AppendLine($"WTUR => {SpanExt.ToHexString(WTURItem)}");
+            }
+            if ((printMask?.WCHG ?? true)
+                && item.WCHG is {} WCHGItem)
+            {
+                sb.AppendLine($"WCHG => {SpanExt.ToHexString(WCHGItem)}");
+            }
+            if (printMask?.PhysicalDamage ?? true)
+            {
+                sb.AppendItem(item.PhysicalDamage, "PhysicalDamage");
+            }
+            if (printMask?.OptimalRange ?? true)
+            {
+                sb.AppendItem(item.OptimalRange, "OptimalRange");
+            }
+            if (printMask?.MaxRange ?? true)
+            {
+                sb.AppendItem(item.MaxRange, "MaxRange");
+            }
+            if (printMask?.WDMGUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown1, "WDMGUnknown1");
+            }
+            if (printMask?.WDMGUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown2, "WDMGUnknown2");
+            }
+            if (printMask?.CriticalHitSpell ?? true)
+            {
+                sb.AppendItem(item.CriticalHitSpell.FormKey, "CriticalHitSpell");
+            }
+            if (printMask?.WDMGUnknown3 ?? true)
+            {
+                sb.AppendLine($"WDMGUnknown3 => {SpanExt.ToHexString(item.WDMGUnknown3)}");
+            }
+            if (printMask?.WDMGUnknown4 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown4, "WDMGUnknown4");
+            }
+            if (printMask?.WDMGUnknown5 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown5, "WDMGUnknown5");
+            }
+            if (printMask?.WDMGUnknown6 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown6, "WDMGUnknown6");
+            }
+            if (printMask?.WDMGUnknown7 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown7, "WDMGUnknown7");
+            }
+            if (printMask?.WDMGUnknown8 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown8, "WDMGUnknown8");
+            }
+            if (printMask?.WDMGUnknown9 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown9, "WDMGUnknown9");
+            }
+            if (printMask?.WDMGUnknown10 ?? true)
+            {
+                sb.AppendItem(item.WDMGUnknown10, "WDMGUnknown10");
+            }
+            if ((printMask?.DamageTypes?.Overall ?? true)
+                && item.DamageTypes is {} DamageTypesItem)
+            {
+                sb.AppendLine("DamageTypes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in DamageTypesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.FiringType ?? true)
+            {
+                sb.AppendItem(item.FiringType, "FiringType");
+            }
+            if (printMask?.BurstCount ?? true)
+            {
+                sb.AppendItem(item.BurstCount, "BurstCount");
+            }
+            if (printMask?.WFIRUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown1, "WFIRUnknown1");
+            }
+            if (printMask?.WFIRUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown2, "WFIRUnknown2");
+            }
+            if (printMask?.WFIRUnknown3 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown3, "WFIRUnknown3");
+            }
+            if (printMask?.WFIRUnknown4 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown4, "WFIRUnknown4");
+            }
+            if (printMask?.WFIRUnknown5 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown5, "WFIRUnknown5");
+            }
+            if (printMask?.WFIRUnknown6 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown6, "WFIRUnknown6");
+            }
+            if (printMask?.FireRate ?? true)
+            {
+                sb.AppendItem(item.FireRate, "FireRate");
+            }
+            if (printMask?.WFIRUnknown7 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown7, "WFIRUnknown7");
+            }
+            if (printMask?.WFIRUnknown8 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown8, "WFIRUnknown8");
+            }
+            if (printMask?.WFIRUnknown9 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown9, "WFIRUnknown9");
+            }
+            if (printMask?.WFIRUnknown10 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown10, "WFIRUnknown10");
+            }
+            if (printMask?.WFIRUnknown11 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown11, "WFIRUnknown11");
+            }
+            if (printMask?.WFIRUnknown12 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown12, "WFIRUnknown12");
+            }
+            if (printMask?.WFIRUnknown13 ?? true)
+            {
+                sb.AppendItem(item.WFIRUnknown13, "WFIRUnknown13");
+            }
+            if ((printMask?.WFLG ?? true)
+                && item.WFLG is {} WFLGItem)
+            {
+                sb.AppendLine($"WFLG => {SpanExt.ToHexString(WFLGItem)}");
+            }
+            if (printMask?.WGENUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WGENUnknown1, "WGENUnknown1");
+            }
+            if (printMask?.BaseWeight ?? true)
+            {
+                sb.AppendItem(item.BaseWeight, "BaseWeight");
+            }
+            if (printMask?.BaseValue ?? true)
+            {
+                sb.AppendItem(item.BaseValue, "BaseValue");
+            }
+            if (printMask?.WGENUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WGENUnknown2, "WGENUnknown2");
+            }
+            if (printMask?.WGENUnknown3 ?? true)
+            {
+                sb.AppendItem(item.WGENUnknown3, "WGENUnknown3");
+            }
+            if (printMask?.WeaponBarrel ?? true)
+            {
+                sb.AppendItem(item.WeaponBarrel.FormKey, "WeaponBarrel");
+            }
+            if ((printMask?.WABB ?? true)
+                && item.WABB is {} WABBItem)
+            {
+                sb.AppendItem(WABBItem, "WABB");
+            }
+            if (printMask?.WMELUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WMELUnknown1, "WMELUnknown1");
+            }
+            if (printMask?.WMELUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WMELUnknown2, "WMELUnknown2");
+            }
+            if (printMask?.WMELUnknown3 ?? true)
+            {
+                sb.AppendItem(item.WMELUnknown3, "WMELUnknown3");
+            }
+            if (printMask?.WMELUnknown4 ?? true)
+            {
+                sb.AppendItem(item.WMELUnknown4, "WMELUnknown4");
+            }
+            if (printMask?.QNAMUnknown1 ?? true)
+            {
+                sb.AppendItem(item.QNAMUnknown1, "QNAMUnknown1");
+            }
+            if (printMask?.RechargeTime ?? true)
+            {
+                sb.AppendItem(item.RechargeTime, "RechargeTime");
+            }
+            if (printMask?.RechargeDelay ?? true)
+            {
+                sb.AppendItem(item.RechargeDelay, "RechargeDelay");
+            }
+            if (printMask?.QNAMUnknown2 ?? true)
+            {
+                sb.AppendItem(item.QNAMUnknown2, "QNAMUnknown2");
+            }
+            if (printMask?.QNAMUnknown3 ?? true)
+            {
+                sb.AppendItem(item.QNAMUnknown3, "QNAMUnknown3");
+            }
+            if (printMask?.QNAMUnknown4 ?? true)
+            {
+                sb.AppendItem(item.QNAMUnknown4, "QNAMUnknown4");
+            }
+            if (printMask?.QNAMUnknown5 ?? true)
+            {
+                sb.AppendItem(item.QNAMUnknown5, "QNAMUnknown5");
+            }
+            if (printMask?.QNAMUnknown6 ?? true)
+            {
+                sb.AppendItem(item.QNAMUnknown6, "QNAMUnknown6");
+            }
+            if (printMask?.QNAMUnknown7 ?? true)
+            {
+                sb.AppendItem(item.QNAMUnknown7, "QNAMUnknown7");
+            }
+            if (printMask?.WRLOUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WRLOUnknown1, "WRLOUnknown1");
+            }
+            if (printMask?.WRLOUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WRLOUnknown2, "WRLOUnknown2");
+            }
+            if (printMask?.WRLOUnknown3 ?? true)
+            {
+                sb.AppendItem(item.WRLOUnknown3, "WRLOUnknown3");
+            }
+            if (printMask?.WVARUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown1, "WVARUnknown1");
+            }
+            if (printMask?.WVARUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown2, "WVARUnknown2");
+            }
+            if (printMask?.WVARUnknown3 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown3, "WVARUnknown3");
+            }
+            if (printMask?.WVARUnknown4 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown4, "WVARUnknown4");
+            }
+            if (printMask?.WVARUnknown5 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown5, "WVARUnknown5");
+            }
+            if (printMask?.WVARUnknown6 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown6, "WVARUnknown6");
+            }
+            if (printMask?.WVARUnknown7 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown7, "WVARUnknown7");
+            }
+            if (printMask?.WVARUnknown8 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown8, "WVARUnknown8");
+            }
+            if (printMask?.WVARUnknown9 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown9, "WVARUnknown9");
+            }
+            if (printMask?.WVARUnknown10 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown10, "WVARUnknown10");
+            }
+            if (printMask?.WVARUnknown11 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown11, "WVARUnknown11");
+            }
+            if (printMask?.WVARUnknown12 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown12, "WVARUnknown12");
+            }
+            if (printMask?.WVARUnknown13 ?? true)
+            {
+                sb.AppendItem(item.WVARUnknown13, "WVARUnknown13");
+            }
+            if ((printMask?.FirstPersonModel?.Overall ?? true)
+                && item.FirstPersonModel is {} FirstPersonModelItem)
+            {
+                FirstPersonModelItem?.Print(sb, "FirstPersonModel");
+            }
+            if (printMask?.WVISUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WVISUnknown1, "WVISUnknown1");
+            }
+            if (printMask?.WVISUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WVISUnknown2, "WVISUnknown2");
+            }
+            if (printMask?.WVISUnknown3 ?? true)
+            {
+                sb.AppendItem(item.WVISUnknown3, "WVISUnknown3");
+            }
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                sb.AppendItem(item.ImpactDataSet.FormKey, "ImpactDataSet");
+            }
+            if (printMask?.WVISUnknown4 ?? true)
+            {
+                sb.AppendItem(item.WVISUnknown4, "WVISUnknown4");
+            }
+            if (printMask?.WVISUnknown5 ?? true)
+            {
+                sb.AppendItem(item.WVISUnknown5, "WVISUnknown5");
+            }
+            if (printMask?.WTRMUnknown1 ?? true)
+            {
+                sb.AppendItem(item.WTRMUnknown1, "WTRMUnknown1");
+            }
+            if (printMask?.WTRMUnknown2 ?? true)
+            {
+                sb.AppendItem(item.WTRMUnknown2, "WTRMUnknown2");
+            }
+            if (printMask?.WTRMUnknown3 ?? true)
+            {
+                sb.AppendItem(item.WTRMUnknown3, "WTRMUnknown3");
+            }
+            if (printMask?.WTRMUnknown4 ?? true)
+            {
+                sb.AppendItem(item.WTRMUnknown4, "WTRMUnknown4");
+            }
+            if (printMask?.WTRMUnknown5 ?? true)
+            {
+                sb.AppendItem(item.WTRMUnknown5, "WTRMUnknown5");
             }
         }
         
@@ -1031,6 +7358,50 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectPlacementDefaults))) return false;
+                }
+                else if (!isObjectPlacementDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
@@ -1038,6 +7409,522 @@ namespace Mutagen.Bethesda.Starfield
                     if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
+            {
+                if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
+            {
+                if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpactDataSet) ?? true))
+            {
+                if (!lhs.BlockBashImpactDataSet.Equals(rhs.BlockBashImpactDataSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
+            {
+                if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickupSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PickupSound, rhs.PickupSound, out var lhsPickupSound, out var rhsPickupSound, out var isPickupSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPickupSound).CommonInstance()!).Equals(lhsPickupSound, rhsPickupSound, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.PickupSound))) return false;
+                }
+                else if (!isPickupSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.DropdownSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DropdownSound, rhs.DropdownSound, out var lhsDropdownSound, out var rhsDropdownSound, out var isDropdownSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDropdownSound).CommonInstance()!).Equals(lhsDropdownSound, rhsDropdownSound, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.DropdownSound))) return false;
+                }
+                else if (!isDropdownSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.InstanceNaming) ?? true))
+            {
+                if (!lhs.InstanceNaming.Equals(rhs.InstanceNaming)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttachParentSlots) ?? true))
+            {
+                if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectTemplates) ?? true))
+            {
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Weapon.Property>)((IObjectTemplateGetter<Weapon.Property>)l).CommonInstance(typeof(Weapon.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectTemplates)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.EmbeddedWeaponMod) ?? true))
+            {
+                if (!lhs.EmbeddedWeaponMod.Equals(rhs.EmbeddedWeaponMod)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BNAM) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.BNAM, rhs.BNAM)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAIMUnknown1) ?? true))
+            {
+                if (!lhs.WAIMUnknown1.EqualsWithin(rhs.WAIMUnknown1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Zoom) ?? true))
+            {
+                if (!lhs.Zoom.Equals(rhs.Zoom)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AimModel) ?? true))
+            {
+                if (!lhs.AimModel.Equals(rhs.AimModel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAIMUnknown2) ?? true))
+            {
+                if (lhs.WAIMUnknown2 != rhs.WAIMUnknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AimAssistModelData) ?? true))
+            {
+                if (!lhs.AimAssistModelData.Equals(rhs.AimAssistModelData)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AimOpticalSightMarker) ?? true))
+            {
+                if (!lhs.AimOpticalSightMarker.Equals(rhs.AimOpticalSightMarker)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MeleeAimAssistModel) ?? true))
+            {
+                if (!lhs.MeleeAimAssistModel.Equals(rhs.MeleeAimAssistModel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAIMUnknown3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.WAIMUnknown3.Span, rhs.WAIMUnknown3.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AmmoType) ?? true))
+            {
+                if (!lhs.AmmoType.Equals(rhs.AmmoType)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MagazineSize) ?? true))
+            {
+                if (lhs.MagazineSize != rhs.MagazineSize) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.AmmoList) ?? true))
+            {
+                if (!lhs.AmmoList.Equals(rhs.AmmoList)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Ejections) ?? true))
+            {
+                if (!lhs.Ejections.Equals(rhs.Ejections)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAM2Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.WAM2Unknown.Span, rhs.WAM2Unknown.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MeleeOrCreature) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MeleeOrCreature, rhs.MeleeOrCreature, out var lhsMeleeOrCreature, out var rhsMeleeOrCreature, out var isMeleeOrCreatureEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsMeleeOrCreature).CommonInstance()!).Equals(lhsMeleeOrCreature, rhsMeleeOrCreature, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.MeleeOrCreature))) return false;
+                }
+                else if (!isMeleeOrCreatureEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PrimedExplosive) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PrimedExplosive, rhs.PrimedExplosive, out var lhsPrimedExplosive, out var rhsPrimedExplosive, out var isPrimedExplosiveEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPrimedExplosive).CommonInstance()!).Equals(lhsPrimedExplosive, rhsPrimedExplosive, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.PrimedExplosive))) return false;
+                }
+                else if (!isPrimedExplosiveEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.DryFire) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DryFire, rhs.DryFire, out var lhsDryFire, out var rhsDryFire, out var isDryFireEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDryFire).CommonInstance()!).Equals(lhsDryFire, rhsDryFire, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.DryFire))) return false;
+                }
+                else if (!isDryFireEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Idle) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Idle, rhs.Idle, out var lhsIdle, out var rhsIdle, out var isIdleEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsIdle).CommonInstance()!).Equals(lhsIdle, rhsIdle, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Idle))) return false;
+                }
+                else if (!isIdleEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Equip) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Equip, rhs.Equip, out var lhsEquip, out var rhsEquip, out var isEquipEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsEquip).CommonInstance()!).Equals(lhsEquip, rhsEquip, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Equip))) return false;
+                }
+                else if (!isEquipEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unequip) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Unequip, rhs.Unequip, out var lhsUnequip, out var rhsUnequip, out var isUnequipEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsUnequip).CommonInstance()!).Equals(lhsUnequip, rhsUnequip, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.Unequip))) return false;
+                }
+                else if (!isUnequipEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FastEquip) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FastEquip, rhs.FastEquip, out var lhsFastEquip, out var rhsFastEquip, out var isFastEquipEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsFastEquip).CommonInstance()!).Equals(lhsFastEquip, rhsFastEquip, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.FastEquip))) return false;
+                }
+                else if (!isFastEquipEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAUDUnknown1) ?? true))
+            {
+                if (lhs.WAUDUnknown1 != rhs.WAUDUnknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAUDUnknown2) ?? true))
+            {
+                if (lhs.WAUDUnknown2 != rhs.WAUDUnknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTUR) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.WTUR, rhs.WTUR)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WCHG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.WCHG, rhs.WCHG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.PhysicalDamage) ?? true))
+            {
+                if (!lhs.PhysicalDamage.EqualsWithin(rhs.PhysicalDamage)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.OptimalRange) ?? true))
+            {
+                if (!lhs.OptimalRange.EqualsWithin(rhs.OptimalRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.MaxRange) ?? true))
+            {
+                if (!lhs.MaxRange.EqualsWithin(rhs.MaxRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown1) ?? true))
+            {
+                if (!lhs.WDMGUnknown1.EqualsWithin(rhs.WDMGUnknown1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown2) ?? true))
+            {
+                if (!lhs.WDMGUnknown2.EqualsWithin(rhs.WDMGUnknown2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.CriticalHitSpell) ?? true))
+            {
+                if (!lhs.CriticalHitSpell.Equals(rhs.CriticalHitSpell)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.WDMGUnknown3.Span, rhs.WDMGUnknown3.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown4) ?? true))
+            {
+                if (!lhs.WDMGUnknown4.EqualsWithin(rhs.WDMGUnknown4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown5) ?? true))
+            {
+                if (!lhs.WDMGUnknown5.EqualsWithin(rhs.WDMGUnknown5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown6) ?? true))
+            {
+                if (!lhs.WDMGUnknown6.EqualsWithin(rhs.WDMGUnknown6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown7) ?? true))
+            {
+                if (!lhs.WDMGUnknown7.EqualsWithin(rhs.WDMGUnknown7)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown8) ?? true))
+            {
+                if (!lhs.WDMGUnknown8.EqualsWithin(rhs.WDMGUnknown8)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown9) ?? true))
+            {
+                if (!lhs.WDMGUnknown9.EqualsWithin(rhs.WDMGUnknown9)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown10) ?? true))
+            {
+                if (!lhs.WDMGUnknown10.EqualsWithin(rhs.WDMGUnknown10)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.DamageTypes) ?? true))
+            {
+                if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes, (l, r) => ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.DamageTypes)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FiringType) ?? true))
+            {
+                if (lhs.FiringType != rhs.FiringType) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BurstCount) ?? true))
+            {
+                if (lhs.BurstCount != rhs.BurstCount) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown1) ?? true))
+            {
+                if (lhs.WFIRUnknown1 != rhs.WFIRUnknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown2) ?? true))
+            {
+                if (!lhs.WFIRUnknown2.EqualsWithin(rhs.WFIRUnknown2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown3) ?? true))
+            {
+                if (!lhs.WFIRUnknown3.EqualsWithin(rhs.WFIRUnknown3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown4) ?? true))
+            {
+                if (!lhs.WFIRUnknown4.EqualsWithin(rhs.WFIRUnknown4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown5) ?? true))
+            {
+                if (!lhs.WFIRUnknown5.EqualsWithin(rhs.WFIRUnknown5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown6) ?? true))
+            {
+                if (lhs.WFIRUnknown6 != rhs.WFIRUnknown6) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FireRate) ?? true))
+            {
+                if (!lhs.FireRate.EqualsWithin(rhs.FireRate)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown7) ?? true))
+            {
+                if (!lhs.WFIRUnknown7.EqualsWithin(rhs.WFIRUnknown7)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown8) ?? true))
+            {
+                if (lhs.WFIRUnknown8 != rhs.WFIRUnknown8) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown9) ?? true))
+            {
+                if (!lhs.WFIRUnknown9.EqualsWithin(rhs.WFIRUnknown9)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown10) ?? true))
+            {
+                if (lhs.WFIRUnknown10 != rhs.WFIRUnknown10) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown11) ?? true))
+            {
+                if (!lhs.WFIRUnknown11.EqualsWithin(rhs.WFIRUnknown11)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown12) ?? true))
+            {
+                if (lhs.WFIRUnknown12 != rhs.WFIRUnknown12) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown13) ?? true))
+            {
+                if (!lhs.WFIRUnknown13.EqualsWithin(rhs.WFIRUnknown13)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFLG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.WFLG, rhs.WFLG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WGENUnknown1) ?? true))
+            {
+                if (lhs.WGENUnknown1 != rhs.WGENUnknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BaseWeight) ?? true))
+            {
+                if (!lhs.BaseWeight.EqualsWithin(rhs.BaseWeight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.BaseValue) ?? true))
+            {
+                if (lhs.BaseValue != rhs.BaseValue) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WGENUnknown2) ?? true))
+            {
+                if (!lhs.WGENUnknown2.EqualsWithin(rhs.WGENUnknown2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WGENUnknown3) ?? true))
+            {
+                if (!lhs.WGENUnknown3.EqualsWithin(rhs.WGENUnknown3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WeaponBarrel) ?? true))
+            {
+                if (!lhs.WeaponBarrel.Equals(rhs.WeaponBarrel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WABB) ?? true))
+            {
+                if (!string.Equals(lhs.WABB, rhs.WABB)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown1) ?? true))
+            {
+                if (lhs.WMELUnknown1 != rhs.WMELUnknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown2) ?? true))
+            {
+                if (!lhs.WMELUnknown2.EqualsWithin(rhs.WMELUnknown2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown3) ?? true))
+            {
+                if (!lhs.WMELUnknown3.EqualsWithin(rhs.WMELUnknown3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown4) ?? true))
+            {
+                if (lhs.WMELUnknown4 != rhs.WMELUnknown4) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown1) ?? true))
+            {
+                if (lhs.QNAMUnknown1 != rhs.QNAMUnknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.RechargeTime) ?? true))
+            {
+                if (!lhs.RechargeTime.EqualsWithin(rhs.RechargeTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.RechargeDelay) ?? true))
+            {
+                if (!lhs.RechargeDelay.EqualsWithin(rhs.RechargeDelay)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown2) ?? true))
+            {
+                if (lhs.QNAMUnknown2 != rhs.QNAMUnknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown3) ?? true))
+            {
+                if (lhs.QNAMUnknown3 != rhs.QNAMUnknown3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown4) ?? true))
+            {
+                if (lhs.QNAMUnknown4 != rhs.QNAMUnknown4) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown5) ?? true))
+            {
+                if (lhs.QNAMUnknown5 != rhs.QNAMUnknown5) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown6) ?? true))
+            {
+                if (!lhs.QNAMUnknown6.EqualsWithin(rhs.QNAMUnknown6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown7) ?? true))
+            {
+                if (lhs.QNAMUnknown7 != rhs.QNAMUnknown7) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WRLOUnknown1) ?? true))
+            {
+                if (!lhs.WRLOUnknown1.EqualsWithin(rhs.WRLOUnknown1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WRLOUnknown2) ?? true))
+            {
+                if (!lhs.WRLOUnknown2.EqualsWithin(rhs.WRLOUnknown2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WRLOUnknown3) ?? true))
+            {
+                if (lhs.WRLOUnknown3 != rhs.WRLOUnknown3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown1) ?? true))
+            {
+                if (lhs.WVARUnknown1 != rhs.WVARUnknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown2) ?? true))
+            {
+                if (!lhs.WVARUnknown2.EqualsWithin(rhs.WVARUnknown2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown3) ?? true))
+            {
+                if (lhs.WVARUnknown3 != rhs.WVARUnknown3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown4) ?? true))
+            {
+                if (!lhs.WVARUnknown4.EqualsWithin(rhs.WVARUnknown4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown5) ?? true))
+            {
+                if (!lhs.WVARUnknown5.EqualsWithin(rhs.WVARUnknown5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown6) ?? true))
+            {
+                if (!lhs.WVARUnknown6.EqualsWithin(rhs.WVARUnknown6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown7) ?? true))
+            {
+                if (!lhs.WVARUnknown7.EqualsWithin(rhs.WVARUnknown7)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown8) ?? true))
+            {
+                if (!lhs.WVARUnknown8.EqualsWithin(rhs.WVARUnknown8)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown9) ?? true))
+            {
+                if (lhs.WVARUnknown9 != rhs.WVARUnknown9) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown10) ?? true))
+            {
+                if (!lhs.WVARUnknown10.EqualsWithin(rhs.WVARUnknown10)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown11) ?? true))
+            {
+                if (!lhs.WVARUnknown11.EqualsWithin(rhs.WVARUnknown11)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown12) ?? true))
+            {
+                if (!lhs.WVARUnknown12.EqualsWithin(rhs.WVARUnknown12)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown13) ?? true))
+            {
+                if (lhs.WVARUnknown13 != rhs.WVARUnknown13) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FirstPersonModel, rhs.FirstPersonModel, out var lhsFirstPersonModel, out var rhsFirstPersonModel, out var isFirstPersonModelEqual))
+                {
+                    if (!((FirstPersonModelCommon)((IFirstPersonModelGetter)lhsFirstPersonModel).CommonInstance()!).Equals(lhsFirstPersonModel, rhsFirstPersonModel, equalsMask?.GetSubCrystal((int)Weapon_FieldIndex.FirstPersonModel))) return false;
+                }
+                else if (!isFirstPersonModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown1) ?? true))
+            {
+                if (lhs.WVISUnknown1 != rhs.WVISUnknown1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown2) ?? true))
+            {
+                if (lhs.WVISUnknown2 != rhs.WVISUnknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown3) ?? true))
+            {
+                if (lhs.WVISUnknown3 != rhs.WVISUnknown3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown4) ?? true))
+            {
+                if (lhs.WVISUnknown4 != rhs.WVISUnknown4) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown5) ?? true))
+            {
+                if (lhs.WVISUnknown5 != rhs.WVISUnknown5) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown1) ?? true))
+            {
+                if (!lhs.WTRMUnknown1.EqualsWithin(rhs.WTRMUnknown1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown2) ?? true))
+            {
+                if (lhs.WTRMUnknown2 != rhs.WTRMUnknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown3) ?? true))
+            {
+                if (!lhs.WTRMUnknown3.EqualsWithin(rhs.WTRMUnknown3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown4) ?? true))
+            {
+                if (!lhs.WTRMUnknown4.EqualsWithin(rhs.WTRMUnknown4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown5) ?? true))
+            {
+                if (!lhs.WTRMUnknown5.EqualsWithin(rhs.WTRMUnknown5)) return false;
             }
             return true;
         }
@@ -1067,10 +7954,181 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IWeaponGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
+            {
+                hash.Add(ObjectPlacementDefaultsitem);
+            }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
+            hash.Add(item.ObjectEffect);
+            if (item.EnchantmentAmount is {} EnchantmentAmountitem)
+            {
+                hash.Add(EnchantmentAmountitem);
+            }
+            hash.Add(item.EquipmentType);
+            hash.Add(item.BlockBashImpactDataSet);
+            hash.Add(item.AlternateBlockMaterial);
+            if (item.PickupSound is {} PickupSounditem)
+            {
+                hash.Add(PickupSounditem);
+            }
+            if (item.DropdownSound is {} DropdownSounditem)
+            {
+                hash.Add(DropdownSounditem);
+            }
+            hash.Add(item.Keywords);
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
+            hash.Add(item.InstanceNaming);
+            hash.Add(item.AttachParentSlots);
+            hash.Add(item.ObjectTemplates);
+            hash.Add(item.EmbeddedWeaponMod);
+            if (item.BNAM is {} BNAMItem)
+            {
+                hash.Add(BNAMItem);
+            }
+            hash.Add(item.WAIMUnknown1);
+            hash.Add(item.Zoom);
+            hash.Add(item.AimModel);
+            hash.Add(item.WAIMUnknown2);
+            hash.Add(item.AimAssistModelData);
+            hash.Add(item.AimOpticalSightMarker);
+            hash.Add(item.MeleeAimAssistModel);
+            hash.Add(item.WAIMUnknown3);
+            hash.Add(item.AmmoType);
+            hash.Add(item.MagazineSize);
+            hash.Add(item.AmmoList);
+            hash.Add(item.Projectile);
+            hash.Add(item.Ejections);
+            hash.Add(item.WAM2Unknown);
+            hash.Add(item.MeleeOrCreature);
+            hash.Add(item.PrimedExplosive);
+            hash.Add(item.DryFire);
+            hash.Add(item.Idle);
+            hash.Add(item.Equip);
+            hash.Add(item.Unequip);
+            hash.Add(item.FastEquip);
+            hash.Add(item.WAUDUnknown1);
+            hash.Add(item.WAUDUnknown2);
+            if (item.WTUR is {} WTURItem)
+            {
+                hash.Add(WTURItem);
+            }
+            if (item.WCHG is {} WCHGItem)
+            {
+                hash.Add(WCHGItem);
+            }
+            hash.Add(item.PhysicalDamage);
+            hash.Add(item.OptimalRange);
+            hash.Add(item.MaxRange);
+            hash.Add(item.WDMGUnknown1);
+            hash.Add(item.WDMGUnknown2);
+            hash.Add(item.CriticalHitSpell);
+            hash.Add(item.WDMGUnknown3);
+            hash.Add(item.WDMGUnknown4);
+            hash.Add(item.WDMGUnknown5);
+            hash.Add(item.WDMGUnknown6);
+            hash.Add(item.WDMGUnknown7);
+            hash.Add(item.WDMGUnknown8);
+            hash.Add(item.WDMGUnknown9);
+            hash.Add(item.WDMGUnknown10);
+            hash.Add(item.DamageTypes);
+            hash.Add(item.FiringType);
+            hash.Add(item.BurstCount);
+            hash.Add(item.WFIRUnknown1);
+            hash.Add(item.WFIRUnknown2);
+            hash.Add(item.WFIRUnknown3);
+            hash.Add(item.WFIRUnknown4);
+            hash.Add(item.WFIRUnknown5);
+            hash.Add(item.WFIRUnknown6);
+            hash.Add(item.FireRate);
+            hash.Add(item.WFIRUnknown7);
+            hash.Add(item.WFIRUnknown8);
+            hash.Add(item.WFIRUnknown9);
+            hash.Add(item.WFIRUnknown10);
+            hash.Add(item.WFIRUnknown11);
+            hash.Add(item.WFIRUnknown12);
+            hash.Add(item.WFIRUnknown13);
+            if (item.WFLG is {} WFLGItem)
+            {
+                hash.Add(WFLGItem);
+            }
+            hash.Add(item.WGENUnknown1);
+            hash.Add(item.BaseWeight);
+            hash.Add(item.BaseValue);
+            hash.Add(item.WGENUnknown2);
+            hash.Add(item.WGENUnknown3);
+            hash.Add(item.WeaponBarrel);
+            if (item.WABB is {} WABBitem)
+            {
+                hash.Add(WABBitem);
+            }
+            hash.Add(item.WMELUnknown1);
+            hash.Add(item.WMELUnknown2);
+            hash.Add(item.WMELUnknown3);
+            hash.Add(item.WMELUnknown4);
+            hash.Add(item.QNAMUnknown1);
+            hash.Add(item.RechargeTime);
+            hash.Add(item.RechargeDelay);
+            hash.Add(item.QNAMUnknown2);
+            hash.Add(item.QNAMUnknown3);
+            hash.Add(item.QNAMUnknown4);
+            hash.Add(item.QNAMUnknown5);
+            hash.Add(item.QNAMUnknown6);
+            hash.Add(item.QNAMUnknown7);
+            hash.Add(item.WRLOUnknown1);
+            hash.Add(item.WRLOUnknown2);
+            hash.Add(item.WRLOUnknown3);
+            hash.Add(item.WVARUnknown1);
+            hash.Add(item.WVARUnknown2);
+            hash.Add(item.WVARUnknown3);
+            hash.Add(item.WVARUnknown4);
+            hash.Add(item.WVARUnknown5);
+            hash.Add(item.WVARUnknown6);
+            hash.Add(item.WVARUnknown7);
+            hash.Add(item.WVARUnknown8);
+            hash.Add(item.WVARUnknown9);
+            hash.Add(item.WVARUnknown10);
+            hash.Add(item.WVARUnknown11);
+            hash.Add(item.WVARUnknown12);
+            hash.Add(item.WVARUnknown13);
+            if (item.FirstPersonModel is {} FirstPersonModelitem)
+            {
+                hash.Add(FirstPersonModelitem);
+            }
+            hash.Add(item.WVISUnknown1);
+            hash.Add(item.WVISUnknown2);
+            hash.Add(item.WVISUnknown3);
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.WVISUnknown4);
+            hash.Add(item.WVISUnknown5);
+            hash.Add(item.WTRMUnknown1);
+            hash.Add(item.WTRMUnknown2);
+            hash.Add(item.WTRMUnknown3);
+            hash.Add(item.WTRMUnknown4);
+            hash.Add(item.WTRMUnknown5);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1100,6 +8158,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateFormLinks())
@@ -1107,6 +8184,119 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
+            {
+                yield return ObjectEffectInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
+            {
+                yield return EquipmentTypeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.BlockBashImpactDataSet, out var BlockBashImpactDataSetInfo))
+            {
+                yield return BlockBashImpactDataSetInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.AlternateBlockMaterial, out var AlternateBlockMaterialInfo))
+            {
+                yield return AlternateBlockMaterialInfo;
+            }
+            if (obj.PickupSound is {} PickupSoundItems)
+            {
+                foreach (var item in PickupSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DropdownSound is {} DropdownSoundItems)
+            {
+                foreach (var item in DropdownSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.InstanceNaming, out var InstanceNamingInfo))
+            {
+                yield return InstanceNamingInfo;
+            }
+            if (obj.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                foreach (var item in AttachParentSlotsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.EmbeddedWeaponMod, out var EmbeddedWeaponModInfo))
+            {
+                yield return EmbeddedWeaponModInfo;
+            }
+            yield return FormLinkInformation.Factory(obj.Zoom);
+            yield return FormLinkInformation.Factory(obj.AimModel);
+            yield return FormLinkInformation.Factory(obj.AimAssistModelData);
+            yield return FormLinkInformation.Factory(obj.AimOpticalSightMarker);
+            yield return FormLinkInformation.Factory(obj.MeleeAimAssistModel);
+            yield return FormLinkInformation.Factory(obj.AmmoType);
+            yield return FormLinkInformation.Factory(obj.AmmoList);
+            yield return FormLinkInformation.Factory(obj.Projectile);
+            yield return FormLinkInformation.Factory(obj.Ejections);
+            foreach (var item in obj.MeleeOrCreature.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.PrimedExplosive.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DryFire.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Idle.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Equip.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Unequip.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FastEquip.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            yield return FormLinkInformation.Factory(obj.CriticalHitSpell);
+            if (obj.DamageTypes is {} DamageTypesItem)
+            {
+                foreach (var item in DamageTypesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield return FormLinkInformation.Factory(obj.WeaponBarrel);
+            if (obj.FirstPersonModel is {} FirstPersonModelItems)
+            {
+                foreach (var item in FirstPersonModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield return FormLinkInformation.Factory(obj.ImpactDataSet);
             yield break;
         }
         
@@ -1118,9 +8308,21 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
                 if (obj.Model is {} ModelItems)
                 {
                     foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.FirstPersonModel is {} FirstPersonModelItems)
+                {
+                    foreach (var item in FirstPersonModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -1200,6 +8402,138 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.ObjectPlacementDefaults);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    {
+                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.ObjectPlacementDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Weapon_FieldIndex.Model);
@@ -1225,6 +8559,804 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
+            {
+                item.ObjectEffect.SetTo(rhs.ObjectEffect.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                item.EnchantmentAmount = rhs.EnchantmentAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
+            {
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpactDataSet) ?? true))
+            {
+                item.BlockBashImpactDataSet.SetTo(rhs.BlockBashImpactDataSet.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
+            {
+                item.AlternateBlockMaterial.SetTo(rhs.AlternateBlockMaterial.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickupSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.PickupSound);
+                try
+                {
+                    if(rhs.PickupSound is {} rhsPickupSound)
+                    {
+                        item.PickupSound = rhsPickupSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.PickupSound));
+                    }
+                    else
+                    {
+                        item.PickupSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DropdownSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.DropdownSound);
+                try
+                {
+                    if(rhs.DropdownSound is {} rhsDropdownSound)
+                    {
+                        item.DropdownSound = rhsDropdownSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.DropdownSound));
+                    }
+                    else
+                    {
+                        item.DropdownSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.InstanceNaming) ?? true))
+            {
+                item.InstanceNaming.SetTo(rhs.InstanceNaming.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttachParentSlots) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.AttachParentSlots);
+                try
+                {
+                    if ((rhs.AttachParentSlots != null))
+                    {
+                        item.AttachParentSlots = 
+                            rhs.AttachParentSlots
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.AttachParentSlots = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.ObjectTemplates);
+                try
+                {
+                    if ((rhs.ObjectTemplates != null))
+                    {
+                        item.ObjectTemplates = 
+                            rhs.ObjectTemplates
+                            .Select(r =>
+                            {
+                                return r.DeepCopy<Weapon.Property>(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectTemplate<Weapon.Property>>();
+                    }
+                    else
+                    {
+                        item.ObjectTemplates = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EmbeddedWeaponMod) ?? true))
+            {
+                item.EmbeddedWeaponMod.SetTo(rhs.EmbeddedWeaponMod.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BNAM) ?? true))
+            {
+                if(rhs.BNAM is {} BNAMrhs)
+                {
+                    item.BNAM = BNAMrhs.ToArray();
+                }
+                else
+                {
+                    item.BNAM = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAIMUnknown1) ?? true))
+            {
+                item.WAIMUnknown1 = rhs.WAIMUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Zoom) ?? true))
+            {
+                item.Zoom.SetTo(rhs.Zoom.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AimModel) ?? true))
+            {
+                item.AimModel.SetTo(rhs.AimModel.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAIMUnknown2) ?? true))
+            {
+                item.WAIMUnknown2 = rhs.WAIMUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AimAssistModelData) ?? true))
+            {
+                item.AimAssistModelData.SetTo(rhs.AimAssistModelData.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AimOpticalSightMarker) ?? true))
+            {
+                item.AimOpticalSightMarker.SetTo(rhs.AimOpticalSightMarker.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.MeleeAimAssistModel) ?? true))
+            {
+                item.MeleeAimAssistModel.SetTo(rhs.MeleeAimAssistModel.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAIMUnknown3) ?? true))
+            {
+                item.WAIMUnknown3 = rhs.WAIMUnknown3.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AmmoType) ?? true))
+            {
+                item.AmmoType.SetTo(rhs.AmmoType.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.MagazineSize) ?? true))
+            {
+                item.MagazineSize = rhs.MagazineSize;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AmmoList) ?? true))
+            {
+                item.AmmoList.SetTo(rhs.AmmoList.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Projectile) ?? true))
+            {
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Ejections) ?? true))
+            {
+                item.Ejections.SetTo(rhs.Ejections.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAM2Unknown) ?? true))
+            {
+                item.WAM2Unknown = rhs.WAM2Unknown.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.MeleeOrCreature) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.MeleeOrCreature);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.MeleeOrCreature) ?? true))
+                    {
+                        item.MeleeOrCreature = rhs.MeleeOrCreature.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.MeleeOrCreature),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PrimedExplosive) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.PrimedExplosive);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PrimedExplosive) ?? true))
+                    {
+                        item.PrimedExplosive = rhs.PrimedExplosive.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.PrimedExplosive),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DryFire) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.DryFire);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DryFire) ?? true))
+                    {
+                        item.DryFire = rhs.DryFire.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.DryFire),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Idle) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Idle);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Idle) ?? true))
+                    {
+                        item.Idle = rhs.Idle.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.Idle),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Equip) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Equip);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Equip) ?? true))
+                    {
+                        item.Equip = rhs.Equip.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.Equip),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unequip) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Unequip);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Unequip) ?? true))
+                    {
+                        item.Unequip = rhs.Unequip.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.Unequip),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FastEquip) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.FastEquip);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FastEquip) ?? true))
+                    {
+                        item.FastEquip = rhs.FastEquip.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Weapon_FieldIndex.FastEquip),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAUDUnknown1) ?? true))
+            {
+                item.WAUDUnknown1 = rhs.WAUDUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WAUDUnknown2) ?? true))
+            {
+                item.WAUDUnknown2 = rhs.WAUDUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTUR) ?? true))
+            {
+                if(rhs.WTUR is {} WTURrhs)
+                {
+                    item.WTUR = WTURrhs.ToArray();
+                }
+                else
+                {
+                    item.WTUR = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WCHG) ?? true))
+            {
+                if(rhs.WCHG is {} WCHGrhs)
+                {
+                    item.WCHG = WCHGrhs.ToArray();
+                }
+                else
+                {
+                    item.WCHG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PhysicalDamage) ?? true))
+            {
+                item.PhysicalDamage = rhs.PhysicalDamage;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.OptimalRange) ?? true))
+            {
+                item.OptimalRange = rhs.OptimalRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.MaxRange) ?? true))
+            {
+                item.MaxRange = rhs.MaxRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown1) ?? true))
+            {
+                item.WDMGUnknown1 = rhs.WDMGUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown2) ?? true))
+            {
+                item.WDMGUnknown2 = rhs.WDMGUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.CriticalHitSpell) ?? true))
+            {
+                item.CriticalHitSpell.SetTo(rhs.CriticalHitSpell.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown3) ?? true))
+            {
+                item.WDMGUnknown3 = rhs.WDMGUnknown3.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown4) ?? true))
+            {
+                item.WDMGUnknown4 = rhs.WDMGUnknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown5) ?? true))
+            {
+                item.WDMGUnknown5 = rhs.WDMGUnknown5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown6) ?? true))
+            {
+                item.WDMGUnknown6 = rhs.WDMGUnknown6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown7) ?? true))
+            {
+                item.WDMGUnknown7 = rhs.WDMGUnknown7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown8) ?? true))
+            {
+                item.WDMGUnknown8 = rhs.WDMGUnknown8;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown9) ?? true))
+            {
+                item.WDMGUnknown9 = rhs.WDMGUnknown9;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WDMGUnknown10) ?? true))
+            {
+                item.WDMGUnknown10 = rhs.WDMGUnknown10;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.DamageTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.DamageTypes);
+                try
+                {
+                    if ((rhs.DamageTypes != null))
+                    {
+                        item.DamageTypes = 
+                            rhs.DamageTypes
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<WeaponDamageType>();
+                    }
+                    else
+                    {
+                        item.DamageTypes = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FiringType) ?? true))
+            {
+                item.FiringType = rhs.FiringType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BurstCount) ?? true))
+            {
+                item.BurstCount = rhs.BurstCount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown1) ?? true))
+            {
+                item.WFIRUnknown1 = rhs.WFIRUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown2) ?? true))
+            {
+                item.WFIRUnknown2 = rhs.WFIRUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown3) ?? true))
+            {
+                item.WFIRUnknown3 = rhs.WFIRUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown4) ?? true))
+            {
+                item.WFIRUnknown4 = rhs.WFIRUnknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown5) ?? true))
+            {
+                item.WFIRUnknown5 = rhs.WFIRUnknown5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown6) ?? true))
+            {
+                item.WFIRUnknown6 = rhs.WFIRUnknown6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FireRate) ?? true))
+            {
+                item.FireRate = rhs.FireRate;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown7) ?? true))
+            {
+                item.WFIRUnknown7 = rhs.WFIRUnknown7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown8) ?? true))
+            {
+                item.WFIRUnknown8 = rhs.WFIRUnknown8;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown9) ?? true))
+            {
+                item.WFIRUnknown9 = rhs.WFIRUnknown9;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown10) ?? true))
+            {
+                item.WFIRUnknown10 = rhs.WFIRUnknown10;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown11) ?? true))
+            {
+                item.WFIRUnknown11 = rhs.WFIRUnknown11;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown12) ?? true))
+            {
+                item.WFIRUnknown12 = rhs.WFIRUnknown12;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFIRUnknown13) ?? true))
+            {
+                item.WFIRUnknown13 = rhs.WFIRUnknown13;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WFLG) ?? true))
+            {
+                if(rhs.WFLG is {} WFLGrhs)
+                {
+                    item.WFLG = WFLGrhs.ToArray();
+                }
+                else
+                {
+                    item.WFLG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WGENUnknown1) ?? true))
+            {
+                item.WGENUnknown1 = rhs.WGENUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BaseWeight) ?? true))
+            {
+                item.BaseWeight = rhs.BaseWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BaseValue) ?? true))
+            {
+                item.BaseValue = rhs.BaseValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WGENUnknown2) ?? true))
+            {
+                item.WGENUnknown2 = rhs.WGENUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WGENUnknown3) ?? true))
+            {
+                item.WGENUnknown3 = rhs.WGENUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WeaponBarrel) ?? true))
+            {
+                item.WeaponBarrel.SetTo(rhs.WeaponBarrel.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WABB) ?? true))
+            {
+                item.WABB = rhs.WABB;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown1) ?? true))
+            {
+                item.WMELUnknown1 = rhs.WMELUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown2) ?? true))
+            {
+                item.WMELUnknown2 = rhs.WMELUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown3) ?? true))
+            {
+                item.WMELUnknown3 = rhs.WMELUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WMELUnknown4) ?? true))
+            {
+                item.WMELUnknown4 = rhs.WMELUnknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown1) ?? true))
+            {
+                item.QNAMUnknown1 = rhs.QNAMUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.RechargeTime) ?? true))
+            {
+                item.RechargeTime = rhs.RechargeTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.RechargeDelay) ?? true))
+            {
+                item.RechargeDelay = rhs.RechargeDelay;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown2) ?? true))
+            {
+                item.QNAMUnknown2 = rhs.QNAMUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown3) ?? true))
+            {
+                item.QNAMUnknown3 = rhs.QNAMUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown4) ?? true))
+            {
+                item.QNAMUnknown4 = rhs.QNAMUnknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown5) ?? true))
+            {
+                item.QNAMUnknown5 = rhs.QNAMUnknown5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown6) ?? true))
+            {
+                item.QNAMUnknown6 = rhs.QNAMUnknown6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.QNAMUnknown7) ?? true))
+            {
+                item.QNAMUnknown7 = rhs.QNAMUnknown7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WRLOUnknown1) ?? true))
+            {
+                item.WRLOUnknown1 = rhs.WRLOUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WRLOUnknown2) ?? true))
+            {
+                item.WRLOUnknown2 = rhs.WRLOUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WRLOUnknown3) ?? true))
+            {
+                item.WRLOUnknown3 = rhs.WRLOUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown1) ?? true))
+            {
+                item.WVARUnknown1 = rhs.WVARUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown2) ?? true))
+            {
+                item.WVARUnknown2 = rhs.WVARUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown3) ?? true))
+            {
+                item.WVARUnknown3 = rhs.WVARUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown4) ?? true))
+            {
+                item.WVARUnknown4 = rhs.WVARUnknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown5) ?? true))
+            {
+                item.WVARUnknown5 = rhs.WVARUnknown5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown6) ?? true))
+            {
+                item.WVARUnknown6 = rhs.WVARUnknown6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown7) ?? true))
+            {
+                item.WVARUnknown7 = rhs.WVARUnknown7;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown8) ?? true))
+            {
+                item.WVARUnknown8 = rhs.WVARUnknown8;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown9) ?? true))
+            {
+                item.WVARUnknown9 = rhs.WVARUnknown9;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown10) ?? true))
+            {
+                item.WVARUnknown10 = rhs.WVARUnknown10;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown11) ?? true))
+            {
+                item.WVARUnknown11 = rhs.WVARUnknown11;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown12) ?? true))
+            {
+                item.WVARUnknown12 = rhs.WVARUnknown12;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVARUnknown13) ?? true))
+            {
+                item.WVARUnknown13 = rhs.WVARUnknown13;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
+            {
+                errorMask?.PushIndex((int)Weapon_FieldIndex.FirstPersonModel);
+                try
+                {
+                    if(rhs.FirstPersonModel is {} rhsFirstPersonModel)
+                    {
+                        item.FirstPersonModel = rhsFirstPersonModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.FirstPersonModel));
+                    }
+                    else
+                    {
+                        item.FirstPersonModel = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown1) ?? true))
+            {
+                item.WVISUnknown1 = rhs.WVISUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown2) ?? true))
+            {
+                item.WVISUnknown2 = rhs.WVISUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown3) ?? true))
+            {
+                item.WVISUnknown3 = rhs.WVISUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown4) ?? true))
+            {
+                item.WVISUnknown4 = rhs.WVISUnknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WVISUnknown5) ?? true))
+            {
+                item.WVISUnknown5 = rhs.WVISUnknown5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown1) ?? true))
+            {
+                item.WTRMUnknown1 = rhs.WTRMUnknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown2) ?? true))
+            {
+                item.WTRMUnknown2 = rhs.WTRMUnknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown3) ?? true))
+            {
+                item.WTRMUnknown3 = rhs.WTRMUnknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown4) ?? true))
+            {
+                item.WTRMUnknown4 = rhs.WTRMUnknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.WTRMUnknown5) ?? true))
+            {
+                item.WTRMUnknown5 = rhs.WTRMUnknown5;
             }
         }
         
@@ -1383,12 +9515,476 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
                     translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ObjectEffect,
+                header: translationParams.ConvertToCustom(RecordTypes.EITM));
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.EnchantmentAmount,
+                header: translationParams.ConvertToCustom(RecordTypes.EAMT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EquipmentType,
+                header: translationParams.ConvertToCustom(RecordTypes.ETYP));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BlockBashImpactDataSet,
+                header: translationParams.ConvertToCustom(RecordTypes.BIDS));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AlternateBlockMaterial,
+                header: translationParams.ConvertToCustom(RecordTypes.BAMT));
+            if (item.PickupSound is {} PickupSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PickupSoundItem).BinaryWriteTranslator).Write(
+                        item: PickupSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.DropdownSound is {} DropdownSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PDSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DropdownSoundItem).BinaryWriteTranslator).Write(
+                        item: DropdownSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.InstanceNaming,
+                header: translationParams.ConvertToCustom(RecordTypes.INRD));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AttachParentSlots,
+                recordType: translationParams.ConvertToCustom(RecordTypes.APPR),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectTemplateGetter<Weapon.Property>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.ObjectTemplates,
+                counterType: RecordTypes.OBTE,
+                counterLength: 4,
+                endMarker: RecordTypes.STOP,
+                alwaysWriteEndMarker: true,
+                transl: (MutagenWriter subWriter, IObjectTemplateGetter<Weapon.Property> subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectTemplateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<Weapon.Property>(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EmbeddedWeaponMod,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.BNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WAIM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WAIMUnknown1);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Zoom);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AimModel);
+                writer.Write(item.WAIMUnknown2);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AimAssistModelData);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AimOpticalSightMarker);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MeleeAimAssistModel);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WAIMUnknown3);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WAM2)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmmoType);
+                writer.Write(item.MagazineSize);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmmoList);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Projectile);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Ejections);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WAM2Unknown);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WAUD)))
+            {
+                var MeleeOrCreatureItem = item.MeleeOrCreature;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)MeleeOrCreatureItem).BinaryWriteTranslator).Write(
+                    item: MeleeOrCreatureItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var PrimedExplosiveItem = item.PrimedExplosive;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PrimedExplosiveItem).BinaryWriteTranslator).Write(
+                    item: PrimedExplosiveItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var DryFireItem = item.DryFire;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DryFireItem).BinaryWriteTranslator).Write(
+                    item: DryFireItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var IdleItem = item.Idle;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)IdleItem).BinaryWriteTranslator).Write(
+                    item: IdleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var EquipItem = item.Equip;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)EquipItem).BinaryWriteTranslator).Write(
+                    item: EquipItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var UnequipItem = item.Unequip;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)UnequipItem).BinaryWriteTranslator).Write(
+                    item: UnequipItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var FastEquipItem = item.FastEquip;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)FastEquipItem).BinaryWriteTranslator).Write(
+                    item: FastEquipItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                writer.Write(item.WAUDUnknown1);
+                writer.Write(item.WAUDUnknown2);
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WTUR,
+                header: translationParams.ConvertToCustom(RecordTypes.WTUR));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WCHG,
+                header: translationParams.ConvertToCustom(RecordTypes.WCHG));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WDMG)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.PhysicalDamage);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.OptimalRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MaxRange);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown2);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CriticalHitSpell);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown5);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown6);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown7);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown8);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown9);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WDMGUnknown10);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWeaponDamageTypeGetter>.Instance.Write(
+                writer: writer,
+                items: item.DamageTypes,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DAMA),
+                transl: (MutagenWriter subWriter, IWeaponDamageTypeGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((WeaponDamageTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WFIR)))
+            {
+                EnumBinaryTranslation<Weapon.FiringTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.FiringType,
+                    length: 1);
+                writer.Write(item.BurstCount);
+                writer.Write(item.WFIRUnknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown5);
+                writer.Write(item.WFIRUnknown6);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.FireRate);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown7);
+                writer.Write(item.WFIRUnknown8);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown9);
+                writer.Write(item.WFIRUnknown10);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown11);
+                writer.Write(item.WFIRUnknown12);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WFIRUnknown13);
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WFLG,
+                header: translationParams.ConvertToCustom(RecordTypes.WFLG));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WGEN)))
+            {
+                writer.Write(item.WGENUnknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.BaseWeight);
+                writer.Write(item.BaseValue);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WGENUnknown2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WGENUnknown3);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.WeaponBarrel);
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WABB,
+                header: translationParams.ConvertToCustom(RecordTypes.WABB),
+                binaryType: StringBinaryType.NullTerminate);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WMEL)))
+            {
+                writer.Write(item.WMELUnknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WMELUnknown2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WMELUnknown3);
+                writer.Write(item.WMELUnknown4);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.QNAM)))
+            {
+                writer.Write(item.QNAMUnknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RechargeTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.RechargeDelay);
+                writer.Write(item.QNAMUnknown2);
+                writer.Write(item.QNAMUnknown3);
+                writer.Write(item.QNAMUnknown4);
+                writer.Write(item.QNAMUnknown5);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.QNAMUnknown6);
+                writer.Write(item.QNAMUnknown7);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WRLO)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WRLOUnknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WRLOUnknown2);
+                writer.Write(item.WRLOUnknown3);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WVAR)))
+            {
+                writer.Write(item.WVARUnknown1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown2);
+                writer.Write(item.WVARUnknown3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown5);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown6);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown7);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown8);
+                writer.Write(item.WVARUnknown9);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown10);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown11);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WVARUnknown12);
+                writer.Write(item.WVARUnknown13);
+            }
+            if (item.FirstPersonModel is {} FirstPersonModelItem)
+            {
+                ((FirstPersonModelBinaryWriteTranslation)((IBinaryItem)FirstPersonModelItem).BinaryWriteTranslator).Write(
+                    item: FirstPersonModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WVIS)))
+            {
+                writer.Write(item.WVISUnknown1);
+                writer.Write(item.WVISUnknown2);
+                writer.Write(item.WVISUnknown3);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactDataSet);
+                writer.Write(item.WVISUnknown4);
+                writer.Write(item.WVISUnknown5);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WTRM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WTRMUnknown1);
+                writer.Write(item.WTRMUnknown2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WTRMUnknown3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WTRMUnknown4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WTRMUnknown5);
             }
         }
 
@@ -1475,15 +10071,514 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Weapon_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Weapon_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Weapon_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    return (int)Weapon_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)Weapon_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Weapon_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Weapon_FieldIndex.Name;
+                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.FLLD:
                 {
-                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.Name)
+                    {
+                        item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                            frame: frame,
+                            translationParams: translationParams.DoNotShortCircuit());
+                        return new ParseResult((int)Weapon_FieldIndex.Model, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.WVARUnknown13)
+                    {
+                        item.FirstPersonModel = Mutagen.Bethesda.Starfield.FirstPersonModel.CreateFromBinary(
+                            frame: frame,
+                            translationParams: translationParams.DoNotShortCircuit());
+                        return new ParseResult((int)Weapon_FieldIndex.FirstPersonModel, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                                    frame: frame,
+                                    translationParams: translationParams.DoNotShortCircuit());
+                                return new ParseResult((int)Weapon_FieldIndex.Model, nextRecordType);
+                            case 1:
+                                item.FirstPersonModel = Mutagen.Bethesda.Starfield.FirstPersonModel.CreateFromBinary(
+                                    frame: frame,
+                                    translationParams: translationParams.DoNotShortCircuit());
+                                return new ParseResult((int)Weapon_FieldIndex.FirstPersonModel, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.EITM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Weapon_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.EAMT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EnchantmentAmount = frame.ReadUInt16();
+                    return (int)Weapon_FieldIndex.EnchantmentAmount;
+                }
+                case RecordTypeInts.ETYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Weapon_FieldIndex.EquipmentType;
+                }
+                case RecordTypeInts.BIDS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BlockBashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Weapon_FieldIndex.BlockBashImpactDataSet;
+                }
+                case RecordTypeInts.BAMT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Weapon_FieldIndex.AlternateBlockMaterial;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Weapon_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Weapon_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Weapon_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Weapon_FieldIndex.Description;
+                }
+                case RecordTypeInts.INRD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Weapon_FieldIndex.InstanceNaming;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachParentSlots = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Weapon_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    item.ObjectTemplates = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectTemplate<Weapon.Property>>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.OBTE,
+                            triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ObjectTemplate<Weapon.Property>.TryCreateFromBinary)
+                        .CastExtendedList<ObjectTemplate<Weapon.Property>>();
+                    return (int)Weapon_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EmbeddedWeaponMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Weapon_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.WAIM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WAIMUnknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Zoom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AimModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 2) return null;
+                    item.WAIMUnknown2 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AimAssistModelData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AimOpticalSightMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MeleeAimAssistModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.WAIMUnknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(9));
+                    return (int)Weapon_FieldIndex.WAIMUnknown3;
+                }
+                case RecordTypeInts.WAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AmmoType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MagazineSize = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AmmoList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Projectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Ejections.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.WAM2Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    return (int)Weapon_FieldIndex.WAM2Unknown;
+                }
+                case RecordTypeInts.WAUD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Complete) return null;
+                    item.MeleeOrCreature = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.PrimedExplosive = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.DryFire = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.Idle = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.Equip = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.Unequip = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.FastEquip = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WAUDUnknown1 = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WAUDUnknown2 = dataFrame.ReadInt32();
+                    return (int)Weapon_FieldIndex.WAUDUnknown2;
+                }
+                case RecordTypeInts.WTUR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WTUR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Weapon_FieldIndex.WTUR;
+                }
+                case RecordTypeInts.WCHG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WCHG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Weapon_FieldIndex.WCHG;
+                }
+                case RecordTypeInts.WDMG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.PhysicalDamage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.OptimalRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MaxRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CriticalHitSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.WDMGUnknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(10));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown8 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WDMGUnknown10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Weapon_FieldIndex.WDMGUnknown10;
+                }
+                case RecordTypeInts.DAMA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DamageTypes = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WeaponDamageType>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: WeaponDamageType.TryCreateFromBinary)
+                        .CastExtendedList<WeaponDamageType>();
+                    return (int)Weapon_FieldIndex.DamageTypes;
+                }
+                case RecordTypeInts.WFIR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.FiringType = EnumBinaryTranslation<Weapon.FiringTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.BurstCount = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.WFIRUnknown1 = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.WFIRUnknown6 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.FireRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.WFIRUnknown8 = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.WFIRUnknown10 = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.WFIRUnknown12 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WFIRUnknown13 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Weapon_FieldIndex.WFIRUnknown13;
+                }
+                case RecordTypeInts.WFLG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WFLG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Weapon_FieldIndex.WFLG;
+                }
+                case RecordTypeInts.WGEN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WGENUnknown1 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.BaseWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.BaseValue = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WGENUnknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WGENUnknown3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WeaponBarrel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Weapon_FieldIndex.WeaponBarrel;
+                }
+                case RecordTypeInts.WABB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WABB = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Weapon_FieldIndex.WABB;
+                }
+                case RecordTypeInts.WMEL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.WMELUnknown1 = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WMELUnknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WMELUnknown3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WMELUnknown4 = dataFrame.ReadUInt32();
+                    return (int)Weapon_FieldIndex.WMELUnknown4;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.QNAMUnknown1 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RechargeTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.RechargeDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.QNAMUnknown2 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.QNAMUnknown3 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.QNAMUnknown4 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.QNAMUnknown5 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.QNAMUnknown6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.QNAMUnknown7 = dataFrame.ReadUInt32();
+                    return (int)Weapon_FieldIndex.QNAMUnknown7;
+                }
+                case RecordTypeInts.WRLO:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WRLOUnknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WRLOUnknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.WRLOUnknown3 = dataFrame.ReadUInt16();
+                    return (int)Weapon_FieldIndex.WRLOUnknown3;
+                }
+                case RecordTypeInts.WVAR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown1 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown3 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown8 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown9 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVARUnknown12 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.WVARUnknown13 = dataFrame.ReadUInt8();
+                    return (int)Weapon_FieldIndex.WVARUnknown13;
+                }
+                case RecordTypeInts.MOD4:
+                case RecordTypeInts.MO4S:
+                {
+                    item.FirstPersonModel = Mutagen.Bethesda.Starfield.FirstPersonModel.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Weapon_FieldIndex.Model;
+                    return (int)Weapon_FieldIndex.FirstPersonModel;
+                }
+                case RecordTypeInts.WVIS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVISUnknown1 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVISUnknown2 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVISUnknown3 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVISUnknown4 = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WVISUnknown5 = dataFrame.ReadUInt32();
+                    return (int)Weapon_FieldIndex.WVISUnknown5;
+                }
+                case RecordTypeInts.WTRM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WTRMUnknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.WTRMUnknown2 = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WTRMUnknown3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WTRMUnknown4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WTRMUnknown5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)Weapon_FieldIndex.WTRMUnknown5;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1544,8 +10639,621 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IWeapon);
 
+        public Weapon.MajorFlag MajorFlags => (Weapon.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ObjectPlacementDefaults
+        private RangeInt32? _ObjectPlacementDefaultsLocation;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
         public IModelGetter? Model { get; private set; }
+        #region ObjectEffect
+        private int? _ObjectEffectLocation;
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        #endregion
+        #region EnchantmentAmount
+        private int? _EnchantmentAmountLocation;
+        public UInt16? EnchantmentAmount => _EnchantmentAmountLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnchantmentAmountLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region EquipmentType
+        private int? _EquipmentTypeLocation;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EquipmentTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEquipTypeGetter>.Null;
+        #endregion
+        #region BlockBashImpactDataSet
+        private int? _BlockBashImpactDataSetLocation;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpactDataSet => _BlockBashImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlockBashImpactDataSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
+        #endregion
+        #region AlternateBlockMaterial
+        private int? _AlternateBlockMaterialLocation;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlternateBlockMaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        #endregion
+        public ISoundReferenceGetter? PickupSound { get; private set; }
+        public ISoundReferenceGetter? DropdownSound { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region InstanceNaming
+        private int? _InstanceNamingLocation;
+        public IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRulesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRulesGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
+        public IReadOnlyList<IObjectTemplateGetter<Weapon.Property>>? ObjectTemplates { get; private set; }
+        #region EmbeddedWeaponMod
+        private int? _EmbeddedWeaponModLocation;
+        public IFormLinkNullableGetter<IAObjectModificationGetter> EmbeddedWeaponMod => _EmbeddedWeaponModLocation.HasValue ? new FormLinkNullable<IAObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmbeddedWeaponModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAObjectModificationGetter>.Null;
+        #endregion
+        #region BNAM
+        private int? _BNAMLocation;
+        public ReadOnlyMemorySlice<Byte>? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        private RangeInt32? _WAIMLocation;
+        #region WAIMUnknown1
+        private int _WAIMUnknown1Location => _WAIMLocation!.Value.Min;
+        private bool _WAIMUnknown1_IsSet => _WAIMLocation.HasValue;
+        public Single WAIMUnknown1 => _WAIMUnknown1_IsSet ? _recordData.Slice(_WAIMUnknown1Location, 4).Float() : default;
+        #endregion
+        #region Zoom
+        private int _ZoomLocation => _WAIMLocation!.Value.Min + 0x4;
+        private bool _Zoom_IsSet => _WAIMLocation.HasValue;
+        public IFormLinkGetter<IZoomGetter> Zoom => _Zoom_IsSet ? new FormLink<IZoomGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ZoomLocation, 0x4)))) : FormLink<IZoomGetter>.Null;
+        #endregion
+        #region AimModel
+        private int _AimModelLocation => _WAIMLocation!.Value.Min + 0x8;
+        private bool _AimModel_IsSet => _WAIMLocation.HasValue;
+        public IFormLinkGetter<IAimModelGetter> AimModel => _AimModel_IsSet ? new FormLink<IAimModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AimModelLocation, 0x4)))) : FormLink<IAimModelGetter>.Null;
+        #endregion
+        #region WAIMUnknown2
+        private int _WAIMUnknown2Location => _WAIMLocation!.Value.Min + 0xC;
+        private bool _WAIMUnknown2_IsSet => _WAIMLocation.HasValue;
+        public UInt16 WAIMUnknown2 => _WAIMUnknown2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_WAIMUnknown2Location, 2)) : default;
+        #endregion
+        #region AimAssistModelData
+        private int _AimAssistModelDataLocation => _WAIMLocation!.Value.Min + 0xE;
+        private bool _AimAssistModelData_IsSet => _WAIMLocation.HasValue;
+        public IFormLinkGetter<IAimAssistModelDataGetter> AimAssistModelData => _AimAssistModelData_IsSet ? new FormLink<IAimAssistModelDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AimAssistModelDataLocation, 0x4)))) : FormLink<IAimAssistModelDataGetter>.Null;
+        #endregion
+        #region AimOpticalSightMarker
+        private int _AimOpticalSightMarkerLocation => _WAIMLocation!.Value.Min + 0x12;
+        private bool _AimOpticalSightMarker_IsSet => _WAIMLocation.HasValue;
+        public IFormLinkGetter<IAimOpticalSightMarkerGetter> AimOpticalSightMarker => _AimOpticalSightMarker_IsSet ? new FormLink<IAimOpticalSightMarkerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AimOpticalSightMarkerLocation, 0x4)))) : FormLink<IAimOpticalSightMarkerGetter>.Null;
+        #endregion
+        #region MeleeAimAssistModel
+        private int _MeleeAimAssistModelLocation => _WAIMLocation!.Value.Min + 0x16;
+        private bool _MeleeAimAssistModel_IsSet => _WAIMLocation.HasValue;
+        public IFormLinkGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModel => _MeleeAimAssistModel_IsSet ? new FormLink<IMeleeAimAssistModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MeleeAimAssistModelLocation, 0x4)))) : FormLink<IMeleeAimAssistModelGetter>.Null;
+        #endregion
+        #region WAIMUnknown3
+        private int _WAIMUnknown3Location => _WAIMLocation!.Value.Min + 0x1A;
+        private bool _WAIMUnknown3_IsSet => _WAIMLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> WAIMUnknown3 => _WAIMUnknown3_IsSet ? _recordData.Span.Slice(_WAIMUnknown3Location, 9).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        private RangeInt32? _WAM2Location;
+        #region AmmoType
+        private int _AmmoTypeLocation => _WAM2Location!.Value.Min;
+        private bool _AmmoType_IsSet => _WAM2Location.HasValue;
+        public IFormLinkGetter<IAmmunitionGetter> AmmoType => _AmmoType_IsSet ? new FormLink<IAmmunitionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AmmoTypeLocation, 0x4)))) : FormLink<IAmmunitionGetter>.Null;
+        #endregion
+        #region MagazineSize
+        private int _MagazineSizeLocation => _WAM2Location!.Value.Min + 0x4;
+        private bool _MagazineSize_IsSet => _WAM2Location.HasValue;
+        public UInt32 MagazineSize => _MagazineSize_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_MagazineSizeLocation, 4)) : default;
+        #endregion
+        #region AmmoList
+        private int _AmmoListLocation => _WAM2Location!.Value.Min + 0x8;
+        private bool _AmmoList_IsSet => _WAM2Location.HasValue;
+        public IFormLinkGetter<ILeveledItemGetter> AmmoList => _AmmoList_IsSet ? new FormLink<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AmmoListLocation, 0x4)))) : FormLink<ILeveledItemGetter>.Null;
+        #endregion
+        #region Projectile
+        private int _ProjectileLocation => _WAM2Location!.Value.Min + 0xC;
+        private bool _Projectile_IsSet => _WAM2Location.HasValue;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        #endregion
+        #region Ejections
+        private int _EjectionsLocation => _WAM2Location!.Value.Min + 0x10;
+        private bool _Ejections_IsSet => _WAM2Location.HasValue;
+        public IFormLinkGetter<IArtObjectGetter> Ejections => _Ejections_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EjectionsLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        #endregion
+        #region WAM2Unknown
+        private int _WAM2UnknownLocation => _WAM2Location!.Value.Min + 0x14;
+        private bool _WAM2Unknown_IsSet => _WAM2Location.HasValue;
+        public ReadOnlyMemorySlice<Byte> WAM2Unknown => _WAM2Unknown_IsSet ? _recordData.Span.Slice(_WAM2UnknownLocation, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        private RangeInt32? _WAUDLocation;
+        #region MeleeOrCreature
+        private int _MeleeOrCreatureLocation => _WAUDLocation!.Value.Min;
+        private bool _MeleeOrCreature_IsSet => _WAUDLocation.HasValue;
+        private ISoundReferenceGetter? _MeleeOrCreature => _MeleeOrCreature_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_MeleeOrCreatureLocation), _package) : default;
+        public ISoundReferenceGetter MeleeOrCreature => _MeleeOrCreature ?? new SoundReference();
+        #endregion
+        #region PrimedExplosive
+        private int _PrimedExplosiveLocation => _WAUDLocation!.Value.Min + 0x28;
+        private bool _PrimedExplosive_IsSet => _WAUDLocation.HasValue;
+        private ISoundReferenceGetter? _PrimedExplosive => _PrimedExplosive_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_PrimedExplosiveLocation), _package) : default;
+        public ISoundReferenceGetter PrimedExplosive => _PrimedExplosive ?? new SoundReference();
+        #endregion
+        #region DryFire
+        private int _DryFireLocation => _WAUDLocation!.Value.Min + 0x50;
+        private bool _DryFire_IsSet => _WAUDLocation.HasValue;
+        private ISoundReferenceGetter? _DryFire => _DryFire_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_DryFireLocation), _package) : default;
+        public ISoundReferenceGetter DryFire => _DryFire ?? new SoundReference();
+        #endregion
+        #region Idle
+        private int _IdleLocation => _WAUDLocation!.Value.Min + 0x78;
+        private bool _Idle_IsSet => _WAUDLocation.HasValue;
+        private ISoundReferenceGetter? _Idle => _Idle_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_IdleLocation), _package) : default;
+        public ISoundReferenceGetter Idle => _Idle ?? new SoundReference();
+        #endregion
+        #region Equip
+        private int _EquipLocation => _WAUDLocation!.Value.Min + 0xA0;
+        private bool _Equip_IsSet => _WAUDLocation.HasValue;
+        private ISoundReferenceGetter? _Equip => _Equip_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_EquipLocation), _package) : default;
+        public ISoundReferenceGetter Equip => _Equip ?? new SoundReference();
+        #endregion
+        #region Unequip
+        private int _UnequipLocation => _WAUDLocation!.Value.Min + 0xC8;
+        private bool _Unequip_IsSet => _WAUDLocation.HasValue;
+        private ISoundReferenceGetter? _Unequip => _Unequip_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_UnequipLocation), _package) : default;
+        public ISoundReferenceGetter Unequip => _Unequip ?? new SoundReference();
+        #endregion
+        #region FastEquip
+        private int _FastEquipLocation => _WAUDLocation!.Value.Min + 0xF0;
+        private bool _FastEquip_IsSet => _WAUDLocation.HasValue;
+        private ISoundReferenceGetter? _FastEquip => _FastEquip_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_FastEquipLocation), _package) : default;
+        public ISoundReferenceGetter FastEquip => _FastEquip ?? new SoundReference();
+        #endregion
+        #region WAUDUnknown1
+        private int _WAUDUnknown1Location => _WAUDLocation!.Value.Min + 0x118;
+        private bool _WAUDUnknown1_IsSet => _WAUDLocation.HasValue;
+        public Int32 WAUDUnknown1 => _WAUDUnknown1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_WAUDUnknown1Location, 4)) : default;
+        #endregion
+        #region WAUDUnknown2
+        private int _WAUDUnknown2Location => _WAUDLocation!.Value.Min + 0x11C;
+        private bool _WAUDUnknown2_IsSet => _WAUDLocation.HasValue;
+        public Int32 WAUDUnknown2 => _WAUDUnknown2_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_WAUDUnknown2Location, 4)) : default;
+        #endregion
+        #region WTUR
+        private int? _WTURLocation;
+        public ReadOnlyMemorySlice<Byte>? WTUR => _WTURLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WTURLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region WCHG
+        private int? _WCHGLocation;
+        public ReadOnlyMemorySlice<Byte>? WCHG => _WCHGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WCHGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        private RangeInt32? _WDMGLocation;
+        #region PhysicalDamage
+        private int _PhysicalDamageLocation => _WDMGLocation!.Value.Min;
+        private bool _PhysicalDamage_IsSet => _WDMGLocation.HasValue;
+        public Single PhysicalDamage => _PhysicalDamage_IsSet ? _recordData.Slice(_PhysicalDamageLocation, 4).Float() : default;
+        #endregion
+        #region OptimalRange
+        private int _OptimalRangeLocation => _WDMGLocation!.Value.Min + 0x4;
+        private bool _OptimalRange_IsSet => _WDMGLocation.HasValue;
+        public Single OptimalRange => _OptimalRange_IsSet ? _recordData.Slice(_OptimalRangeLocation, 4).Float() : default;
+        #endregion
+        #region MaxRange
+        private int _MaxRangeLocation => _WDMGLocation!.Value.Min + 0x8;
+        private bool _MaxRange_IsSet => _WDMGLocation.HasValue;
+        public Single MaxRange => _MaxRange_IsSet ? _recordData.Slice(_MaxRangeLocation, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown1
+        private int _WDMGUnknown1Location => _WDMGLocation!.Value.Min + 0xC;
+        private bool _WDMGUnknown1_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown1 => _WDMGUnknown1_IsSet ? _recordData.Slice(_WDMGUnknown1Location, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown2
+        private int _WDMGUnknown2Location => _WDMGLocation!.Value.Min + 0x10;
+        private bool _WDMGUnknown2_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown2 => _WDMGUnknown2_IsSet ? _recordData.Slice(_WDMGUnknown2Location, 4).Float() : default;
+        #endregion
+        #region CriticalHitSpell
+        private int _CriticalHitSpellLocation => _WDMGLocation!.Value.Min + 0x14;
+        private bool _CriticalHitSpell_IsSet => _WDMGLocation.HasValue;
+        public IFormLinkGetter<ISpellGetter> CriticalHitSpell => _CriticalHitSpell_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CriticalHitSpellLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
+        #endregion
+        #region WDMGUnknown3
+        private int _WDMGUnknown3Location => _WDMGLocation!.Value.Min + 0x18;
+        private bool _WDMGUnknown3_IsSet => _WDMGLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> WDMGUnknown3 => _WDMGUnknown3_IsSet ? _recordData.Span.Slice(_WDMGUnknown3Location, 10).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        #region WDMGUnknown4
+        private int _WDMGUnknown4Location => _WDMGLocation!.Value.Min + 0x22;
+        private bool _WDMGUnknown4_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown4 => _WDMGUnknown4_IsSet ? _recordData.Slice(_WDMGUnknown4Location, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown5
+        private int _WDMGUnknown5Location => _WDMGLocation!.Value.Min + 0x26;
+        private bool _WDMGUnknown5_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown5 => _WDMGUnknown5_IsSet ? _recordData.Slice(_WDMGUnknown5Location, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown6
+        private int _WDMGUnknown6Location => _WDMGLocation!.Value.Min + 0x2A;
+        private bool _WDMGUnknown6_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown6 => _WDMGUnknown6_IsSet ? _recordData.Slice(_WDMGUnknown6Location, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown7
+        private int _WDMGUnknown7Location => _WDMGLocation!.Value.Min + 0x2E;
+        private bool _WDMGUnknown7_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown7 => _WDMGUnknown7_IsSet ? _recordData.Slice(_WDMGUnknown7Location, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown8
+        private int _WDMGUnknown8Location => _WDMGLocation!.Value.Min + 0x32;
+        private bool _WDMGUnknown8_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown8 => _WDMGUnknown8_IsSet ? _recordData.Slice(_WDMGUnknown8Location, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown9
+        private int _WDMGUnknown9Location => _WDMGLocation!.Value.Min + 0x36;
+        private bool _WDMGUnknown9_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown9 => _WDMGUnknown9_IsSet ? _recordData.Slice(_WDMGUnknown9Location, 4).Float() : default;
+        #endregion
+        #region WDMGUnknown10
+        private int _WDMGUnknown10Location => _WDMGLocation!.Value.Min + 0x3A;
+        private bool _WDMGUnknown10_IsSet => _WDMGLocation.HasValue;
+        public Single WDMGUnknown10 => _WDMGUnknown10_IsSet ? _recordData.Slice(_WDMGUnknown10Location, 4).Float() : default;
+        #endregion
+        public IReadOnlyList<IWeaponDamageTypeGetter>? DamageTypes { get; private set; }
+        private RangeInt32? _WFIRLocation;
+        #region FiringType
+        private int _FiringTypeLocation => _WFIRLocation!.Value.Min;
+        private bool _FiringType_IsSet => _WFIRLocation.HasValue;
+        public Weapon.FiringTypeEnum FiringType => _FiringType_IsSet ? (Weapon.FiringTypeEnum)_recordData.Span.Slice(_FiringTypeLocation, 0x1)[0] : default;
+        #endregion
+        #region BurstCount
+        private int _BurstCountLocation => _WFIRLocation!.Value.Min + 0x1;
+        private bool _BurstCount_IsSet => _WFIRLocation.HasValue;
+        public Byte BurstCount => _BurstCount_IsSet ? _recordData.Span[_BurstCountLocation] : default;
+        #endregion
+        #region WFIRUnknown1
+        private int _WFIRUnknown1Location => _WFIRLocation!.Value.Min + 0x2;
+        private bool _WFIRUnknown1_IsSet => _WFIRLocation.HasValue;
+        public Byte WFIRUnknown1 => _WFIRUnknown1_IsSet ? _recordData.Span[_WFIRUnknown1Location] : default;
+        #endregion
+        #region WFIRUnknown2
+        private int _WFIRUnknown2Location => _WFIRLocation!.Value.Min + 0x3;
+        private bool _WFIRUnknown2_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown2 => _WFIRUnknown2_IsSet ? _recordData.Slice(_WFIRUnknown2Location, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown3
+        private int _WFIRUnknown3Location => _WFIRLocation!.Value.Min + 0x7;
+        private bool _WFIRUnknown3_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown3 => _WFIRUnknown3_IsSet ? _recordData.Slice(_WFIRUnknown3Location, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown4
+        private int _WFIRUnknown4Location => _WFIRLocation!.Value.Min + 0xB;
+        private bool _WFIRUnknown4_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown4 => _WFIRUnknown4_IsSet ? _recordData.Slice(_WFIRUnknown4Location, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown5
+        private int _WFIRUnknown5Location => _WFIRLocation!.Value.Min + 0xF;
+        private bool _WFIRUnknown5_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown5 => _WFIRUnknown5_IsSet ? _recordData.Slice(_WFIRUnknown5Location, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown6
+        private int _WFIRUnknown6Location => _WFIRLocation!.Value.Min + 0x13;
+        private bool _WFIRUnknown6_IsSet => _WFIRLocation.HasValue;
+        public UInt16 WFIRUnknown6 => _WFIRUnknown6_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_WFIRUnknown6Location, 2)) : default;
+        #endregion
+        #region FireRate
+        private int _FireRateLocation => _WFIRLocation!.Value.Min + 0x15;
+        private bool _FireRate_IsSet => _WFIRLocation.HasValue;
+        public Single FireRate => _FireRate_IsSet ? _recordData.Slice(_FireRateLocation, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown7
+        private int _WFIRUnknown7Location => _WFIRLocation!.Value.Min + 0x19;
+        private bool _WFIRUnknown7_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown7 => _WFIRUnknown7_IsSet ? _recordData.Slice(_WFIRUnknown7Location, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown8
+        private int _WFIRUnknown8Location => _WFIRLocation!.Value.Min + 0x1D;
+        private bool _WFIRUnknown8_IsSet => _WFIRLocation.HasValue;
+        public Byte WFIRUnknown8 => _WFIRUnknown8_IsSet ? _recordData.Span[_WFIRUnknown8Location] : default;
+        #endregion
+        #region WFIRUnknown9
+        private int _WFIRUnknown9Location => _WFIRLocation!.Value.Min + 0x1E;
+        private bool _WFIRUnknown9_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown9 => _WFIRUnknown9_IsSet ? _recordData.Slice(_WFIRUnknown9Location, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown10
+        private int _WFIRUnknown10Location => _WFIRLocation!.Value.Min + 0x22;
+        private bool _WFIRUnknown10_IsSet => _WFIRLocation.HasValue;
+        public Byte WFIRUnknown10 => _WFIRUnknown10_IsSet ? _recordData.Span[_WFIRUnknown10Location] : default;
+        #endregion
+        #region WFIRUnknown11
+        private int _WFIRUnknown11Location => _WFIRLocation!.Value.Min + 0x23;
+        private bool _WFIRUnknown11_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown11 => _WFIRUnknown11_IsSet ? _recordData.Slice(_WFIRUnknown11Location, 4).Float() : default;
+        #endregion
+        #region WFIRUnknown12
+        private int _WFIRUnknown12Location => _WFIRLocation!.Value.Min + 0x27;
+        private bool _WFIRUnknown12_IsSet => _WFIRLocation.HasValue;
+        public UInt16 WFIRUnknown12 => _WFIRUnknown12_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_WFIRUnknown12Location, 2)) : default;
+        #endregion
+        #region WFIRUnknown13
+        private int _WFIRUnknown13Location => _WFIRLocation!.Value.Min + 0x29;
+        private bool _WFIRUnknown13_IsSet => _WFIRLocation.HasValue;
+        public Single WFIRUnknown13 => _WFIRUnknown13_IsSet ? _recordData.Slice(_WFIRUnknown13Location, 4).Float() : default;
+        #endregion
+        #region WFLG
+        private int? _WFLGLocation;
+        public ReadOnlyMemorySlice<Byte>? WFLG => _WFLGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WFLGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        private RangeInt32? _WGENLocation;
+        #region WGENUnknown1
+        private int _WGENUnknown1Location => _WGENLocation!.Value.Min;
+        private bool _WGENUnknown1_IsSet => _WGENLocation.HasValue;
+        public UInt32 WGENUnknown1 => _WGENUnknown1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WGENUnknown1Location, 4)) : default;
+        #endregion
+        #region BaseWeight
+        private int _BaseWeightLocation => _WGENLocation!.Value.Min + 0x4;
+        private bool _BaseWeight_IsSet => _WGENLocation.HasValue;
+        public Single BaseWeight => _BaseWeight_IsSet ? _recordData.Slice(_BaseWeightLocation, 4).Float() : default;
+        #endregion
+        #region BaseValue
+        private int _BaseValueLocation => _WGENLocation!.Value.Min + 0x8;
+        private bool _BaseValue_IsSet => _WGENLocation.HasValue;
+        public UInt32 BaseValue => _BaseValue_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BaseValueLocation, 4)) : default;
+        #endregion
+        #region WGENUnknown2
+        private int _WGENUnknown2Location => _WGENLocation!.Value.Min + 0xC;
+        private bool _WGENUnknown2_IsSet => _WGENLocation.HasValue;
+        public Single WGENUnknown2 => _WGENUnknown2_IsSet ? _recordData.Slice(_WGENUnknown2Location, 4).Float() : default;
+        #endregion
+        #region WGENUnknown3
+        private int _WGENUnknown3Location => _WGENLocation!.Value.Min + 0x10;
+        private bool _WGENUnknown3_IsSet => _WGENLocation.HasValue;
+        public Single WGENUnknown3 => _WGENUnknown3_IsSet ? _recordData.Slice(_WGENUnknown3Location, 4).Float() : default;
+        #endregion
+        #region WeaponBarrel
+        private int _WeaponBarrelLocation => _WGENLocation!.Value.Min + 0x14;
+        private bool _WeaponBarrel_IsSet => _WGENLocation.HasValue;
+        public IFormLinkGetter<IWeaponBarrelModelGetter> WeaponBarrel => _WeaponBarrel_IsSet ? new FormLink<IWeaponBarrelModelGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_WeaponBarrelLocation, 0x4)))) : FormLink<IWeaponBarrelModelGetter>.Null;
+        #endregion
+        #region WABB
+        private int? _WABBLocation;
+        public String? WABB => _WABBLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WABBLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        private RangeInt32? _WMELLocation;
+        #region WMELUnknown1
+        private int _WMELUnknown1Location => _WMELLocation!.Value.Min;
+        private bool _WMELUnknown1_IsSet => _WMELLocation.HasValue;
+        public Byte WMELUnknown1 => _WMELUnknown1_IsSet ? _recordData.Span[_WMELUnknown1Location] : default;
+        #endregion
+        #region WMELUnknown2
+        private int _WMELUnknown2Location => _WMELLocation!.Value.Min + 0x1;
+        private bool _WMELUnknown2_IsSet => _WMELLocation.HasValue;
+        public Single WMELUnknown2 => _WMELUnknown2_IsSet ? _recordData.Slice(_WMELUnknown2Location, 4).Float() : default;
+        #endregion
+        #region WMELUnknown3
+        private int _WMELUnknown3Location => _WMELLocation!.Value.Min + 0x5;
+        private bool _WMELUnknown3_IsSet => _WMELLocation.HasValue;
+        public Single WMELUnknown3 => _WMELUnknown3_IsSet ? _recordData.Slice(_WMELUnknown3Location, 4).Float() : default;
+        #endregion
+        #region WMELUnknown4
+        private int _WMELUnknown4Location => _WMELLocation!.Value.Min + 0x9;
+        private bool _WMELUnknown4_IsSet => _WMELLocation.HasValue;
+        public UInt32 WMELUnknown4 => _WMELUnknown4_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WMELUnknown4Location, 4)) : default;
+        #endregion
+        private RangeInt32? _QNAMLocation;
+        #region QNAMUnknown1
+        private int _QNAMUnknown1Location => _QNAMLocation!.Value.Min;
+        private bool _QNAMUnknown1_IsSet => _QNAMLocation.HasValue;
+        public UInt32 QNAMUnknown1 => _QNAMUnknown1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_QNAMUnknown1Location, 4)) : default;
+        #endregion
+        #region RechargeTime
+        private int _RechargeTimeLocation => _QNAMLocation!.Value.Min + 0x4;
+        private bool _RechargeTime_IsSet => _QNAMLocation.HasValue;
+        public Single RechargeTime => _RechargeTime_IsSet ? _recordData.Slice(_RechargeTimeLocation, 4).Float() : default;
+        #endregion
+        #region RechargeDelay
+        private int _RechargeDelayLocation => _QNAMLocation!.Value.Min + 0x8;
+        private bool _RechargeDelay_IsSet => _QNAMLocation.HasValue;
+        public Single RechargeDelay => _RechargeDelay_IsSet ? _recordData.Slice(_RechargeDelayLocation, 4).Float() : default;
+        #endregion
+        #region QNAMUnknown2
+        private int _QNAMUnknown2Location => _QNAMLocation!.Value.Min + 0xC;
+        private bool _QNAMUnknown2_IsSet => _QNAMLocation.HasValue;
+        public UInt32 QNAMUnknown2 => _QNAMUnknown2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_QNAMUnknown2Location, 4)) : default;
+        #endregion
+        #region QNAMUnknown3
+        private int _QNAMUnknown3Location => _QNAMLocation!.Value.Min + 0x10;
+        private bool _QNAMUnknown3_IsSet => _QNAMLocation.HasValue;
+        public UInt32 QNAMUnknown3 => _QNAMUnknown3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_QNAMUnknown3Location, 4)) : default;
+        #endregion
+        #region QNAMUnknown4
+        private int _QNAMUnknown4Location => _QNAMLocation!.Value.Min + 0x14;
+        private bool _QNAMUnknown4_IsSet => _QNAMLocation.HasValue;
+        public UInt32 QNAMUnknown4 => _QNAMUnknown4_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_QNAMUnknown4Location, 4)) : default;
+        #endregion
+        #region QNAMUnknown5
+        private int _QNAMUnknown5Location => _QNAMLocation!.Value.Min + 0x18;
+        private bool _QNAMUnknown5_IsSet => _QNAMLocation.HasValue;
+        public UInt32 QNAMUnknown5 => _QNAMUnknown5_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_QNAMUnknown5Location, 4)) : default;
+        #endregion
+        #region QNAMUnknown6
+        private int _QNAMUnknown6Location => _QNAMLocation!.Value.Min + 0x1C;
+        private bool _QNAMUnknown6_IsSet => _QNAMLocation.HasValue;
+        public Single QNAMUnknown6 => _QNAMUnknown6_IsSet ? _recordData.Slice(_QNAMUnknown6Location, 4).Float() : default;
+        #endregion
+        #region QNAMUnknown7
+        private int _QNAMUnknown7Location => _QNAMLocation!.Value.Min + 0x20;
+        private bool _QNAMUnknown7_IsSet => _QNAMLocation.HasValue;
+        public UInt32 QNAMUnknown7 => _QNAMUnknown7_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_QNAMUnknown7Location, 4)) : default;
+        #endregion
+        private RangeInt32? _WRLOLocation;
+        #region WRLOUnknown1
+        private int _WRLOUnknown1Location => _WRLOLocation!.Value.Min;
+        private bool _WRLOUnknown1_IsSet => _WRLOLocation.HasValue;
+        public Single WRLOUnknown1 => _WRLOUnknown1_IsSet ? _recordData.Slice(_WRLOUnknown1Location, 4).Float() : default;
+        #endregion
+        #region WRLOUnknown2
+        private int _WRLOUnknown2Location => _WRLOLocation!.Value.Min + 0x4;
+        private bool _WRLOUnknown2_IsSet => _WRLOLocation.HasValue;
+        public Single WRLOUnknown2 => _WRLOUnknown2_IsSet ? _recordData.Slice(_WRLOUnknown2Location, 4).Float() : default;
+        #endregion
+        #region WRLOUnknown3
+        private int _WRLOUnknown3Location => _WRLOLocation!.Value.Min + 0x8;
+        private bool _WRLOUnknown3_IsSet => _WRLOLocation.HasValue;
+        public UInt16 WRLOUnknown3 => _WRLOUnknown3_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_WRLOUnknown3Location, 2)) : default;
+        #endregion
+        private RangeInt32? _WVARLocation;
+        #region WVARUnknown1
+        private int _WVARUnknown1Location => _WVARLocation!.Value.Min;
+        private bool _WVARUnknown1_IsSet => _WVARLocation.HasValue;
+        public UInt32 WVARUnknown1 => _WVARUnknown1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVARUnknown1Location, 4)) : default;
+        #endregion
+        #region WVARUnknown2
+        private int _WVARUnknown2Location => _WVARLocation!.Value.Min + 0x4;
+        private bool _WVARUnknown2_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown2 => _WVARUnknown2_IsSet ? _recordData.Slice(_WVARUnknown2Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown3
+        private int _WVARUnknown3Location => _WVARLocation!.Value.Min + 0x8;
+        private bool _WVARUnknown3_IsSet => _WVARLocation.HasValue;
+        public UInt32 WVARUnknown3 => _WVARUnknown3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVARUnknown3Location, 4)) : default;
+        #endregion
+        #region WVARUnknown4
+        private int _WVARUnknown4Location => _WVARLocation!.Value.Min + 0xC;
+        private bool _WVARUnknown4_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown4 => _WVARUnknown4_IsSet ? _recordData.Slice(_WVARUnknown4Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown5
+        private int _WVARUnknown5Location => _WVARLocation!.Value.Min + 0x10;
+        private bool _WVARUnknown5_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown5 => _WVARUnknown5_IsSet ? _recordData.Slice(_WVARUnknown5Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown6
+        private int _WVARUnknown6Location => _WVARLocation!.Value.Min + 0x14;
+        private bool _WVARUnknown6_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown6 => _WVARUnknown6_IsSet ? _recordData.Slice(_WVARUnknown6Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown7
+        private int _WVARUnknown7Location => _WVARLocation!.Value.Min + 0x18;
+        private bool _WVARUnknown7_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown7 => _WVARUnknown7_IsSet ? _recordData.Slice(_WVARUnknown7Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown8
+        private int _WVARUnknown8Location => _WVARLocation!.Value.Min + 0x1C;
+        private bool _WVARUnknown8_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown8 => _WVARUnknown8_IsSet ? _recordData.Slice(_WVARUnknown8Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown9
+        private int _WVARUnknown9Location => _WVARLocation!.Value.Min + 0x20;
+        private bool _WVARUnknown9_IsSet => _WVARLocation.HasValue;
+        public UInt32 WVARUnknown9 => _WVARUnknown9_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVARUnknown9Location, 4)) : default;
+        #endregion
+        #region WVARUnknown10
+        private int _WVARUnknown10Location => _WVARLocation!.Value.Min + 0x24;
+        private bool _WVARUnknown10_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown10 => _WVARUnknown10_IsSet ? _recordData.Slice(_WVARUnknown10Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown11
+        private int _WVARUnknown11Location => _WVARLocation!.Value.Min + 0x28;
+        private bool _WVARUnknown11_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown11 => _WVARUnknown11_IsSet ? _recordData.Slice(_WVARUnknown11Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown12
+        private int _WVARUnknown12Location => _WVARLocation!.Value.Min + 0x2C;
+        private bool _WVARUnknown12_IsSet => _WVARLocation.HasValue;
+        public Single WVARUnknown12 => _WVARUnknown12_IsSet ? _recordData.Slice(_WVARUnknown12Location, 4).Float() : default;
+        #endregion
+        #region WVARUnknown13
+        private int _WVARUnknown13Location => _WVARLocation!.Value.Min + 0x30;
+        private bool _WVARUnknown13_IsSet => _WVARLocation.HasValue;
+        public Byte WVARUnknown13 => _WVARUnknown13_IsSet ? _recordData.Span[_WVARUnknown13Location] : default;
+        #endregion
+        public IFirstPersonModelGetter? FirstPersonModel { get; private set; }
+        private RangeInt32? _WVISLocation;
+        #region WVISUnknown1
+        private int _WVISUnknown1Location => _WVISLocation!.Value.Min;
+        private bool _WVISUnknown1_IsSet => _WVISLocation.HasValue;
+        public UInt32 WVISUnknown1 => _WVISUnknown1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVISUnknown1Location, 4)) : default;
+        #endregion
+        #region WVISUnknown2
+        private int _WVISUnknown2Location => _WVISLocation!.Value.Min + 0x4;
+        private bool _WVISUnknown2_IsSet => _WVISLocation.HasValue;
+        public UInt32 WVISUnknown2 => _WVISUnknown2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVISUnknown2Location, 4)) : default;
+        #endregion
+        #region WVISUnknown3
+        private int _WVISUnknown3Location => _WVISLocation!.Value.Min + 0x8;
+        private bool _WVISUnknown3_IsSet => _WVISLocation.HasValue;
+        public UInt32 WVISUnknown3 => _WVISUnknown3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVISUnknown3Location, 4)) : default;
+        #endregion
+        #region ImpactDataSet
+        private int _ImpactDataSetLocation => _WVISLocation!.Value.Min + 0xC;
+        private bool _ImpactDataSet_IsSet => _WVISLocation.HasValue;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region WVISUnknown4
+        private int _WVISUnknown4Location => _WVISLocation!.Value.Min + 0x10;
+        private bool _WVISUnknown4_IsSet => _WVISLocation.HasValue;
+        public UInt32 WVISUnknown4 => _WVISUnknown4_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVISUnknown4Location, 4)) : default;
+        #endregion
+        #region WVISUnknown5
+        private int _WVISUnknown5Location => _WVISLocation!.Value.Min + 0x14;
+        private bool _WVISUnknown5_IsSet => _WVISLocation.HasValue;
+        public UInt32 WVISUnknown5 => _WVISUnknown5_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WVISUnknown5Location, 4)) : default;
+        #endregion
+        private RangeInt32? _WTRMLocation;
+        #region WTRMUnknown1
+        private int _WTRMUnknown1Location => _WTRMLocation!.Value.Min;
+        private bool _WTRMUnknown1_IsSet => _WTRMLocation.HasValue;
+        public Single WTRMUnknown1 => _WTRMUnknown1_IsSet ? _recordData.Slice(_WTRMUnknown1Location, 4).Float() : default;
+        #endregion
+        #region WTRMUnknown2
+        private int _WTRMUnknown2Location => _WTRMLocation!.Value.Min + 0x4;
+        private bool _WTRMUnknown2_IsSet => _WTRMLocation.HasValue;
+        public Byte WTRMUnknown2 => _WTRMUnknown2_IsSet ? _recordData.Span[_WTRMUnknown2Location] : default;
+        #endregion
+        #region WTRMUnknown3
+        private int _WTRMUnknown3Location => _WTRMLocation!.Value.Min + 0x5;
+        private bool _WTRMUnknown3_IsSet => _WTRMLocation.HasValue;
+        public Single WTRMUnknown3 => _WTRMUnknown3_IsSet ? _recordData.Slice(_WTRMUnknown3Location, 4).Float() : default;
+        #endregion
+        #region WTRMUnknown4
+        private int _WTRMUnknown4Location => _WTRMLocation!.Value.Min + 0x9;
+        private bool _WTRMUnknown4_IsSet => _WTRMLocation.HasValue;
+        public Single WTRMUnknown4 => _WTRMUnknown4_IsSet ? _recordData.Slice(_WTRMUnknown4Location, 4).Float() : default;
+        #endregion
+        #region WTRMUnknown5
+        private int _WTRMUnknown5Location => _WTRMLocation!.Value.Min + 0xD;
+        private bool _WTRMUnknown5_IsSet => _WTRMLocation.HasValue;
+        public Single WTRMUnknown5 => _WTRMUnknown5_IsSet ? _recordData.Slice(_WTRMUnknown5Location, 4).Float() : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1615,16 +11323,299 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Weapon_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Weapon_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Weapon_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Weapon_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Weapon_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.Name;
+                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.FLLD:
                 {
-                    this.Model = ModelBinaryOverlay.ModelFactory(
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.Name)
+                    {
+                        this.Model = ModelBinaryOverlay.ModelFactory(
+                            stream: stream,
+                            package: _package,
+                            translationParams: translationParams.DoNotShortCircuit());
+                        return new ParseResult((int)Weapon_FieldIndex.Model, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.WVARUnknown13)
+                    {
+                        this.FirstPersonModel = FirstPersonModelBinaryOverlay.FirstPersonModelFactory(
+                            stream: stream,
+                            package: _package,
+                            translationParams: translationParams.DoNotShortCircuit());
+                        return new ParseResult((int)Weapon_FieldIndex.FirstPersonModel, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                                this.Model = ModelBinaryOverlay.ModelFactory(
+                                    stream: stream,
+                                    package: _package,
+                                    translationParams: translationParams.DoNotShortCircuit());
+                                return new ParseResult((int)Weapon_FieldIndex.Model, type);
+                            case 1:
+                                this.FirstPersonModel = FirstPersonModelBinaryOverlay.FirstPersonModelFactory(
+                                    stream: stream,
+                                    package: _package,
+                                    translationParams: translationParams.DoNotShortCircuit());
+                                return new ParseResult((int)Weapon_FieldIndex.FirstPersonModel, type);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
+                }
+                case RecordTypeInts.EITM:
+                {
+                    _ObjectEffectLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.EAMT:
+                {
+                    _EnchantmentAmountLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.EnchantmentAmount;
+                }
+                case RecordTypeInts.ETYP:
+                {
+                    _EquipmentTypeLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.EquipmentType;
+                }
+                case RecordTypeInts.BIDS:
+                {
+                    _BlockBashImpactDataSetLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.BlockBashImpactDataSet;
+                }
+                case RecordTypeInts.BAMT:
+                {
+                    _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.AlternateBlockMaterial;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.PickupSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Weapon_FieldIndex.Model;
+                    return (int)Weapon_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.DropdownSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Weapon_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Weapon_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.Description;
+                }
+                case RecordTypeInts.INRD:
+                {
+                    _InstanceNamingLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.InstanceNaming;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)Weapon_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<IObjectTemplateGetter<Weapon.Property>>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: ObjectTemplate_Registration.TriggerSpecs,
+                        countType: RecordTypes.OBTE,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Weapon.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Weapon_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _EmbeddedWeaponModLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _BNAMLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.BNAM;
+                }
+                case RecordTypeInts.WAIM:
+                {
+                    _WAIMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WAIMUnknown3;
+                }
+                case RecordTypeInts.WAM2:
+                {
+                    _WAM2Location = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WAM2Unknown;
+                }
+                case RecordTypeInts.WAUD:
+                {
+                    _WAUDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WAUDUnknown2;
+                }
+                case RecordTypeInts.WTUR:
+                {
+                    _WTURLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.WTUR;
+                }
+                case RecordTypeInts.WCHG:
+                {
+                    _WCHGLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.WCHG;
+                }
+                case RecordTypeInts.WDMG:
+                {
+                    _WDMGLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WDMGUnknown10;
+                }
+                case RecordTypeInts.DAMA:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.DamageTypes = BinaryOverlayList.FactoryByStartIndex<IWeaponDamageTypeGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => WeaponDamageTypeBinaryOverlay.WeaponDamageTypeFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Weapon_FieldIndex.DamageTypes;
+                }
+                case RecordTypeInts.WFIR:
+                {
+                    _WFIRLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WFIRUnknown13;
+                }
+                case RecordTypeInts.WFLG:
+                {
+                    _WFLGLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.WFLG;
+                }
+                case RecordTypeInts.WGEN:
+                {
+                    _WGENLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WeaponBarrel;
+                }
+                case RecordTypeInts.WABB:
+                {
+                    _WABBLocation = (stream.Position - offset);
+                    return (int)Weapon_FieldIndex.WABB;
+                }
+                case RecordTypeInts.WMEL:
+                {
+                    _WMELLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WMELUnknown4;
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _QNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.QNAMUnknown7;
+                }
+                case RecordTypeInts.WRLO:
+                {
+                    _WRLOLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WRLOUnknown3;
+                }
+                case RecordTypeInts.WVAR:
+                {
+                    _WVARLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WVARUnknown13;
+                }
+                case RecordTypeInts.MOD4:
+                case RecordTypeInts.MO4S:
+                {
+                    this.FirstPersonModel = FirstPersonModelBinaryOverlay.FirstPersonModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Weapon_FieldIndex.FirstPersonModel;
+                }
+                case RecordTypeInts.WVIS:
+                {
+                    _WVISLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WVISUnknown5;
+                }
+                case RecordTypeInts.WTRM:
+                {
+                    _WTRMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Weapon_FieldIndex.WTRMUnknown5;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

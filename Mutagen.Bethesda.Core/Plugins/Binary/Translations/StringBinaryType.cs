@@ -14,6 +14,10 @@ public enum StringBinaryType
     /// </summary>
     NullTerminate,
     /// <summary>
+    /// Terminated by an extra null character at the end if there is content
+    /// </summary>
+    NullTerminateIfNotEmpty,
+    /// <summary>
     /// Length prepended as a uint
     /// </summary>
     PrependLength,

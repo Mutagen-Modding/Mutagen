@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ENAM,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminateIfNotEmpty);
         }
 
         public void Write(
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ENAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminateIfNotEmpty);
                     return (int)AnimationGraphComponent_FieldIndex.ENAM;
                 }
                 default:

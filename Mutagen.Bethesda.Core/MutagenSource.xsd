@@ -644,6 +644,8 @@
       <xs:enumeration value="NullTerminate" />
       <xs:enumeration value="PrependLength" />
       <xs:enumeration value="PrependLengthUShort" />
+      <xs:enumeration value="NullTerminateIfNotEmpty" />
+      <xs:enumeration value="PrependLengthWithNullIfContent" />
     </xs:restriction>
   </xs:simpleType>
 

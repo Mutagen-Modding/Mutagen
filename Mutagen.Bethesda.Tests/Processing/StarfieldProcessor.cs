@@ -99,6 +99,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "ACTI", "FULL", "ATTX" },
                     new RecordType[] { "FLST", "FULL" },
                     new RecordType[] { "TMLM", "FULL", "BTXT", "INAM", "ITXT", "ISTX", "UNAM"  },
+                    new RecordType[] { "WEAP", "FULL" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

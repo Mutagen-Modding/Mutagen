@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Starfield
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 TerminalMenu_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IKeywordCommon)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
@@ -37,9 +38,11 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 KeywordFormComponent_Registration.Instance,
                 MagicEffect_Registration.Instance,
+                ObjectTemplate_Registration.Instance,
                 Race_Registration.Instance,
                 SoundMarker_Registration.Instance,
                 Spell_Registration.Instance,
+                Weapon_Registration.Instance,
                 Weather_Registration.Instance,
             });
             dict[typeof(IKeywordedGetter<IKeywordGetter>)] = dict[typeof(IKeyworded<IKeywordGetter>)] with { Setter = false };
@@ -74,12 +77,14 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffect_Registration.Instance,
                 MorphGroup_Registration.Instance,
                 ObjectEffect_Registration.Instance,
+                ObjectTemplate_Registration.Instance,
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TerminalMenu_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -99,6 +104,7 @@ namespace Mutagen.Bethesda.Starfield
                 MagicEffect_Registration.Instance,
                 MorphGroup_Registration.Instance,
                 ObjectEffect_Registration.Instance,
+                ObjectTemplate_Registration.Instance,
                 Planet_Registration.Instance,
                 ProgressionEvaluatorArgument_Registration.Instance,
                 Race_Registration.Instance,
@@ -121,6 +127,7 @@ namespace Mutagen.Bethesda.Starfield
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TerminalMenu_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
             dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -137,10 +144,12 @@ namespace Mutagen.Bethesda.Starfield
                 Keyword_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 ObjectEffect_Registration.Instance,
+                ObjectTemplate_Registration.Instance,
                 Race_Registration.Instance,
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TerminalMenu_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -157,10 +166,12 @@ namespace Mutagen.Bethesda.Starfield
                 Keyword_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 ObjectEffect_Registration.Instance,
+                ObjectTemplate_Registration.Instance,
                 Race_Registration.Instance,
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TerminalMenu_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBounded)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -176,6 +187,7 @@ namespace Mutagen.Bethesda.Starfield
                 Spell_Registration.Instance,
                 StaticCollection_Registration.Instance,
                 TextureSet_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IObjectBoundedGetter)] = dict[typeof(IObjectBounded)] with { Setter = false };
             dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -195,6 +207,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
+                Weapon_Registration.Instance,
             });
             dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
             InterfaceToObjectTypes = dict;

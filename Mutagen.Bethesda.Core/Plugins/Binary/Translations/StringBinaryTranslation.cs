@@ -70,6 +70,19 @@ public sealed class StringBinaryTranslation
                 {
                     return BinaryStringUtility.ParseUnknownLengthString(reader, encoding);
                 }
+            case StringBinaryType.NullTerminateIfNotEmpty:
+                if (reader.Complete)
+                {
+                    return string.Empty;
+                }
+                if (parseWhole)
+                {
+                    return BinaryStringUtility.ProcessWholeToZString(reader.ReadMemory(checked((int)reader.Remaining)), encoding);
+                }
+                else
+                {
+                    return BinaryStringUtility.ParseUnknownLengthString(reader, encoding);
+                }
             case StringBinaryType.PrependLength:
             {
                 var len = reader.ReadInt32();

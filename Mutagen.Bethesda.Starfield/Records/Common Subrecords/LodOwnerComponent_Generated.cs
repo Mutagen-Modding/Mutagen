@@ -38,14 +38,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BGSLodOwnerComponent :
+    public partial class LodOwnerComponent :
         AComponent,
-        IBGSLodOwnerComponent,
-        IEquatable<IBGSLodOwnerComponentGetter>,
-        ILoquiObjectSetter<BGSLodOwnerComponent>
+        IEquatable<ILodOwnerComponentGetter>,
+        ILodOwnerComponent,
+        ILoquiObjectSetter<LodOwnerComponent>
     {
         #region Ctor
-        public BGSLodOwnerComponent()
+        public LodOwnerComponent()
         {
             CustomCtor();
         }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._REFL = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBGSLodOwnerComponentGetter.REFL => this.REFL;
+        ReadOnlyMemorySlice<Byte>? ILodOwnerComponentGetter.REFL => this.REFL;
         #endregion
 
         #region To String
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BGSLodOwnerComponentMixIn.Print(
+            LodOwnerComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -81,16 +81,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBGSLodOwnerComponentGetter rhs) return false;
-            return ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILodOwnerComponentGetter rhs) return false;
+            return ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBGSLodOwnerComponentGetter? obj)
+        public bool Equals(ILodOwnerComponentGetter? obj)
         {
-            return ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BGSLodOwnerComponent.Mask<R>();
+                var ret = new LodOwnerComponent.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -179,16 +179,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BGSLodOwnerComponent.Mask<bool>? printMask = null)
+            public string Print(LodOwnerComponent.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BGSLodOwnerComponent.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LodOwnerComponent.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BGSLodOwnerComponent.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(LodOwnerComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.REFL ?? true)
@@ -212,10 +212,10 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                BGSLodOwnerComponent_FieldIndex enu = (BGSLodOwnerComponent_FieldIndex)index;
+                LodOwnerComponent_FieldIndex enu = (LodOwnerComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case BGSLodOwnerComponent_FieldIndex.REFL:
+                    case LodOwnerComponent_FieldIndex.REFL:
                         return REFL;
                     default:
                         return base.GetNthMask(index);
@@ -224,10 +224,10 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                BGSLodOwnerComponent_FieldIndex enu = (BGSLodOwnerComponent_FieldIndex)index;
+                LodOwnerComponent_FieldIndex enu = (LodOwnerComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case BGSLodOwnerComponent_FieldIndex.REFL:
+                    case LodOwnerComponent_FieldIndex.REFL:
                         this.REFL = ex;
                         break;
                     default:
@@ -238,10 +238,10 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                BGSLodOwnerComponent_FieldIndex enu = (BGSLodOwnerComponent_FieldIndex)index;
+                LodOwnerComponent_FieldIndex enu = (LodOwnerComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case BGSLodOwnerComponent_FieldIndex.REFL:
+                    case LodOwnerComponent_FieldIndex.REFL:
                         this.REFL = (Exception?)obj;
                         break;
                     default:
@@ -344,23 +344,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BGSLodOwnerComponentBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LodOwnerComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BGSLodOwnerComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LodOwnerComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static BGSLodOwnerComponent CreateFromBinary(
+        public new static LodOwnerComponent CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BGSLodOwnerComponent();
-            ((BGSLodOwnerComponentSetterCommon)((IBGSLodOwnerComponentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LodOwnerComponent();
+            ((LodOwnerComponentSetterCommon)((ILodOwnerComponentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BGSLodOwnerComponent item,
+            out LodOwnerComponent item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -386,32 +386,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BGSLodOwnerComponentSetterCommon)((IBGSLodOwnerComponentGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LodOwnerComponentSetterCommon)((ILodOwnerComponentGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new BGSLodOwnerComponent GetNew()
+        internal static new LodOwnerComponent GetNew()
         {
-            return new BGSLodOwnerComponent();
+            return new LodOwnerComponent();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBGSLodOwnerComponent :
+    public partial interface ILodOwnerComponent :
         IAComponent,
-        IBGSLodOwnerComponentGetter,
-        ILoquiObjectSetter<IBGSLodOwnerComponent>
+        ILodOwnerComponentGetter,
+        ILoquiObjectSetter<ILodOwnerComponent>
     {
         new MemorySlice<Byte>? REFL { get; set; }
     }
 
-    public partial interface IBGSLodOwnerComponentGetter :
+    public partial interface ILodOwnerComponentGetter :
         IAComponentGetter,
         IBinaryItem,
-        ILoquiObject<IBGSLodOwnerComponentGetter>
+        ILoquiObject<ILodOwnerComponentGetter>
     {
-        static new ILoquiRegistration StaticRegistration => BGSLodOwnerComponent_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => LodOwnerComponent_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? REFL { get; }
 
     }
@@ -419,42 +419,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class BGSLodOwnerComponentMixIn
+    public static partial class LodOwnerComponentMixIn
     {
-        public static void Clear(this IBGSLodOwnerComponent item)
+        public static void Clear(this ILodOwnerComponent item)
         {
-            ((BGSLodOwnerComponentSetterCommon)((IBGSLodOwnerComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LodOwnerComponentSetterCommon)((ILodOwnerComponentGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BGSLodOwnerComponent.Mask<bool> GetEqualsMask(
-            this IBGSLodOwnerComponentGetter item,
-            IBGSLodOwnerComponentGetter rhs,
+        public static LodOwnerComponent.Mask<bool> GetEqualsMask(
+            this ILodOwnerComponentGetter item,
+            ILodOwnerComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBGSLodOwnerComponentGetter item,
+            this ILodOwnerComponentGetter item,
             string? name = null,
-            BGSLodOwnerComponent.Mask<bool>? printMask = null)
+            LodOwnerComponent.Mask<bool>? printMask = null)
         {
-            return ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).Print(
+            return ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBGSLodOwnerComponentGetter item,
+            this ILodOwnerComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BGSLodOwnerComponent.Mask<bool>? printMask = null)
+            LodOwnerComponent.Mask<bool>? printMask = null)
         {
-            ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).Print(
+            ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -462,39 +462,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBGSLodOwnerComponentGetter item,
-            IBGSLodOwnerComponentGetter rhs,
-            BGSLodOwnerComponent.TranslationMask? equalsMask = null)
+            this ILodOwnerComponentGetter item,
+            ILodOwnerComponentGetter rhs,
+            LodOwnerComponent.TranslationMask? equalsMask = null)
         {
-            return ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).Equals(
+            return ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBGSLodOwnerComponent lhs,
-            IBGSLodOwnerComponentGetter rhs,
-            out BGSLodOwnerComponent.ErrorMask errorMask,
-            BGSLodOwnerComponent.TranslationMask? copyMask = null)
+            this ILodOwnerComponent lhs,
+            ILodOwnerComponentGetter rhs,
+            out LodOwnerComponent.ErrorMask errorMask,
+            LodOwnerComponent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BGSLodOwnerComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LodOwnerComponent.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBGSLodOwnerComponent lhs,
-            IBGSLodOwnerComponentGetter rhs,
+            this ILodOwnerComponent lhs,
+            ILodOwnerComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -502,32 +502,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BGSLodOwnerComponent DeepCopy(
-            this IBGSLodOwnerComponentGetter item,
-            BGSLodOwnerComponent.TranslationMask? copyMask = null)
+        public static LodOwnerComponent DeepCopy(
+            this ILodOwnerComponentGetter item,
+            LodOwnerComponent.TranslationMask? copyMask = null)
         {
-            return ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BGSLodOwnerComponent DeepCopy(
-            this IBGSLodOwnerComponentGetter item,
-            out BGSLodOwnerComponent.ErrorMask errorMask,
-            BGSLodOwnerComponent.TranslationMask? copyMask = null)
+        public static LodOwnerComponent DeepCopy(
+            this ILodOwnerComponentGetter item,
+            out LodOwnerComponent.ErrorMask errorMask,
+            LodOwnerComponent.TranslationMask? copyMask = null)
         {
-            return ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BGSLodOwnerComponent DeepCopy(
-            this IBGSLodOwnerComponentGetter item,
+        public static LodOwnerComponent DeepCopy(
+            this ILodOwnerComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -535,11 +535,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBGSLodOwnerComponent item,
+            this ILodOwnerComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BGSLodOwnerComponentSetterCommon)((IBGSLodOwnerComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LodOwnerComponentSetterCommon)((ILodOwnerComponentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -555,16 +555,16 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BGSLodOwnerComponent_FieldIndex
+    internal enum LodOwnerComponent_FieldIndex
     {
         REFL = 0,
     }
     #endregion
 
     #region Registration
-    internal partial class BGSLodOwnerComponent_Registration : ILoquiRegistration
+    internal partial class LodOwnerComponent_Registration : ILoquiRegistration
     {
-        public static readonly BGSLodOwnerComponent_Registration Instance = new BGSLodOwnerComponent_Registration();
+        public static readonly LodOwnerComponent_Registration Instance = new LodOwnerComponent_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -572,23 +572,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(BGSLodOwnerComponent.Mask<>);
+        public static readonly Type MaskType = typeof(LodOwnerComponent.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BGSLodOwnerComponent.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LodOwnerComponent.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BGSLodOwnerComponent);
+        public static readonly Type ClassType = typeof(LodOwnerComponent);
 
-        public static readonly Type GetterType = typeof(IBGSLodOwnerComponentGetter);
+        public static readonly Type GetterType = typeof(ILodOwnerComponentGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBGSLodOwnerComponent);
+        public static readonly Type SetterType = typeof(ILodOwnerComponent);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BGSLodOwnerComponent";
+        public const string FullName = "Mutagen.Bethesda.Starfield.LodOwnerComponent";
 
-        public const string Name = "BGSLodOwnerComponent";
+        public const string Name = "LodOwnerComponent";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.REFL);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(BGSLodOwnerComponentBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LodOwnerComponentBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -637,13 +637,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BGSLodOwnerComponentSetterCommon : AComponentSetterCommon
+    internal partial class LodOwnerComponentSetterCommon : AComponentSetterCommon
     {
-        public new static readonly BGSLodOwnerComponentSetterCommon Instance = new BGSLodOwnerComponentSetterCommon();
+        public new static readonly LodOwnerComponentSetterCommon Instance = new LodOwnerComponentSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBGSLodOwnerComponent item)
+        public void Clear(ILodOwnerComponent item)
         {
             ClearPartial();
             item.REFL = default;
@@ -652,11 +652,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IAComponent item)
         {
-            Clear(item: (IBGSLodOwnerComponent)item);
+            Clear(item: (ILodOwnerComponent)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IBGSLodOwnerComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILodOwnerComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBGSLodOwnerComponent item,
+            ILodOwnerComponent item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: BGSLodOwnerComponentBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: LodOwnerComponentBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (BGSLodOwnerComponent)item,
+                item: (LodOwnerComponent)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -690,17 +690,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BGSLodOwnerComponentCommon : AComponentCommon
+    internal partial class LodOwnerComponentCommon : AComponentCommon
     {
-        public new static readonly BGSLodOwnerComponentCommon Instance = new BGSLodOwnerComponentCommon();
+        public new static readonly LodOwnerComponentCommon Instance = new LodOwnerComponentCommon();
 
-        public BGSLodOwnerComponent.Mask<bool> GetEqualsMask(
-            IBGSLodOwnerComponentGetter item,
-            IBGSLodOwnerComponentGetter rhs,
+        public LodOwnerComponent.Mask<bool> GetEqualsMask(
+            ILodOwnerComponentGetter item,
+            ILodOwnerComponentGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BGSLodOwnerComponent.Mask<bool>(false);
-            ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LodOwnerComponent.Mask<bool>(false);
+            ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -709,9 +709,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBGSLodOwnerComponentGetter item,
-            IBGSLodOwnerComponentGetter rhs,
-            BGSLodOwnerComponent.Mask<bool> ret,
+            ILodOwnerComponentGetter item,
+            ILodOwnerComponentGetter rhs,
+            LodOwnerComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.REFL = MemorySliceExt.SequenceEqual(item.REFL, rhs.REFL);
@@ -719,9 +719,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IBGSLodOwnerComponentGetter item,
+            ILodOwnerComponentGetter item,
             string? name = null,
-            BGSLodOwnerComponent.Mask<bool>? printMask = null)
+            LodOwnerComponent.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -733,18 +733,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBGSLodOwnerComponentGetter item,
+            ILodOwnerComponentGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BGSLodOwnerComponent.Mask<bool>? printMask = null)
+            LodOwnerComponent.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BGSLodOwnerComponent =>");
+                sb.AppendLine($"LodOwnerComponent =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BGSLodOwnerComponent) =>");
+                sb.AppendLine($"{name} (LodOwnerComponent) =>");
             }
             using (sb.Brace())
             {
@@ -756,9 +756,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBGSLodOwnerComponentGetter item,
+            ILodOwnerComponentGetter item,
             StructuredStringBuilder sb,
-            BGSLodOwnerComponent.Mask<bool>? printMask = null)
+            LodOwnerComponent.Mask<bool>? printMask = null)
         {
             AComponentCommon.ToStringFields(
                 item: item,
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static BGSLodOwnerComponent_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
+        public static LodOwnerComponent_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
         {
             switch (index)
             {
@@ -782,13 +782,13 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBGSLodOwnerComponentGetter? lhs,
-            IBGSLodOwnerComponentGetter? rhs,
+            ILodOwnerComponentGetter? lhs,
+            ILodOwnerComponentGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)BGSLodOwnerComponent_FieldIndex.REFL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LodOwnerComponent_FieldIndex.REFL) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.REFL, rhs.REFL)) return false;
             }
@@ -801,12 +801,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IBGSLodOwnerComponentGetter?)lhs,
-                rhs: rhs as IBGSLodOwnerComponentGetter,
+                lhs: (ILodOwnerComponentGetter?)lhs,
+                rhs: rhs as ILodOwnerComponentGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IBGSLodOwnerComponentGetter item)
+        public virtual int GetHashCode(ILodOwnerComponentGetter item)
         {
             var hash = new HashCode();
             if (item.REFL is {} REFLItem)
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IAComponentGetter item)
         {
-            return GetHashCode(item: (IBGSLodOwnerComponentGetter)item);
+            return GetHashCode(item: (ILodOwnerComponentGetter)item);
         }
         
         #endregion
@@ -827,11 +827,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return BGSLodOwnerComponent.GetNew();
+            return LodOwnerComponent.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBGSLodOwnerComponentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILodOwnerComponentGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -843,14 +843,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BGSLodOwnerComponentSetterTranslationCommon : AComponentSetterTranslationCommon
+    internal partial class LodOwnerComponentSetterTranslationCommon : AComponentSetterTranslationCommon
     {
-        public new static readonly BGSLodOwnerComponentSetterTranslationCommon Instance = new BGSLodOwnerComponentSetterTranslationCommon();
+        public new static readonly LodOwnerComponentSetterTranslationCommon Instance = new LodOwnerComponentSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBGSLodOwnerComponent item,
-            IBGSLodOwnerComponentGetter rhs,
+            ILodOwnerComponent item,
+            ILodOwnerComponentGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)BGSLodOwnerComponent_FieldIndex.REFL) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LodOwnerComponent_FieldIndex.REFL) ?? true))
             {
                 if(rhs.REFL is {} REFLrhs)
                 {
@@ -883,8 +883,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBGSLodOwnerComponent)item,
-                rhs: (IBGSLodOwnerComponentGetter)rhs,
+                item: (ILodOwnerComponent)item,
+                rhs: (ILodOwnerComponentGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -892,12 +892,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public BGSLodOwnerComponent DeepCopy(
-            IBGSLodOwnerComponentGetter item,
-            BGSLodOwnerComponent.TranslationMask? copyMask = null)
+        public LodOwnerComponent DeepCopy(
+            ILodOwnerComponentGetter item,
+            LodOwnerComponent.TranslationMask? copyMask = null)
         {
-            BGSLodOwnerComponent ret = (BGSLodOwnerComponent)((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).GetNew();
-            ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LodOwnerComponent ret = (LodOwnerComponent)((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).GetNew();
+            ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -906,30 +906,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BGSLodOwnerComponent DeepCopy(
-            IBGSLodOwnerComponentGetter item,
-            out BGSLodOwnerComponent.ErrorMask errorMask,
-            BGSLodOwnerComponent.TranslationMask? copyMask = null)
+        public LodOwnerComponent DeepCopy(
+            ILodOwnerComponentGetter item,
+            out LodOwnerComponent.ErrorMask errorMask,
+            LodOwnerComponent.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BGSLodOwnerComponent ret = (BGSLodOwnerComponent)((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).GetNew();
-            ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LodOwnerComponent ret = (LodOwnerComponent)((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).GetNew();
+            ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BGSLodOwnerComponent.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LodOwnerComponent.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BGSLodOwnerComponent DeepCopy(
-            IBGSLodOwnerComponentGetter item,
+        public LodOwnerComponent DeepCopy(
+            ILodOwnerComponentGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BGSLodOwnerComponent ret = (BGSLodOwnerComponent)((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)item).CommonInstance()!).GetNew();
-            ((BGSLodOwnerComponentSetterTranslationCommon)((IBGSLodOwnerComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LodOwnerComponent ret = (LodOwnerComponent)((LodOwnerComponentCommon)((ILodOwnerComponentGetter)item).CommonInstance()!).GetNew();
+            ((LodOwnerComponentSetterTranslationCommon)((ILodOwnerComponentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -945,21 +945,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BGSLodOwnerComponent
+    public partial class LodOwnerComponent
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BGSLodOwnerComponent_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => BGSLodOwnerComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LodOwnerComponent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LodOwnerComponent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BGSLodOwnerComponentCommon.Instance;
+        protected override object CommonInstance() => LodOwnerComponentCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return BGSLodOwnerComponentSetterCommon.Instance;
+            return LodOwnerComponentSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BGSLodOwnerComponentSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LodOwnerComponentSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -970,14 +970,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BGSLodOwnerComponentBinaryWriteTranslation :
+    public partial class LodOwnerComponentBinaryWriteTranslation :
         AComponentBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BGSLodOwnerComponentBinaryWriteTranslation Instance = new();
+        public new static readonly LodOwnerComponentBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IBGSLodOwnerComponentGetter item,
+            ILodOwnerComponentGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IBGSLodOwnerComponentGetter item,
+            ILodOwnerComponentGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1009,7 +1009,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBGSLodOwnerComponentGetter)item,
+                item: (ILodOwnerComponentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1020,19 +1020,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IBGSLodOwnerComponentGetter)item,
+                item: (ILodOwnerComponentGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BGSLodOwnerComponentBinaryCreateTranslation : AComponentBinaryCreateTranslation
+    internal partial class LodOwnerComponentBinaryCreateTranslation : AComponentBinaryCreateTranslation
     {
-        public new static readonly BGSLodOwnerComponentBinaryCreateTranslation Instance = new BGSLodOwnerComponentBinaryCreateTranslation();
+        public new static readonly LodOwnerComponentBinaryCreateTranslation Instance = new LodOwnerComponentBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IBGSLodOwnerComponent item,
+            ILodOwnerComponent item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.REFL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)BGSLodOwnerComponent_FieldIndex.REFL;
+                    return (int)LodOwnerComponent_FieldIndex.REFL;
                 }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BGSLodOwnerComponentBinaryTranslationMixIn
+    public static class LodOwnerComponentBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1076,30 +1076,30 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BGSLodOwnerComponentBinaryOverlay :
+    internal partial class LodOwnerComponentBinaryOverlay :
         AComponentBinaryOverlay,
-        IBGSLodOwnerComponentGetter
+        ILodOwnerComponentGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BGSLodOwnerComponent_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => BGSLodOwnerComponent_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LodOwnerComponent_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => LodOwnerComponent_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BGSLodOwnerComponentCommon.Instance;
+        protected override object CommonInstance() => LodOwnerComponentCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BGSLodOwnerComponentSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => LodOwnerComponentSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BGSLodOwnerComponentBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => LodOwnerComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BGSLodOwnerComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LodOwnerComponentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected BGSLodOwnerComponentBinaryOverlay(
+        protected LodOwnerComponentBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBGSLodOwnerComponentGetter BGSLodOwnerComponentFactory(
+        public static ILodOwnerComponentGetter LodOwnerComponentFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new BGSLodOwnerComponentBinaryOverlay(
+            var ret = new LodOwnerComponentBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1149,12 +1149,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBGSLodOwnerComponentGetter BGSLodOwnerComponentFactory(
+        public static ILodOwnerComponentGetter LodOwnerComponentFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BGSLodOwnerComponentFactory(
+            return LodOwnerComponentFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.REFL:
                 {
                     _REFLLocation = (stream.Position - offset);
-                    return (int)BGSLodOwnerComponent_FieldIndex.REFL;
+                    return (int)LodOwnerComponent_FieldIndex.REFL;
                 }
                 default:
                     return base.FillRecordType(
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BGSLodOwnerComponentMixIn.Print(
+            LodOwnerComponentMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1205,16 +1205,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBGSLodOwnerComponentGetter rhs) return false;
-            return ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILodOwnerComponentGetter rhs) return false;
+            return ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBGSLodOwnerComponentGetter? obj)
+        public bool Equals(ILodOwnerComponentGetter? obj)
         {
-            return ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BGSLodOwnerComponentCommon)((IBGSLodOwnerComponentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LodOwnerComponentCommon)((ILodOwnerComponentGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

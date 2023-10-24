@@ -115,6 +115,10 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
+    <None Update="Records\Common Subrecords\ObjectTemplate.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldAnimationTextAssetType.cs" />
@@ -149,6 +153,9 @@
     <Compile Include="InternalsPermissions.cs" />
     <Compile Include="Records\Common Subrecords\AComponent.cs">
       <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AObjectModProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\AttackData.cs">
       <DependentUpon>Attack.xml</DependentUpon>
@@ -1917,6 +1924,34 @@
     <Compile Include="Records\Common Subrecords\NavmeshTriangle.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModBoolProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModEnumProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModFloatProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModFormLinkFloatProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModFormLinkIntProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModIntProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectModProperty.cs" />
+    <Compile Include="Records\Common Subrecords\ObjectModStringProperty_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectTemplate.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectTemplate_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEntry.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
@@ -1995,6 +2030,9 @@
     <Compile Include="Records\Major Records\LockData.cs">
       <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ObjectModification.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Planet.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
@@ -2009,6 +2047,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Transform.cs">
       <DependentUpon>Transform.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Weapon.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Weather.cs">
       <DependentUpon>Weather.xml</DependentUpon>
@@ -4115,9 +4156,6 @@
     <Compile Include="Records\Common Subrecords\ParticleSystemComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\BGSLodOwnerComponent_Generated.cs">
-      <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Condition_Generated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -4784,9 +4822,6 @@
     <Compile Include="Records\Major Records\ObjectEffect_Generated.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ObjectModification_Generated.cs">
-      <DependentUpon>ObjectModification.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ObjectVisibilityManager_Generated.cs">
       <DependentUpon>ObjectVisibilityManager.xml</DependentUpon>
     </Compile>
@@ -5006,9 +5041,6 @@
     <Compile Include="Records\Major Records\Water_Generated.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WBARRecord_Generated.cs">
-      <DependentUpon>WBARRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Weapon_Generated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
@@ -5063,6 +5095,37 @@
     </Compile>
     <Compile Include="Records\Major Records\LockData_Generated.cs">
       <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectTemplateInclude_Generated.cs">
+      <DependentUpon>ObjectTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AObjectModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\UnknownObjectModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\LodOwnerComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SoundTagComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponDamageType_Generated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponBarrelModel_Generated.cs">
+      <DependentUpon>WeaponBarrelModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\FirstPersonModel_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

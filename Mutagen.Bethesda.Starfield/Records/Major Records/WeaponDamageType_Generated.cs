@@ -38,31 +38,41 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class LegendaryMod :
-        IEquatable<ILegendaryModGetter>,
-        ILegendaryMod,
-        ILoquiObjectSetter<LegendaryMod>
+    public partial class WeaponDamageType :
+        IEquatable<IWeaponDamageTypeGetter>,
+        ILoquiObjectSetter<WeaponDamageType>,
+        IWeaponDamageType
     {
         #region Ctor
-        public LegendaryMod()
+        public WeaponDamageType()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Slot
-        public LegendaryItem.StarSlot Slot { get; set; } = default;
-        #endregion
-        #region LegendaryModifier
-        private readonly IFormLink<IAObjectModificationGetter> _LegendaryModifier = new FormLink<IAObjectModificationGetter>();
-        public IFormLink<IAObjectModificationGetter> LegendaryModifier
+        #region DamageType
+        private readonly IFormLink<IDamageTypeGetter> _DamageType = new FormLink<IDamageTypeGetter>();
+        public IFormLink<IDamageTypeGetter> DamageType
         {
-            get => _LegendaryModifier;
-            set => _LegendaryModifier.SetTo(value);
+            get => _DamageType;
+            set => _DamageType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IAObjectModificationGetter> ILegendaryModGetter.LegendaryModifier => this.LegendaryModifier;
+        IFormLinkGetter<IDamageTypeGetter> IWeaponDamageTypeGetter.DamageType => this.DamageType;
+        #endregion
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region CurveTable
+        private readonly IFormLink<ICurveTableGetter> _CurveTable = new FormLink<ICurveTableGetter>();
+        public IFormLink<ICurveTableGetter> CurveTable
+        {
+            get => _CurveTable;
+            set => _CurveTable.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ICurveTableGetter> IWeaponDamageTypeGetter.CurveTable => this.CurveTable;
         #endregion
 
         #region To String
@@ -71,7 +81,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LegendaryModMixIn.Print(
+            WeaponDamageTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -82,16 +92,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILegendaryModGetter rhs) return false;
-            return ((LegendaryModCommon)((ILegendaryModGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWeaponDamageTypeGetter rhs) return false;
+            return ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILegendaryModGetter? obj)
+        public bool Equals(IWeaponDamageTypeGetter? obj)
         {
-            return ((LegendaryModCommon)((ILegendaryModGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LegendaryModCommon)((ILegendaryModGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -103,16 +113,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Slot = initialValue;
-                this.LegendaryModifier = initialValue;
+                this.DamageType = initialValue;
+                this.Value = initialValue;
+                this.CurveTable = initialValue;
             }
 
             public Mask(
-                TItem Slot,
-                TItem LegendaryModifier)
+                TItem DamageType,
+                TItem Value,
+                TItem CurveTable)
             {
-                this.Slot = Slot;
-                this.LegendaryModifier = LegendaryModifier;
+                this.DamageType = DamageType;
+                this.Value = Value;
+                this.CurveTable = CurveTable;
             }
 
             #pragma warning disable CS8618
@@ -124,8 +137,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Slot;
-            public TItem LegendaryModifier;
+            public TItem DamageType;
+            public TItem Value;
+            public TItem CurveTable;
             #endregion
 
             #region Equals
@@ -138,15 +152,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Slot, rhs.Slot)) return false;
-                if (!object.Equals(this.LegendaryModifier, rhs.LegendaryModifier)) return false;
+                if (!object.Equals(this.DamageType, rhs.DamageType)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.CurveTable, rhs.CurveTable)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Slot);
-                hash.Add(this.LegendaryModifier);
+                hash.Add(this.DamageType);
+                hash.Add(this.Value);
+                hash.Add(this.CurveTable);
                 return hash.ToHashCode();
             }
 
@@ -155,8 +171,9 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Slot)) return false;
-                if (!eval(this.LegendaryModifier)) return false;
+                if (!eval(this.DamageType)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.CurveTable)) return false;
                 return true;
             }
             #endregion
@@ -164,8 +181,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Slot)) return true;
-                if (eval(this.LegendaryModifier)) return true;
+                if (eval(this.DamageType)) return true;
+                if (eval(this.Value)) return true;
+                if (eval(this.CurveTable)) return true;
                 return false;
             }
             #endregion
@@ -173,40 +191,45 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LegendaryMod.Mask<R>();
+                var ret = new WeaponDamageType.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Slot = eval(this.Slot);
-                obj.LegendaryModifier = eval(this.LegendaryModifier);
+                obj.DamageType = eval(this.DamageType);
+                obj.Value = eval(this.Value);
+                obj.CurveTable = eval(this.CurveTable);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LegendaryMod.Mask<bool>? printMask = null)
+            public string Print(WeaponDamageType.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LegendaryMod.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeaponDamageType.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LegendaryMod.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(WeaponDamageType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Slot ?? true)
+                    if (printMask?.DamageType ?? true)
                     {
-                        sb.AppendItem(Slot, "Slot");
+                        sb.AppendItem(DamageType, "DamageType");
                     }
-                    if (printMask?.LegendaryModifier ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        sb.AppendItem(LegendaryModifier, "LegendaryModifier");
+                        sb.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.CurveTable ?? true)
+                    {
+                        sb.AppendItem(CurveTable, "CurveTable");
                     }
                 }
             }
@@ -232,20 +255,23 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Slot;
-            public Exception? LegendaryModifier;
+            public Exception? DamageType;
+            public Exception? Value;
+            public Exception? CurveTable;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LegendaryMod_FieldIndex enu = (LegendaryMod_FieldIndex)index;
+                WeaponDamageType_FieldIndex enu = (WeaponDamageType_FieldIndex)index;
                 switch (enu)
                 {
-                    case LegendaryMod_FieldIndex.Slot:
-                        return Slot;
-                    case LegendaryMod_FieldIndex.LegendaryModifier:
-                        return LegendaryModifier;
+                    case WeaponDamageType_FieldIndex.DamageType:
+                        return DamageType;
+                    case WeaponDamageType_FieldIndex.Value:
+                        return Value;
+                    case WeaponDamageType_FieldIndex.CurveTable:
+                        return CurveTable;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -253,14 +279,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                LegendaryMod_FieldIndex enu = (LegendaryMod_FieldIndex)index;
+                WeaponDamageType_FieldIndex enu = (WeaponDamageType_FieldIndex)index;
                 switch (enu)
                 {
-                    case LegendaryMod_FieldIndex.Slot:
-                        this.Slot = ex;
+                    case WeaponDamageType_FieldIndex.DamageType:
+                        this.DamageType = ex;
                         break;
-                    case LegendaryMod_FieldIndex.LegendaryModifier:
-                        this.LegendaryModifier = ex;
+                    case WeaponDamageType_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case WeaponDamageType_FieldIndex.CurveTable:
+                        this.CurveTable = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -269,14 +298,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                LegendaryMod_FieldIndex enu = (LegendaryMod_FieldIndex)index;
+                WeaponDamageType_FieldIndex enu = (WeaponDamageType_FieldIndex)index;
                 switch (enu)
                 {
-                    case LegendaryMod_FieldIndex.Slot:
-                        this.Slot = (Exception?)obj;
+                    case WeaponDamageType_FieldIndex.DamageType:
+                        this.DamageType = (Exception?)obj;
                         break;
-                    case LegendaryMod_FieldIndex.LegendaryModifier:
-                        this.LegendaryModifier = (Exception?)obj;
+                    case WeaponDamageType_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case WeaponDamageType_FieldIndex.CurveTable:
+                        this.CurveTable = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -286,8 +318,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Slot != null) return true;
-                if (LegendaryModifier != null) return true;
+                if (DamageType != null) return true;
+                if (Value != null) return true;
+                if (CurveTable != null) return true;
                 return false;
             }
             #endregion
@@ -314,10 +347,13 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Slot, "Slot");
+                    sb.AppendItem(DamageType, "DamageType");
                 }
                 {
-                    sb.AppendItem(LegendaryModifier, "LegendaryModifier");
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(CurveTable, "CurveTable");
                 }
             }
             #endregion
@@ -327,8 +363,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Slot = this.Slot.Combine(rhs.Slot);
-                ret.LegendaryModifier = this.LegendaryModifier.Combine(rhs.LegendaryModifier);
+                ret.DamageType = this.DamageType.Combine(rhs.DamageType);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.CurveTable = this.CurveTable.Combine(rhs.CurveTable);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -352,8 +389,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Slot;
-            public bool LegendaryModifier;
+            public bool DamageType;
+            public bool Value;
+            public bool CurveTable;
             #endregion
 
             #region Ctors
@@ -363,8 +401,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Slot = defaultOn;
-                this.LegendaryModifier = defaultOn;
+                this.DamageType = defaultOn;
+                this.Value = defaultOn;
+                this.CurveTable = defaultOn;
             }
 
             #endregion
@@ -380,8 +419,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Slot, null));
-                ret.Add((LegendaryModifier, null));
+                ret.Add((DamageType, null));
+                ret.Add((Value, null));
+                ret.Add((CurveTable, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -393,31 +433,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LegendaryModCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LegendaryModSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponDamageTypeCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponDamageTypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LegendaryModBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WeaponDamageTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LegendaryModBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponDamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static LegendaryMod CreateFromBinary(
+        public static WeaponDamageType CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new LegendaryMod();
-            ((LegendaryModSetterCommon)((ILegendaryModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WeaponDamageType();
+            ((WeaponDamageTypeSetterCommon)((IWeaponDamageTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -428,7 +468,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LegendaryMod item,
+            out WeaponDamageType item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -443,32 +483,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((LegendaryModSetterCommon)((ILegendaryModGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WeaponDamageTypeSetterCommon)((IWeaponDamageTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LegendaryMod GetNew()
+        internal static WeaponDamageType GetNew()
         {
-            return new LegendaryMod();
+            return new WeaponDamageType();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILegendaryMod :
+    public partial interface IWeaponDamageType :
         IFormLinkContainer,
-        ILegendaryModGetter,
-        ILoquiObjectSetter<ILegendaryMod>
+        ILoquiObjectSetter<IWeaponDamageType>,
+        IWeaponDamageTypeGetter
     {
-        new LegendaryItem.StarSlot Slot { get; set; }
-        new IFormLink<IAObjectModificationGetter> LegendaryModifier { get; set; }
+        new IFormLink<IDamageTypeGetter> DamageType { get; set; }
+        new UInt32 Value { get; set; }
+        new IFormLink<ICurveTableGetter> CurveTable { get; set; }
     }
 
-    public partial interface ILegendaryModGetter :
+    public partial interface IWeaponDamageTypeGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILegendaryModGetter>
+        ILoquiObject<IWeaponDamageTypeGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -476,51 +517,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => LegendaryMod_Registration.Instance;
-        LegendaryItem.StarSlot Slot { get; }
-        IFormLinkGetter<IAObjectModificationGetter> LegendaryModifier { get; }
+        static ILoquiRegistration StaticRegistration => WeaponDamageType_Registration.Instance;
+        IFormLinkGetter<IDamageTypeGetter> DamageType { get; }
+        UInt32 Value { get; }
+        IFormLinkGetter<ICurveTableGetter> CurveTable { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LegendaryModMixIn
+    public static partial class WeaponDamageTypeMixIn
     {
-        public static void Clear(this ILegendaryMod item)
+        public static void Clear(this IWeaponDamageType item)
         {
-            ((LegendaryModSetterCommon)((ILegendaryModGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WeaponDamageTypeSetterCommon)((IWeaponDamageTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LegendaryMod.Mask<bool> GetEqualsMask(
-            this ILegendaryModGetter item,
-            ILegendaryModGetter rhs,
+        public static WeaponDamageType.Mask<bool> GetEqualsMask(
+            this IWeaponDamageTypeGetter item,
+            IWeaponDamageTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILegendaryModGetter item,
+            this IWeaponDamageTypeGetter item,
             string? name = null,
-            LegendaryMod.Mask<bool>? printMask = null)
+            WeaponDamageType.Mask<bool>? printMask = null)
         {
-            return ((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).Print(
+            return ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILegendaryModGetter item,
+            this IWeaponDamageTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LegendaryMod.Mask<bool>? printMask = null)
+            WeaponDamageType.Mask<bool>? printMask = null)
         {
-            ((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).Print(
+            ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -528,21 +570,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ILegendaryModGetter item,
-            ILegendaryModGetter rhs,
-            LegendaryMod.TranslationMask? equalsMask = null)
+            this IWeaponDamageTypeGetter item,
+            IWeaponDamageTypeGetter rhs,
+            WeaponDamageType.TranslationMask? equalsMask = null)
         {
-            return ((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).Equals(
+            return ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILegendaryMod lhs,
-            ILegendaryModGetter rhs)
+            this IWeaponDamageType lhs,
+            IWeaponDamageTypeGetter rhs)
         {
-            ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -551,11 +593,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ILegendaryMod lhs,
-            ILegendaryModGetter rhs,
-            LegendaryMod.TranslationMask? copyMask = null)
+            this IWeaponDamageType lhs,
+            IWeaponDamageTypeGetter rhs,
+            WeaponDamageType.TranslationMask? copyMask = null)
         {
-            ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -564,28 +606,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ILegendaryMod lhs,
-            ILegendaryModGetter rhs,
-            out LegendaryMod.ErrorMask errorMask,
-            LegendaryMod.TranslationMask? copyMask = null)
+            this IWeaponDamageType lhs,
+            IWeaponDamageTypeGetter rhs,
+            out WeaponDamageType.ErrorMask errorMask,
+            WeaponDamageType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LegendaryMod.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponDamageType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILegendaryMod lhs,
-            ILegendaryModGetter rhs,
+            this IWeaponDamageType lhs,
+            IWeaponDamageTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -593,32 +635,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static LegendaryMod DeepCopy(
-            this ILegendaryModGetter item,
-            LegendaryMod.TranslationMask? copyMask = null)
+        public static WeaponDamageType DeepCopy(
+            this IWeaponDamageTypeGetter item,
+            WeaponDamageType.TranslationMask? copyMask = null)
         {
-            return ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LegendaryMod DeepCopy(
-            this ILegendaryModGetter item,
-            out LegendaryMod.ErrorMask errorMask,
-            LegendaryMod.TranslationMask? copyMask = null)
+        public static WeaponDamageType DeepCopy(
+            this IWeaponDamageTypeGetter item,
+            out WeaponDamageType.ErrorMask errorMask,
+            WeaponDamageType.TranslationMask? copyMask = null)
         {
-            return ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LegendaryMod DeepCopy(
-            this ILegendaryModGetter item,
+        public static WeaponDamageType DeepCopy(
+            this IWeaponDamageTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -626,11 +668,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILegendaryMod item,
+            this IWeaponDamageType item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((LegendaryModSetterCommon)((ILegendaryModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WeaponDamageTypeSetterCommon)((IWeaponDamageTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -646,41 +688,42 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum LegendaryMod_FieldIndex
+    internal enum WeaponDamageType_FieldIndex
     {
-        Slot = 0,
-        LegendaryModifier = 1,
+        DamageType = 0,
+        Value = 1,
+        CurveTable = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class LegendaryMod_Registration : ILoquiRegistration
+    internal partial class WeaponDamageType_Registration : ILoquiRegistration
     {
-        public static readonly LegendaryMod_Registration Instance = new LegendaryMod_Registration();
+        public static readonly WeaponDamageType_Registration Instance = new WeaponDamageType_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(LegendaryMod.Mask<>);
+        public static readonly Type MaskType = typeof(WeaponDamageType.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LegendaryMod.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WeaponDamageType.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LegendaryMod);
+        public static readonly Type ClassType = typeof(WeaponDamageType);
 
-        public static readonly Type GetterType = typeof(ILegendaryModGetter);
+        public static readonly Type GetterType = typeof(IWeaponDamageTypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILegendaryMod);
+        public static readonly Type SetterType = typeof(IWeaponDamageType);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.LegendaryMod";
+        public const string FullName = "Mutagen.Bethesda.Starfield.WeaponDamageType";
 
-        public const string Name = "LegendaryMod";
+        public const string Name = "WeaponDamageType";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -688,7 +731,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(LegendaryModBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WeaponDamageTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -719,30 +762,32 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class LegendaryModSetterCommon
+    internal partial class WeaponDamageTypeSetterCommon
     {
-        public static readonly LegendaryModSetterCommon Instance = new LegendaryModSetterCommon();
+        public static readonly WeaponDamageTypeSetterCommon Instance = new WeaponDamageTypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILegendaryMod item)
+        public void Clear(IWeaponDamageType item)
         {
             ClearPartial();
-            item.Slot = default;
-            item.LegendaryModifier.Clear();
+            item.DamageType.Clear();
+            item.Value = default;
+            item.CurveTable.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(ILegendaryMod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWeaponDamageType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.LegendaryModifier.Relink(mapping);
+            obj.DamageType.Relink(mapping);
+            obj.CurveTable.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILegendaryMod item,
+            IWeaponDamageType item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -750,23 +795,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LegendaryModBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: WeaponDamageTypeBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class LegendaryModCommon
+    internal partial class WeaponDamageTypeCommon
     {
-        public static readonly LegendaryModCommon Instance = new LegendaryModCommon();
+        public static readonly WeaponDamageTypeCommon Instance = new WeaponDamageTypeCommon();
 
-        public LegendaryMod.Mask<bool> GetEqualsMask(
-            ILegendaryModGetter item,
-            ILegendaryModGetter rhs,
+        public WeaponDamageType.Mask<bool> GetEqualsMask(
+            IWeaponDamageTypeGetter item,
+            IWeaponDamageTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LegendaryMod.Mask<bool>(false);
-            ((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WeaponDamageType.Mask<bool>(false);
+            ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -775,19 +820,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ILegendaryModGetter item,
-            ILegendaryModGetter rhs,
-            LegendaryMod.Mask<bool> ret,
+            IWeaponDamageTypeGetter item,
+            IWeaponDamageTypeGetter rhs,
+            WeaponDamageType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Slot = item.Slot == rhs.Slot;
-            ret.LegendaryModifier = item.LegendaryModifier.Equals(rhs.LegendaryModifier);
+            ret.DamageType = item.DamageType.Equals(rhs.DamageType);
+            ret.Value = item.Value == rhs.Value;
+            ret.CurveTable = item.CurveTable.Equals(rhs.CurveTable);
         }
         
         public string Print(
-            ILegendaryModGetter item,
+            IWeaponDamageTypeGetter item,
             string? name = null,
-            LegendaryMod.Mask<bool>? printMask = null)
+            WeaponDamageType.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -799,18 +845,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ILegendaryModGetter item,
+            IWeaponDamageTypeGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LegendaryMod.Mask<bool>? printMask = null)
+            WeaponDamageType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LegendaryMod =>");
+                sb.AppendLine($"WeaponDamageType =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LegendaryMod) =>");
+                sb.AppendLine($"{name} (WeaponDamageType) =>");
             }
             using (sb.Brace())
             {
@@ -822,43 +868,52 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ILegendaryModGetter item,
+            IWeaponDamageTypeGetter item,
             StructuredStringBuilder sb,
-            LegendaryMod.Mask<bool>? printMask = null)
+            WeaponDamageType.Mask<bool>? printMask = null)
         {
-            if (printMask?.Slot ?? true)
+            if (printMask?.DamageType ?? true)
             {
-                sb.AppendItem(item.Slot, "Slot");
+                sb.AppendItem(item.DamageType.FormKey, "DamageType");
             }
-            if (printMask?.LegendaryModifier ?? true)
+            if (printMask?.Value ?? true)
             {
-                sb.AppendItem(item.LegendaryModifier.FormKey, "LegendaryModifier");
+                sb.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.CurveTable ?? true)
+            {
+                sb.AppendItem(item.CurveTable.FormKey, "CurveTable");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILegendaryModGetter? lhs,
-            ILegendaryModGetter? rhs,
+            IWeaponDamageTypeGetter? lhs,
+            IWeaponDamageTypeGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryMod_FieldIndex.Slot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.DamageType) ?? true))
             {
-                if (lhs.Slot != rhs.Slot) return false;
+                if (!lhs.DamageType.Equals(rhs.DamageType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryMod_FieldIndex.LegendaryModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.Value) ?? true))
             {
-                if (!lhs.LegendaryModifier.Equals(rhs.LegendaryModifier)) return false;
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.CurveTable) ?? true))
+            {
+                if (!lhs.CurveTable.Equals(rhs.CurveTable)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ILegendaryModGetter item)
+        public virtual int GetHashCode(IWeaponDamageTypeGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Slot);
-            hash.Add(item.LegendaryModifier);
+            hash.Add(item.DamageType);
+            hash.Add(item.Value);
+            hash.Add(item.CurveTable);
             return hash.ToHashCode();
         }
         
@@ -867,49 +922,54 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return LegendaryMod.GetNew();
+            return WeaponDamageType.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILegendaryModGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponDamageTypeGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.LegendaryModifier);
+            yield return FormLinkInformation.Factory(obj.DamageType);
+            yield return FormLinkInformation.Factory(obj.CurveTable);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class LegendaryModSetterTranslationCommon
+    internal partial class WeaponDamageTypeSetterTranslationCommon
     {
-        public static readonly LegendaryModSetterTranslationCommon Instance = new LegendaryModSetterTranslationCommon();
+        public static readonly WeaponDamageTypeSetterTranslationCommon Instance = new WeaponDamageTypeSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILegendaryMod item,
-            ILegendaryModGetter rhs,
+            IWeaponDamageType item,
+            IWeaponDamageTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)LegendaryMod_FieldIndex.Slot) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.DamageType) ?? true))
             {
-                item.Slot = rhs.Slot;
+                item.DamageType.SetTo(rhs.DamageType.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryMod_FieldIndex.LegendaryModifier) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.Value) ?? true))
             {
-                item.LegendaryModifier.SetTo(rhs.LegendaryModifier.FormKey);
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WeaponDamageType_FieldIndex.CurveTable) ?? true))
+            {
+                item.CurveTable.SetTo(rhs.CurveTable.FormKey);
             }
         }
         
         #endregion
         
-        public LegendaryMod DeepCopy(
-            ILegendaryModGetter item,
-            LegendaryMod.TranslationMask? copyMask = null)
+        public WeaponDamageType DeepCopy(
+            IWeaponDamageTypeGetter item,
+            WeaponDamageType.TranslationMask? copyMask = null)
         {
-            LegendaryMod ret = (LegendaryMod)((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).GetNew();
-            ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponDamageType ret = (WeaponDamageType)((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).GetNew();
+            ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -918,30 +978,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public LegendaryMod DeepCopy(
-            ILegendaryModGetter item,
-            out LegendaryMod.ErrorMask errorMask,
-            LegendaryMod.TranslationMask? copyMask = null)
+        public WeaponDamageType DeepCopy(
+            IWeaponDamageTypeGetter item,
+            out WeaponDamageType.ErrorMask errorMask,
+            WeaponDamageType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LegendaryMod ret = (LegendaryMod)((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).GetNew();
-            ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponDamageType ret = (WeaponDamageType)((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).GetNew();
+            ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LegendaryMod.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponDamageType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LegendaryMod DeepCopy(
-            ILegendaryModGetter item,
+        public WeaponDamageType DeepCopy(
+            IWeaponDamageTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LegendaryMod ret = (LegendaryMod)((LegendaryModCommon)((ILegendaryModGetter)item).CommonInstance()!).GetNew();
-            ((LegendaryModSetterTranslationCommon)((ILegendaryModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponDamageType ret = (WeaponDamageType)((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)item).CommonInstance()!).GetNew();
+            ((WeaponDamageTypeSetterTranslationCommon)((IWeaponDamageTypeGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -957,27 +1017,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class LegendaryMod
+    public partial class WeaponDamageType
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LegendaryMod_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LegendaryMod_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponDamageType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponDamageType_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LegendaryModCommon.Instance;
+        protected object CommonInstance() => WeaponDamageTypeCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LegendaryModSetterCommon.Instance;
+            return WeaponDamageTypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LegendaryModSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeaponDamageTypeSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILegendaryModGetter.CommonInstance() => this.CommonInstance();
+        object IWeaponDamageTypeGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILegendaryModGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWeaponDamageTypeGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILegendaryModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWeaponDamageTypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -988,26 +1048,29 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class LegendaryModBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class WeaponDamageTypeBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LegendaryModBinaryWriteTranslation Instance = new();
+        public static readonly WeaponDamageTypeBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ILegendaryModGetter item,
+            IWeaponDamageTypeGetter item,
             MutagenWriter writer)
         {
-            EnumBinaryTranslation<LegendaryItem.StarSlot, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Slot,
-                length: 4);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LegendaryModifier);
+                item: item.DamageType);
+            writer.Write(item.Value);
+            if (writer.MetaData.FormVersion!.Value >= 152)
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CurveTable);
+            }
         }
 
         public void Write(
             MutagenWriter writer,
-            ILegendaryModGetter item,
+            IWeaponDamageTypeGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1021,25 +1084,27 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ILegendaryModGetter)item,
+                item: (IWeaponDamageTypeGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LegendaryModBinaryCreateTranslation
+    internal partial class WeaponDamageTypeBinaryCreateTranslation
     {
-        public static readonly LegendaryModBinaryCreateTranslation Instance = new LegendaryModBinaryCreateTranslation();
+        public static readonly WeaponDamageTypeBinaryCreateTranslation Instance = new WeaponDamageTypeBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ILegendaryMod item,
+            IWeaponDamageType item,
             MutagenFrame frame)
         {
-            item.Slot = EnumBinaryTranslation<LegendaryItem.StarSlot, MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                length: 4);
-            item.LegendaryModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.DamageType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Value = frame.ReadUInt32();
+            if (frame.MetaData.FormVersion!.Value >= 152)
+            {
+                item.CurveTable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            }
         }
 
     }
@@ -1048,14 +1113,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class LegendaryModBinaryTranslationMixIn
+    public static class WeaponDamageTypeBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILegendaryModGetter item,
+            this IWeaponDamageTypeGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LegendaryModBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((WeaponDamageTypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1068,53 +1133,57 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class LegendaryModBinaryOverlay :
+    internal partial class WeaponDamageTypeBinaryOverlay :
         PluginBinaryOverlay,
-        ILegendaryModGetter
+        IWeaponDamageTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LegendaryMod_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LegendaryMod_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponDamageType_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => WeaponDamageType_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LegendaryModCommon.Instance;
+        protected object CommonInstance() => WeaponDamageTypeCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LegendaryModSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeaponDamageTypeSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILegendaryModGetter.CommonInstance() => this.CommonInstance();
+        object IWeaponDamageTypeGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILegendaryModGetter.CommonSetterInstance() => null;
+        object? IWeaponDamageTypeGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILegendaryModGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWeaponDamageTypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LegendaryModCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponDamageTypeCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LegendaryModBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WeaponDamageTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LegendaryModBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponDamageTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public LegendaryItem.StarSlot Slot => (LegendaryItem.StarSlot)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IAObjectModificationGetter> LegendaryModifier => new FormLink<IAObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IDamageTypeGetter> DamageType => new FormLink<IDamageTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        #region CurveTable
+        public IFormLinkGetter<ICurveTableGetter> CurveTable => new FormLink<ICurveTableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        int CurveTableVersioningOffset => _package.FormVersion!.FormVersion!.Value < 152 ? -4 : 0;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected LegendaryModBinaryOverlay(
+        protected WeaponDamageTypeBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1124,7 +1193,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ILegendaryModGetter LegendaryModFactory(
+        public static IWeaponDamageTypeGetter WeaponDamageTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1133,13 +1202,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x8,
+                length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new LegendaryModBinaryOverlay(
+            var ret = new WeaponDamageTypeBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x8;
+            stream.Position += ret.CurveTableVersioningOffset + 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1147,12 +1216,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ILegendaryModGetter LegendaryModFactory(
+        public static IWeaponDamageTypeGetter WeaponDamageTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return LegendaryModFactory(
+            return WeaponDamageTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1164,7 +1233,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LegendaryModMixIn.Print(
+            WeaponDamageTypeMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1175,16 +1244,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILegendaryModGetter rhs) return false;
-            return ((LegendaryModCommon)((ILegendaryModGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWeaponDamageTypeGetter rhs) return false;
+            return ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILegendaryModGetter? obj)
+        public bool Equals(IWeaponDamageTypeGetter? obj)
         {
-            return ((LegendaryModCommon)((ILegendaryModGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LegendaryModCommon)((ILegendaryModGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponDamageTypeCommon)((IWeaponDamageTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

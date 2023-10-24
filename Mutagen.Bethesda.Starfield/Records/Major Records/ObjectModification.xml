@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="AObjectModification" recordType="OMOD" abstract="true" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <AdditionalContainedRecordType>NONE</AdditionalContainedRecordType>
+  </Object>
+  <Object name="WeaponModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="Weapon.Property" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="UnknownObjectModification" recordType="OMOD" objType="Record" baseClass="AObjectModification">
+    <Fields>
+      <List name="Properties" binary="NoGeneration">
+        <Ref>
+          <Direct refName="AObjectModProperty">
+            <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+      <RecordType name="ModificationType" binary="NoGeneration" />
+    </Fields>
   </Object>
 </Loqui>

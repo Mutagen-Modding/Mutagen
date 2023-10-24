@@ -40,14 +40,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class WBARRecord :
+    public partial class WeaponBarrelModel :
         StarfieldMajorRecord,
-        IEquatable<IWBARRecordGetter>,
-        ILoquiObjectSetter<WBARRecord>,
-        IWBARRecordInternal
+        IEquatable<IWeaponBarrelModelGetter>,
+        ILoquiObjectSetter<WeaponBarrelModel>,
+        IWeaponBarrelModelInternal
     {
         #region Ctor
-        protected WBARRecord()
+        protected WeaponBarrelModel()
         {
             CustomCtor();
         }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WBARRecordMixIn.Print(
+            WeaponBarrelModelMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new WBARRecord.Mask<R>();
+                var ret = new WeaponBarrelModel.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -163,16 +163,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(WBARRecord.Mask<bool>? printMask = null)
+            public string Print(WeaponBarrelModel.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, WBARRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, WeaponBarrelModel.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(WBARRecord.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(WeaponBarrelModel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                WBARRecord_FieldIndex enu = (WBARRecord_FieldIndex)index;
+                WeaponBarrelModel_FieldIndex enu = (WeaponBarrelModel_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                WBARRecord_FieldIndex enu = (WBARRecord_FieldIndex)index;
+                WeaponBarrelModel_FieldIndex enu = (WeaponBarrelModel_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                WBARRecord_FieldIndex enu = (WBARRecord_FieldIndex)index;
+                WeaponBarrelModel_FieldIndex enu = (WeaponBarrelModel_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -295,8 +295,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = WBARRecord_Registration.TriggeringRecordType;
-        public WBARRecord(
+        public static readonly RecordType GrupRecordType = WeaponBarrelModel_Registration.TriggeringRecordType;
+        public WeaponBarrelModel(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private WBARRecord(
+        private WeaponBarrelModel(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal WBARRecord(
+        internal WeaponBarrelModel(
             FormKey formKey,
             ushort formVersion)
         {
@@ -323,14 +323,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public WBARRecord(IStarfieldMod mod)
+        public WeaponBarrelModel(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public WBARRecord(IStarfieldMod mod, string editorID)
+        public WeaponBarrelModel(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -340,10 +340,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<WBARRecord>.ToString(this);
+            return MajorRecordPrinter<WeaponBarrelModel>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IWBARRecord);
+        protected override Type LinkType => typeof(IWeaponBarrelModel);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -352,16 +352,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IWBARRecordGetter rhs) return false;
-            return ((WBARRecordCommon)((IWBARRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWeaponBarrelModelGetter rhs) return false;
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IWBARRecordGetter? obj)
+        public bool Equals(IWeaponBarrelModelGetter? obj)
         {
-            return ((WBARRecordCommon)((IWBARRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((WBARRecordCommon)((IWBARRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -369,23 +369,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => WBARRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WeaponBarrelModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((WBARRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponBarrelModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static WBARRecord CreateFromBinary(
+        public new static WeaponBarrelModel CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new WBARRecord();
-            ((WBARRecordSetterCommon)((IWBARRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WeaponBarrelModel();
+            ((WeaponBarrelModelSetterCommon)((IWeaponBarrelModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out WBARRecord item,
+            out WeaponBarrelModel item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -411,82 +411,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((WBARRecordSetterCommon)((IWBARRecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WeaponBarrelModelSetterCommon)((IWeaponBarrelModelGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new WBARRecord GetNew()
+        internal static new WeaponBarrelModel GetNew()
         {
-            return new WBARRecord();
+            return new WeaponBarrelModel();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IWBARRecord :
-        ILoquiObjectSetter<IWBARRecordInternal>,
+    public partial interface IWeaponBarrelModel :
+        ILoquiObjectSetter<IWeaponBarrelModelInternal>,
         IStarfieldMajorRecordInternal,
-        IWBARRecordGetter
+        IWeaponBarrelModelGetter
     {
     }
 
-    public partial interface IWBARRecordInternal :
+    public partial interface IWeaponBarrelModelInternal :
         IStarfieldMajorRecordInternal,
-        IWBARRecord,
-        IWBARRecordGetter
+        IWeaponBarrelModel,
+        IWeaponBarrelModelGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.WBAR)]
-    public partial interface IWBARRecordGetter :
+    public partial interface IWeaponBarrelModelGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IWBARRecordGetter>,
-        IMapsToGetter<IWBARRecordGetter>
+        ILoquiObject<IWeaponBarrelModelGetter>,
+        IMapsToGetter<IWeaponBarrelModelGetter>
     {
-        static new ILoquiRegistration StaticRegistration => WBARRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => WeaponBarrelModel_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class WBARRecordMixIn
+    public static partial class WeaponBarrelModelMixIn
     {
-        public static void Clear(this IWBARRecordInternal item)
+        public static void Clear(this IWeaponBarrelModelInternal item)
         {
-            ((WBARRecordSetterCommon)((IWBARRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WeaponBarrelModelSetterCommon)((IWeaponBarrelModelGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static WBARRecord.Mask<bool> GetEqualsMask(
-            this IWBARRecordGetter item,
-            IWBARRecordGetter rhs,
+        public static WeaponBarrelModel.Mask<bool> GetEqualsMask(
+            this IWeaponBarrelModelGetter item,
+            IWeaponBarrelModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IWBARRecordGetter item,
+            this IWeaponBarrelModelGetter item,
             string? name = null,
-            WBARRecord.Mask<bool>? printMask = null)
+            WeaponBarrelModel.Mask<bool>? printMask = null)
         {
-            return ((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).Print(
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IWBARRecordGetter item,
+            this IWeaponBarrelModelGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            WBARRecord.Mask<bool>? printMask = null)
+            WeaponBarrelModel.Mask<bool>? printMask = null)
         {
-            ((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).Print(
+            ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -494,39 +494,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IWBARRecordGetter item,
-            IWBARRecordGetter rhs,
-            WBARRecord.TranslationMask? equalsMask = null)
+            this IWeaponBarrelModelGetter item,
+            IWeaponBarrelModelGetter rhs,
+            WeaponBarrelModel.TranslationMask? equalsMask = null)
         {
-            return ((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).Equals(
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IWBARRecordInternal lhs,
-            IWBARRecordGetter rhs,
-            out WBARRecord.ErrorMask errorMask,
-            WBARRecord.TranslationMask? copyMask = null)
+            this IWeaponBarrelModelInternal lhs,
+            IWeaponBarrelModelGetter rhs,
+            out WeaponBarrelModel.ErrorMask errorMask,
+            WeaponBarrelModel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = WBARRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponBarrelModel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IWBARRecordInternal lhs,
-            IWBARRecordGetter rhs,
+            this IWeaponBarrelModelInternal lhs,
+            IWeaponBarrelModelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -534,55 +534,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static WBARRecord DeepCopy(
-            this IWBARRecordGetter item,
-            WBARRecord.TranslationMask? copyMask = null)
+        public static WeaponBarrelModel DeepCopy(
+            this IWeaponBarrelModelGetter item,
+            WeaponBarrelModel.TranslationMask? copyMask = null)
         {
-            return ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static WBARRecord DeepCopy(
-            this IWBARRecordGetter item,
-            out WBARRecord.ErrorMask errorMask,
-            WBARRecord.TranslationMask? copyMask = null)
+        public static WeaponBarrelModel DeepCopy(
+            this IWeaponBarrelModelGetter item,
+            out WeaponBarrelModel.ErrorMask errorMask,
+            WeaponBarrelModel.TranslationMask? copyMask = null)
         {
-            return ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static WBARRecord DeepCopy(
-            this IWBARRecordGetter item,
+        public static WeaponBarrelModel DeepCopy(
+            this IWeaponBarrelModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static WBARRecord Duplicate(
-            this IWBARRecordGetter item,
+        public static WeaponBarrelModel Duplicate(
+            this IWeaponBarrelModelGetter item,
             FormKey formKey,
-            WBARRecord.TranslationMask? copyMask = null)
+            WeaponBarrelModel.TranslationMask? copyMask = null)
         {
-            return ((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).Duplicate(
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static WBARRecord Duplicate(
-            this IWBARRecordGetter item,
+        public static WeaponBarrelModel Duplicate(
+            this IWeaponBarrelModelGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).Duplicate(
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -592,11 +592,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IWBARRecordInternal item,
+            this IWeaponBarrelModelInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((WBARRecordSetterCommon)((IWBARRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WeaponBarrelModelSetterCommon)((IWeaponBarrelModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum WBARRecord_FieldIndex
+    internal enum WeaponBarrelModel_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -625,9 +625,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class WBARRecord_Registration : ILoquiRegistration
+    internal partial class WeaponBarrelModel_Registration : ILoquiRegistration
     {
-        public static readonly WBARRecord_Registration Instance = new WBARRecord_Registration();
+        public static readonly WeaponBarrelModel_Registration Instance = new WeaponBarrelModel_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -635,23 +635,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(WBARRecord.Mask<>);
+        public static readonly Type MaskType = typeof(WeaponBarrelModel.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(WBARRecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WeaponBarrelModel.ErrorMask);
 
-        public static readonly Type ClassType = typeof(WBARRecord);
+        public static readonly Type ClassType = typeof(WeaponBarrelModel);
 
-        public static readonly Type GetterType = typeof(IWBARRecordGetter);
+        public static readonly Type GetterType = typeof(IWeaponBarrelModelGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IWBARRecord);
+        public static readonly Type SetterType = typeof(IWeaponBarrelModel);
 
-        public static readonly Type? InternalSetterType = typeof(IWBARRecordInternal);
+        public static readonly Type? InternalSetterType = typeof(IWeaponBarrelModelInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.WBARRecord";
+        public const string FullName = "Mutagen.Bethesda.Starfield.WeaponBarrelModel";
 
-        public const string Name = "WBARRecord";
+        public const string Name = "WeaponBarrelModel";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.WBAR);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(WBARRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WeaponBarrelModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -697,13 +697,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class WBARRecordSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class WeaponBarrelModelSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly WBARRecordSetterCommon Instance = new WBARRecordSetterCommon();
+        public new static readonly WeaponBarrelModelSetterCommon Instance = new WeaponBarrelModelSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IWBARRecordInternal item)
+        public void Clear(IWeaponBarrelModelInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -711,16 +711,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IWBARRecordInternal)item);
+            Clear(item: (IWeaponBarrelModelInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IWBARRecordInternal)item);
+            Clear(item: (IWeaponBarrelModelInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IWBARRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IWeaponBarrelModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -729,16 +729,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IWBARRecordInternal item,
+            IWeaponBarrelModelInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IWBARRecordInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IWeaponBarrelModelInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: WBARRecordBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: WBARRecordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: WeaponBarrelModelBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: WeaponBarrelModelBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (WBARRecord)item,
+                item: (WeaponBarrelModel)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (WBARRecord)item,
+                item: (WeaponBarrelModel)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -766,17 +766,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class WBARRecordCommon : StarfieldMajorRecordCommon
+    internal partial class WeaponBarrelModelCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly WBARRecordCommon Instance = new WBARRecordCommon();
+        public new static readonly WeaponBarrelModelCommon Instance = new WeaponBarrelModelCommon();
 
-        public WBARRecord.Mask<bool> GetEqualsMask(
-            IWBARRecordGetter item,
-            IWBARRecordGetter rhs,
+        public WeaponBarrelModel.Mask<bool> GetEqualsMask(
+            IWeaponBarrelModelGetter item,
+            IWeaponBarrelModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WBARRecord.Mask<bool>(false);
-            ((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WeaponBarrelModel.Mask<bool>(false);
+            ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -785,18 +785,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IWBARRecordGetter item,
-            IWBARRecordGetter rhs,
-            WBARRecord.Mask<bool> ret,
+            IWeaponBarrelModelGetter item,
+            IWeaponBarrelModelGetter rhs,
+            WeaponBarrelModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IWBARRecordGetter item,
+            IWeaponBarrelModelGetter item,
             string? name = null,
-            WBARRecord.Mask<bool>? printMask = null)
+            WeaponBarrelModel.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -808,18 +808,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IWBARRecordGetter item,
+            IWeaponBarrelModelGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            WBARRecord.Mask<bool>? printMask = null)
+            WeaponBarrelModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"WBARRecord =>");
+                sb.AppendLine($"WeaponBarrelModel =>");
             }
             else
             {
-                sb.AppendLine($"{name} (WBARRecord) =>");
+                sb.AppendLine($"{name} (WeaponBarrelModel) =>");
             }
             using (sb.Brace())
             {
@@ -831,9 +831,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IWBARRecordGetter item,
+            IWeaponBarrelModelGetter item,
             StructuredStringBuilder sb,
-            WBARRecord.Mask<bool>? printMask = null)
+            WeaponBarrelModel.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -841,41 +841,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static WBARRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static WeaponBarrelModel_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new WBARRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new WeaponBarrelModel_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (WBARRecord_FieldIndex)((int)index);
+                    return (WeaponBarrelModel_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -883,8 +883,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IWBARRecordGetter? lhs,
-            IWBARRecordGetter? rhs,
+            IWeaponBarrelModelGetter? lhs,
+            IWeaponBarrelModelGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -898,8 +898,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IWBARRecordGetter?)lhs,
-                rhs: rhs as IWBARRecordGetter,
+                lhs: (IWeaponBarrelModelGetter?)lhs,
+                rhs: rhs as IWeaponBarrelModelGetter,
                 equalsMask: equalsMask);
         }
         
@@ -909,12 +909,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IWBARRecordGetter?)lhs,
-                rhs: rhs as IWBARRecordGetter,
+                lhs: (IWeaponBarrelModelGetter?)lhs,
+                rhs: rhs as IWeaponBarrelModelGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IWBARRecordGetter item)
+        public virtual int GetHashCode(IWeaponBarrelModelGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -923,12 +923,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IWBARRecordGetter)item);
+            return GetHashCode(item: (IWeaponBarrelModelGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IWBARRecordGetter)item);
+            return GetHashCode(item: (IWeaponBarrelModelGetter)item);
         }
         
         #endregion
@@ -936,11 +936,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return WBARRecord.GetNew();
+            return WeaponBarrelModel.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWBARRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWeaponBarrelModelGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -950,12 +950,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public WBARRecord Duplicate(
-            IWBARRecordGetter item,
+        public WeaponBarrelModel Duplicate(
+            IWeaponBarrelModelGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new WBARRecord(formKey, item.FormVersion);
+            var newRec = new WeaponBarrelModel(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWBARRecordGetter)item,
+                item: (IWeaponBarrelModelGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWBARRecordGetter)item,
+                item: (IWeaponBarrelModelGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -987,14 +987,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class WBARRecordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class WeaponBarrelModelSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly WBARRecordSetterTranslationCommon Instance = new WBARRecordSetterTranslationCommon();
+        public new static readonly WeaponBarrelModelSetterTranslationCommon Instance = new WeaponBarrelModelSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IWBARRecordInternal item,
-            IWBARRecordGetter rhs,
+            IWeaponBarrelModelInternal item,
+            IWeaponBarrelModelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1008,8 +1008,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IWBARRecord item,
-            IWBARRecordGetter rhs,
+            IWeaponBarrelModel item,
+            IWeaponBarrelModelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1030,8 +1030,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IWBARRecordInternal)item,
-                rhs: (IWBARRecordGetter)rhs,
+                item: (IWeaponBarrelModelInternal)item,
+                rhs: (IWeaponBarrelModelGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1045,8 +1045,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IWBARRecord)item,
-                rhs: (IWBARRecordGetter)rhs,
+                item: (IWeaponBarrelModel)item,
+                rhs: (IWeaponBarrelModelGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1060,8 +1060,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IWBARRecordInternal)item,
-                rhs: (IWBARRecordGetter)rhs,
+                item: (IWeaponBarrelModelInternal)item,
+                rhs: (IWeaponBarrelModelGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1075,8 +1075,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IWBARRecord)item,
-                rhs: (IWBARRecordGetter)rhs,
+                item: (IWeaponBarrelModel)item,
+                rhs: (IWeaponBarrelModelGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1084,12 +1084,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public WBARRecord DeepCopy(
-            IWBARRecordGetter item,
-            WBARRecord.TranslationMask? copyMask = null)
+        public WeaponBarrelModel DeepCopy(
+            IWeaponBarrelModelGetter item,
+            WeaponBarrelModel.TranslationMask? copyMask = null)
         {
-            WBARRecord ret = (WBARRecord)((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).GetNew();
-            ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponBarrelModel ret = (WeaponBarrelModel)((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).GetNew();
+            ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1098,30 +1098,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public WBARRecord DeepCopy(
-            IWBARRecordGetter item,
-            out WBARRecord.ErrorMask errorMask,
-            WBARRecord.TranslationMask? copyMask = null)
+        public WeaponBarrelModel DeepCopy(
+            IWeaponBarrelModelGetter item,
+            out WeaponBarrelModel.ErrorMask errorMask,
+            WeaponBarrelModel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            WBARRecord ret = (WBARRecord)((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).GetNew();
-            ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponBarrelModel ret = (WeaponBarrelModel)((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).GetNew();
+            ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = WBARRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponBarrelModel.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public WBARRecord DeepCopy(
-            IWBARRecordGetter item,
+        public WeaponBarrelModel DeepCopy(
+            IWeaponBarrelModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            WBARRecord ret = (WBARRecord)((WBARRecordCommon)((IWBARRecordGetter)item).CommonInstance()!).GetNew();
-            ((WBARRecordSetterTranslationCommon)((IWBARRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            WeaponBarrelModel ret = (WeaponBarrelModel)((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)item).CommonInstance()!).GetNew();
+            ((WeaponBarrelModelSetterTranslationCommon)((IWeaponBarrelModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1137,21 +1137,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class WBARRecord
+    public partial class WeaponBarrelModel
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WBARRecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => WBARRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponBarrelModel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WeaponBarrelModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => WBARRecordCommon.Instance;
+        protected override object CommonInstance() => WeaponBarrelModelCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return WBARRecordSetterCommon.Instance;
+            return WeaponBarrelModelSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => WBARRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WeaponBarrelModelSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1162,15 +1162,15 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class WBARRecordBinaryWriteTranslation :
+    public partial class WeaponBarrelModelBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly WBARRecordBinaryWriteTranslation Instance = new();
+        public new static readonly WeaponBarrelModelBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IWBARRecordGetter item,
+            IWeaponBarrelModelGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IWBARRecordGetter)item,
+                item: (IWeaponBarrelModelGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IWBARRecordGetter)item,
+                item: (IWeaponBarrelModelGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1225,16 +1225,16 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IWBARRecordGetter)item,
+                item: (IWeaponBarrelModelGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class WBARRecordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class WeaponBarrelModelBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly WBARRecordBinaryCreateTranslation Instance = new WBARRecordBinaryCreateTranslation();
+        public new static readonly WeaponBarrelModelBinaryCreateTranslation Instance = new WeaponBarrelModelBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.WBAR;
     }
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class WBARRecordBinaryTranslationMixIn
+    public static class WeaponBarrelModelBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1252,35 +1252,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class WBARRecordBinaryOverlay :
+    internal partial class WeaponBarrelModelBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IWBARRecordGetter
+        IWeaponBarrelModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WBARRecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => WBARRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponBarrelModel_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => WeaponBarrelModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => WBARRecordCommon.Instance;
+        protected override object CommonInstance() => WeaponBarrelModelCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => WBARRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WeaponBarrelModelSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => WBARRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WeaponBarrelModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((WBARRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponBarrelModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IWBARRecord);
+        protected override Type LinkType => typeof(IWeaponBarrelModel);
 
 
         partial void CustomFactoryEnd(
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected WBARRecordBinaryOverlay(
+        protected WeaponBarrelModelBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IWBARRecordGetter WBARRecordFactory(
+        public static IWeaponBarrelModelGetter WeaponBarrelModelFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new WBARRecordBinaryOverlay(
+            var ret = new WeaponBarrelModelBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1329,12 +1329,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IWBARRecordGetter WBARRecordFactory(
+        public static IWeaponBarrelModelGetter WeaponBarrelModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return WBARRecordFactory(
+            return WeaponBarrelModelFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            WBARRecordMixIn.Print(
+            WeaponBarrelModelMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<WBARRecord>.ToString(this);
+            return MajorRecordPrinter<WeaponBarrelModel>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1366,16 +1366,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IWBARRecordGetter rhs) return false;
-            return ((WBARRecordCommon)((IWBARRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IWeaponBarrelModelGetter rhs) return false;
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IWBARRecordGetter? obj)
+        public bool Equals(IWeaponBarrelModelGetter? obj)
         {
-            return ((WBARRecordCommon)((IWBARRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((WBARRecordCommon)((IWBARRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponBarrelModelCommon)((IWeaponBarrelModelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

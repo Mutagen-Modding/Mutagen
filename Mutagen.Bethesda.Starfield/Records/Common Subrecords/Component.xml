@@ -11,7 +11,7 @@
       <String name="BNAM" recordType="BNAM" nullable="true" />
       <String name="CNAM" recordType="CNAM" nullable="true" />
       <String name="DNAM" recordType="DNAM" nullable="true" />
-      <String name="ENAM" recordType="ENAM" nullable="true" />
+      <String name="ENAM" recordType="ENAM" nullable="true" binaryType="NullTerminateIfNotEmpty" />
     </Fields>
   </Object>
   <Object name="AttachParentArrayComponent" objType="Subrecord" baseClass="AComponent">
@@ -123,9 +123,14 @@
       <ByteArray name="PTCL" recordType="PTCL" unknown="true" />
     </Fields>
   </Object>
-  <Object name="BGSLodOwnerComponent" objType="Subrecord" baseClass="AComponent">
+  <Object name="LodOwnerComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
       <ByteArray name="REFL" recordType="REFL" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="SoundTagComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
     </Fields>
   </Object>
 </Loqui>

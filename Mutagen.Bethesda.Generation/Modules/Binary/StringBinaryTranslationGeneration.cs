@@ -223,6 +223,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
             {  
                 case StringBinaryType.Plain:  
                 case StringBinaryType.NullTerminate:  
+                case StringBinaryType.NullTerminateIfNotEmpty:  
                     var data = typeGen.GetFieldData();  
                     var gendered = data.Parent as GenderedType;  
                     if (data.HasTrigger  

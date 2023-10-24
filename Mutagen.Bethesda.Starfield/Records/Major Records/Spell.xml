@@ -22,5 +22,6 @@
       <RefList name="Effects" refName="Effect" />
     </Fields>
     <LinkInterface>ISpellRecord</LinkInterface>
+    <LinkInterface>IEffectRecord</LinkInterface>
   </Object>
 </Loqui>

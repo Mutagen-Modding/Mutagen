@@ -13,4 +13,5 @@
       <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
   </Object>
+  <LinkInterface>IEffectRecord</LinkInterface>
 </Loqui>

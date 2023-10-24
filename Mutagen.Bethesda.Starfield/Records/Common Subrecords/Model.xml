@@ -10,4 +10,11 @@
       <ByteArray name="XFLG" recordType="XFLG" unknown="true" />
     </Fields>
   </Object>
+  <Object name="FirstPersonModel" objType="Subrecord">
+    <Fields>
+      <AssetLink name="File" recordType="MOD4" assetType="StarfieldModel" />
+      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <FormLink name="MaterialSwap" refName="LayeredMaterialSwap" recordType="MO4S" />
+    </Fields>
+  </Object>
 </Loqui>

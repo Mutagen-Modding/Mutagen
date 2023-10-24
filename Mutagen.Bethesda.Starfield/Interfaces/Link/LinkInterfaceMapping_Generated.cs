@@ -36,7 +36,7 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             MiscItem_Registration.Instance,
             MoveableStatic_Registration.Instance,
             Npc_Registration.Instance,
-            ObjectModification_Registration.Instance,
+            AObjectModification_Registration.Instance,
             PackIn_Registration.Instance,
             Static_Registration.Instance,
             Terminal_Registration.Instance,
@@ -142,6 +142,11 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             Spell_Registration.Instance,
         });
         dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)] with { Setter = false };
+        dict[typeof(IEffectRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Spell_Registration.Instance,
+        });
+        dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
         dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             TextureSet_Registration.Instance,

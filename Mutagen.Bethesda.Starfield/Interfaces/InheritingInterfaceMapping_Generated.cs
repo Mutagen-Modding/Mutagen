@@ -44,6 +44,21 @@ internal class StarfieldInheritingInterfaceMapping : IInterfaceMapping
             GameSetting_Registration.Instance,
         });
         dict[typeof(IGameSettingUIntGetter)] = dict[typeof(IGameSettingUInt)] with { Setter = false };
+        dict[typeof(IObjectModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IObjectModificationGetter)] = dict[typeof(IObjectModification)] with { Setter = false };
+        dict[typeof(IUnknownObjectModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IUnknownObjectModificationGetter)] = dict[typeof(IUnknownObjectModification)] with { Setter = false };
+        dict[typeof(IWeaponModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IWeaponModificationGetter)] = dict[typeof(IWeaponModification)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

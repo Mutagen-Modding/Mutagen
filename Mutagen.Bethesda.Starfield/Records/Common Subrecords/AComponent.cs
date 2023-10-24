@@ -30,6 +30,7 @@ public partial class AComponent
         LightAnimFormComponent,
         ParticleSystem_Component,
         BGSLodOwner_Component,
+        BGSSoundTag_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -87,7 +88,9 @@ public partial class AComponent
             case ComponentType.ParticleSystem_Component:
                 return ParticleSystemComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSLodOwner_Component:
-                return BGSLodOwnerComponent.CreateFromBinary(frame, translationParams);
+                return LodOwnerComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSSoundTag_Component:
+                return SoundTagComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -148,7 +151,8 @@ partial class AComponentBinaryWriteTranslation
             ILightAttachmentFormComponentGetter _ => AComponent.ComponentType.LightAttachmentFormComponent,
             ILightAnimFormComponentGetter _ => AComponent.ComponentType.LightAnimFormComponent,
             IParticleSystemComponentGetter _ => AComponent.ComponentType.ParticleSystem_Component,
-            IBGSLodOwnerComponentGetter _ => AComponent.ComponentType.BGSLodOwner_Component,
+            ILodOwnerComponentGetter _ => AComponent.ComponentType.BGSLodOwner_Component,
+            ISoundTagComponentGetter _ => AComponent.ComponentType.BGSSoundTag_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -204,7 +208,9 @@ partial class AComponentBinaryOverlay
             case AComponent.ComponentType.ParticleSystem_Component:
                 return ParticleSystemComponentBinaryOverlay.ParticleSystemComponentFactory(stream, package);
             case AComponent.ComponentType.BGSLodOwner_Component:
-                return BGSLodOwnerComponentBinaryOverlay.BGSLodOwnerComponentFactory(stream, package);
+                return LodOwnerComponentBinaryOverlay.LodOwnerComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSSoundTag_Component:
+                return SoundTagComponentBinaryOverlay.SoundTagComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }
