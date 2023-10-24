@@ -447,6 +447,7 @@ public sealed record GameConstants
             GameRelease.EnderalSE => EnderalSE,
             GameRelease.SkyrimVR => SkyrimVR,
             GameRelease.Fallout4 => Fallout4,
+            GameRelease.Fallout4VR => Fallout4VR,
             GameRelease.Starfield => Starfield,
             _ => throw new NotImplementedException()
         };

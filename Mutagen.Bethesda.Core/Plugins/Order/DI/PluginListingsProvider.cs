@@ -35,6 +35,7 @@ public sealed class PluginListingsProvider : IPluginListingsProvider
             case GameRelease.EnderalLE:
             case GameRelease.EnderalSE:
             case GameRelease.Fallout4:
+            case GameRelease.Fallout4VR:
             case GameRelease.Starfield:
                 return _enabledPluginListingsProvider.Get();
             default:

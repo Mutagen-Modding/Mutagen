@@ -31,6 +31,7 @@ public static class GameReleaseKernelExt
             GameRelease.EnderalLE => GameCategory.Skyrim,
             GameRelease.EnderalSE => GameCategory.Skyrim,
             GameRelease.Fallout4 => GameCategory.Fallout4,
+            GameRelease.Fallout4VR => GameCategory.Fallout4,
             GameRelease.Starfield => GameCategory.Starfield,
             _ => throw new NotImplementedException(),
         };

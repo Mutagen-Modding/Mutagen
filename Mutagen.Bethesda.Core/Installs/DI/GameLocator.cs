@@ -263,6 +263,28 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                     })
             },
             {
+                GameRelease.Fallout4VR, new GameMetaData(
+                    GameRelease.Fallout4VR,
+                    NexusName: "fallout4",
+                    NexusGameId: 1151,
+                    GameSources: new IGameSource[]
+                    {
+                        // new RegistryGameSource()
+                        // {
+                        //     RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
+                        //     RegistryKey = @"installed path",
+                        // },
+                        new SteamGameSource() 
+                        {
+                            Id = 611660
+                        },
+                    },
+                    RequiredFiles: new string[]
+                    {
+                        "Fallout4VR.exe"
+                    })
+            },
+            {
                 GameRelease.SkyrimVR, new GameMetaData(
                     GameRelease.SkyrimVR,
                     NexusName: "skyrimspecialedition",
