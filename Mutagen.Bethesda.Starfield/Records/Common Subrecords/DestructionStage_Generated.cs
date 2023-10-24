@@ -1178,6 +1178,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             obj.Explosion.Relink(mapping);
             obj.Debris.Relink(mapping);
+            obj.Model?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDestructionStage obj)
@@ -1458,6 +1459,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             yield return FormLinkInformation.Factory(obj.Explosion);
             yield return FormLinkInformation.Factory(obj.Debris);
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         

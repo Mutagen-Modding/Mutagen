@@ -367,6 +367,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Weapon_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeaponSetterCommon.Instance.RemapLinks(this, mapping);
         public Weapon(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -500,6 +502,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IWeapon :
         IAssetLinkContainer,
+        IFormLinkContainer,
         IItem,
         ILoquiObjectSetter<IWeaponInternal>,
         IModeled,
@@ -525,6 +528,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         IItemGetter,
         ILoquiObject<IWeaponGetter>,
         IMapsToGetter<IWeaponGetter>,
@@ -824,6 +828,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IWeapon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWeapon obj)
@@ -1094,6 +1099,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1517,6 +1529,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WeaponCommon.Instance.EnumerateFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => WeaponCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeaponBinaryWriteTranslation.Instance;

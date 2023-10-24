@@ -1983,6 +1983,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.UseGlobal.Relink(mapping);
             obj.Entries?.RemapLinks(mapping);
             obj.FilterKeywordChances?.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
             obj.ForcedLocations?.RemapLinks(mapping);
         }
         
@@ -2583,6 +2584,13 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in FilterKeywordChancesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
                 }
             }
             if (obj.ForcedLocations is {} ForcedLocationsItem)

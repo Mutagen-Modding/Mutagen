@@ -1092,7 +1092,7 @@ public class PluginListBinaryTranslationGeneration : ListBinaryTranslationGenera
                         throw new NotImplementedException();
                 }
                 using (var args = sb.Call(
-                           $"{target} = BinaryOverlayList.FactoryByCount<{typeName}>"))
+                           $"{target} = BinaryOverlayList.FactoryByCount{(expectedLen == null ? null : "Length")}<{typeName}>"))
                 {
                     args.AddPassArg($"stream");
                     args.Add($"package: _package");

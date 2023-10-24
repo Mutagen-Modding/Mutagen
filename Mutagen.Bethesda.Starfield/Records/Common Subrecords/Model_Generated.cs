@@ -59,16 +59,19 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         AssetLinkGetter<StarfieldModelAssetType>? IModelGetter.File => this.File;
         #endregion
-        #region MOLM
+        #region MaterialSwaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _MOLM;
-        public MemorySlice<Byte>? MOLM
+        private ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? _MaterialSwaps;
+        public ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps
         {
-            get => this._MOLM;
-            set => this._MOLM = value;
+            get => this._MaterialSwaps;
+            set => this._MaterialSwaps = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModelGetter.MOLM => this.MOLM;
+        IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? IModelGetter.MaterialSwaps => _MaterialSwaps;
+        #endregion
+
         #endregion
         #region FLLD
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -132,19 +135,19 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.File = initialValue;
-                this.MOLM = initialValue;
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FLLD = initialValue;
                 this.XFLG = initialValue;
             }
 
             public Mask(
                 TItem File,
-                TItem MOLM,
+                TItem MaterialSwaps,
                 TItem FLLD,
                 TItem XFLG)
             {
                 this.File = File;
-                this.MOLM = MOLM;
+                this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FLLD = FLLD;
                 this.XFLG = XFLG;
             }
@@ -159,7 +162,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem File;
-            public TItem MOLM;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MaterialSwaps;
             public TItem FLLD;
             public TItem XFLG;
             #endregion
@@ -175,7 +178,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.File, rhs.File)) return false;
-                if (!object.Equals(this.MOLM, rhs.MOLM)) return false;
+                if (!object.Equals(this.MaterialSwaps, rhs.MaterialSwaps)) return false;
                 if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
                 if (!object.Equals(this.XFLG, rhs.XFLG)) return false;
                 return true;
@@ -184,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.File);
-                hash.Add(this.MOLM);
+                hash.Add(this.MaterialSwaps);
                 hash.Add(this.FLLD);
                 hash.Add(this.XFLG);
                 return hash.ToHashCode();
@@ -196,7 +199,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.File)) return false;
-                if (!eval(this.MOLM)) return false;
+                if (this.MaterialSwaps != null)
+                {
+                    if (!eval(this.MaterialSwaps.Overall)) return false;
+                    if (this.MaterialSwaps.Specific != null)
+                    {
+                        foreach (var item in this.MaterialSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.FLLD)) return false;
                 if (!eval(this.XFLG)) return false;
                 return true;
@@ -207,7 +220,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.File)) return true;
-                if (eval(this.MOLM)) return true;
+                if (this.MaterialSwaps != null)
+                {
+                    if (eval(this.MaterialSwaps.Overall)) return true;
+                    if (this.MaterialSwaps.Specific != null)
+                    {
+                        foreach (var item in this.MaterialSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (eval(this.FLLD)) return true;
                 if (eval(this.XFLG)) return true;
                 return false;
@@ -225,7 +248,20 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.File = eval(this.File);
-                obj.MOLM = eval(this.MOLM);
+                if (MaterialSwaps != null)
+                {
+                    obj.MaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MaterialSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (MaterialSwaps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.MaterialSwaps.Specific = l;
+                        foreach (var item in MaterialSwaps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.FLLD = eval(this.FLLD);
                 obj.XFLG = eval(this.XFLG);
             }
@@ -250,9 +286,26 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(File, "File");
                     }
-                    if (printMask?.MOLM ?? true)
+                    if ((printMask?.MaterialSwaps?.Overall ?? true)
+                        && MaterialSwaps is {} MaterialSwapsItem)
                     {
-                        sb.AppendItem(MOLM, "MOLM");
+                        sb.AppendLine("MaterialSwaps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MaterialSwapsItem.Overall);
+                            if (MaterialSwapsItem.Specific != null)
+                            {
+                                foreach (var subItem in MaterialSwapsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.FLLD ?? true)
                     {
@@ -287,7 +340,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? File;
-            public Exception? MOLM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MaterialSwaps;
             public Exception? FLLD;
             public Exception? XFLG;
             #endregion
@@ -300,8 +353,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case Model_FieldIndex.File:
                         return File;
-                    case Model_FieldIndex.MOLM:
-                        return MOLM;
+                    case Model_FieldIndex.MaterialSwaps:
+                        return MaterialSwaps;
                     case Model_FieldIndex.FLLD:
                         return FLLD;
                     case Model_FieldIndex.XFLG:
@@ -319,8 +372,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Model_FieldIndex.File:
                         this.File = ex;
                         break;
-                    case Model_FieldIndex.MOLM:
-                        this.MOLM = ex;
+                    case Model_FieldIndex.MaterialSwaps:
+                        this.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Model_FieldIndex.FLLD:
                         this.FLLD = ex;
@@ -341,8 +394,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Model_FieldIndex.File:
                         this.File = (Exception?)obj;
                         break;
-                    case Model_FieldIndex.MOLM:
-                        this.MOLM = (Exception?)obj;
+                    case Model_FieldIndex.MaterialSwaps:
+                        this.MaterialSwaps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Model_FieldIndex.FLLD:
                         this.FLLD = (Exception?)obj;
@@ -359,7 +412,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (File != null) return true;
-                if (MOLM != null) return true;
+                if (MaterialSwaps != null) return true;
                 if (FLLD != null) return true;
                 if (XFLG != null) return true;
                 return false;
@@ -390,8 +443,25 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(File, "File");
                 }
+                if (MaterialSwaps is {} MaterialSwapsItem)
                 {
-                    sb.AppendItem(MOLM, "MOLM");
+                    sb.AppendLine("MaterialSwaps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MaterialSwapsItem.Overall);
+                        if (MaterialSwapsItem.Specific != null)
+                        {
+                            foreach (var subItem in MaterialSwapsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 {
                     sb.AppendItem(FLLD, "FLLD");
@@ -408,7 +478,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.File = this.File.Combine(rhs.File);
-                ret.MOLM = this.MOLM.Combine(rhs.MOLM);
+                ret.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Overall, rhs.MaterialSwaps?.Overall), Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Specific, rhs.MaterialSwaps?.Specific));
                 ret.FLLD = this.FLLD.Combine(rhs.FLLD);
                 ret.XFLG = this.XFLG.Combine(rhs.XFLG);
                 return ret;
@@ -435,7 +505,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool File;
-            public bool MOLM;
+            public bool MaterialSwaps;
             public bool FLLD;
             public bool XFLG;
             #endregion
@@ -448,7 +518,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.File = defaultOn;
-                this.MOLM = defaultOn;
+                this.MaterialSwaps = defaultOn;
                 this.FLLD = defaultOn;
                 this.XFLG = defaultOn;
             }
@@ -467,7 +537,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((File, null));
-                ret.Add((MOLM, null));
+                ret.Add((MaterialSwaps, null));
                 ret.Add((FLLD, null));
                 ret.Add((XFLG, null));
             }
@@ -481,6 +551,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ModelCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModelSetterCommon.Instance.RemapLinks(this, mapping);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -547,11 +619,12 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IModel :
         IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<IModel>,
         IModelGetter
     {
         new AssetLink<StarfieldModelAssetType>? File { get; set; }
-        new MemorySlice<Byte>? MOLM { get; set; }
+        new ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; set; }
         new MemorySlice<Byte>? FLLD { get; set; }
         new MemorySlice<Byte>? XFLG { get; set; }
     }
@@ -560,6 +633,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IModelGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -570,7 +644,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Model_Registration.Instance;
         AssetLinkGetter<StarfieldModelAssetType>? File { get; }
-        ReadOnlyMemorySlice<Byte>? MOLM { get; }
+        IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; }
         ReadOnlyMemorySlice<Byte>? FLLD { get; }
         ReadOnlyMemorySlice<Byte>? XFLG { get; }
 
@@ -743,7 +817,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum Model_FieldIndex
     {
         File = 0,
-        MOLM = 1,
+        MaterialSwaps = 1,
         FLLD = 2,
         XFLG = 3,
     }
@@ -835,7 +909,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.File = default;
-            item.MOLM = default;
+            item.MaterialSwaps = null;
             item.FLLD = default;
             item.XFLG = default;
         }
@@ -843,6 +917,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public void RemapLinks(IModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.MaterialSwaps?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IModel obj)
@@ -909,7 +984,10 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.File = object.Equals(item.File, rhs.File);
-            ret.MOLM = MemorySliceExt.SequenceEqual(item.MOLM, rhs.MOLM);
+            ret.MaterialSwaps = item.MaterialSwaps.CollectionEqualsHelper(
+                rhs.MaterialSwaps,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
             ret.XFLG = MemorySliceExt.SequenceEqual(item.XFLG, rhs.XFLG);
         }
@@ -961,10 +1039,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(FileItem, "File");
             }
-            if ((printMask?.MOLM ?? true)
-                && item.MOLM is {} MOLMItem)
+            if ((printMask?.MaterialSwaps?.Overall ?? true)
+                && item.MaterialSwaps is {} MaterialSwapsItem)
             {
-                sb.AppendLine($"MOLM => {SpanExt.ToHexString(MOLMItem)}");
+                sb.AppendLine("MaterialSwaps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in MaterialSwapsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
             if ((printMask?.FLLD ?? true)
                 && item.FLLD is {} FLLDItem)
@@ -989,9 +1077,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.File, rhs.File)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.MOLM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.MaterialSwaps) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.MOLM, rhs.MOLM)) return false;
+                if (!lhs.MaterialSwaps.SequenceEqualNullable(rhs.MaterialSwaps)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.FLLD) ?? true))
             {
@@ -1011,10 +1099,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Fileitem);
             }
-            if (item.MOLM is {} MOLMItem)
-            {
-                hash.Add(MOLMItem);
-            }
+            hash.Add(item.MaterialSwaps);
             if (item.FLLD is {} FLLDItem)
             {
                 hash.Add(FLLDItem);
@@ -1037,6 +1122,13 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IModelGetter obj)
         {
+            if (obj.MaterialSwaps is {} MaterialSwapsItem)
+            {
+                foreach (var item in MaterialSwapsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
             yield break;
         }
         
@@ -1068,15 +1160,31 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             item.File = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.File, rhs.File);
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.MOLM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.MaterialSwaps) ?? true))
             {
-                if(rhs.MOLM is {} MOLMrhs)
+                errorMask?.PushIndex((int)Model_FieldIndex.MaterialSwaps);
+                try
                 {
-                    item.MOLM = MOLMrhs.ToArray();
+                    if ((rhs.MaterialSwaps != null))
+                    {
+                        item.MaterialSwaps = 
+                            rhs.MaterialSwaps
+                            .Select(r => (IFormLinkGetter<ILayeredMaterialSwapGetter>)new FormLink<ILayeredMaterialSwapGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
+                    }
+                    else
+                    {
+                        item.MaterialSwaps = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.MOLM = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.FLLD) ?? true))
@@ -1203,10 +1311,17 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.File?.RawPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILayeredMaterialSwapGetter>>.Instance.Write(
                 writer: writer,
-                item: item.MOLM,
-                header: translationParams.ConvertToCustom(RecordTypes.MOLM));
+                items: item.MaterialSwaps,
+                recordType: translationParams.ConvertToCustom(RecordTypes.MOLM),
+                countLengthLength: 2,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILayeredMaterialSwapGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FLLD,
@@ -1266,10 +1381,15 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MOLM:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.MOLM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.MaterialSwaps, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MOLM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Model_FieldIndex.MOLM;
+                    item.MaterialSwaps = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILayeredMaterialSwapGetter>>.Instance.Parse(
+                            amount: frame.ReadUInt16(),
+                            reader: frame,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
+                    return (int)Model_FieldIndex.MaterialSwaps;
                 }
                 case RecordTypeInts.FLLD:
                 {
@@ -1339,6 +1459,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ModelCommon.Instance.EnumerateFormLinks(this);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ModelBinaryWriteTranslation.Instance;
@@ -1358,10 +1479,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FileLocation;
         public AssetLinkGetter<StarfieldModelAssetType>? File => _FileLocation.HasValue ? new AssetLinkGetter<StarfieldModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
         #endregion
-        #region MOLM
-        private int? _MOLMLocation;
-        public ReadOnlyMemorySlice<Byte>? MOLM => _MOLMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MOLMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; private set; }
         #region FLLD
         private int? _FLLDLocation;
         public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -1441,9 +1559,16 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MOLM:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.MOLM, translationParams)) return ParseResult.Stop;
-                    _MOLMLocation = (stream.Position - offset);
-                    return (int)Model_FieldIndex.MOLM;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.MaterialSwaps, translationParams)) return ParseResult.Stop;
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    var count = stream.ReadUInt16();
+                    this.MaterialSwaps = BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<ILayeredMaterialSwapGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 4,
+                        count: count,
+                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Model_FieldIndex.MaterialSwaps;
                 }
                 case RecordTypeInts.FLLD:
                 {

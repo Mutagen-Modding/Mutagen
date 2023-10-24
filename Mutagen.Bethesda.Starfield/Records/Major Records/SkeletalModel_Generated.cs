@@ -483,6 +483,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkeletalModelCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkeletalModelSetterCommon.Instance.RemapLinks(this, mapping);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkeletalModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => SkeletalModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SkeletalModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -549,6 +551,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ISkeletalModel :
         IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISkeletalModel>,
         IModeled,
         ISkeletalModelGetter
@@ -566,6 +569,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISkeletalModelGetter>,
         IModeledGetter
     {
@@ -862,6 +866,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public void RemapLinks(ISkeletalModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Model?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISkeletalModel obj)
@@ -1077,6 +1082,13 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISkeletalModelGetter obj)
         {
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1399,6 +1411,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkeletalModelCommon.Instance.EnumerateFormLinks(this);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => SkeletalModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SkeletalModelBinaryWriteTranslation.Instance;

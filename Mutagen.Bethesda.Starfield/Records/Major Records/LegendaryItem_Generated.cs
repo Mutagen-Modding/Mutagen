@@ -1412,6 +1412,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILegendaryItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
             obj.ApplicableItemList.Relink(mapping);
             obj.LegendaryTemplateList.Relink(mapping);
             obj.LegendaryMods?.RemapLinks(mapping);
@@ -1829,6 +1830,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (FormLinkInformation.TryFactory(obj.ApplicableItemList, out var ApplicableItemListInfo))
             {

@@ -1450,6 +1450,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
             obj.ExtraParts.RemapLinks(mapping);
             obj.TextureSet.Relink(mapping);
             obj.ValidRaces.Relink(mapping);
@@ -1877,6 +1878,13 @@ namespace Mutagen.Bethesda.Starfield
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.ExtraParts)
             {

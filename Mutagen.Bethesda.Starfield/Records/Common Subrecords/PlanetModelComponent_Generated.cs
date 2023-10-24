@@ -517,6 +517,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlanetModelComponentCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlanetModelComponentSetterCommon.Instance.RemapLinks(this, mapping);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PlanetModelComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => PlanetModelComponentSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => PlanetModelComponentSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -582,6 +584,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlanetModelComponent :
         IAComponent,
         IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPlanetModelComponent>,
         IModeled,
         IPlanetModelComponentGetter
@@ -600,6 +603,7 @@ namespace Mutagen.Bethesda.Starfield
         IAComponentGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IPlanetModelComponentGetter>,
         IModeledGetter
     {
@@ -875,6 +879,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IPlanetModelComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Model?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPlanetModelComponent obj)
@@ -1150,6 +1155,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1537,6 +1549,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlanetModelComponentCommon.Instance.EnumerateFormLinks(this);
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PlanetModelComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PlanetModelComponentBinaryWriteTranslation.Instance;

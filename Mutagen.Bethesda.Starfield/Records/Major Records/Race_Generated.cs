@@ -2581,9 +2581,12 @@ namespace Mutagen.Bethesda.Starfield
             obj.Keywords?.RemapLinks(mapping);
             obj.Properties?.RemapLinks(mapping);
             obj.BodyPartData.Relink(mapping);
+            obj.SkeletalModel?.RemapLinks(mapping);
             obj.Voices.RemapLinks(mapping);
             obj.Attacks.RemapLinks(mapping);
+            obj.BodyData.RemapLinks(mapping);
             obj.AimAssistPose.Relink(mapping);
+            obj.BehaviorGraph.RemapLinks(mapping);
             obj.ImpactMaterialType.Relink(mapping);
             obj.BipedObjects?.RemapLinks(mapping);
             obj.EquipmentSlots.RemapLinks(mapping);
@@ -3291,6 +3294,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return BodyPartDataInfo;
             }
+            if (obj.SkeletalModel is {} SkeletalModelItem)
+            {
+                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
             foreach (var item in obj.Voices)
             {
                 yield return FormLinkInformation.Factory(item);
@@ -3299,9 +3309,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             if (FormLinkInformation.TryFactory(obj.AimAssistPose, out var AimAssistPoseInfo))
             {
                 yield return AimAssistPoseInfo;
+            }
+            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             if (FormLinkInformation.TryFactory(obj.ImpactMaterialType, out var ImpactMaterialTypeInfo))
             {

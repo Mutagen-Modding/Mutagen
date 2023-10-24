@@ -3,7 +3,9 @@
   <Object name="Model" objType="Subrecord">
     <Fields>
       <AssetLink name="File" recordType="MODL" assetType="StarfieldModel" />
-      <ByteArray name="MOLM" recordType="MOLM" unknown="true" />
+      <List name="MaterialSwaps" recordType="MOLM" counterLength="2"  >
+        <FormLink refName="LayeredMaterialSwap" />
+      </List>
       <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
       <ByteArray name="XFLG" recordType="XFLG" unknown="true" />
     </Fields>

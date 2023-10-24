@@ -4259,6 +4259,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ImageSpaceLateSunrise.Relink(mapping);
             obj.ImageSpaceEarlySunset.Relink(mapping);
             obj.ImageSpaceLateSunset.Relink(mapping);
+            obj.Aurora?.RemapLinks(mapping);
             obj.SunGlareLensFlare.Relink(mapping);
             obj.Magic?.RemapLinks(mapping);
         }
@@ -5496,6 +5497,13 @@ namespace Mutagen.Bethesda.Starfield
             yield return FormLinkInformation.Factory(obj.ImageSpaceLateSunrise);
             yield return FormLinkInformation.Factory(obj.ImageSpaceEarlySunset);
             yield return FormLinkInformation.Factory(obj.ImageSpaceLateSunset);
+            if (obj.Aurora is {} AuroraItems)
+            {
+                foreach (var item in AuroraItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (FormLinkInformation.TryFactory(obj.SunGlareLensFlare, out var SunGlareLensFlareInfo))
             {
                 yield return SunGlareLensFlareInfo;
