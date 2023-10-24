@@ -2,8 +2,6 @@
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.DI;
-using Noggog;
 using NSubstitute;
 
 namespace Mutagen.Bethesda.Testing.AutoData;

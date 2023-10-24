@@ -205,7 +205,7 @@ public sealed class ModHeaderWriteLogic
                 {
                     var fk = maj.FormKey;
                     if (fk.ModKey != _modKey) return;
-                    if (fk.ID > _nextFormID)
+                    if (!_nextFormID.HasValue || fk.ID > _nextFormID)
                     {
                         _nextFormID = fk.ID;
                     }
