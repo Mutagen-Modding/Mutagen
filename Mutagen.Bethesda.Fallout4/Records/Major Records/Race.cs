@@ -73,6 +73,14 @@ public partial class Race
         LowPriorityPushable = 0x0020_0000_0000_0000,
         CannotUsePlayableItems = 0x0040_0000_0000_0000
     }
+
+    partial void CustomCtor()
+    {      
+        for (int key = 0; key < 32; ++key)
+        {
+            this.BipedObjects[(BipedObject)key] = new BipedObjectData();
+        }
+    }
 }
 
 public partial interface IRace
