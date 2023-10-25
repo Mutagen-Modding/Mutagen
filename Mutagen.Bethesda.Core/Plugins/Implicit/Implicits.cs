@@ -134,8 +134,8 @@ public static class Implicits
         Fallout4VR = Fallout4 with
         {
             GameRelease = GameRelease.Fallout4VR,
-            BaseMasters = new ImplicitModKeyCollection(SkyrimSE.BaseMasters.And("Fallout4VR.esm")),
-            Listings = new ImplicitModKeyCollection(SkyrimSE.Listings.And("Fallout4VR.esm")),
+            BaseMasters = new ImplicitModKeyCollection(Fallout4.BaseMasters.And("Fallout4_VR.esm")),
+            Listings = new ImplicitModKeyCollection(Fallout4.Listings.And("Fallout4_VR.esm")),
         };
         #endregion
 

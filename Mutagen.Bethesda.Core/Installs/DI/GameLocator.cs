@@ -269,11 +269,11 @@ public sealed class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
                     NexusGameId: 1151,
                     GameSources: new IGameSource[]
                     {
-                        // new RegistryGameSource()
-                        // {
-                        //     RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
-                        //     RegistryKey = @"installed path",
-                        // },
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout 4 VR",
+                            RegistryKey = @"installed path",
+                        },
                         new SteamGameSource() 
                         {
                             Id = 611660
