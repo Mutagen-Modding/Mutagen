@@ -485,8 +485,15 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                 }
                 else
                 {
-                    var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $".Slice(0, {structDataAccessor}.Length - {passedLengthAccessor})" : null; 
-                    sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}{finalPosParam}, _package, {recConverter});"); 
+                    var finalPosParam = loqui.TargetObjectGeneration.IsVariableLengthStruct() ? $".Slice(0, {structDataAccessor}.Length - {passedLengthAccessor})" : null;
+                    if (data.IsAfterBreak)
+                    {
+                        sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {structDataAccessor}.Length > {passedLengthAccessor} ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}{finalPosParam}, _package, {recConverter}) : new {loqui.TargetObjectGeneration.Name}();"); 
+                    }
+                    else
+                    {
+                        sb.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({structDataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}{finalPosParam}, _package, {recConverter});"); 
+                    }
                 }
             }
         }

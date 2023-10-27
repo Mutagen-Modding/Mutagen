@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkGetter<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x18, 0x4))));
         public Single ProjectileSpeed => _structData.Slice(0x1C, 0x4).Float();
         public IFormLinkGetter<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x20, 0x4))));
-        public IMagicEffectSubDataGetter SubData => MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(_structData.Slice(0x24), _package, default(TypedParseParams));
+        public IMagicEffectSubDataGetter SubData => _structData.Length > 0x24 ? MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(_structData.Slice(0x24), _package, default(TypedParseParams)) : new MagicEffectSubData();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
