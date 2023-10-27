@@ -175,30 +175,39 @@ namespace Mutagen.Bethesda.Starfield
         public TranslatedString Description { get; set; } = string.Empty;
         ITranslatedStringGetter ISpellGetter.Description => this.Description;
         #endregion
-        #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[9];
-        public MemorySlice<Byte> Unknown
+        #region BaseCost
+        public UInt32 BaseCost { get; set; } = default;
+        #endregion
+        #region Flags
+        public Spell.Flag Flags { get; set; } = default;
+        #endregion
+        #region Type
+        public Spell.SpellType Type { get; set; } = default;
+        #endregion
+        #region ChargeTime
+        public Single ChargeTime { get; set; } = default;
+        #endregion
+        #region CastType
+        public CastType CastType { get; set; } = default;
+        #endregion
+        #region TargetType
+        public TargetType TargetType { get; set; } = default;
+        #endregion
+        #region CastDuration
+        public Single CastDuration { get; set; } = default;
+        #endregion
+        #region Range
+        public Single Range { get; set; } = default;
+        #endregion
+        #region CastingPerk
+        private readonly IFormLink<IPerkGetter> _CastingPerk = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> CastingPerk
         {
-            get => _Unknown;
-            set => this._Unknown = value;
+            get => _CastingPerk;
+            set => _CastingPerk.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ISpellGetter.Unknown => this.Unknown;
-        #endregion
-        #region Unknown2
-        public Single Unknown2 { get; set; } = default;
-        #endregion
-        #region Unknown3
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown3 = new byte[14];
-        public MemorySlice<Byte> Unknown3
-        {
-            get => _Unknown3;
-            set => this._Unknown3 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ISpellGetter.Unknown3 => this.Unknown3;
+        IFormLinkGetter<IPerkGetter> ISpellGetter.CastingPerk => this.CastingPerk;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -247,9 +256,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Description = initialValue;
-                this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.BaseCost = initialValue;
+                this.Flags = initialValue;
+                this.Type = initialValue;
+                this.ChargeTime = initialValue;
+                this.CastType = initialValue;
+                this.TargetType = initialValue;
+                this.CastDuration = initialValue;
+                this.Range = initialValue;
+                this.CastingPerk = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
@@ -269,9 +284,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem PickupSound,
                 TItem DropdownSound,
                 TItem Description,
-                TItem Unknown,
-                TItem Unknown2,
-                TItem Unknown3,
+                TItem BaseCost,
+                TItem Flags,
+                TItem Type,
+                TItem ChargeTime,
+                TItem CastType,
+                TItem TargetType,
+                TItem CastDuration,
+                TItem Range,
+                TItem CastingPerk,
                 TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -290,9 +311,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
                 this.Description = Description;
-                this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.BaseCost = BaseCost;
+                this.Flags = Flags;
+                this.Type = Type;
+                this.ChargeTime = ChargeTime;
+                this.CastType = CastType;
+                this.TargetType = TargetType;
+                this.CastDuration = CastDuration;
+                this.Range = Range;
+                this.CastingPerk = CastingPerk;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
@@ -313,9 +340,15 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
             public TItem Description;
-            public TItem Unknown;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public TItem BaseCost;
+            public TItem Flags;
+            public TItem Type;
+            public TItem ChargeTime;
+            public TItem CastType;
+            public TItem TargetType;
+            public TItem CastDuration;
+            public TItem Range;
+            public TItem CastingPerk;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             #endregion
 
@@ -338,9 +371,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
                 if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.ChargeTime, rhs.ChargeTime)) return false;
+                if (!object.Equals(this.CastType, rhs.CastType)) return false;
+                if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
+                if (!object.Equals(this.CastDuration, rhs.CastDuration)) return false;
+                if (!object.Equals(this.Range, rhs.Range)) return false;
+                if (!object.Equals(this.CastingPerk, rhs.CastingPerk)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
             }
@@ -355,9 +394,15 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.PickupSound);
                 hash.Add(this.DropdownSound);
                 hash.Add(this.Description);
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.BaseCost);
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
+                hash.Add(this.ChargeTime);
+                hash.Add(this.CastType);
+                hash.Add(this.TargetType);
+                hash.Add(this.CastDuration);
+                hash.Add(this.Range);
+                hash.Add(this.CastingPerk);
                 hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -399,9 +444,15 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Description)) return false;
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.BaseCost)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.ChargeTime)) return false;
+                if (!eval(this.CastType)) return false;
+                if (!eval(this.TargetType)) return false;
+                if (!eval(this.CastDuration)) return false;
+                if (!eval(this.Range)) return false;
+                if (!eval(this.CastingPerk)) return false;
                 if (this.Effects != null)
                 {
                     if (!eval(this.Effects.Overall)) return false;
@@ -452,9 +503,15 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Description)) return true;
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.BaseCost)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.ChargeTime)) return true;
+                if (eval(this.CastType)) return true;
+                if (eval(this.TargetType)) return true;
+                if (eval(this.CastDuration)) return true;
+                if (eval(this.Range)) return true;
+                if (eval(this.CastingPerk)) return true;
                 if (this.Effects != null)
                 {
                     if (eval(this.Effects.Overall)) return true;
@@ -503,9 +560,15 @@ namespace Mutagen.Bethesda.Starfield
                 obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
                 obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
                 obj.Description = eval(this.Description);
-                obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.BaseCost = eval(this.BaseCost);
+                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
+                obj.ChargeTime = eval(this.ChargeTime);
+                obj.CastType = eval(this.CastType);
+                obj.TargetType = eval(this.TargetType);
+                obj.CastDuration = eval(this.CastDuration);
+                obj.Range = eval(this.Range);
+                obj.CastingPerk = eval(this.CastingPerk);
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
@@ -588,17 +651,41 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Description, "Description");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.BaseCost ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(BaseCost, "BaseCost");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.ChargeTime ?? true)
+                    {
+                        sb.AppendItem(ChargeTime, "ChargeTime");
+                    }
+                    if (printMask?.CastType ?? true)
+                    {
+                        sb.AppendItem(CastType, "CastType");
+                    }
+                    if (printMask?.TargetType ?? true)
+                    {
+                        sb.AppendItem(TargetType, "TargetType");
+                    }
+                    if (printMask?.CastDuration ?? true)
+                    {
+                        sb.AppendItem(CastDuration, "CastDuration");
+                    }
+                    if (printMask?.Range ?? true)
+                    {
+                        sb.AppendItem(Range, "Range");
+                    }
+                    if (printMask?.CastingPerk ?? true)
+                    {
+                        sb.AppendItem(CastingPerk, "CastingPerk");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects is {} EffectsItem)
@@ -638,9 +725,15 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
             public Exception? Description;
-            public Exception? Unknown;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public Exception? BaseCost;
+            public Exception? Flags;
+            public Exception? Type;
+            public Exception? ChargeTime;
+            public Exception? CastType;
+            public Exception? TargetType;
+            public Exception? CastDuration;
+            public Exception? Range;
+            public Exception? CastingPerk;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
             #endregion
 
@@ -666,12 +759,24 @@ namespace Mutagen.Bethesda.Starfield
                         return DropdownSound;
                     case Spell_FieldIndex.Description:
                         return Description;
-                    case Spell_FieldIndex.Unknown:
-                        return Unknown;
-                    case Spell_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case Spell_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case Spell_FieldIndex.BaseCost:
+                        return BaseCost;
+                    case Spell_FieldIndex.Flags:
+                        return Flags;
+                    case Spell_FieldIndex.Type:
+                        return Type;
+                    case Spell_FieldIndex.ChargeTime:
+                        return ChargeTime;
+                    case Spell_FieldIndex.CastType:
+                        return CastType;
+                    case Spell_FieldIndex.TargetType:
+                        return TargetType;
+                    case Spell_FieldIndex.CastDuration:
+                        return CastDuration;
+                    case Spell_FieldIndex.Range:
+                        return Range;
+                    case Spell_FieldIndex.CastingPerk:
+                        return CastingPerk;
                     case Spell_FieldIndex.Effects:
                         return Effects;
                     default:
@@ -708,14 +813,32 @@ namespace Mutagen.Bethesda.Starfield
                     case Spell_FieldIndex.Description:
                         this.Description = ex;
                         break;
-                    case Spell_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Spell_FieldIndex.BaseCost:
+                        this.BaseCost = ex;
                         break;
-                    case Spell_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case Spell_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
-                    case Spell_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case Spell_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Spell_FieldIndex.ChargeTime:
+                        this.ChargeTime = ex;
+                        break;
+                    case Spell_FieldIndex.CastType:
+                        this.CastType = ex;
+                        break;
+                    case Spell_FieldIndex.TargetType:
+                        this.TargetType = ex;
+                        break;
+                    case Spell_FieldIndex.CastDuration:
+                        this.CastDuration = ex;
+                        break;
+                    case Spell_FieldIndex.Range:
+                        this.Range = ex;
+                        break;
+                    case Spell_FieldIndex.CastingPerk:
+                        this.CastingPerk = ex;
                         break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
@@ -755,14 +878,32 @@ namespace Mutagen.Bethesda.Starfield
                     case Spell_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Spell_FieldIndex.BaseCost:
+                        this.BaseCost = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case Spell_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case Spell_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Spell_FieldIndex.ChargeTime:
+                        this.ChargeTime = (Exception?)obj;
+                        break;
+                    case Spell_FieldIndex.CastType:
+                        this.CastType = (Exception?)obj;
+                        break;
+                    case Spell_FieldIndex.TargetType:
+                        this.TargetType = (Exception?)obj;
+                        break;
+                    case Spell_FieldIndex.CastDuration:
+                        this.CastDuration = (Exception?)obj;
+                        break;
+                    case Spell_FieldIndex.Range:
+                        this.Range = (Exception?)obj;
+                        break;
+                    case Spell_FieldIndex.CastingPerk:
+                        this.CastingPerk = (Exception?)obj;
                         break;
                     case Spell_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
@@ -784,9 +925,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (PickupSound != null) return true;
                 if (DropdownSound != null) return true;
                 if (Description != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (BaseCost != null) return true;
+                if (Flags != null) return true;
+                if (Type != null) return true;
+                if (ChargeTime != null) return true;
+                if (CastType != null) return true;
+                if (TargetType != null) return true;
+                if (CastDuration != null) return true;
+                if (Range != null) return true;
+                if (CastingPerk != null) return true;
                 if (Effects != null) return true;
                 return false;
             }
@@ -850,13 +997,31 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Description, "Description");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(BaseCost, "BaseCost");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendItem(Type, "Type");
+                }
+                {
+                    sb.AppendItem(ChargeTime, "ChargeTime");
+                }
+                {
+                    sb.AppendItem(CastType, "CastType");
+                }
+                {
+                    sb.AppendItem(TargetType, "TargetType");
+                }
+                {
+                    sb.AppendItem(CastDuration, "CastDuration");
+                }
+                {
+                    sb.AppendItem(Range, "Range");
+                }
+                {
+                    sb.AppendItem(CastingPerk, "CastingPerk");
                 }
                 if (Effects is {} EffectsItem)
                 {
@@ -892,9 +1057,15 @@ namespace Mutagen.Bethesda.Starfield
                 ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
                 ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
                 ret.Description = this.Description.Combine(rhs.Description);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.ChargeTime = this.ChargeTime.Combine(rhs.ChargeTime);
+                ret.CastType = this.CastType.Combine(rhs.CastType);
+                ret.TargetType = this.TargetType.Combine(rhs.TargetType);
+                ret.CastDuration = this.CastDuration.Combine(rhs.CastDuration);
+                ret.Range = this.Range.Combine(rhs.Range);
+                ret.CastingPerk = this.CastingPerk.Combine(rhs.CastingPerk);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), Noggog.ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
@@ -926,9 +1097,15 @@ namespace Mutagen.Bethesda.Starfield
             public SoundReference.TranslationMask? PickupSound;
             public SoundReference.TranslationMask? DropdownSound;
             public bool Description;
-            public bool Unknown;
-            public bool Unknown2;
-            public bool Unknown3;
+            public bool BaseCost;
+            public bool Flags;
+            public bool Type;
+            public bool ChargeTime;
+            public bool CastType;
+            public bool TargetType;
+            public bool CastDuration;
+            public bool Range;
+            public bool CastingPerk;
             public Effect.TranslationMask? Effects;
             #endregion
 
@@ -943,9 +1120,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.Keywords = defaultOn;
                 this.EquipmentType = defaultOn;
                 this.Description = defaultOn;
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.BaseCost = defaultOn;
+                this.Flags = defaultOn;
+                this.Type = defaultOn;
+                this.ChargeTime = defaultOn;
+                this.CastType = defaultOn;
+                this.TargetType = defaultOn;
+                this.CastDuration = defaultOn;
+                this.Range = defaultOn;
+                this.CastingPerk = defaultOn;
             }
 
             #endregion
@@ -961,9 +1144,15 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
                 ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
                 ret.Add((Description, null));
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((BaseCost, null));
+                ret.Add((Flags, null));
+                ret.Add((Type, null));
+                ret.Add((ChargeTime, null));
+                ret.Add((CastType, null));
+                ret.Add((TargetType, null));
+                ret.Add((CastDuration, null));
+                ret.Add((Range, null));
+                ret.Add((CastingPerk, null));
                 ret.Add((Effects == null ? DefaultOn : !Effects.GetCrystal().CopyNothing, Effects?.GetCrystal()));
             }
 
@@ -1137,9 +1326,15 @@ namespace Mutagen.Bethesda.Starfield
         new SoundReference? PickupSound { get; set; }
         new SoundReference? DropdownSound { get; set; }
         new TranslatedString Description { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
-        new Single Unknown2 { get; set; }
-        new MemorySlice<Byte> Unknown3 { get; set; }
+        new UInt32 BaseCost { get; set; }
+        new Spell.Flag Flags { get; set; }
+        new Spell.SpellType Type { get; set; }
+        new Single ChargeTime { get; set; }
+        new CastType CastType { get; set; }
+        new TargetType TargetType { get; set; }
+        new Single CastDuration { get; set; }
+        new Single Range { get; set; }
+        new IFormLink<IPerkGetter> CastingPerk { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
 
@@ -1190,9 +1385,15 @@ namespace Mutagen.Bethesda.Starfield
         ISoundReferenceGetter? PickupSound { get; }
         ISoundReferenceGetter? DropdownSound { get; }
         ITranslatedStringGetter Description { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
-        Single Unknown2 { get; }
-        ReadOnlyMemorySlice<Byte> Unknown3 { get; }
+        UInt32 BaseCost { get; }
+        Spell.Flag Flags { get; }
+        Spell.SpellType Type { get; }
+        Single ChargeTime { get; }
+        CastType CastType { get; }
+        TargetType TargetType { get; }
+        Single CastDuration { get; }
+        Single Range { get; }
+        IFormLinkGetter<IPerkGetter> CastingPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
@@ -1378,10 +1579,16 @@ namespace Mutagen.Bethesda.Starfield
         PickupSound = 12,
         DropdownSound = 13,
         Description = 14,
-        Unknown = 15,
-        Unknown2 = 16,
-        Unknown3 = 17,
-        Effects = 18,
+        BaseCost = 15,
+        Flags = 16,
+        Type = 17,
+        ChargeTime = 18,
+        CastType = 19,
+        TargetType = 20,
+        CastDuration = 21,
+        Range = 22,
+        CastingPerk = 23,
+        Effects = 24,
     }
     #endregion
 
@@ -1392,9 +1599,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Spell.Mask<>);
 
@@ -1498,9 +1705,15 @@ namespace Mutagen.Bethesda.Starfield
             item.PickupSound = null;
             item.DropdownSound = null;
             item.Description.Clear();
-            item.Unknown = new byte[9];
-            item.Unknown2 = default;
-            item.Unknown3 = new byte[14];
+            item.BaseCost = default;
+            item.Flags = default;
+            item.Type = default;
+            item.ChargeTime = default;
+            item.CastType = default;
+            item.TargetType = default;
+            item.CastDuration = default;
+            item.Range = default;
+            item.CastingPerk.Clear();
             item.Effects.Clear();
             base.Clear(item);
         }
@@ -1523,6 +1736,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.EquipmentType.Relink(mapping);
             obj.PickupSound?.RemapLinks(mapping);
             obj.DropdownSound?.RemapLinks(mapping);
+            obj.CastingPerk.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         
@@ -1610,9 +1824,15 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
-            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
-            ret.Unknown3 = MemoryExtensions.SequenceEqual(item.Unknown3.Span, rhs.Unknown3.Span);
+            ret.BaseCost = item.BaseCost == rhs.BaseCost;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
+            ret.ChargeTime = item.ChargeTime.EqualsWithin(rhs.ChargeTime);
+            ret.CastType = item.CastType == rhs.CastType;
+            ret.TargetType = item.TargetType == rhs.TargetType;
+            ret.CastDuration = item.CastDuration.EqualsWithin(rhs.CastDuration);
+            ret.Range = item.Range.EqualsWithin(rhs.Range);
+            ret.CastingPerk = item.CastingPerk.Equals(rhs.CastingPerk);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1713,17 +1933,41 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Description, "Description");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.BaseCost ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.BaseCost, "BaseCost");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.Flags ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.Type ?? true)
             {
-                sb.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
+                sb.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.ChargeTime ?? true)
+            {
+                sb.AppendItem(item.ChargeTime, "ChargeTime");
+            }
+            if (printMask?.CastType ?? true)
+            {
+                sb.AppendItem(item.CastType, "CastType");
+            }
+            if (printMask?.TargetType ?? true)
+            {
+                sb.AppendItem(item.TargetType, "TargetType");
+            }
+            if (printMask?.CastDuration ?? true)
+            {
+                sb.AppendItem(item.CastDuration, "CastDuration");
+            }
+            if (printMask?.Range ?? true)
+            {
+                sb.AppendItem(item.Range, "Range");
+            }
+            if (printMask?.CastingPerk ?? true)
+            {
+                sb.AppendItem(item.CastingPerk.FormKey, "CastingPerk");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1833,17 +2077,41 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.BaseCost != rhs.BaseCost) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
             {
-                if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Type) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.ChargeTime) ?? true))
+            {
+                if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastType) ?? true))
+            {
+                if (lhs.CastType != rhs.CastType) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.TargetType) ?? true))
+            {
+                if (lhs.TargetType != rhs.TargetType) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastDuration) ?? true))
+            {
+                if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Range) ?? true))
+            {
+                if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.CastingPerk) ?? true))
+            {
+                if (!lhs.CastingPerk.Equals(rhs.CastingPerk)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -1897,9 +2165,15 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(DropdownSounditem);
             }
             hash.Add(item.Description);
-            hash.Add(item.Unknown);
-            hash.Add(item.Unknown2);
-            hash.Add(item.Unknown3);
+            hash.Add(item.BaseCost);
+            hash.Add(item.Flags);
+            hash.Add(item.Type);
+            hash.Add(item.ChargeTime);
+            hash.Add(item.CastType);
+            hash.Add(item.TargetType);
+            hash.Add(item.CastDuration);
+            hash.Add(item.Range);
+            hash.Add(item.CastingPerk);
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1955,6 +2229,7 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            yield return FormLinkInformation.Factory(obj.CastingPerk);
             foreach (var item in obj.Effects.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -2150,17 +2425,41 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Description = rhs.Description.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.BaseCost = rhs.BaseCost;
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Type) ?? true))
             {
-                item.Unknown3 = rhs.Unknown3.ToArray();
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.ChargeTime) ?? true))
+            {
+                item.ChargeTime = rhs.ChargeTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.CastType) ?? true))
+            {
+                item.CastType = rhs.CastType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.TargetType) ?? true))
+            {
+                item.TargetType = rhs.TargetType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.CastDuration) ?? true))
+            {
+                item.CastDuration = rhs.CastDuration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Range) ?? true))
+            {
+                item.Range = rhs.Range;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.CastingPerk) ?? true))
+            {
+                item.CastingPerk.SetTo(rhs.CastingPerk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -2402,15 +2701,35 @@ namespace Mutagen.Bethesda.Starfield
                 source: StringsSource.DL);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.SPIT)))
             {
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unknown);
+                writer.Write(item.BaseCost);
+                EnumBinaryTranslation<Spell.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                EnumBinaryTranslation<Spell.SpellType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 1);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unknown2);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.ChargeTime);
+                EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.CastType,
+                    length: 1);
+                EnumBinaryTranslation<TargetType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.TargetType,
+                    length: 1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unknown3);
+                    item: item.CastDuration);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Range);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CastingPerk);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
@@ -2572,11 +2891,33 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(9));
                     if (dataFrame.Remaining < 4) return null;
-                    item.Unknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Unknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(14));
-                    return (int)Spell_FieldIndex.Unknown3;
+                    item.BaseCost = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<Spell.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Type = EnumBinaryTranslation<Spell.SpellType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ChargeTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.CastType = EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.TargetType = EnumBinaryTranslation<TargetType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CastDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Range = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.CastingPerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Spell_FieldIndex.CastingPerk;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -2690,20 +3031,50 @@ namespace Mutagen.Bethesda.Starfield
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
         #endregion
         private RangeInt32? _SPITLocation;
-        #region Unknown
-        private int _UnknownLocation => _SPITLocation!.Value.Min;
-        private bool _Unknown_IsSet => _SPITLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 9).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region BaseCost
+        private int _BaseCostLocation => _SPITLocation!.Value.Min;
+        private bool _BaseCost_IsSet => _SPITLocation.HasValue;
+        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_BaseCostLocation, 4)) : default;
         #endregion
-        #region Unknown2
-        private int _Unknown2Location => _SPITLocation!.Value.Min + 0x9;
-        private bool _Unknown2_IsSet => _SPITLocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default;
+        #region Flags
+        private int _FlagsLocation => _SPITLocation!.Value.Min + 0x4;
+        private bool _Flags_IsSet => _SPITLocation.HasValue;
+        public Spell.Flag Flags => _Flags_IsSet ? (Spell.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
-        #region Unknown3
-        private int _Unknown3Location => _SPITLocation!.Value.Min + 0xD;
-        private bool _Unknown3_IsSet => _SPITLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown3 => _Unknown3_IsSet ? _recordData.Span.Slice(_Unknown3Location, 14).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region Type
+        private int _TypeLocation => _SPITLocation!.Value.Min + 0x8;
+        private bool _Type_IsSet => _SPITLocation.HasValue;
+        public Spell.SpellType Type => _Type_IsSet ? (Spell.SpellType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        #endregion
+        #region ChargeTime
+        private int _ChargeTimeLocation => _SPITLocation!.Value.Min + 0x9;
+        private bool _ChargeTime_IsSet => _SPITLocation.HasValue;
+        public Single ChargeTime => _ChargeTime_IsSet ? _recordData.Slice(_ChargeTimeLocation, 4).Float() : default;
+        #endregion
+        #region CastType
+        private int _CastTypeLocation => _SPITLocation!.Value.Min + 0xD;
+        private bool _CastType_IsSet => _SPITLocation.HasValue;
+        public CastType CastType => _CastType_IsSet ? (CastType)_recordData.Span.Slice(_CastTypeLocation, 0x1)[0] : default;
+        #endregion
+        #region TargetType
+        private int _TargetTypeLocation => _SPITLocation!.Value.Min + 0xE;
+        private bool _TargetType_IsSet => _SPITLocation.HasValue;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)_recordData.Span.Slice(_TargetTypeLocation, 0x1)[0] : default;
+        #endregion
+        #region CastDuration
+        private int _CastDurationLocation => _SPITLocation!.Value.Min + 0xF;
+        private bool _CastDuration_IsSet => _SPITLocation.HasValue;
+        public Single CastDuration => _CastDuration_IsSet ? _recordData.Slice(_CastDurationLocation, 4).Float() : default;
+        #endregion
+        #region Range
+        private int _RangeLocation => _SPITLocation!.Value.Min + 0x13;
+        private bool _Range_IsSet => _SPITLocation.HasValue;
+        public Single Range => _Range_IsSet ? _recordData.Slice(_RangeLocation, 4).Float() : default;
+        #endregion
+        #region CastingPerk
+        private int _CastingPerkLocation => _SPITLocation!.Value.Min + 0x17;
+        private bool _CastingPerk_IsSet => _SPITLocation.HasValue;
+        public IFormLinkGetter<IPerkGetter> CastingPerk => _CastingPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(
@@ -2834,7 +3205,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SPIT:
                 {
                     _SPITLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Spell_FieldIndex.Unknown3;
+                    return (int)Spell_FieldIndex.CastingPerk;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:

@@ -128,6 +128,7 @@
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Axis.cs" />
     <Compile Include="Enums\BipedObject.cs" />
+    <Compile Include="Enums\CastType.cs" />
     <Compile Include="Enums\CombatReaction.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\EquipType.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Enums\SoundLevel.cs" />
     <Compile Include="Enums\Stagger.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
+    <Compile Include="Enums\TargetType.cs" />
     <Compile Include="Enums\TimeOfDay.cs" />
     <Compile Include="Interfaces\Aspect\IHaveVirtualMachineAdapter.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
@@ -2041,6 +2043,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Spell.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\StaticCollection.cs">
       <DependentUpon>StaticCollection.xml</DependentUpon>

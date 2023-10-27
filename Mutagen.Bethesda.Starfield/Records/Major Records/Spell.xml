@@ -14,9 +14,15 @@
       <String name="Description" recordType="DESC" translated="DL" nullable="false" />
       <Data recordType="SPIT" >
         <Fields>
-          <ByteArray name="Unknown" nullable="false" byteLength="9" />
-          <Float name="Unknown2" />
-          <ByteArray name="Unknown3" nullable="false" byteLength="14" />
+          <UInt32 name="BaseCost" />
+          <Enum name="Flags" enumName="Spell.Flag" byteLength="4" />
+          <Enum name="Type" enumName="Spell.SpellType" byteLength="1" />
+          <Float name="ChargeTime" />
+          <Enum name="CastType" enumName="CastType" byteLength="1" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="1" />
+          <Float name="CastDuration" />
+          <Float name="Range" />
+          <FormLink name="CastingPerk" refName="Perk" />
         </Fields>
       </Data>
       <RefList name="Effects" refName="Effect" />
