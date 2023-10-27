@@ -30,7 +30,7 @@
     <Fields>
       <FormLink name="Texture" refName="LandTexture" />
       <Enum name="Quadrant" enumName="Quadrant" byteLength="2" />
-      <UInt16 name="LayerNumber" setPermission="Protected" internalSetInterface="true" />
+      <UInt16 name="LayerNumber" />
     </Fields>
   </Object>
 </Loqui>
