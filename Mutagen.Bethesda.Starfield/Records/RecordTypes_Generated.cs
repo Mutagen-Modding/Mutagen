@@ -132,6 +132,11 @@ public partial class RecordTypes
     public static readonly RecordType ENAM = new(0x4D414E45);
     public static readonly RecordType ENCH = new(0x48434E45);
     public static readonly RecordType ENIT = new(0x54494E45);
+    public static readonly RecordType EPF2 = new(0x32465045);
+    public static readonly RecordType EPF3 = new(0x33465045);
+    public static readonly RecordType EPFB = new(0x42465045);
+    public static readonly RecordType EPFD = new(0x44465045);
+    public static readonly RecordType EPFT = new(0x54465045);
     public static readonly RecordType EQUP = new(0x50555145);
     public static readonly RecordType ESSH = new(0x48535345);
     public static readonly RecordType ETYP = new(0x50595445);
@@ -302,8 +307,13 @@ public partial class RecordTypes
     public static readonly RecordType PNDT = new(0x54444E50);
     public static readonly RecordType PPBD = new(0x44425050);
     public static readonly RecordType PRIS = new(0x53495250);
+    public static readonly RecordType PRKC = new(0x434B5250);
+    public static readonly RecordType PRKE = new(0x454B5250);
+    public static readonly RecordType PRKF = new(0x464B5250);
     public static readonly RecordType PROJ = new(0x4A4F5250);
     public static readonly RecordType PRPS = new(0x53505250);
+    public static readonly RecordType PRRF = new(0x46525250);
+    public static readonly RecordType PRRK = new(0x4B525250);
     public static readonly RecordType PSDC = new(0x43445350);
     public static readonly RecordType PTCL = new(0x4C435450);
     public static readonly RecordType PTST = new(0x54535450);

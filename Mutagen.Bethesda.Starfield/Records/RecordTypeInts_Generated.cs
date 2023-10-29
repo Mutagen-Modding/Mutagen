@@ -130,6 +130,11 @@ public partial class RecordTypeInts
     public const int ENAM = 0x4D414E45;
     public const int ENCH = 0x48434E45;
     public const int ENIT = 0x54494E45;
+    public const int EPF2 = 0x32465045;
+    public const int EPF3 = 0x33465045;
+    public const int EPFB = 0x42465045;
+    public const int EPFD = 0x44465045;
+    public const int EPFT = 0x54465045;
     public const int EQUP = 0x50555145;
     public const int ESSH = 0x48535345;
     public const int ETYP = 0x50595445;
@@ -300,8 +305,13 @@ public partial class RecordTypeInts
     public const int PNDT = 0x54444E50;
     public const int PPBD = 0x44425050;
     public const int PRIS = 0x53495250;
+    public const int PRKC = 0x434B5250;
+    public const int PRKE = 0x454B5250;
+    public const int PRKF = 0x464B5250;
     public const int PROJ = 0x4A4F5250;
     public const int PRPS = 0x53505250;
+    public const int PRRF = 0x46525250;
+    public const int PRRK = 0x4B525250;
     public const int PSDC = 0x43445350;
     public const int PTCL = 0x4C435450;
     public const int PTST = 0x54535450;

@@ -100,12 +100,15 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "FLST", "FULL" },
                     new RecordType[] { "TMLM", "FULL", "BTXT", "INAM", "ITXT", "ISTX", "UNAM"  },
                     new RecordType[] { "WEAP", "FULL" },
+                    new RecordType[] { "PERK", "FULL" },
+                    new StringsAlignmentCustom("PERK", PerkStringHandler),
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]
                 {
                     new RecordType[] { "SPEL", "DESC" },
                     new RecordType[] { "COBJ", "DESC" },
+                    new RecordType[] { "PERK", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]
@@ -146,5 +149,34 @@ public class StarfieldProcessor : Processor
         if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec)) return;
         int offset = 0;
         ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
+    }
+    public void PerkStringHandler(
+        long loc,
+        MajorRecordFrame major,
+        List<StringEntry> processedStrings,
+        IStringsLookup overlay)
+    {
+        SubrecordPinFrame? lastepft = null; 
+        foreach (var sub in major.EnumerateSubrecords())
+        {
+            switch (sub.RecordTypeInt)
+            {
+                case RecordTypeInts.FULL:
+                case RecordTypeInts.EPF2:
+                    AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
+                    break;
+                case RecordTypeInts.EPFT:
+                    lastepft = sub; 
+                    break;
+                case RecordTypeInts.EPFD:
+                    if (lastepft!.Value.Content[0] == (byte)APerkEntryPointEffect.ParameterType.LString)
+                    {
+                        AStringsAlignment.ProcessStringLink(loc, processedStrings, overlay, major, sub);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

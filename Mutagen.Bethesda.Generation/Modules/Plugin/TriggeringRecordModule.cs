@@ -468,6 +468,11 @@ public class TriggeringRecordModule : GenerationModule
             {
                 data.TriggeringRecordTypes.Add(itemStartMarker);
             }
+            if (listType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.ItemEndMarker, out var itemEndMarkerObj)
+                && itemEndMarkerObj is string itemEndMarker)
+            {
+                data.TriggeringRecordTypes.Add(itemEndMarker);
+            }
             else if (listType.SubTypeGeneration is LoquiType subListLoqui)
             {
                 if (subListLoqui.GenericDef != null)

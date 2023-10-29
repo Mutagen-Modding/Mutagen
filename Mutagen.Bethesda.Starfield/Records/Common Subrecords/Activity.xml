@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Activity" objType="Subrecord" baseClass="AComponent">
+  <Object name="Activity" objType="Subrecord" >
     <Fields>
-      <String name="ATAN" recordType="ATAN" unknown="true" />
+      <String name="ATAN" recordType="ATAN" unknown="true" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
       <RefList name="ProgressionEvalutor" refName="ProgressionEvaluatorArgument" />
       <String name="ANAM" recordType="ANAM" nullable="false" unknown="true" />
-      <String name="Configuration" recordType="ATAV" nullable="false" />
+      <String name="Configuration" recordType="ATAV" nullable="false" binaryType="Plain" />
       <ByteArray name="ATAF" recordType="ATAF" nullable="false" unknown="true" />
     </Fields>
   </Object>
   <Object name="ProgressionEvaluatorArgument" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="DNAM" />
-      <!-- Conditions -->
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
     </Fields>
   </Object>
 </Loqui>

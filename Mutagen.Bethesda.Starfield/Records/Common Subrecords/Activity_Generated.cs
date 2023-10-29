@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -41,7 +42,6 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     public partial class Activity :
-        AComponent,
         IActivity,
         IEquatable<IActivityGetter>,
         ILoquiObjectSetter<Activity>
@@ -55,9 +55,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region ATAN
-        public String? ATAN { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActivityGetter.ATAN => this.ATAN;
+        public String ATAN { get; set; } = string.Empty;
         #endregion
         #region Name
         /// <summary>
@@ -133,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -162,14 +160,12 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mask
-        public new class Mask<TItem> :
-            AComponent.Mask<TItem>,
+        public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
-            : base(initialValue)
             {
                 this.ATAN = initialValue;
                 this.Name = initialValue;
@@ -188,7 +184,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ANAM,
                 TItem Configuration,
                 TItem ATAF)
-            : base()
             {
                 this.ATAN = ATAN;
                 this.Name = Name;
@@ -227,7 +222,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ATAN, rhs.ATAN)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
@@ -247,16 +241,14 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ANAM);
                 hash.Add(this.Configuration);
                 hash.Add(this.ATAF);
-                hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public override bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (!base.All(eval)) return false;
                 if (!eval(this.ATAN)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
@@ -280,9 +272,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Any
-            public override bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (base.Any(eval)) return true;
                 if (eval(this.ATAN)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.Description)) return true;
@@ -306,7 +297,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<TItem, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new Activity.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
@@ -315,7 +306,6 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                base.Translate_InternalFill(obj, eval);
                 obj.ATAN = eval(this.ATAN);
                 obj.Name = eval(this.Name);
                 obj.Description = eval(this.Description);
@@ -404,11 +394,24 @@ namespace Mutagen.Bethesda.Starfield
 
         }
 
-        public new class ErrorMask :
-            AComponent.ErrorMask,
+        public class ErrorMask :
+            IErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
             public Exception? ATAN;
             public Exception? Name;
             public Exception? Description;
@@ -419,7 +422,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region IErrorMask
-            public override object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
                 Activity_FieldIndex enu = (Activity_FieldIndex)index;
                 switch (enu)
@@ -439,11 +442,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Activity_FieldIndex.ATAF:
                         return ATAF;
                     default:
-                        return base.GetNthMask(index);
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
                 Activity_FieldIndex enu = (Activity_FieldIndex)index;
                 switch (enu)
@@ -470,12 +473,11 @@ namespace Mutagen.Bethesda.Starfield
                         this.ATAF = ex;
                         break;
                     default:
-                        base.SetNthException(index, ex);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
                 Activity_FieldIndex enu = (Activity_FieldIndex)index;
                 switch (enu)
@@ -502,12 +504,11 @@ namespace Mutagen.Bethesda.Starfield
                         this.ATAF = (Exception?)obj;
                         break;
                     default:
-                        base.SetNthMask(index, obj);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
                 if (ATAN != null) return true;
@@ -524,7 +525,7 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public override void Print(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -540,9 +541,8 @@ namespace Mutagen.Bethesda.Starfield
                     PrintFillInternal(sb);
                 }
             }
-            protected override void PrintFillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(ATAN, "ATAN");
                 }
@@ -604,18 +604,19 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Factory
-            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
             {
                 return new ErrorMask();
             }
             #endregion
 
         }
-        public new class TranslationMask :
-            AComponent.TranslationMask,
-            ITranslationMask
+        public class TranslationMask : ITranslationMask
         {
             #region Members
+            private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool ATAN;
             public bool Name;
             public bool Description;
@@ -629,8 +630,9 @@ namespace Mutagen.Bethesda.Starfield
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
-                : base(defaultOn, onOverall)
             {
+                this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.ATAN = defaultOn;
                 this.Name = defaultOn;
                 this.Description = defaultOn;
@@ -641,9 +643,17 @@ namespace Mutagen.Bethesda.Starfield
 
             #endregion
 
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            public TranslationCrystal GetCrystal()
             {
-                base.GetCrystal(ret);
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
                 ret.Add((ATAN, null));
                 ret.Add((Name, null));
                 ret.Add((Description, null));
@@ -661,9 +671,16 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActivityCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivitySetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ActivityBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ActivityBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -674,7 +691,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Activity CreateFromBinary(
+        public static Activity CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -708,7 +725,7 @@ namespace Mutagen.Bethesda.Starfield
             ((ActivitySetterCommon)((IActivityGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Activity GetNew()
+        internal static Activity GetNew()
         {
             return new Activity();
         }
@@ -718,15 +735,15 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IActivity :
-        IAComponent,
         IActivityGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IActivity>,
         INamed,
         INamedRequired,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
-        new String? ATAN { get; set; }
+        new String ATAN { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
@@ -739,16 +756,23 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     public partial interface IActivityGetter :
-        IAComponentGetter,
+        ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IActivityGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration StaticRegistration => Activity_Registration.Instance;
-        String? ATAN { get; }
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object? CommonSetterInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonSetterTranslationInstance();
+        static ILoquiRegistration StaticRegistration => Activity_Registration.Instance;
+        String ATAN { get; }
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -817,6 +841,31 @@ namespace Mutagen.Bethesda.Starfield
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
+        }
+
+        public static void DeepCopyIn(
+            this IActivity lhs,
+            IActivityGetter rhs)
+        {
+            ((ActivitySetterTranslationCommon)((IActivityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default,
+                deepCopy: false);
+        }
+
+        public static void DeepCopyIn(
+            this IActivity lhs,
+            IActivityGetter rhs,
+            Activity.TranslationMask? copyMask = null)
+        {
+            ((ActivitySetterTranslationCommon)((IActivityGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -949,17 +998,20 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BFCB;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ATAN;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.BFCB);
+            var triggers = RecordCollection.Factory(RecordTypes.ATAN);
             var all = RecordCollection.Factory(
-                RecordTypes.BFCB,
                 RecordTypes.ATAN,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.DNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.ANAM,
                 RecordTypes.ATAV,
                 RecordTypes.ATAF);
@@ -996,34 +1048,28 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ActivitySetterCommon : AComponentSetterCommon
+    internal partial class ActivitySetterCommon
     {
-        public new static readonly ActivitySetterCommon Instance = new ActivitySetterCommon();
+        public static readonly ActivitySetterCommon Instance = new ActivitySetterCommon();
 
         partial void ClearPartial();
         
         public void Clear(IActivity item)
         {
             ClearPartial();
-            item.ATAN = default;
+            item.ATAN = string.Empty;
             item.Name = default;
             item.Description.Clear();
             item.ProgressionEvalutor.Clear();
             item.ANAM = string.Empty;
             item.Configuration = string.Empty;
             item.ATAF = Array.Empty<byte>();
-            base.Clear(item);
-        }
-        
-        public override void Clear(IAComponent item)
-        {
-            Clear(item: (IActivity)item);
         }
         
         #region Mutagen
         public void RemapLinks(IActivity obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            base.RemapLinks(obj, mapping);
+            obj.ProgressionEvalutor.RemapLinks(mapping);
         }
         
         #endregion
@@ -1041,23 +1087,12 @@ namespace Mutagen.Bethesda.Starfield
                 fillTyped: ActivityBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
-        public override void CopyInFromBinary(
-            IAComponent item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (Activity)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
         #endregion
         
     }
-    internal partial class ActivityCommon : AComponentCommon
+    internal partial class ActivityCommon
     {
-        public new static readonly ActivityCommon Instance = new ActivityCommon();
+        public static readonly ActivityCommon Instance = new ActivityCommon();
 
         public Activity.Mask<bool> GetEqualsMask(
             IActivityGetter item,
@@ -1089,7 +1124,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.ANAM = string.Equals(item.ANAM, rhs.ANAM);
             ret.Configuration = string.Equals(item.Configuration, rhs.Configuration);
             ret.ATAF = MemoryExtensions.SequenceEqual(item.ATAF.Span, rhs.ATAF.Span);
-            base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
@@ -1134,14 +1168,9 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             Activity.Mask<bool>? printMask = null)
         {
-            AComponentCommon.ToStringFields(
-                item: item,
-                sb: sb,
-                printMask: printMask);
-            if ((printMask?.ATAN ?? true)
-                && item.ATAN is {} ATANItem)
+            if (printMask?.ATAN ?? true)
             {
-                sb.AppendItem(ATANItem, "ATAN");
+                sb.AppendItem(item.ATAN, "ATAN");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
@@ -1180,15 +1209,6 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static Activity_FieldIndex ConvertFieldIndex(AComponent_FieldIndex index)
-        {
-            switch (index)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             IActivityGetter? lhs,
@@ -1196,7 +1216,6 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Activity_FieldIndex.ATAN) ?? true))
             {
                 if (!string.Equals(lhs.ATAN, rhs.ATAN)) return false;
@@ -1228,24 +1247,10 @@ namespace Mutagen.Bethesda.Starfield
             return true;
         }
         
-        public override bool Equals(
-            IAComponentGetter? lhs,
-            IAComponentGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (IActivityGetter?)lhs,
-                rhs: rhs as IActivityGetter,
-                equalsMask: equalsMask);
-        }
-        
         public virtual int GetHashCode(IActivityGetter item)
         {
             var hash = new HashCode();
-            if (item.ATAN is {} ATANitem)
-            {
-                hash.Add(ATANitem);
-            }
+            hash.Add(item.ATAN);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -1255,19 +1260,13 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ANAM);
             hash.Add(item.Configuration);
             hash.Add(item.ATAF);
-            hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAComponentGetter item)
-        {
-            return GetHashCode(item: (IActivityGetter)item);
         }
         
         #endregion
         
         
-        public override object GetNew()
+        public object GetNew()
         {
             return Activity.GetNew();
         }
@@ -1275,9 +1274,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IActivityGetter obj)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
+            foreach (var item in obj.ProgressionEvalutor.SelectMany(f => f.EnumerateFormLinks()))
             {
-                yield return item;
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1285,9 +1284,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ActivitySetterTranslationCommon : AComponentSetterTranslationCommon
+    internal partial class ActivitySetterTranslationCommon
     {
-        public new static readonly ActivitySetterTranslationCommon Instance = new ActivitySetterTranslationCommon();
+        public static readonly ActivitySetterTranslationCommon Instance = new ActivitySetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
@@ -1297,12 +1296,6 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            base.DeepCopyIn(
-                (IAComponent)item,
-                (IAComponentGetter)rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Activity_FieldIndex.ATAN) ?? true))
             {
                 item.ATAN = rhs.ATAN;
@@ -1351,22 +1344,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ATAF = rhs.ATAF.ToArray();
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IAComponent item,
-            IAComponentGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IActivity)item,
-                rhs: (IActivityGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         #endregion
@@ -1429,16 +1406,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activity_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Activity_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Activity_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ActivityCommon.Instance;
+        protected object CommonInstance() => ActivityCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
             return ActivitySetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ActivitySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ActivitySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object IActivityGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object IActivityGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
+        object IActivityGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1449,22 +1432,16 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ActivityBinaryWriteTranslation :
-        AComponentBinaryWriteTranslation,
-        IBinaryWriteTranslator
+    public partial class ActivityBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public new static readonly ActivityBinaryWriteTranslation Instance = new();
+        public static readonly ActivityBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             IActivityGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            AComponentBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams);
-            StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ATAN,
                 header: translationParams.ConvertToCustom(RecordTypes.ATAN),
@@ -1501,7 +1478,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Configuration,
                 header: translationParams.ConvertToCustom(RecordTypes.ATAV),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.Plain);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ATAF,
@@ -1517,10 +1494,9 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, RecordTypes.BFCE)) { } // End Marker
         }
 
-        public override void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams translationParams = default)
@@ -1531,22 +1507,11 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public override void Write(
-            MutagenWriter writer,
-            IAComponentGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (IActivityGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
     }
 
-    internal partial class ActivityBinaryCreateTranslation : AComponentBinaryCreateTranslation
+    internal partial class ActivityBinaryCreateTranslation
     {
-        public new static readonly ActivityBinaryCreateTranslation Instance = new ActivityBinaryCreateTranslation();
+        public static readonly ActivityBinaryCreateTranslation Instance = new ActivityBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
             IActivity item,
@@ -1562,6 +1527,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ATAN:
                 {
+                    if (lastParsed.ShortCircuit((int)Activity_FieldIndex.ATAN, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ATAN = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
@@ -1587,6 +1553,8 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Activity_FieldIndex.Description;
                 }
                 case RecordTypeInts.DNAM:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
                 {
                     item.ProgressionEvalutor.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ProgressionEvaluatorArgument>.Instance.Parse(
@@ -1609,7 +1577,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Configuration = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.Plain);
                     return (int)Activity_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.ATAF:
@@ -1619,14 +1587,7 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Activity_FieldIndex.ATAF;
                 }
                 default:
-                    return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        translationParams: translationParams.WithNoConverter());
+                    return ParseResult.Stop;
             }
         }
 
@@ -1638,6 +1599,17 @@ namespace Mutagen.Bethesda.Starfield
     #region Binary Write Mixins
     public static class ActivityBinaryTranslationMixIn
     {
+        public static void WriteToBinary(
+            this IActivityGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams = default)
+        {
+            ((ActivityBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
     }
     #endregion
 
@@ -1646,24 +1618,33 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     internal partial class ActivityBinaryOverlay :
-        AComponentBinaryOverlay,
+        PluginBinaryOverlay,
         IActivityGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Activity_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Activity_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => Activity_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ActivityCommon.Instance;
+        protected object CommonInstance() => ActivityCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ActivitySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ActivitySetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object IActivityGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object? IActivityGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
+        object IActivityGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActivityCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ActivityBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ActivityBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -1676,7 +1657,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ATAN
         private int? _ATANLocation;
-        public String? ATAN => _ATANLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ATANLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String ATAN => _ATANLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ATANLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1758,7 +1739,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public override ParseResult FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1772,6 +1753,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ATAN:
                 {
+                    if (lastParsed.ShortCircuit((int)Activity_FieldIndex.ATAN, translationParams)) return ParseResult.Stop;
                     _ATANLocation = (stream.Position - offset);
                     return (int)Activity_FieldIndex.ATAN;
                 }
@@ -1786,6 +1768,8 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Activity_FieldIndex.Description;
                 }
                 case RecordTypeInts.DNAM:
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
                 {
                     this.ProgressionEvalutor = this.ParseRepeatedTypelessSubrecord<IProgressionEvaluatorArgumentGetter>(
                         stream: stream,
@@ -1810,19 +1794,12 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Activity_FieldIndex.ATAF;
                 }
                 default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        translationParams: translationParams.WithNoConverter());
+                    return ParseResult.Stop;
             }
         }
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {

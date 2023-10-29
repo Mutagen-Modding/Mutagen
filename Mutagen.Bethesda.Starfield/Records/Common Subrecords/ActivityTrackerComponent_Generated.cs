@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -410,6 +411,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActivityTrackerComponentCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActivityTrackerComponentSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActivityTrackerComponentBinaryWriteTranslation.Instance;
@@ -469,6 +475,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActivityTrackerComponent :
         IAComponent,
         IActivityTrackerComponentGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IActivityTrackerComponent>
     {
         new ExtendedList<Activity>? Activities { get; set; }
@@ -477,6 +484,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActivityTrackerComponentGetter :
         IAComponentGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IActivityTrackerComponentGetter>
     {
         static new ILoquiRegistration StaticRegistration => ActivityTrackerComponent_Registration.Instance;
@@ -671,11 +679,15 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
-                RecordTypes.ATCP,
                 RecordTypes.ATAN,
+                RecordTypes.ATCP,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.DNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.ANAM,
                 RecordTypes.ATAV,
                 RecordTypes.ATAF);
@@ -734,6 +746,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IActivityTrackerComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Activities?.RemapLinks(mapping);
         }
         
         #endregion
@@ -921,6 +934,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Activities is {} ActivitiesItem)
+            {
+                foreach (var item in ActivitiesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1158,7 +1178,7 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.BFCB:
+                case RecordTypeInts.ATAN:
                 case RecordTypeInts.ATCP:
                 {
                     item.Activities = 
@@ -1216,6 +1236,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActivityTrackerComponentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActivityTrackerComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1292,7 +1313,7 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.BFCB:
+                case RecordTypeInts.ATAN:
                 case RecordTypeInts.ATCP:
                 {
                     this.Activities = BinaryOverlayList.FactoryByCountPerItem<IActivityGetter>(

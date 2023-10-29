@@ -7,6 +7,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - LeveledItem
 - MagicEffect
+- Perk
 - TerminalMenu
 - Weapon
 ### IKeywordCommon
@@ -51,6 +52,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MorphGroup
 - ObjectEffect
 - ObjectTemplate
+- Perk
 - Planet
 - ProgressionEvaluatorArgument
 - Race
@@ -165,6 +167,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### ObjectTemplate
 - IKeyworded
+- INamed
+### Perk
+- IHaveVirtualMachineAdapter
 - INamed
 ### Planet
 - INamed

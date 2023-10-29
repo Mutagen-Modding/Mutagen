@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -22,7 +26,9 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
+using Mutagen.Bethesda.Starfield.Assets;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +60,123 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private PerkAdapter? _VirtualMachineAdapter;
+        public PerkAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPerkAdapterGetter? IPerkGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IPerkGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Description
+        public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IPerkGetter.Description => this.Description;
+        #endregion
+        #region Categroy
+        public Perk.PerkCategory Categroy { get; set; } = default;
+        #endregion
+        #region SkillGroup
+        public Perk.PerkSkillGroup SkillGroup { get; set; } = default;
+        #endregion
+        #region CrewAssignment
+        public Perk.PerkCrewAssignment CrewAssignment { get; set; } = default;
+        #endregion
+        #region Flags
+        public Perk.Flag Flags { get; set; } = default;
+        #endregion
+        #region Restriction
+        private readonly IFormLinkNullable<IKeywordGetter> _Restriction = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> Restriction
+        {
+            get => _Restriction;
+            set => _Restriction.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IPerkGetter.Restriction => this.Restriction;
+        #endregion
+        #region PerkIcon
+        public AssetLink<StarfieldTextureAssetType>? PerkIcon { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        AssetLinkGetter<StarfieldTextureAssetType>? IPerkGetter.PerkIcon => this.PerkIcon;
+        #endregion
+        #region Training
+        private readonly IFormLinkNullable<IPerkGetter> _Training = new FormLinkNullable<IPerkGetter>();
+        public IFormLinkNullable<IPerkGetter> Training
+        {
+            get => _Training;
+            set => _Training.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPerkGetter> IPerkGetter.Training => this.Training;
+        #endregion
+        #region Ranks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<PerkRank> _Ranks = new ExtendedList<PerkRank>();
+        public ExtendedList<PerkRank> Ranks
+        {
+            get => this._Ranks;
+            init => this._Ranks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPerkRankGetter> IPerkGetter.Ranks => _Ranks;
+        #endregion
+
+        #endregion
+        #region BackgroundSkills
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IPerkGetter>> _BackgroundSkills = new ExtendedList<IFormLinkGetter<IPerkGetter>>();
+        public ExtendedList<IFormLinkGetter<IPerkGetter>> BackgroundSkills
+        {
+            get => this._BackgroundSkills;
+            init => this._BackgroundSkills = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IPerkGetter>> IPerkGetter.BackgroundSkills => _BackgroundSkills;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +202,18 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(initialValue, new PerkAdapter.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Categroy = initialValue;
+                this.SkillGroup = initialValue;
+                this.CrewAssignment = initialValue;
+                this.Flags = initialValue;
+                this.Restriction = initialValue;
+                this.PerkIcon = initialValue;
+                this.Training = initialValue;
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>());
+                this.BackgroundSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -88,7 +223,19 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem Name,
+                TItem Description,
+                TItem Categroy,
+                TItem SkillGroup,
+                TItem CrewAssignment,
+                TItem Flags,
+                TItem Restriction,
+                TItem PerkIcon,
+                TItem Training,
+                TItem Ranks,
+                TItem BackgroundSkills)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +245,18 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, PerkAdapter.Mask<TItem>?>(VirtualMachineAdapter, new PerkAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Name = Name;
+                this.Description = Description;
+                this.Categroy = Categroy;
+                this.SkillGroup = SkillGroup;
+                this.CrewAssignment = CrewAssignment;
+                this.Flags = Flags;
+                this.Restriction = Restriction;
+                this.PerkIcon = PerkIcon;
+                this.Training = Training;
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>());
+                this.BackgroundSkills = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BackgroundSkills, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -106,6 +265,21 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, PerkAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Name;
+            public TItem Description;
+            public TItem Categroy;
+            public TItem SkillGroup;
+            public TItem CrewAssignment;
+            public TItem Flags;
+            public TItem Restriction;
+            public TItem PerkIcon;
+            public TItem Training;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkRank.Mask<TItem>?>>?>? Ranks;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? BackgroundSkills;
             #endregion
 
             #region Equals
@@ -119,11 +293,35 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Categroy, rhs.Categroy)) return false;
+                if (!object.Equals(this.SkillGroup, rhs.SkillGroup)) return false;
+                if (!object.Equals(this.CrewAssignment, rhs.CrewAssignment)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Restriction, rhs.Restriction)) return false;
+                if (!object.Equals(this.PerkIcon, rhs.PerkIcon)) return false;
+                if (!object.Equals(this.Training, rhs.Training)) return false;
+                if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
+                if (!object.Equals(this.BackgroundSkills, rhs.BackgroundSkills)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Categroy);
+                hash.Add(this.SkillGroup);
+                hash.Add(this.CrewAssignment);
+                hash.Add(this.Flags);
+                hash.Add(this.Restriction);
+                hash.Add(this.PerkIcon);
+                hash.Add(this.Training);
+                hash.Add(this.Ranks);
+                hash.Add(this.BackgroundSkills);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +332,43 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Categroy)) return false;
+                if (!eval(this.SkillGroup)) return false;
+                if (!eval(this.CrewAssignment)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Restriction)) return false;
+                if (!eval(this.PerkIcon)) return false;
+                if (!eval(this.Training)) return false;
+                if (this.Ranks != null)
+                {
+                    if (!eval(this.Ranks.Overall)) return false;
+                    if (this.Ranks.Specific != null)
+                    {
+                        foreach (var item in this.Ranks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.BackgroundSkills != null)
+                {
+                    if (!eval(this.BackgroundSkills.Overall)) return false;
+                    if (this.BackgroundSkills.Specific != null)
+                    {
+                        foreach (var item in this.BackgroundSkills.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -142,6 +377,43 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Categroy)) return true;
+                if (eval(this.SkillGroup)) return true;
+                if (eval(this.CrewAssignment)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Restriction)) return true;
+                if (eval(this.PerkIcon)) return true;
+                if (eval(this.Training)) return true;
+                if (this.Ranks != null)
+                {
+                    if (eval(this.Ranks.Overall)) return true;
+                    if (this.Ranks.Specific != null)
+                    {
+                        foreach (var item in this.Ranks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.BackgroundSkills != null)
+                {
+                    if (eval(this.BackgroundSkills.Overall)) return true;
+                    if (this.BackgroundSkills.Specific != null)
+                    {
+                        foreach (var item in this.BackgroundSkills.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -157,6 +429,45 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, PerkAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                obj.Categroy = eval(this.Categroy);
+                obj.SkillGroup = eval(this.SkillGroup);
+                obj.CrewAssignment = eval(this.CrewAssignment);
+                obj.Flags = eval(this.Flags);
+                obj.Restriction = eval(this.Restriction);
+                obj.PerkIcon = eval(this.PerkIcon);
+                obj.Training = eval(this.Training);
+                if (Ranks != null)
+                {
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PerkRank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, PerkRank.Mask<R>?>>());
+                    if (Ranks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PerkRank.Mask<R>?>>();
+                        obj.Ranks.Specific = l;
+                        foreach (var item in Ranks.Specific)
+                        {
+                            MaskItemIndexed<R, PerkRank.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PerkRank.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (BackgroundSkills != null)
+                {
+                    obj.BackgroundSkills = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BackgroundSkills.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (BackgroundSkills.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.BackgroundSkills.Specific = l;
+                        foreach (var item in BackgroundSkills.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -175,6 +486,86 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Perk.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Categroy ?? true)
+                    {
+                        sb.AppendItem(Categroy, "Categroy");
+                    }
+                    if (printMask?.SkillGroup ?? true)
+                    {
+                        sb.AppendItem(SkillGroup, "SkillGroup");
+                    }
+                    if (printMask?.CrewAssignment ?? true)
+                    {
+                        sb.AppendItem(CrewAssignment, "CrewAssignment");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Restriction ?? true)
+                    {
+                        sb.AppendItem(Restriction, "Restriction");
+                    }
+                    if (printMask?.PerkIcon ?? true)
+                    {
+                        sb.AppendItem(PerkIcon, "PerkIcon");
+                    }
+                    if (printMask?.Training ?? true)
+                    {
+                        sb.AppendItem(Training, "Training");
+                    }
+                    if ((printMask?.Ranks?.Overall ?? true)
+                        && Ranks is {} RanksItem)
+                    {
+                        sb.AppendLine("Ranks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RanksItem.Overall);
+                            if (RanksItem.Specific != null)
+                            {
+                                foreach (var subItem in RanksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.BackgroundSkills?.Overall ?? true)
+                        && BackgroundSkills is {} BackgroundSkillsItem)
+                    {
+                        sb.AppendLine("BackgroundSkills =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(BackgroundSkillsItem.Overall);
+                            if (BackgroundSkillsItem.Specific != null)
+                            {
+                                foreach (var subItem in BackgroundSkillsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -185,12 +576,51 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, PerkAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Name;
+            public Exception? Description;
+            public Exception? Categroy;
+            public Exception? SkillGroup;
+            public Exception? CrewAssignment;
+            public Exception? Flags;
+            public Exception? Restriction;
+            public Exception? PerkIcon;
+            public Exception? Training;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkRank.ErrorMask?>>?>? Ranks;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? BackgroundSkills;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Perk_FieldIndex.Name:
+                        return Name;
+                    case Perk_FieldIndex.Description:
+                        return Description;
+                    case Perk_FieldIndex.Categroy:
+                        return Categroy;
+                    case Perk_FieldIndex.SkillGroup:
+                        return SkillGroup;
+                    case Perk_FieldIndex.CrewAssignment:
+                        return CrewAssignment;
+                    case Perk_FieldIndex.Flags:
+                        return Flags;
+                    case Perk_FieldIndex.Restriction:
+                        return Restriction;
+                    case Perk_FieldIndex.PerkIcon:
+                        return PerkIcon;
+                    case Perk_FieldIndex.Training:
+                        return Training;
+                    case Perk_FieldIndex.Ranks:
+                        return Ranks;
+                    case Perk_FieldIndex.BackgroundSkills:
+                        return BackgroundSkills;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +631,42 @@ namespace Mutagen.Bethesda.Starfield
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, PerkAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Perk_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Perk_FieldIndex.Categroy:
+                        this.Categroy = ex;
+                        break;
+                    case Perk_FieldIndex.SkillGroup:
+                        this.SkillGroup = ex;
+                        break;
+                    case Perk_FieldIndex.CrewAssignment:
+                        this.CrewAssignment = ex;
+                        break;
+                    case Perk_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Perk_FieldIndex.Restriction:
+                        this.Restriction = ex;
+                        break;
+                    case Perk_FieldIndex.PerkIcon:
+                        this.PerkIcon = ex;
+                        break;
+                    case Perk_FieldIndex.Training:
+                        this.Training = ex;
+                        break;
+                    case Perk_FieldIndex.Ranks:
+                        this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkRank.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Perk_FieldIndex.BackgroundSkills:
+                        this.BackgroundSkills = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +678,42 @@ namespace Mutagen.Bethesda.Starfield
                 Perk_FieldIndex enu = (Perk_FieldIndex)index;
                 switch (enu)
                 {
+                    case Perk_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, PerkAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Perk_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Categroy:
+                        this.Categroy = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.SkillGroup:
+                        this.SkillGroup = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.CrewAssignment:
+                        this.CrewAssignment = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Restriction:
+                        this.Restriction = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.PerkIcon:
+                        this.PerkIcon = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Training:
+                        this.Training = (Exception?)obj;
+                        break;
+                    case Perk_FieldIndex.Ranks:
+                        this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkRank.ErrorMask?>>?>)obj;
+                        break;
+                    case Perk_FieldIndex.BackgroundSkills:
+                        this.BackgroundSkills = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +723,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Categroy != null) return true;
+                if (SkillGroup != null) return true;
+                if (CrewAssignment != null) return true;
+                if (Flags != null) return true;
+                if (Restriction != null) return true;
+                if (PerkIcon != null) return true;
+                if (Training != null) return true;
+                if (Ranks != null) return true;
+                if (BackgroundSkills != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +761,72 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(Categroy, "Categroy");
+                }
+                {
+                    sb.AppendItem(SkillGroup, "SkillGroup");
+                }
+                {
+                    sb.AppendItem(CrewAssignment, "CrewAssignment");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Restriction, "Restriction");
+                }
+                {
+                    sb.AppendItem(PerkIcon, "PerkIcon");
+                }
+                {
+                    sb.AppendItem(Training, "Training");
+                }
+                if (Ranks is {} RanksItem)
+                {
+                    sb.AppendLine("Ranks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RanksItem.Overall);
+                        if (RanksItem.Specific != null)
+                        {
+                            foreach (var subItem in RanksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (BackgroundSkills is {} BackgroundSkillsItem)
+                {
+                    sb.AppendLine("BackgroundSkills =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(BackgroundSkillsItem.Overall);
+                        if (BackgroundSkillsItem.Specific != null)
+                        {
+                            foreach (var subItem in BackgroundSkillsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -255,6 +835,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Categroy = this.Categroy.Combine(rhs.Categroy);
+                ret.SkillGroup = this.SkillGroup.Combine(rhs.SkillGroup);
+                ret.CrewAssignment = this.CrewAssignment.Combine(rhs.CrewAssignment);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Restriction = this.Restriction.Combine(rhs.Restriction);
+                ret.PerkIcon = this.PerkIcon.Combine(rhs.PerkIcon);
+                ret.Training = this.Training.Combine(rhs.Training);
+                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkRank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
+                ret.BackgroundSkills = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.BackgroundSkills?.Overall, rhs.BackgroundSkills?.Overall), Noggog.ExceptionExt.Combine(this.BackgroundSkills?.Specific, rhs.BackgroundSkills?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +868,57 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public PerkAdapter.TranslationMask? VirtualMachineAdapter;
+            public bool Name;
+            public bool Description;
+            public bool Categroy;
+            public bool SkillGroup;
+            public bool CrewAssignment;
+            public bool Flags;
+            public bool Restriction;
+            public bool PerkIcon;
+            public bool Training;
+            public PerkRank.TranslationMask? Ranks;
+            public bool BackgroundSkills;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Categroy = defaultOn;
+                this.SkillGroup = defaultOn;
+                this.CrewAssignment = defaultOn;
+                this.Flags = defaultOn;
+                this.Restriction = defaultOn;
+                this.PerkIcon = defaultOn;
+                this.Training = defaultOn;
+                this.BackgroundSkills = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Categroy, null));
+                ret.Add((SkillGroup, null));
+                ret.Add((CrewAssignment, null));
+                ret.Add((Flags, null));
+                ret.Add((Restriction, null));
+                ret.Add((PerkIcon, null));
+                ret.Add((Training, null));
+                ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
+                ret.Add((BackgroundSkills, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +930,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Perk_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkSetterCommon.Instance.RemapLinks(this, mapping);
         public Perk(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +981,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IPerk);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PerkCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => PerkSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => PerkSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => PerkSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +1069,35 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPerk :
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<IPerkInternal>,
+        INamed,
+        INamedRequired,
         IPerkGetter,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new PerkAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new TranslatedString Description { get; set; }
+        new Perk.PerkCategory Categroy { get; set; }
+        new Perk.PerkSkillGroup SkillGroup { get; set; }
+        new Perk.PerkCrewAssignment CrewAssignment { get; set; }
+        new Perk.Flag Flags { get; set; }
+        new IFormLinkNullable<IKeywordGetter> Restriction { get; set; }
+        new AssetLink<StarfieldTextureAssetType>? PerkIcon { get; set; }
+        new IFormLinkNullable<IPerkGetter> Training { get; set; }
+        new ExtendedList<PerkRank> Ranks { get; }
+        new ExtendedList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; }
+        #region Mutagen
+        new Perk.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IPerkInternal :
@@ -440,11 +1110,44 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.PERK)]
     public partial interface IPerkGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IPerkGetter>,
-        IMapsToGetter<IPerkGetter>
+        IMapsToGetter<IPerkGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Perk_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
+        IPerkAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        ITranslatedStringGetter Description { get; }
+        Perk.PerkCategory Categroy { get; }
+        Perk.PerkSkillGroup SkillGroup { get; }
+        Perk.PerkCrewAssignment CrewAssignment { get; }
+        Perk.Flag Flags { get; }
+        IFormLinkNullableGetter<IKeywordGetter> Restriction { get; }
+        AssetLinkGetter<StarfieldTextureAssetType>? PerkIcon { get; }
+        IFormLinkNullableGetter<IPerkGetter> Training { get; }
+        IReadOnlyList<IPerkRankGetter> Ranks { get; }
+        IReadOnlyList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; }
+
+        #region Mutagen
+        Perk.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -621,6 +1324,18 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Description = 9,
+        Categroy = 10,
+        SkillGroup = 11,
+        CrewAssignment = 12,
+        Flags = 13,
+        Restriction = 14,
+        PerkIcon = 15,
+        Training = 16,
+        Ranks = 17,
+        BackgroundSkills = 18,
     }
     #endregion
 
@@ -631,9 +1346,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Perk.Mask<>);
 
@@ -663,8 +1378,34 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PERK);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PERK);
+            var all = RecordCollection.Factory(
+                RecordTypes.PERK,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.DATA,
+                RecordTypes.TNAM,
+                RecordTypes.GNAM,
+                RecordTypes.UNAM,
+                RecordTypes.PRRK,
+                RecordTypes.PRRF,
+                RecordTypes.PRKE,
+                RecordTypes.CTDA,
+                RecordTypes.ATAN,
+                RecordTypes.ATCP,
+                RecordTypes.PRKF,
+                RecordTypes.PRKC,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.DNAM,
+                RecordTypes.ANAM,
+                RecordTypes.ATAV,
+                RecordTypes.ATAF,
+                RecordTypes.RNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1447,18 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPerkInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Name = default;
+            item.Description.Clear();
+            item.Categroy = default;
+            item.SkillGroup = default;
+            item.CrewAssignment = default;
+            item.Flags = default;
+            item.Restriction.Clear();
+            item.PerkIcon = default;
+            item.Training.Clear();
+            item.Ranks.Clear();
+            item.BackgroundSkills.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1476,37 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IPerk obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Restriction.Relink(mapping);
+            obj.Training.Relink(mapping);
+            obj.Ranks.RemapLinks(mapping);
+            obj.BackgroundSkills.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPerk obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.PerkIcon != null)
+            {
+                yield return obj.PerkIcon;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IPerk obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.PerkIcon?.Relink(mapping);
+            }
         }
         
         #endregion
@@ -790,6 +1574,28 @@ namespace Mutagen.Bethesda.Starfield
             Perk.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Categroy = item.Categroy == rhs.Categroy;
+            ret.SkillGroup = item.SkillGroup == rhs.SkillGroup;
+            ret.CrewAssignment = item.CrewAssignment == rhs.CrewAssignment;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Restriction = item.Restriction.Equals(rhs.Restriction);
+            ret.PerkIcon = object.Equals(item.PerkIcon, rhs.PerkIcon);
+            ret.Training = item.Training.Equals(rhs.Training);
+            ret.Ranks = item.Ranks.CollectionEqualsHelper(
+                rhs.Ranks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.BackgroundSkills = item.BackgroundSkills.CollectionEqualsHelper(
+                rhs.BackgroundSkills,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1645,77 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Description ?? true)
+            {
+                sb.AppendItem(item.Description, "Description");
+            }
+            if (printMask?.Categroy ?? true)
+            {
+                sb.AppendItem(item.Categroy, "Categroy");
+            }
+            if (printMask?.SkillGroup ?? true)
+            {
+                sb.AppendItem(item.SkillGroup, "SkillGroup");
+            }
+            if (printMask?.CrewAssignment ?? true)
+            {
+                sb.AppendItem(item.CrewAssignment, "CrewAssignment");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Restriction ?? true)
+            {
+                sb.AppendItem(item.Restriction.FormKeyNullable, "Restriction");
+            }
+            if ((printMask?.PerkIcon ?? true)
+                && item.PerkIcon is {} PerkIconItem)
+            {
+                sb.AppendItem(PerkIconItem, "PerkIcon");
+            }
+            if (printMask?.Training ?? true)
+            {
+                sb.AppendItem(item.Training.FormKeyNullable, "Training");
+            }
+            if (printMask?.Ranks?.Overall ?? true)
+            {
+                sb.AppendLine("Ranks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Ranks)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.BackgroundSkills?.Overall ?? true)
+            {
+                sb.AppendLine("BackgroundSkills =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.BackgroundSkills)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
         }
         
         public static Perk_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1766,58 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((PerkAdapterCommon)((IPerkAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Categroy) ?? true))
+            {
+                if (lhs.Categroy != rhs.Categroy) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.SkillGroup) ?? true))
+            {
+                if (lhs.SkillGroup != rhs.SkillGroup) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.CrewAssignment) ?? true))
+            {
+                if (lhs.CrewAssignment != rhs.CrewAssignment) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Restriction) ?? true))
+            {
+                if (!lhs.Restriction.Equals(rhs.Restriction)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.PerkIcon) ?? true))
+            {
+                if (!object.Equals(lhs.PerkIcon, rhs.PerkIcon)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Training) ?? true))
+            {
+                if (!lhs.Training.Equals(rhs.Training)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Ranks) ?? true))
+            {
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((PerkRankCommon)((IPerkRankGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.Ranks)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.BackgroundSkills) ?? true))
+            {
+                if (!lhs.BackgroundSkills.SequenceEqualNullable(rhs.BackgroundSkills)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1846,27 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPerkGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Description);
+            hash.Add(item.Categroy);
+            hash.Add(item.SkillGroup);
+            hash.Add(item.CrewAssignment);
+            hash.Add(item.Flags);
+            hash.Add(item.Restriction);
+            if (item.PerkIcon is {} PerkIconitem)
+            {
+                hash.Add(PerkIconitem);
+            }
+            hash.Add(item.Training);
+            hash.Add(item.Ranks);
+            hash.Add(item.BackgroundSkills);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1895,45 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.Restriction, out var RestrictionInfo))
+            {
+                yield return RestrictionInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Training, out var TrainingInfo))
+            {
+                yield return TrainingInfo;
+            }
+            foreach (var item in obj.Ranks.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.BackgroundSkills)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPerkGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.PerkIcon != null)
+                {
+                    yield return obj.PerkIcon;
+                }
             }
             yield break;
         }
@@ -1020,6 +2009,108 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Categroy) ?? true))
+            {
+                item.Categroy = rhs.Categroy;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.SkillGroup) ?? true))
+            {
+                item.SkillGroup = rhs.SkillGroup;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.CrewAssignment) ?? true))
+            {
+                item.CrewAssignment = rhs.CrewAssignment;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Restriction) ?? true))
+            {
+                item.Restriction.SetTo(rhs.Restriction.FormKeyNullable);
+            }
+            item.PerkIcon = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.PerkIcon, rhs.PerkIcon);
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Training) ?? true))
+            {
+                item.Training.SetTo(rhs.Training.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Ranks) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.Ranks);
+                try
+                {
+                    item.Ranks.SetTo(
+                        rhs.Ranks
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.BackgroundSkills) ?? true))
+            {
+                errorMask?.PushIndex((int)Perk_FieldIndex.BackgroundSkills);
+                try
+                {
+                    item.BackgroundSkills.SetTo(
+                        rhs.BackgroundSkills
+                        .Select(r => (IFormLinkGetter<IPerkGetter>)new FormLink<IPerkGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2259,91 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly PerkBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IPerkGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((PerkAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                EnumBinaryTranslation<Perk.PerkCategory, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Categroy,
+                    length: 1);
+                EnumBinaryTranslation<Perk.PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.SkillGroup,
+                    length: 1);
+                EnumBinaryTranslation<Perk.PerkCrewAssignment, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.CrewAssignment,
+                    length: 1);
+                EnumBinaryTranslation<Perk.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Restriction,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PerkIcon?.RawPath,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Training,
+                header: translationParams.ConvertToCustom(RecordTypes.UNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPerkRankGetter>.Instance.Write(
+                writer: writer,
+                items: item.Ranks,
+                itemStartMarker: RecordTypes.PRRK,
+                itemEndMarker: RecordTypes.PRRF,
+                transl: (MutagenWriter subWriter, IPerkRankGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PerkRankBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPerkGetter>>.Instance.Write(
+                writer: writer,
+                items: item.BackgroundSkills,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPerkGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IPerkGetter item,
@@ -1184,10 +2360,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2415,121 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly PerkBinaryCreateTranslation Instance = new PerkBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PERK;
+        public static ParseResult FillBinaryRecordTypes(
+            IPerkInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.PerkAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Perk_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Perk_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Perk_FieldIndex.Description;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Categroy = EnumBinaryTranslation<Perk.PerkCategory, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.SkillGroup = EnumBinaryTranslation<Perk.PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.CrewAssignment = EnumBinaryTranslation<Perk.PerkCrewAssignment, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Flags = EnumBinaryTranslation<Perk.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    return (int)Perk_FieldIndex.Flags;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Restriction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Perk_FieldIndex.Restriction;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PerkIcon = AssetLinkBinaryTranslation.Instance.Parse<StarfieldTextureAssetType>(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Perk_FieldIndex.PerkIcon;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Training.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Perk_FieldIndex.Training;
+                }
+                case RecordTypeInts.PRRK:
+                case RecordTypeInts.PRRF:
+                {
+                    item.Ranks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PerkRank>.Instance.Parse(
+                            reader: frame,
+                            itemStartMarker: RecordTypes.PRRK,
+                            itemEndMarker: RecordTypes.PRRF,
+                            translationParams: translationParams,
+                            transl: PerkRank.TryCreateFromBinary));
+                    return (int)Perk_FieldIndex.Ranks;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    item.BackgroundSkills.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPerkGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.RNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Perk_FieldIndex.BackgroundSkills;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2562,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => PerkCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1282,7 +2577,65 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IPerk);
 
+        public Perk.MajorFlag MajorFlags => (Perk.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IPerkAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? PerkAdapterBinaryOverlay.PerkAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        #endregion
+        private RangeInt32? _DATALocation;
+        #region Categroy
+        private int _CategroyLocation => _DATALocation!.Value.Min;
+        private bool _Categroy_IsSet => _DATALocation.HasValue;
+        public Perk.PerkCategory Categroy => _Categroy_IsSet ? (Perk.PerkCategory)_recordData.Span.Slice(_CategroyLocation, 0x1)[0] : default;
+        #endregion
+        #region SkillGroup
+        private int _SkillGroupLocation => _DATALocation!.Value.Min + 0x1;
+        private bool _SkillGroup_IsSet => _DATALocation.HasValue;
+        public Perk.PerkSkillGroup SkillGroup => _SkillGroup_IsSet ? (Perk.PerkSkillGroup)_recordData.Span.Slice(_SkillGroupLocation, 0x1)[0] : default;
+        #endregion
+        #region CrewAssignment
+        private int _CrewAssignmentLocation => _DATALocation!.Value.Min + 0x2;
+        private bool _CrewAssignment_IsSet => _DATALocation.HasValue;
+        public Perk.PerkCrewAssignment CrewAssignment => _CrewAssignment_IsSet ? (Perk.PerkCrewAssignment)_recordData.Span.Slice(_CrewAssignmentLocation, 0x1)[0] : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0x3;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Perk.Flag Flags => _Flags_IsSet ? (Perk.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region Restriction
+        private int? _RestrictionLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> Restriction => _RestrictionLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RestrictionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region PerkIcon
+        private int? _PerkIconLocation;
+        public AssetLinkGetter<StarfieldTextureAssetType>? PerkIcon => _PerkIconLocation.HasValue ? new AssetLinkGetter<StarfieldTextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkIconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : null;
+        #endregion
+        #region Training
+        private int? _TrainingLocation;
+        public IFormLinkNullableGetter<IPerkGetter> Training => _TrainingLocation.HasValue ? new FormLinkNullable<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrainingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPerkGetter>.Null;
+        #endregion
+        public IReadOnlyList<IPerkRankGetter> Ranks { get; private set; } = Array.Empty<IPerkRankGetter>();
+        public IReadOnlyList<IFormLinkGetter<IPerkGetter>> BackgroundSkills { get; private set; } = Array.Empty<IFormLinkGetter<IPerkGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2693,99 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Perk_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Description;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Perk_FieldIndex.Flags;
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _RestrictionLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Restriction;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _PerkIconLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.PerkIcon;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    _TrainingLocation = (stream.Position - offset);
+                    return (int)Perk_FieldIndex.Training;
+                }
+                case RecordTypeInts.PRRK:
+                case RecordTypeInts.PRRF:
+                {
+                    this.Ranks = this.ParseRepeatedTypelessSubrecord<IPerkRankGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        itemStartMarker: RecordTypes.PRRK,
+                        itemEndMarker: RecordTypes.PRRF,
+                        factory: PerkRankBinaryOverlay.PerkRankFactory);
+                    return (int)Perk_FieldIndex.Ranks;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    this.BackgroundSkills = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IPerkGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IPerkGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)Perk_FieldIndex.BackgroundSkills;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

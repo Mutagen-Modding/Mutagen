@@ -9,7 +9,6 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -40,48 +39,33 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ProgressionEvaluatorArgument :
-        IEquatable<IProgressionEvaluatorArgumentGetter>,
-        ILoquiObjectSetter<ProgressionEvaluatorArgument>,
-        IProgressionEvaluatorArgument
+    public partial class PerkCondition :
+        IEquatable<IPerkConditionGetter>,
+        ILoquiObjectSetter<PerkCondition>,
+        IPerkCondition
     {
         #region Ctor
-        public ProgressionEvaluatorArgument()
+        public PerkCondition()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Name
-        /// <summary>
-        /// Aspects: INamed, INamedRequired
-        /// </summary>
-        public String? Name { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IProgressionEvaluatorArgumentGetter.Name => this.Name;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
-        #endregion
+        #region RunOnTabIndex
+        public Byte RunOnTabIndex { get; set; } = default;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter>? IProgressionEvaluatorArgumentGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter> IPerkConditionGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -92,7 +76,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ProgressionEvaluatorArgumentMixIn.Print(
+            PerkConditionMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -103,16 +87,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IProgressionEvaluatorArgumentGetter rhs) return false;
-            return ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPerkConditionGetter rhs) return false;
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IProgressionEvaluatorArgumentGetter? obj)
+        public bool Equals(IPerkConditionGetter? obj)
         {
-            return ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -124,15 +108,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Name = initialValue;
+                this.RunOnTabIndex = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
             public Mask(
-                TItem Name,
+                TItem RunOnTabIndex,
                 TItem Conditions)
             {
-                this.Name = Name;
+                this.RunOnTabIndex = RunOnTabIndex;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
@@ -145,7 +129,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Name;
+            public TItem RunOnTabIndex;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
@@ -159,14 +143,14 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.RunOnTabIndex, rhs.RunOnTabIndex)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Name);
+                hash.Add(this.RunOnTabIndex);
                 hash.Add(this.Conditions);
                 return hash.ToHashCode();
             }
@@ -176,7 +160,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Name)) return false;
+                if (!eval(this.RunOnTabIndex)) return false;
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -196,7 +180,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Name)) return true;
+                if (eval(this.RunOnTabIndex)) return true;
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -216,14 +200,14 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ProgressionEvaluatorArgument.Mask<R>();
+                var ret = new PerkCondition.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Name = eval(this.Name);
+                obj.RunOnTabIndex = eval(this.RunOnTabIndex);
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -245,21 +229,21 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ProgressionEvaluatorArgument.Mask<bool>? printMask = null)
+            public string Print(PerkCondition.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ProgressionEvaluatorArgument.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PerkCondition.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ProgressionEvaluatorArgument.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PerkCondition.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Name ?? true)
+                    if (printMask?.RunOnTabIndex ?? true)
                     {
-                        sb.AppendItem(Name, "Name");
+                        sb.AppendItem(RunOnTabIndex, "RunOnTabIndex");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
@@ -304,19 +288,19 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Name;
+            public Exception? RunOnTabIndex;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ProgressionEvaluatorArgument_FieldIndex enu = (ProgressionEvaluatorArgument_FieldIndex)index;
+                PerkCondition_FieldIndex enu = (PerkCondition_FieldIndex)index;
                 switch (enu)
                 {
-                    case ProgressionEvaluatorArgument_FieldIndex.Name:
-                        return Name;
-                    case ProgressionEvaluatorArgument_FieldIndex.Conditions:
+                    case PerkCondition_FieldIndex.RunOnTabIndex:
+                        return RunOnTabIndex;
+                    case PerkCondition_FieldIndex.Conditions:
                         return Conditions;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -325,13 +309,13 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ProgressionEvaluatorArgument_FieldIndex enu = (ProgressionEvaluatorArgument_FieldIndex)index;
+                PerkCondition_FieldIndex enu = (PerkCondition_FieldIndex)index;
                 switch (enu)
                 {
-                    case ProgressionEvaluatorArgument_FieldIndex.Name:
-                        this.Name = ex;
+                    case PerkCondition_FieldIndex.RunOnTabIndex:
+                        this.RunOnTabIndex = ex;
                         break;
-                    case ProgressionEvaluatorArgument_FieldIndex.Conditions:
+                    case PerkCondition_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -341,13 +325,13 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ProgressionEvaluatorArgument_FieldIndex enu = (ProgressionEvaluatorArgument_FieldIndex)index;
+                PerkCondition_FieldIndex enu = (PerkCondition_FieldIndex)index;
                 switch (enu)
                 {
-                    case ProgressionEvaluatorArgument_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case PerkCondition_FieldIndex.RunOnTabIndex:
+                        this.RunOnTabIndex = (Exception?)obj;
                         break;
-                    case ProgressionEvaluatorArgument_FieldIndex.Conditions:
+                    case PerkCondition_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -358,7 +342,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Name != null) return true;
+                if (RunOnTabIndex != null) return true;
                 if (Conditions != null) return true;
                 return false;
             }
@@ -386,7 +370,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Name, "Name");
+                    sb.AppendItem(RunOnTabIndex, "RunOnTabIndex");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
@@ -414,7 +398,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Name = this.Name.Combine(rhs.Name);
+                ret.RunOnTabIndex = this.RunOnTabIndex.Combine(rhs.RunOnTabIndex);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
@@ -439,7 +423,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Name;
+            public bool RunOnTabIndex;
             public Condition.TranslationMask? Conditions;
             #endregion
 
@@ -450,7 +434,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Name = defaultOn;
+                this.RunOnTabIndex = defaultOn;
             }
 
             #endregion
@@ -466,7 +450,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Name, null));
+                ret.Add((RunOnTabIndex, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
@@ -479,31 +463,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProgressionEvaluatorArgumentCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ProgressionEvaluatorArgumentSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkConditionCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkConditionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ProgressionEvaluatorArgumentBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PerkConditionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ProgressionEvaluatorArgumentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ProgressionEvaluatorArgument CreateFromBinary(
+        public static PerkCondition CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ProgressionEvaluatorArgument();
-            ((ProgressionEvaluatorArgumentSetterCommon)((IProgressionEvaluatorArgumentGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PerkCondition();
+            ((PerkConditionSetterCommon)((IPerkConditionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -514,7 +498,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ProgressionEvaluatorArgument item,
+            out PerkCondition item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -529,39 +513,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ProgressionEvaluatorArgumentSetterCommon)((IProgressionEvaluatorArgumentGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PerkConditionSetterCommon)((IPerkConditionGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ProgressionEvaluatorArgument GetNew()
+        internal static PerkCondition GetNew()
         {
-            return new ProgressionEvaluatorArgument();
+            return new PerkCondition();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IProgressionEvaluatorArgument :
+    public partial interface IPerkCondition :
         IFormLinkContainer,
-        ILoquiObjectSetter<IProgressionEvaluatorArgument>,
-        INamed,
-        INamedRequired,
-        IProgressionEvaluatorArgumentGetter
+        ILoquiObjectSetter<IPerkCondition>,
+        IPerkConditionGetter
     {
-        /// <summary>
-        /// Aspects: INamed, INamedRequired
-        /// </summary>
-        new String? Name { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new Byte RunOnTabIndex { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
     }
 
-    public partial interface IProgressionEvaluatorArgumentGetter :
+    public partial interface IPerkConditionGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IProgressionEvaluatorArgumentGetter>,
-        INamedGetter,
-        INamedRequiredGetter
+        ILoquiObject<IPerkConditionGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -569,56 +546,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ProgressionEvaluatorArgument_Registration.Instance;
-        #region Name
-        /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
-        /// </summary>
-        String? Name { get; }
-        #endregion
-        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        static ILoquiRegistration StaticRegistration => PerkCondition_Registration.Instance;
+        Byte RunOnTabIndex { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ProgressionEvaluatorArgumentMixIn
+    public static partial class PerkConditionMixIn
     {
-        public static void Clear(this IProgressionEvaluatorArgument item)
+        public static void Clear(this IPerkCondition item)
         {
-            ((ProgressionEvaluatorArgumentSetterCommon)((IProgressionEvaluatorArgumentGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PerkConditionSetterCommon)((IPerkConditionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ProgressionEvaluatorArgument.Mask<bool> GetEqualsMask(
-            this IProgressionEvaluatorArgumentGetter item,
-            IProgressionEvaluatorArgumentGetter rhs,
+        public static PerkCondition.Mask<bool> GetEqualsMask(
+            this IPerkConditionGetter item,
+            IPerkConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IProgressionEvaluatorArgumentGetter item,
+            this IPerkConditionGetter item,
             string? name = null,
-            ProgressionEvaluatorArgument.Mask<bool>? printMask = null)
+            PerkCondition.Mask<bool>? printMask = null)
         {
-            return ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).Print(
+            return ((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IProgressionEvaluatorArgumentGetter item,
+            this IPerkConditionGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ProgressionEvaluatorArgument.Mask<bool>? printMask = null)
+            PerkCondition.Mask<bool>? printMask = null)
         {
-            ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).Print(
+            ((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -626,21 +598,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IProgressionEvaluatorArgumentGetter item,
-            IProgressionEvaluatorArgumentGetter rhs,
-            ProgressionEvaluatorArgument.TranslationMask? equalsMask = null)
+            this IPerkConditionGetter item,
+            IPerkConditionGetter rhs,
+            PerkCondition.TranslationMask? equalsMask = null)
         {
-            return ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).Equals(
+            return ((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IProgressionEvaluatorArgument lhs,
-            IProgressionEvaluatorArgumentGetter rhs)
+            this IPerkCondition lhs,
+            IPerkConditionGetter rhs)
         {
-            ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -649,11 +621,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IProgressionEvaluatorArgument lhs,
-            IProgressionEvaluatorArgumentGetter rhs,
-            ProgressionEvaluatorArgument.TranslationMask? copyMask = null)
+            this IPerkCondition lhs,
+            IPerkConditionGetter rhs,
+            PerkCondition.TranslationMask? copyMask = null)
         {
-            ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -662,28 +634,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IProgressionEvaluatorArgument lhs,
-            IProgressionEvaluatorArgumentGetter rhs,
-            out ProgressionEvaluatorArgument.ErrorMask errorMask,
-            ProgressionEvaluatorArgument.TranslationMask? copyMask = null)
+            this IPerkCondition lhs,
+            IPerkConditionGetter rhs,
+            out PerkCondition.ErrorMask errorMask,
+            PerkCondition.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ProgressionEvaluatorArgument.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkCondition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IProgressionEvaluatorArgument lhs,
-            IProgressionEvaluatorArgumentGetter rhs,
+            this IPerkCondition lhs,
+            IPerkConditionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -691,32 +663,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ProgressionEvaluatorArgument DeepCopy(
-            this IProgressionEvaluatorArgumentGetter item,
-            ProgressionEvaluatorArgument.TranslationMask? copyMask = null)
+        public static PerkCondition DeepCopy(
+            this IPerkConditionGetter item,
+            PerkCondition.TranslationMask? copyMask = null)
         {
-            return ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ProgressionEvaluatorArgument DeepCopy(
-            this IProgressionEvaluatorArgumentGetter item,
-            out ProgressionEvaluatorArgument.ErrorMask errorMask,
-            ProgressionEvaluatorArgument.TranslationMask? copyMask = null)
+        public static PerkCondition DeepCopy(
+            this IPerkConditionGetter item,
+            out PerkCondition.ErrorMask errorMask,
+            PerkCondition.TranslationMask? copyMask = null)
         {
-            return ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ProgressionEvaluatorArgument DeepCopy(
-            this IProgressionEvaluatorArgumentGetter item,
+        public static PerkCondition DeepCopy(
+            this IPerkConditionGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -724,11 +696,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IProgressionEvaluatorArgument item,
+            this IPerkCondition item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ProgressionEvaluatorArgumentSetterCommon)((IProgressionEvaluatorArgumentGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PerkConditionSetterCommon)((IPerkConditionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -744,17 +716,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ProgressionEvaluatorArgument_FieldIndex
+    internal enum PerkCondition_FieldIndex
     {
-        Name = 0,
+        RunOnTabIndex = 0,
         Conditions = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class ProgressionEvaluatorArgument_Registration : ILoquiRegistration
+    internal partial class PerkCondition_Registration : ILoquiRegistration
     {
-        public static readonly ProgressionEvaluatorArgument_Registration Instance = new ProgressionEvaluatorArgument_Registration();
+        public static readonly PerkCondition_Registration Instance = new PerkCondition_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -762,23 +734,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ProgressionEvaluatorArgument.Mask<>);
+        public static readonly Type MaskType = typeof(PerkCondition.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ProgressionEvaluatorArgument.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PerkCondition.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ProgressionEvaluatorArgument);
+        public static readonly Type ClassType = typeof(PerkCondition);
 
-        public static readonly Type GetterType = typeof(IProgressionEvaluatorArgumentGetter);
+        public static readonly Type GetterType = typeof(IPerkConditionGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IProgressionEvaluatorArgument);
+        public static readonly Type SetterType = typeof(IPerkCondition);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ProgressionEvaluatorArgument";
+        public const string FullName = "Mutagen.Bethesda.Starfield.PerkCondition";
 
-        public const string Name = "ProgressionEvaluatorArgument";
+        public const string Name = "PerkCondition";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -786,22 +758,20 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.PRKC;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.DNAM,
-                RecordTypes.CTDA,
-                RecordTypes.CITC);
+            var triggers = RecordCollection.Factory(RecordTypes.PRKC);
             var all = RecordCollection.Factory(
-                RecordTypes.DNAM,
+                RecordTypes.PRKC,
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ProgressionEvaluatorArgumentBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PerkConditionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -832,30 +802,30 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ProgressionEvaluatorArgumentSetterCommon
+    internal partial class PerkConditionSetterCommon
     {
-        public static readonly ProgressionEvaluatorArgumentSetterCommon Instance = new ProgressionEvaluatorArgumentSetterCommon();
+        public static readonly PerkConditionSetterCommon Instance = new PerkConditionSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IProgressionEvaluatorArgument item)
+        public void Clear(IPerkCondition item)
         {
             ClearPartial();
-            item.Name = default;
-            item.Conditions = null;
+            item.RunOnTabIndex = default;
+            item.Conditions.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IProgressionEvaluatorArgument obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPerkCondition obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Conditions?.RemapLinks(mapping);
+            obj.Conditions.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IProgressionEvaluatorArgument item,
+            IPerkCondition item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -863,23 +833,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: ProgressionEvaluatorArgumentBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: PerkConditionBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class ProgressionEvaluatorArgumentCommon
+    internal partial class PerkConditionCommon
     {
-        public static readonly ProgressionEvaluatorArgumentCommon Instance = new ProgressionEvaluatorArgumentCommon();
+        public static readonly PerkConditionCommon Instance = new PerkConditionCommon();
 
-        public ProgressionEvaluatorArgument.Mask<bool> GetEqualsMask(
-            IProgressionEvaluatorArgumentGetter item,
-            IProgressionEvaluatorArgumentGetter rhs,
+        public PerkCondition.Mask<bool> GetEqualsMask(
+            IPerkConditionGetter item,
+            IPerkConditionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ProgressionEvaluatorArgument.Mask<bool>(false);
-            ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PerkCondition.Mask<bool>(false);
+            ((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -888,12 +858,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IProgressionEvaluatorArgumentGetter item,
-            IProgressionEvaluatorArgumentGetter rhs,
-            ProgressionEvaluatorArgument.Mask<bool> ret,
+            IPerkConditionGetter item,
+            IPerkConditionGetter rhs,
+            PerkCondition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.RunOnTabIndex = item.RunOnTabIndex == rhs.RunOnTabIndex;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -901,9 +871,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IProgressionEvaluatorArgumentGetter item,
+            IPerkConditionGetter item,
             string? name = null,
-            ProgressionEvaluatorArgument.Mask<bool>? printMask = null)
+            PerkCondition.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -915,18 +885,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IProgressionEvaluatorArgumentGetter item,
+            IPerkConditionGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ProgressionEvaluatorArgument.Mask<bool>? printMask = null)
+            PerkCondition.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ProgressionEvaluatorArgument =>");
+                sb.AppendLine($"PerkCondition =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ProgressionEvaluatorArgument) =>");
+                sb.AppendLine($"{name} (PerkCondition) =>");
             }
             using (sb.Brace())
             {
@@ -938,22 +908,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IProgressionEvaluatorArgumentGetter item,
+            IPerkConditionGetter item,
             StructuredStringBuilder sb,
-            ProgressionEvaluatorArgument.Mask<bool>? printMask = null)
+            PerkCondition.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Name ?? true)
-                && item.Name is {} NameItem)
+            if (printMask?.RunOnTabIndex ?? true)
             {
-                sb.AppendItem(NameItem, "Name");
+                sb.AppendItem(item.RunOnTabIndex, "RunOnTabIndex");
             }
-            if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions is {} ConditionsItem)
+            if (printMask?.Conditions?.Overall ?? true)
             {
                 sb.AppendLine("Conditions =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ConditionsItem)
+                    foreach (var subItem in item.Conditions)
                     {
                         using (sb.Brace())
                         {
@@ -966,29 +934,26 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IProgressionEvaluatorArgumentGetter? lhs,
-            IProgressionEvaluatorArgumentGetter? rhs,
+            IPerkConditionGetter? lhs,
+            IPerkConditionGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ProgressionEvaluatorArgument_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkCondition_FieldIndex.RunOnTabIndex) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (lhs.RunOnTabIndex != rhs.RunOnTabIndex) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ProgressionEvaluatorArgument_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkCondition_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ProgressionEvaluatorArgument_FieldIndex.Conditions)))) return false;
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PerkCondition_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IProgressionEvaluatorArgumentGetter item)
+        public virtual int GetHashCode(IPerkConditionGetter item)
         {
             var hash = new HashCode();
-            if (item.Name is {} Nameitem)
-            {
-                hash.Add(Nameitem);
-            }
+            hash.Add(item.RunOnTabIndex);
             hash.Add(item.Conditions);
             return hash.ToHashCode();
         }
@@ -998,18 +963,15 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ProgressionEvaluatorArgument.GetNew();
+            return PerkCondition.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IProgressionEvaluatorArgumentGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkConditionGetter obj)
         {
-            if (obj.Conditions is {} ConditionsItem)
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
             {
-                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks()))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1017,43 +979,35 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ProgressionEvaluatorArgumentSetterTranslationCommon
+    internal partial class PerkConditionSetterTranslationCommon
     {
-        public static readonly ProgressionEvaluatorArgumentSetterTranslationCommon Instance = new ProgressionEvaluatorArgumentSetterTranslationCommon();
+        public static readonly PerkConditionSetterTranslationCommon Instance = new PerkConditionSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IProgressionEvaluatorArgument item,
-            IProgressionEvaluatorArgumentGetter rhs,
+            IPerkCondition item,
+            IPerkConditionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ProgressionEvaluatorArgument_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkCondition_FieldIndex.RunOnTabIndex) ?? true))
             {
-                item.Name = rhs.Name;
+                item.RunOnTabIndex = rhs.RunOnTabIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)ProgressionEvaluatorArgument_FieldIndex.Conditions) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkCondition_FieldIndex.Conditions) ?? true))
             {
-                errorMask?.PushIndex((int)ProgressionEvaluatorArgument_FieldIndex.Conditions);
+                errorMask?.PushIndex((int)PerkCondition_FieldIndex.Conditions);
                 try
                 {
-                    if ((rhs.Conditions != null))
-                    {
-                        item.Conditions = 
-                            rhs.Conditions
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<Condition>();
-                    }
-                    else
-                    {
-                        item.Conditions = null;
-                    }
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1069,12 +1023,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public ProgressionEvaluatorArgument DeepCopy(
-            IProgressionEvaluatorArgumentGetter item,
-            ProgressionEvaluatorArgument.TranslationMask? copyMask = null)
+        public PerkCondition DeepCopy(
+            IPerkConditionGetter item,
+            PerkCondition.TranslationMask? copyMask = null)
         {
-            ProgressionEvaluatorArgument ret = (ProgressionEvaluatorArgument)((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).GetNew();
-            ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkCondition ret = (PerkCondition)((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).GetNew();
+            ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1083,30 +1037,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ProgressionEvaluatorArgument DeepCopy(
-            IProgressionEvaluatorArgumentGetter item,
-            out ProgressionEvaluatorArgument.ErrorMask errorMask,
-            ProgressionEvaluatorArgument.TranslationMask? copyMask = null)
+        public PerkCondition DeepCopy(
+            IPerkConditionGetter item,
+            out PerkCondition.ErrorMask errorMask,
+            PerkCondition.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ProgressionEvaluatorArgument ret = (ProgressionEvaluatorArgument)((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).GetNew();
-            ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkCondition ret = (PerkCondition)((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).GetNew();
+            ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ProgressionEvaluatorArgument.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkCondition.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ProgressionEvaluatorArgument DeepCopy(
-            IProgressionEvaluatorArgumentGetter item,
+        public PerkCondition DeepCopy(
+            IPerkConditionGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ProgressionEvaluatorArgument ret = (ProgressionEvaluatorArgument)((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)item).CommonInstance()!).GetNew();
-            ((ProgressionEvaluatorArgumentSetterTranslationCommon)((IProgressionEvaluatorArgumentGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkCondition ret = (PerkCondition)((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).GetNew();
+            ((PerkConditionSetterTranslationCommon)((IPerkConditionGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1122,27 +1076,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ProgressionEvaluatorArgument
+    public partial class PerkCondition
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ProgressionEvaluatorArgument_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ProgressionEvaluatorArgument_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkCondition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkCondition_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ProgressionEvaluatorArgumentCommon.Instance;
+        protected object CommonInstance() => PerkConditionCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ProgressionEvaluatorArgumentSetterCommon.Instance;
+            return PerkConditionSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ProgressionEvaluatorArgumentSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PerkConditionSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IProgressionEvaluatorArgumentGetter.CommonInstance() => this.CommonInstance();
+        object IPerkConditionGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IProgressionEvaluatorArgumentGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPerkConditionGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IProgressionEvaluatorArgumentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPerkConditionGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1153,25 +1107,22 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ProgressionEvaluatorArgumentBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class PerkConditionBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ProgressionEvaluatorArgumentBinaryWriteTranslation Instance = new();
+        public static readonly PerkConditionBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IProgressionEvaluatorArgumentGetter item,
+            IPerkConditionGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.WriteNullable(
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Name,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
+                item: item.RunOnTabIndex,
+                header: translationParams.ConvertToCustom(RecordTypes.PRKC));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
-                counterType: RecordTypes.CITC,
-                counterLength: 4,
                 transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -1184,7 +1135,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IProgressionEvaluatorArgumentGetter item,
+            IPerkConditionGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1199,19 +1150,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IProgressionEvaluatorArgumentGetter)item,
+                item: (IPerkConditionGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ProgressionEvaluatorArgumentBinaryCreateTranslation
+    internal partial class PerkConditionBinaryCreateTranslation
     {
-        public static readonly ProgressionEvaluatorArgumentBinaryCreateTranslation Instance = new ProgressionEvaluatorArgumentBinaryCreateTranslation();
+        public static readonly PerkConditionBinaryCreateTranslation Instance = new PerkConditionBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IProgressionEvaluatorArgument item,
+            IPerkCondition item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1222,29 +1173,22 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.DNAM:
+                case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.ShortCircuit((int)ProgressionEvaluatorArgument_FieldIndex.Name, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PerkCondition_FieldIndex.RunOnTabIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ProgressionEvaluatorArgument_FieldIndex.Name;
+                    item.RunOnTabIndex = frame.ReadUInt8();
+                    return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }
                 case RecordTypeInts.CTDA:
-                case RecordTypeInts.CITC:
                 {
-                    if (lastParsed.ShortCircuit((int)ProgressionEvaluatorArgument_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
-                    item.Conditions = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             reader: frame,
-                            countLengthLength: 4,
-                            countRecord: RecordTypes.CITC,
                             triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: Condition.TryCreateFromBinary)
-                        .CastExtendedList<Condition>();
-                    return (int)ProgressionEvaluatorArgument_FieldIndex.Conditions;
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)PerkCondition_FieldIndex.Conditions;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1257,14 +1201,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ProgressionEvaluatorArgumentBinaryTranslationMixIn
+    public static class PerkConditionBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IProgressionEvaluatorArgumentGetter item,
+            this IPerkConditionGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ProgressionEvaluatorArgumentBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((PerkConditionBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1277,60 +1221,56 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ProgressionEvaluatorArgumentBinaryOverlay :
+    internal partial class PerkConditionBinaryOverlay :
         PluginBinaryOverlay,
-        IProgressionEvaluatorArgumentGetter
+        IPerkConditionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ProgressionEvaluatorArgument_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ProgressionEvaluatorArgument_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkCondition_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkCondition_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ProgressionEvaluatorArgumentCommon.Instance;
+        protected object CommonInstance() => PerkConditionCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ProgressionEvaluatorArgumentSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PerkConditionSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IProgressionEvaluatorArgumentGetter.CommonInstance() => this.CommonInstance();
+        object IPerkConditionGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IProgressionEvaluatorArgumentGetter.CommonSetterInstance() => null;
+        object? IPerkConditionGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IProgressionEvaluatorArgumentGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPerkConditionGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ProgressionEvaluatorArgumentCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PerkConditionCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ProgressionEvaluatorArgumentBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PerkConditionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ProgressionEvaluatorArgumentBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkConditionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region Name
-        private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #region RunOnTabIndex
+        private int? _RunOnTabIndexLocation;
+        public Byte RunOnTabIndex => _RunOnTabIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RunOnTabIndexLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
-        #endregion
-        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ProgressionEvaluatorArgumentBinaryOverlay(
+        protected PerkConditionBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1340,7 +1280,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IProgressionEvaluatorArgumentGetter ProgressionEvaluatorArgumentFactory(
+        public static IPerkConditionGetter PerkConditionFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1352,7 +1292,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ProgressionEvaluatorArgumentBinaryOverlay(
+            var ret = new PerkConditionBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1364,12 +1304,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IProgressionEvaluatorArgumentGetter ProgressionEvaluatorArgumentFactory(
+        public static IPerkConditionGetter PerkConditionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ProgressionEvaluatorArgumentFactory(
+            return PerkConditionFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1387,26 +1327,26 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.DNAM:
+                case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.ShortCircuit((int)ProgressionEvaluatorArgument_FieldIndex.Name, translationParams)) return ParseResult.Stop;
-                    _NameLocation = (stream.Position - offset);
-                    return (int)ProgressionEvaluatorArgument_FieldIndex.Name;
+                    if (lastParsed.ShortCircuit((int)PerkCondition_FieldIndex.RunOnTabIndex, translationParams)) return ParseResult.Stop;
+                    _RunOnTabIndexLocation = (stream.Position - offset);
+                    return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }
                 case RecordTypeInts.CTDA:
-                case RecordTypeInts.CITC:
                 {
-                    if (lastParsed.ShortCircuit((int)ProgressionEvaluatorArgument_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
-                        stream: stream,
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
                         package: _package,
-                        countLength: 4,
-                        trigger: Condition_Registration.TriggerSpecs,
-                        countType: RecordTypes.CITC,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
-                    return (int)ProgressionEvaluatorArgument_FieldIndex.Conditions;
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)PerkCondition_FieldIndex.Conditions;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1418,7 +1358,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ProgressionEvaluatorArgumentMixIn.Print(
+            PerkConditionMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1429,16 +1369,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IProgressionEvaluatorArgumentGetter rhs) return false;
-            return ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPerkConditionGetter rhs) return false;
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IProgressionEvaluatorArgumentGetter? obj)
+        public bool Equals(IPerkConditionGetter? obj)
         {
-            return ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ProgressionEvaluatorArgumentCommon)((IProgressionEvaluatorArgumentGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

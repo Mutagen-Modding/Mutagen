@@ -125,6 +125,7 @@
     <Compile Include="Assets\StarfieldMaterialAssetType.cs" />
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
     <Compile Include="Assets\StarfieldRigAssetType.cs" />
+    <Compile Include="Assets\StarfieldTextureAssetType.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Axis.cs" />
     <Compile Include="Enums\BipedObject.cs" />
@@ -1981,6 +1982,12 @@
     <Compile Include="Records\Major Records\AnimatedObject.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\APerkEffect.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEntryPointEffect.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -2037,6 +2044,27 @@
     </Compile>
     <Compile Include="Records\Major Records\ObjectModification.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Perk.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAdapter.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAddActivateChoice.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyValue.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkRank.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFragments.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Planet.cs">
       <DependentUpon>Planet.xml</DependentUpon>
@@ -5134,6 +5162,66 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\FirstPersonModel_Generated.cs">
       <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAdapter_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFragments_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkScriptFragment_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkRank_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkCondition_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkQuestEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkAbilityEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APerkEntryPointEffect_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyValues_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAddRangeToValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAbsoluteValue_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAddLeveledItem_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointAddActivateChoice_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointSelectSpell_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointSelectText_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointSetText_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointLegendaryMagicEffectEvent_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -1040,6 +1040,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XALG,
                 RecordTypes.NNAM,
                 RecordTypes.ECHO,
+                RecordTypes.ECHE,
                 RecordTypes.ECTE,
                 RecordTypes.ECSH,
                 RecordTypes.ANAM,
@@ -1047,8 +1048,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CNAM,
                 RecordTypes.DNAM,
                 RecordTypes.ENAM,
-                RecordTypes.ECHD,
-                RecordTypes.ECHE);
+                RecordTypes.ECHD);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SoundEchoMarkerBinaryWriteTranslation);
@@ -1924,6 +1924,7 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)SoundEchoMarker_FieldIndex.Description;
                 }
                 case RecordTypeInts.ECHO:
+                case RecordTypeInts.ECHE:
                 {
                     item.Markers.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EchoMarker>.Instance.Parse(
@@ -2111,6 +2112,7 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)SoundEchoMarker_FieldIndex.Description;
                 }
                 case RecordTypeInts.ECHO:
+                case RecordTypeInts.ECHE:
                 {
                     this.Markers = this.ParseRepeatedTypelessSubrecord<IEchoMarkerGetter>(
                         stream: stream,

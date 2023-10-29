@@ -1,7 +1,153 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Perk" recordType="PERK" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Perk" recordType="PERK" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="PerkAdapter" recordType="VMAD" overflowRecordType="XXXX" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <Data>
+        <Fields>
+          <Enum name="Categroy" enumName="Perk.PerkCategory" byteLength="1" />
+          <Enum name="SkillGroup" enumName="Perk.PerkSkillGroup" byteLength="1" />
+          <Enum name="CrewAssignment" enumName="Perk.PerkCrewAssignment" byteLength="1" />
+          <Enum name="Flags" enumName="Perk.Flag" byteLength="1" />
+        </Fields>
+      </Data>
+      <FormLink name="Restriction" refName="Keyword" recordType="TNAM" />
+      <AssetLink name="PerkIcon" recordType="GNAM" assetType="StarfieldTexture" />
+      <FormLink name="Training" refName="Perk" recordType="UNAM" />
+      <RefList name="Ranks" refName="PerkRank" itemMarkerType="PRRK" itemEndMarkerType="PRRF" />
+      <List name="BackgroundSkills" >
+        <FormLink refName="Perk" recordType="RNAM" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="PerkAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="PerkScriptFragments" binary="Custom" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PerkScriptFragments" objType="Subrecord">
+    <Fields>
+      <UInt8 name="ExtraBindDataVersion" default="2" binary="NoGeneration" />
+      <RefDirect name="Script" refName="ScriptEntry" binary="NoGeneration" />
+      <RefList name="Fragments" refName="PerkScriptFragment" counterLength="2" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PerkScriptFragment" objType="Subrecord">
+    <Fields>
+      <UInt16 name="Index" />
+      <Int16 name="Unknown" />
+      <Int8 name="Unknown2" />
+      <String name="ScriptName" binaryType="PrependLengthUShort" />
+      <String name="FragmentName" binaryType="PrependLengthUShort" />
+    </Fields>
+  </Object>
+  <Object name="PerkRank" objType="Subrecord" >
+    <Fields>
+      <RefList name="Effects" refName="APerkEffect" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefList name="Activities" refName="Activity" counterRecType="ATCP" />
+      <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="APerkEffect" objType="Subrecord" abstract="true" endMarkerType="PRKF" >
+    <Fields>
+      <Data recordType="PRKE">
+        <Fields>
+          <UInt8 name="Rank" binary="NoGeneration" />
+          <UInt8 name="Priority" binary="NoGeneration" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="PerkCondition" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PerkQuestEffect" objType="Subrecord" baseClass="APerkEffect">
+    <Fields>
+      <FormLink name="Quest" refName="Quest" />
+      <UInt16 name="Stage" />
+    </Fields>
+  </Object>
+  <Object name="PerkAbilityEffect" objType="Subrecord" baseClass="APerkEffect">
+    <Fields>
+      <FormLink name="Ability" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="APerkEntryPointEffect" objType="Subrecord" abstract="true" baseClass="APerkEffect">
+    <Fields>
+      <Enum name="EntryPoint" enumName="APerkEntryPointEffect.EntryType" byteLength="1" />
+      <UInt8 name="PerkConditionTabCount" />
+      <UInt16 name="PerkEntryID" recordType="EPFB" />
+      <CustomLogic name="FunctionParameters" recordType="EPFT" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointModifyValue" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <Enum name="Modification" enumName="PerkEntryPointModifyValue.ModificationType" />
+      <Float name="Value" recordType="EPFD" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointModifyValues" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <Enum name="Modification" enumName="PerkEntryPointModifyValue.ModificationType" />
+      <Float name="Value" nullable="True" />
+      <Float name="Value2" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointAddRangeToValue" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <Float name="From" />
+      <Float name="To" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointModifyActorValue" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <FormLink name="ActorValue" refName="ActorValueInformation" />
+      <Float name="Value" />
+      <Enum name="Modification" enumName="PerkEntryPointModifyActorValue.ModificationType" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointAbsoluteValue" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <Bool name="Negative" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointAddLeveledItem" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <FormLink name="Item" refName="LeveledItem" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointAddActivateChoice" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" nullable="True" />
+      <String name="ButtonLabel" translated="Normal" recordType="EPF2" nullable="True" />
+      <Enum name="Flags" enumName="PerkEntryPointAddActivateChoice.Flag" recordType="EPF3" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointSelectSpell" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointSelectText" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <String name="Text" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointSetText" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <String name="Text" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointLegendaryMagicEffectEvent" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" />
+    </Fields>
+  </Object>
+  <Object name="PerkCondition" objType="Subrecord">
+    <Fields>
+      <UInt8 name="RunOnTabIndex" nullable="False" recordType="PRKC" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>
