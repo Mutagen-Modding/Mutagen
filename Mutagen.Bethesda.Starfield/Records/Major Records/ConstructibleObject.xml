@@ -28,6 +28,7 @@
       </List>
       <UInt64 name="RECF" recordType="RECF" unknown="true" />
     </Fields>
+    <LinkInterface>IResourceTarget</LinkInterface>
   </Object>
   <Object name="ConstructibleObjectComponent" objType="Subrecord">
     <Fields>

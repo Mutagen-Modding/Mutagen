@@ -368,6 +368,7 @@ public partial class RecordTypeInts
     public const int TEMP = 0x504D4554;
     public const int TERM = 0x4D524554;
     public const int TES4 = 0x34534554;
+    public const int TINC = 0x434E4954;
     public const int TMLM = 0x4D4C4D54;
     public const int TMVT = 0x54564D54;
     public const int TNAM = 0x4D414E54;

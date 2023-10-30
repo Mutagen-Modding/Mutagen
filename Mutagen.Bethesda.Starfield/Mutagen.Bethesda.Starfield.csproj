@@ -2075,6 +2075,9 @@
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Resource.cs">
+      <DependentUpon>Resource.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
@@ -5229,5 +5232,6 @@
     <Compile Include="Records\Common Subrecords\ItemResource_Generated.cs">
       <DependentUpon>ItemComponent.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IResourceTarget_Generated.cs" />
   </ItemGroup>
 </Project>

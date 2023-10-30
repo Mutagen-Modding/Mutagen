@@ -1546,6 +1546,7 @@ namespace Mutagen.Bethesda.Starfield
         IModeled,
         IObjectBounded,
         IOutfitTarget,
+        IResourceTarget,
         IScripted,
         IStarfieldMajorRecordInternal
     {
@@ -1598,6 +1599,7 @@ namespace Mutagen.Bethesda.Starfield
         IModeledGetter,
         IObjectBoundedGetter,
         IOutfitTargetGetter,
+        IResourceTargetGetter,
         IScriptedGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledItem_Registration.Instance;

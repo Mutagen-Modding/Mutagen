@@ -69,6 +69,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IRelatable
 - Faction
 - Race
+### IResourceTarget
+- ConstructibleObject
+- LeveledItem
 ### ISpellRecord
 - Spell
 ### IStaticTarget
@@ -107,6 +110,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Book
 - IItem
 - IStaticTarget
+### ConstructibleObject
+- IResourceTarget
 ### Container
 - IConstructibleObjectTarget
 - IItem
@@ -142,6 +147,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### LeveledItem
 - IItem
 - IOutfitTarget
+- IResourceTarget
 ### LocationReferenceType
 - ILocationRecord
 ### MiscItem

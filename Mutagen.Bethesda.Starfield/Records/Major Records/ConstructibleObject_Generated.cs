@@ -1534,6 +1534,7 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleObjectGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
+        IResourceTarget,
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<AComponent> Components { get; }
@@ -1571,7 +1572,8 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IConstructibleObjectGetter>,
-        IMapsToGetter<IConstructibleObjectGetter>
+        IMapsToGetter<IConstructibleObjectGetter>,
+        IResourceTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }

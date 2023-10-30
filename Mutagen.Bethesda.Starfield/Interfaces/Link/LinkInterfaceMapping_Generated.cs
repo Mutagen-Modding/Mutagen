@@ -84,6 +84,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             LeveledItem_Registration.Instance,
         });
         dict[typeof(IOutfitTargetGetter)] = dict[typeof(IOutfitTarget)] with { Setter = false };
+        dict[typeof(IResourceTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            ConstructibleObject_Registration.Instance,
+            LeveledItem_Registration.Instance,
+        });
+        dict[typeof(IResourceTargetGetter)] = dict[typeof(IResourceTarget)] with { Setter = false };
         dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Faction_Registration.Instance,

@@ -370,6 +370,7 @@ public partial class RecordTypes
     public static readonly RecordType TEMP = new(0x504D4554);
     public static readonly RecordType TERM = new(0x4D524554);
     public static readonly RecordType TES4 = new(0x34534554);
+    public static readonly RecordType TINC = new(0x434E4954);
     public static readonly RecordType TMLM = new(0x4D4C4D54);
     public static readonly RecordType TMVT = new(0x54564D54);
     public static readonly RecordType TNAM = new(0x4D414E54);

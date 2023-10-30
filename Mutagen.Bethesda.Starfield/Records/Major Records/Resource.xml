@@ -2,6 +2,24 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Resource" recordType="IRES" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <RefDirect name="CraftingSound" recordType="CUSH" refName="SoundReference" />
+      <FormLink name="List" refName="LeveledItem" recordType="FNAM" />
+      <Enum name="Rarity" enumName="Resource.RarityEnum" recordType="SNAM" />
+      <List name="NextRarities" >
+        <FormLink refName="Resource" recordType="CNAM" />
+      </List>
+      <Color name="SurfaceColor" recordType="TINC" />
+      <String name="ShortName" recordType="NNAM" translated="Normal" />
+      <String name="ResourceType" recordType="GNAM" />
+      <FormLink name="ActorValue" refName="ActorValueInformation" recordType="NAM1" />
+      <FormLink name="Produce" recordType="NAM2" >
+        <Interface>IResourceTarget</Interface>
+      </FormLink>
+      <FormLink name="Interval" refName="Global" recordType="NAM3" />
     </Fields>
   </Object>
 </Loqui>

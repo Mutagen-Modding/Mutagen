@@ -20,6 +20,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - ObjectTemplate
 - Race
+- Resource
 - SoundMarker
 - Spell
 - Weapon
@@ -60,6 +61,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Planet
 - ProgressionEvaluatorArgument
 - Race
+- Resource
 - ScriptBoolListProperty
 - ScriptBoolProperty
 - ScriptEntry
@@ -193,6 +195,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ProjectedDecal
 - IObjectBounded
 ### Race
+- IKeyworded
+- INamed
+### Resource
 - IKeyworded
 - INamed
 ### ScriptBoolListProperty

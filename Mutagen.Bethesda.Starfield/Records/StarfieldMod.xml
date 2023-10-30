@@ -50,6 +50,7 @@
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="MiscItems" refName="MiscItem" />
+      <Group name="Resources" refName="Resource" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>

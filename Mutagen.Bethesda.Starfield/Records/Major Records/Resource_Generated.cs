@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +25,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -32,6 +35,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -54,6 +58,148 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IResourceGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IResourceGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region CraftingSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _CraftingSound;
+        public SoundReference? CraftingSound
+        {
+            get => _CraftingSound;
+            set => _CraftingSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IResourceGetter.CraftingSound => this.CraftingSound;
+        #endregion
+        #region List
+        private readonly IFormLinkNullable<ILeveledItemGetter> _List = new FormLinkNullable<ILeveledItemGetter>();
+        public IFormLinkNullable<ILeveledItemGetter> List
+        {
+            get => _List;
+            set => _List.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILeveledItemGetter> IResourceGetter.List => this.List;
+        #endregion
+        #region Rarity
+        public Resource.RarityEnum? Rarity { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Resource.RarityEnum? IResourceGetter.Rarity => this.Rarity;
+        #endregion
+        #region NextRarities
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IResourceGetter>> _NextRarities = new ExtendedList<IFormLinkGetter<IResourceGetter>>();
+        public ExtendedList<IFormLinkGetter<IResourceGetter>> NextRarities
+        {
+            get => this._NextRarities;
+            init => this._NextRarities = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IResourceGetter>> IResourceGetter.NextRarities => _NextRarities;
+        #endregion
+
+        #endregion
+        #region SurfaceColor
+        public Color? SurfaceColor { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? IResourceGetter.SurfaceColor => this.SurfaceColor;
+        #endregion
+        #region ShortName
+        public TranslatedString? ShortName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IResourceGetter.ShortName => this.ShortName;
+        #endregion
+        #region ResourceType
+        public String? ResourceType { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IResourceGetter.ResourceType => this.ResourceType;
+        #endregion
+        #region ActorValue
+        private readonly IFormLinkNullable<IActorValueInformationGetter> _ActorValue = new FormLinkNullable<IActorValueInformationGetter>();
+        public IFormLinkNullable<IActorValueInformationGetter> ActorValue
+        {
+            get => _ActorValue;
+            set => _ActorValue.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IActorValueInformationGetter> IResourceGetter.ActorValue => this.ActorValue;
+        #endregion
+        #region Produce
+        private readonly IFormLinkNullable<IResourceTargetGetter> _Produce = new FormLinkNullable<IResourceTargetGetter>();
+        public IFormLinkNullable<IResourceTargetGetter> Produce
+        {
+            get => _Produce;
+            set => _Produce.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IResourceTargetGetter> IResourceGetter.Produce => this.Produce;
+        #endregion
+        #region Interval
+        private readonly IFormLinkNullable<IGlobalGetter> _Interval = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> Interval
+        {
+            get => _Interval;
+            set => _Interval.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IResourceGetter.Interval => this.Interval;
+        #endregion
 
         #region To String
 
@@ -79,6 +225,18 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.List = initialValue;
+                this.Rarity = initialValue;
+                this.NextRarities = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfaceColor = initialValue;
+                this.ShortName = initialValue;
+                this.ResourceType = initialValue;
+                this.ActorValue = initialValue;
+                this.Produce = initialValue;
+                this.Interval = initialValue;
             }
 
             public Mask(
@@ -88,7 +246,19 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Name,
+                TItem Keywords,
+                TItem CraftingSound,
+                TItem List,
+                TItem Rarity,
+                TItem NextRarities,
+                TItem SurfaceColor,
+                TItem ShortName,
+                TItem ResourceType,
+                TItem ActorValue,
+                TItem Produce,
+                TItem Interval)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +268,18 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Name = Name;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
+                this.List = List;
+                this.Rarity = Rarity;
+                this.NextRarities = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NextRarities, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SurfaceColor = SurfaceColor;
+                this.ShortName = ShortName;
+                this.ResourceType = ResourceType;
+                this.ActorValue = ActorValue;
+                this.Produce = Produce;
+                this.Interval = Interval;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +288,21 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? CraftingSound { get; set; }
+            public TItem List;
+            public TItem Rarity;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? NextRarities;
+            public TItem SurfaceColor;
+            public TItem ShortName;
+            public TItem ResourceType;
+            public TItem ActorValue;
+            public TItem Produce;
+            public TItem Interval;
             #endregion
 
             #region Equals
@@ -119,11 +316,35 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
+                if (!object.Equals(this.List, rhs.List)) return false;
+                if (!object.Equals(this.Rarity, rhs.Rarity)) return false;
+                if (!object.Equals(this.NextRarities, rhs.NextRarities)) return false;
+                if (!object.Equals(this.SurfaceColor, rhs.SurfaceColor)) return false;
+                if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
+                if (!object.Equals(this.ResourceType, rhs.ResourceType)) return false;
+                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
+                if (!object.Equals(this.Produce, rhs.Produce)) return false;
+                if (!object.Equals(this.Interval, rhs.Interval)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Keywords);
+                hash.Add(this.CraftingSound);
+                hash.Add(this.List);
+                hash.Add(this.Rarity);
+                hash.Add(this.NextRarities);
+                hash.Add(this.SurfaceColor);
+                hash.Add(this.ShortName);
+                hash.Add(this.ResourceType);
+                hash.Add(this.ActorValue);
+                hash.Add(this.Produce);
+                hash.Add(this.Interval);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +355,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (CraftingSound != null)
+                {
+                    if (!eval(this.CraftingSound.Overall)) return false;
+                    if (this.CraftingSound.Specific != null && !this.CraftingSound.Specific.All(eval)) return false;
+                }
+                if (!eval(this.List)) return false;
+                if (!eval(this.Rarity)) return false;
+                if (this.NextRarities != null)
+                {
+                    if (!eval(this.NextRarities.Overall)) return false;
+                    if (this.NextRarities.Specific != null)
+                    {
+                        foreach (var item in this.NextRarities.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.SurfaceColor)) return false;
+                if (!eval(this.ShortName)) return false;
+                if (!eval(this.ResourceType)) return false;
+                if (!eval(this.ActorValue)) return false;
+                if (!eval(this.Produce)) return false;
+                if (!eval(this.Interval)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +399,42 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (CraftingSound != null)
+                {
+                    if (eval(this.CraftingSound.Overall)) return true;
+                    if (this.CraftingSound.Specific != null && this.CraftingSound.Specific.Any(eval)) return true;
+                }
+                if (eval(this.List)) return true;
+                if (eval(this.Rarity)) return true;
+                if (this.NextRarities != null)
+                {
+                    if (eval(this.NextRarities.Overall)) return true;
+                    if (this.NextRarities.Specific != null)
+                    {
+                        foreach (var item in this.NextRarities.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.SurfaceColor)) return true;
+                if (eval(this.ShortName)) return true;
+                if (eval(this.ResourceType)) return true;
+                if (eval(this.ActorValue)) return true;
+                if (eval(this.Produce)) return true;
+                if (eval(this.Interval)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +450,44 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.CraftingSound = this.CraftingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CraftingSound.Overall), this.CraftingSound.Specific?.Translate(eval));
+                obj.List = eval(this.List);
+                obj.Rarity = eval(this.Rarity);
+                if (NextRarities != null)
+                {
+                    obj.NextRarities = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NextRarities.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (NextRarities.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.NextRarities.Specific = l;
+                        foreach (var item in NextRarities.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.SurfaceColor = eval(this.SurfaceColor);
+                obj.ShortName = eval(this.ShortName);
+                obj.ResourceType = eval(this.ResourceType);
+                obj.ActorValue = eval(this.ActorValue);
+                obj.Produce = eval(this.Produce);
+                obj.Interval = eval(this.Interval);
             }
             #endregion
 
@@ -175,6 +506,88 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Resource.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.CraftingSound?.Overall ?? true)
+                    {
+                        CraftingSound?.Print(sb);
+                    }
+                    if (printMask?.List ?? true)
+                    {
+                        sb.AppendItem(List, "List");
+                    }
+                    if (printMask?.Rarity ?? true)
+                    {
+                        sb.AppendItem(Rarity, "Rarity");
+                    }
+                    if ((printMask?.NextRarities?.Overall ?? true)
+                        && NextRarities is {} NextRaritiesItem)
+                    {
+                        sb.AppendLine("NextRarities =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(NextRaritiesItem.Overall);
+                            if (NextRaritiesItem.Specific != null)
+                            {
+                                foreach (var subItem in NextRaritiesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.SurfaceColor ?? true)
+                    {
+                        sb.AppendItem(SurfaceColor, "SurfaceColor");
+                    }
+                    if (printMask?.ShortName ?? true)
+                    {
+                        sb.AppendItem(ShortName, "ShortName");
+                    }
+                    if (printMask?.ResourceType ?? true)
+                    {
+                        sb.AppendItem(ResourceType, "ResourceType");
+                    }
+                    if (printMask?.ActorValue ?? true)
+                    {
+                        sb.AppendItem(ActorValue, "ActorValue");
+                    }
+                    if (printMask?.Produce ?? true)
+                    {
+                        sb.AppendItem(Produce, "Produce");
+                    }
+                    if (printMask?.Interval ?? true)
+                    {
+                        sb.AppendItem(Interval, "Interval");
+                    }
                 }
             }
             #endregion
@@ -185,12 +598,51 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? CraftingSound;
+            public Exception? List;
+            public Exception? Rarity;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? NextRarities;
+            public Exception? SurfaceColor;
+            public Exception? ShortName;
+            public Exception? ResourceType;
+            public Exception? ActorValue;
+            public Exception? Produce;
+            public Exception? Interval;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Resource_FieldIndex enu = (Resource_FieldIndex)index;
                 switch (enu)
                 {
+                    case Resource_FieldIndex.Name:
+                        return Name;
+                    case Resource_FieldIndex.Keywords:
+                        return Keywords;
+                    case Resource_FieldIndex.CraftingSound:
+                        return CraftingSound;
+                    case Resource_FieldIndex.List:
+                        return List;
+                    case Resource_FieldIndex.Rarity:
+                        return Rarity;
+                    case Resource_FieldIndex.NextRarities:
+                        return NextRarities;
+                    case Resource_FieldIndex.SurfaceColor:
+                        return SurfaceColor;
+                    case Resource_FieldIndex.ShortName:
+                        return ShortName;
+                    case Resource_FieldIndex.ResourceType:
+                        return ResourceType;
+                    case Resource_FieldIndex.ActorValue:
+                        return ActorValue;
+                    case Resource_FieldIndex.Produce:
+                        return Produce;
+                    case Resource_FieldIndex.Interval:
+                        return Interval;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +653,42 @@ namespace Mutagen.Bethesda.Starfield
                 Resource_FieldIndex enu = (Resource_FieldIndex)index;
                 switch (enu)
                 {
+                    case Resource_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Resource_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Resource_FieldIndex.CraftingSound:
+                        this.CraftingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Resource_FieldIndex.List:
+                        this.List = ex;
+                        break;
+                    case Resource_FieldIndex.Rarity:
+                        this.Rarity = ex;
+                        break;
+                    case Resource_FieldIndex.NextRarities:
+                        this.NextRarities = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Resource_FieldIndex.SurfaceColor:
+                        this.SurfaceColor = ex;
+                        break;
+                    case Resource_FieldIndex.ShortName:
+                        this.ShortName = ex;
+                        break;
+                    case Resource_FieldIndex.ResourceType:
+                        this.ResourceType = ex;
+                        break;
+                    case Resource_FieldIndex.ActorValue:
+                        this.ActorValue = ex;
+                        break;
+                    case Resource_FieldIndex.Produce:
+                        this.Produce = ex;
+                        break;
+                    case Resource_FieldIndex.Interval:
+                        this.Interval = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +700,42 @@ namespace Mutagen.Bethesda.Starfield
                 Resource_FieldIndex enu = (Resource_FieldIndex)index;
                 switch (enu)
                 {
+                    case Resource_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Resource_FieldIndex.CraftingSound:
+                        this.CraftingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Resource_FieldIndex.List:
+                        this.List = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.Rarity:
+                        this.Rarity = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.NextRarities:
+                        this.NextRarities = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Resource_FieldIndex.SurfaceColor:
+                        this.SurfaceColor = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.ShortName:
+                        this.ShortName = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.ResourceType:
+                        this.ResourceType = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.ActorValue:
+                        this.ActorValue = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.Produce:
+                        this.Produce = (Exception?)obj;
+                        break;
+                    case Resource_FieldIndex.Interval:
+                        this.Interval = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +745,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Keywords != null) return true;
+                if (CraftingSound != null) return true;
+                if (List != null) return true;
+                if (Rarity != null) return true;
+                if (NextRarities != null) return true;
+                if (SurfaceColor != null) return true;
+                if (ShortName != null) return true;
+                if (ResourceType != null) return true;
+                if (ActorValue != null) return true;
+                if (Produce != null) return true;
+                if (Interval != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +783,74 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                CraftingSound?.Print(sb);
+                {
+                    sb.AppendItem(List, "List");
+                }
+                {
+                    sb.AppendItem(Rarity, "Rarity");
+                }
+                if (NextRarities is {} NextRaritiesItem)
+                {
+                    sb.AppendLine("NextRarities =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(NextRaritiesItem.Overall);
+                        if (NextRaritiesItem.Specific != null)
+                        {
+                            foreach (var subItem in NextRaritiesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(SurfaceColor, "SurfaceColor");
+                }
+                {
+                    sb.AppendItem(ShortName, "ShortName");
+                }
+                {
+                    sb.AppendItem(ResourceType, "ResourceType");
+                }
+                {
+                    sb.AppendItem(ActorValue, "ActorValue");
+                }
+                {
+                    sb.AppendItem(Produce, "Produce");
+                }
+                {
+                    sb.AppendItem(Interval, "Interval");
+                }
             }
             #endregion
 
@@ -255,6 +859,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound, (l, r) => l.Combine(r));
+                ret.List = this.List.Combine(rhs.List);
+                ret.Rarity = this.Rarity.Combine(rhs.Rarity);
+                ret.NextRarities = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.NextRarities?.Overall, rhs.NextRarities?.Overall), Noggog.ExceptionExt.Combine(this.NextRarities?.Specific, rhs.NextRarities?.Specific));
+                ret.SurfaceColor = this.SurfaceColor.Combine(rhs.SurfaceColor);
+                ret.ShortName = this.ShortName.Combine(rhs.ShortName);
+                ret.ResourceType = this.ResourceType.Combine(rhs.ResourceType);
+                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
+                ret.Produce = this.Produce.Combine(rhs.Produce);
+                ret.Interval = this.Interval.Combine(rhs.Interval);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +892,58 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool Keywords;
+            public SoundReference.TranslationMask? CraftingSound;
+            public bool List;
+            public bool Rarity;
+            public bool NextRarities;
+            public bool SurfaceColor;
+            public bool ShortName;
+            public bool ResourceType;
+            public bool ActorValue;
+            public bool Produce;
+            public bool Interval;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Keywords = defaultOn;
+                this.List = defaultOn;
+                this.Rarity = defaultOn;
+                this.NextRarities = defaultOn;
+                this.SurfaceColor = defaultOn;
+                this.ShortName = defaultOn;
+                this.ResourceType = defaultOn;
+                this.ActorValue = defaultOn;
+                this.Produce = defaultOn;
+                this.Interval = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Keywords, null));
+                ret.Add((CraftingSound != null ? CraftingSound.OnOverall : DefaultOn, CraftingSound?.GetCrystal()));
+                ret.Add((List, null));
+                ret.Add((Rarity, null));
+                ret.Add((NextRarities, null));
+                ret.Add((SurfaceColor, null));
+                ret.Add((ShortName, null));
+                ret.Add((ResourceType, null));
+                ret.Add((ActorValue, null));
+                ret.Add((Produce, null));
+                ret.Add((Interval, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +955,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Resource_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ResourceCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ResourceSetterCommon.Instance.RemapLinks(this, mapping);
         public Resource(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -424,10 +1085,34 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IResource :
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IResourceInternal>,
+        INamed,
+        INamedRequired,
         IResourceGetter,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new SoundReference? CraftingSound { get; set; }
+        new IFormLinkNullable<ILeveledItemGetter> List { get; set; }
+        new Resource.RarityEnum? Rarity { get; set; }
+        new ExtendedList<IFormLinkGetter<IResourceGetter>> NextRarities { get; }
+        new Color? SurfaceColor { get; set; }
+        new TranslatedString? ShortName { get; set; }
+        new String? ResourceType { get; set; }
+        new IFormLinkNullable<IActorValueInformationGetter> ActorValue { get; set; }
+        new IFormLinkNullable<IResourceTargetGetter> Produce { get; set; }
+        new IFormLinkNullable<IGlobalGetter> Interval { get; set; }
     }
 
     public partial interface IResourceInternal :
@@ -441,10 +1126,38 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IResourceGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IResourceGetter>,
-        IMapsToGetter<IResourceGetter>
+        IMapsToGetter<IResourceGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Resource_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        ISoundReferenceGetter? CraftingSound { get; }
+        IFormLinkNullableGetter<ILeveledItemGetter> List { get; }
+        Resource.RarityEnum? Rarity { get; }
+        IReadOnlyList<IFormLinkGetter<IResourceGetter>> NextRarities { get; }
+        Color? SurfaceColor { get; }
+        ITranslatedStringGetter? ShortName { get; }
+        String? ResourceType { get; }
+        IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue { get; }
+        IFormLinkNullableGetter<IResourceTargetGetter> Produce { get; }
+        IFormLinkNullableGetter<IGlobalGetter> Interval { get; }
 
     }
 
@@ -621,6 +1334,18 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Name = 7,
+        Keywords = 8,
+        CraftingSound = 9,
+        List = 10,
+        Rarity = 11,
+        NextRarities = 12,
+        SurfaceColor = 13,
+        ShortName = 14,
+        ResourceType = 15,
+        ActorValue = 16,
+        Produce = 17,
+        Interval = 18,
     }
     #endregion
 
@@ -631,9 +1356,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Resource.Mask<>);
 
@@ -663,8 +1388,23 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.IRES);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.IRES);
+            var all = RecordCollection.Factory(
+                RecordTypes.IRES,
+                RecordTypes.FULL,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CUSH,
+                RecordTypes.FNAM,
+                RecordTypes.SNAM,
+                RecordTypes.CNAM,
+                RecordTypes.TINC,
+                RecordTypes.NNAM,
+                RecordTypes.GNAM,
+                RecordTypes.NAM1,
+                RecordTypes.NAM2,
+                RecordTypes.NAM3);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ResourceBinaryWriteTranslation);
         #region Interface
@@ -706,6 +1446,18 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IResourceInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Keywords = null;
+            item.CraftingSound = null;
+            item.List.Clear();
+            item.Rarity = default;
+            item.NextRarities.Clear();
+            item.SurfaceColor = default;
+            item.ShortName = default;
+            item.ResourceType = default;
+            item.ActorValue.Clear();
+            item.Produce.Clear();
+            item.Interval.Clear();
             base.Clear(item);
         }
         
@@ -723,6 +1475,13 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IResource obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.CraftingSound?.RemapLinks(mapping);
+            obj.List.Relink(mapping);
+            obj.NextRarities.RemapLinks(mapping);
+            obj.ActorValue.Relink(mapping);
+            obj.Produce.Relink(mapping);
+            obj.Interval.Relink(mapping);
         }
         
         #endregion
@@ -790,6 +1549,28 @@ namespace Mutagen.Bethesda.Starfield
             Resource.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.CraftingSound = EqualsMaskHelper.EqualsHelper(
+                item.CraftingSound,
+                rhs.CraftingSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.List = item.List.Equals(rhs.List);
+            ret.Rarity = item.Rarity == rhs.Rarity;
+            ret.NextRarities = item.NextRarities.CollectionEqualsHelper(
+                rhs.NextRarities,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.SurfaceColor = item.SurfaceColor.ColorOnlyEquals(rhs.SurfaceColor);
+            ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
+            ret.ResourceType = string.Equals(item.ResourceType, rhs.ResourceType);
+            ret.ActorValue = item.ActorValue.Equals(rhs.ActorValue);
+            ret.Produce = item.Produce.Equals(rhs.Produce);
+            ret.Interval = item.Interval.Equals(rhs.Interval);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +1620,81 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.CraftingSound?.Overall ?? true)
+                && item.CraftingSound is {} CraftingSoundItem)
+            {
+                CraftingSoundItem?.Print(sb, "CraftingSound");
+            }
+            if (printMask?.List ?? true)
+            {
+                sb.AppendItem(item.List.FormKeyNullable, "List");
+            }
+            if ((printMask?.Rarity ?? true)
+                && item.Rarity is {} RarityItem)
+            {
+                sb.AppendItem(RarityItem, "Rarity");
+            }
+            if (printMask?.NextRarities?.Overall ?? true)
+            {
+                sb.AppendLine("NextRarities =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.NextRarities)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.SurfaceColor ?? true)
+                && item.SurfaceColor is {} SurfaceColorItem)
+            {
+                sb.AppendItem(SurfaceColorItem, "SurfaceColor");
+            }
+            if ((printMask?.ShortName ?? true)
+                && item.ShortName is {} ShortNameItem)
+            {
+                sb.AppendItem(ShortNameItem, "ShortName");
+            }
+            if ((printMask?.ResourceType ?? true)
+                && item.ResourceType is {} ResourceTypeItem)
+            {
+                sb.AppendItem(ResourceTypeItem, "ResourceType");
+            }
+            if (printMask?.ActorValue ?? true)
+            {
+                sb.AppendItem(item.ActorValue.FormKeyNullable, "ActorValue");
+            }
+            if (printMask?.Produce ?? true)
+            {
+                sb.AppendItem(item.Produce.FormKeyNullable, "Produce");
+            }
+            if (printMask?.Interval ?? true)
+            {
+                sb.AppendItem(item.Interval.FormKeyNullable, "Interval");
+            }
         }
         
         public static Resource_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +1745,58 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.CraftingSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CraftingSound, rhs.CraftingSound, out var lhsCraftingSound, out var rhsCraftingSound, out var isCraftingSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsCraftingSound).CommonInstance()!).Equals(lhsCraftingSound, rhsCraftingSound, equalsMask?.GetSubCrystal((int)Resource_FieldIndex.CraftingSound))) return false;
+                }
+                else if (!isCraftingSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.List) ?? true))
+            {
+                if (!lhs.List.Equals(rhs.List)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.Rarity) ?? true))
+            {
+                if (lhs.Rarity != rhs.Rarity) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.NextRarities) ?? true))
+            {
+                if (!lhs.NextRarities.SequenceEqualNullable(rhs.NextRarities)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.SurfaceColor) ?? true))
+            {
+                if (!lhs.SurfaceColor.ColorOnlyEquals(rhs.SurfaceColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.ShortName) ?? true))
+            {
+                if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.ResourceType) ?? true))
+            {
+                if (!string.Equals(lhs.ResourceType, rhs.ResourceType)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.ActorValue) ?? true))
+            {
+                if (!lhs.ActorValue.Equals(rhs.ActorValue)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.Produce) ?? true))
+            {
+                if (!lhs.Produce.Equals(rhs.Produce)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Resource_FieldIndex.Interval) ?? true))
+            {
+                if (!lhs.Interval.Equals(rhs.Interval)) return false;
+            }
             return true;
         }
         
@@ -917,6 +1825,36 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IResourceGetter item)
         {
             var hash = new HashCode();
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.CraftingSound is {} CraftingSounditem)
+            {
+                hash.Add(CraftingSounditem);
+            }
+            hash.Add(item.List);
+            if (item.Rarity is {} Rarityitem)
+            {
+                hash.Add(Rarityitem);
+            }
+            hash.Add(item.NextRarities);
+            if (item.SurfaceColor is {} SurfaceColoritem)
+            {
+                hash.Add(SurfaceColoritem);
+            }
+            if (item.ShortName is {} ShortNameitem)
+            {
+                hash.Add(ShortNameitem);
+            }
+            if (item.ResourceType is {} ResourceTypeitem)
+            {
+                hash.Add(ResourceTypeitem);
+            }
+            hash.Add(item.ActorValue);
+            hash.Add(item.Produce);
+            hash.Add(item.Interval);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +1883,40 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.CraftingSound is {} CraftingSoundItems)
+            {
+                foreach (var item in CraftingSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.List, out var ListInfo))
+            {
+                yield return ListInfo;
+            }
+            foreach (var item in obj.NextRarities)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.ActorValue, out var ActorValueInfo))
+            {
+                yield return ActorValueInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Produce, out var ProduceInfo))
+            {
+                yield return ProduceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Interval, out var IntervalInfo))
+            {
+                yield return IntervalInfo;
             }
             yield break;
         }
@@ -1020,6 +1992,114 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Resource_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.CraftingSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Resource_FieldIndex.CraftingSound);
+                try
+                {
+                    if(rhs.CraftingSound is {} rhsCraftingSound)
+                    {
+                        item.CraftingSound = rhsCraftingSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Resource_FieldIndex.CraftingSound));
+                    }
+                    else
+                    {
+                        item.CraftingSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.List) ?? true))
+            {
+                item.List.SetTo(rhs.List.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.Rarity) ?? true))
+            {
+                item.Rarity = rhs.Rarity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.NextRarities) ?? true))
+            {
+                errorMask?.PushIndex((int)Resource_FieldIndex.NextRarities);
+                try
+                {
+                    item.NextRarities.SetTo(
+                        rhs.NextRarities
+                        .Select(r => (IFormLinkGetter<IResourceGetter>)new FormLink<IResourceGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.SurfaceColor) ?? true))
+            {
+                item.SurfaceColor = rhs.SurfaceColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.ShortName) ?? true))
+            {
+                item.ShortName = rhs.ShortName?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.ResourceType) ?? true))
+            {
+                item.ResourceType = rhs.ResourceType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.ActorValue) ?? true))
+            {
+                item.ActorValue.SetTo(rhs.ActorValue.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.Produce) ?? true))
+            {
+                item.Produce.SetTo(rhs.Produce.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Resource_FieldIndex.Interval) ?? true))
+            {
+                item.Interval.SetTo(rhs.Interval.FormKeyNullable);
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +2248,91 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ResourceBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IResourceGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            if (item.CraftingSound is {} CraftingSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.CUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)CraftingSoundItem).BinaryWriteTranslator).Write(
+                        item: CraftingSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.List,
+                header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            EnumBinaryTranslation<Resource.RarityEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Rarity,
+                length: 4,
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IResourceGetter>>.Instance.Write(
+                writer: writer,
+                items: item.NextRarities,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IResourceGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.CNAM));
+                });
+            ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SurfaceColor,
+                header: translationParams.ConvertToCustom(RecordTypes.TINC));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ShortName,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ResourceType,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActorValue,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Produce,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Interval,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3));
+        }
+
         public void Write(
             MutagenWriter writer,
             IResourceGetter item,
@@ -1184,10 +2349,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +2404,122 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ResourceBinaryCreateTranslation Instance = new ResourceBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IRES;
+        public static ParseResult FillBinaryRecordTypes(
+            IResourceInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Resource_FieldIndex.Name;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Resource_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.CraftingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Resource_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.List.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Resource_FieldIndex.List;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Rarity = EnumBinaryTranslation<Resource.RarityEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Resource_FieldIndex.Rarity;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    item.NextRarities.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IResourceGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.CNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Resource_FieldIndex.NextRarities;
+                }
+                case RecordTypeInts.TINC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SurfaceColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Resource_FieldIndex.SurfaceColor;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ShortName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Resource_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ResourceType = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Resource_FieldIndex.ResourceType;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Resource_FieldIndex.ActorValue;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Produce.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Resource_FieldIndex.Produce;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Interval.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Resource_FieldIndex.Interval;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1269,6 +2552,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ResourceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ResourceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1283,6 +2567,56 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IResource);
 
 
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        public ISoundReferenceGetter? CraftingSound { get; private set; }
+        #region List
+        private int? _ListLocation;
+        public IFormLinkNullableGetter<ILeveledItemGetter> List => _ListLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        #endregion
+        #region Rarity
+        private int? _RarityLocation;
+        public Resource.RarityEnum? Rarity => _RarityLocation.HasValue ? (Resource.RarityEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RarityLocation!.Value, _package.MetaData.Constants)) : default(Resource.RarityEnum?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IResourceGetter>> NextRarities { get; private set; } = Array.Empty<IFormLinkGetter<IResourceGetter>>();
+        #region SurfaceColor
+        private int? _SurfaceColorLocation;
+        public Color? SurfaceColor => _SurfaceColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
+        #region ShortName
+        private int? _ShortNameLocation;
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region ResourceType
+        private int? _ResourceTypeLocation;
+        public String? ResourceType => _ResourceTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResourceTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ActorValue
+        private int? _ActorValueLocation;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => _ActorValueLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        #endregion
+        #region Produce
+        private int? _ProduceLocation;
+        public IFormLinkNullableGetter<IResourceTargetGetter> Produce => _ProduceLocation.HasValue ? new FormLinkNullable<IResourceTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ProduceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IResourceTargetGetter>.Null;
+        #endregion
+        #region Interval
+        private int? _IntervalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> Interval => _IntervalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IntervalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +2674,110 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.Name;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Resource_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.CraftingSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Resource_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _ListLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.List;
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    _RarityLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.Rarity;
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    this.NextRarities = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IResourceGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IResourceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)Resource_FieldIndex.NextRarities;
+                }
+                case RecordTypeInts.TINC:
+                {
+                    _SurfaceColorLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.SurfaceColor;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _ShortNameLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _ResourceTypeLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.ResourceType;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _ActorValueLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.ActorValue;
+                }
+                case RecordTypeInts.NAM2:
+                {
+                    _ProduceLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.Produce;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    _IntervalLocation = (stream.Position - offset);
+                    return (int)Resource_FieldIndex.Interval;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(
