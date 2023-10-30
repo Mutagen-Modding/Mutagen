@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;
@@ -34,7 +35,7 @@ public sealed class StringsWriter : IDisposable
         ModKey = modKey;
         EncodingProvider = encodingProvider;
         FileSystem = fileSystem.GetOrDefault();
-        LanguageFormat = release.GetLanguageFormat();
+        LanguageFormat = GameConstants.Get(release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
         WriteDir = writeDirectory;
     }
 

@@ -568,7 +568,6 @@
     <Compile Include="Extensions\FormLinkRemappingMixIn.cs" />
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
-    <Compile Include="Extensions\GameReleaseExt.cs" />
     <Compile Include="Plugins\Implicit\ImplicitRecordFormKeys.cs" />
     <Compile Include="Plugins\Implicit\ImplicitListings.cs" />
     <Compile Include="Plugins\Implicit\ImplicitBaseMasters.cs" />

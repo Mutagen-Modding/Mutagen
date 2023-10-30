@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Noggog;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Installs.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;
@@ -53,7 +54,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         DirectoryPath dataPath,
         StringsReadParameters? instructions)
     {
-        var languageFormat = release.GetLanguageFormat();
+        var languageFormat = GameConstants.Get(release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
         var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
         var stringsFolderPath = instructions?.StringsFolderOverride;
         if (stringsFolderPath == null)
@@ -99,7 +100,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                                 foreach (var item in stringsFolder.Files)
                                 {
                                     if (!StringsUtility.TryRetrieveInfoFromString(
-                                            release.GetLanguageFormat(), 
+                                            languageFormat, 
                                             Path.GetFileName(item.Path), 
                                             out var type, 
                                             out var lang,

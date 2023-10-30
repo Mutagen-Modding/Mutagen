@@ -54,6 +54,8 @@ public sealed record GameConstants
     
     public string IniName { get; init; }
     
+    public StringsLanguageFormat? StringsLanguageFormat { get; init; }
+    
     /// <summary> 
     /// Constructor 
     /// </summary> 
@@ -72,6 +74,7 @@ public sealed record GameConstants
         MajorRecordConstants majorConstants,
         RecordHeaderConstants subConstants,
         Language[] languages,
+        StringsLanguageFormat? languageFormat,
         EncodingBundle encodings,
         bool hasEnabledMarkers,
         ushort? defaultFormVersion,
@@ -89,6 +92,7 @@ public sealed record GameConstants
         HasEnabledMarkers = hasEnabledMarkers;
         DefaultFormVersion = defaultFormVersion;
         MyDocumentsString = myDocumentsString;
+        StringsLanguageFormat = languageFormat;
         IniName = iniName;
     }
 
@@ -145,6 +149,7 @@ public sealed record GameConstants
             headerLength: 6,
             lengthLength: 2),
         languages: Array.Empty<Language>(),
+        languageFormat: null,
         hasEnabledMarkers: false,
         defaultFormVersion: null,
         myDocumentsString: "Oblivion",
@@ -211,6 +216,7 @@ public sealed record GameConstants
             Language.Chinese,
             Language.Russian,
         },
+        languageFormat: Strings.StringsLanguageFormat.FullName,
         hasEnabledMarkers: false,
         defaultFormVersion: 43,
         myDocumentsString: "Skyrim",
@@ -328,6 +334,7 @@ public sealed record GameConstants
             Language.Russian,
             Language.Japanese,
         },
+        languageFormat: Strings.StringsLanguageFormat.Iso,
         hasEnabledMarkers: true,
         defaultFormVersion: 131,
         myDocumentsString: "Fallout4",
@@ -408,6 +415,7 @@ public sealed record GameConstants
             Language.Russian,
             Language.Japanese,
         },
+        languageFormat: Strings.StringsLanguageFormat.Iso,
         hasEnabledMarkers: true,
         defaultFormVersion: 555,
         myDocumentsString: null,

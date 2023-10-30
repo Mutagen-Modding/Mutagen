@@ -552,9 +552,10 @@ public abstract class PassthroughTest
         DirectoryPath processedDir,
         DirectoryPath writeDir)
     {
+        var languageFormat = GameConstants.Get(GameRelease).StringsLanguageFormat!.Value;
         foreach (var source in Enums<StringsSource>.Values)
         {
-            var stringsFileName = StringsUtility.GetFileName(GameRelease.GetLanguageFormat(), ModKey, Language.English, source);
+            var stringsFileName = StringsUtility.GetFileName(languageFormat, ModKey, Language.English, source);
             var sourcePath = Path.Combine(processedDir.Path, stringsFileName);
             var pathToTest = Path.Combine(writeDir.Path, stringsFileName);
             bool sourceExists = File.Exists(sourcePath);
