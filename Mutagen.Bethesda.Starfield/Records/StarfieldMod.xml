@@ -49,6 +49,7 @@
       <Group name="SurfacePatternStyles" refName="SurfacePatternStyle" />
       <Group name="LegendaryItems" refName="LegendaryItem" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
+      <Group name="MiscItems" refName="MiscItem" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>

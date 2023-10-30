@@ -7,6 +7,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - LeveledItem
 - MagicEffect
+- MiscItem
 - Perk
 - TerminalMenu
 - Weapon
@@ -16,6 +17,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - KeywordFormComponent
 - MagicEffect
+- MiscItem
 - ObjectTemplate
 - Race
 - SoundMarker
@@ -30,6 +32,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - LegendaryItem
 - LeveledItem
+- MiscItem
 - ModelComponent
 - PlanetModelComponent
 - SkeletalModel
@@ -49,6 +52,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - Keyword
 - MagicEffect
+- MiscItem
 - MorphGroup
 - ObjectEffect
 - ObjectTemplate
@@ -83,6 +87,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BendableSpline
 - LegendaryItem
 - LeveledItem
+- MiscItem
 - ObjectEffect
 - ProjectedDecal
 - SoundEchoMarker
@@ -98,6 +103,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - LeveledItem
 - MagicEffect
+- MiscItem
 - Weapon
 ## Concrete Classes to Interfaces
 ### AcousticSpace
@@ -157,6 +163,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - INamed
+- IScripted
+### MiscItem
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
 - IScripted
 ### ModelComponent
 - IModeled

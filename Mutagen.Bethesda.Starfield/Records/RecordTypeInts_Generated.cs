@@ -89,6 +89,7 @@ public partial class RecordTypeInts
     public const int CUR3 = 0x33525543;
     public const int CURV = 0x56525543;
     public const int CUSH = 0x48535543;
+    public const int CVPA = 0x41505643;
     public const int DALC = 0x434C4144;
     public const int DAMA = 0x414D4144;
     public const int DAMC = 0x434D4144;
@@ -143,6 +144,7 @@ public partial class RecordTypeInts
     public const int FDSI = 0x49534446;
     public const int FDSL = 0x4C534446;
     public const int FFKW = 0x574B4646;
+    public const int FLAG = 0x47414C46;
     public const int FLCS = 0x53434C46;
     public const int FLLD = 0x444C4C46;
     public const int FLOR = 0x524F4C46;

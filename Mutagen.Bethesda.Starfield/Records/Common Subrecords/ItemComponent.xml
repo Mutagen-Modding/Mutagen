@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ItemResource" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Resource" refName="Resource" />
+      <UInt32 name="Count" />
+      <UInt32 name="Unknown" />
+    </Fields>
+  </Object>
+</Loqui>

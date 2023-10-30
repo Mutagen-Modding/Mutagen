@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,252 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IMiscItemGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IMiscItemGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMiscItemGetter.ODTY => this.ODTY;
+        #endregion
+        #region ObjectPlacementDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
+        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        {
+            get => _ObjectPlacementDefaults;
+            set => _ObjectPlacementDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPlacementDefaultsGetter? IMiscItemGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? IMiscItemGetter.Transforms => this.Transforms;
+        #endregion
+        #region XALG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XALG;
+        public MemorySlice<Byte>? XALG
+        {
+            get => this._XALG;
+            set => this._XALG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IMiscItemGetter.XALG => this.XALG;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IMiscItemGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IMiscItemGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IMiscItemGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IMiscItemGetter.Destructible => this.Destructible;
+        #endregion
+        #region CraftingSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _CraftingSound;
+        public SoundReference? CraftingSound
+        {
+            get => _CraftingSound;
+            set => _CraftingSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IMiscItemGetter.CraftingSound => this.CraftingSound;
+        #endregion
+        #region PickupSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _PickupSound;
+        public SoundReference? PickupSound
+        {
+            get => _PickupSound;
+            set => _PickupSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IMiscItemGetter.PickupSound => this.PickupSound;
+        #endregion
+        #region DropdownSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _DropdownSound;
+        public SoundReference? DropdownSound
+        {
+            get => _DropdownSound;
+            set => _DropdownSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IMiscItemGetter.DropdownSound => this.DropdownSound;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IMiscItemGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Resources
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ItemResource>? _Resources;
+        public ExtendedList<ItemResource>? Resources
+        {
+            get => this._Resources;
+            set => this._Resources = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IItemResourceGetter>? IMiscItemGetter.Resources => _Resources;
+        #endregion
+
+        #endregion
+        #region Value
+        public Int32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
+        #endregion
+        #region FLAG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _FLAG;
+        public MemorySlice<Byte>? FLAG
+        {
+            get => this._FLAG;
+            set => this._FLAG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IMiscItemGetter.FLAG => this.FLAG;
+        #endregion
+        #region ShortName
+        public TranslatedString? ShortName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IMiscItemGetter.ShortName => this.ShortName;
+        #endregion
 
         #region To String
 
@@ -79,6 +330,25 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.XALG = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.FLAG = initialValue;
+                this.ShortName = initialValue;
             }
 
             public Mask(
@@ -88,7 +358,26 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem ObjectPlacementDefaults,
+                TItem Transforms,
+                TItem XALG,
+                TItem Components,
+                TItem Name,
+                TItem Model,
+                TItem Destructible,
+                TItem CraftingSound,
+                TItem PickupSound,
+                TItem DropdownSound,
+                TItem Keywords,
+                TItem Resources,
+                TItem Value,
+                TItem Weight,
+                TItem FLAG,
+                TItem ShortName)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +387,25 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.XALG = XALG;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(Resources, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
+                this.Value = Value;
+                this.Weight = Weight;
+                this.FLAG = FLAG;
+                this.ShortName = ShortName;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +414,28 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem XALG;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? CraftingSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>? Resources;
+            public TItem Value;
+            public TItem Weight;
+            public TItem FLAG;
+            public TItem ShortName;
             #endregion
 
             #region Equals
@@ -119,11 +449,49 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
+                if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
+                if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Resources, rhs.Resources)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.FLAG, rhs.FLAG)) return false;
+                if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.Transforms);
+                hash.Add(this.XALG);
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Destructible);
+                hash.Add(this.CraftingSound);
+                hash.Add(this.PickupSound);
+                hash.Add(this.DropdownSound);
+                hash.Add(this.Keywords);
+                hash.Add(this.Resources);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
+                hash.Add(this.FLAG);
+                hash.Add(this.ShortName);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +502,93 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
+                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (!eval(this.XALG)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (CraftingSound != null)
+                {
+                    if (!eval(this.CraftingSound.Overall)) return false;
+                    if (this.CraftingSound.Specific != null && !this.CraftingSound.Specific.All(eval)) return false;
+                }
+                if (PickupSound != null)
+                {
+                    if (!eval(this.PickupSound.Overall)) return false;
+                    if (this.PickupSound.Specific != null && !this.PickupSound.Specific.All(eval)) return false;
+                }
+                if (DropdownSound != null)
+                {
+                    if (!eval(this.DropdownSound.Overall)) return false;
+                    if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Resources != null)
+                {
+                    if (!eval(this.Resources.Overall)) return false;
+                    if (this.Resources.Specific != null)
+                    {
+                        foreach (var item in this.Resources.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.FLAG)) return false;
+                if (!eval(this.ShortName)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +597,93 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (ObjectPlacementDefaults != null)
+                {
+                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
+                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (eval(this.XALG)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (CraftingSound != null)
+                {
+                    if (eval(this.CraftingSound.Overall)) return true;
+                    if (this.CraftingSound.Specific != null && this.CraftingSound.Specific.Any(eval)) return true;
+                }
+                if (PickupSound != null)
+                {
+                    if (eval(this.PickupSound.Overall)) return true;
+                    if (this.PickupSound.Specific != null && this.PickupSound.Specific.Any(eval)) return true;
+                }
+                if (DropdownSound != null)
+                {
+                    if (eval(this.DropdownSound.Overall)) return true;
+                    if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Resources != null)
+                {
+                    if (eval(this.Resources.Overall)) return true;
+                    if (this.Resources.Specific != null)
+                    {
+                        foreach (var item in this.Resources.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
+                if (eval(this.FLAG)) return true;
+                if (eval(this.ShortName)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +699,66 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.XALG = eval(this.XALG);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.CraftingSound = this.CraftingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CraftingSound.Overall), this.CraftingSound.Specific?.Translate(eval));
+                obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
+                obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Resources != null)
+                {
+                    obj.Resources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemResource.Mask<R>?>>?>(eval(this.Resources.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemResource.Mask<R>?>>());
+                    if (Resources.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ItemResource.Mask<R>?>>();
+                        obj.Resources.Specific = l;
+                        foreach (var item in Resources.Specific)
+                        {
+                            MaskItemIndexed<R, ItemResource.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ItemResource.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.FLAG = eval(this.FLAG);
+                obj.ShortName = eval(this.ShortName);
             }
             #endregion
 
@@ -175,6 +777,129 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(MiscItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                    {
+                        ObjectPlacementDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
+                    if (printMask?.CraftingSound?.Overall ?? true)
+                    {
+                        CraftingSound?.Print(sb);
+                    }
+                    if (printMask?.PickupSound?.Overall ?? true)
+                    {
+                        PickupSound?.Print(sb);
+                    }
+                    if (printMask?.DropdownSound?.Overall ?? true)
+                    {
+                        DropdownSound?.Print(sb);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Resources?.Overall ?? true)
+                        && Resources is {} ResourcesItem)
+                    {
+                        sb.AppendLine("Resources =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ResourcesItem.Overall);
+                            if (ResourcesItem.Specific != null)
+                            {
+                                foreach (var subItem in ResourcesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        sb.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        sb.AppendItem(Weight, "Weight");
+                    }
+                    if (printMask?.FLAG ?? true)
+                    {
+                        sb.AppendItem(FLAG, "FLAG");
+                    }
+                    if (printMask?.ShortName ?? true)
+                    {
+                        sb.AppendItem(ShortName, "ShortName");
+                    }
                 }
             }
             #endregion
@@ -185,12 +910,72 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? XALG;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? CraftingSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>? Resources;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? FLAG;
+            public Exception? ShortName;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case MiscItem_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case MiscItem_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case MiscItem_FieldIndex.ODTY:
+                        return ODTY;
+                    case MiscItem_FieldIndex.ObjectPlacementDefaults:
+                        return ObjectPlacementDefaults;
+                    case MiscItem_FieldIndex.Transforms:
+                        return Transforms;
+                    case MiscItem_FieldIndex.XALG:
+                        return XALG;
+                    case MiscItem_FieldIndex.Components:
+                        return Components;
+                    case MiscItem_FieldIndex.Name:
+                        return Name;
+                    case MiscItem_FieldIndex.Model:
+                        return Model;
+                    case MiscItem_FieldIndex.Destructible:
+                        return Destructible;
+                    case MiscItem_FieldIndex.CraftingSound:
+                        return CraftingSound;
+                    case MiscItem_FieldIndex.PickupSound:
+                        return PickupSound;
+                    case MiscItem_FieldIndex.DropdownSound:
+                        return DropdownSound;
+                    case MiscItem_FieldIndex.Keywords:
+                        return Keywords;
+                    case MiscItem_FieldIndex.Resources:
+                        return Resources;
+                    case MiscItem_FieldIndex.Value:
+                        return Value;
+                    case MiscItem_FieldIndex.Weight:
+                        return Weight;
+                    case MiscItem_FieldIndex.FLAG:
+                        return FLAG;
+                    case MiscItem_FieldIndex.ShortName:
+                        return ShortName;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +986,63 @@ namespace Mutagen.Bethesda.Starfield
                 MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case MiscItem_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case MiscItem_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case MiscItem_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case MiscItem_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.CraftingSound:
+                        this.CraftingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.PickupSound:
+                        this.PickupSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.DropdownSound:
+                        this.DropdownSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.Resources:
+                        this.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case MiscItem_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case MiscItem_FieldIndex.FLAG:
+                        this.FLAG = ex;
+                        break;
+                    case MiscItem_FieldIndex.ShortName:
+                        this.ShortName = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1054,63 @@ namespace Mutagen.Bethesda.Starfield
                 MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case MiscItem_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.ObjectPlacementDefaults:
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case MiscItem_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.CraftingSound:
+                        this.CraftingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.PickupSound:
+                        this.PickupSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.DropdownSound:
+                        this.DropdownSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case MiscItem_FieldIndex.Resources:
+                        this.Resources = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>)obj;
+                        break;
+                    case MiscItem_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.FLAG:
+                        this.FLAG = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.ShortName:
+                        this.ShortName = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1120,25 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (ObjectPlacementDefaults != null) return true;
+                if (Transforms != null) return true;
+                if (XALG != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Destructible != null) return true;
+                if (CraftingSound != null) return true;
+                if (PickupSound != null) return true;
+                if (DropdownSound != null) return true;
+                if (Keywords != null) return true;
+                if (Resources != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (FLAG != null) return true;
+                if (ShortName != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1165,92 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                ObjectPlacementDefaults?.Print(sb);
+                Transforms?.Print(sb);
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                Model?.Print(sb);
+                Destructible?.Print(sb);
+                CraftingSound?.Print(sb);
+                PickupSound?.Print(sb);
+                DropdownSound?.Print(sb);
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Resources is {} ResourcesItem)
+                {
+                    sb.AppendLine("Resources =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ResourcesItem.Overall);
+                        if (ResourcesItem.Specific != null)
+                        {
+                            foreach (var subItem in ResourcesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(FLAG, "FLAG");
+                }
+                {
+                    sb.AppendItem(ShortName, "ShortName");
+                }
             }
             #endregion
 
@@ -255,6 +1259,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound, (l, r) => l.Combine(r));
+                ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
+                ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resources?.Overall, rhs.Resources?.Overall), Noggog.ExceptionExt.Combine(this.Resources?.Specific, rhs.Resources?.Specific));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.FLAG = this.FLAG.Combine(rhs.FLAG);
+                ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1299,69 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public Transforms.TranslationMask? Transforms;
+            public bool XALG;
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
+            public SoundReference.TranslationMask? CraftingSound;
+            public SoundReference.TranslationMask? PickupSound;
+            public SoundReference.TranslationMask? DropdownSound;
+            public bool Keywords;
+            public ItemResource.TranslationMask? Resources;
+            public bool Value;
+            public bool Weight;
+            public bool FLAG;
+            public bool ShortName;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.XALG = defaultOn;
+                this.Name = defaultOn;
+                this.Keywords = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.FLAG = defaultOn;
+                this.ShortName = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((XALG, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((CraftingSound != null ? CraftingSound.OnOverall : DefaultOn, CraftingSound?.GetCrystal()));
+                ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
+                ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((Resources == null ? DefaultOn : !Resources.GetCrystal().CopyNothing, Resources?.GetCrystal()));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((FLAG, null));
+                ret.Add((ShortName, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1373,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MiscItem_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MiscItemCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemSetterCommon.Instance.RemapLinks(this, mapping);
         public MiscItem(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1424,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IMiscItem);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MiscItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MiscItemSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MiscItemSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MiscItemSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,13 +1512,61 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IMiscItem :
+        IAssetLinkContainer,
         IConstructibleObjectTarget,
+        IFormLinkContainer,
         IItem,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IMiscItemInternal>,
         IMiscItemGetter,
+        IModeled,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
+        IScripted,
         IStarfieldMajorRecordInternal,
-        IStaticTarget
+        IStaticTarget,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
+        new MemorySlice<Byte>? XALG { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new Destructible? Destructible { get; set; }
+        new SoundReference? CraftingSound { get; set; }
+        new SoundReference? PickupSound { get; set; }
+        new SoundReference? DropdownSound { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<ItemResource>? Resources { get; set; }
+        new Int32 Value { get; set; }
+        new Single Weight { get; set; }
+        new MemorySlice<Byte>? FLAG { get; set; }
+        new TranslatedString? ShortName { get; set; }
+        #region Mutagen
+        new MiscItem.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IMiscItemInternal :
@@ -443,14 +1579,73 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.MISC)]
     public partial interface IMiscItemGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IMiscItemGetter>,
         IMapsToGetter<IMiscItemGetter>,
-        IStaticTargetGetter
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IScriptedGetter,
+        IStaticTargetGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => MiscItem_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        ITransformsGetter? Transforms { get; }
+        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        IDestructibleGetter? Destructible { get; }
+        ISoundReferenceGetter? CraftingSound { get; }
+        ISoundReferenceGetter? PickupSound { get; }
+        ISoundReferenceGetter? DropdownSound { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IReadOnlyList<IItemResourceGetter>? Resources { get; }
+        Int32 Value { get; }
+        Single Weight { get; }
+        ReadOnlyMemorySlice<Byte>? FLAG { get; }
+        ITranslatedStringGetter? ShortName { get; }
+
+        #region Mutagen
+        MiscItem.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -627,6 +1822,25 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        ODTY = 9,
+        ObjectPlacementDefaults = 10,
+        Transforms = 11,
+        XALG = 12,
+        Components = 13,
+        Name = 14,
+        Model = 15,
+        Destructible = 16,
+        CraftingSound = 17,
+        PickupSound = 18,
+        DropdownSound = 19,
+        Keywords = 20,
+        Resources = 21,
+        Value = 22,
+        Weight = 23,
+        FLAG = 24,
+        ShortName = 25,
     }
     #endregion
 
@@ -637,9 +1851,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(MiscItem.Mask<>);
 
@@ -669,8 +1883,37 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.MISC);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.MISC);
+            var all = RecordCollection.Factory(
+                RecordTypes.MISC,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.PTT2,
+                RecordTypes.XALG,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSDL,
+                RecordTypes.DSTD,
+                RecordTypes.CUSH,
+                RecordTypes.PUSH,
+                RecordTypes.PDSH,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.CVPA,
+                RecordTypes.DATA,
+                RecordTypes.FLAG,
+                RecordTypes.NNAM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MiscItemBinaryWriteTranslation);
         #region Interface
@@ -712,6 +1955,25 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IMiscItemInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.ObjectPlacementDefaults = null;
+            item.Transforms = null;
+            item.XALG = default;
+            item.Components.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.Destructible = null;
+            item.CraftingSound = null;
+            item.PickupSound = null;
+            item.DropdownSound = null;
+            item.Keywords = null;
+            item.Resources = null;
+            item.Value = default;
+            item.Weight = default;
+            item.FLAG = default;
+            item.ShortName = default;
             base.Clear(item);
         }
         
@@ -729,6 +1991,56 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IMiscItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.CraftingSound?.RemapLinks(mapping);
+            obj.PickupSound?.RemapLinks(mapping);
+            obj.DropdownSound?.RemapLinks(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.Resources?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMiscItem obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMiscItem obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -796,6 +2108,66 @@ namespace Mutagen.Bethesda.Starfield
             MiscItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPlacementDefaults,
+                rhs.ObjectPlacementDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.CraftingSound = EqualsMaskHelper.EqualsHelper(
+                item.CraftingSound,
+                rhs.CraftingSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PickupSound = EqualsMaskHelper.EqualsHelper(
+                item.PickupSound,
+                rhs.PickupSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DropdownSound = EqualsMaskHelper.EqualsHelper(
+                item.DropdownSound,
+                rhs.DropdownSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Resources = item.Resources.CollectionEqualsHelper(
+                rhs.Resources,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.FLAG = MemorySliceExt.SequenceEqual(item.FLAG, rhs.FLAG);
+            ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -845,6 +2217,127 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
+                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
+            }
+            if ((printMask?.CraftingSound?.Overall ?? true)
+                && item.CraftingSound is {} CraftingSoundItem)
+            {
+                CraftingSoundItem?.Print(sb, "CraftingSound");
+            }
+            if ((printMask?.PickupSound?.Overall ?? true)
+                && item.PickupSound is {} PickupSoundItem)
+            {
+                PickupSoundItem?.Print(sb, "PickupSound");
+            }
+            if ((printMask?.DropdownSound?.Overall ?? true)
+                && item.DropdownSound is {} DropdownSoundItem)
+            {
+                DropdownSoundItem?.Print(sb, "DropdownSound");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Resources?.Overall ?? true)
+                && item.Resources is {} ResourcesItem)
+            {
+                sb.AppendLine("Resources =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ResourcesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Value ?? true)
+            {
+                sb.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                sb.AppendItem(item.Weight, "Weight");
+            }
+            if ((printMask?.FLAG ?? true)
+                && item.FLAG is {} FLAGItem)
+            {
+                sb.AppendLine($"FLAG => {SpanExt.ToHexString(FLAGItem)}");
+            }
+            if ((printMask?.ShortName ?? true)
+                && item.ShortName is {} ShortNameItem)
+            {
+                sb.AppendItem(ShortNameItem, "ShortName");
+            }
         }
         
         public static MiscItem_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -895,6 +2388,118 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                {
+                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectPlacementDefaults))) return false;
+                }
+                else if (!isObjectPlacementDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.XALG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.CraftingSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CraftingSound, rhs.CraftingSound, out var lhsCraftingSound, out var rhsCraftingSound, out var isCraftingSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsCraftingSound).CommonInstance()!).Equals(lhsCraftingSound, rhsCraftingSound, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.CraftingSound))) return false;
+                }
+                else if (!isCraftingSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PickupSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PickupSound, rhs.PickupSound, out var lhsPickupSound, out var rhsPickupSound, out var isPickupSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPickupSound).CommonInstance()!).Equals(lhsPickupSound, rhsPickupSound, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.PickupSound))) return false;
+                }
+                else if (!isPickupSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.DropdownSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DropdownSound, rhs.DropdownSound, out var lhsDropdownSound, out var rhsDropdownSound, out var isDropdownSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDropdownSound).CommonInstance()!).Equals(lhsDropdownSound, rhsDropdownSound, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.DropdownSound))) return false;
+                }
+                else if (!isDropdownSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Resources) ?? true))
+            {
+                if (!lhs.Resources.SequenceEqualNullable(rhs.Resources, (l, r) => ((ItemResourceCommon)((IItemResourceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Resources)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.FLAG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.FLAG, rhs.FLAG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ShortName) ?? true))
+            {
+                if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
+            }
             return true;
         }
         
@@ -923,6 +2528,64 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IMiscItemGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
+            {
+                hash.Add(ObjectPlacementDefaultsitem);
+            }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
+            if (item.XALG is {} XALGItem)
+            {
+                hash.Add(XALGItem);
+            }
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            if (item.CraftingSound is {} CraftingSounditem)
+            {
+                hash.Add(CraftingSounditem);
+            }
+            if (item.PickupSound is {} PickupSounditem)
+            {
+                hash.Add(PickupSounditem);
+            }
+            if (item.DropdownSound is {} DropdownSounditem)
+            {
+                hash.Add(DropdownSounditem);
+            }
+            hash.Add(item.Keywords);
+            hash.Add(item.Resources);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
+            if (item.FLAG is {} FLAGItem)
+            {
+                hash.Add(FLAGItem);
+            }
+            if (item.ShortName is {} ShortNameitem)
+            {
+                hash.Add(ShortNameitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -951,6 +2614,105 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.CraftingSound is {} CraftingSoundItems)
+            {
+                foreach (var item in CraftingSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PickupSound is {} PickupSoundItems)
+            {
+                foreach (var item in PickupSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DropdownSound is {} DropdownSoundItems)
+            {
+                foreach (var item in DropdownSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.Resources is {} ResourcesItem)
+            {
+                foreach (var item in ResourcesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMiscItemGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Destructible is {} DestructibleItems)
+                {
+                    foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1026,6 +2788,361 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectPlacementDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.ObjectPlacementDefaults);
+                try
+                {
+                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    {
+                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectPlacementDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPlacementDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.XALG) ?? true))
+            {
+                if(rhs.XALG is {} XALGrhs)
+                {
+                    item.XALG = XALGrhs.ToArray();
+                }
+                else
+                {
+                    item.XALG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.CraftingSound) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.CraftingSound);
+                try
+                {
+                    if(rhs.CraftingSound is {} rhsCraftingSound)
+                    {
+                        item.CraftingSound = rhsCraftingSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.CraftingSound));
+                    }
+                    else
+                    {
+                        item.CraftingSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PickupSound) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.PickupSound);
+                try
+                {
+                    if(rhs.PickupSound is {} rhsPickupSound)
+                    {
+                        item.PickupSound = rhsPickupSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.PickupSound));
+                    }
+                    else
+                    {
+                        item.PickupSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.DropdownSound) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.DropdownSound);
+                try
+                {
+                    if(rhs.DropdownSound is {} rhsDropdownSound)
+                    {
+                        item.DropdownSound = rhsDropdownSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.DropdownSound));
+                    }
+                    else
+                    {
+                        item.DropdownSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Resources) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Resources);
+                try
+                {
+                    if ((rhs.Resources != null))
+                    {
+                        item.Resources = 
+                            rhs.Resources
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ItemResource>();
+                    }
+                    else
+                    {
+                        item.Resources = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.FLAG) ?? true))
+            {
+                if(rhs.FLAG is {} FLAGrhs)
+                {
+                    item.FLAG = FLAGrhs.ToArray();
+                }
+                else
+                {
+                    item.FLAG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ShortName) ?? true))
+            {
+                item.ShortName = rhs.ShortName?.DeepCopy();
+            }
         }
         
         public override void DeepCopyIn(
@@ -1174,6 +3291,153 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly MiscItemBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IMiscItemGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            {
+                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPlacementDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.CraftingSound is {} CraftingSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.CUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)CraftingSoundItem).BinaryWriteTranslator).Write(
+                        item: CraftingSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.PickupSound is {} PickupSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PickupSoundItem).BinaryWriteTranslator).Write(
+                        item: PickupSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.DropdownSound is {} DropdownSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PDSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DropdownSoundItem).BinaryWriteTranslator).Write(
+                        item: DropdownSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IItemResourceGetter>.Instance.Write(
+                writer: writer,
+                items: item.Resources,
+                recordType: translationParams.ConvertToCustom(RecordTypes.CVPA),
+                transl: (MutagenWriter subWriter, IItemResourceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ItemResourceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                writer.Write(item.Value);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Weight);
+            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.FLAG,
+                header: translationParams.ConvertToCustom(RecordTypes.FLAG));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ShortName,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+        }
+
         public void Write(
             MutagenWriter writer,
             IMiscItemGetter item,
@@ -1190,10 +3454,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1243,6 +3509,174 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly MiscItemBinaryCreateTranslation Instance = new MiscItemBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MISC;
+        public static ParseResult FillBinaryRecordTypes(
+            IMiscItemInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)MiscItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MiscItem_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    return (int)MiscItem_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)MiscItem_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MiscItem_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)MiscItem_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)MiscItem_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Starfield.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.CraftingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)MiscItem_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)MiscItem_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)MiscItem_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)MiscItem_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CVPA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Resources = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ItemResource>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ItemResource.TryCreateFromBinary)
+                        .CastExtendedList<ItemResource>();
+                    return (int)MiscItem_FieldIndex.Resources;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Value = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)MiscItem_FieldIndex.Weight;
+                }
+                case RecordTypeInts.FLAG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FLAG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MiscItem_FieldIndex.FLAG;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ShortName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)MiscItem_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1275,6 +3709,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MiscItemCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MiscItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MiscItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1288,7 +3724,77 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IMiscItem);
 
+        public MiscItem.MajorFlag MajorFlags => (MiscItem.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region ObjectPlacementDefaults
+        private RangeInt32? _ObjectPlacementDefaultsLocation;
+        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
+        public ISoundReferenceGetter? CraftingSound { get; private set; }
+        public ISoundReferenceGetter? PickupSound { get; private set; }
+        public ISoundReferenceGetter? DropdownSound { get; private set; }
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        public IReadOnlyList<IItemResourceGetter>? Resources { get; private set; }
+        private RangeInt32? _DATALocation;
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value.Min;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        #endregion
+        #region FLAG
+        private int? _FLAGLocation;
+        public ReadOnlyMemorySlice<Byte>? FLAG => _FLAGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLAGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region ShortName
+        private int? _ShortNameLocation;
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1346,6 +3852,172 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)MiscItem_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)MiscItem_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)MiscItem_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)MiscItem_FieldIndex.ObjectPlacementDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)MiscItem_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)MiscItem_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)MiscItem_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)MiscItem_FieldIndex.Name;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.CraftingSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.PickupSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.DropdownSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MiscItem_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)MiscItem_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.CVPA:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Resources = BinaryOverlayList.FactoryByStartIndex<IItemResourceGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ItemResourceBinaryOverlay.ItemResourceFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)MiscItem_FieldIndex.Resources;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)MiscItem_FieldIndex.Weight;
+                }
+                case RecordTypeInts.FLAG:
+                {
+                    _FLAGLocation = (stream.Position - offset);
+                    return (int)MiscItem_FieldIndex.FLAG;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _ShortNameLocation = (stream.Position - offset);
+                    return (int)MiscItem_FieldIndex.ShortName;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

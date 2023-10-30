@@ -713,6 +713,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             IsWeaponSkillTypeConditionData_Registration.Instance,
             IsWindowsPCConditionData_Registration.Instance,
             IsXBoxConditionData_Registration.Instance,
+            ItemResource_Registration.Instance,
             Key_Registration.Instance,
             Keyword_Registration.Instance,
             KeywordFormComponent_Registration.Instance,

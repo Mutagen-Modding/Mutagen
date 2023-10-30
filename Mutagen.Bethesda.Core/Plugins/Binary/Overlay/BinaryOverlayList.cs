@@ -431,14 +431,14 @@ internal abstract class BinaryOverlayList
     public static IReadOnlyList<T> FactoryByCountLength<T>(
         OverlayStream stream,
         BinaryOverlayFactoryPackage package,
-        uint itemLength,
+        int itemLength,
         uint count,
         PluginBinaryOverlay.SpanFactory<T> getter)
     {
         var ret = new List<T>(checked((int)count));
         for (uint i = 0; i < count; i++)
         {
-            ret.Add(getter(stream.RemainingMemory, package));
+            ret.Add(getter(stream.ReadMemory(itemLength), package));
         }
         return ret;
     }

@@ -25,6 +25,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.BNDS, ProcessBendableSplines);
         AddDynamicProcessing(RecordTypes.PDCL, ProcessProjectedDecals);
+        AddDynamicProcessing(RecordTypes.MISC, ProcessMisc);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -57,7 +58,7 @@ public class StarfieldProcessor : Processor
         }
     }
 
-    private void ProcessProjectedDecals(
+    private void ProcessObjectPlacementDefaults(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
@@ -69,6 +70,20 @@ public class StarfieldProcessor : Processor
                 ProcessZeroFloat(frame, fileOffset, ref offset);
             }
         }
+    }
+
+    private void ProcessProjectedDecals(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+    }
+
+    private void ProcessMisc(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
     }
 
     protected override Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>>? KnownDeadStringKeys()
@@ -102,6 +117,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "WEAP", "FULL" },
                     new RecordType[] { "PERK", "FULL" },
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
+                    new RecordType[] { "MISC", "FULL", "NNAM" },
                 };
             case StringsSource.DL:
                 return new AStringsAlignment[]

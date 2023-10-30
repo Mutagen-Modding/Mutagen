@@ -2042,6 +2042,9 @@
     <Compile Include="Records\Major Records\LockData.cs">
       <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MiscItem.cs">
+      <DependentUpon>MiscItem.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ObjectModification.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
     </Compile>
@@ -5222,6 +5225,9 @@
     </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointLegendaryMagicEffectEvent_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ItemResource_Generated.cs">
+      <DependentUpon>ItemComponent.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

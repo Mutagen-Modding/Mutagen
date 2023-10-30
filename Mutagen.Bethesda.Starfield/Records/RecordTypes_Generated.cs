@@ -91,6 +91,7 @@ public partial class RecordTypes
     public static readonly RecordType CUR3 = new(0x33525543);
     public static readonly RecordType CURV = new(0x56525543);
     public static readonly RecordType CUSH = new(0x48535543);
+    public static readonly RecordType CVPA = new(0x41505643);
     public static readonly RecordType DALC = new(0x434C4144);
     public static readonly RecordType DAMA = new(0x414D4144);
     public static readonly RecordType DAMC = new(0x434D4144);
@@ -145,6 +146,7 @@ public partial class RecordTypes
     public static readonly RecordType FDSI = new(0x49534446);
     public static readonly RecordType FDSL = new(0x4C534446);
     public static readonly RecordType FFKW = new(0x574B4646);
+    public static readonly RecordType FLAG = new(0x47414C46);
     public static readonly RecordType FLCS = new(0x53434C46);
     public static readonly RecordType FLLD = new(0x444C4C46);
     public static readonly RecordType FLOR = new(0x524F4C46);
