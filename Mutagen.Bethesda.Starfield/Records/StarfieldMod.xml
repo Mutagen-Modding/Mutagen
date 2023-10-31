@@ -51,6 +51,7 @@
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="MiscItems" refName="MiscItem" />
       <Group name="Resources" refName="Resource" />
+      <Group name="ConditionRecords" refName="ConditionRecord" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>

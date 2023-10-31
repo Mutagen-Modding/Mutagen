@@ -948,9 +948,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ConditionRecord</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter> ConditionRecord(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter> ConditionRecord(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IConditionRecordGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -960,9 +960,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on ConditionRecord</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter> ConditionRecord(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter> ConditionRecord(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IConditionRecordGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IConditionRecord, IConditionRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
