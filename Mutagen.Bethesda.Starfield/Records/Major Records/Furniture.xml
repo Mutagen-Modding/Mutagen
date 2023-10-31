@@ -4,6 +4,6 @@
     <Fields>
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
-    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>

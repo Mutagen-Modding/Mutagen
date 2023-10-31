@@ -3,6 +3,6 @@
   <Object name="GenericBaseForm" recordType="GBFM" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
     </Fields>
-    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>

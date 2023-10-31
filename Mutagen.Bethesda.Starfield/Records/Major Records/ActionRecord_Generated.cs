@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IActionRecord :
         IActionRecordGetter,
-        IConstructibleObjectTarget,
+        IConstructible,
         IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>,
         IStarfieldMajorRecordInternal
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActionRecordGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         IIdleRelationGetter,
         ILoquiObject<IActionRecordGetter>,
         IMapsToGetter<IActionRecordGetter>

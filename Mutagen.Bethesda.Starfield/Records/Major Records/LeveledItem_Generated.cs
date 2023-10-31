@@ -1539,6 +1539,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ILeveledItem :
         IAssetLinkContainer,
+        IConstructible,
         IFormLinkContainer,
         IItem,
         ILeveledItemGetter,
@@ -1591,6 +1592,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IConstructibleGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,

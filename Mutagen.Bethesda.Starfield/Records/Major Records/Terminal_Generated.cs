@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface ITerminal :
-        IConstructibleObjectTarget,
+        IConstructible,
         ILoquiObjectSetter<ITerminalInternal>,
         IStarfieldMajorRecordInternal,
         IStaticTarget,
@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ITerminalGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         ILoquiObject<ITerminalGetter>,
         IMapsToGetter<ITerminalGetter>,
         IStaticTargetGetter

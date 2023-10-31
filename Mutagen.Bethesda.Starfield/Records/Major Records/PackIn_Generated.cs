@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPackIn :
-        IConstructibleObjectTarget,
+        IConstructible,
         ILoquiObjectSetter<IPackInInternal>,
         IPackInGetter,
         IStarfieldMajorRecordInternal
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPackInGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         ILoquiObject<IPackInGetter>,
         IMapsToGetter<IPackInGetter>
     {

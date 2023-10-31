@@ -6502,6 +6502,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IWeapon :
         IAssetLinkContainer,
+        IConstructible,
         IFormLinkContainer,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -6709,6 +6710,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IConstructibleGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,

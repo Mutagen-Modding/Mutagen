@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IMiscItem :
         IAssetLinkContainer,
-        IConstructibleObjectTarget,
+        IConstructible,
         IFormLinkContainer,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,

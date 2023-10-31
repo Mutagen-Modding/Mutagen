@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IGenericBaseForm :
-        IConstructibleObjectTarget,
+        IConstructible,
         IGenericBaseFormGetter,
         ILoquiObjectSetter<IGenericBaseFormInternal>,
         IStarfieldMajorRecordInternal
@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IGenericBaseFormGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         ILoquiObject<IGenericBaseFormGetter>,
         IMapsToGetter<IGenericBaseFormGetter>
     {

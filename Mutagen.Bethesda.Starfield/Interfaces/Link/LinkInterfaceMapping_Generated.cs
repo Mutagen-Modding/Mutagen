@@ -24,24 +24,28 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             ActionRecord_Registration.Instance,
         });
         dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
-        dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        dict[typeof(IConstructible)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ActionRecord_Registration.Instance,
             Activator_Registration.Instance,
+            Ammunition_Registration.Instance,
+            Armor_Registration.Instance,
+            Book_Registration.Instance,
             Container_Registration.Instance,
             FormList_Registration.Instance,
             Furniture_Registration.Instance,
             GenericBaseForm_Registration.Instance,
             Ingestible_Registration.Instance,
+            LeveledItem_Registration.Instance,
             MiscItem_Registration.Instance,
             MoveableStatic_Registration.Instance,
             Npc_Registration.Instance,
-            AObjectModification_Registration.Instance,
             PackIn_Registration.Instance,
             Static_Registration.Instance,
             Terminal_Registration.Instance,
+            Weapon_Registration.Instance,
         });
-        dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
+        dict[typeof(IConstructibleGetter)] = dict[typeof(IConstructible)] with { Setter = false };
         dict[typeof(IStaticTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Activator_Registration.Instance,
@@ -128,6 +132,11 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             LocationReferenceType_Registration.Instance,
         });
         dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)] with { Setter = false };
+        dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             PlacedObject_Registration.Instance,

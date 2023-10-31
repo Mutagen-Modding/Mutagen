@@ -425,6 +425,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IBook :
         IBookGetter,
+        IConstructible,
         IItem,
         ILoquiObjectSetter<IBookInternal>,
         IStarfieldMajorRecordInternal,
@@ -443,6 +444,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IBookGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IConstructibleGetter,
         IItemGetter,
         ILoquiObject<IBookGetter>,
         IMapsToGetter<IBookGetter>,

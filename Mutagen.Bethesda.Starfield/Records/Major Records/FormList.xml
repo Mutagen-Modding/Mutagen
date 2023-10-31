@@ -10,7 +10,7 @@
       <RefList name="ConditionalEntries" refName="FormListConditionalEntry" />
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>
-    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
   <Object name="FormListConditionalEntry" objType="Subrecord" >
     <Fields>

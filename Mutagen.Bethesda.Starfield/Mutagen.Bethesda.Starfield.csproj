@@ -5233,5 +5233,6 @@
       <DependentUpon>ItemComponent.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IResourceTarget_Generated.cs" />
+    <Compile Include="Interfaces\Link\IConstructible_Generated.cs" />
   </ItemGroup>
 </Project>

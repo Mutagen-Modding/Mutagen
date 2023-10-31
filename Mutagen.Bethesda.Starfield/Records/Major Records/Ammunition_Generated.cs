@@ -425,6 +425,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IAmmunition :
         IAmmunitionGetter,
+        IConstructible,
         IItem,
         ILoquiObjectSetter<IAmmunitionInternal>,
         IStarfieldMajorRecordInternal,
@@ -443,6 +444,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAmmunitionGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IConstructibleGetter,
         IItemGetter,
         ILoquiObject<IAmmunitionGetter>,
         IMapsToGetter<IAmmunitionGetter>,

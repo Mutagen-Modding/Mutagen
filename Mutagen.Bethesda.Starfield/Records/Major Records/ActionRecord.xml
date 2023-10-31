@@ -8,6 +8,6 @@
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
     </Fields>
     <LinkInterface>IIdleRelation</LinkInterface>
-    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
+    <LinkInterface>IConstructible</LinkInterface>
   </Object>
 </Loqui>

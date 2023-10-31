@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IContainer :
-        IConstructibleObjectTarget,
+        IConstructible,
         IContainerGetter,
         IItem,
         ILoquiObjectSetter<IContainerInternal>,
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IContainerGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         IItemGetter,
         ILoquiObject<IContainerGetter>,
         IMapsToGetter<IContainerGetter>,

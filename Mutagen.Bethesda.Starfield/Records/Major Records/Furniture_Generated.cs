@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IFurniture :
-        IConstructibleObjectTarget,
+        IConstructible,
         IFurnitureGetter,
         ILoquiObjectSetter<IFurnitureInternal>,
         IStarfieldMajorRecordInternal,
@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IFurnitureGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         ILoquiObject<IFurnitureGetter>,
         IMapsToGetter<IFurnitureGetter>,
         IStaticTargetGetter

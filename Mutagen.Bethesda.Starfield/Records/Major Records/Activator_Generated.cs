@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActivator :
         IActivatorGetter,
         IAssetLinkContainer,
-        IConstructibleObjectTarget,
+        IConstructible,
         IFormLinkContainer,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
-        IConstructibleObjectTargetGetter,
+        IConstructibleGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
