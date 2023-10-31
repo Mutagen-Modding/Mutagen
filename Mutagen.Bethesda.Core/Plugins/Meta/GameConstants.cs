@@ -344,8 +344,8 @@ public sealed record GameConstants
     public static readonly GameConstants Fallout4VR = Fallout4 with
     {
         Release = GameRelease.Fallout4VR,
-        MyDocumentsString = "Fallout4 VR",
-        IniName = "Fallout4 VR",
+        MyDocumentsString = null,
+        IniName = "Fallout4",
     };
 
     /// <summary> 

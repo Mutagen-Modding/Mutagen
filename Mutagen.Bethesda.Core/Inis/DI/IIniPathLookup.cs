@@ -20,14 +20,11 @@ public class IniPathLookup : IIniPathLookup
     
     public FilePath Get(GameRelease release)
     {
-        if (release == GameRelease.Starfield)
-        {
-            return Path.Combine(_gameDirectoryLookup.Get(release), ToIniFileName(release));
-        }
-        var docsString = GameConstants.Get(release).MyDocumentsString;
+        var constants = GameConstants.Get(release);
+        var docsString = constants.MyDocumentsString;
         if (docsString == null)
         {
-            throw new ArgumentException($"{release} does not have ini in My Documents");
+            return Path.Combine(_gameDirectoryLookup.Get(release), ToIniFileName(release));
         }
         
         return Path.Combine(
