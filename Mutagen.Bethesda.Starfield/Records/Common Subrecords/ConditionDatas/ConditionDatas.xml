@@ -4457,7 +4457,7 @@
   </Object>
   <Object name="HasPerkCategoryConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
-      <Int32 name="FirstParameter" />
+      <Enum enumName="PerkCategory" name="FirstParameter" />
       <String name="FirstUnusedStringParameter" nullable="true" binary="NoGeneration" />
       <Int32 name="SecondParameter" />
       <String name="SecondUnusedStringParameter" nullable="true" binary="NoGeneration" />
@@ -4465,17 +4465,17 @@
   </Object>
   <Object name="HasPerkSkillGroupConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
-      <Int32 name="FirstParameter" />
+      <Enum enumName="PerkSkillGroup" name="FirstParameter" />
       <String name="FirstUnusedStringParameter" nullable="true" binary="NoGeneration" />
-      <Int32 name="SecondParameter" />
+      <Enum enumName="PerkSkillGroup" name="SecondParameter" />
       <String name="SecondUnusedStringParameter" nullable="true" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="CountAquiredPerkRanksByTypeConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
-      <Int32 name="FirstParameter" />
+      <Enum enumName="PerkCategory" name="FirstParameter" />
       <String name="FirstUnusedStringParameter" nullable="true" binary="NoGeneration" />
-      <Int32 name="SecondParameter" />
+      <Enum enumName="PerkSkillGroup" name="SecondParameter" />
       <String name="SecondUnusedStringParameter" nullable="true" binary="NoGeneration" />
     </Fields>
   </Object>

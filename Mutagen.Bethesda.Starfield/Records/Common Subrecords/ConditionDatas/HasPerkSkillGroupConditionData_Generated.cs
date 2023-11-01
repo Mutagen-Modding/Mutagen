@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FirstParameter
-        public Int32 FirstParameter { get; set; } = default;
+        public PerkSkillGroup FirstParameter { get; set; } = default;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         String? IHasPerkSkillGroupConditionDataGetter.FirstUnusedStringParameter => this.FirstUnusedStringParameter;
         #endregion
         #region SecondParameter
-        public Int32 SecondParameter { get; set; } = default;
+        public PerkSkillGroup SecondParameter { get; set; } = default;
         #endregion
         #region SecondUnusedStringParameter
         public String? SecondUnusedStringParameter { get; set; }
@@ -515,9 +515,9 @@ namespace Mutagen.Bethesda.Starfield
         IHasPerkSkillGroupConditionDataGetter,
         ILoquiObjectSetter<IHasPerkSkillGroupConditionData>
     {
-        new Int32 FirstParameter { get; set; }
+        new PerkSkillGroup FirstParameter { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
-        new Int32 SecondParameter { get; set; }
+        new PerkSkillGroup SecondParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
     }
 
@@ -527,9 +527,9 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IHasPerkSkillGroupConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => HasPerkSkillGroupConditionData_Registration.Instance;
-        Int32 FirstParameter { get; }
+        PerkSkillGroup FirstParameter { get; }
         String? FirstUnusedStringParameter { get; }
-        Int32 SecondParameter { get; }
+        PerkSkillGroup SecondParameter { get; }
         String? SecondUnusedStringParameter { get; }
 
     }
@@ -1151,8 +1151,14 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.FirstParameter);
-            writer.Write(item.SecondParameter);
+            EnumBinaryTranslation<PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.FirstParameter,
+                length: 4);
+            EnumBinaryTranslation<PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.SecondParameter,
+                length: 4);
         }
 
         public void Write(
@@ -1200,8 +1206,12 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter = frame.ReadInt32();
-            item.SecondParameter = frame.ReadInt32();
+            item.FirstParameter = EnumBinaryTranslation<PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.SecondParameter = EnumBinaryTranslation<PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

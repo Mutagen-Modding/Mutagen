@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FirstParameter
-        public Int32 FirstParameter { get; set; } = default;
+        public PerkCategory FirstParameter { get; set; } = default;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Starfield
         IHasPerkCategoryConditionDataGetter,
         ILoquiObjectSetter<IHasPerkCategoryConditionData>
     {
-        new Int32 FirstParameter { get; set; }
+        new PerkCategory FirstParameter { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IHasPerkCategoryConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => HasPerkCategoryConditionData_Registration.Instance;
-        Int32 FirstParameter { get; }
+        PerkCategory FirstParameter { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -1151,7 +1151,10 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            writer.Write(item.FirstParameter);
+            EnumBinaryTranslation<PerkCategory, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.FirstParameter,
+                length: 4);
             writer.Write(item.SecondParameter);
         }
 
@@ -1200,7 +1203,9 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter = frame.ReadInt32();
+            item.FirstParameter = EnumBinaryTranslation<PerkCategory, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.SecondParameter = frame.ReadInt32();
         }
 

@@ -113,10 +113,10 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter IPerkGetter.Description => this.Description;
         #endregion
         #region Categroy
-        public Perk.PerkCategory Categroy { get; set; } = default;
+        public PerkCategory Categroy { get; set; } = default;
         #endregion
         #region SkillGroup
-        public Perk.PerkSkillGroup SkillGroup { get; set; } = default;
+        public PerkSkillGroup SkillGroup { get; set; } = default;
         #endregion
         #region CrewAssignment
         public Perk.PerkCrewAssignment CrewAssignment { get; set; } = default;
@@ -1085,8 +1085,8 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
-        new Perk.PerkCategory Categroy { get; set; }
-        new Perk.PerkSkillGroup SkillGroup { get; set; }
+        new PerkCategory Categroy { get; set; }
+        new PerkSkillGroup SkillGroup { get; set; }
         new Perk.PerkCrewAssignment CrewAssignment { get; set; }
         new Perk.Flag Flags { get; set; }
         new IFormLinkNullable<IKeywordGetter> Restriction { get; set; }
@@ -1135,8 +1135,8 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter Description { get; }
-        Perk.PerkCategory Categroy { get; }
-        Perk.PerkSkillGroup SkillGroup { get; }
+        PerkCategory Categroy { get; }
+        PerkSkillGroup SkillGroup { get; }
         Perk.PerkCrewAssignment CrewAssignment { get; }
         Perk.Flag Flags { get; }
         IFormLinkNullableGetter<IKeywordGetter> Restriction { get; }
@@ -2289,11 +2289,11 @@ namespace Mutagen.Bethesda.Starfield
                 source: StringsSource.DL);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
-                EnumBinaryTranslation<Perk.PerkCategory, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<PerkCategory, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Categroy,
                     length: 1);
-                EnumBinaryTranslation<Perk.PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.SkillGroup,
                     length: 1);
@@ -2457,11 +2457,11 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
-                    item.Categroy = EnumBinaryTranslation<Perk.PerkCategory, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Categroy = EnumBinaryTranslation<PerkCategory, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
                     if (dataFrame.Remaining < 1) return null;
-                    item.SkillGroup = EnumBinaryTranslation<Perk.PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.SkillGroup = EnumBinaryTranslation<PerkSkillGroup, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
                     if (dataFrame.Remaining < 1) return null;
@@ -2605,12 +2605,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Categroy
         private int _CategroyLocation => _DATALocation!.Value.Min;
         private bool _Categroy_IsSet => _DATALocation.HasValue;
-        public Perk.PerkCategory Categroy => _Categroy_IsSet ? (Perk.PerkCategory)_recordData.Span.Slice(_CategroyLocation, 0x1)[0] : default;
+        public PerkCategory Categroy => _Categroy_IsSet ? (PerkCategory)_recordData.Span.Slice(_CategroyLocation, 0x1)[0] : default;
         #endregion
         #region SkillGroup
         private int _SkillGroupLocation => _DATALocation!.Value.Min + 0x1;
         private bool _SkillGroup_IsSet => _DATALocation.HasValue;
-        public Perk.PerkSkillGroup SkillGroup => _SkillGroup_IsSet ? (Perk.PerkSkillGroup)_recordData.Span.Slice(_SkillGroupLocation, 0x1)[0] : default;
+        public PerkSkillGroup SkillGroup => _SkillGroup_IsSet ? (PerkSkillGroup)_recordData.Span.Slice(_SkillGroupLocation, 0x1)[0] : default;
         #endregion
         #region CrewAssignment
         private int _CrewAssignmentLocation => _DATALocation!.Value.Min + 0x2;

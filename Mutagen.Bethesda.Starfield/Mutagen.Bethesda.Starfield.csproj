@@ -136,6 +136,8 @@
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\HitBehavior.cs" />
     <Compile Include="Enums\LockLevel.cs" />
+    <Compile Include="Enums\PerkCategory.cs" />
+    <Compile Include="Enums\PerkSkillGroup.cs" />
     <Compile Include="Enums\Pronoun.cs" />
     <Compile Include="Enums\SoundLevel.cs" />
     <Compile Include="Enums\Stagger.cs" />

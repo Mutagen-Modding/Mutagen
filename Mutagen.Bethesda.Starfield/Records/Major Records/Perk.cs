@@ -7,28 +7,7 @@ public partial class Perk
     {
         NonPlayable = 0x4
     }
-
-    public enum PerkCategory
-    {
-        None,
-        Combat,
-        Science,
-        Tech,
-        Physical,
-        Social,
-        All,
-        AllIncludingNone,
-    }
-
-    public enum PerkSkillGroup
-    {
-        None,
-        Basic,
-        Advanced,
-        Expert,
-        Master
-    }
-
+    
     public enum PerkCrewAssignment
     {
         None,
