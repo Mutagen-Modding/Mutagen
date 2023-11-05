@@ -1978,11 +1978,11 @@
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ActionRecord_Generated.cs">
+      <DependentUpon>ActionRecord.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AnimatedObject.cs">
-      <DependentUpon>AnimatedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\APerkEffect.cs">
       <DependentUpon>Perk.xml</DependentUpon>
@@ -2125,29 +2125,13 @@
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
-    <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Records\TransientType_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
-    <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
-    <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
-    <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
-    <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
-    <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
-    <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
-    <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
     <Compile Include="Interfaces\Link\IAliasVoiceType_Generated.cs" />
-    <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
-    <Compile Include="Interfaces\Link\IPlacedSimple_Generated.cs" />
-    <Compile Include="Interfaces\Link\IPlacedThing_Generated.cs" />
-    <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
-    <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ActorValueModulation.cs">
       <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
@@ -2155,10 +2139,6 @@
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulation.cs">
-      <DependentUpon>ActorValueModulation.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\Link\IItem_Generated.cs" />
     <Compile Include="Records\Common Subrecords\ConditionDatas\GetThreatRatioConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
@@ -3986,41 +3966,8 @@
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ActionRecord.cs">
-      <DependentUpon>ActionRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AnimatedObject.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BipedObjectData.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BodyData.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DefaultObject.cs">
-      <DependentUpon>DefaultObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Faction.cs">
-      <DependentUpon>Faction.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSetting.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSettingBool.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSettingFloat.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSettingInt.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSettingString.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSettingUInt.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
@@ -4077,17 +4024,13 @@
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
-    <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
     <Compile Include="Interfaces\Link\IObjectId_Generated.cs" />
-    <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
-    <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
     <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
     <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
-    <Compile Include="Interfaces\Link\IAliasVoiceType_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlacedSimple_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlacedThing_Generated.cs" />
@@ -4099,7 +4042,6 @@
     <Compile Include="Records\Major Records\ActorValueModulation.cs">
       <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\Link\IOutfitTarget_Generated.cs" />
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
@@ -4475,9 +4417,6 @@
     </Compile>
     <Compile Include="Records\Major Records\AcousticSpace_Generated.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActionRecord_Generated.cs">
-      <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Activator_Generated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
