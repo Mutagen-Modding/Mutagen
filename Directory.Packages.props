@@ -23,7 +23,7 @@
       <Version>2.4.0</Version>
     </PackageVersion>
     <PackageVersion Include="GitInfo">
-      <Version>3.3.3</Version>
+      <Version>3.0.4</Version>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
@@ -62,7 +62,7 @@
       <Version>[2.60.0.1-nightly-20230901-092788]</Version>
     </PackageVersion>
     <PackageVersion Include="NuGetizer">
-      <Version>1.2.0</Version>
+      <Version>0.9.5</Version>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
