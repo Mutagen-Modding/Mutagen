@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -39,7 +38,6 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     public partial class CollectionAlias :
-        AQuestAlias,
         ICollectionAlias,
         IEquatable<ICollectionAliasGetter>,
         ILoquiObjectSetter<CollectionAlias>
@@ -63,7 +61,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
@@ -92,14 +90,12 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mask
-        public new class Mask<TItem> :
-            AQuestAlias.Mask<TItem>,
+        public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
             #region Ctors
             public Mask(TItem initialValue)
-            : base(initialValue)
             {
                 this.AliasID = initialValue;
                 this.MaxInitialFillCount = initialValue;
@@ -108,7 +104,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(
                 TItem AliasID,
                 TItem MaxInitialFillCount)
-            : base()
             {
                 this.AliasID = AliasID;
                 this.MaxInitialFillCount = MaxInitialFillCount;
@@ -137,7 +132,6 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.AliasID, rhs.AliasID)) return false;
                 if (!object.Equals(this.MaxInitialFillCount, rhs.MaxInitialFillCount)) return false;
                 return true;
@@ -147,16 +141,14 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.AliasID);
                 hash.Add(this.MaxInitialFillCount);
-                hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public override bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (!base.All(eval)) return false;
                 if (!eval(this.AliasID)) return false;
                 if (!eval(this.MaxInitialFillCount)) return false;
                 return true;
@@ -164,9 +156,8 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Any
-            public override bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (base.Any(eval)) return true;
                 if (eval(this.AliasID)) return true;
                 if (eval(this.MaxInitialFillCount)) return true;
                 return false;
@@ -174,7 +165,7 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Translate
-            public new Mask<R> Translate<R>(Func<TItem, R> eval)
+            public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
                 var ret = new CollectionAlias.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
@@ -183,7 +174,6 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                base.Translate_InternalFill(obj, eval);
                 obj.AliasID = eval(this.AliasID);
                 obj.MaxInitialFillCount = eval(this.MaxInitialFillCount);
             }
@@ -218,17 +208,30 @@ namespace Mutagen.Bethesda.Fallout4
 
         }
 
-        public new class ErrorMask :
-            AQuestAlias.ErrorMask,
+        public class ErrorMask :
+            IErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Overall { get; set; }
+            private List<string>? _warnings;
+            public List<string> Warnings
+            {
+                get
+                {
+                    if (_warnings == null)
+                    {
+                        _warnings = new List<string>();
+                    }
+                    return _warnings;
+                }
+            }
             public Exception? AliasID;
             public Exception? MaxInitialFillCount;
             #endregion
 
             #region IErrorMask
-            public override object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
                 CollectionAlias_FieldIndex enu = (CollectionAlias_FieldIndex)index;
                 switch (enu)
@@ -238,11 +241,11 @@ namespace Mutagen.Bethesda.Fallout4
                     case CollectionAlias_FieldIndex.MaxInitialFillCount:
                         return MaxInitialFillCount;
                     default:
-                        return base.GetNthMask(index);
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
                 CollectionAlias_FieldIndex enu = (CollectionAlias_FieldIndex)index;
                 switch (enu)
@@ -254,12 +257,11 @@ namespace Mutagen.Bethesda.Fallout4
                         this.MaxInitialFillCount = ex;
                         break;
                     default:
-                        base.SetNthException(index, ex);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
                 CollectionAlias_FieldIndex enu = (CollectionAlias_FieldIndex)index;
                 switch (enu)
@@ -271,12 +273,11 @@ namespace Mutagen.Bethesda.Fallout4
                         this.MaxInitialFillCount = (Exception?)obj;
                         break;
                     default:
-                        base.SetNthMask(index, obj);
-                        break;
+                        throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public override bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
                 if (AliasID != null) return true;
@@ -288,7 +289,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public override void Print(StructuredStringBuilder sb, string? name = null)
+            public void Print(StructuredStringBuilder sb, string? name = null)
             {
                 sb.AppendLine($"{(name ?? "ErrorMask")} =>");
                 using (sb.Brace())
@@ -304,9 +305,8 @@ namespace Mutagen.Bethesda.Fallout4
                     PrintFillInternal(sb);
                 }
             }
-            protected override void PrintFillInternal(StructuredStringBuilder sb)
+            protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                base.PrintFillInternal(sb);
                 {
                     sb.AppendItem(AliasID, "AliasID");
                 }
@@ -333,18 +333,19 @@ namespace Mutagen.Bethesda.Fallout4
             #endregion
 
             #region Factory
-            public static new ErrorMask Factory(ErrorMaskBuilder errorMask)
+            public static ErrorMask Factory(ErrorMaskBuilder errorMask)
             {
                 return new ErrorMask();
             }
             #endregion
 
         }
-        public new class TranslationMask :
-            AQuestAlias.TranslationMask,
-            ITranslationMask
+        public class TranslationMask : ITranslationMask
         {
             #region Members
+            private TranslationCrystal? _crystal;
+            public readonly bool DefaultOn;
+            public bool OnOverall;
             public bool AliasID;
             public bool MaxInitialFillCount;
             #endregion
@@ -353,17 +354,26 @@ namespace Mutagen.Bethesda.Fallout4
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
-                : base(defaultOn, onOverall)
             {
+                this.DefaultOn = defaultOn;
+                this.OnOverall = onOverall;
                 this.AliasID = defaultOn;
                 this.MaxInitialFillCount = defaultOn;
             }
 
             #endregion
 
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            public TranslationCrystal GetCrystal()
             {
-                base.GetCrystal(ret);
+                if (_crystal != null) return _crystal;
+                var ret = new List<(bool On, TranslationCrystal? SubCrystal)>();
+                GetCrystal(ret);
+                _crystal = new TranslationCrystal(ret.ToArray());
+                return _crystal;
+            }
+
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
                 ret.Add((AliasID, null));
                 ret.Add((MaxInitialFillCount, null));
             }
@@ -378,7 +388,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => CollectionAliasBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => CollectionAliasBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -389,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static CollectionAlias CreateFromBinary(
+        public static CollectionAlias CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -423,7 +435,7 @@ namespace Mutagen.Bethesda.Fallout4
             ((CollectionAliasSetterCommon)((ICollectionAliasGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new CollectionAlias GetNew()
+        internal static CollectionAlias GetNew()
         {
             return new CollectionAlias();
         }
@@ -433,7 +445,6 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ICollectionAlias :
-        IAQuestAlias,
         ICollectionAliasGetter,
         ILoquiObjectSetter<ICollectionAlias>
     {
@@ -442,11 +453,17 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     public partial interface ICollectionAliasGetter :
-        IAQuestAliasGetter,
+        ILoquiObject,
         IBinaryItem,
         ILoquiObject<ICollectionAliasGetter>
     {
-        static new ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object? CommonSetterInstance();
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        object CommonSetterTranslationInstance();
+        static ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
         Int32 AliasID { get; }
         Byte? MaxInitialFillCount { get; }
 
@@ -506,6 +523,31 @@ namespace Mutagen.Bethesda.Fallout4
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
+        }
+
+        public static void DeepCopyIn(
+            this ICollectionAlias lhs,
+            ICollectionAliasGetter rhs)
+        {
+            ((CollectionAliasSetterTranslationCommon)((ICollectionAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default,
+                deepCopy: false);
+        }
+
+        public static void DeepCopyIn(
+            this ICollectionAlias lhs,
+            ICollectionAliasGetter rhs,
+            CollectionAlias.TranslationMask? copyMask = null)
+        {
+            ((CollectionAliasSetterTranslationCommon)((ICollectionAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: copyMask?.GetCrystal(),
+                deepCopy: false);
         }
 
         public static void DeepCopyIn(
@@ -674,9 +716,9 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class CollectionAliasSetterCommon : AQuestAliasSetterCommon
+    internal partial class CollectionAliasSetterCommon
     {
-        public new static readonly CollectionAliasSetterCommon Instance = new CollectionAliasSetterCommon();
+        public static readonly CollectionAliasSetterCommon Instance = new CollectionAliasSetterCommon();
 
         partial void ClearPartial();
         
@@ -685,18 +727,11 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.AliasID = default;
             item.MaxInitialFillCount = default;
-            base.Clear(item);
-        }
-        
-        public override void Clear(IAQuestAlias item)
-        {
-            Clear(item: (ICollectionAlias)item);
         }
         
         #region Mutagen
         public void RemapLinks(ICollectionAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            base.RemapLinks(obj, mapping);
         }
         
         #endregion
@@ -714,23 +749,12 @@ namespace Mutagen.Bethesda.Fallout4
                 fillTyped: CollectionAliasBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
-        public override void CopyInFromBinary(
-            IAQuestAlias item,
-            MutagenFrame frame,
-            TypedParseParams translationParams)
-        {
-            CopyInFromBinary(
-                item: (CollectionAlias)item,
-                frame: frame,
-                translationParams: translationParams);
-        }
-        
         #endregion
         
     }
-    internal partial class CollectionAliasCommon : AQuestAliasCommon
+    internal partial class CollectionAliasCommon
     {
-        public new static readonly CollectionAliasCommon Instance = new CollectionAliasCommon();
+        public static readonly CollectionAliasCommon Instance = new CollectionAliasCommon();
 
         public CollectionAlias.Mask<bool> GetEqualsMask(
             ICollectionAliasGetter item,
@@ -754,7 +778,6 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.AliasID = item.AliasID == rhs.AliasID;
             ret.MaxInitialFillCount = item.MaxInitialFillCount == rhs.MaxInitialFillCount;
-            base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
@@ -799,10 +822,6 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             CollectionAlias.Mask<bool>? printMask = null)
         {
-            AQuestAliasCommon.ToStringFields(
-                item: item,
-                sb: sb,
-                printMask: printMask);
             if (printMask?.AliasID ?? true)
             {
                 sb.AppendItem(item.AliasID, "AliasID");
@@ -814,15 +833,6 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public static CollectionAlias_FieldIndex ConvertFieldIndex(AQuestAlias_FieldIndex index)
-        {
-            switch (index)
-            {
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
-            }
-        }
-        
         #region Equals and Hash
         public virtual bool Equals(
             ICollectionAliasGetter? lhs,
@@ -830,7 +840,6 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAQuestAliasGetter)lhs, (IAQuestAliasGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.AliasID) ?? true))
             {
                 if (lhs.AliasID != rhs.AliasID) return false;
@@ -842,17 +851,6 @@ namespace Mutagen.Bethesda.Fallout4
             return true;
         }
         
-        public override bool Equals(
-            IAQuestAliasGetter? lhs,
-            IAQuestAliasGetter? rhs,
-            TranslationCrystal? equalsMask)
-        {
-            return Equals(
-                lhs: (ICollectionAliasGetter?)lhs,
-                rhs: rhs as ICollectionAliasGetter,
-                equalsMask: equalsMask);
-        }
-        
         public virtual int GetHashCode(ICollectionAliasGetter item)
         {
             var hash = new HashCode();
@@ -861,19 +859,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(MaxInitialFillCountitem);
             }
-            hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAQuestAliasGetter item)
-        {
-            return GetHashCode(item: (ICollectionAliasGetter)item);
         }
         
         #endregion
         
         
-        public override object GetNew()
+        public object GetNew()
         {
             return CollectionAlias.GetNew();
         }
@@ -881,19 +873,15 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICollectionAliasGetter obj)
         {
-            foreach (var item in base.EnumerateFormLinks(obj))
-            {
-                yield return item;
-            }
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class CollectionAliasSetterTranslationCommon : AQuestAliasSetterTranslationCommon
+    internal partial class CollectionAliasSetterTranslationCommon
     {
-        public new static readonly CollectionAliasSetterTranslationCommon Instance = new CollectionAliasSetterTranslationCommon();
+        public static readonly CollectionAliasSetterTranslationCommon Instance = new CollectionAliasSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
@@ -903,12 +891,6 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            base.DeepCopyIn(
-                (IAQuestAlias)item,
-                (IAQuestAliasGetter)rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)CollectionAlias_FieldIndex.AliasID) ?? true))
             {
                 item.AliasID = rhs.AliasID;
@@ -917,22 +899,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.MaxInitialFillCount = rhs.MaxInitialFillCount;
             }
-        }
-        
-        
-        public override void DeepCopyIn(
-            IAQuestAlias item,
-            IAQuestAliasGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICollectionAlias)item,
-                rhs: (ICollectionAliasGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         #endregion
@@ -995,16 +961,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollectionAlias_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => CollectionAliasCommon.Instance;
+        protected object CommonInstance() => CollectionAliasCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
             return CollectionAliasSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => CollectionAliasSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => CollectionAliasSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object ICollectionAliasGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object ICollectionAliasGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        [DebuggerStepThrough]
+        object ICollectionAliasGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1015,11 +987,9 @@ namespace Mutagen.Bethesda.Fallout4
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout4
 {
-    public partial class CollectionAliasBinaryWriteTranslation :
-        AQuestAliasBinaryWriteTranslation,
-        IBinaryWriteTranslator
+    public partial class CollectionAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public new static readonly CollectionAliasBinaryWriteTranslation Instance = new();
+        public static readonly CollectionAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
             ICollectionAliasGetter item,
@@ -1047,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public override void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             TypedWriteParams translationParams = default)
@@ -1058,22 +1028,11 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public override void Write(
-            MutagenWriter writer,
-            IAQuestAliasGetter item,
-            TypedWriteParams translationParams)
-        {
-            Write(
-                item: (ICollectionAliasGetter)item,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
     }
 
-    internal partial class CollectionAliasBinaryCreateTranslation : AQuestAliasBinaryCreateTranslation
+    internal partial class CollectionAliasBinaryCreateTranslation
     {
-        public new static readonly CollectionAliasBinaryCreateTranslation Instance = new CollectionAliasBinaryCreateTranslation();
+        public static readonly CollectionAliasBinaryCreateTranslation Instance = new CollectionAliasBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
             ICollectionAlias item,
@@ -1113,6 +1072,17 @@ namespace Mutagen.Bethesda.Fallout4
     #region Binary Write Mixins
     public static class CollectionAliasBinaryTranslationMixIn
     {
+        public static void WriteToBinary(
+            this ICollectionAliasGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams = default)
+        {
+            ((CollectionAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
     }
     #endregion
 
@@ -1121,24 +1091,32 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4
 {
     internal partial class CollectionAliasBinaryOverlay :
-        AQuestAliasBinaryOverlay,
+        PluginBinaryOverlay,
         ICollectionAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CollectionAlias_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => CollectionAlias_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => CollectionAliasCommon.Instance;
+        protected object CommonInstance() => CollectionAliasCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => CollectionAliasSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => CollectionAliasSetterTranslationCommon.Instance;
+        [DebuggerStepThrough]
+        object ICollectionAliasGetter.CommonInstance() => this.CommonInstance();
+        [DebuggerStepThrough]
+        object? ICollectionAliasGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
+        object ICollectionAliasGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => CollectionAliasBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => CollectionAliasBinaryWriteTranslation.Instance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
@@ -1237,7 +1215,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #region To String
 
-        public override void Print(
+        public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {

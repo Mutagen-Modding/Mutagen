@@ -2783,9 +2783,6 @@ namespace Mutagen.Bethesda.Fallout4
                 case "QuestCollectionAlias":
                 case "IQuestCollectionAliasGetter":
                 case "IQuestCollectionAlias":
-                case "CollectionAlias":
-                case "ICollectionAliasGetter":
-                case "ICollectionAlias":
                     break;
                 case "DialogBranch":
                 case "IDialogBranchGetter":

@@ -178,7 +178,7 @@
       <RefList name="Collection" refName="CollectionAlias" />
     </Fields>
   </Object>
-  <Object name="CollectionAlias" objType="Subrecord" baseClass="AQuestAlias">
+  <Object name="CollectionAlias" objType="Subrecord" >
     <Fields>
       <Int32 name="AliasID" recordType="ALCS" nullable="False" />
       <UInt8 name="MaxInitialFillCount" recordType="ALMI" />
