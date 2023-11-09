@@ -23,7 +23,7 @@ public class GenderedTests
                 new ParsingBundle(
                     GameRelease.SkyrimSE, 
                     new MasterReferenceCollection(Constants.Skyrim))));
-        var headData = GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
+        var headData = GenderedItemBinaryTranslation.ParseMarkerAheadOfItem<HeadData>(
             frame: frame,
             maleMarker: RecordTypes.MNAM,
             femaleMarker: RecordTypes.FNAM,

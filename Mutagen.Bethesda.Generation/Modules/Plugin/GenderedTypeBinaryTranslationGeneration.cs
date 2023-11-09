@@ -53,8 +53,19 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         }
 
         bool notNull = gender.ItemNullable && !gender.SubTypeGeneration.IsNullable;
+
+        string parseSuffix = string.Empty;
+        if (gender.MarkerPerGender)
+        {
+            parseSuffix = "MarkerAheadOfItem";
+        }
+        else if (gender.SubTypeGeneration.GetFieldData().MarkerType.HasValue)
+        {
+            parseSuffix = "MarkerWithinItem";
+        }
+        
         using (var args = sb.Call(
-                   $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
+                   $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{parseSuffix}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
         {
             args.AddPassArg($"frame");
             if (gender.MaleMarker.HasValue)
@@ -184,9 +195,19 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         }
 
         var generics = gendered.SubTypeGeneration is FormLinkType linkType && linkType.Nullable ? $"<{linkType.GenericString}>" : string.Empty;
+
+        string writeSuffix = string.Empty;
+        if (gendered.MarkerPerGender)
+        {
+            writeSuffix = "MarkerAheadOfItem";
+        }
+        else if (gendered.SubTypeGeneration.GetFieldData().MarkerType.HasValue)
+        {
+            writeSuffix = "MarkerWithinItem";
+        }
         
         using (var args = sb.Call(
-                   $"GenderedItemBinaryTranslation.Write{(gendered.MarkerPerGender ? "MarkerPerItem" : null)}{generics}"))
+                   $"GenderedItemBinaryTranslation.Write{writeSuffix}{generics}"))
         {
             args.Add($"writer: {writerAccessor}");
             args.Add($"item: {itemAccessor}");

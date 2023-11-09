@@ -7554,7 +7554,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.BaseMovementDefaultSprint,
                 header: translationParams.ConvertToCustom(RecordTypes.SPMV));
-            GenderedItemBinaryTranslation.WriteMarkerPerItem(
+            GenderedItemBinaryTranslation.WriteMarkerAheadOfItem(
                 writer: writer,
                 item: item.HeadData,
                 markerType: RecordTypes.NAM0,
@@ -8167,7 +8167,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
+                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseMarkerAheadOfItem<HeadData>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,

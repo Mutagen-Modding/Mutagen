@@ -299,7 +299,7 @@ internal sealed class GenderedItemBinaryTranslation
         return new GenderedItem<TItem?>(male, female);
     }
 
-    public static GenderedItem<TItem?> ParseMarkerPerItem<TItem>(
+    public static GenderedItem<TItem?> ParseMarkerAheadOfItem<TItem>(
         MutagenFrame frame,
         RecordType marker,
         RecordType maleMarker,
@@ -323,6 +323,55 @@ internal sealed class GenderedItemBinaryTranslation
                 break;
             }
             frame.Position += genderedHeader.TotalLength;
+            TypedParseParams p = new TypedParseParams(null, 
+                recordTypeConverter: type == maleMarker ? null : femaleRecordConverter,
+                doNotShortCircuit: false);
+            if (!transl(frame, out var item, p))
+            {
+                continue;
+            }
+            if (type == maleMarker)
+            {
+                male = item;
+            }
+            else if (type == femaleMarker)
+            {
+                female = item;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+        return new GenderedItem<TItem?>(male, female);
+    }
+
+    public static GenderedItem<TItem?> ParseMarkerWithinItem<TItem>(
+        MutagenFrame frame,
+        RecordType marker,
+        RecordType maleMarker,
+        RecordType femaleMarker,
+        BinaryMasterParseDelegate<TItem> transl,
+        RecordTypeConverter? femaleRecordConverter = null)
+        where TItem : class
+    {
+        TItem? male = default, female = default;
+        for (int i = 0; i < 2; i++)
+        {
+            if (frame.Reader.Complete) break;
+
+            var genderedHeader = frame.GetSubrecordHeader();
+            RecordType type = genderedHeader.RecordType;
+            if (type != maleMarker && type != femaleMarker)
+            {
+                break;
+            }
+            frame.Position += genderedHeader.TotalLength;
+            
+            var markerHeader = frame.GetSubrecordHeader();
+            if (markerHeader.RecordType != marker) break;
+            frame.Position += markerHeader.TotalLength;
+            
             TypedParseParams p = new TypedParseParams(null, 
                 recordTypeConverter: type == maleMarker ? null : femaleRecordConverter,
                 doNotShortCircuit: false);
@@ -643,7 +692,7 @@ internal sealed class GenderedItemBinaryTranslation
         }
     }
 
-    public static void WriteMarkerPerItem<T>(
+    public static void WriteMarkerAheadOfItem<T>(
         MutagenWriter writer,
         IGenderedItemGetter<T>? item,
         RecordType markerType,

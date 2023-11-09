@@ -8350,7 +8350,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer: writer,
                 item: item.BaseMovementDefaultSneak,
                 header: translationParams.ConvertToCustom(RecordTypes.SNMV));
-            GenderedItemBinaryTranslation.WriteMarkerPerItem(
+            GenderedItemBinaryTranslation.WriteMarkerAheadOfItem(
                 writer: writer,
                 item: item.HeadData,
                 markerType: RecordTypes.NAM0,
@@ -9072,7 +9072,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
+                    item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseMarkerAheadOfItem<HeadData>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
