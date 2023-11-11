@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ContainerEntry" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Item" refName="ContainerItem" nullable="False" />
+      <RefDirect name="Data" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="ContainerItem" recordType="CNTO" objType="Subrecord">
+    <Fields>
+      <FormLink name="Item">
+        <Interface>IItem</Interface>
+      </FormLink>
+      <Int32 name="Count" />
+    </Fields>
+  </Object>
+</Loqui>

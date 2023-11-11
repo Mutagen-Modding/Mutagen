@@ -13,13 +13,13 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -38,37 +38,39 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class FaceMorph :
-        IEquatable<IFaceMorphGetter>,
-        IFaceMorph,
-        ILoquiObjectSetter<FaceMorph>
+    public partial class MannequinSkinSwapItem :
+        IEquatable<IMannequinSkinSwapItemGetter>,
+        ILoquiObjectSetter<MannequinSkinSwapItem>,
+        IMannequinSkinSwapItem
     {
         #region Ctor
-        public FaceMorph()
+        public MannequinSkinSwapItem()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Index
-        public UInt32? Index { get; set; }
+        #region MSSI
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IFaceMorphGetter.Index => this.Index;
-        #endregion
-        #region FaceMorphItems
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FaceMorphItem> _FaceMorphItems = new ExtendedList<FaceMorphItem>();
-        public ExtendedList<FaceMorphItem> FaceMorphItems
+        protected MemorySlice<Byte>? _MSSI;
+        public MemorySlice<Byte>? MSSI
         {
-            get => this._FaceMorphItems;
-            init => this._FaceMorphItems = value;
+            get => this._MSSI;
+            set => this._MSSI = value;
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFaceMorphItemGetter> IFaceMorphGetter.FaceMorphItems => _FaceMorphItems;
+        ReadOnlyMemorySlice<Byte>? IMannequinSkinSwapItemGetter.MSSI => this.MSSI;
         #endregion
-
+        #region MaterialSwap
+        private readonly IFormLinkNullable<ILayeredMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<ILayeredMaterialSwapGetter>();
+        public IFormLinkNullable<ILayeredMaterialSwapGetter> MaterialSwap
+        {
+            get => _MaterialSwap;
+            set => _MaterialSwap.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayeredMaterialSwapGetter> IMannequinSkinSwapItemGetter.MaterialSwap => this.MaterialSwap;
         #endregion
 
         #region To String
@@ -77,7 +79,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceMorphMixIn.Print(
+            MannequinSkinSwapItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -88,16 +90,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFaceMorphGetter rhs) return false;
-            return ((FaceMorphCommon)((IFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMannequinSkinSwapItemGetter rhs) return false;
+            return ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFaceMorphGetter? obj)
+        public bool Equals(IMannequinSkinSwapItemGetter? obj)
         {
-            return ((FaceMorphCommon)((IFaceMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FaceMorphCommon)((IFaceMorphGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -109,16 +111,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Index = initialValue;
-                this.FaceMorphItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>());
+                this.MSSI = initialValue;
+                this.MaterialSwap = initialValue;
             }
 
             public Mask(
-                TItem Index,
-                TItem FaceMorphItems)
+                TItem MSSI,
+                TItem MaterialSwap)
             {
-                this.Index = Index;
-                this.FaceMorphItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>?>(FaceMorphItems, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>());
+                this.MSSI = MSSI;
+                this.MaterialSwap = MaterialSwap;
             }
 
             #pragma warning disable CS8618
@@ -130,8 +132,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Index;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphItem.Mask<TItem>?>>?>? FaceMorphItems;
+            public TItem MSSI;
+            public TItem MaterialSwap;
             #endregion
 
             #region Equals
@@ -144,15 +146,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Index, rhs.Index)) return false;
-                if (!object.Equals(this.FaceMorphItems, rhs.FaceMorphItems)) return false;
+                if (!object.Equals(this.MSSI, rhs.MSSI)) return false;
+                if (!object.Equals(this.MaterialSwap, rhs.MaterialSwap)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Index);
-                hash.Add(this.FaceMorphItems);
+                hash.Add(this.MSSI);
+                hash.Add(this.MaterialSwap);
                 return hash.ToHashCode();
             }
 
@@ -161,19 +163,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Index)) return false;
-                if (this.FaceMorphItems != null)
-                {
-                    if (!eval(this.FaceMorphItems.Overall)) return false;
-                    if (this.FaceMorphItems.Specific != null)
-                    {
-                        foreach (var item in this.FaceMorphItems.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.MSSI)) return false;
+                if (!eval(this.MaterialSwap)) return false;
                 return true;
             }
             #endregion
@@ -181,19 +172,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Index)) return true;
-                if (this.FaceMorphItems != null)
-                {
-                    if (eval(this.FaceMorphItems.Overall)) return true;
-                    if (this.FaceMorphItems.Specific != null)
-                    {
-                        foreach (var item in this.FaceMorphItems.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (eval(this.MSSI)) return true;
+                if (eval(this.MaterialSwap)) return true;
                 return false;
             }
             #endregion
@@ -201,69 +181,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new FaceMorph.Mask<R>();
+                var ret = new MannequinSkinSwapItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Index = eval(this.Index);
-                if (FaceMorphItems != null)
-                {
-                    obj.FaceMorphItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorphItem.Mask<R>?>>?>(eval(this.FaceMorphItems.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceMorphItem.Mask<R>?>>());
-                    if (FaceMorphItems.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, FaceMorphItem.Mask<R>?>>();
-                        obj.FaceMorphItems.Specific = l;
-                        foreach (var item in FaceMorphItems.Specific)
-                        {
-                            MaskItemIndexed<R, FaceMorphItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FaceMorphItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.MSSI = eval(this.MSSI);
+                obj.MaterialSwap = eval(this.MaterialSwap);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(FaceMorph.Mask<bool>? printMask = null)
+            public string Print(MannequinSkinSwapItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, FaceMorph.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MannequinSkinSwapItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(FaceMorph.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(MannequinSkinSwapItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Index ?? true)
+                    if (printMask?.MSSI ?? true)
                     {
-                        sb.AppendItem(Index, "Index");
+                        sb.AppendItem(MSSI, "MSSI");
                     }
-                    if ((printMask?.FaceMorphItems?.Overall ?? true)
-                        && FaceMorphItems is {} FaceMorphItemsItem)
+                    if (printMask?.MaterialSwap ?? true)
                     {
-                        sb.AppendLine("FaceMorphItems =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(FaceMorphItemsItem.Overall);
-                            if (FaceMorphItemsItem.Specific != null)
-                            {
-                                foreach (var subItem in FaceMorphItemsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
+                        sb.AppendItem(MaterialSwap, "MaterialSwap");
                     }
                 }
             }
@@ -289,20 +240,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Index;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphItem.ErrorMask?>>?>? FaceMorphItems;
+            public Exception? MSSI;
+            public Exception? MaterialSwap;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                FaceMorph_FieldIndex enu = (FaceMorph_FieldIndex)index;
+                MannequinSkinSwapItem_FieldIndex enu = (MannequinSkinSwapItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceMorph_FieldIndex.Index:
-                        return Index;
-                    case FaceMorph_FieldIndex.FaceMorphItems:
-                        return FaceMorphItems;
+                    case MannequinSkinSwapItem_FieldIndex.MSSI:
+                        return MSSI;
+                    case MannequinSkinSwapItem_FieldIndex.MaterialSwap:
+                        return MaterialSwap;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -310,14 +261,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                FaceMorph_FieldIndex enu = (FaceMorph_FieldIndex)index;
+                MannequinSkinSwapItem_FieldIndex enu = (MannequinSkinSwapItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceMorph_FieldIndex.Index:
-                        this.Index = ex;
+                    case MannequinSkinSwapItem_FieldIndex.MSSI:
+                        this.MSSI = ex;
                         break;
-                    case FaceMorph_FieldIndex.FaceMorphItems:
-                        this.FaceMorphItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphItem.ErrorMask?>>?>(ex, null);
+                    case MannequinSkinSwapItem_FieldIndex.MaterialSwap:
+                        this.MaterialSwap = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -326,14 +277,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                FaceMorph_FieldIndex enu = (FaceMorph_FieldIndex)index;
+                MannequinSkinSwapItem_FieldIndex enu = (MannequinSkinSwapItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceMorph_FieldIndex.Index:
-                        this.Index = (Exception?)obj;
+                    case MannequinSkinSwapItem_FieldIndex.MSSI:
+                        this.MSSI = (Exception?)obj;
                         break;
-                    case FaceMorph_FieldIndex.FaceMorphItems:
-                        this.FaceMorphItems = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphItem.ErrorMask?>>?>)obj;
+                    case MannequinSkinSwapItem_FieldIndex.MaterialSwap:
+                        this.MaterialSwap = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -343,8 +294,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Index != null) return true;
-                if (FaceMorphItems != null) return true;
+                if (MSSI != null) return true;
+                if (MaterialSwap != null) return true;
                 return false;
             }
             #endregion
@@ -371,25 +322,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Index, "Index");
+                    sb.AppendItem(MSSI, "MSSI");
                 }
-                if (FaceMorphItems is {} FaceMorphItemsItem)
                 {
-                    sb.AppendLine("FaceMorphItems =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(FaceMorphItemsItem.Overall);
-                        if (FaceMorphItemsItem.Specific != null)
-                        {
-                            foreach (var subItem in FaceMorphItemsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(MaterialSwap, "MaterialSwap");
                 }
             }
             #endregion
@@ -399,8 +335,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Index = this.Index.Combine(rhs.Index);
-                ret.FaceMorphItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphItems?.Overall, rhs.FaceMorphItems?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphItems?.Specific, rhs.FaceMorphItems?.Specific));
+                ret.MSSI = this.MSSI.Combine(rhs.MSSI);
+                ret.MaterialSwap = this.MaterialSwap.Combine(rhs.MaterialSwap);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -424,8 +360,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Index;
-            public FaceMorphItem.TranslationMask? FaceMorphItems;
+            public bool MSSI;
+            public bool MaterialSwap;
             #endregion
 
             #region Ctors
@@ -435,7 +371,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Index = defaultOn;
+                this.MSSI = defaultOn;
+                this.MaterialSwap = defaultOn;
             }
 
             #endregion
@@ -451,8 +388,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Index, null));
-                ret.Add((FaceMorphItems == null ? DefaultOn : !FaceMorphItems.GetCrystal().CopyNothing, FaceMorphItems?.GetCrystal()));
+                ret.Add((MSSI, null));
+                ret.Add((MaterialSwap, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -463,27 +400,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MannequinSkinSwapItemCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MannequinSkinSwapItemSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FaceMorphBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MannequinSkinSwapItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MannequinSkinSwapItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static FaceMorph CreateFromBinary(
+        public static MannequinSkinSwapItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new FaceMorph();
-            ((FaceMorphSetterCommon)((IFaceMorphGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MannequinSkinSwapItem();
+            ((MannequinSkinSwapItemSetterCommon)((IMannequinSkinSwapItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -494,7 +436,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out FaceMorph item,
+            out MannequinSkinSwapItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -509,30 +451,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((FaceMorphSetterCommon)((IFaceMorphGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MannequinSkinSwapItemSetterCommon)((IMannequinSkinSwapItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static FaceMorph GetNew()
+        internal static MannequinSkinSwapItem GetNew()
         {
-            return new FaceMorph();
+            return new MannequinSkinSwapItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IFaceMorph :
-        IFaceMorphGetter,
-        ILoquiObjectSetter<IFaceMorph>
+    public partial interface IMannequinSkinSwapItem :
+        IFormLinkContainer,
+        ILoquiObjectSetter<IMannequinSkinSwapItem>,
+        IMannequinSkinSwapItemGetter
     {
-        new UInt32? Index { get; set; }
-        new ExtendedList<FaceMorphItem> FaceMorphItems { get; }
+        new MemorySlice<Byte>? MSSI { get; set; }
+        new IFormLinkNullable<ILayeredMaterialSwapGetter> MaterialSwap { get; set; }
     }
 
-    public partial interface IFaceMorphGetter :
+    public partial interface IMannequinSkinSwapItemGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IFaceMorphGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IMannequinSkinSwapItemGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -540,51 +484,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => FaceMorph_Registration.Instance;
-        UInt32? Index { get; }
-        IReadOnlyList<IFaceMorphItemGetter> FaceMorphItems { get; }
+        static ILoquiRegistration StaticRegistration => MannequinSkinSwapItem_Registration.Instance;
+        ReadOnlyMemorySlice<Byte>? MSSI { get; }
+        IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class FaceMorphMixIn
+    public static partial class MannequinSkinSwapItemMixIn
     {
-        public static void Clear(this IFaceMorph item)
+        public static void Clear(this IMannequinSkinSwapItem item)
         {
-            ((FaceMorphSetterCommon)((IFaceMorphGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MannequinSkinSwapItemSetterCommon)((IMannequinSkinSwapItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FaceMorph.Mask<bool> GetEqualsMask(
-            this IFaceMorphGetter item,
-            IFaceMorphGetter rhs,
+        public static MannequinSkinSwapItem.Mask<bool> GetEqualsMask(
+            this IMannequinSkinSwapItemGetter item,
+            IMannequinSkinSwapItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IFaceMorphGetter item,
+            this IMannequinSkinSwapItemGetter item,
             string? name = null,
-            FaceMorph.Mask<bool>? printMask = null)
+            MannequinSkinSwapItem.Mask<bool>? printMask = null)
         {
-            return ((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).Print(
+            return ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IFaceMorphGetter item,
+            this IMannequinSkinSwapItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FaceMorph.Mask<bool>? printMask = null)
+            MannequinSkinSwapItem.Mask<bool>? printMask = null)
         {
-            ((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).Print(
+            ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -592,21 +536,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IFaceMorphGetter item,
-            IFaceMorphGetter rhs,
-            FaceMorph.TranslationMask? equalsMask = null)
+            this IMannequinSkinSwapItemGetter item,
+            IMannequinSkinSwapItemGetter rhs,
+            MannequinSkinSwapItem.TranslationMask? equalsMask = null)
         {
-            return ((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).Equals(
+            return ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFaceMorph lhs,
-            IFaceMorphGetter rhs)
+            this IMannequinSkinSwapItem lhs,
+            IMannequinSkinSwapItemGetter rhs)
         {
-            ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -615,11 +559,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFaceMorph lhs,
-            IFaceMorphGetter rhs,
-            FaceMorph.TranslationMask? copyMask = null)
+            this IMannequinSkinSwapItem lhs,
+            IMannequinSkinSwapItemGetter rhs,
+            MannequinSkinSwapItem.TranslationMask? copyMask = null)
         {
-            ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -628,28 +572,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFaceMorph lhs,
-            IFaceMorphGetter rhs,
-            out FaceMorph.ErrorMask errorMask,
-            FaceMorph.TranslationMask? copyMask = null)
+            this IMannequinSkinSwapItem lhs,
+            IMannequinSkinSwapItemGetter rhs,
+            out MannequinSkinSwapItem.ErrorMask errorMask,
+            MannequinSkinSwapItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = FaceMorph.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MannequinSkinSwapItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFaceMorph lhs,
-            IFaceMorphGetter rhs,
+            this IMannequinSkinSwapItem lhs,
+            IMannequinSkinSwapItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -657,32 +601,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static FaceMorph DeepCopy(
-            this IFaceMorphGetter item,
-            FaceMorph.TranslationMask? copyMask = null)
+        public static MannequinSkinSwapItem DeepCopy(
+            this IMannequinSkinSwapItemGetter item,
+            MannequinSkinSwapItem.TranslationMask? copyMask = null)
         {
-            return ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static FaceMorph DeepCopy(
-            this IFaceMorphGetter item,
-            out FaceMorph.ErrorMask errorMask,
-            FaceMorph.TranslationMask? copyMask = null)
+        public static MannequinSkinSwapItem DeepCopy(
+            this IMannequinSkinSwapItemGetter item,
+            out MannequinSkinSwapItem.ErrorMask errorMask,
+            MannequinSkinSwapItem.TranslationMask? copyMask = null)
         {
-            return ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static FaceMorph DeepCopy(
-            this IFaceMorphGetter item,
+        public static MannequinSkinSwapItem DeepCopy(
+            this IMannequinSkinSwapItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -690,11 +634,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFaceMorph item,
+            this IMannequinSkinSwapItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((FaceMorphSetterCommon)((IFaceMorphGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MannequinSkinSwapItemSetterCommon)((IMannequinSkinSwapItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -710,17 +654,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum FaceMorph_FieldIndex
+    internal enum MannequinSkinSwapItem_FieldIndex
     {
-        Index = 0,
-        FaceMorphItems = 1,
+        MSSI = 0,
+        MaterialSwap = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class FaceMorph_Registration : ILoquiRegistration
+    internal partial class MannequinSkinSwapItem_Registration : ILoquiRegistration
     {
-        public static readonly FaceMorph_Registration Instance = new FaceMorph_Registration();
+        public static readonly MannequinSkinSwapItem_Registration Instance = new MannequinSkinSwapItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -728,23 +672,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(FaceMorph.Mask<>);
+        public static readonly Type MaskType = typeof(MannequinSkinSwapItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FaceMorph.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MannequinSkinSwapItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(FaceMorph);
+        public static readonly Type ClassType = typeof(MannequinSkinSwapItem);
 
-        public static readonly Type GetterType = typeof(IFaceMorphGetter);
+        public static readonly Type GetterType = typeof(IMannequinSkinSwapItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFaceMorph);
+        public static readonly Type SetterType = typeof(IMannequinSkinSwapItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.FaceMorph";
+        public const string FullName = "Mutagen.Bethesda.Starfield.MannequinSkinSwapItem";
 
-        public const string Name = "FaceMorph";
+        public const string Name = "MannequinSkinSwapItem";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -756,14 +700,11 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.FMRI,
-                RecordTypes.FMRU,
-                RecordTypes.FMRN,
-                RecordTypes.FMRS,
-                RecordTypes.FMSR);
+                RecordTypes.MSSI,
+                RecordTypes.MSSA);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(FaceMorphBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MannequinSkinSwapItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -794,29 +735,30 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class FaceMorphSetterCommon
+    internal partial class MannequinSkinSwapItemSetterCommon
     {
-        public static readonly FaceMorphSetterCommon Instance = new FaceMorphSetterCommon();
+        public static readonly MannequinSkinSwapItemSetterCommon Instance = new MannequinSkinSwapItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IFaceMorph item)
+        public void Clear(IMannequinSkinSwapItem item)
         {
             ClearPartial();
-            item.Index = default;
-            item.FaceMorphItems.Clear();
+            item.MSSI = default;
+            item.MaterialSwap.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IFaceMorph obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMannequinSkinSwapItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.MaterialSwap.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IFaceMorph item,
+            IMannequinSkinSwapItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -824,23 +766,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: FaceMorphBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: MannequinSkinSwapItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class FaceMorphCommon
+    internal partial class MannequinSkinSwapItemCommon
     {
-        public static readonly FaceMorphCommon Instance = new FaceMorphCommon();
+        public static readonly MannequinSkinSwapItemCommon Instance = new MannequinSkinSwapItemCommon();
 
-        public FaceMorph.Mask<bool> GetEqualsMask(
-            IFaceMorphGetter item,
-            IFaceMorphGetter rhs,
+        public MannequinSkinSwapItem.Mask<bool> GetEqualsMask(
+            IMannequinSkinSwapItemGetter item,
+            IMannequinSkinSwapItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FaceMorph.Mask<bool>(false);
-            ((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MannequinSkinSwapItem.Mask<bool>(false);
+            ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -849,22 +791,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IFaceMorphGetter item,
-            IFaceMorphGetter rhs,
-            FaceMorph.Mask<bool> ret,
+            IMannequinSkinSwapItemGetter item,
+            IMannequinSkinSwapItemGetter rhs,
+            MannequinSkinSwapItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Index = item.Index == rhs.Index;
-            ret.FaceMorphItems = item.FaceMorphItems.CollectionEqualsHelper(
-                rhs.FaceMorphItems,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
+            ret.MSSI = MemorySliceExt.SequenceEqual(item.MSSI, rhs.MSSI);
+            ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
         }
         
         public string Print(
-            IFaceMorphGetter item,
+            IMannequinSkinSwapItemGetter item,
             string? name = null,
-            FaceMorph.Mask<bool>? printMask = null)
+            MannequinSkinSwapItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -876,18 +815,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IFaceMorphGetter item,
+            IMannequinSkinSwapItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FaceMorph.Mask<bool>? printMask = null)
+            MannequinSkinSwapItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"FaceMorph =>");
+                sb.AppendLine($"MannequinSkinSwapItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (FaceMorph) =>");
+                sb.AppendLine($"{name} (MannequinSkinSwapItem) =>");
             }
             using (sb.Brace())
             {
@@ -899,57 +838,47 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IFaceMorphGetter item,
+            IMannequinSkinSwapItemGetter item,
             StructuredStringBuilder sb,
-            FaceMorph.Mask<bool>? printMask = null)
+            MannequinSkinSwapItem.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Index ?? true)
-                && item.Index is {} IndexItem)
+            if ((printMask?.MSSI ?? true)
+                && item.MSSI is {} MSSIItem)
             {
-                sb.AppendItem(IndexItem, "Index");
+                sb.AppendLine($"MSSI => {SpanExt.ToHexString(MSSIItem)}");
             }
-            if (printMask?.FaceMorphItems?.Overall ?? true)
+            if (printMask?.MaterialSwap ?? true)
             {
-                sb.AppendLine("FaceMorphItems =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.FaceMorphItems)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
+                sb.AppendItem(item.MaterialSwap.FormKeyNullable, "MaterialSwap");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFaceMorphGetter? lhs,
-            IFaceMorphGetter? rhs,
+            IMannequinSkinSwapItemGetter? lhs,
+            IMannequinSkinSwapItemGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)FaceMorph_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MannequinSkinSwapItem_FieldIndex.MSSI) ?? true))
             {
-                if (lhs.Index != rhs.Index) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.MSSI, rhs.MSSI)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FaceMorph_FieldIndex.FaceMorphItems) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MannequinSkinSwapItem_FieldIndex.MaterialSwap) ?? true))
             {
-                if (!lhs.FaceMorphItems.SequenceEqual(rhs.FaceMorphItems, (l, r) => ((FaceMorphItemCommon)((IFaceMorphItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)FaceMorph_FieldIndex.FaceMorphItems)))) return false;
+                if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IFaceMorphGetter item)
+        public virtual int GetHashCode(IMannequinSkinSwapItemGetter item)
         {
             var hash = new HashCode();
-            if (item.Index is {} Indexitem)
+            if (item.MSSI is {} MSSIItem)
             {
-                hash.Add(Indexitem);
+                hash.Add(MSSIItem);
             }
-            hash.Add(item.FaceMorphItems);
+            hash.Add(item.MaterialSwap);
             return hash.ToHashCode();
         }
         
@@ -958,68 +887,59 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return FaceMorph.GetNew();
+            return MannequinSkinSwapItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceMorphGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMannequinSkinSwapItemGetter obj)
         {
+            if (FormLinkInformation.TryFactory(obj.MaterialSwap, out var MaterialSwapInfo))
+            {
+                yield return MaterialSwapInfo;
+            }
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class FaceMorphSetterTranslationCommon
+    internal partial class MannequinSkinSwapItemSetterTranslationCommon
     {
-        public static readonly FaceMorphSetterTranslationCommon Instance = new FaceMorphSetterTranslationCommon();
+        public static readonly MannequinSkinSwapItemSetterTranslationCommon Instance = new MannequinSkinSwapItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IFaceMorph item,
-            IFaceMorphGetter rhs,
+            IMannequinSkinSwapItem item,
+            IMannequinSkinSwapItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)FaceMorph_FieldIndex.Index) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MannequinSkinSwapItem_FieldIndex.MSSI) ?? true))
             {
-                item.Index = rhs.Index;
+                if(rhs.MSSI is {} MSSIrhs)
+                {
+                    item.MSSI = MSSIrhs.ToArray();
+                }
+                else
+                {
+                    item.MSSI = default;
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceMorph_FieldIndex.FaceMorphItems) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MannequinSkinSwapItem_FieldIndex.MaterialSwap) ?? true))
             {
-                errorMask?.PushIndex((int)FaceMorph_FieldIndex.FaceMorphItems);
-                try
-                {
-                    item.FaceMorphItems.SetTo(
-                        rhs.FaceMorphItems
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
             }
         }
         
         #endregion
         
-        public FaceMorph DeepCopy(
-            IFaceMorphGetter item,
-            FaceMorph.TranslationMask? copyMask = null)
+        public MannequinSkinSwapItem DeepCopy(
+            IMannequinSkinSwapItemGetter item,
+            MannequinSkinSwapItem.TranslationMask? copyMask = null)
         {
-            FaceMorph ret = (FaceMorph)((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).GetNew();
-            ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MannequinSkinSwapItem ret = (MannequinSkinSwapItem)((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).GetNew();
+            ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1028,30 +948,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public FaceMorph DeepCopy(
-            IFaceMorphGetter item,
-            out FaceMorph.ErrorMask errorMask,
-            FaceMorph.TranslationMask? copyMask = null)
+        public MannequinSkinSwapItem DeepCopy(
+            IMannequinSkinSwapItemGetter item,
+            out MannequinSkinSwapItem.ErrorMask errorMask,
+            MannequinSkinSwapItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FaceMorph ret = (FaceMorph)((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).GetNew();
-            ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MannequinSkinSwapItem ret = (MannequinSkinSwapItem)((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).GetNew();
+            ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = FaceMorph.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MannequinSkinSwapItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public FaceMorph DeepCopy(
-            IFaceMorphGetter item,
+        public MannequinSkinSwapItem DeepCopy(
+            IMannequinSkinSwapItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            FaceMorph ret = (FaceMorph)((FaceMorphCommon)((IFaceMorphGetter)item).CommonInstance()!).GetNew();
-            ((FaceMorphSetterTranslationCommon)((IFaceMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MannequinSkinSwapItem ret = (MannequinSkinSwapItem)((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)item).CommonInstance()!).GetNew();
+            ((MannequinSkinSwapItemSetterTranslationCommon)((IMannequinSkinSwapItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1067,27 +987,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FaceMorph
+    public partial class MannequinSkinSwapItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FaceMorph_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FaceMorph_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MannequinSkinSwapItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MannequinSkinSwapItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FaceMorphCommon.Instance;
+        protected object CommonInstance() => MannequinSkinSwapItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return FaceMorphSetterCommon.Instance;
+            return MannequinSkinSwapItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FaceMorphSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MannequinSkinSwapItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFaceMorphGetter.CommonInstance() => this.CommonInstance();
+        object IMannequinSkinSwapItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IFaceMorphGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMannequinSkinSwapItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IFaceMorphGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMannequinSkinSwapItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1098,35 +1018,28 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FaceMorphBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class MannequinSkinSwapItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FaceMorphBinaryWriteTranslation Instance = new();
+        public static readonly MannequinSkinSwapItemBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IFaceMorphGetter item,
+            IMannequinSkinSwapItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Index,
-                header: translationParams.ConvertToCustom(RecordTypes.FMRI));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFaceMorphItemGetter>.Instance.Write(
+                item: item.MSSI,
+                header: translationParams.ConvertToCustom(RecordTypes.MSSI));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                items: item.FaceMorphItems,
-                transl: (MutagenWriter subWriter, IFaceMorphItemGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((FaceMorphItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                item: item.MaterialSwap,
+                header: translationParams.ConvertToCustom(RecordTypes.MSSA));
         }
 
         public void Write(
             MutagenWriter writer,
-            IFaceMorphGetter item,
+            IMannequinSkinSwapItemGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1141,19 +1054,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IFaceMorphGetter)item,
+                item: (IMannequinSkinSwapItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class FaceMorphBinaryCreateTranslation
+    internal partial class MannequinSkinSwapItemBinaryCreateTranslation
     {
-        public static readonly FaceMorphBinaryCreateTranslation Instance = new FaceMorphBinaryCreateTranslation();
+        public static readonly MannequinSkinSwapItemBinaryCreateTranslation Instance = new MannequinSkinSwapItemBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IFaceMorph item,
+            IMannequinSkinSwapItem item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1164,26 +1077,19 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.FMRI:
+                case RecordTypeInts.MSSI:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.Index, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)MannequinSkinSwapItem_FieldIndex.MSSI, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
-                    return (int)FaceMorph_FieldIndex.Index;
+                    item.MSSI = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MannequinSkinSwapItem_FieldIndex.MSSI;
                 }
-                case RecordTypeInts.FMRU:
-                case RecordTypeInts.FMRN:
-                case RecordTypeInts.FMRS:
-                case RecordTypeInts.FMSR:
+                case RecordTypeInts.MSSA:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.FaceMorphItems, translationParams)) return ParseResult.Stop;
-                    item.FaceMorphItems.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FaceMorphItem>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: FaceMorphItem_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: FaceMorphItem.TryCreateFromBinary));
-                    return (int)FaceMorph_FieldIndex.FaceMorphItems;
+                    if (lastParsed.ShortCircuit((int)MannequinSkinSwapItem_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)MannequinSkinSwapItem_FieldIndex.MaterialSwap;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1196,14 +1102,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class FaceMorphBinaryTranslationMixIn
+    public static class MannequinSkinSwapItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IFaceMorphGetter item,
+            this IMannequinSkinSwapItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceMorphBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((MannequinSkinSwapItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1216,55 +1122,59 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class FaceMorphBinaryOverlay :
+    internal partial class MannequinSkinSwapItemBinaryOverlay :
         PluginBinaryOverlay,
-        IFaceMorphGetter
+        IMannequinSkinSwapItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FaceMorph_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FaceMorph_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MannequinSkinSwapItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MannequinSkinSwapItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FaceMorphCommon.Instance;
+        protected object CommonInstance() => MannequinSkinSwapItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FaceMorphSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MannequinSkinSwapItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFaceMorphGetter.CommonInstance() => this.CommonInstance();
+        object IMannequinSkinSwapItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IFaceMorphGetter.CommonSetterInstance() => null;
+        object? IMannequinSkinSwapItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IFaceMorphGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMannequinSkinSwapItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MannequinSkinSwapItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FaceMorphBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MannequinSkinSwapItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MannequinSkinSwapItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region Index
-        private int? _IndexLocation;
-        public UInt32? Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #region MSSI
+        private int? _MSSILocation;
+        public ReadOnlyMemorySlice<Byte>? MSSI => _MSSILocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MSSILocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IFaceMorphItemGetter> FaceMorphItems { get; private set; } = Array.Empty<IFaceMorphItemGetter>();
+        #region MaterialSwap
+        private int? _MaterialSwapLocation;
+        public IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<ILayeredMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayeredMaterialSwapGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected FaceMorphBinaryOverlay(
+        protected MannequinSkinSwapItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1274,7 +1184,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IFaceMorphGetter FaceMorphFactory(
+        public static IMannequinSkinSwapItemGetter MannequinSkinSwapItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1286,7 +1196,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new FaceMorphBinaryOverlay(
+            var ret = new MannequinSkinSwapItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1298,12 +1208,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IFaceMorphGetter FaceMorphFactory(
+        public static IMannequinSkinSwapItemGetter MannequinSkinSwapItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return FaceMorphFactory(
+            return MannequinSkinSwapItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1321,24 +1231,17 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.FMRI:
+                case RecordTypeInts.MSSI:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
-                    return (int)FaceMorph_FieldIndex.Index;
+                    if (lastParsed.ShortCircuit((int)MannequinSkinSwapItem_FieldIndex.MSSI, translationParams)) return ParseResult.Stop;
+                    _MSSILocation = (stream.Position - offset);
+                    return (int)MannequinSkinSwapItem_FieldIndex.MSSI;
                 }
-                case RecordTypeInts.FMRU:
-                case RecordTypeInts.FMRN:
-                case RecordTypeInts.FMRS:
-                case RecordTypeInts.FMSR:
+                case RecordTypeInts.MSSA:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorph_FieldIndex.FaceMorphItems, translationParams)) return ParseResult.Stop;
-                    this.FaceMorphItems = this.ParseRepeatedTypelessSubrecord<IFaceMorphItemGetter>(
-                        stream: stream,
-                        translationParams: translationParams,
-                        trigger: FaceMorphItem_Registration.TriggerSpecs,
-                        factory: FaceMorphItemBinaryOverlay.FaceMorphItemFactory);
-                    return (int)FaceMorph_FieldIndex.FaceMorphItems;
+                    if (lastParsed.ShortCircuit((int)MannequinSkinSwapItem_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
+                    _MaterialSwapLocation = (stream.Position - offset);
+                    return (int)MannequinSkinSwapItem_FieldIndex.MaterialSwap;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1350,7 +1253,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceMorphMixIn.Print(
+            MannequinSkinSwapItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1361,16 +1264,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFaceMorphGetter rhs) return false;
-            return ((FaceMorphCommon)((IFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMannequinSkinSwapItemGetter rhs) return false;
+            return ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFaceMorphGetter? obj)
+        public bool Equals(IMannequinSkinSwapItemGetter? obj)
         {
-            return ((FaceMorphCommon)((IFaceMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FaceMorphCommon)((IFaceMorphGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MannequinSkinSwapItemCommon)((IMannequinSkinSwapItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

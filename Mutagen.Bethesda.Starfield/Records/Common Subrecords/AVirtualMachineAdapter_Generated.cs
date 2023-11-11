@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, PerkAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, PerkAdapter, QuestAdapter]
     /// </summary>
     public abstract partial class AVirtualMachineAdapter :
         IAVirtualMachineAdapter,
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, PerkAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, PerkAdapter, QuestAdapter]
     /// </summary>
     public partial interface IAVirtualMachineAdapter :
         IAVirtualMachineAdapterGetter,
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, PerkAdapter]
+    /// Implemented by: [VirtualMachineAdapter, VirtualMachineAdapterIndexed, PerkAdapter, QuestAdapter]
     /// </summary>
     public partial interface IAVirtualMachineAdapterGetter :
         ILoquiObject,

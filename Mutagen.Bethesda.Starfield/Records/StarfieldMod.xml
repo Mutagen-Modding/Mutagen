@@ -52,6 +52,7 @@
       <Group name="MiscItems" refName="MiscItem" />
       <Group name="Resources" refName="Resource" />
       <Group name="ConditionRecords" refName="ConditionRecord" />
+      <Group name="Quests" refName="Quest" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>

@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,293 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private QuestAdapter? _VirtualMachineAdapter;
+        public QuestAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IQuestAdapterGetter? IQuestGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IQuestGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IQuestGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private QuestData? _Data;
+        public QuestData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IQuestDataGetter? IQuestGetter.Data => this.Data;
+        #endregion
+        #region QuestType
+        private readonly IFormLinkNullable<IKeywordGetter> _QuestType = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> QuestType
+        {
+            get => _QuestType;
+            set => _QuestType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IQuestGetter.QuestType => this.QuestType;
+        #endregion
+        #region QuestFaction
+        private readonly IFormLinkNullable<IKeywordGetter> _QuestFaction = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> QuestFaction
+        {
+            get => _QuestFaction;
+            set => _QuestFaction.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IQuestGetter.QuestFaction => this.QuestFaction;
+        #endregion
+        #region Event
+        public RecordType? Event { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        RecordType? IQuestGetter.Event => this.Event;
+        #endregion
+        #region Location
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IQuestGetter.Location => this.Location;
+        #endregion
+        #region QuestTimeLimit
+        private readonly IFormLinkNullable<IGlobalGetter> _QuestTimeLimit = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> QuestTimeLimit
+        {
+            get => _QuestTimeLimit;
+            set => _QuestTimeLimit.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IQuestGetter.QuestTimeLimit => this.QuestTimeLimit;
+        #endregion
+        #region SourceQuest
+        private readonly IFormLinkNullable<IQuestGetter> _SourceQuest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> SourceQuest
+        {
+            get => _SourceQuest;
+            set => _SourceQuest.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IQuestGetter.SourceQuest => this.SourceQuest;
+        #endregion
+        #region TextDisplayGlobals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IGlobalGetter>> _TextDisplayGlobals = new ExtendedList<IFormLinkGetter<IGlobalGetter>>();
+        public ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals
+        {
+            get => this._TextDisplayGlobals;
+            init => this._TextDisplayGlobals = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IGlobalGetter>> IQuestGetter.TextDisplayGlobals => _TextDisplayGlobals;
+        #endregion
+
+        #endregion
+        #region Filter
+        public String? Filter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IQuestGetter.Filter => this.Filter;
+        #endregion
+        #region Summary
+        public String? Summary { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IQuestGetter.Summary => this.Summary;
+        #endregion
+        #region DialogConditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _DialogConditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> DialogConditions
+        {
+            get => this._DialogConditions;
+            init => this._DialogConditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IQuestGetter.DialogConditions => _DialogConditions;
+        #endregion
+
+        #endregion
+        #region UnusedConditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition>? _UnusedConditions;
+        public ExtendedList<Condition>? UnusedConditions
+        {
+            get => this._UnusedConditions;
+            set => this._UnusedConditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter>? IQuestGetter.UnusedConditions => _UnusedConditions;
+        #endregion
+
+        #endregion
+        #region Stages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestStage> _Stages = new ExtendedList<QuestStage>();
+        public ExtendedList<QuestStage> Stages
+        {
+            get => this._Stages;
+            init => this._Stages = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestStageGetter> IQuestGetter.Stages => _Stages;
+        #endregion
+
+        #endregion
+        #region Objectives
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestObjective> _Objectives = new ExtendedList<QuestObjective>();
+        public ExtendedList<QuestObjective> Objectives
+        {
+            get => this._Objectives;
+            init => this._Objectives = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestObjectiveGetter> IQuestGetter.Objectives => _Objectives;
+        #endregion
+
+        #endregion
+        #region Aliases
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AQuestAlias>? _Aliases;
+        public ExtendedList<AQuestAlias>? Aliases
+        {
+            get => this._Aliases;
+            set => this._Aliases = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAQuestAliasGetter>? IQuestGetter.Aliases => _Aliases;
+        #endregion
+
+        #endregion
+        #region QuestGroup
+        private readonly IFormLinkNullable<IKeywordGetter> _QuestGroup = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> QuestGroup
+        {
+            get => _QuestGroup;
+            set => _QuestGroup.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IQuestGetter.QuestGroup => this.QuestGroup;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IQuestGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region MissionTypeKeyword
+        private readonly IFormLinkNullable<IKeywordGetter> _MissionTypeKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> MissionTypeKeyword
+        {
+            get => _MissionTypeKeyword;
+            set => _MissionTypeKeyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IQuestGetter.MissionTypeKeyword => this.MissionTypeKeyword;
+        #endregion
+        #region MissionBoardDescription
+        public TranslatedString? MissionBoardDescription { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IQuestGetter.MissionBoardDescription => this.MissionBoardDescription;
+        #endregion
+        #region MissionBoardInfoPanels
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<QuestMissionBoardPanel> _MissionBoardInfoPanels = new ExtendedList<QuestMissionBoardPanel>();
+        public ExtendedList<QuestMissionBoardPanel> MissionBoardInfoPanels
+        {
+            get => this._MissionBoardInfoPanels;
+            init => this._MissionBoardInfoPanels = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IQuestMissionBoardPanelGetter> IQuestGetter.MissionBoardInfoPanels => _MissionBoardInfoPanels;
+        #endregion
+
+        #endregion
+        #region ScriptComment
+        public String? ScriptComment { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IQuestGetter.ScriptComment => this.ScriptComment;
+        #endregion
 
         #region To String
 
@@ -79,6 +371,30 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(initialValue, new QuestAdapter.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(initialValue, new QuestData.Mask<TItem>(initialValue));
+                this.QuestType = initialValue;
+                this.QuestFaction = initialValue;
+                this.Event = initialValue;
+                this.Location = initialValue;
+                this.QuestTimeLimit = initialValue;
+                this.SourceQuest = initialValue;
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Filter = initialValue;
+                this.Summary = initialValue;
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
+                this.QuestGroup = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MissionTypeKeyword = initialValue;
+                this.MissionBoardDescription = initialValue;
+                this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>());
+                this.ScriptComment = initialValue;
             }
 
             public Mask(
@@ -88,7 +404,31 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem Name,
+                TItem Components,
+                TItem Data,
+                TItem QuestType,
+                TItem QuestFaction,
+                TItem Event,
+                TItem Location,
+                TItem QuestTimeLimit,
+                TItem SourceQuest,
+                TItem TextDisplayGlobals,
+                TItem Filter,
+                TItem Summary,
+                TItem DialogConditions,
+                TItem UnusedConditions,
+                TItem Stages,
+                TItem Objectives,
+                TItem Aliases,
+                TItem QuestGroup,
+                TItem Keywords,
+                TItem MissionTypeKeyword,
+                TItem MissionBoardDescription,
+                TItem MissionBoardInfoPanels,
+                TItem ScriptComment)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +438,30 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, QuestAdapter.Mask<TItem>?>(VirtualMachineAdapter, new QuestAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Name = Name;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Data = new MaskItem<TItem, QuestData.Mask<TItem>?>(Data, new QuestData.Mask<TItem>(Data));
+                this.QuestType = QuestType;
+                this.QuestFaction = QuestFaction;
+                this.Event = Event;
+                this.Location = Location;
+                this.QuestTimeLimit = QuestTimeLimit;
+                this.SourceQuest = SourceQuest;
+                this.TextDisplayGlobals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TextDisplayGlobals, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Filter = Filter;
+                this.Summary = Summary;
+                this.DialogConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(DialogConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.UnusedConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(UnusedConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
+                this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>());
+                this.QuestGroup = QuestGroup;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MissionTypeKeyword = MissionTypeKeyword;
+                this.MissionBoardDescription = MissionBoardDescription;
+                this.MissionBoardInfoPanels = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>(MissionBoardInfoPanels, Enumerable.Empty<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>());
+                this.ScriptComment = ScriptComment;
             }
 
             #pragma warning disable CS8618
@@ -106,6 +470,33 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, QuestAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, QuestData.Mask<TItem>?>? Data { get; set; }
+            public TItem QuestType;
+            public TItem QuestFaction;
+            public TItem Event;
+            public TItem Location;
+            public TItem QuestTimeLimit;
+            public TItem SourceQuest;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? TextDisplayGlobals;
+            public TItem Filter;
+            public TItem Summary;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? DialogConditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? UnusedConditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>? Stages;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>? Objectives;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AQuestAlias.Mask<TItem>?>>?>? Aliases;
+            public TItem QuestGroup;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem MissionTypeKeyword;
+            public TItem MissionBoardDescription;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestMissionBoardPanel.Mask<TItem>?>>?>? MissionBoardInfoPanels;
+            public TItem ScriptComment;
             #endregion
 
             #region Equals
@@ -119,11 +510,59 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.QuestType, rhs.QuestType)) return false;
+                if (!object.Equals(this.QuestFaction, rhs.QuestFaction)) return false;
+                if (!object.Equals(this.Event, rhs.Event)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.QuestTimeLimit, rhs.QuestTimeLimit)) return false;
+                if (!object.Equals(this.SourceQuest, rhs.SourceQuest)) return false;
+                if (!object.Equals(this.TextDisplayGlobals, rhs.TextDisplayGlobals)) return false;
+                if (!object.Equals(this.Filter, rhs.Filter)) return false;
+                if (!object.Equals(this.Summary, rhs.Summary)) return false;
+                if (!object.Equals(this.DialogConditions, rhs.DialogConditions)) return false;
+                if (!object.Equals(this.UnusedConditions, rhs.UnusedConditions)) return false;
+                if (!object.Equals(this.Stages, rhs.Stages)) return false;
+                if (!object.Equals(this.Objectives, rhs.Objectives)) return false;
+                if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
+                if (!object.Equals(this.QuestGroup, rhs.QuestGroup)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.MissionTypeKeyword, rhs.MissionTypeKeyword)) return false;
+                if (!object.Equals(this.MissionBoardDescription, rhs.MissionBoardDescription)) return false;
+                if (!object.Equals(this.MissionBoardInfoPanels, rhs.MissionBoardInfoPanels)) return false;
+                if (!object.Equals(this.ScriptComment, rhs.ScriptComment)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Name);
+                hash.Add(this.Components);
+                hash.Add(this.Data);
+                hash.Add(this.QuestType);
+                hash.Add(this.QuestFaction);
+                hash.Add(this.Event);
+                hash.Add(this.Location);
+                hash.Add(this.QuestTimeLimit);
+                hash.Add(this.SourceQuest);
+                hash.Add(this.TextDisplayGlobals);
+                hash.Add(this.Filter);
+                hash.Add(this.Summary);
+                hash.Add(this.DialogConditions);
+                hash.Add(this.UnusedConditions);
+                hash.Add(this.Stages);
+                hash.Add(this.Objectives);
+                hash.Add(this.Aliases);
+                hash.Add(this.QuestGroup);
+                hash.Add(this.Keywords);
+                hash.Add(this.MissionTypeKeyword);
+                hash.Add(this.MissionBoardDescription);
+                hash.Add(this.MissionBoardInfoPanels);
+                hash.Add(this.ScriptComment);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +573,135 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (!eval(this.QuestType)) return false;
+                if (!eval(this.QuestFaction)) return false;
+                if (!eval(this.Event)) return false;
+                if (!eval(this.Location)) return false;
+                if (!eval(this.QuestTimeLimit)) return false;
+                if (!eval(this.SourceQuest)) return false;
+                if (this.TextDisplayGlobals != null)
+                {
+                    if (!eval(this.TextDisplayGlobals.Overall)) return false;
+                    if (this.TextDisplayGlobals.Specific != null)
+                    {
+                        foreach (var item in this.TextDisplayGlobals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Filter)) return false;
+                if (!eval(this.Summary)) return false;
+                if (this.DialogConditions != null)
+                {
+                    if (!eval(this.DialogConditions.Overall)) return false;
+                    if (this.DialogConditions.Specific != null)
+                    {
+                        foreach (var item in this.DialogConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.UnusedConditions != null)
+                {
+                    if (!eval(this.UnusedConditions.Overall)) return false;
+                    if (this.UnusedConditions.Specific != null)
+                    {
+                        foreach (var item in this.UnusedConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Stages != null)
+                {
+                    if (!eval(this.Stages.Overall)) return false;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Objectives != null)
+                {
+                    if (!eval(this.Objectives.Overall)) return false;
+                    if (this.Objectives.Specific != null)
+                    {
+                        foreach (var item in this.Objectives.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Aliases != null)
+                {
+                    if (!eval(this.Aliases.Overall)) return false;
+                    if (this.Aliases.Specific != null)
+                    {
+                        foreach (var item in this.Aliases.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.QuestGroup)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.MissionTypeKeyword)) return false;
+                if (!eval(this.MissionBoardDescription)) return false;
+                if (this.MissionBoardInfoPanels != null)
+                {
+                    if (!eval(this.MissionBoardInfoPanels.Overall)) return false;
+                    if (this.MissionBoardInfoPanels.Specific != null)
+                    {
+                        foreach (var item in this.MissionBoardInfoPanels.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ScriptComment)) return false;
                 return true;
             }
             #endregion
@@ -142,6 +710,135 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (eval(this.QuestType)) return true;
+                if (eval(this.QuestFaction)) return true;
+                if (eval(this.Event)) return true;
+                if (eval(this.Location)) return true;
+                if (eval(this.QuestTimeLimit)) return true;
+                if (eval(this.SourceQuest)) return true;
+                if (this.TextDisplayGlobals != null)
+                {
+                    if (eval(this.TextDisplayGlobals.Overall)) return true;
+                    if (this.TextDisplayGlobals.Specific != null)
+                    {
+                        foreach (var item in this.TextDisplayGlobals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Filter)) return true;
+                if (eval(this.Summary)) return true;
+                if (this.DialogConditions != null)
+                {
+                    if (eval(this.DialogConditions.Overall)) return true;
+                    if (this.DialogConditions.Specific != null)
+                    {
+                        foreach (var item in this.DialogConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.UnusedConditions != null)
+                {
+                    if (eval(this.UnusedConditions.Overall)) return true;
+                    if (this.UnusedConditions.Specific != null)
+                    {
+                        foreach (var item in this.UnusedConditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Stages != null)
+                {
+                    if (eval(this.Stages.Overall)) return true;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Objectives != null)
+                {
+                    if (eval(this.Objectives.Overall)) return true;
+                    if (this.Objectives.Specific != null)
+                    {
+                        foreach (var item in this.Objectives.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Aliases != null)
+                {
+                    if (eval(this.Aliases.Overall)) return true;
+                    if (this.Aliases.Specific != null)
+                    {
+                        foreach (var item in this.Aliases.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.QuestGroup)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.MissionTypeKeyword)) return true;
+                if (eval(this.MissionBoardDescription)) return true;
+                if (this.MissionBoardInfoPanels != null)
+                {
+                    if (eval(this.MissionBoardInfoPanels.Overall)) return true;
+                    if (this.MissionBoardInfoPanels.Specific != null)
+                    {
+                        foreach (var item in this.MissionBoardInfoPanels.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ScriptComment)) return true;
                 return false;
             }
             #endregion
@@ -157,6 +854,154 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, QuestAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Data = this.Data == null ? null : new MaskItem<R, QuestData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.QuestType = eval(this.QuestType);
+                obj.QuestFaction = eval(this.QuestFaction);
+                obj.Event = eval(this.Event);
+                obj.Location = eval(this.Location);
+                obj.QuestTimeLimit = eval(this.QuestTimeLimit);
+                obj.SourceQuest = eval(this.SourceQuest);
+                if (TextDisplayGlobals != null)
+                {
+                    obj.TextDisplayGlobals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TextDisplayGlobals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (TextDisplayGlobals.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.TextDisplayGlobals.Specific = l;
+                        foreach (var item in TextDisplayGlobals.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Filter = eval(this.Filter);
+                obj.Summary = eval(this.Summary);
+                if (DialogConditions != null)
+                {
+                    obj.DialogConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.DialogConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (DialogConditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.DialogConditions.Specific = l;
+                        foreach (var item in DialogConditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (UnusedConditions != null)
+                {
+                    obj.UnusedConditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.UnusedConditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (UnusedConditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.UnusedConditions.Specific = l;
+                        foreach (var item in UnusedConditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Stages != null)
+                {
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestStage.Mask<R>?>>());
+                    if (Stages.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestStage.Mask<R>?>>();
+                        obj.Stages.Specific = l;
+                        foreach (var item in Stages.Specific)
+                        {
+                            MaskItemIndexed<R, QuestStage.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestStage.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Objectives != null)
+                {
+                    obj.Objectives = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjective.Mask<R>?>>?>(eval(this.Objectives.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestObjective.Mask<R>?>>());
+                    if (Objectives.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestObjective.Mask<R>?>>();
+                        obj.Objectives.Specific = l;
+                        foreach (var item in Objectives.Specific)
+                        {
+                            MaskItemIndexed<R, QuestObjective.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestObjective.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Aliases != null)
+                {
+                    obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), Enumerable.Empty<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>());
+                    if (Aliases.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AQuestAlias.Mask<R>?>>();
+                        obj.Aliases.Specific = l;
+                        foreach (var item in Aliases.Specific)
+                        {
+                            MaskItemIndexed<R, AQuestAlias.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AQuestAlias.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.QuestGroup = eval(this.QuestGroup);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.MissionTypeKeyword = eval(this.MissionTypeKeyword);
+                obj.MissionBoardDescription = eval(this.MissionBoardDescription);
+                if (MissionBoardInfoPanels != null)
+                {
+                    obj.MissionBoardInfoPanels = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>>?>(eval(this.MissionBoardInfoPanels.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>>());
+                    if (MissionBoardInfoPanels.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>>();
+                        obj.MissionBoardInfoPanels.Specific = l;
+                        foreach (var item in MissionBoardInfoPanels.Specific)
+                        {
+                            MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, QuestMissionBoardPanel.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ScriptComment = eval(this.ScriptComment);
             }
             #endregion
 
@@ -175,6 +1020,241 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Quest.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.Print(sb);
+                    }
+                    if (printMask?.QuestType ?? true)
+                    {
+                        sb.AppendItem(QuestType, "QuestType");
+                    }
+                    if (printMask?.QuestFaction ?? true)
+                    {
+                        sb.AppendItem(QuestFaction, "QuestFaction");
+                    }
+                    if (printMask?.Event ?? true)
+                    {
+                        sb.AppendItem(Event, "Event");
+                    }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.QuestTimeLimit ?? true)
+                    {
+                        sb.AppendItem(QuestTimeLimit, "QuestTimeLimit");
+                    }
+                    if (printMask?.SourceQuest ?? true)
+                    {
+                        sb.AppendItem(SourceQuest, "SourceQuest");
+                    }
+                    if ((printMask?.TextDisplayGlobals?.Overall ?? true)
+                        && TextDisplayGlobals is {} TextDisplayGlobalsItem)
+                    {
+                        sb.AppendLine("TextDisplayGlobals =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TextDisplayGlobalsItem.Overall);
+                            if (TextDisplayGlobalsItem.Specific != null)
+                            {
+                                foreach (var subItem in TextDisplayGlobalsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Filter ?? true)
+                    {
+                        sb.AppendItem(Filter, "Filter");
+                    }
+                    if (printMask?.Summary ?? true)
+                    {
+                        sb.AppendItem(Summary, "Summary");
+                    }
+                    if ((printMask?.DialogConditions?.Overall ?? true)
+                        && DialogConditions is {} DialogConditionsItem)
+                    {
+                        sb.AppendLine("DialogConditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DialogConditionsItem.Overall);
+                            if (DialogConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in DialogConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.UnusedConditions?.Overall ?? true)
+                        && UnusedConditions is {} UnusedConditionsItem)
+                    {
+                        sb.AppendLine("UnusedConditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(UnusedConditionsItem.Overall);
+                            if (UnusedConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in UnusedConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Stages?.Overall ?? true)
+                        && Stages is {} StagesItem)
+                    {
+                        sb.AppendLine("Stages =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(StagesItem.Overall);
+                            if (StagesItem.Specific != null)
+                            {
+                                foreach (var subItem in StagesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Objectives?.Overall ?? true)
+                        && Objectives is {} ObjectivesItem)
+                    {
+                        sb.AppendLine("Objectives =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ObjectivesItem.Overall);
+                            if (ObjectivesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectivesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.Aliases?.Overall ?? true)
+                        && Aliases is {} AliasesItem)
+                    {
+                        sb.AppendLine("Aliases =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AliasesItem.Overall);
+                            if (AliasesItem.Specific != null)
+                            {
+                                foreach (var subItem in AliasesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.QuestGroup ?? true)
+                    {
+                        sb.AppendItem(QuestGroup, "QuestGroup");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.MissionTypeKeyword ?? true)
+                    {
+                        sb.AppendItem(MissionTypeKeyword, "MissionTypeKeyword");
+                    }
+                    if (printMask?.MissionBoardDescription ?? true)
+                    {
+                        sb.AppendItem(MissionBoardDescription, "MissionBoardDescription");
+                    }
+                    if ((printMask?.MissionBoardInfoPanels?.Overall ?? true)
+                        && MissionBoardInfoPanels is {} MissionBoardInfoPanelsItem)
+                    {
+                        sb.AppendLine("MissionBoardInfoPanels =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MissionBoardInfoPanelsItem.Overall);
+                            if (MissionBoardInfoPanelsItem.Specific != null)
+                            {
+                                foreach (var subItem in MissionBoardInfoPanelsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.ScriptComment ?? true)
+                    {
+                        sb.AppendItem(ScriptComment, "ScriptComment");
+                    }
                 }
             }
             #endregion
@@ -185,12 +1265,87 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, QuestAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, QuestData.ErrorMask?>? Data;
+            public Exception? QuestType;
+            public Exception? QuestFaction;
+            public Exception? Event;
+            public Exception? Location;
+            public Exception? QuestTimeLimit;
+            public Exception? SourceQuest;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? TextDisplayGlobals;
+            public Exception? Filter;
+            public Exception? Summary;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? DialogConditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? UnusedConditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>? Stages;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>? Objectives;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>? Aliases;
+            public Exception? QuestGroup;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? MissionTypeKeyword;
+            public Exception? MissionBoardDescription;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestMissionBoardPanel.ErrorMask?>>?>? MissionBoardInfoPanels;
+            public Exception? ScriptComment;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Quest_FieldIndex.Name:
+                        return Name;
+                    case Quest_FieldIndex.Components:
+                        return Components;
+                    case Quest_FieldIndex.Data:
+                        return Data;
+                    case Quest_FieldIndex.QuestType:
+                        return QuestType;
+                    case Quest_FieldIndex.QuestFaction:
+                        return QuestFaction;
+                    case Quest_FieldIndex.Event:
+                        return Event;
+                    case Quest_FieldIndex.Location:
+                        return Location;
+                    case Quest_FieldIndex.QuestTimeLimit:
+                        return QuestTimeLimit;
+                    case Quest_FieldIndex.SourceQuest:
+                        return SourceQuest;
+                    case Quest_FieldIndex.TextDisplayGlobals:
+                        return TextDisplayGlobals;
+                    case Quest_FieldIndex.Filter:
+                        return Filter;
+                    case Quest_FieldIndex.Summary:
+                        return Summary;
+                    case Quest_FieldIndex.DialogConditions:
+                        return DialogConditions;
+                    case Quest_FieldIndex.UnusedConditions:
+                        return UnusedConditions;
+                    case Quest_FieldIndex.Stages:
+                        return Stages;
+                    case Quest_FieldIndex.Objectives:
+                        return Objectives;
+                    case Quest_FieldIndex.Aliases:
+                        return Aliases;
+                    case Quest_FieldIndex.QuestGroup:
+                        return QuestGroup;
+                    case Quest_FieldIndex.Keywords:
+                        return Keywords;
+                    case Quest_FieldIndex.MissionTypeKeyword:
+                        return MissionTypeKeyword;
+                    case Quest_FieldIndex.MissionBoardDescription:
+                        return MissionBoardDescription;
+                    case Quest_FieldIndex.MissionBoardInfoPanels:
+                        return MissionBoardInfoPanels;
+                    case Quest_FieldIndex.ScriptComment:
+                        return ScriptComment;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +1356,78 @@ namespace Mutagen.Bethesda.Starfield
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, QuestAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Quest_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, QuestData.ErrorMask?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.QuestType:
+                        this.QuestType = ex;
+                        break;
+                    case Quest_FieldIndex.QuestFaction:
+                        this.QuestFaction = ex;
+                        break;
+                    case Quest_FieldIndex.Event:
+                        this.Event = ex;
+                        break;
+                    case Quest_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case Quest_FieldIndex.QuestTimeLimit:
+                        this.QuestTimeLimit = ex;
+                        break;
+                    case Quest_FieldIndex.SourceQuest:
+                        this.SourceQuest = ex;
+                        break;
+                    case Quest_FieldIndex.TextDisplayGlobals:
+                        this.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Filter:
+                        this.Filter = ex;
+                        break;
+                    case Quest_FieldIndex.Summary:
+                        this.Summary = ex;
+                        break;
+                    case Quest_FieldIndex.DialogConditions:
+                        this.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.UnusedConditions:
+                        this.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Stages:
+                        this.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Objectives:
+                        this.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.Aliases:
+                        this.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.QuestGroup:
+                        this.QuestGroup = ex;
+                        break;
+                    case Quest_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.MissionTypeKeyword:
+                        this.MissionTypeKeyword = ex;
+                        break;
+                    case Quest_FieldIndex.MissionBoardDescription:
+                        this.MissionBoardDescription = ex;
+                        break;
+                    case Quest_FieldIndex.MissionBoardInfoPanels:
+                        this.MissionBoardInfoPanels = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestMissionBoardPanel.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.ScriptComment:
+                        this.ScriptComment = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1439,78 @@ namespace Mutagen.Bethesda.Starfield
                 Quest_FieldIndex enu = (Quest_FieldIndex)index;
                 switch (enu)
                 {
+                    case Quest_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, QuestAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Quest_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, QuestData.ErrorMask?>?)obj;
+                        break;
+                    case Quest_FieldIndex.QuestType:
+                        this.QuestType = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.QuestFaction:
+                        this.QuestFaction = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Event:
+                        this.Event = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.QuestTimeLimit:
+                        this.QuestTimeLimit = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.SourceQuest:
+                        this.SourceQuest = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.TextDisplayGlobals:
+                        this.TextDisplayGlobals = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Filter:
+                        this.Filter = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Summary:
+                        this.Summary = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.DialogConditions:
+                        this.DialogConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.UnusedConditions:
+                        this.UnusedConditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Stages:
+                        this.Stages = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Objectives:
+                        this.Objectives = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.Aliases:
+                        this.Aliases = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.QuestGroup:
+                        this.QuestGroup = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Quest_FieldIndex.MissionTypeKeyword:
+                        this.MissionTypeKeyword = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.MissionBoardDescription:
+                        this.MissionBoardDescription = (Exception?)obj;
+                        break;
+                    case Quest_FieldIndex.MissionBoardInfoPanels:
+                        this.MissionBoardInfoPanels = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestMissionBoardPanel.ErrorMask?>>?>)obj;
+                        break;
+                    case Quest_FieldIndex.ScriptComment:
+                        this.ScriptComment = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1520,30 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Name != null) return true;
+                if (Components != null) return true;
+                if (Data != null) return true;
+                if (QuestType != null) return true;
+                if (QuestFaction != null) return true;
+                if (Event != null) return true;
+                if (Location != null) return true;
+                if (QuestTimeLimit != null) return true;
+                if (SourceQuest != null) return true;
+                if (TextDisplayGlobals != null) return true;
+                if (Filter != null) return true;
+                if (Summary != null) return true;
+                if (DialogConditions != null) return true;
+                if (UnusedConditions != null) return true;
+                if (Stages != null) return true;
+                if (Objectives != null) return true;
+                if (Aliases != null) return true;
+                if (QuestGroup != null) return true;
+                if (Keywords != null) return true;
+                if (MissionTypeKeyword != null) return true;
+                if (MissionBoardDescription != null) return true;
+                if (MissionBoardInfoPanels != null) return true;
+                if (ScriptComment != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1570,213 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Data?.Print(sb);
+                {
+                    sb.AppendItem(QuestType, "QuestType");
+                }
+                {
+                    sb.AppendItem(QuestFaction, "QuestFaction");
+                }
+                {
+                    sb.AppendItem(Event, "Event");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(QuestTimeLimit, "QuestTimeLimit");
+                }
+                {
+                    sb.AppendItem(SourceQuest, "SourceQuest");
+                }
+                if (TextDisplayGlobals is {} TextDisplayGlobalsItem)
+                {
+                    sb.AppendLine("TextDisplayGlobals =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TextDisplayGlobalsItem.Overall);
+                        if (TextDisplayGlobalsItem.Specific != null)
+                        {
+                            foreach (var subItem in TextDisplayGlobalsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Filter, "Filter");
+                }
+                {
+                    sb.AppendItem(Summary, "Summary");
+                }
+                if (DialogConditions is {} DialogConditionsItem)
+                {
+                    sb.AppendLine("DialogConditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DialogConditionsItem.Overall);
+                        if (DialogConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in DialogConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (UnusedConditions is {} UnusedConditionsItem)
+                {
+                    sb.AppendLine("UnusedConditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(UnusedConditionsItem.Overall);
+                        if (UnusedConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in UnusedConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Stages is {} StagesItem)
+                {
+                    sb.AppendLine("Stages =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(StagesItem.Overall);
+                        if (StagesItem.Specific != null)
+                        {
+                            foreach (var subItem in StagesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Objectives is {} ObjectivesItem)
+                {
+                    sb.AppendLine("Objectives =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ObjectivesItem.Overall);
+                        if (ObjectivesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectivesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Aliases is {} AliasesItem)
+                {
+                    sb.AppendLine("Aliases =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AliasesItem.Overall);
+                        if (AliasesItem.Specific != null)
+                        {
+                            foreach (var subItem in AliasesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(QuestGroup, "QuestGroup");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(MissionTypeKeyword, "MissionTypeKeyword");
+                }
+                {
+                    sb.AppendItem(MissionBoardDescription, "MissionBoardDescription");
+                }
+                if (MissionBoardInfoPanels is {} MissionBoardInfoPanelsItem)
+                {
+                    sb.AppendLine("MissionBoardInfoPanels =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MissionBoardInfoPanelsItem.Overall);
+                        if (MissionBoardInfoPanelsItem.Specific != null)
+                        {
+                            foreach (var subItem in MissionBoardInfoPanelsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(ScriptComment, "ScriptComment");
+                }
             }
             #endregion
 
@@ -255,6 +1785,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.QuestType = this.QuestType.Combine(rhs.QuestType);
+                ret.QuestFaction = this.QuestFaction.Combine(rhs.QuestFaction);
+                ret.Event = this.Event.Combine(rhs.Event);
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.QuestTimeLimit = this.QuestTimeLimit.Combine(rhs.QuestTimeLimit);
+                ret.SourceQuest = this.SourceQuest.Combine(rhs.SourceQuest);
+                ret.TextDisplayGlobals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Overall, rhs.TextDisplayGlobals?.Overall), Noggog.ExceptionExt.Combine(this.TextDisplayGlobals?.Specific, rhs.TextDisplayGlobals?.Specific));
+                ret.Filter = this.Filter.Combine(rhs.Filter);
+                ret.Summary = this.Summary.Combine(rhs.Summary);
+                ret.DialogConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DialogConditions?.Overall, rhs.DialogConditions?.Overall), Noggog.ExceptionExt.Combine(this.DialogConditions?.Specific, rhs.DialogConditions?.Specific));
+                ret.UnusedConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UnusedConditions?.Overall, rhs.UnusedConditions?.Overall), Noggog.ExceptionExt.Combine(this.UnusedConditions?.Specific, rhs.UnusedConditions?.Specific));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
+                ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
+                ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AQuestAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
+                ret.QuestGroup = this.QuestGroup.Combine(rhs.QuestGroup);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.MissionTypeKeyword = this.MissionTypeKeyword.Combine(rhs.MissionTypeKeyword);
+                ret.MissionBoardDescription = this.MissionBoardDescription.Combine(rhs.MissionBoardDescription);
+                ret.MissionBoardInfoPanels = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestMissionBoardPanel.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MissionBoardInfoPanels?.Overall, rhs.MissionBoardInfoPanels?.Overall), Noggog.ExceptionExt.Combine(this.MissionBoardInfoPanels?.Specific, rhs.MissionBoardInfoPanels?.Specific));
+                ret.ScriptComment = this.ScriptComment.Combine(rhs.ScriptComment);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1830,86 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public QuestAdapter.TranslationMask? VirtualMachineAdapter;
+            public bool Name;
+            public AComponent.TranslationMask? Components;
+            public QuestData.TranslationMask? Data;
+            public bool QuestType;
+            public bool QuestFaction;
+            public bool Event;
+            public bool Location;
+            public bool QuestTimeLimit;
+            public bool SourceQuest;
+            public bool TextDisplayGlobals;
+            public bool Filter;
+            public bool Summary;
+            public Condition.TranslationMask? DialogConditions;
+            public Condition.TranslationMask? UnusedConditions;
+            public QuestStage.TranslationMask? Stages;
+            public QuestObjective.TranslationMask? Objectives;
+            public AQuestAlias.TranslationMask? Aliases;
+            public bool QuestGroup;
+            public bool Keywords;
+            public bool MissionTypeKeyword;
+            public bool MissionBoardDescription;
+            public QuestMissionBoardPanel.TranslationMask? MissionBoardInfoPanels;
+            public bool ScriptComment;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.QuestType = defaultOn;
+                this.QuestFaction = defaultOn;
+                this.Event = defaultOn;
+                this.Location = defaultOn;
+                this.QuestTimeLimit = defaultOn;
+                this.SourceQuest = defaultOn;
+                this.TextDisplayGlobals = defaultOn;
+                this.Filter = defaultOn;
+                this.Summary = defaultOn;
+                this.QuestGroup = defaultOn;
+                this.Keywords = defaultOn;
+                this.MissionTypeKeyword = defaultOn;
+                this.MissionBoardDescription = defaultOn;
+                this.ScriptComment = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((QuestType, null));
+                ret.Add((QuestFaction, null));
+                ret.Add((Event, null));
+                ret.Add((Location, null));
+                ret.Add((QuestTimeLimit, null));
+                ret.Add((SourceQuest, null));
+                ret.Add((TextDisplayGlobals, null));
+                ret.Add((Filter, null));
+                ret.Add((Summary, null));
+                ret.Add((DialogConditions == null ? DefaultOn : !DialogConditions.GetCrystal().CopyNothing, DialogConditions?.GetCrystal()));
+                ret.Add((UnusedConditions == null ? DefaultOn : !UnusedConditions.GetCrystal().CopyNothing, UnusedConditions?.GetCrystal()));
+                ret.Add((Stages == null ? DefaultOn : !Stages.GetCrystal().CopyNothing, Stages?.GetCrystal()));
+                ret.Add((Objectives == null ? DefaultOn : !Objectives.GetCrystal().CopyNothing, Objectives?.GetCrystal()));
+                ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
+                ret.Add((QuestGroup, null));
+                ret.Add((Keywords, null));
+                ret.Add((MissionTypeKeyword, null));
+                ret.Add((MissionBoardDescription, null));
+                ret.Add((MissionBoardInfoPanels == null ? DefaultOn : !MissionBoardInfoPanels.GetCrystal().CopyNothing, MissionBoardInfoPanels?.GetCrystal()));
+                ret.Add((ScriptComment, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1921,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestSetterCommon.Instance.RemapLinks(this, mapping);
         public Quest(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1972,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IQuest);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => QuestSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => QuestSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => QuestSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -424,10 +2060,51 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IQuest :
+        IAssetLinkContainer,
+        IFormLinkContainer,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IQuestInternal>,
+        INamed,
+        INamedRequired,
         IQuestGetter,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new QuestAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new QuestData? Data { get; set; }
+        new IFormLinkNullable<IKeywordGetter> QuestType { get; set; }
+        new IFormLinkNullable<IKeywordGetter> QuestFaction { get; set; }
+        new RecordType? Event { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
+        new IFormLinkNullable<IGlobalGetter> QuestTimeLimit { get; set; }
+        new IFormLinkNullable<IQuestGetter> SourceQuest { get; set; }
+        new ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
+        new String? Filter { get; set; }
+        new String? Summary { get; set; }
+        new ExtendedList<Condition> DialogConditions { get; }
+        new ExtendedList<Condition>? UnusedConditions { get; set; }
+        new ExtendedList<QuestStage> Stages { get; }
+        new ExtendedList<QuestObjective> Objectives { get; }
+        new ExtendedList<AQuestAlias>? Aliases { get; set; }
+        new IFormLinkNullable<IKeywordGetter> QuestGroup { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IKeywordGetter> MissionTypeKeyword { get; set; }
+        new TranslatedString? MissionBoardDescription { get; set; }
+        new ExtendedList<QuestMissionBoardPanel> MissionBoardInfoPanels { get; }
+        new String? ScriptComment { get; set; }
+        #region Mutagen
+        new Quest.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IQuestInternal :
@@ -440,11 +2117,62 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.QUST)]
     public partial interface IQuestGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IQuestGetter>,
-        IMapsToGetter<IQuestGetter>
+        IMapsToGetter<IQuestGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Quest_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter
+        /// </summary>
+        IQuestAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IQuestDataGetter? Data { get; }
+        IFormLinkNullableGetter<IKeywordGetter> QuestType { get; }
+        IFormLinkNullableGetter<IKeywordGetter> QuestFaction { get; }
+        RecordType? Event { get; }
+        IFormLinkNullableGetter<ILocationGetter> Location { get; }
+        IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit { get; }
+        IFormLinkNullableGetter<IQuestGetter> SourceQuest { get; }
+        IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; }
+        String? Filter { get; }
+        String? Summary { get; }
+        IReadOnlyList<IConditionGetter> DialogConditions { get; }
+        IReadOnlyList<IConditionGetter>? UnusedConditions { get; }
+        IReadOnlyList<IQuestStageGetter> Stages { get; }
+        IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
+        IReadOnlyList<IAQuestAliasGetter>? Aliases { get; }
+        IFormLinkNullableGetter<IKeywordGetter> QuestGroup { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword { get; }
+        ITranslatedStringGetter? MissionBoardDescription { get; }
+        IReadOnlyList<IQuestMissionBoardPanelGetter> MissionBoardInfoPanels { get; }
+        String? ScriptComment { get; }
+
+        #region Mutagen
+        Quest.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -621,6 +2349,30 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        Components = 9,
+        Data = 10,
+        QuestType = 11,
+        QuestFaction = 12,
+        Event = 13,
+        Location = 14,
+        QuestTimeLimit = 15,
+        SourceQuest = 16,
+        TextDisplayGlobals = 17,
+        Filter = 18,
+        Summary = 19,
+        DialogConditions = 20,
+        UnusedConditions = 21,
+        Stages = 22,
+        Objectives = 23,
+        Aliases = 24,
+        QuestGroup = 25,
+        Keywords = 26,
+        MissionTypeKeyword = 27,
+        MissionBoardDescription = 28,
+        MissionBoardInfoPanels = 29,
+        ScriptComment = 30,
     }
     #endregion
 
@@ -631,9 +2383,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -663,8 +2415,58 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.QUST);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.QUST);
+            var all = RecordCollection.Factory(
+                RecordTypes.QUST,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.FULL,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.DNAM,
+                RecordTypes.QTYP,
+                RecordTypes.FTYP,
+                RecordTypes.ENAM,
+                RecordTypes.LNAM,
+                RecordTypes.QTLM,
+                RecordTypes.QSRC,
+                RecordTypes.QTGL,
+                RecordTypes.FLTR,
+                RecordTypes.NAM3,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.NEXT,
+                RecordTypes.INDX,
+                RecordTypes.QSDT,
+                RecordTypes.NAM2,
+                RecordTypes.SCFC,
+                RecordTypes.CNAM,
+                RecordTypes.QSRD,
+                RecordTypes.NAM1,
+                RecordTypes.QRXP,
+                RecordTypes.QRCR,
+                RecordTypes.QRRD,
+                RecordTypes.QOBJ,
+                RecordTypes.FNAM,
+                RecordTypes.NNAM,
+                RecordTypes.QSTA,
+                RecordTypes.ANAM,
+                RecordTypes.ALST,
+                RecordTypes.ALLS,
+                RecordTypes.ALCS,
+                RecordTypes.ALMI,
+                RecordTypes.GNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.QMTY,
+                RecordTypes.QMSU,
+                RecordTypes.QMDT,
+                RecordTypes.QMDP,
+                RecordTypes.QMDS,
+                RecordTypes.SCCM);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(QuestBinaryWriteTranslation);
         #region Interface
@@ -706,6 +2508,30 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IQuestInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Name = default;
+            item.Components.Clear();
+            item.Data = null;
+            item.QuestType.Clear();
+            item.QuestFaction.Clear();
+            item.Event = default;
+            item.Location.Clear();
+            item.QuestTimeLimit.Clear();
+            item.SourceQuest.Clear();
+            item.TextDisplayGlobals.Clear();
+            item.Filter = default;
+            item.Summary = default;
+            item.DialogConditions.Clear();
+            item.UnusedConditions = null;
+            item.Stages.Clear();
+            item.Objectives.Clear();
+            item.Aliases = null;
+            item.QuestGroup.Clear();
+            item.Keywords = null;
+            item.MissionTypeKeyword.Clear();
+            item.MissionBoardDescription = default;
+            item.MissionBoardInfoPanels.Clear();
+            item.ScriptComment = default;
             base.Clear(item);
         }
         
@@ -723,6 +2549,46 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IQuest obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.QuestType.Relink(mapping);
+            obj.QuestFaction.Relink(mapping);
+            obj.Location.Relink(mapping);
+            obj.QuestTimeLimit.Relink(mapping);
+            obj.SourceQuest.Relink(mapping);
+            obj.TextDisplayGlobals.RemapLinks(mapping);
+            obj.DialogConditions.RemapLinks(mapping);
+            obj.UnusedConditions?.RemapLinks(mapping);
+            obj.Stages.RemapLinks(mapping);
+            obj.Objectives.RemapLinks(mapping);
+            obj.Aliases?.RemapLinks(mapping);
+            obj.QuestGroup.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.MissionTypeKeyword.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IQuest obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IQuest obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -790,6 +2656,65 @@ namespace Mutagen.Bethesda.Starfield
             Quest.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.QuestType = item.QuestType.Equals(rhs.QuestType);
+            ret.QuestFaction = item.QuestFaction.Equals(rhs.QuestFaction);
+            ret.Event = item.Event == rhs.Event;
+            ret.Location = item.Location.Equals(rhs.Location);
+            ret.QuestTimeLimit = item.QuestTimeLimit.Equals(rhs.QuestTimeLimit);
+            ret.SourceQuest = item.SourceQuest.Equals(rhs.SourceQuest);
+            ret.TextDisplayGlobals = item.TextDisplayGlobals.CollectionEqualsHelper(
+                rhs.TextDisplayGlobals,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Filter = string.Equals(item.Filter, rhs.Filter);
+            ret.Summary = string.Equals(item.Summary, rhs.Summary);
+            ret.DialogConditions = item.DialogConditions.CollectionEqualsHelper(
+                rhs.DialogConditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.UnusedConditions = item.UnusedConditions.CollectionEqualsHelper(
+                rhs.UnusedConditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Stages = item.Stages.CollectionEqualsHelper(
+                rhs.Stages,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Objectives = item.Objectives.CollectionEqualsHelper(
+                rhs.Objectives,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Aliases = item.Aliases.CollectionEqualsHelper(
+                rhs.Aliases,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.QuestGroup = item.QuestGroup.Equals(rhs.QuestGroup);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.MissionTypeKeyword = item.MissionTypeKeyword.Equals(rhs.MissionTypeKeyword);
+            ret.MissionBoardDescription = object.Equals(item.MissionBoardDescription, rhs.MissionBoardDescription);
+            ret.MissionBoardInfoPanels = item.MissionBoardInfoPanels.CollectionEqualsHelper(
+                rhs.MissionBoardInfoPanels,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ScriptComment = string.Equals(item.ScriptComment, rhs.ScriptComment);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -839,6 +2764,203 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
+            {
+                DataItem?.Print(sb, "Data");
+            }
+            if (printMask?.QuestType ?? true)
+            {
+                sb.AppendItem(item.QuestType.FormKeyNullable, "QuestType");
+            }
+            if (printMask?.QuestFaction ?? true)
+            {
+                sb.AppendItem(item.QuestFaction.FormKeyNullable, "QuestFaction");
+            }
+            if ((printMask?.Event ?? true)
+                && item.Event is {} EventItem)
+            {
+                sb.AppendItem(EventItem, "Event");
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location.FormKeyNullable, "Location");
+            }
+            if (printMask?.QuestTimeLimit ?? true)
+            {
+                sb.AppendItem(item.QuestTimeLimit.FormKeyNullable, "QuestTimeLimit");
+            }
+            if (printMask?.SourceQuest ?? true)
+            {
+                sb.AppendItem(item.SourceQuest.FormKeyNullable, "SourceQuest");
+            }
+            if (printMask?.TextDisplayGlobals?.Overall ?? true)
+            {
+                sb.AppendLine("TextDisplayGlobals =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.TextDisplayGlobals)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Filter ?? true)
+                && item.Filter is {} FilterItem)
+            {
+                sb.AppendItem(FilterItem, "Filter");
+            }
+            if ((printMask?.Summary ?? true)
+                && item.Summary is {} SummaryItem)
+            {
+                sb.AppendItem(SummaryItem, "Summary");
+            }
+            if (printMask?.DialogConditions?.Overall ?? true)
+            {
+                sb.AppendLine("DialogConditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.DialogConditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.UnusedConditions?.Overall ?? true)
+                && item.UnusedConditions is {} UnusedConditionsItem)
+            {
+                sb.AppendLine("UnusedConditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in UnusedConditionsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Stages?.Overall ?? true)
+            {
+                sb.AppendLine("Stages =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Stages)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Objectives?.Overall ?? true)
+            {
+                sb.AppendLine("Objectives =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Objectives)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Aliases?.Overall ?? true)
+                && item.Aliases is {} AliasesItem)
+            {
+                sb.AppendLine("Aliases =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in AliasesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.QuestGroup ?? true)
+            {
+                sb.AppendItem(item.QuestGroup.FormKeyNullable, "QuestGroup");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.MissionTypeKeyword ?? true)
+            {
+                sb.AppendItem(item.MissionTypeKeyword.FormKeyNullable, "MissionTypeKeyword");
+            }
+            if ((printMask?.MissionBoardDescription ?? true)
+                && item.MissionBoardDescription is {} MissionBoardDescriptionItem)
+            {
+                sb.AppendItem(MissionBoardDescriptionItem, "MissionBoardDescription");
+            }
+            if (printMask?.MissionBoardInfoPanels?.Overall ?? true)
+            {
+                sb.AppendLine("MissionBoardInfoPanels =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.MissionBoardInfoPanels)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ScriptComment ?? true)
+                && item.ScriptComment is {} ScriptCommentItem)
+            {
+                sb.AppendItem(ScriptCommentItem, "ScriptComment");
+            }
         }
         
         public static Quest_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -889,6 +3011,110 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((QuestAdapterCommon)((IQuestAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Data) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((QuestDataCommon)((IQuestDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestType) ?? true))
+            {
+                if (!lhs.QuestType.Equals(rhs.QuestType)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestFaction) ?? true))
+            {
+                if (!lhs.QuestFaction.Equals(rhs.QuestFaction)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
+            {
+                if (lhs.Event != rhs.Event) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestTimeLimit) ?? true))
+            {
+                if (!lhs.QuestTimeLimit.Equals(rhs.QuestTimeLimit)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.SourceQuest) ?? true))
+            {
+                if (!lhs.SourceQuest.Equals(rhs.SourceQuest)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.TextDisplayGlobals) ?? true))
+            {
+                if (!lhs.TextDisplayGlobals.SequenceEqualNullable(rhs.TextDisplayGlobals)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Filter) ?? true))
+            {
+                if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Summary) ?? true))
+            {
+                if (!string.Equals(lhs.Summary, rhs.Summary)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
+            {
+                if (!lhs.DialogConditions.SequenceEqual(rhs.DialogConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.DialogConditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
+            {
+                if (!lhs.UnusedConditions.SequenceEqualNullable(rhs.UnusedConditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.UnusedConditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            {
+                if (!lhs.Stages.SequenceEqual(rhs.Stages, (l, r) => ((QuestStageCommon)((IQuestStageGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Stages)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
+            {
+                if (!lhs.Objectives.SequenceEqual(rhs.Objectives, (l, r) => ((QuestObjectiveCommon)((IQuestObjectiveGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Objectives)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
+            {
+                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases, (l, r) => ((AQuestAliasCommon)((IAQuestAliasGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Aliases)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestGroup) ?? true))
+            {
+                if (!lhs.QuestGroup.Equals(rhs.QuestGroup)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionTypeKeyword) ?? true))
+            {
+                if (!lhs.MissionTypeKeyword.Equals(rhs.MissionTypeKeyword)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionBoardDescription) ?? true))
+            {
+                if (!object.Equals(lhs.MissionBoardDescription, rhs.MissionBoardDescription)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionBoardInfoPanels) ?? true))
+            {
+                if (!lhs.MissionBoardInfoPanels.SequenceEqual(rhs.MissionBoardInfoPanels, (l, r) => ((QuestMissionBoardPanelCommon)((IQuestMissionBoardPanelGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.MissionBoardInfoPanels)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.ScriptComment) ?? true))
+            {
+                if (!string.Equals(lhs.ScriptComment, rhs.ScriptComment)) return false;
+            }
             return true;
         }
         
@@ -917,6 +3143,54 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IQuestGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Components);
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
+            hash.Add(item.QuestType);
+            hash.Add(item.QuestFaction);
+            if (item.Event is {} Eventitem)
+            {
+                hash.Add(Eventitem);
+            }
+            hash.Add(item.Location);
+            hash.Add(item.QuestTimeLimit);
+            hash.Add(item.SourceQuest);
+            hash.Add(item.TextDisplayGlobals);
+            if (item.Filter is {} Filteritem)
+            {
+                hash.Add(Filteritem);
+            }
+            if (item.Summary is {} Summaryitem)
+            {
+                hash.Add(Summaryitem);
+            }
+            hash.Add(item.DialogConditions);
+            hash.Add(item.UnusedConditions);
+            hash.Add(item.Stages);
+            hash.Add(item.Objectives);
+            hash.Add(item.Aliases);
+            hash.Add(item.QuestGroup);
+            hash.Add(item.Keywords);
+            hash.Add(item.MissionTypeKeyword);
+            if (item.MissionBoardDescription is {} MissionBoardDescriptionitem)
+            {
+                hash.Add(MissionBoardDescriptionitem);
+            }
+            hash.Add(item.MissionBoardInfoPanels);
+            if (item.ScriptComment is {} ScriptCommentitem)
+            {
+                hash.Add(ScriptCommentitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -945,6 +3219,101 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.QuestType, out var QuestTypeInfo))
+            {
+                yield return QuestTypeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.QuestFaction, out var QuestFactionInfo))
+            {
+                yield return QuestFactionInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
+            {
+                yield return LocationInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.QuestTimeLimit, out var QuestTimeLimitInfo))
+            {
+                yield return QuestTimeLimitInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.SourceQuest, out var SourceQuestInfo))
+            {
+                yield return SourceQuestInfo;
+            }
+            foreach (var item in obj.TextDisplayGlobals)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.DialogConditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.UnusedConditions is {} UnusedConditionsItem)
+            {
+                foreach (var item in UnusedConditionsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            foreach (var item in obj.Stages.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Objectives.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Aliases is {} AliasesItem)
+            {
+                foreach (var item in AliasesItem.WhereCastable<IAQuestAliasGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.QuestGroup, out var QuestGroupInfo))
+            {
+                yield return QuestGroupInfo;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.MissionTypeKeyword, out var MissionTypeKeywordInfo))
+            {
+                yield return MissionTypeKeywordInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IQuestGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1020,6 +3389,340 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Quest_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Quest_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestType) ?? true))
+            {
+                item.QuestType.SetTo(rhs.QuestType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestFaction) ?? true))
+            {
+                item.QuestFaction.SetTo(rhs.QuestFaction.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Event) ?? true))
+            {
+                item.Event = rhs.Event;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Location) ?? true))
+            {
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestTimeLimit) ?? true))
+            {
+                item.QuestTimeLimit.SetTo(rhs.QuestTimeLimit.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.SourceQuest) ?? true))
+            {
+                item.SourceQuest.SetTo(rhs.SourceQuest.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.TextDisplayGlobals) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.TextDisplayGlobals);
+                try
+                {
+                    item.TextDisplayGlobals.SetTo(
+                        rhs.TextDisplayGlobals
+                        .Select(r => (IFormLinkGetter<IGlobalGetter>)new FormLink<IGlobalGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Filter) ?? true))
+            {
+                item.Filter = rhs.Filter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Summary) ?? true))
+            {
+                item.Summary = rhs.Summary;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.DialogConditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.DialogConditions);
+                try
+                {
+                    item.DialogConditions.SetTo(
+                        rhs.DialogConditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.UnusedConditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.UnusedConditions);
+                try
+                {
+                    if ((rhs.UnusedConditions != null))
+                    {
+                        item.UnusedConditions = 
+                            rhs.UnusedConditions
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<Condition>();
+                    }
+                    else
+                    {
+                        item.UnusedConditions = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Stages);
+                try
+                {
+                    item.Stages.SetTo(
+                        rhs.Stages
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Objectives) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Objectives);
+                try
+                {
+                    item.Objectives.SetTo(
+                        rhs.Objectives
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Aliases);
+                try
+                {
+                    if ((rhs.Aliases != null))
+                    {
+                        item.Aliases = 
+                            rhs.Aliases
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<AQuestAlias>();
+                    }
+                    else
+                    {
+                        item.Aliases = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.QuestGroup) ?? true))
+            {
+                item.QuestGroup.SetTo(rhs.QuestGroup.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionTypeKeyword) ?? true))
+            {
+                item.MissionTypeKeyword.SetTo(rhs.MissionTypeKeyword.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionBoardDescription) ?? true))
+            {
+                item.MissionBoardDescription = rhs.MissionBoardDescription?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.MissionBoardInfoPanels) ?? true))
+            {
+                errorMask?.PushIndex((int)Quest_FieldIndex.MissionBoardInfoPanels);
+                try
+                {
+                    item.MissionBoardInfoPanels.SetTo(
+                        rhs.MissionBoardInfoPanels
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.ScriptComment) ?? true))
+            {
+                item.ScriptComment = rhs.ScriptComment;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1168,6 +3871,204 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly QuestBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IQuestGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((QuestAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.Data is {} DataItem)
+            {
+                ((QuestDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.QuestType,
+                header: translationParams.ConvertToCustom(RecordTypes.QTYP));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.QuestFaction,
+                header: translationParams.ConvertToCustom(RecordTypes.FTYP));
+            RecordTypeBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Event,
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Location,
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.QuestTimeLimit,
+                header: translationParams.ConvertToCustom(RecordTypes.QTLM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SourceQuest,
+                header: translationParams.ConvertToCustom(RecordTypes.QSRC));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGlobalGetter>>.Instance.Write(
+                writer: writer,
+                items: item.TextDisplayGlobals,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IGlobalGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.QTGL));
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Filter,
+                header: translationParams.ConvertToCustom(RecordTypes.FLTR),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Summary,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM3),
+                binaryType: StringBinaryType.NullTerminate);
+            QuestBinaryWriteTranslation.WriteBinaryDialogConditions(
+                writer: writer,
+                item: item);
+            QuestBinaryWriteTranslation.WriteBinaryUnusedConditionsLogic(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestStageGetter>.Instance.Write(
+                writer: writer,
+                items: item.Stages,
+                transl: (MutagenWriter subWriter, IQuestStageGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestStageBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestObjectiveGetter>.Instance.Write(
+                writer: writer,
+                items: item.Objectives,
+                transl: (MutagenWriter subWriter, IQuestObjectiveGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestObjectiveBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            QuestBinaryWriteTranslation.WriteBinaryAliasParse(
+                writer: writer,
+                item: item);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.QuestGroup,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MissionTypeKeyword,
+                header: translationParams.ConvertToCustom(RecordTypes.QMTY));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MissionBoardDescription,
+                header: translationParams.ConvertToCustom(RecordTypes.QMSU),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestMissionBoardPanelGetter>.Instance.Write(
+                writer: writer,
+                items: item.MissionBoardInfoPanels,
+                transl: (MutagenWriter subWriter, IQuestMissionBoardPanelGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((QuestMissionBoardPanelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ScriptComment,
+                header: translationParams.ConvertToCustom(RecordTypes.SCCM),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
+        public static partial void WriteBinaryDialogConditionsCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryDialogConditions(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryDialogConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryUnusedConditionsLogicCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryUnusedConditionsLogic(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryUnusedConditionsLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryAliasParseCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryAliasParse(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryAliasParseCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IQuestGetter item,
@@ -1184,10 +4085,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1237,6 +4140,242 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly QuestBinaryCreateTranslation Instance = new QuestBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.QUST;
+        public static ParseResult FillBinaryRecordTypes(
+            IQuestInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.QuestAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Quest_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Quest_FieldIndex.Name;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Quest_FieldIndex.Components;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    item.Data = Mutagen.Bethesda.Starfield.QuestData.CreateFromBinary(frame: frame);
+                    return (int)Quest_FieldIndex.Data;
+                }
+                case RecordTypeInts.QTYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.QuestType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.QuestType;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.QuestFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.QuestFaction;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Quest_FieldIndex.Event;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.Location;
+                }
+                case RecordTypeInts.QTLM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.QuestTimeLimit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.QuestTimeLimit;
+                }
+                case RecordTypeInts.QSRC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SourceQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.SourceQuest;
+                }
+                case RecordTypeInts.QTGL:
+                {
+                    item.TextDisplayGlobals.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGlobalGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.QTGL),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Quest_FieldIndex.TextDisplayGlobals;
+                }
+                case RecordTypeInts.FLTR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Filter = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Quest_FieldIndex.Filter;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Summary = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Quest_FieldIndex.Summary;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    QuestBinaryCreateTranslation.FillBinaryDialogConditionsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                    return (int)Quest_FieldIndex.DialogConditions;
+                }
+                case RecordTypeInts.NEXT:
+                {
+                    return QuestBinaryCreateTranslation.FillBinaryUnusedConditionsLogicCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.INDX:
+                {
+                    item.Stages.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestStage>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: QuestStage_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: QuestStage.TryCreateFromBinary));
+                    return (int)Quest_FieldIndex.Stages;
+                }
+                case RecordTypeInts.QOBJ:
+                {
+                    item.Objectives.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestObjective>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: QuestObjective_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: QuestObjective.TryCreateFromBinary));
+                    return (int)Quest_FieldIndex.Objectives;
+                }
+                case RecordTypeInts.ANAM:
+                case RecordTypeInts.ALST:
+                case RecordTypeInts.ALLS:
+                case RecordTypeInts.ALCS:
+                case RecordTypeInts.ALMI:
+                {
+                    return QuestBinaryCreateTranslation.FillBinaryAliasParseCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.QuestGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.QuestGroup;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Quest_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.QMTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MissionTypeKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Quest_FieldIndex.MissionTypeKeyword;
+                }
+                case RecordTypeInts.QMSU:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MissionBoardDescription = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Quest_FieldIndex.MissionBoardDescription;
+                }
+                case RecordTypeInts.QMDT:
+                case RecordTypeInts.QMDP:
+                case RecordTypeInts.QMDS:
+                {
+                    item.MissionBoardInfoPanels.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestMissionBoardPanel>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: QuestMissionBoardPanel_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: QuestMissionBoardPanel.TryCreateFromBinary));
+                    return (int)Quest_FieldIndex.MissionBoardInfoPanels;
+                }
+                case RecordTypeInts.SCCM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ScriptComment = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Quest_FieldIndex.ScriptComment;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial void FillBinaryDialogConditionsCustom(
+            MutagenFrame frame,
+            IQuestInternal item,
+            PreviousParse lastParsed);
+
+        public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
+            MutagenFrame frame,
+            IQuestInternal item,
+            PreviousParse lastParsed);
+
+        public static partial ParseResult FillBinaryAliasParseCustom(
+            MutagenFrame frame,
+            IQuestInternal item,
+            PreviousParse lastParsed);
+
     }
 
 }
@@ -1269,6 +4408,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => QuestCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => QuestCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1282,7 +4423,107 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IQuest);
 
+        public Quest.MajorFlag MajorFlags => (Quest.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IQuestAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? QuestAdapterBinaryOverlay.QuestAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Data
+        private RangeInt32? _DataLocation;
+        public IQuestDataGetter? Data => _DataLocation.HasValue ? QuestDataBinaryOverlay.QuestDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        #endregion
+        #region QuestType
+        private int? _QuestTypeLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestType => _QuestTypeLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region QuestFaction
+        private int? _QuestFactionLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestFaction => _QuestFactionLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region Event
+        private int? _EventLocation;
+        public RecordType? Event => _EventLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EventLocation.Value, _package.MetaData.Constants))) : default(RecordType?);
+        #endregion
+        #region Location
+        private int? _LocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> Location => _LocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region QuestTimeLimit
+        private int? _QuestTimeLimitLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> QuestTimeLimit => _QuestTimeLimitLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestTimeLimitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #endregion
+        #region SourceQuest
+        private int? _SourceQuestLocation;
+        public IFormLinkNullableGetter<IQuestGetter> SourceQuest => _SourceQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourceQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals { get; private set; } = Array.Empty<IFormLinkGetter<IGlobalGetter>>();
+        #region Filter
+        private int? _FilterLocation;
+        public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region Summary
+        private int? _SummaryLocation;
+        public String? Summary => _SummaryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SummaryLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region DialogConditions
+        partial void DialogConditionsCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed);
+        #endregion
+        #region UnusedConditionsLogic
+        public partial ParseResult UnusedConditionsLogicCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
+        public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
+        public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
+        #region AliasParse
+        public partial ParseResult AliasParseCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
+        #region QuestGroup
+        private int? _QuestGroupLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> QuestGroup => _QuestGroupLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuestGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region MissionTypeKeyword
+        private int? _MissionTypeKeywordLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> MissionTypeKeyword => _MissionTypeKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MissionTypeKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        #endregion
+        #region MissionBoardDescription
+        private int? _MissionBoardDescriptionLocation;
+        public ITranslatedStringGetter? MissionBoardDescription => _MissionBoardDescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MissionBoardDescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        public IReadOnlyList<IQuestMissionBoardPanelGetter> MissionBoardInfoPanels { get; private set; } = Array.Empty<IQuestMissionBoardPanelGetter>();
+        #region ScriptComment
+        private int? _ScriptCommentLocation;
+        public String? ScriptComment => _ScriptCommentLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptCommentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1340,6 +4581,207 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Quest_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Name;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Quest_FieldIndex.Components;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Quest_FieldIndex.Data;
+                }
+                case RecordTypeInts.QTYP:
+                {
+                    _QuestTypeLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.QuestType;
+                }
+                case RecordTypeInts.FTYP:
+                {
+                    _QuestFactionLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.QuestFaction;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _EventLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Event;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _LocationLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Location;
+                }
+                case RecordTypeInts.QTLM:
+                {
+                    _QuestTimeLimitLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.QuestTimeLimit;
+                }
+                case RecordTypeInts.QSRC:
+                {
+                    _SourceQuestLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.SourceQuest;
+                }
+                case RecordTypeInts.QTGL:
+                {
+                    this.TextDisplayGlobals = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IGlobalGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IGlobalGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)Quest_FieldIndex.TextDisplayGlobals;
+                }
+                case RecordTypeInts.FLTR:
+                {
+                    _FilterLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Filter;
+                }
+                case RecordTypeInts.NAM3:
+                {
+                    _SummaryLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.Summary;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    DialogConditionsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return (int)Quest_FieldIndex.DialogConditions;
+                }
+                case RecordTypeInts.NEXT:
+                {
+                    return UnusedConditionsLogicCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.INDX:
+                {
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<IQuestStageGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: QuestStage_Registration.TriggerSpecs,
+                        factory: QuestStageBinaryOverlay.QuestStageFactory);
+                    return (int)Quest_FieldIndex.Stages;
+                }
+                case RecordTypeInts.QOBJ:
+                {
+                    this.Objectives = this.ParseRepeatedTypelessSubrecord<IQuestObjectiveGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: QuestObjective_Registration.TriggerSpecs,
+                        factory: QuestObjectiveBinaryOverlay.QuestObjectiveFactory);
+                    return (int)Quest_FieldIndex.Objectives;
+                }
+                case RecordTypeInts.ANAM:
+                case RecordTypeInts.ALST:
+                case RecordTypeInts.ALLS:
+                case RecordTypeInts.ALCS:
+                case RecordTypeInts.ALMI:
+                {
+                    return AliasParseCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _QuestGroupLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.QuestGroup;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Quest_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.QMTY:
+                {
+                    _MissionTypeKeywordLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.MissionTypeKeyword;
+                }
+                case RecordTypeInts.QMSU:
+                {
+                    _MissionBoardDescriptionLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.MissionBoardDescription;
+                }
+                case RecordTypeInts.QMDT:
+                case RecordTypeInts.QMDP:
+                case RecordTypeInts.QMDS:
+                {
+                    this.MissionBoardInfoPanels = this.ParseRepeatedTypelessSubrecord<IQuestMissionBoardPanelGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: QuestMissionBoardPanel_Registration.TriggerSpecs,
+                        factory: QuestMissionBoardPanelBinaryOverlay.QuestMissionBoardPanelFactory);
+                    return (int)Quest_FieldIndex.MissionBoardInfoPanels;
+                }
+                case RecordTypeInts.SCCM:
+                {
+                    _ScriptCommentLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.ScriptComment;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

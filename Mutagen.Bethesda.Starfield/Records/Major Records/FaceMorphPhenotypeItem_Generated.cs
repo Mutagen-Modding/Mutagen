@@ -39,23 +39,26 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class FaceMorphItem :
-        IEquatable<IFaceMorphItemGetter>,
-        IFaceMorphItem,
-        ILoquiObjectSetter<FaceMorphItem>
+    public partial class FaceMorphPhenotypeItem :
+        IEquatable<IFaceMorphPhenotypeItemGetter>,
+        IFaceMorphPhenotypeItem,
+        ILoquiObjectSetter<FaceMorphPhenotypeItem>
     {
         #region Ctor
-        public FaceMorphItem()
+        public FaceMorphPhenotypeItem()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Index
+        public UInt32 Index { get; set; } = default;
+        #endregion
         #region FMRU
         public String? FMRU { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFaceMorphItemGetter.FMRU => this.FMRU;
+        String? IFaceMorphPhenotypeItemGetter.FMRU => this.FMRU;
         #endregion
         #region Name
         /// <summary>
@@ -63,7 +66,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IFaceMorphItemGetter.Name => this.Name;
+        ITranslatedStringGetter? IFaceMorphPhenotypeItemGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -93,16 +96,6 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
-        #region FMRS
-        public String? FMRS { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFaceMorphItemGetter.FMRS => this.FMRS;
-        #endregion
-        #region FMSR
-        public Int32? FMSR { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IFaceMorphItemGetter.FMSR => this.FMSR;
-        #endregion
 
         #region To String
 
@@ -110,7 +103,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceMorphItemMixIn.Print(
+            FaceMorphPhenotypeItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -121,16 +114,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFaceMorphItemGetter rhs) return false;
-            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFaceMorphPhenotypeItemGetter rhs) return false;
+            return ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFaceMorphItemGetter? obj)
+        public bool Equals(IFaceMorphPhenotypeItemGetter? obj)
         {
-            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -142,22 +135,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Index = initialValue;
                 this.FMRU = initialValue;
                 this.Name = initialValue;
-                this.FMRS = initialValue;
-                this.FMSR = initialValue;
             }
 
             public Mask(
+                TItem Index,
                 TItem FMRU,
-                TItem Name,
-                TItem FMRS,
-                TItem FMSR)
+                TItem Name)
             {
+                this.Index = Index;
                 this.FMRU = FMRU;
                 this.Name = Name;
-                this.FMRS = FMRS;
-                this.FMSR = FMSR;
             }
 
             #pragma warning disable CS8618
@@ -169,10 +159,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public TItem Index;
             public TItem FMRU;
             public TItem Name;
-            public TItem FMRS;
-            public TItem FMSR;
             #endregion
 
             #region Equals
@@ -185,19 +174,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
                 if (!object.Equals(this.FMRU, rhs.FMRU)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.FMRS, rhs.FMRS)) return false;
-                if (!object.Equals(this.FMSR, rhs.FMSR)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Index);
                 hash.Add(this.FMRU);
                 hash.Add(this.Name);
-                hash.Add(this.FMRS);
-                hash.Add(this.FMSR);
                 return hash.ToHashCode();
             }
 
@@ -206,10 +193,9 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Index)) return false;
                 if (!eval(this.FMRU)) return false;
                 if (!eval(this.Name)) return false;
-                if (!eval(this.FMRS)) return false;
-                if (!eval(this.FMSR)) return false;
                 return true;
             }
             #endregion
@@ -217,10 +203,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Index)) return true;
                 if (eval(this.FMRU)) return true;
                 if (eval(this.Name)) return true;
-                if (eval(this.FMRS)) return true;
-                if (eval(this.FMSR)) return true;
                 return false;
             }
             #endregion
@@ -228,35 +213,38 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new FaceMorphItem.Mask<R>();
+                var ret = new FaceMorphPhenotypeItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Index = eval(this.Index);
                 obj.FMRU = eval(this.FMRU);
                 obj.Name = eval(this.Name);
-                obj.FMRS = eval(this.FMRS);
-                obj.FMSR = eval(this.FMSR);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(FaceMorphItem.Mask<bool>? printMask = null)
+            public string Print(FaceMorphPhenotypeItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, FaceMorphItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FaceMorphPhenotypeItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(FaceMorphItem.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(FaceMorphPhenotypeItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Index ?? true)
+                    {
+                        sb.AppendItem(Index, "Index");
+                    }
                     if (printMask?.FMRU ?? true)
                     {
                         sb.AppendItem(FMRU, "FMRU");
@@ -264,14 +252,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Name ?? true)
                     {
                         sb.AppendItem(Name, "Name");
-                    }
-                    if (printMask?.FMRS ?? true)
-                    {
-                        sb.AppendItem(FMRS, "FMRS");
-                    }
-                    if (printMask?.FMSR ?? true)
-                    {
-                        sb.AppendItem(FMSR, "FMSR");
                     }
                 }
             }
@@ -297,26 +277,23 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
+            public Exception? Index;
             public Exception? FMRU;
             public Exception? Name;
-            public Exception? FMRS;
-            public Exception? FMSR;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                FaceMorphItem_FieldIndex enu = (FaceMorphItem_FieldIndex)index;
+                FaceMorphPhenotypeItem_FieldIndex enu = (FaceMorphPhenotypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceMorphItem_FieldIndex.FMRU:
+                    case FaceMorphPhenotypeItem_FieldIndex.Index:
+                        return Index;
+                    case FaceMorphPhenotypeItem_FieldIndex.FMRU:
                         return FMRU;
-                    case FaceMorphItem_FieldIndex.Name:
+                    case FaceMorphPhenotypeItem_FieldIndex.Name:
                         return Name;
-                    case FaceMorphItem_FieldIndex.FMRS:
-                        return FMRS;
-                    case FaceMorphItem_FieldIndex.FMSR:
-                        return FMSR;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -324,20 +301,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                FaceMorphItem_FieldIndex enu = (FaceMorphItem_FieldIndex)index;
+                FaceMorphPhenotypeItem_FieldIndex enu = (FaceMorphPhenotypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceMorphItem_FieldIndex.FMRU:
+                    case FaceMorphPhenotypeItem_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    case FaceMorphPhenotypeItem_FieldIndex.FMRU:
                         this.FMRU = ex;
                         break;
-                    case FaceMorphItem_FieldIndex.Name:
+                    case FaceMorphPhenotypeItem_FieldIndex.Name:
                         this.Name = ex;
-                        break;
-                    case FaceMorphItem_FieldIndex.FMRS:
-                        this.FMRS = ex;
-                        break;
-                    case FaceMorphItem_FieldIndex.FMSR:
-                        this.FMSR = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -346,20 +320,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                FaceMorphItem_FieldIndex enu = (FaceMorphItem_FieldIndex)index;
+                FaceMorphPhenotypeItem_FieldIndex enu = (FaceMorphPhenotypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceMorphItem_FieldIndex.FMRU:
+                    case FaceMorphPhenotypeItem_FieldIndex.Index:
+                        this.Index = (Exception?)obj;
+                        break;
+                    case FaceMorphPhenotypeItem_FieldIndex.FMRU:
                         this.FMRU = (Exception?)obj;
                         break;
-                    case FaceMorphItem_FieldIndex.Name:
+                    case FaceMorphPhenotypeItem_FieldIndex.Name:
                         this.Name = (Exception?)obj;
-                        break;
-                    case FaceMorphItem_FieldIndex.FMRS:
-                        this.FMRS = (Exception?)obj;
-                        break;
-                    case FaceMorphItem_FieldIndex.FMSR:
-                        this.FMSR = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -369,10 +340,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Index != null) return true;
                 if (FMRU != null) return true;
                 if (Name != null) return true;
-                if (FMRS != null) return true;
-                if (FMSR != null) return true;
                 return false;
             }
             #endregion
@@ -399,16 +369,13 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Index, "Index");
+                }
+                {
                     sb.AppendItem(FMRU, "FMRU");
                 }
                 {
                     sb.AppendItem(Name, "Name");
-                }
-                {
-                    sb.AppendItem(FMRS, "FMRS");
-                }
-                {
-                    sb.AppendItem(FMSR, "FMSR");
                 }
             }
             #endregion
@@ -418,10 +385,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Index = this.Index.Combine(rhs.Index);
                 ret.FMRU = this.FMRU.Combine(rhs.FMRU);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.FMRS = this.FMRS.Combine(rhs.FMRS);
-                ret.FMSR = this.FMSR.Combine(rhs.FMSR);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -445,10 +411,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Index;
             public bool FMRU;
             public bool Name;
-            public bool FMRS;
-            public bool FMSR;
             #endregion
 
             #region Ctors
@@ -458,10 +423,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Index = defaultOn;
                 this.FMRU = defaultOn;
                 this.Name = defaultOn;
-                this.FMRS = defaultOn;
-                this.FMSR = defaultOn;
             }
 
             #endregion
@@ -477,10 +441,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Index, null));
                 ret.Add((FMRU, null));
                 ret.Add((Name, null));
-                ret.Add((FMRS, null));
-                ret.Add((FMSR, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -493,25 +456,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FaceMorphItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FaceMorphPhenotypeItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceMorphItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FaceMorphPhenotypeItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static FaceMorphItem CreateFromBinary(
+        public static FaceMorphPhenotypeItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new FaceMorphItem();
-            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new FaceMorphPhenotypeItem();
+            ((FaceMorphPhenotypeItemSetterCommon)((IFaceMorphPhenotypeItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -522,7 +485,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out FaceMorphItem item,
+            out FaceMorphPhenotypeItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -537,39 +500,38 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((FaceMorphPhenotypeItemSetterCommon)((IFaceMorphPhenotypeItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static FaceMorphItem GetNew()
+        internal static FaceMorphPhenotypeItem GetNew()
         {
-            return new FaceMorphItem();
+            return new FaceMorphPhenotypeItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IFaceMorphItem :
-        IFaceMorphItemGetter,
-        ILoquiObjectSetter<IFaceMorphItem>,
+    public partial interface IFaceMorphPhenotypeItem :
+        IFaceMorphPhenotypeItemGetter,
+        ILoquiObjectSetter<IFaceMorphPhenotypeItem>,
         INamed,
         INamedRequired,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        new UInt32 Index { get; set; }
         new String? FMRU { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new String? FMRS { get; set; }
-        new Int32? FMSR { get; set; }
     }
 
-    public partial interface IFaceMorphItemGetter :
+    public partial interface IFaceMorphPhenotypeItemGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IFaceMorphItemGetter>,
+        ILoquiObject<IFaceMorphPhenotypeItemGetter>,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,
@@ -581,7 +543,8 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => FaceMorphItem_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FaceMorphPhenotypeItem_Registration.Instance;
+        UInt32 Index { get; }
         String? FMRU { get; }
         #region Name
         /// <summary>
@@ -589,50 +552,48 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        String? FMRS { get; }
-        Int32? FMSR { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class FaceMorphItemMixIn
+    public static partial class FaceMorphPhenotypeItemMixIn
     {
-        public static void Clear(this IFaceMorphItem item)
+        public static void Clear(this IFaceMorphPhenotypeItem item)
         {
-            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((FaceMorphPhenotypeItemSetterCommon)((IFaceMorphPhenotypeItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FaceMorphItem.Mask<bool> GetEqualsMask(
-            this IFaceMorphItemGetter item,
-            IFaceMorphItemGetter rhs,
+        public static FaceMorphPhenotypeItem.Mask<bool> GetEqualsMask(
+            this IFaceMorphPhenotypeItemGetter item,
+            IFaceMorphPhenotypeItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IFaceMorphItemGetter item,
+            this IFaceMorphPhenotypeItemGetter item,
             string? name = null,
-            FaceMorphItem.Mask<bool>? printMask = null)
+            FaceMorphPhenotypeItem.Mask<bool>? printMask = null)
         {
-            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).Print(
+            return ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IFaceMorphItemGetter item,
+            this IFaceMorphPhenotypeItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FaceMorphItem.Mask<bool>? printMask = null)
+            FaceMorphPhenotypeItem.Mask<bool>? printMask = null)
         {
-            ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).Print(
+            ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -640,21 +601,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IFaceMorphItemGetter item,
-            IFaceMorphItemGetter rhs,
-            FaceMorphItem.TranslationMask? equalsMask = null)
+            this IFaceMorphPhenotypeItemGetter item,
+            IFaceMorphPhenotypeItemGetter rhs,
+            FaceMorphPhenotypeItem.TranslationMask? equalsMask = null)
         {
-            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).Equals(
+            return ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFaceMorphItem lhs,
-            IFaceMorphItemGetter rhs)
+            this IFaceMorphPhenotypeItem lhs,
+            IFaceMorphPhenotypeItemGetter rhs)
         {
-            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -663,11 +624,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFaceMorphItem lhs,
-            IFaceMorphItemGetter rhs,
-            FaceMorphItem.TranslationMask? copyMask = null)
+            this IFaceMorphPhenotypeItem lhs,
+            IFaceMorphPhenotypeItemGetter rhs,
+            FaceMorphPhenotypeItem.TranslationMask? copyMask = null)
         {
-            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -676,28 +637,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFaceMorphItem lhs,
-            IFaceMorphItemGetter rhs,
-            out FaceMorphItem.ErrorMask errorMask,
-            FaceMorphItem.TranslationMask? copyMask = null)
+            this IFaceMorphPhenotypeItem lhs,
+            IFaceMorphPhenotypeItemGetter rhs,
+            out FaceMorphPhenotypeItem.ErrorMask errorMask,
+            FaceMorphPhenotypeItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = FaceMorphItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceMorphPhenotypeItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFaceMorphItem lhs,
-            IFaceMorphItemGetter rhs,
+            this IFaceMorphPhenotypeItem lhs,
+            IFaceMorphPhenotypeItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -705,32 +666,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static FaceMorphItem DeepCopy(
-            this IFaceMorphItemGetter item,
-            FaceMorphItem.TranslationMask? copyMask = null)
+        public static FaceMorphPhenotypeItem DeepCopy(
+            this IFaceMorphPhenotypeItemGetter item,
+            FaceMorphPhenotypeItem.TranslationMask? copyMask = null)
         {
-            return ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static FaceMorphItem DeepCopy(
-            this IFaceMorphItemGetter item,
-            out FaceMorphItem.ErrorMask errorMask,
-            FaceMorphItem.TranslationMask? copyMask = null)
+        public static FaceMorphPhenotypeItem DeepCopy(
+            this IFaceMorphPhenotypeItemGetter item,
+            out FaceMorphPhenotypeItem.ErrorMask errorMask,
+            FaceMorphPhenotypeItem.TranslationMask? copyMask = null)
         {
-            return ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static FaceMorphItem DeepCopy(
-            this IFaceMorphItemGetter item,
+        public static FaceMorphPhenotypeItem DeepCopy(
+            this IFaceMorphPhenotypeItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -738,11 +699,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFaceMorphItem item,
+            this IFaceMorphPhenotypeItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((FaceMorphItemSetterCommon)((IFaceMorphItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((FaceMorphPhenotypeItemSetterCommon)((IFaceMorphPhenotypeItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -758,43 +719,42 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum FaceMorphItem_FieldIndex
+    internal enum FaceMorphPhenotypeItem_FieldIndex
     {
-        FMRU = 0,
-        Name = 1,
-        FMRS = 2,
-        FMSR = 3,
+        Index = 0,
+        FMRU = 1,
+        Name = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class FaceMorphItem_Registration : ILoquiRegistration
+    internal partial class FaceMorphPhenotypeItem_Registration : ILoquiRegistration
     {
-        public static readonly FaceMorphItem_Registration Instance = new FaceMorphItem_Registration();
+        public static readonly FaceMorphPhenotypeItem_Registration Instance = new FaceMorphPhenotypeItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(FaceMorphItem.Mask<>);
+        public static readonly Type MaskType = typeof(FaceMorphPhenotypeItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FaceMorphItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FaceMorphPhenotypeItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(FaceMorphItem);
+        public static readonly Type ClassType = typeof(FaceMorphPhenotypeItem);
 
-        public static readonly Type GetterType = typeof(IFaceMorphItemGetter);
+        public static readonly Type GetterType = typeof(IFaceMorphPhenotypeItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFaceMorphItem);
+        public static readonly Type SetterType = typeof(IFaceMorphPhenotypeItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.FaceMorphItem";
+        public const string FullName = "Mutagen.Bethesda.Starfield.FaceMorphPhenotypeItem";
 
-        public const string Name = "FaceMorphItem";
+        public const string Name = "FaceMorphPhenotypeItem";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -802,17 +762,18 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.FMSR;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var triggers = RecordCollection.Factory(RecordTypes.FMSR);
             var all = RecordCollection.Factory(
+                RecordTypes.FMSR,
                 RecordTypes.FMRU,
-                RecordTypes.FMRN,
-                RecordTypes.FMRS,
-                RecordTypes.FMSR);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+                RecordTypes.FMRN);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(FaceMorphItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(FaceMorphPhenotypeItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -843,23 +804,22 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class FaceMorphItemSetterCommon
+    internal partial class FaceMorphPhenotypeItemSetterCommon
     {
-        public static readonly FaceMorphItemSetterCommon Instance = new FaceMorphItemSetterCommon();
+        public static readonly FaceMorphPhenotypeItemSetterCommon Instance = new FaceMorphPhenotypeItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IFaceMorphItem item)
+        public void Clear(IFaceMorphPhenotypeItem item)
         {
             ClearPartial();
+            item.Index = default;
             item.FMRU = default;
             item.Name = default;
-            item.FMRS = default;
-            item.FMSR = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IFaceMorphItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IFaceMorphPhenotypeItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -867,7 +827,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IFaceMorphItem item,
+            IFaceMorphPhenotypeItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -875,23 +835,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: FaceMorphItemBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: FaceMorphPhenotypeItemBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class FaceMorphItemCommon
+    internal partial class FaceMorphPhenotypeItemCommon
     {
-        public static readonly FaceMorphItemCommon Instance = new FaceMorphItemCommon();
+        public static readonly FaceMorphPhenotypeItemCommon Instance = new FaceMorphPhenotypeItemCommon();
 
-        public FaceMorphItem.Mask<bool> GetEqualsMask(
-            IFaceMorphItemGetter item,
-            IFaceMorphItemGetter rhs,
+        public FaceMorphPhenotypeItem.Mask<bool> GetEqualsMask(
+            IFaceMorphPhenotypeItemGetter item,
+            IFaceMorphPhenotypeItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FaceMorphItem.Mask<bool>(false);
-            ((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new FaceMorphPhenotypeItem.Mask<bool>(false);
+            ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -900,21 +860,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IFaceMorphItemGetter item,
-            IFaceMorphItemGetter rhs,
-            FaceMorphItem.Mask<bool> ret,
+            IFaceMorphPhenotypeItemGetter item,
+            IFaceMorphPhenotypeItemGetter rhs,
+            FaceMorphPhenotypeItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Index = item.Index == rhs.Index;
             ret.FMRU = string.Equals(item.FMRU, rhs.FMRU);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.FMRS = string.Equals(item.FMRS, rhs.FMRS);
-            ret.FMSR = item.FMSR == rhs.FMSR;
         }
         
         public string Print(
-            IFaceMorphItemGetter item,
+            IFaceMorphPhenotypeItemGetter item,
             string? name = null,
-            FaceMorphItem.Mask<bool>? printMask = null)
+            FaceMorphPhenotypeItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -926,18 +885,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IFaceMorphItemGetter item,
+            IFaceMorphPhenotypeItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FaceMorphItem.Mask<bool>? printMask = null)
+            FaceMorphPhenotypeItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"FaceMorphItem =>");
+                sb.AppendLine($"FaceMorphPhenotypeItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (FaceMorphItem) =>");
+                sb.AppendLine($"{name} (FaceMorphPhenotypeItem) =>");
             }
             using (sb.Brace())
             {
@@ -949,10 +908,14 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IFaceMorphItemGetter item,
+            IFaceMorphPhenotypeItemGetter item,
             StructuredStringBuilder sb,
-            FaceMorphItem.Mask<bool>? printMask = null)
+            FaceMorphPhenotypeItem.Mask<bool>? printMask = null)
         {
+            if (printMask?.Index ?? true)
+            {
+                sb.AppendItem(item.Index, "Index");
+            }
             if ((printMask?.FMRU ?? true)
                 && item.FMRU is {} FMRUItem)
             {
@@ -963,47 +926,34 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.FMRS ?? true)
-                && item.FMRS is {} FMRSItem)
-            {
-                sb.AppendItem(FMRSItem, "FMRS");
-            }
-            if ((printMask?.FMSR ?? true)
-                && item.FMSR is {} FMSRItem)
-            {
-                sb.AppendItem(FMSRItem, "FMSR");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFaceMorphItemGetter? lhs,
-            IFaceMorphItemGetter? rhs,
+            IFaceMorphPhenotypeItemGetter? lhs,
+            IFaceMorphPhenotypeItemGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMRU) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceMorphPhenotypeItem_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)FaceMorphPhenotypeItem_FieldIndex.FMRU) ?? true))
             {
                 if (!string.Equals(lhs.FMRU, rhs.FMRU)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FaceMorphPhenotypeItem_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMRS) ?? true))
-            {
-                if (!string.Equals(lhs.FMRS, rhs.FMRS)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMSR) ?? true))
-            {
-                if (lhs.FMSR != rhs.FMSR) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IFaceMorphItemGetter item)
+        public virtual int GetHashCode(IFaceMorphPhenotypeItemGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Index);
             if (item.FMRU is {} FMRUitem)
             {
                 hash.Add(FMRUitem);
@@ -1011,14 +961,6 @@ namespace Mutagen.Bethesda.Starfield
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
-            }
-            if (item.FMRS is {} FMRSitem)
-            {
-                hash.Add(FMRSitem);
-            }
-            if (item.FMSR is {} FMSRitem)
-            {
-                hash.Add(FMSRitem);
             }
             return hash.ToHashCode();
         }
@@ -1028,11 +970,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return FaceMorphItem.GetNew();
+            return FaceMorphPhenotypeItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceMorphItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFaceMorphPhenotypeItemGetter obj)
         {
             yield break;
         }
@@ -1040,44 +982,40 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class FaceMorphItemSetterTranslationCommon
+    internal partial class FaceMorphPhenotypeItemSetterTranslationCommon
     {
-        public static readonly FaceMorphItemSetterTranslationCommon Instance = new FaceMorphItemSetterTranslationCommon();
+        public static readonly FaceMorphPhenotypeItemSetterTranslationCommon Instance = new FaceMorphPhenotypeItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IFaceMorphItem item,
-            IFaceMorphItemGetter rhs,
+            IFaceMorphPhenotypeItem item,
+            IFaceMorphPhenotypeItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMRU) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceMorphPhenotypeItem_FieldIndex.Index) ?? true))
+            {
+                item.Index = rhs.Index;
+            }
+            if ((copyMask?.GetShouldTranslate((int)FaceMorphPhenotypeItem_FieldIndex.FMRU) ?? true))
             {
                 item.FMRU = rhs.FMRU;
             }
-            if ((copyMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceMorphPhenotypeItem_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMRS) ?? true))
-            {
-                item.FMRS = rhs.FMRS;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FaceMorphItem_FieldIndex.FMSR) ?? true))
-            {
-                item.FMSR = rhs.FMSR;
             }
         }
         
         #endregion
         
-        public FaceMorphItem DeepCopy(
-            IFaceMorphItemGetter item,
-            FaceMorphItem.TranslationMask? copyMask = null)
+        public FaceMorphPhenotypeItem DeepCopy(
+            IFaceMorphPhenotypeItemGetter item,
+            FaceMorphPhenotypeItem.TranslationMask? copyMask = null)
         {
-            FaceMorphItem ret = (FaceMorphItem)((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetNew();
-            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FaceMorphPhenotypeItem ret = (FaceMorphPhenotypeItem)((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).GetNew();
+            ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1086,30 +1024,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public FaceMorphItem DeepCopy(
-            IFaceMorphItemGetter item,
-            out FaceMorphItem.ErrorMask errorMask,
-            FaceMorphItem.TranslationMask? copyMask = null)
+        public FaceMorphPhenotypeItem DeepCopy(
+            IFaceMorphPhenotypeItemGetter item,
+            out FaceMorphPhenotypeItem.ErrorMask errorMask,
+            FaceMorphPhenotypeItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FaceMorphItem ret = (FaceMorphItem)((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetNew();
-            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FaceMorphPhenotypeItem ret = (FaceMorphPhenotypeItem)((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).GetNew();
+            ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = FaceMorphItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FaceMorphPhenotypeItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public FaceMorphItem DeepCopy(
-            IFaceMorphItemGetter item,
+        public FaceMorphPhenotypeItem DeepCopy(
+            IFaceMorphPhenotypeItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            FaceMorphItem ret = (FaceMorphItem)((FaceMorphItemCommon)((IFaceMorphItemGetter)item).CommonInstance()!).GetNew();
-            ((FaceMorphItemSetterTranslationCommon)((IFaceMorphItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FaceMorphPhenotypeItem ret = (FaceMorphPhenotypeItem)((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)item).CommonInstance()!).GetNew();
+            ((FaceMorphPhenotypeItemSetterTranslationCommon)((IFaceMorphPhenotypeItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1125,27 +1063,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FaceMorphItem
+    public partial class FaceMorphPhenotypeItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FaceMorphItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FaceMorphItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FaceMorphPhenotypeItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceMorphPhenotypeItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FaceMorphItemCommon.Instance;
+        protected object CommonInstance() => FaceMorphPhenotypeItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return FaceMorphItemSetterCommon.Instance;
+            return FaceMorphPhenotypeItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FaceMorphItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FaceMorphPhenotypeItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFaceMorphItemGetter.CommonInstance() => this.CommonInstance();
+        object IFaceMorphPhenotypeItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IFaceMorphItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IFaceMorphPhenotypeItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IFaceMorphItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFaceMorphPhenotypeItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1156,15 +1094,19 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FaceMorphItemBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class FaceMorphPhenotypeItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FaceMorphItemBinaryWriteTranslation Instance = new();
+        public static readonly FaceMorphPhenotypeItemBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IFaceMorphItemGetter item,
+            IFaceMorphPhenotypeItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Index,
+                header: translationParams.ConvertToCustom(RecordTypes.FMSR));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FMRU,
@@ -1176,20 +1118,11 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FMRN),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.FMRS,
-                header: translationParams.ConvertToCustom(RecordTypes.FMRS),
-                binaryType: StringBinaryType.NullTerminate);
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.FMSR,
-                header: translationParams.ConvertToCustom(RecordTypes.FMSR));
         }
 
         public void Write(
             MutagenWriter writer,
-            IFaceMorphItemGetter item,
+            IFaceMorphPhenotypeItemGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1204,19 +1137,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IFaceMorphItemGetter)item,
+                item: (IFaceMorphPhenotypeItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class FaceMorphItemBinaryCreateTranslation
+    internal partial class FaceMorphPhenotypeItemBinaryCreateTranslation
     {
-        public static readonly FaceMorphItemBinaryCreateTranslation Instance = new FaceMorphItemBinaryCreateTranslation();
+        public static readonly FaceMorphPhenotypeItemBinaryCreateTranslation Instance = new FaceMorphPhenotypeItemBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IFaceMorphItem item,
+            IFaceMorphPhenotypeItem item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1227,40 +1160,29 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.FMSR:
+                {
+                    if (lastParsed.ShortCircuit((int)FaceMorphPhenotypeItem_FieldIndex.Index, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = frame.ReadUInt32();
+                    return (int)FaceMorphPhenotypeItem_FieldIndex.Index;
+                }
                 case RecordTypeInts.FMRU:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMRU, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FMRU = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)FaceMorphItem_FieldIndex.FMRU;
+                    return (int)FaceMorphPhenotypeItem_FieldIndex.FMRU;
                 }
                 case RecordTypeInts.FMRN:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)FaceMorphItem_FieldIndex.Name;
-                }
-                case RecordTypeInts.FMRS:
-                {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMRS, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FMRS = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)FaceMorphItem_FieldIndex.FMRS;
-                }
-                case RecordTypeInts.FMSR:
-                {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMSR, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FMSR = frame.ReadInt32();
-                    return (int)FaceMorphItem_FieldIndex.FMSR;
+                    return (int)FaceMorphPhenotypeItem_FieldIndex.Name;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1273,14 +1195,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class FaceMorphItemBinaryTranslationMixIn
+    public static class FaceMorphPhenotypeItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IFaceMorphItemGetter item,
+            this IFaceMorphPhenotypeItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceMorphItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((FaceMorphPhenotypeItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1293,43 +1215,47 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class FaceMorphItemBinaryOverlay :
+    internal partial class FaceMorphPhenotypeItemBinaryOverlay :
         PluginBinaryOverlay,
-        IFaceMorphItemGetter
+        IFaceMorphPhenotypeItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FaceMorphItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FaceMorphItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FaceMorphPhenotypeItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FaceMorphPhenotypeItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FaceMorphItemCommon.Instance;
+        protected object CommonInstance() => FaceMorphPhenotypeItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FaceMorphItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FaceMorphPhenotypeItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFaceMorphItemGetter.CommonInstance() => this.CommonInstance();
+        object IFaceMorphPhenotypeItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IFaceMorphItemGetter.CommonSetterInstance() => null;
+        object? IFaceMorphPhenotypeItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IFaceMorphItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFaceMorphPhenotypeItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FaceMorphItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FaceMorphPhenotypeItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FaceMorphItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FaceMorphPhenotypeItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
+        #region Index
+        private int? _IndexLocation;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
         #region FMRU
         private int? _FMRULocation;
         public String? FMRU => _FMRULocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMRULocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -1346,21 +1272,13 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        #region FMRS
-        private int? _FMRSLocation;
-        public String? FMRS => _FMRSLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMRSLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        #region FMSR
-        private int? _FMSRLocation;
-        public Int32? FMSR => _FMSRLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMSRLocation.Value, _package.MetaData.Constants)) : default(Int32?);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected FaceMorphItemBinaryOverlay(
+        protected FaceMorphPhenotypeItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1370,7 +1288,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IFaceMorphItemGetter FaceMorphItemFactory(
+        public static IFaceMorphPhenotypeItemGetter FaceMorphPhenotypeItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1382,7 +1300,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new FaceMorphItemBinaryOverlay(
+            var ret = new FaceMorphPhenotypeItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1394,12 +1312,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IFaceMorphItemGetter FaceMorphItemFactory(
+        public static IFaceMorphPhenotypeItemGetter FaceMorphPhenotypeItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return FaceMorphItemFactory(
+            return FaceMorphPhenotypeItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1417,29 +1335,21 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.FMSR:
+                {
+                    if (lastParsed.ShortCircuit((int)FaceMorphPhenotypeItem_FieldIndex.Index, translationParams)) return ParseResult.Stop;
+                    _IndexLocation = (stream.Position - offset);
+                    return (int)FaceMorphPhenotypeItem_FieldIndex.Index;
+                }
                 case RecordTypeInts.FMRU:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMRU, translationParams)) return ParseResult.Stop;
                     _FMRULocation = (stream.Position - offset);
-                    return (int)FaceMorphItem_FieldIndex.FMRU;
+                    return (int)FaceMorphPhenotypeItem_FieldIndex.FMRU;
                 }
                 case RecordTypeInts.FMRN:
                 {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
-                    return (int)FaceMorphItem_FieldIndex.Name;
-                }
-                case RecordTypeInts.FMRS:
-                {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMRS, translationParams)) return ParseResult.Stop;
-                    _FMRSLocation = (stream.Position - offset);
-                    return (int)FaceMorphItem_FieldIndex.FMRS;
-                }
-                case RecordTypeInts.FMSR:
-                {
-                    if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.FMSR, translationParams)) return ParseResult.Stop;
-                    _FMSRLocation = (stream.Position - offset);
-                    return (int)FaceMorphItem_FieldIndex.FMSR;
+                    return (int)FaceMorphPhenotypeItem_FieldIndex.Name;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1451,7 +1361,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FaceMorphItemMixIn.Print(
+            FaceMorphPhenotypeItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1462,16 +1372,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFaceMorphItemGetter rhs) return false;
-            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFaceMorphPhenotypeItemGetter rhs) return false;
+            return ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFaceMorphItemGetter? obj)
+        public bool Equals(IFaceMorphPhenotypeItemGetter? obj)
         {
-            return ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FaceMorphItemCommon)((IFaceMorphItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FaceMorphPhenotypeItemCommon)((IFaceMorphPhenotypeItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -37,28 +38,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class FDSIRecord :
-        IEquatable<IFDSIRecordGetter>,
-        IFDSIRecord,
-        ILoquiObjectSetter<FDSIRecord>
+    public partial class ContainerItem :
+        IContainerItem,
+        IEquatable<IContainerItemGetter>,
+        ILoquiObjectSetter<ContainerItem>
     {
         #region Ctor
-        public FDSIRecord()
+        public ContainerItem()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FDSI
-        public Int32? FDSI { get; set; }
+        #region Item
+        private readonly IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
+        public IFormLink<IItemGetter> Item
+        {
+            get => _Item;
+            set => _Item.SetTo(value);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IFDSIRecordGetter.FDSI => this.FDSI;
+        IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
-        #region FDSL
-        public Int32? FDSL { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IFDSIRecordGetter.FDSL => this.FDSL;
+        #region Count
+        public Int32 Count { get; set; } = default;
         #endregion
 
         #region To String
@@ -67,7 +71,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FDSIRecordMixIn.Print(
+            ContainerItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -78,16 +82,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFDSIRecordGetter rhs) return false;
-            return ((FDSIRecordCommon)((IFDSIRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IContainerItemGetter rhs) return false;
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFDSIRecordGetter? obj)
+        public bool Equals(IContainerItemGetter? obj)
         {
-            return ((FDSIRecordCommon)((IFDSIRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FDSIRecordCommon)((IFDSIRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,16 +103,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.FDSI = initialValue;
-                this.FDSL = initialValue;
+                this.Item = initialValue;
+                this.Count = initialValue;
             }
 
             public Mask(
-                TItem FDSI,
-                TItem FDSL)
+                TItem Item,
+                TItem Count)
             {
-                this.FDSI = FDSI;
-                this.FDSL = FDSL;
+                this.Item = Item;
+                this.Count = Count;
             }
 
             #pragma warning disable CS8618
@@ -120,8 +124,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem FDSI;
-            public TItem FDSL;
+            public TItem Item;
+            public TItem Count;
             #endregion
 
             #region Equals
@@ -134,15 +138,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.FDSI, rhs.FDSI)) return false;
-                if (!object.Equals(this.FDSL, rhs.FDSL)) return false;
+                if (!object.Equals(this.Item, rhs.Item)) return false;
+                if (!object.Equals(this.Count, rhs.Count)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FDSI);
-                hash.Add(this.FDSL);
+                hash.Add(this.Item);
+                hash.Add(this.Count);
                 return hash.ToHashCode();
             }
 
@@ -151,8 +155,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.FDSI)) return false;
-                if (!eval(this.FDSL)) return false;
+                if (!eval(this.Item)) return false;
+                if (!eval(this.Count)) return false;
                 return true;
             }
             #endregion
@@ -160,8 +164,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.FDSI)) return true;
-                if (eval(this.FDSL)) return true;
+                if (eval(this.Item)) return true;
+                if (eval(this.Count)) return true;
                 return false;
             }
             #endregion
@@ -169,40 +173,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new FDSIRecord.Mask<R>();
+                var ret = new ContainerItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.FDSI = eval(this.FDSI);
-                obj.FDSL = eval(this.FDSL);
+                obj.Item = eval(this.Item);
+                obj.Count = eval(this.Count);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(FDSIRecord.Mask<bool>? printMask = null)
+            public string Print(ContainerItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, FDSIRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ContainerItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(FDSIRecord.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ContainerItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FDSI ?? true)
+                    if (printMask?.Item ?? true)
                     {
-                        sb.AppendItem(FDSI, "FDSI");
+                        sb.AppendItem(Item, "Item");
                     }
-                    if (printMask?.FDSL ?? true)
+                    if (printMask?.Count ?? true)
                     {
-                        sb.AppendItem(FDSL, "FDSL");
+                        sb.AppendItem(Count, "Count");
                     }
                 }
             }
@@ -228,20 +232,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? FDSI;
-            public Exception? FDSL;
+            public Exception? Item;
+            public Exception? Count;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                FDSIRecord_FieldIndex enu = (FDSIRecord_FieldIndex)index;
+                ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FDSIRecord_FieldIndex.FDSI:
-                        return FDSI;
-                    case FDSIRecord_FieldIndex.FDSL:
-                        return FDSL;
+                    case ContainerItem_FieldIndex.Item:
+                        return Item;
+                    case ContainerItem_FieldIndex.Count:
+                        return Count;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -249,14 +253,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                FDSIRecord_FieldIndex enu = (FDSIRecord_FieldIndex)index;
+                ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FDSIRecord_FieldIndex.FDSI:
-                        this.FDSI = ex;
+                    case ContainerItem_FieldIndex.Item:
+                        this.Item = ex;
                         break;
-                    case FDSIRecord_FieldIndex.FDSL:
-                        this.FDSL = ex;
+                    case ContainerItem_FieldIndex.Count:
+                        this.Count = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -265,14 +269,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                FDSIRecord_FieldIndex enu = (FDSIRecord_FieldIndex)index;
+                ContainerItem_FieldIndex enu = (ContainerItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case FDSIRecord_FieldIndex.FDSI:
-                        this.FDSI = (Exception?)obj;
+                    case ContainerItem_FieldIndex.Item:
+                        this.Item = (Exception?)obj;
                         break;
-                    case FDSIRecord_FieldIndex.FDSL:
-                        this.FDSL = (Exception?)obj;
+                    case ContainerItem_FieldIndex.Count:
+                        this.Count = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -282,8 +286,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FDSI != null) return true;
-                if (FDSL != null) return true;
+                if (Item != null) return true;
+                if (Count != null) return true;
                 return false;
             }
             #endregion
@@ -310,10 +314,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(FDSI, "FDSI");
+                    sb.AppendItem(Item, "Item");
                 }
                 {
-                    sb.AppendItem(FDSL, "FDSL");
+                    sb.AppendItem(Count, "Count");
                 }
             }
             #endregion
@@ -323,8 +327,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FDSI = this.FDSI.Combine(rhs.FDSI);
-                ret.FDSL = this.FDSL.Combine(rhs.FDSL);
+                ret.Item = this.Item.Combine(rhs.Item);
+                ret.Count = this.Count.Combine(rhs.Count);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -348,8 +352,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool FDSI;
-            public bool FDSL;
+            public bool Item;
+            public bool Count;
             #endregion
 
             #region Ctors
@@ -359,8 +363,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.FDSI = defaultOn;
-                this.FDSL = defaultOn;
+                this.Item = defaultOn;
+                this.Count = defaultOn;
             }
 
             #endregion
@@ -376,8 +380,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((FDSI, null));
-                ret.Add((FDSL, null));
+                ret.Add((Item, null));
+                ret.Add((Count, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -388,27 +392,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ContainerItemCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ContainerItemSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FDSIRecordBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ContainerItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FDSIRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ContainerItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static FDSIRecord CreateFromBinary(
+        public static ContainerItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new FDSIRecord();
-            ((FDSIRecordSetterCommon)((IFDSIRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ContainerItem();
+            ((ContainerItemSetterCommon)((IContainerItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -419,7 +428,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out FDSIRecord item,
+            out ContainerItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -434,30 +443,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((FDSIRecordSetterCommon)((IFDSIRecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ContainerItemSetterCommon)((IContainerItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static FDSIRecord GetNew()
+        internal static ContainerItem GetNew()
         {
-            return new FDSIRecord();
+            return new ContainerItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IFDSIRecord :
-        IFDSIRecordGetter,
-        ILoquiObjectSetter<IFDSIRecord>
+    public partial interface IContainerItem :
+        IContainerItemGetter,
+        IFormLinkContainer,
+        ILoquiObjectSetter<IContainerItem>
     {
-        new Int32? FDSI { get; set; }
-        new Int32? FDSL { get; set; }
+        new IFormLink<IItemGetter> Item { get; set; }
+        new Int32 Count { get; set; }
     }
 
-    public partial interface IFDSIRecordGetter :
+    public partial interface IContainerItemGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IFDSIRecordGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IContainerItemGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -465,51 +476,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => FDSIRecord_Registration.Instance;
-        Int32? FDSI { get; }
-        Int32? FDSL { get; }
+        static ILoquiRegistration StaticRegistration => ContainerItem_Registration.Instance;
+        IFormLinkGetter<IItemGetter> Item { get; }
+        Int32 Count { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class FDSIRecordMixIn
+    public static partial class ContainerItemMixIn
     {
-        public static void Clear(this IFDSIRecord item)
+        public static void Clear(this IContainerItem item)
         {
-            ((FDSIRecordSetterCommon)((IFDSIRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ContainerItemSetterCommon)((IContainerItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FDSIRecord.Mask<bool> GetEqualsMask(
-            this IFDSIRecordGetter item,
-            IFDSIRecordGetter rhs,
+        public static ContainerItem.Mask<bool> GetEqualsMask(
+            this IContainerItemGetter item,
+            IContainerItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IFDSIRecordGetter item,
+            this IContainerItemGetter item,
             string? name = null,
-            FDSIRecord.Mask<bool>? printMask = null)
+            ContainerItem.Mask<bool>? printMask = null)
         {
-            return ((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).Print(
+            return ((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IFDSIRecordGetter item,
+            this IContainerItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FDSIRecord.Mask<bool>? printMask = null)
+            ContainerItem.Mask<bool>? printMask = null)
         {
-            ((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).Print(
+            ((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -517,21 +528,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IFDSIRecordGetter item,
-            IFDSIRecordGetter rhs,
-            FDSIRecord.TranslationMask? equalsMask = null)
+            this IContainerItemGetter item,
+            IContainerItemGetter rhs,
+            ContainerItem.TranslationMask? equalsMask = null)
         {
-            return ((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).Equals(
+            return ((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFDSIRecord lhs,
-            IFDSIRecordGetter rhs)
+            this IContainerItem lhs,
+            IContainerItemGetter rhs)
         {
-            ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -540,11 +551,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFDSIRecord lhs,
-            IFDSIRecordGetter rhs,
-            FDSIRecord.TranslationMask? copyMask = null)
+            this IContainerItem lhs,
+            IContainerItemGetter rhs,
+            ContainerItem.TranslationMask? copyMask = null)
         {
-            ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -553,28 +564,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFDSIRecord lhs,
-            IFDSIRecordGetter rhs,
-            out FDSIRecord.ErrorMask errorMask,
-            FDSIRecord.TranslationMask? copyMask = null)
+            this IContainerItem lhs,
+            IContainerItemGetter rhs,
+            out ContainerItem.ErrorMask errorMask,
+            ContainerItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = FDSIRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ContainerItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFDSIRecord lhs,
-            IFDSIRecordGetter rhs,
+            this IContainerItem lhs,
+            IContainerItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -582,32 +593,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static FDSIRecord DeepCopy(
-            this IFDSIRecordGetter item,
-            FDSIRecord.TranslationMask? copyMask = null)
+        public static ContainerItem DeepCopy(
+            this IContainerItemGetter item,
+            ContainerItem.TranslationMask? copyMask = null)
         {
-            return ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static FDSIRecord DeepCopy(
-            this IFDSIRecordGetter item,
-            out FDSIRecord.ErrorMask errorMask,
-            FDSIRecord.TranslationMask? copyMask = null)
+        public static ContainerItem DeepCopy(
+            this IContainerItemGetter item,
+            out ContainerItem.ErrorMask errorMask,
+            ContainerItem.TranslationMask? copyMask = null)
         {
-            return ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static FDSIRecord DeepCopy(
-            this IFDSIRecordGetter item,
+        public static ContainerItem DeepCopy(
+            this IContainerItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -615,11 +626,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFDSIRecord item,
+            this IContainerItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((FDSIRecordSetterCommon)((IFDSIRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ContainerItemSetterCommon)((IContainerItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -635,17 +646,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum FDSIRecord_FieldIndex
+    internal enum ContainerItem_FieldIndex
     {
-        FDSI = 0,
-        FDSL = 1,
+        Item = 0,
+        Count = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class FDSIRecord_Registration : ILoquiRegistration
+    internal partial class ContainerItem_Registration : ILoquiRegistration
     {
-        public static readonly FDSIRecord_Registration Instance = new FDSIRecord_Registration();
+        public static readonly ContainerItem_Registration Instance = new ContainerItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -653,23 +664,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(FDSIRecord.Mask<>);
+        public static readonly Type MaskType = typeof(ContainerItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FDSIRecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ContainerItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(FDSIRecord);
+        public static readonly Type ClassType = typeof(ContainerItem);
 
-        public static readonly Type GetterType = typeof(IFDSIRecordGetter);
+        public static readonly Type GetterType = typeof(IContainerItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFDSIRecord);
+        public static readonly Type SetterType = typeof(IContainerItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.FDSIRecord";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ContainerItem";
 
-        public const string Name = "FDSIRecord";
+        public const string Name = "ContainerItem";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -677,15 +688,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
+        public static readonly RecordType TriggeringRecordType = RecordTypes.CNTO;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(
-                RecordTypes.FDSI,
-                RecordTypes.FDSL);
+            var all = RecordCollection.Factory(RecordTypes.CNTO);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(FDSIRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ContainerItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -716,53 +726,58 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class FDSIRecordSetterCommon
+    internal partial class ContainerItemSetterCommon
     {
-        public static readonly FDSIRecordSetterCommon Instance = new FDSIRecordSetterCommon();
+        public static readonly ContainerItemSetterCommon Instance = new ContainerItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IFDSIRecord item)
+        public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.FDSI = default;
-            item.FDSL = default;
+            item.Item.Clear();
+            item.Count = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IFDSIRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IContainerItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Item.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IFDSIRecord item,
+            IContainerItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.CNTO),
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: FDSIRecordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ContainerItemBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class FDSIRecordCommon
+    internal partial class ContainerItemCommon
     {
-        public static readonly FDSIRecordCommon Instance = new FDSIRecordCommon();
+        public static readonly ContainerItemCommon Instance = new ContainerItemCommon();
 
-        public FDSIRecord.Mask<bool> GetEqualsMask(
-            IFDSIRecordGetter item,
-            IFDSIRecordGetter rhs,
+        public ContainerItem.Mask<bool> GetEqualsMask(
+            IContainerItemGetter item,
+            IContainerItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FDSIRecord.Mask<bool>(false);
-            ((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ContainerItem.Mask<bool>(false);
+            ((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -771,19 +786,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IFDSIRecordGetter item,
-            IFDSIRecordGetter rhs,
-            FDSIRecord.Mask<bool> ret,
+            IContainerItemGetter item,
+            IContainerItemGetter rhs,
+            ContainerItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FDSI = item.FDSI == rhs.FDSI;
-            ret.FDSL = item.FDSL == rhs.FDSL;
+            ret.Item = item.Item.Equals(rhs.Item);
+            ret.Count = item.Count == rhs.Count;
         }
         
         public string Print(
-            IFDSIRecordGetter item,
+            IContainerItemGetter item,
             string? name = null,
-            FDSIRecord.Mask<bool>? printMask = null)
+            ContainerItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -795,18 +810,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IFDSIRecordGetter item,
+            IContainerItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FDSIRecord.Mask<bool>? printMask = null)
+            ContainerItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"FDSIRecord =>");
+                sb.AppendLine($"ContainerItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (FDSIRecord) =>");
+                sb.AppendLine($"{name} (ContainerItem) =>");
             }
             using (sb.Brace())
             {
@@ -818,51 +833,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IFDSIRecordGetter item,
+            IContainerItemGetter item,
             StructuredStringBuilder sb,
-            FDSIRecord.Mask<bool>? printMask = null)
+            ContainerItem.Mask<bool>? printMask = null)
         {
-            if ((printMask?.FDSI ?? true)
-                && item.FDSI is {} FDSIItem)
+            if (printMask?.Item ?? true)
             {
-                sb.AppendItem(FDSIItem, "FDSI");
+                sb.AppendItem(item.Item.FormKey, "Item");
             }
-            if ((printMask?.FDSL ?? true)
-                && item.FDSL is {} FDSLItem)
+            if (printMask?.Count ?? true)
             {
-                sb.AppendItem(FDSLItem, "FDSL");
+                sb.AppendItem(item.Count, "Count");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFDSIRecordGetter? lhs,
-            IFDSIRecordGetter? rhs,
+            IContainerItemGetter? lhs,
+            IContainerItemGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)FDSIRecord_FieldIndex.FDSI) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                if (lhs.FDSI != rhs.FDSI) return false;
+                if (!lhs.Item.Equals(rhs.Item)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FDSIRecord_FieldIndex.FDSL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
-                if (lhs.FDSL != rhs.FDSL) return false;
+                if (lhs.Count != rhs.Count) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IFDSIRecordGetter item)
+        public virtual int GetHashCode(IContainerItemGetter item)
         {
             var hash = new HashCode();
-            if (item.FDSI is {} FDSIitem)
-            {
-                hash.Add(FDSIitem);
-            }
-            if (item.FDSL is {} FDSLitem)
-            {
-                hash.Add(FDSLitem);
-            }
+            hash.Add(item.Item);
+            hash.Add(item.Count);
             return hash.ToHashCode();
         }
         
@@ -871,48 +878,49 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return FDSIRecord.GetNew();
+            return ContainerItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFDSIRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IContainerItemGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.Item);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class FDSIRecordSetterTranslationCommon
+    internal partial class ContainerItemSetterTranslationCommon
     {
-        public static readonly FDSIRecordSetterTranslationCommon Instance = new FDSIRecordSetterTranslationCommon();
+        public static readonly ContainerItemSetterTranslationCommon Instance = new ContainerItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IFDSIRecord item,
-            IFDSIRecordGetter rhs,
+            IContainerItem item,
+            IContainerItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)FDSIRecord_FieldIndex.FDSI) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.FDSI = rhs.FDSI;
+                item.Item.SetTo(rhs.Item.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)FDSIRecord_FieldIndex.FDSL) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
-                item.FDSL = rhs.FDSL;
+                item.Count = rhs.Count;
             }
         }
         
         #endregion
         
-        public FDSIRecord DeepCopy(
-            IFDSIRecordGetter item,
-            FDSIRecord.TranslationMask? copyMask = null)
+        public ContainerItem DeepCopy(
+            IContainerItemGetter item,
+            ContainerItem.TranslationMask? copyMask = null)
         {
-            FDSIRecord ret = (FDSIRecord)((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).GetNew();
-            ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ContainerItem ret = (ContainerItem)((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).GetNew();
+            ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -921,30 +929,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public FDSIRecord DeepCopy(
-            IFDSIRecordGetter item,
-            out FDSIRecord.ErrorMask errorMask,
-            FDSIRecord.TranslationMask? copyMask = null)
+        public ContainerItem DeepCopy(
+            IContainerItemGetter item,
+            out ContainerItem.ErrorMask errorMask,
+            ContainerItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FDSIRecord ret = (FDSIRecord)((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).GetNew();
-            ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ContainerItem ret = (ContainerItem)((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).GetNew();
+            ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = FDSIRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ContainerItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public FDSIRecord DeepCopy(
-            IFDSIRecordGetter item,
+        public ContainerItem DeepCopy(
+            IContainerItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            FDSIRecord ret = (FDSIRecord)((FDSIRecordCommon)((IFDSIRecordGetter)item).CommonInstance()!).GetNew();
-            ((FDSIRecordSetterTranslationCommon)((IFDSIRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ContainerItem ret = (ContainerItem)((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).GetNew();
+            ((ContainerItemSetterTranslationCommon)((IContainerItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -960,27 +968,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FDSIRecord
+    public partial class ContainerItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FDSIRecord_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FDSIRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FDSIRecordCommon.Instance;
+        protected object CommonInstance() => ContainerItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return FDSIRecordSetterCommon.Instance;
+            return ContainerItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FDSIRecordSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ContainerItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFDSIRecordGetter.CommonInstance() => this.CommonInstance();
+        object IContainerItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IFDSIRecordGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IContainerItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IFDSIRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IContainerItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -991,34 +999,35 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FDSIRecordBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ContainerItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FDSIRecordBinaryWriteTranslation Instance = new();
+        public static readonly ContainerItemBinaryWriteTranslation Instance = new();
 
-        public static void WriteRecordTypes(
-            IFDSIRecordGetter item,
-            MutagenWriter writer,
-            TypedWriteParams translationParams)
+        public static void WriteEmbedded(
+            IContainerItemGetter item,
+            MutagenWriter writer)
         {
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FDSI,
-                header: translationParams.ConvertToCustom(RecordTypes.FDSI));
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.FDSL,
-                header: translationParams.ConvertToCustom(RecordTypes.FDSL));
+                item: item.Item);
+            writer.Write(item.Count);
         }
 
         public void Write(
             MutagenWriter writer,
-            IFDSIRecordGetter item,
+            IContainerItemGetter item,
             TypedWriteParams translationParams)
         {
-            WriteRecordTypes(
-                item: item,
+            using (HeaderExport.Subrecord(
                 writer: writer,
-                translationParams: translationParams);
+                record: translationParams.ConvertToCustom(RecordTypes.CNTO),
+                overflowRecord: translationParams.OverflowRecordType,
+                out var writerToUse))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writerToUse);
+            }
         }
 
         public void Write(
@@ -1027,46 +1036,23 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IFDSIRecordGetter)item,
+                item: (IContainerItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class FDSIRecordBinaryCreateTranslation
+    internal partial class ContainerItemBinaryCreateTranslation
     {
-        public static readonly FDSIRecordBinaryCreateTranslation Instance = new FDSIRecordBinaryCreateTranslation();
+        public static readonly ContainerItemBinaryCreateTranslation Instance = new ContainerItemBinaryCreateTranslation();
 
-        public static ParseResult FillBinaryRecordTypes(
-            IFDSIRecord item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
+        public static void FillBinaryStructs(
+            IContainerItem item,
+            MutagenFrame frame)
         {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.FDSI:
-                {
-                    if (lastParsed.ShortCircuit((int)FDSIRecord_FieldIndex.FDSI, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FDSI = frame.ReadInt32();
-                    return (int)FDSIRecord_FieldIndex.FDSI;
-                }
-                case RecordTypeInts.FDSL:
-                {
-                    if (lastParsed.ShortCircuit((int)FDSIRecord_FieldIndex.FDSL, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FDSL = frame.ReadInt32();
-                    return (int)FDSIRecord_FieldIndex.FDSL;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
+            item.Item.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Count = frame.ReadInt32();
         }
 
     }
@@ -1075,14 +1061,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class FDSIRecordBinaryTranslationMixIn
+    public static class ContainerItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IFDSIRecordGetter item,
+            this IContainerItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FDSIRecordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ContainerItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1095,58 +1081,53 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class FDSIRecordBinaryOverlay :
+    internal partial class ContainerItemBinaryOverlay :
         PluginBinaryOverlay,
-        IFDSIRecordGetter
+        IContainerItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FDSIRecord_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FDSIRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ContainerItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FDSIRecordCommon.Instance;
+        protected object CommonInstance() => ContainerItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FDSIRecordSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ContainerItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFDSIRecordGetter.CommonInstance() => this.CommonInstance();
+        object IContainerItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IFDSIRecordGetter.CommonSetterInstance() => null;
+        object? IContainerItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IFDSIRecordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IContainerItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ContainerItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FDSIRecordBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ContainerItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FDSIRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ContainerItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region FDSI
-        private int? _FDSILocation;
-        public Int32? FDSI => _FDSILocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FDSILocation.Value, _package.MetaData.Constants)) : default(Int32?);
-        #endregion
-        #region FDSL
-        private int? _FDSLLocation;
-        public Int32? FDSL => _FDSLLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FDSLLocation.Value, _package.MetaData.Constants)) : default(Int32?);
-        #endregion
+        public IFormLinkGetter<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected FDSIRecordBinaryOverlay(
+        protected ContainerItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1156,76 +1137,47 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IFDSIRecordGetter FDSIRecordFactory(
+        public static IContainerItemGetter ContainerItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractTypelessSubrecordRecordMemory(
+            stream = ExtractSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x8,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new FDSIRecordBinaryOverlay(
+                offset: out var offset);
+            var ret = new ContainerItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.FillTypelessSubrecordTypes(
+            stream.Position += 0x8 + package.MetaData.Constants.SubConstants.HeaderLength;
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: offset,
-                translationParams: translationParams,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public static IFDSIRecordGetter FDSIRecordFactory(
+        public static IContainerItemGetter ContainerItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return FDSIRecordFactory(
+            return ContainerItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
         }
 
-        public ParseResult FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams translationParams = default)
-        {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.FDSI:
-                {
-                    if (lastParsed.ShortCircuit((int)FDSIRecord_FieldIndex.FDSI, translationParams)) return ParseResult.Stop;
-                    _FDSILocation = (stream.Position - offset);
-                    return (int)FDSIRecord_FieldIndex.FDSI;
-                }
-                case RecordTypeInts.FDSL:
-                {
-                    if (lastParsed.ShortCircuit((int)FDSIRecord_FieldIndex.FDSL, translationParams)) return ParseResult.Stop;
-                    _FDSLLocation = (stream.Position - offset);
-                    return (int)FDSIRecord_FieldIndex.FDSL;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
-        }
         #region To String
 
         public void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FDSIRecordMixIn.Print(
+            ContainerItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1236,16 +1188,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFDSIRecordGetter rhs) return false;
-            return ((FDSIRecordCommon)((IFDSIRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IContainerItemGetter rhs) return false;
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFDSIRecordGetter? obj)
+        public bool Equals(IContainerItemGetter? obj)
         {
-            return ((FDSIRecordCommon)((IFDSIRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FDSIRecordCommon)((IFDSIRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

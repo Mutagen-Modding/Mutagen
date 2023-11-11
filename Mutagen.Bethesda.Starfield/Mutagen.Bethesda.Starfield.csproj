@@ -119,6 +119,14 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
+    <None Update="Records\Common Subrecords\ContainerEntry.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
+    <None Update="Records\Common Subrecords\ExtraData.xml">
+      <DefaultPackFolder>none</DefaultPackFolder>
+      <BuildAction>None</BuildAction>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\StarfieldAnimationTextAssetType.cs" />
@@ -133,12 +141,16 @@
     <Compile Include="Enums\CombatReaction.cs" />
     <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\EquipType.cs" />
+    <Compile Include="Enums\FirstPersonFlag.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Enums\HitBehavior.cs" />
+    <Compile Include="Enums\Level.cs" />
     <Compile Include="Enums\LockLevel.cs" />
     <Compile Include="Enums\PerkCategory.cs" />
     <Compile Include="Enums\PerkSkillGroup.cs" />
+    <Compile Include="Enums\Perspective.cs" />
     <Compile Include="Enums\Pronoun.cs" />
+    <Compile Include="Enums\Size.cs" />
     <Compile Include="Enums\SoundLevel.cs" />
     <Compile Include="Enums\Stagger.cs" />
     <Compile Include="Enums\TargetObjectType.cs" />
@@ -1923,8 +1935,23 @@
     <Compile Include="Records\Common Subrecords\ConditionDatas\GetTargetHeightConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ContainerEntry_Generated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ContainerItem_Generated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Destructible.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ExtraData.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ExtraData_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\FactionOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\NavmeshGeometry.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
@@ -1960,6 +1987,15 @@
     <Compile Include="Records\Common Subrecords\ObjectTemplate_Generated.cs">
       <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\NoOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\NpcOwner_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\OwnerTarget_Generated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEntry.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
@@ -1990,6 +2026,9 @@
     <Compile Include="Records\Major Records\APerkEntryPointEffect.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AQuestAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -2002,11 +2041,17 @@
     <Compile Include="Records\Major Records\ConstructibleObject.cs">
       <DependentUpon>ConstructibleObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CreateReferenceToObject.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\DefaultObject.cs">
       <DependentUpon>DefaultObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FindMatchingRefNearAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -2074,8 +2119,29 @@
     <Compile Include="Records\Major Records\Planet.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Race.cs">
-      <DependentUpon>Race.xml</DependentUpon>
+    <Compile Include="Records\Major Records\Quest.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestAdapter.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestFragmentAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestLocationAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestLogEntry.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestObjective.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestReferenceAlias.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestStage.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Resource.cs">
       <DependentUpon>Resource.xml</DependentUpon>
@@ -2085,6 +2151,9 @@
     </Compile>
     <Compile Include="Records\Major Records\StaticCollection.cs">
       <DependentUpon>StaticCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Subgraph.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -4877,18 +4946,6 @@
     <Compile Include="Records\Major Records\BodyData_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MovementDataOverride_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MovementData_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MovementDirectionData_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MovementRotationData_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\EquipmentSlot_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -4898,22 +4955,7 @@
     <Compile Include="Records\Major Records\BipedObjectData_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\HeadData_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\NeckFatAdjustmentsScale_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MorphGroup_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FaceMorph_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FaceMorphItem_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FDSIRecord_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ReferenceGroup_Generated.cs">
@@ -5174,6 +5216,123 @@
       <DependentUpon>ItemComponent.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IResourceTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\QuestAdapter_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestScriptFragment_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestFragmentAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestData_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestStage_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestLogEntry_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestStageCompleteData_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestStageRewardData_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestStageReward_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestObjective_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestObjectiveTarget_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\Link\IConstructible_Generated.cs" />
+    <Compile Include="Records\Major Records\AQuestAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestReferenceAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ExternalAliasReference_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FindMatchingRefFromEvent_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationAliasReference_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreateReferenceToObject_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FindMatchingRefNearAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreateObjectTemplate_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LinkedAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestLocationAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ReferenceAliasLocation_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ExternalAliasLocation_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestCollectionAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CollectionAlias_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestMissionBoardPanel_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Weight_Generated.cs">
+      <DependentUpon>Weight.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MovementDataOverride_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MovementRotationData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ChargenAndSkintones_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceDial_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Subgraph_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HeadPartsAndBoneModifiers_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RaceHeadPart_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MannequinSkinSwap_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MannequinSkinSwapItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MorphGroup_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceMorphPhenotype_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceMorphPhenotypeItem_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

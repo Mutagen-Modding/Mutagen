@@ -69,17 +69,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
-        #region MPGMs
+        #region Morphs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _MPGMs = new ExtendedList<String>();
-        public ExtendedList<String> MPGMs
+        private ExtendedList<String> _Morphs = new ExtendedList<String>();
+        public ExtendedList<String> Morphs
         {
-            get => this._MPGMs;
-            init => this._MPGMs = value;
+            get => this._Morphs;
+            init => this._Morphs = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String> IMorphGroupGetter.MPGMs => _MPGMs;
+        IReadOnlyList<String> IMorphGroupGetter.Morphs => _Morphs;
         #endregion
 
         #endregion
@@ -123,15 +123,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Name = initialValue;
-                this.MPGMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
                 TItem Name,
-                TItem MPGMs)
+                TItem Morphs)
             {
                 this.Name = Name;
-                this.MPGMs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MPGMs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Morphs, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Name;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MPGMs;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Morphs;
             #endregion
 
             #region Equals
@@ -158,14 +158,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.MPGMs, rhs.MPGMs)) return false;
+                if (!object.Equals(this.Morphs, rhs.Morphs)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Name);
-                hash.Add(this.MPGMs);
+                hash.Add(this.Morphs);
                 return hash.ToHashCode();
             }
 
@@ -175,12 +175,12 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Name)) return false;
-                if (this.MPGMs != null)
+                if (this.Morphs != null)
                 {
-                    if (!eval(this.MPGMs.Overall)) return false;
-                    if (this.MPGMs.Specific != null)
+                    if (!eval(this.Morphs.Overall)) return false;
+                    if (this.Morphs.Specific != null)
                     {
-                        foreach (var item in this.MPGMs.Specific)
+                        foreach (var item in this.Morphs.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -194,12 +194,12 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Name)) return true;
-                if (this.MPGMs != null)
+                if (this.Morphs != null)
                 {
-                    if (eval(this.MPGMs.Overall)) return true;
-                    if (this.MPGMs.Specific != null)
+                    if (eval(this.Morphs.Overall)) return true;
+                    if (this.Morphs.Specific != null)
                     {
-                        foreach (var item in this.MPGMs.Specific)
+                        foreach (var item in this.Morphs.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -220,14 +220,14 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Name = eval(this.Name);
-                if (MPGMs != null)
+                if (Morphs != null)
                 {
-                    obj.MPGMs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MPGMs.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (MPGMs.Specific != null)
+                    obj.Morphs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Morphs.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Morphs.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.MPGMs.Specific = l;
-                        foreach (var item in MPGMs.Specific)
+                        obj.Morphs.Specific = l;
+                        foreach (var item in Morphs.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
@@ -256,16 +256,16 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if ((printMask?.MPGMs?.Overall ?? true)
-                        && MPGMs is {} MPGMsItem)
+                    if ((printMask?.Morphs?.Overall ?? true)
+                        && Morphs is {} MorphsItem)
                     {
-                        sb.AppendLine("MPGMs =>");
+                        sb.AppendLine("Morphs =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(MPGMsItem.Overall);
-                            if (MPGMsItem.Specific != null)
+                            sb.AppendItem(MorphsItem.Overall);
+                            if (MorphsItem.Specific != null)
                             {
-                                foreach (var subItem in MPGMsItem.Specific)
+                                foreach (var subItem in MorphsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Name;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MPGMs;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Morphs;
             #endregion
 
             #region IErrorMask
@@ -313,8 +313,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case MorphGroup_FieldIndex.Name:
                         return Name;
-                    case MorphGroup_FieldIndex.MPGMs:
-                        return MPGMs;
+                    case MorphGroup_FieldIndex.Morphs:
+                        return Morphs;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -328,8 +328,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MorphGroup_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case MorphGroup_FieldIndex.MPGMs:
-                        this.MPGMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case MorphGroup_FieldIndex.Morphs:
+                        this.Morphs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -344,8 +344,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MorphGroup_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case MorphGroup_FieldIndex.MPGMs:
-                        this.MPGMs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case MorphGroup_FieldIndex.Morphs:
+                        this.Morphs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Name != null) return true;
-                if (MPGMs != null) return true;
+                if (Morphs != null) return true;
                 return false;
             }
             #endregion
@@ -385,15 +385,15 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Name, "Name");
                 }
-                if (MPGMs is {} MPGMsItem)
+                if (Morphs is {} MorphsItem)
                 {
-                    sb.AppendLine("MPGMs =>");
+                    sb.AppendLine("Morphs =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(MPGMsItem.Overall);
-                        if (MPGMsItem.Specific != null)
+                        sb.AppendItem(MorphsItem.Overall);
+                        if (MorphsItem.Specific != null)
                         {
-                            foreach (var subItem in MPGMsItem.Specific)
+                            foreach (var subItem in MorphsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -414,7 +414,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.MPGMs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MPGMs?.Overall, rhs.MPGMs?.Overall), Noggog.ExceptionExt.Combine(this.MPGMs?.Specific, rhs.MPGMs?.Specific));
+                ret.Morphs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), Noggog.ExceptionExt.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Name;
-            public bool MPGMs;
+            public bool Morphs;
             #endregion
 
             #region Ctors
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Name = defaultOn;
-                this.MPGMs = defaultOn;
+                this.Morphs = defaultOn;
             }
 
             #endregion
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Name, null));
-                ret.Add((MPGMs, null));
+                ret.Add((Morphs, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new ExtendedList<String> MPGMs { get; }
+        new ExtendedList<String> Morphs { get; }
     }
 
     public partial interface IMorphGroupGetter :
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         String? Name { get; }
         #endregion
-        IReadOnlyList<String> MPGMs { get; }
+        IReadOnlyList<String> Morphs { get; }
 
     }
 
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum MorphGroup_FieldIndex
     {
         Name = 0,
-        MPGMs = 1,
+        Morphs = 1,
     }
     #endregion
 
@@ -828,7 +828,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Name = default;
-            item.MPGMs.Clear();
+            item.Morphs.Clear();
         }
         
         #region Mutagen
@@ -879,8 +879,8 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.MPGMs = item.MPGMs.CollectionEqualsHelper(
-                rhs.MPGMs,
+            ret.Morphs = item.Morphs.CollectionEqualsHelper(
+                rhs.Morphs,
                 (l, r) => string.Equals(l, r),
                 include);
         }
@@ -932,12 +932,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if (printMask?.MPGMs?.Overall ?? true)
+            if (printMask?.Morphs?.Overall ?? true)
             {
-                sb.AppendLine("MPGMs =>");
+                sb.AppendLine("Morphs =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.MPGMs)
+                    foreach (var subItem in item.Morphs)
                     {
                         using (sb.Brace())
                         {
@@ -959,9 +959,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.MPGMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.Morphs) ?? true))
             {
-                if (!lhs.MPGMs.SequenceEqualNullable(rhs.MPGMs)) return false;
+                if (!lhs.Morphs.SequenceEqualNullable(rhs.Morphs)) return false;
             }
             return true;
         }
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.MPGMs);
+            hash.Add(item.Morphs);
             return hash.ToHashCode();
         }
         
@@ -1010,12 +1010,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.MPGMs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MorphGroup_FieldIndex.Morphs) ?? true))
             {
-                errorMask?.PushIndex((int)MorphGroup_FieldIndex.MPGMs);
+                errorMask?.PushIndex((int)MorphGroup_FieldIndex.Morphs);
                 try
                 {
-                    item.MPGMs.SetTo(rhs.MPGMs);
+                    item.Morphs.SetTo(rhs.Morphs);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Starfield
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.WritePerItem(
                 writer: writer,
-                items: item.MPGMs,
+                items: item.Morphs,
                 recordType: translationParams.ConvertToCustom(RecordTypes.MPGM),
                 transl: StringBinaryTranslation.Instance.Write);
         }
@@ -1187,13 +1187,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MPGM:
                 {
-                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.MPGMs, translationParams)) return ParseResult.Stop;
-                    item.MPGMs.SetTo(
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.Morphs, translationParams)) return ParseResult.Stop;
+                    item.Morphs.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.MPGM),
                             transl: StringBinaryTranslation.Instance.Parse));
-                    return (int)MorphGroup_FieldIndex.MPGMs;
+                    return (int)MorphGroup_FieldIndex.Morphs;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Starfield
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<String> MPGMs { get; private set; } = Array.Empty<String>();
+        public IReadOnlyList<String> Morphs { get; private set; } = Array.Empty<String>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1343,8 +1343,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MPGM:
                 {
-                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.MPGMs, translationParams)) return ParseResult.Stop;
-                    this.MPGMs = BinaryOverlayList.FactoryByArray<String>(
+                    if (lastParsed.ShortCircuit((int)MorphGroup_FieldIndex.Morphs, translationParams)) return ParseResult.Stop;
+                    this.Morphs = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
@@ -1354,7 +1354,7 @@ namespace Mutagen.Bethesda.Starfield
                             trigger: type,
                             skipHeader: false,
                             translationParams: translationParams));
-                    return (int)MorphGroup_FieldIndex.MPGMs;
+                    return (int)MorphGroup_FieldIndex.Morphs;
                 }
                 default:
                     return ParseResult.Stop;

@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -62,16 +61,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IMovementDataOverrideGetter.MovementType => this.MovementType;
         #endregion
-        #region MovementData
+        #region SPED
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MovementData? _MovementData;
-        public MovementData? MovementData
+        protected MemorySlice<Byte>? _SPED;
+        public MemorySlice<Byte>? SPED
         {
-            get => _MovementData;
-            set => _MovementData = value;
+            get => this._SPED;
+            set => this._SPED = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IMovementDataGetter? IMovementDataOverrideGetter.MovementData => this.MovementData;
+        ReadOnlyMemorySlice<Byte>? IMovementDataOverrideGetter.SPED => this.SPED;
         #endregion
 
         #region To String
@@ -113,15 +112,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.MovementType = initialValue;
-                this.MovementData = new MaskItem<TItem, MovementData.Mask<TItem>?>(initialValue, new MovementData.Mask<TItem>(initialValue));
+                this.SPED = initialValue;
             }
 
             public Mask(
                 TItem MovementType,
-                TItem MovementData)
+                TItem SPED)
             {
                 this.MovementType = MovementType;
-                this.MovementData = new MaskItem<TItem, MovementData.Mask<TItem>?>(MovementData, new MovementData.Mask<TItem>(MovementData));
+                this.SPED = SPED;
             }
 
             #pragma warning disable CS8618
@@ -134,7 +133,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem MovementType;
-            public MaskItem<TItem, MovementData.Mask<TItem>?>? MovementData { get; set; }
+            public TItem SPED;
             #endregion
 
             #region Equals
@@ -148,14 +147,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.MovementType, rhs.MovementType)) return false;
-                if (!object.Equals(this.MovementData, rhs.MovementData)) return false;
+                if (!object.Equals(this.SPED, rhs.SPED)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.MovementType);
-                hash.Add(this.MovementData);
+                hash.Add(this.SPED);
                 return hash.ToHashCode();
             }
 
@@ -165,11 +164,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.MovementType)) return false;
-                if (MovementData != null)
-                {
-                    if (!eval(this.MovementData.Overall)) return false;
-                    if (this.MovementData.Specific != null && !this.MovementData.Specific.All(eval)) return false;
-                }
+                if (!eval(this.SPED)) return false;
                 return true;
             }
             #endregion
@@ -178,11 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.MovementType)) return true;
-                if (MovementData != null)
-                {
-                    if (eval(this.MovementData.Overall)) return true;
-                    if (this.MovementData.Specific != null && this.MovementData.Specific.Any(eval)) return true;
-                }
+                if (eval(this.SPED)) return true;
                 return false;
             }
             #endregion
@@ -198,7 +189,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.MovementType = eval(this.MovementType);
-                obj.MovementData = this.MovementData == null ? null : new MaskItem<R, MovementData.Mask<R>?>(eval(this.MovementData.Overall), this.MovementData.Specific?.Translate(eval));
+                obj.SPED = eval(this.SPED);
             }
             #endregion
 
@@ -221,9 +212,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(MovementType, "MovementType");
                     }
-                    if (printMask?.MovementData?.Overall ?? true)
+                    if (printMask?.SPED ?? true)
                     {
-                        MovementData?.Print(sb);
+                        sb.AppendItem(SPED, "SPED");
                     }
                 }
             }
@@ -250,7 +241,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? MovementType;
-            public MaskItem<Exception?, MovementData.ErrorMask?>? MovementData;
+            public Exception? SPED;
             #endregion
 
             #region IErrorMask
@@ -261,8 +252,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case MovementDataOverride_FieldIndex.MovementType:
                         return MovementType;
-                    case MovementDataOverride_FieldIndex.MovementData:
-                        return MovementData;
+                    case MovementDataOverride_FieldIndex.SPED:
+                        return SPED;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -276,8 +267,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MovementDataOverride_FieldIndex.MovementType:
                         this.MovementType = ex;
                         break;
-                    case MovementDataOverride_FieldIndex.MovementData:
-                        this.MovementData = new MaskItem<Exception?, MovementData.ErrorMask?>(ex, null);
+                    case MovementDataOverride_FieldIndex.SPED:
+                        this.SPED = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -292,8 +283,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MovementDataOverride_FieldIndex.MovementType:
                         this.MovementType = (Exception?)obj;
                         break;
-                    case MovementDataOverride_FieldIndex.MovementData:
-                        this.MovementData = (MaskItem<Exception?, MovementData.ErrorMask?>?)obj;
+                    case MovementDataOverride_FieldIndex.SPED:
+                        this.SPED = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -304,7 +295,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (MovementType != null) return true;
-                if (MovementData != null) return true;
+                if (SPED != null) return true;
                 return false;
             }
             #endregion
@@ -333,7 +324,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(MovementType, "MovementType");
                 }
-                MovementData?.Print(sb);
+                {
+                    sb.AppendItem(SPED, "SPED");
+                }
             }
             #endregion
 
@@ -343,7 +336,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.MovementType = this.MovementType.Combine(rhs.MovementType);
-                ret.MovementData = this.MovementData.Combine(rhs.MovementData, (l, r) => l.Combine(r));
+                ret.SPED = this.SPED.Combine(rhs.SPED);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -368,7 +361,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool MovementType;
-            public MovementData.TranslationMask? MovementData;
+            public bool SPED;
             #endregion
 
             #region Ctors
@@ -379,6 +372,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.MovementType = defaultOn;
+                this.SPED = defaultOn;
             }
 
             #endregion
@@ -395,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((MovementType, null));
-                ret.Add((MovementData != null ? MovementData.OnOverall : DefaultOn, MovementData?.GetCrystal()));
+                ret.Add((SPED, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -475,7 +469,7 @@ namespace Mutagen.Bethesda.Starfield
         IMovementDataOverrideGetter
     {
         new IFormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
-        new MovementData? MovementData { get; set; }
+        new MemorySlice<Byte>? SPED { get; set; }
     }
 
     public partial interface IMovementDataOverrideGetter :
@@ -492,7 +486,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MovementDataOverride_Registration.Instance;
         IFormLinkNullableGetter<IMovementTypeGetter> MovementType { get; }
-        IMovementDataGetter? MovementData { get; }
+        ReadOnlyMemorySlice<Byte>? SPED { get; }
 
     }
 
@@ -663,7 +657,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum MovementDataOverride_FieldIndex
     {
         MovementType = 0,
-        MovementData = 1,
+        SPED = 1,
     }
     #endregion
 
@@ -751,7 +745,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.MovementType.Clear();
-            item.MovementData = null;
+            item.SPED = default;
         }
         
         #region Mutagen
@@ -803,11 +797,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.MovementType = item.MovementType.Equals(rhs.MovementType);
-            ret.MovementData = EqualsMaskHelper.EqualsHelper(
-                item.MovementData,
-                rhs.MovementData,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.SPED = MemorySliceExt.SequenceEqual(item.SPED, rhs.SPED);
         }
         
         public string Print(
@@ -856,10 +846,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.MovementType.FormKeyNullable, "MovementType");
             }
-            if ((printMask?.MovementData?.Overall ?? true)
-                && item.MovementData is {} MovementDataItem)
+            if ((printMask?.SPED ?? true)
+                && item.SPED is {} SPEDItem)
             {
-                MovementDataItem?.Print(sb, "MovementData");
+                sb.AppendLine($"SPED => {SpanExt.ToHexString(SPEDItem)}");
             }
         }
         
@@ -874,13 +864,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.MovementType.Equals(rhs.MovementType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MovementDataOverride_FieldIndex.MovementData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MovementDataOverride_FieldIndex.SPED) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.MovementData, rhs.MovementData, out var lhsMovementData, out var rhsMovementData, out var isMovementDataEqual))
-                {
-                    if (!((MovementDataCommon)((IMovementDataGetter)lhsMovementData).CommonInstance()!).Equals(lhsMovementData, rhsMovementData, equalsMask?.GetSubCrystal((int)MovementDataOverride_FieldIndex.MovementData))) return false;
-                }
-                else if (!isMovementDataEqual) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.SPED, rhs.SPED)) return false;
             }
             return true;
         }
@@ -889,9 +875,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.MovementType);
-            if (item.MovementData is {} MovementDataitem)
+            if (item.SPED is {} SPEDItem)
             {
-                hash.Add(MovementDataitem);
+                hash.Add(SPEDItem);
             }
             return hash.ToHashCode();
         }
@@ -933,30 +919,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MovementType.SetTo(rhs.MovementType.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)MovementDataOverride_FieldIndex.MovementData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MovementDataOverride_FieldIndex.SPED) ?? true))
             {
-                errorMask?.PushIndex((int)MovementDataOverride_FieldIndex.MovementData);
-                try
+                if(rhs.SPED is {} SPEDrhs)
                 {
-                    if(rhs.MovementData is {} rhsMovementData)
-                    {
-                        item.MovementData = rhsMovementData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)MovementDataOverride_FieldIndex.MovementData));
-                    }
-                    else
-                    {
-                        item.MovementData = default;
-                    }
+                    item.SPED = SPEDrhs.ToArray();
                 }
-                catch (Exception ex)
-                when (errorMask != null)
+                else
                 {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
+                    item.SPED = default;
                 }
             }
         }
@@ -1060,16 +1031,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.MovementType,
                 header: translationParams.ConvertToCustom(RecordTypes.MTYP));
-            if (item.MovementData is {} MovementDataItem)
-            {
-                using (HeaderExport.Subrecord(writer, RecordTypes.SPED))
-                {
-                    ((MovementDataBinaryWriteTranslation)((IBinaryItem)MovementDataItem).BinaryWriteTranslator).Write(
-                        item: MovementDataItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.SPED,
+                header: translationParams.ConvertToCustom(RecordTypes.SPED));
         }
 
         public void Write(
@@ -1121,10 +1086,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementData, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.MovementData = Mutagen.Bethesda.Starfield.MovementData.CreateFromBinary(frame: frame);
-                    return (int)MovementDataOverride_FieldIndex.MovementData;
+                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.SPED, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SPED = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)MovementDataOverride_FieldIndex.SPED;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1199,7 +1164,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MovementTypeLocation;
         public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
-        public IMovementDataGetter? MovementData { get; private set; }
+        #region SPED
+        private int? _SPEDLocation;
+        public ReadOnlyMemorySlice<Byte>? SPED => _SPEDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SPEDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1271,13 +1239,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPED:
                 {
-                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementData, translationParams)) return ParseResult.Stop;
-                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.MovementData = MovementDataBinaryOverlay.MovementDataFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)MovementDataOverride_FieldIndex.MovementData;
+                    if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.SPED, translationParams)) return ParseResult.Stop;
+                    _SPEDLocation = (stream.Position - offset);
+                    return (int)MovementDataOverride_FieldIndex.SPED;
                 }
                 default:
                     return ParseResult.Stop;

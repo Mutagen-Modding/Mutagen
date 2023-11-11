@@ -110,6 +110,7 @@ namespace Mutagen.Bethesda.Starfield
             _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
+            _Quests_Object = new StarfieldGroup<Quest>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -465,6 +466,13 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IConditionRecordGetter> IStarfieldModGetter.ConditionRecords => _ConditionRecords_Object;
         #endregion
+        #region Quests
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Quest> _Quests_Object;
+        public StarfieldGroup<Quest> Quests => _Quests_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IQuestGetter> IStarfieldModGetter.Quests => _Quests_Object;
+        #endregion
 
         #region To String
 
@@ -554,6 +562,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -606,7 +615,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ActorValueModulations,
                 TItem MiscItems,
                 TItem Resources,
-                TItem ConditionRecords)
+                TItem ConditionRecords,
+                TItem Quests)
             {
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
@@ -658,6 +668,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MiscItems, new StarfieldGroup.Mask<TItem>(MiscItems));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConditionRecords, new StarfieldGroup.Mask<TItem>(ConditionRecords));
+                this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Quests, new StarfieldGroup.Mask<TItem>(Quests));
             }
 
             #pragma warning disable CS8618
@@ -719,6 +730,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MiscItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConditionRecords { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Quests { get; set; }
             #endregion
 
             #region Equals
@@ -781,6 +793,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
                 if (!object.Equals(this.ConditionRecords, rhs.ConditionRecords)) return false;
+                if (!object.Equals(this.Quests, rhs.Quests)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -836,6 +849,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.MiscItems);
                 hash.Add(this.Resources);
                 hash.Add(this.ConditionRecords);
+                hash.Add(this.Quests);
                 return hash.ToHashCode();
             }
 
@@ -1094,6 +1108,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ConditionRecords.Overall)) return false;
                     if (this.ConditionRecords.Specific != null && !this.ConditionRecords.Specific.All(eval)) return false;
                 }
+                if (Quests != null)
+                {
+                    if (!eval(this.Quests.Overall)) return false;
+                    if (this.Quests.Specific != null && !this.Quests.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1351,6 +1370,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ConditionRecords.Overall)) return true;
                     if (this.ConditionRecords.Specific != null && this.ConditionRecords.Specific.Any(eval)) return true;
                 }
+                if (Quests != null)
+                {
+                    if (eval(this.Quests.Overall)) return true;
+                    if (this.Quests.Specific != null && this.Quests.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1415,6 +1439,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
                 obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
                 obj.ConditionRecords = this.ConditionRecords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConditionRecords.Overall), this.ConditionRecords.Specific?.Translate(eval));
+                obj.Quests = this.Quests == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1633,6 +1658,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ConditionRecords?.Print(sb);
                     }
+                    if (printMask?.Quests?.Overall ?? true)
+                    {
+                        Quests?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -1707,6 +1736,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>? ConditionRecords;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>? Quests;
             #endregion
 
             #region IErrorMask
@@ -1815,6 +1845,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Resources;
                     case StarfieldMod_FieldIndex.ConditionRecords:
                         return ConditionRecords;
+                    case StarfieldMod_FieldIndex.Quests:
+                        return Quests;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1974,6 +2006,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ConditionRecords:
                         this.ConditionRecords = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Quests:
+                        this.Quests = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2135,6 +2170,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.ConditionRecords:
                         this.ConditionRecords = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Quests:
+                        this.Quests = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2193,6 +2231,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (MiscItems != null) return true;
                 if (Resources != null) return true;
                 if (ConditionRecords != null) return true;
+                if (Quests != null) return true;
                 return false;
             }
             #endregion
@@ -2268,6 +2307,7 @@ namespace Mutagen.Bethesda.Starfield
                 MiscItems?.Print(sb);
                 Resources?.Print(sb);
                 ConditionRecords?.Print(sb);
+                Quests?.Print(sb);
             }
             #endregion
 
@@ -2326,6 +2366,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
                 ret.ConditionRecords = this.ConditionRecords.Combine(rhs.ConditionRecords, (l, r) => l.Combine(r));
+                ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2399,6 +2440,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<MiscItem.TranslationMask>? MiscItems;
             public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
             public StarfieldGroup.TranslationMask<ConditionRecord.TranslationMask>? ConditionRecords;
+            public StarfieldGroup.TranslationMask<Quest.TranslationMask>? Quests;
             #endregion
 
             #region Ctors
@@ -2473,6 +2515,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((MiscItems != null ? MiscItems.OnOverall : DefaultOn, MiscItems?.GetCrystal()));
                 ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
                 ret.Add((ConditionRecords != null ? ConditionRecords.OnOverall : DefaultOn, ConditionRecords?.GetCrystal()));
+                ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2569,6 +2612,7 @@ namespace Mutagen.Bethesda.Starfield
             _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
+            _Quests_Object = new StarfieldGroup<Quest>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -2771,6 +2815,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ConditionRecords.RecordCache.Set(rhsMod.ConditionRecords.RecordCache.Items);
             }
+            if (mask?.Quests ?? true)
+            {
+                this.Quests.RecordCache.Set(rhsMod.Quests.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -2830,6 +2878,7 @@ namespace Mutagen.Bethesda.Starfield
             count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3153,6 +3202,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<MiscItem> MiscItems { get; }
         new StarfieldGroup<Resource> Resources { get; }
         new StarfieldGroup<ConditionRecord> ConditionRecords { get; }
+        new StarfieldGroup<Quest> Quests { get; }
     }
 
     public partial interface IStarfieldModGetter :
@@ -3222,6 +3272,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IMiscItemGetter> MiscItems { get; }
         IStarfieldGroupGetter<IResourceGetter> Resources { get; }
         IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords { get; }
+        IStarfieldGroupGetter<IQuestGetter> Quests { get; }
 
         #region Mutagen
         StarfieldRelease StarfieldRelease { get; }
@@ -3853,6 +3904,7 @@ namespace Mutagen.Bethesda.Starfield
         MiscItems = 47,
         Resources = 48,
         ConditionRecords = 49,
+        Quests = 50,
     }
     #endregion
 
@@ -3863,9 +3915,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 50;
+        public const ushort AdditionalFieldCount = 51;
 
-        public const ushort FieldCount = 50;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -3981,6 +4033,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MiscItems.Clear();
             item.Resources.Clear();
             item.ConditionRecords.Clear();
+            item.Quests.Clear();
         }
         
         #region Mutagen
@@ -4023,6 +4076,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.MiscItems.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
             obj.ConditionRecords.RemapLinks(mapping);
+            obj.Quests.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IStarfieldMod obj)
@@ -4106,6 +4160,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.MiscItems.Remove(keys);
             obj.Resources.Remove(keys);
             obj.ConditionRecords.Remove(keys);
+            obj.Quests.Remove(keys);
         }
         
         public void Remove(
@@ -4537,6 +4592,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    obj.Quests.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -4793,6 +4856,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Quests is IAssetLinkContainer QuestslinkCont)
+            {
+                foreach (var item in QuestslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -4831,6 +4901,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueModulations.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.MiscItems.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -4926,6 +4997,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
             ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
             ret.ConditionRecords = MaskItemExt.Factory(item.ConditionRecords.GetEqualsMask(rhs.ConditionRecords, include), include);
+            ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
         }
         
         public string Print(
@@ -5169,6 +5241,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.ConditionRecords?.Overall ?? true)
             {
                 item.ConditionRecords?.Print(sb, "ConditionRecords");
+            }
+            if (printMask?.Quests?.Overall ?? true)
+            {
+                item.Quests?.Print(sb, "Quests");
             }
         }
         
@@ -5579,6 +5655,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isConditionRecordsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Quests) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Quests, rhs.Quests, out var lhsQuests, out var rhsQuests, out var isQuestsEqual))
+                {
+                    if (!object.Equals(lhsQuests, rhsQuests)) return false;
+                }
+                else if (!isQuestsEqual) return false;
+            }
             return true;
         }
         
@@ -5635,6 +5719,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.MiscItems);
             hash.Add(item.Resources);
             hash.Add(item.ConditionRecords);
+            hash.Add(item.Quests);
             return hash.ToHashCode();
         }
         
@@ -5898,6 +5983,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IConditionRecord":
                 case "IConditionRecordInternal":
                     return obj.ConditionRecords;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    return obj.Quests;
                 default:
                     return null;
             }
@@ -5924,7 +6014,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[49];
+            Stream[] outputStreams = new Stream[50];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -5975,6 +6065,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.MiscItems, 46, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Resources, 47, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 48, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Quests, 49, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6182,6 +6273,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.Quests.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -6380,6 +6475,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ConditionRecords.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Quests.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6859,6 +6958,15 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    foreach (var item in obj.Quests.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Starfield, obj, type, out var linkInterfaces))
                     {
@@ -7321,6 +7429,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.ConditionRecords,
                 groupGetter: (m) => m.ConditionRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Quest, IQuestGetter>(
+                srcGroup: obj.Quests,
+                type: typeof(IQuestGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Quests,
+                groupGetter: (m) => m.Quests))
             {
                 yield return item;
             }
@@ -8041,6 +8158,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Quest":
+                case "IQuestGetter":
+                case "IQuest":
+                case "IQuestInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Quest, IQuestGetter>(
+                        srcGroup: obj.Quests,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Quests,
+                        groupGetter: (m) => m.Quests))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IStarfieldModGetter, IStarfieldMod, IStarfieldModGetter>(
                         GameCategory.Starfield,
@@ -8217,6 +8348,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
                 {
                     foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Quests is IAssetLinkContainerGetter QuestslinkCont)
+                {
+                    foreach (var item in QuestslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -9240,6 +9378,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Quests) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Quests);
+                try
+                {
+                    item.Quests.DeepCopyIn(
+                        rhs: rhs.Quests,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Quests));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9379,6 +9537,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool MiscItems;
         public bool Resources;
         public bool ConditionRecords;
+        public bool Quests;
         public GroupMask()
         {
         }
@@ -9433,6 +9592,7 @@ namespace Mutagen.Bethesda.Starfield
             MiscItems = defaultValue;
             Resources = defaultValue;
             ConditionRecords = defaultValue;
+            Quests = defaultValue;
         }
     }
 
@@ -10027,6 +10187,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ConditionRecordsItem).BinaryWriteTranslator).Write<IConditionRecordGetter>(
                         item: ConditionRecordsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Quests ?? true)
+            {
+                var QuestsItem = item.Quests;
+                if (QuestsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)QuestsItem).BinaryWriteTranslator).Write<IQuestGetter>(
+                        item: QuestsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -10777,6 +10948,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.ConditionRecords;
                 }
+                case RecordTypeInts.QUST:
+                {
+                    if (importMask?.Quests ?? true)
+                    {
+                        item.Quests.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Quests;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -11193,6 +11378,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IConditionRecordGetter>? _ConditionRecords => _ConditionRecordsLocations != null ? StarfieldGroupBinaryOverlay<IConditionRecordGetter>.StarfieldGroupFactory(_stream, _ConditionRecordsLocations, _package) : default;
         public IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords => _ConditionRecords ?? new StarfieldGroup<ConditionRecord>(this);
         #endregion
+        #region Quests
+        private List<RangeInt64>? _QuestsLocations;
+        private IStarfieldGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? StarfieldGroupBinaryOverlay<IQuestGetter>.StarfieldGroupFactory(_stream, _QuestsLocations, _package) : default;
+        public IStarfieldGroupGetter<IQuestGetter> Quests => _Quests ?? new StarfieldGroup<Quest>(this);
+        #endregion
         protected StarfieldModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -11580,6 +11770,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ConditionRecordsLocations ??= new();
                     _ConditionRecordsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ConditionRecords;
+                }
+                case RecordTypeInts.QUST:
+                {
+                    _QuestsLocations ??= new();
+                    _QuestsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Quests;
                 }
                 default:
                     return default(int?);

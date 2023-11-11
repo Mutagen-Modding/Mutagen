@@ -39,29 +39,29 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class HeadData :
-        IEquatable<IHeadDataGetter>,
-        IHeadData,
-        ILoquiObjectSetter<HeadData>
+    public partial class ChargenAndSkintones :
+        IChargenAndSkintones,
+        IEquatable<IChargenAndSkintonesGetter>,
+        ILoquiObjectSetter<ChargenAndSkintones>
     {
         #region Ctor
-        public HeadData()
+        public ChargenAndSkintones()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region NeckFatAdjustmentsScale
+        #region NNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private NeckFatAdjustmentsScale? _NeckFatAdjustmentsScale;
-        public NeckFatAdjustmentsScale? NeckFatAdjustmentsScale
+        private MemorySlice<Byte> _NNAM = new byte[12];
+        public MemorySlice<Byte> NNAM
         {
-            get => _NeckFatAdjustmentsScale;
-            set => _NeckFatAdjustmentsScale = value;
+            get => _NNAM;
+            set => this._NNAM = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INeckFatAdjustmentsScaleGetter? IHeadDataGetter.NeckFatAdjustmentsScale => this.NeckFatAdjustmentsScale;
+        ReadOnlyMemorySlice<Byte> IChargenAndSkintonesGetter.NNAM => this.NNAM;
         #endregion
         #region RacePresets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<INpcGetter>> IHeadDataGetter.RacePresets => _RacePresets;
+        IReadOnlyList<IFormLinkGetter<INpcGetter>> IChargenAndSkintonesGetter.RacePresets => _RacePresets;
         #endregion
 
         #endregion
@@ -87,52 +87,57 @@ namespace Mutagen.Bethesda.Starfield
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMorphGroupGetter> IHeadDataGetter.MorphGroups => _MorphGroups;
+        IReadOnlyList<IMorphGroupGetter> IChargenAndSkintonesGetter.MorphGroups => _MorphGroups;
         #endregion
 
         #endregion
-        #region FaceMorphs
+        #region FaceMorphPhenotypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FaceMorph> _FaceMorphs = new ExtendedList<FaceMorph>();
-        public ExtendedList<FaceMorph> FaceMorphs
+        private ExtendedList<FaceMorphPhenotype> _FaceMorphPhenotypes = new ExtendedList<FaceMorphPhenotype>();
+        public ExtendedList<FaceMorphPhenotype> FaceMorphPhenotypes
         {
-            get => this._FaceMorphs;
-            init => this._FaceMorphs = value;
+            get => this._FaceMorphPhenotypes;
+            init => this._FaceMorphPhenotypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFaceMorphGetter> IHeadDataGetter.FaceMorphs => _FaceMorphs;
+        IReadOnlyList<IFaceMorphPhenotypeGetter> IChargenAndSkintonesGetter.FaceMorphPhenotypes => _FaceMorphPhenotypes;
         #endregion
 
         #endregion
-        #region FDSIs
+        #region FaceDials
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FDSIRecord> _FDSIs = new ExtendedList<FDSIRecord>();
-        public ExtendedList<FDSIRecord> FDSIs
+        private ExtendedList<FaceDial> _FaceDials = new ExtendedList<FaceDial>();
+        public ExtendedList<FaceDial> FaceDials
         {
-            get => this._FDSIs;
-            init => this._FDSIs = value;
+            get => this._FaceDials;
+            init => this._FaceDials = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFDSIRecordGetter> IHeadDataGetter.FDSIs => _FDSIs;
+        IReadOnlyList<IFaceDialGetter> IChargenAndSkintonesGetter.FaceDials => _FaceDials;
         #endregion
 
         #endregion
-        #region BSTT
-        public String? BSTT { get; set; }
+        #region BodySkinTones
+        public String? BodySkinTones { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHeadDataGetter.BSTT => this.BSTT;
+        String? IChargenAndSkintonesGetter.BodySkinTones => this.BodySkinTones;
         #endregion
-        #region HSTT
-        public String? HSTT { get; set; }
+        #region HandSkinTones
+        public String? HandSkinTones { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHeadDataGetter.HSTT => this.HSTT;
+        String? IChargenAndSkintonesGetter.HandSkinTones => this.HandSkinTones;
         #endregion
-        #region FSTT
-        public String? FSTT { get; set; }
+        #region FCTP
+        public String? FCTP { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHeadDataGetter.FSTT => this.FSTT;
+        String? IChargenAndSkintonesGetter.FCTP => this.FCTP;
+        #endregion
+        #region FaceSkinTones
+        public String? FaceSkinTones { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IChargenAndSkintonesGetter.FaceSkinTones => this.FaceSkinTones;
         #endregion
 
         #region To String
@@ -141,7 +146,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            HeadDataMixIn.Print(
+            ChargenAndSkintonesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -152,16 +157,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IHeadDataGetter rhs) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IChargenAndSkintonesGetter rhs) return false;
+            return ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IHeadDataGetter? obj)
+        public bool Equals(IChargenAndSkintonesGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -173,34 +178,37 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.NeckFatAdjustmentsScale = new MaskItem<TItem, NeckFatAdjustmentsScale.Mask<TItem>?>(initialValue, new NeckFatAdjustmentsScale.Mask<TItem>(initialValue));
+                this.NNAM = initialValue;
                 this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>());
-                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>());
-                this.FDSIs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FDSIRecord.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FDSIRecord.Mask<TItem>?>>());
-                this.BSTT = initialValue;
-                this.HSTT = initialValue;
-                this.FSTT = initialValue;
+                this.FaceMorphPhenotypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphPhenotype.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorphPhenotype.Mask<TItem>?>>());
+                this.FaceDials = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>());
+                this.BodySkinTones = initialValue;
+                this.HandSkinTones = initialValue;
+                this.FCTP = initialValue;
+                this.FaceSkinTones = initialValue;
             }
 
             public Mask(
-                TItem NeckFatAdjustmentsScale,
+                TItem NNAM,
                 TItem RacePresets,
                 TItem MorphGroups,
-                TItem FaceMorphs,
-                TItem FDSIs,
-                TItem BSTT,
-                TItem HSTT,
-                TItem FSTT)
+                TItem FaceMorphPhenotypes,
+                TItem FaceDials,
+                TItem BodySkinTones,
+                TItem HandSkinTones,
+                TItem FCTP,
+                TItem FaceSkinTones)
             {
-                this.NeckFatAdjustmentsScale = new MaskItem<TItem, NeckFatAdjustmentsScale.Mask<TItem>?>(NeckFatAdjustmentsScale, new NeckFatAdjustmentsScale.Mask<TItem>(NeckFatAdjustmentsScale));
+                this.NNAM = NNAM;
                 this.RacePresets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RacePresets, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MorphGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>(MorphGroups, Enumerable.Empty<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>());
-                this.FaceMorphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>(FaceMorphs, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>());
-                this.FDSIs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FDSIRecord.Mask<TItem>?>>?>(FDSIs, Enumerable.Empty<MaskItemIndexed<TItem, FDSIRecord.Mask<TItem>?>>());
-                this.BSTT = BSTT;
-                this.HSTT = HSTT;
-                this.FSTT = FSTT;
+                this.FaceMorphPhenotypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphPhenotype.Mask<TItem>?>>?>(FaceMorphPhenotypes, Enumerable.Empty<MaskItemIndexed<TItem, FaceMorphPhenotype.Mask<TItem>?>>());
+                this.FaceDials = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>?>(FaceDials, Enumerable.Empty<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>());
+                this.BodySkinTones = BodySkinTones;
+                this.HandSkinTones = HandSkinTones;
+                this.FCTP = FCTP;
+                this.FaceSkinTones = FaceSkinTones;
             }
 
             #pragma warning disable CS8618
@@ -212,14 +220,15 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, NeckFatAdjustmentsScale.Mask<TItem>?>? NeckFatAdjustmentsScale { get; set; }
+            public TItem NNAM;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RacePresets;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MorphGroup.Mask<TItem>?>>?>? MorphGroups;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorph.Mask<TItem>?>>?>? FaceMorphs;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FDSIRecord.Mask<TItem>?>>?>? FDSIs;
-            public TItem BSTT;
-            public TItem HSTT;
-            public TItem FSTT;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceMorphPhenotype.Mask<TItem>?>>?>? FaceMorphPhenotypes;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FaceDial.Mask<TItem>?>>?>? FaceDials;
+            public TItem BodySkinTones;
+            public TItem HandSkinTones;
+            public TItem FCTP;
+            public TItem FaceSkinTones;
             #endregion
 
             #region Equals
@@ -232,27 +241,29 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.NeckFatAdjustmentsScale, rhs.NeckFatAdjustmentsScale)) return false;
+                if (!object.Equals(this.NNAM, rhs.NNAM)) return false;
                 if (!object.Equals(this.RacePresets, rhs.RacePresets)) return false;
                 if (!object.Equals(this.MorphGroups, rhs.MorphGroups)) return false;
-                if (!object.Equals(this.FaceMorphs, rhs.FaceMorphs)) return false;
-                if (!object.Equals(this.FDSIs, rhs.FDSIs)) return false;
-                if (!object.Equals(this.BSTT, rhs.BSTT)) return false;
-                if (!object.Equals(this.HSTT, rhs.HSTT)) return false;
-                if (!object.Equals(this.FSTT, rhs.FSTT)) return false;
+                if (!object.Equals(this.FaceMorphPhenotypes, rhs.FaceMorphPhenotypes)) return false;
+                if (!object.Equals(this.FaceDials, rhs.FaceDials)) return false;
+                if (!object.Equals(this.BodySkinTones, rhs.BodySkinTones)) return false;
+                if (!object.Equals(this.HandSkinTones, rhs.HandSkinTones)) return false;
+                if (!object.Equals(this.FCTP, rhs.FCTP)) return false;
+                if (!object.Equals(this.FaceSkinTones, rhs.FaceSkinTones)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.NeckFatAdjustmentsScale);
+                hash.Add(this.NNAM);
                 hash.Add(this.RacePresets);
                 hash.Add(this.MorphGroups);
-                hash.Add(this.FaceMorphs);
-                hash.Add(this.FDSIs);
-                hash.Add(this.BSTT);
-                hash.Add(this.HSTT);
-                hash.Add(this.FSTT);
+                hash.Add(this.FaceMorphPhenotypes);
+                hash.Add(this.FaceDials);
+                hash.Add(this.BodySkinTones);
+                hash.Add(this.HandSkinTones);
+                hash.Add(this.FCTP);
+                hash.Add(this.FaceSkinTones);
                 return hash.ToHashCode();
             }
 
@@ -261,11 +272,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (NeckFatAdjustmentsScale != null)
-                {
-                    if (!eval(this.NeckFatAdjustmentsScale.Overall)) return false;
-                    if (this.NeckFatAdjustmentsScale.Specific != null && !this.NeckFatAdjustmentsScale.Specific.All(eval)) return false;
-                }
+                if (!eval(this.NNAM)) return false;
                 if (this.RacePresets != null)
                 {
                     if (!eval(this.RacePresets.Overall)) return false;
@@ -289,33 +296,34 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.FaceMorphs != null)
+                if (this.FaceMorphPhenotypes != null)
                 {
-                    if (!eval(this.FaceMorphs.Overall)) return false;
-                    if (this.FaceMorphs.Specific != null)
+                    if (!eval(this.FaceMorphPhenotypes.Overall)) return false;
+                    if (this.FaceMorphPhenotypes.Specific != null)
                     {
-                        foreach (var item in this.FaceMorphs.Specific)
+                        foreach (var item in this.FaceMorphPhenotypes.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.FDSIs != null)
+                if (this.FaceDials != null)
                 {
-                    if (!eval(this.FDSIs.Overall)) return false;
-                    if (this.FDSIs.Specific != null)
+                    if (!eval(this.FaceDials.Overall)) return false;
+                    if (this.FaceDials.Specific != null)
                     {
-                        foreach (var item in this.FDSIs.Specific)
+                        foreach (var item in this.FaceDials.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (!eval(this.BSTT)) return false;
-                if (!eval(this.HSTT)) return false;
-                if (!eval(this.FSTT)) return false;
+                if (!eval(this.BodySkinTones)) return false;
+                if (!eval(this.HandSkinTones)) return false;
+                if (!eval(this.FCTP)) return false;
+                if (!eval(this.FaceSkinTones)) return false;
                 return true;
             }
             #endregion
@@ -323,11 +331,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (NeckFatAdjustmentsScale != null)
-                {
-                    if (eval(this.NeckFatAdjustmentsScale.Overall)) return true;
-                    if (this.NeckFatAdjustmentsScale.Specific != null && this.NeckFatAdjustmentsScale.Specific.Any(eval)) return true;
-                }
+                if (eval(this.NNAM)) return true;
                 if (this.RacePresets != null)
                 {
                     if (eval(this.RacePresets.Overall)) return true;
@@ -351,33 +355,34 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.FaceMorphs != null)
+                if (this.FaceMorphPhenotypes != null)
                 {
-                    if (eval(this.FaceMorphs.Overall)) return true;
-                    if (this.FaceMorphs.Specific != null)
+                    if (eval(this.FaceMorphPhenotypes.Overall)) return true;
+                    if (this.FaceMorphPhenotypes.Specific != null)
                     {
-                        foreach (var item in this.FaceMorphs.Specific)
+                        foreach (var item in this.FaceMorphPhenotypes.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.FDSIs != null)
+                if (this.FaceDials != null)
                 {
-                    if (eval(this.FDSIs.Overall)) return true;
-                    if (this.FDSIs.Specific != null)
+                    if (eval(this.FaceDials.Overall)) return true;
+                    if (this.FaceDials.Specific != null)
                     {
-                        foreach (var item in this.FDSIs.Specific)
+                        foreach (var item in this.FaceDials.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (eval(this.BSTT)) return true;
-                if (eval(this.HSTT)) return true;
-                if (eval(this.FSTT)) return true;
+                if (eval(this.BodySkinTones)) return true;
+                if (eval(this.HandSkinTones)) return true;
+                if (eval(this.FCTP)) return true;
+                if (eval(this.FaceSkinTones)) return true;
                 return false;
             }
             #endregion
@@ -385,14 +390,14 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new HeadData.Mask<R>();
+                var ret = new ChargenAndSkintones.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.NeckFatAdjustmentsScale = this.NeckFatAdjustmentsScale == null ? null : new MaskItem<R, NeckFatAdjustmentsScale.Mask<R>?>(eval(this.NeckFatAdjustmentsScale.Overall), this.NeckFatAdjustmentsScale.Specific?.Translate(eval));
+                obj.NNAM = eval(this.NNAM);
                 if (RacePresets != null)
                 {
                     obj.RacePresets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RacePresets.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -422,60 +427,61 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (FaceMorphs != null)
+                if (FaceMorphPhenotypes != null)
                 {
-                    obj.FaceMorphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorph.Mask<R>?>>?>(eval(this.FaceMorphs.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceMorph.Mask<R>?>>());
-                    if (FaceMorphs.Specific != null)
+                    obj.FaceMorphPhenotypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceMorphPhenotype.Mask<R>?>>?>(eval(this.FaceMorphPhenotypes.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceMorphPhenotype.Mask<R>?>>());
+                    if (FaceMorphPhenotypes.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, FaceMorph.Mask<R>?>>();
-                        obj.FaceMorphs.Specific = l;
-                        foreach (var item in FaceMorphs.Specific)
+                        var l = new List<MaskItemIndexed<R, FaceMorphPhenotype.Mask<R>?>>();
+                        obj.FaceMorphPhenotypes.Specific = l;
+                        foreach (var item in FaceMorphPhenotypes.Specific)
                         {
-                            MaskItemIndexed<R, FaceMorph.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FaceMorph.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, FaceMorphPhenotype.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FaceMorphPhenotype.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (FDSIs != null)
+                if (FaceDials != null)
                 {
-                    obj.FDSIs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FDSIRecord.Mask<R>?>>?>(eval(this.FDSIs.Overall), Enumerable.Empty<MaskItemIndexed<R, FDSIRecord.Mask<R>?>>());
-                    if (FDSIs.Specific != null)
+                    obj.FaceDials = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FaceDial.Mask<R>?>>?>(eval(this.FaceDials.Overall), Enumerable.Empty<MaskItemIndexed<R, FaceDial.Mask<R>?>>());
+                    if (FaceDials.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, FDSIRecord.Mask<R>?>>();
-                        obj.FDSIs.Specific = l;
-                        foreach (var item in FDSIs.Specific)
+                        var l = new List<MaskItemIndexed<R, FaceDial.Mask<R>?>>();
+                        obj.FaceDials.Specific = l;
+                        foreach (var item in FaceDials.Specific)
                         {
-                            MaskItemIndexed<R, FDSIRecord.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FDSIRecord.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, FaceDial.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FaceDial.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                obj.BSTT = eval(this.BSTT);
-                obj.HSTT = eval(this.HSTT);
-                obj.FSTT = eval(this.FSTT);
+                obj.BodySkinTones = eval(this.BodySkinTones);
+                obj.HandSkinTones = eval(this.HandSkinTones);
+                obj.FCTP = eval(this.FCTP);
+                obj.FaceSkinTones = eval(this.FaceSkinTones);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(HeadData.Mask<bool>? printMask = null)
+            public string Print(ChargenAndSkintones.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, HeadData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ChargenAndSkintones.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(HeadData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ChargenAndSkintones.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.NeckFatAdjustmentsScale?.Overall ?? true)
+                    if (printMask?.NNAM ?? true)
                     {
-                        NeckFatAdjustmentsScale?.Print(sb);
+                        sb.AppendItem(NNAM, "NNAM");
                     }
                     if ((printMask?.RacePresets?.Overall ?? true)
                         && RacePresets is {} RacePresetsItem)
@@ -517,16 +523,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.FaceMorphs?.Overall ?? true)
-                        && FaceMorphs is {} FaceMorphsItem)
+                    if ((printMask?.FaceMorphPhenotypes?.Overall ?? true)
+                        && FaceMorphPhenotypes is {} FaceMorphPhenotypesItem)
                     {
-                        sb.AppendLine("FaceMorphs =>");
+                        sb.AppendLine("FaceMorphPhenotypes =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(FaceMorphsItem.Overall);
-                            if (FaceMorphsItem.Specific != null)
+                            sb.AppendItem(FaceMorphPhenotypesItem.Overall);
+                            if (FaceMorphPhenotypesItem.Specific != null)
                             {
-                                foreach (var subItem in FaceMorphsItem.Specific)
+                                foreach (var subItem in FaceMorphPhenotypesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -536,16 +542,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.FDSIs?.Overall ?? true)
-                        && FDSIs is {} FDSIsItem)
+                    if ((printMask?.FaceDials?.Overall ?? true)
+                        && FaceDials is {} FaceDialsItem)
                     {
-                        sb.AppendLine("FDSIs =>");
+                        sb.AppendLine("FaceDials =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(FDSIsItem.Overall);
-                            if (FDSIsItem.Specific != null)
+                            sb.AppendItem(FaceDialsItem.Overall);
+                            if (FaceDialsItem.Specific != null)
                             {
-                                foreach (var subItem in FDSIsItem.Specific)
+                                foreach (var subItem in FaceDialsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -555,17 +561,21 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.BSTT ?? true)
+                    if (printMask?.BodySkinTones ?? true)
                     {
-                        sb.AppendItem(BSTT, "BSTT");
+                        sb.AppendItem(BodySkinTones, "BodySkinTones");
                     }
-                    if (printMask?.HSTT ?? true)
+                    if (printMask?.HandSkinTones ?? true)
                     {
-                        sb.AppendItem(HSTT, "HSTT");
+                        sb.AppendItem(HandSkinTones, "HandSkinTones");
                     }
-                    if (printMask?.FSTT ?? true)
+                    if (printMask?.FCTP ?? true)
                     {
-                        sb.AppendItem(FSTT, "FSTT");
+                        sb.AppendItem(FCTP, "FCTP");
+                    }
+                    if (printMask?.FaceSkinTones ?? true)
+                    {
+                        sb.AppendItem(FaceSkinTones, "FaceSkinTones");
                     }
                 }
             }
@@ -591,38 +601,41 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, NeckFatAdjustmentsScale.ErrorMask?>? NeckFatAdjustmentsScale;
+            public Exception? NNAM;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RacePresets;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>? MorphGroups;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>? FaceMorphs;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FDSIRecord.ErrorMask?>>?>? FDSIs;
-            public Exception? BSTT;
-            public Exception? HSTT;
-            public Exception? FSTT;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphPhenotype.ErrorMask?>>?>? FaceMorphPhenotypes;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceDial.ErrorMask?>>?>? FaceDials;
+            public Exception? BodySkinTones;
+            public Exception? HandSkinTones;
+            public Exception? FCTP;
+            public Exception? FaceSkinTones;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
+                ChargenAndSkintones_FieldIndex enu = (ChargenAndSkintones_FieldIndex)index;
                 switch (enu)
                 {
-                    case HeadData_FieldIndex.NeckFatAdjustmentsScale:
-                        return NeckFatAdjustmentsScale;
-                    case HeadData_FieldIndex.RacePresets:
+                    case ChargenAndSkintones_FieldIndex.NNAM:
+                        return NNAM;
+                    case ChargenAndSkintones_FieldIndex.RacePresets:
                         return RacePresets;
-                    case HeadData_FieldIndex.MorphGroups:
+                    case ChargenAndSkintones_FieldIndex.MorphGroups:
                         return MorphGroups;
-                    case HeadData_FieldIndex.FaceMorphs:
-                        return FaceMorphs;
-                    case HeadData_FieldIndex.FDSIs:
-                        return FDSIs;
-                    case HeadData_FieldIndex.BSTT:
-                        return BSTT;
-                    case HeadData_FieldIndex.HSTT:
-                        return HSTT;
-                    case HeadData_FieldIndex.FSTT:
-                        return FSTT;
+                    case ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes:
+                        return FaceMorphPhenotypes;
+                    case ChargenAndSkintones_FieldIndex.FaceDials:
+                        return FaceDials;
+                    case ChargenAndSkintones_FieldIndex.BodySkinTones:
+                        return BodySkinTones;
+                    case ChargenAndSkintones_FieldIndex.HandSkinTones:
+                        return HandSkinTones;
+                    case ChargenAndSkintones_FieldIndex.FCTP:
+                        return FCTP;
+                    case ChargenAndSkintones_FieldIndex.FaceSkinTones:
+                        return FaceSkinTones;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -630,32 +643,35 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
+                ChargenAndSkintones_FieldIndex enu = (ChargenAndSkintones_FieldIndex)index;
                 switch (enu)
                 {
-                    case HeadData_FieldIndex.NeckFatAdjustmentsScale:
-                        this.NeckFatAdjustmentsScale = new MaskItem<Exception?, NeckFatAdjustmentsScale.ErrorMask?>(ex, null);
+                    case ChargenAndSkintones_FieldIndex.NNAM:
+                        this.NNAM = ex;
                         break;
-                    case HeadData_FieldIndex.RacePresets:
+                    case ChargenAndSkintones_FieldIndex.RacePresets:
                         this.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case HeadData_FieldIndex.MorphGroups:
+                    case ChargenAndSkintones_FieldIndex.MorphGroups:
                         this.MorphGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>(ex, null);
                         break;
-                    case HeadData_FieldIndex.FaceMorphs:
-                        this.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>(ex, null);
+                    case ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes:
+                        this.FaceMorphPhenotypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphPhenotype.ErrorMask?>>?>(ex, null);
                         break;
-                    case HeadData_FieldIndex.FDSIs:
-                        this.FDSIs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FDSIRecord.ErrorMask?>>?>(ex, null);
+                    case ChargenAndSkintones_FieldIndex.FaceDials:
+                        this.FaceDials = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceDial.ErrorMask?>>?>(ex, null);
                         break;
-                    case HeadData_FieldIndex.BSTT:
-                        this.BSTT = ex;
+                    case ChargenAndSkintones_FieldIndex.BodySkinTones:
+                        this.BodySkinTones = ex;
                         break;
-                    case HeadData_FieldIndex.HSTT:
-                        this.HSTT = ex;
+                    case ChargenAndSkintones_FieldIndex.HandSkinTones:
+                        this.HandSkinTones = ex;
                         break;
-                    case HeadData_FieldIndex.FSTT:
-                        this.FSTT = ex;
+                    case ChargenAndSkintones_FieldIndex.FCTP:
+                        this.FCTP = ex;
+                        break;
+                    case ChargenAndSkintones_FieldIndex.FaceSkinTones:
+                        this.FaceSkinTones = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -664,32 +680,35 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                HeadData_FieldIndex enu = (HeadData_FieldIndex)index;
+                ChargenAndSkintones_FieldIndex enu = (ChargenAndSkintones_FieldIndex)index;
                 switch (enu)
                 {
-                    case HeadData_FieldIndex.NeckFatAdjustmentsScale:
-                        this.NeckFatAdjustmentsScale = (MaskItem<Exception?, NeckFatAdjustmentsScale.ErrorMask?>?)obj;
+                    case ChargenAndSkintones_FieldIndex.NNAM:
+                        this.NNAM = (Exception?)obj;
                         break;
-                    case HeadData_FieldIndex.RacePresets:
+                    case ChargenAndSkintones_FieldIndex.RacePresets:
                         this.RacePresets = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case HeadData_FieldIndex.MorphGroups:
+                    case ChargenAndSkintones_FieldIndex.MorphGroups:
                         this.MorphGroups = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>)obj;
                         break;
-                    case HeadData_FieldIndex.FaceMorphs:
-                        this.FaceMorphs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>)obj;
+                    case ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes:
+                        this.FaceMorphPhenotypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphPhenotype.ErrorMask?>>?>)obj;
                         break;
-                    case HeadData_FieldIndex.FDSIs:
-                        this.FDSIs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FDSIRecord.ErrorMask?>>?>)obj;
+                    case ChargenAndSkintones_FieldIndex.FaceDials:
+                        this.FaceDials = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceDial.ErrorMask?>>?>)obj;
                         break;
-                    case HeadData_FieldIndex.BSTT:
-                        this.BSTT = (Exception?)obj;
+                    case ChargenAndSkintones_FieldIndex.BodySkinTones:
+                        this.BodySkinTones = (Exception?)obj;
                         break;
-                    case HeadData_FieldIndex.HSTT:
-                        this.HSTT = (Exception?)obj;
+                    case ChargenAndSkintones_FieldIndex.HandSkinTones:
+                        this.HandSkinTones = (Exception?)obj;
                         break;
-                    case HeadData_FieldIndex.FSTT:
-                        this.FSTT = (Exception?)obj;
+                    case ChargenAndSkintones_FieldIndex.FCTP:
+                        this.FCTP = (Exception?)obj;
+                        break;
+                    case ChargenAndSkintones_FieldIndex.FaceSkinTones:
+                        this.FaceSkinTones = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -699,14 +718,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (NeckFatAdjustmentsScale != null) return true;
+                if (NNAM != null) return true;
                 if (RacePresets != null) return true;
                 if (MorphGroups != null) return true;
-                if (FaceMorphs != null) return true;
-                if (FDSIs != null) return true;
-                if (BSTT != null) return true;
-                if (HSTT != null) return true;
-                if (FSTT != null) return true;
+                if (FaceMorphPhenotypes != null) return true;
+                if (FaceDials != null) return true;
+                if (BodySkinTones != null) return true;
+                if (HandSkinTones != null) return true;
+                if (FCTP != null) return true;
+                if (FaceSkinTones != null) return true;
                 return false;
             }
             #endregion
@@ -732,7 +752,9 @@ namespace Mutagen.Bethesda.Starfield
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                NeckFatAdjustmentsScale?.Print(sb);
+                {
+                    sb.AppendItem(NNAM, "NNAM");
+                }
                 if (RacePresets is {} RacePresetsItem)
                 {
                     sb.AppendLine("RacePresets =>");
@@ -771,15 +793,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (FaceMorphs is {} FaceMorphsItem)
+                if (FaceMorphPhenotypes is {} FaceMorphPhenotypesItem)
                 {
-                    sb.AppendLine("FaceMorphs =>");
+                    sb.AppendLine("FaceMorphPhenotypes =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(FaceMorphsItem.Overall);
-                        if (FaceMorphsItem.Specific != null)
+                        sb.AppendItem(FaceMorphPhenotypesItem.Overall);
+                        if (FaceMorphPhenotypesItem.Specific != null)
                         {
-                            foreach (var subItem in FaceMorphsItem.Specific)
+                            foreach (var subItem in FaceMorphPhenotypesItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -789,15 +811,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (FDSIs is {} FDSIsItem)
+                if (FaceDials is {} FaceDialsItem)
                 {
-                    sb.AppendLine("FDSIs =>");
+                    sb.AppendLine("FaceDials =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(FDSIsItem.Overall);
-                        if (FDSIsItem.Specific != null)
+                        sb.AppendItem(FaceDialsItem.Overall);
+                        if (FaceDialsItem.Specific != null)
                         {
-                            foreach (var subItem in FDSIsItem.Specific)
+                            foreach (var subItem in FaceDialsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -808,13 +830,16 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(BSTT, "BSTT");
+                    sb.AppendItem(BodySkinTones, "BodySkinTones");
                 }
                 {
-                    sb.AppendItem(HSTT, "HSTT");
+                    sb.AppendItem(HandSkinTones, "HandSkinTones");
                 }
                 {
-                    sb.AppendItem(FSTT, "FSTT");
+                    sb.AppendItem(FCTP, "FCTP");
+                }
+                {
+                    sb.AppendItem(FaceSkinTones, "FaceSkinTones");
                 }
             }
             #endregion
@@ -824,14 +849,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.NeckFatAdjustmentsScale = this.NeckFatAdjustmentsScale.Combine(rhs.NeckFatAdjustmentsScale, (l, r) => l.Combine(r));
+                ret.NNAM = this.NNAM.Combine(rhs.NNAM);
                 ret.RacePresets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RacePresets?.Overall, rhs.RacePresets?.Overall), Noggog.ExceptionExt.Combine(this.RacePresets?.Specific, rhs.RacePresets?.Specific));
                 ret.MorphGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MorphGroup.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MorphGroups?.Overall, rhs.MorphGroups?.Overall), Noggog.ExceptionExt.Combine(this.MorphGroups?.Specific, rhs.MorphGroups?.Specific));
-                ret.FaceMorphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphs?.Overall, rhs.FaceMorphs?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphs?.Specific, rhs.FaceMorphs?.Specific));
-                ret.FDSIs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FDSIRecord.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FDSIs?.Overall, rhs.FDSIs?.Overall), Noggog.ExceptionExt.Combine(this.FDSIs?.Specific, rhs.FDSIs?.Specific));
-                ret.BSTT = this.BSTT.Combine(rhs.BSTT);
-                ret.HSTT = this.HSTT.Combine(rhs.HSTT);
-                ret.FSTT = this.FSTT.Combine(rhs.FSTT);
+                ret.FaceMorphPhenotypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceMorphPhenotype.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceMorphPhenotypes?.Overall, rhs.FaceMorphPhenotypes?.Overall), Noggog.ExceptionExt.Combine(this.FaceMorphPhenotypes?.Specific, rhs.FaceMorphPhenotypes?.Specific));
+                ret.FaceDials = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FaceDial.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FaceDials?.Overall, rhs.FaceDials?.Overall), Noggog.ExceptionExt.Combine(this.FaceDials?.Specific, rhs.FaceDials?.Specific));
+                ret.BodySkinTones = this.BodySkinTones.Combine(rhs.BodySkinTones);
+                ret.HandSkinTones = this.HandSkinTones.Combine(rhs.HandSkinTones);
+                ret.FCTP = this.FCTP.Combine(rhs.FCTP);
+                ret.FaceSkinTones = this.FaceSkinTones.Combine(rhs.FaceSkinTones);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -855,14 +881,15 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public NeckFatAdjustmentsScale.TranslationMask? NeckFatAdjustmentsScale;
+            public bool NNAM;
             public bool RacePresets;
             public MorphGroup.TranslationMask? MorphGroups;
-            public FaceMorph.TranslationMask? FaceMorphs;
-            public FDSIRecord.TranslationMask? FDSIs;
-            public bool BSTT;
-            public bool HSTT;
-            public bool FSTT;
+            public FaceMorphPhenotype.TranslationMask? FaceMorphPhenotypes;
+            public FaceDial.TranslationMask? FaceDials;
+            public bool BodySkinTones;
+            public bool HandSkinTones;
+            public bool FCTP;
+            public bool FaceSkinTones;
             #endregion
 
             #region Ctors
@@ -872,10 +899,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.NNAM = defaultOn;
                 this.RacePresets = defaultOn;
-                this.BSTT = defaultOn;
-                this.HSTT = defaultOn;
-                this.FSTT = defaultOn;
+                this.BodySkinTones = defaultOn;
+                this.HandSkinTones = defaultOn;
+                this.FCTP = defaultOn;
+                this.FaceSkinTones = defaultOn;
             }
 
             #endregion
@@ -891,14 +920,15 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((NeckFatAdjustmentsScale != null ? NeckFatAdjustmentsScale.OnOverall : DefaultOn, NeckFatAdjustmentsScale?.GetCrystal()));
+                ret.Add((NNAM, null));
                 ret.Add((RacePresets, null));
                 ret.Add((MorphGroups == null ? DefaultOn : !MorphGroups.GetCrystal().CopyNothing, MorphGroups?.GetCrystal()));
-                ret.Add((FaceMorphs == null ? DefaultOn : !FaceMorphs.GetCrystal().CopyNothing, FaceMorphs?.GetCrystal()));
-                ret.Add((FDSIs == null ? DefaultOn : !FDSIs.GetCrystal().CopyNothing, FDSIs?.GetCrystal()));
-                ret.Add((BSTT, null));
-                ret.Add((HSTT, null));
-                ret.Add((FSTT, null));
+                ret.Add((FaceMorphPhenotypes == null ? DefaultOn : !FaceMorphPhenotypes.GetCrystal().CopyNothing, FaceMorphPhenotypes?.GetCrystal()));
+                ret.Add((FaceDials == null ? DefaultOn : !FaceDials.GetCrystal().CopyNothing, FaceDials?.GetCrystal()));
+                ret.Add((BodySkinTones, null));
+                ret.Add((HandSkinTones, null));
+                ret.Add((FCTP, null));
+                ret.Add((FaceSkinTones, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -910,31 +940,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ChargenAndSkintonesCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ChargenAndSkintonesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ChargenAndSkintonesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ChargenAndSkintonesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static HeadData CreateFromBinary(
+        public static ChargenAndSkintones CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new HeadData();
-            ((HeadDataSetterCommon)((IHeadDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ChargenAndSkintones();
+            ((ChargenAndSkintonesSetterCommon)((IChargenAndSkintonesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -945,7 +975,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out HeadData item,
+            out ChargenAndSkintones item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -960,38 +990,39 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((HeadDataSetterCommon)((IHeadDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ChargenAndSkintonesSetterCommon)((IChargenAndSkintonesGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static HeadData GetNew()
+        internal static ChargenAndSkintones GetNew()
         {
-            return new HeadData();
+            return new ChargenAndSkintones();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IHeadData :
+    public partial interface IChargenAndSkintones :
+        IChargenAndSkintonesGetter,
         IFormLinkContainer,
-        IHeadDataGetter,
-        ILoquiObjectSetter<IHeadData>
+        ILoquiObjectSetter<IChargenAndSkintones>
     {
-        new NeckFatAdjustmentsScale? NeckFatAdjustmentsScale { get; set; }
+        new MemorySlice<Byte> NNAM { get; set; }
         new ExtendedList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
         new ExtendedList<MorphGroup> MorphGroups { get; }
-        new ExtendedList<FaceMorph> FaceMorphs { get; }
-        new ExtendedList<FDSIRecord> FDSIs { get; }
-        new String? BSTT { get; set; }
-        new String? HSTT { get; set; }
-        new String? FSTT { get; set; }
+        new ExtendedList<FaceMorphPhenotype> FaceMorphPhenotypes { get; }
+        new ExtendedList<FaceDial> FaceDials { get; }
+        new String? BodySkinTones { get; set; }
+        new String? HandSkinTones { get; set; }
+        new String? FCTP { get; set; }
+        new String? FaceSkinTones { get; set; }
     }
 
-    public partial interface IHeadDataGetter :
+    public partial interface IChargenAndSkintonesGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IHeadDataGetter>
+        ILoquiObject<IChargenAndSkintonesGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -999,57 +1030,58 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => HeadData_Registration.Instance;
-        INeckFatAdjustmentsScaleGetter? NeckFatAdjustmentsScale { get; }
+        static ILoquiRegistration StaticRegistration => ChargenAndSkintones_Registration.Instance;
+        ReadOnlyMemorySlice<Byte> NNAM { get; }
         IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
         IReadOnlyList<IMorphGroupGetter> MorphGroups { get; }
-        IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; }
-        IReadOnlyList<IFDSIRecordGetter> FDSIs { get; }
-        String? BSTT { get; }
-        String? HSTT { get; }
-        String? FSTT { get; }
+        IReadOnlyList<IFaceMorphPhenotypeGetter> FaceMorphPhenotypes { get; }
+        IReadOnlyList<IFaceDialGetter> FaceDials { get; }
+        String? BodySkinTones { get; }
+        String? HandSkinTones { get; }
+        String? FCTP { get; }
+        String? FaceSkinTones { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class HeadDataMixIn
+    public static partial class ChargenAndSkintonesMixIn
     {
-        public static void Clear(this IHeadData item)
+        public static void Clear(this IChargenAndSkintones item)
         {
-            ((HeadDataSetterCommon)((IHeadDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ChargenAndSkintonesSetterCommon)((IChargenAndSkintonesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static HeadData.Mask<bool> GetEqualsMask(
-            this IHeadDataGetter item,
-            IHeadDataGetter rhs,
+        public static ChargenAndSkintones.Mask<bool> GetEqualsMask(
+            this IChargenAndSkintonesGetter item,
+            IChargenAndSkintonesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IHeadDataGetter item,
+            this IChargenAndSkintonesGetter item,
             string? name = null,
-            HeadData.Mask<bool>? printMask = null)
+            ChargenAndSkintones.Mask<bool>? printMask = null)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Print(
+            return ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IHeadDataGetter item,
+            this IChargenAndSkintonesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            HeadData.Mask<bool>? printMask = null)
+            ChargenAndSkintones.Mask<bool>? printMask = null)
         {
-            ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Print(
+            ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -1057,21 +1089,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IHeadDataGetter item,
-            IHeadDataGetter rhs,
-            HeadData.TranslationMask? equalsMask = null)
+            this IChargenAndSkintonesGetter item,
+            IChargenAndSkintonesGetter rhs,
+            ChargenAndSkintones.TranslationMask? equalsMask = null)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Equals(
+            return ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IHeadData lhs,
-            IHeadDataGetter rhs)
+            this IChargenAndSkintones lhs,
+            IChargenAndSkintonesGetter rhs)
         {
-            ((HeadDataSetterTranslationCommon)((IHeadDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -1080,11 +1112,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IHeadData lhs,
-            IHeadDataGetter rhs,
-            HeadData.TranslationMask? copyMask = null)
+            this IChargenAndSkintones lhs,
+            IChargenAndSkintonesGetter rhs,
+            ChargenAndSkintones.TranslationMask? copyMask = null)
         {
-            ((HeadDataSetterTranslationCommon)((IHeadDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -1093,28 +1125,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IHeadData lhs,
-            IHeadDataGetter rhs,
-            out HeadData.ErrorMask errorMask,
-            HeadData.TranslationMask? copyMask = null)
+            this IChargenAndSkintones lhs,
+            IChargenAndSkintonesGetter rhs,
+            out ChargenAndSkintones.ErrorMask errorMask,
+            ChargenAndSkintones.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((HeadDataSetterTranslationCommon)((IHeadDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = HeadData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ChargenAndSkintones.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IHeadData lhs,
-            IHeadDataGetter rhs,
+            this IChargenAndSkintones lhs,
+            IChargenAndSkintonesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((HeadDataSetterTranslationCommon)((IHeadDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -1122,32 +1154,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static HeadData DeepCopy(
-            this IHeadDataGetter item,
-            HeadData.TranslationMask? copyMask = null)
+        public static ChargenAndSkintones DeepCopy(
+            this IChargenAndSkintonesGetter item,
+            ChargenAndSkintones.TranslationMask? copyMask = null)
         {
-            return ((HeadDataSetterTranslationCommon)((IHeadDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static HeadData DeepCopy(
-            this IHeadDataGetter item,
-            out HeadData.ErrorMask errorMask,
-            HeadData.TranslationMask? copyMask = null)
+        public static ChargenAndSkintones DeepCopy(
+            this IChargenAndSkintonesGetter item,
+            out ChargenAndSkintones.ErrorMask errorMask,
+            ChargenAndSkintones.TranslationMask? copyMask = null)
         {
-            return ((HeadDataSetterTranslationCommon)((IHeadDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static HeadData DeepCopy(
-            this IHeadDataGetter item,
+        public static ChargenAndSkintones DeepCopy(
+            this IChargenAndSkintonesGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((HeadDataSetterTranslationCommon)((IHeadDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1155,11 +1187,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IHeadData item,
+            this IChargenAndSkintones item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((HeadDataSetterCommon)((IHeadDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ChargenAndSkintonesSetterCommon)((IChargenAndSkintonesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -1175,47 +1207,48 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum HeadData_FieldIndex
+    internal enum ChargenAndSkintones_FieldIndex
     {
-        NeckFatAdjustmentsScale = 0,
+        NNAM = 0,
         RacePresets = 1,
         MorphGroups = 2,
-        FaceMorphs = 3,
-        FDSIs = 4,
-        BSTT = 5,
-        HSTT = 6,
-        FSTT = 7,
+        FaceMorphPhenotypes = 3,
+        FaceDials = 4,
+        BodySkinTones = 5,
+        HandSkinTones = 6,
+        FCTP = 7,
+        FaceSkinTones = 8,
     }
     #endregion
 
     #region Registration
-    internal partial class HeadData_Registration : ILoquiRegistration
+    internal partial class ChargenAndSkintones_Registration : ILoquiRegistration
     {
-        public static readonly HeadData_Registration Instance = new HeadData_Registration();
+        public static readonly ChargenAndSkintones_Registration Instance = new ChargenAndSkintones_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(HeadData.Mask<>);
+        public static readonly Type MaskType = typeof(ChargenAndSkintones.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(HeadData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ChargenAndSkintones.ErrorMask);
 
-        public static readonly Type ClassType = typeof(HeadData);
+        public static readonly Type ClassType = typeof(ChargenAndSkintones);
 
-        public static readonly Type GetterType = typeof(IHeadDataGetter);
+        public static readonly Type GetterType = typeof(IChargenAndSkintonesGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IHeadData);
+        public static readonly Type SetterType = typeof(IChargenAndSkintones);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.HeadData";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ChargenAndSkintones";
 
-        public const string Name = "HeadData";
+        public const string Name = "ChargenAndSkintones";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -1226,9 +1259,12 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(
-                RecordTypes.NAM0,
+            var triggers = RecordCollection.Factory(
                 RecordTypes.NNAM,
+                RecordTypes.NAM0);
+            var all = RecordCollection.Factory(
+                RecordTypes.NNAM,
+                RecordTypes.NAM0,
                 RecordTypes.RPRM,
                 RecordTypes.MPGN,
                 RecordTypes.MPGM,
@@ -1236,15 +1272,15 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FMRU,
                 RecordTypes.FMRN,
                 RecordTypes.FMRS,
-                RecordTypes.FMSR,
                 RecordTypes.FDSI,
                 RecordTypes.FDSL,
                 RecordTypes.BSTT,
                 RecordTypes.HSTT,
+                RecordTypes.FCTP,
                 RecordTypes.FSTT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ChargenAndSkintonesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -1275,27 +1311,28 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class HeadDataSetterCommon
+    internal partial class ChargenAndSkintonesSetterCommon
     {
-        public static readonly HeadDataSetterCommon Instance = new HeadDataSetterCommon();
+        public static readonly ChargenAndSkintonesSetterCommon Instance = new ChargenAndSkintonesSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IHeadData item)
+        public void Clear(IChargenAndSkintones item)
         {
             ClearPartial();
-            item.NeckFatAdjustmentsScale = null;
+            item.NNAM = new byte[12];
             item.RacePresets.Clear();
             item.MorphGroups.Clear();
-            item.FaceMorphs.Clear();
-            item.FDSIs.Clear();
-            item.BSTT = default;
-            item.HSTT = default;
-            item.FSTT = default;
+            item.FaceMorphPhenotypes.Clear();
+            item.FaceDials.Clear();
+            item.BodySkinTones = default;
+            item.HandSkinTones = default;
+            item.FCTP = default;
+            item.FaceSkinTones = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IHeadData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IChargenAndSkintones obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.RacePresets.RemapLinks(mapping);
         }
@@ -1304,7 +1341,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IHeadData item,
+            IChargenAndSkintones item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -1312,23 +1349,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: HeadDataBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: ChargenAndSkintonesBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class HeadDataCommon
+    internal partial class ChargenAndSkintonesCommon
     {
-        public static readonly HeadDataCommon Instance = new HeadDataCommon();
+        public static readonly ChargenAndSkintonesCommon Instance = new ChargenAndSkintonesCommon();
 
-        public HeadData.Mask<bool> GetEqualsMask(
-            IHeadDataGetter item,
-            IHeadDataGetter rhs,
+        public ChargenAndSkintones.Mask<bool> GetEqualsMask(
+            IChargenAndSkintonesGetter item,
+            IChargenAndSkintonesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new HeadData.Mask<bool>(false);
-            ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ChargenAndSkintones.Mask<bool>(false);
+            ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1337,16 +1374,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IHeadDataGetter item,
-            IHeadDataGetter rhs,
-            HeadData.Mask<bool> ret,
+            IChargenAndSkintonesGetter item,
+            IChargenAndSkintonesGetter rhs,
+            ChargenAndSkintones.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.NeckFatAdjustmentsScale = EqualsMaskHelper.EqualsHelper(
-                item.NeckFatAdjustmentsScale,
-                rhs.NeckFatAdjustmentsScale,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.NNAM = MemoryExtensions.SequenceEqual(item.NNAM.Span, rhs.NNAM.Span);
             ret.RacePresets = item.RacePresets.CollectionEqualsHelper(
                 rhs.RacePresets,
                 (l, r) => object.Equals(l, r),
@@ -1355,23 +1388,24 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.MorphGroups,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.FaceMorphs = item.FaceMorphs.CollectionEqualsHelper(
-                rhs.FaceMorphs,
+            ret.FaceMorphPhenotypes = item.FaceMorphPhenotypes.CollectionEqualsHelper(
+                rhs.FaceMorphPhenotypes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.FDSIs = item.FDSIs.CollectionEqualsHelper(
-                rhs.FDSIs,
+            ret.FaceDials = item.FaceDials.CollectionEqualsHelper(
+                rhs.FaceDials,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.BSTT = string.Equals(item.BSTT, rhs.BSTT);
-            ret.HSTT = string.Equals(item.HSTT, rhs.HSTT);
-            ret.FSTT = string.Equals(item.FSTT, rhs.FSTT);
+            ret.BodySkinTones = string.Equals(item.BodySkinTones, rhs.BodySkinTones);
+            ret.HandSkinTones = string.Equals(item.HandSkinTones, rhs.HandSkinTones);
+            ret.FCTP = string.Equals(item.FCTP, rhs.FCTP);
+            ret.FaceSkinTones = string.Equals(item.FaceSkinTones, rhs.FaceSkinTones);
         }
         
         public string Print(
-            IHeadDataGetter item,
+            IChargenAndSkintonesGetter item,
             string? name = null,
-            HeadData.Mask<bool>? printMask = null)
+            ChargenAndSkintones.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1383,18 +1417,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IHeadDataGetter item,
+            IChargenAndSkintonesGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            HeadData.Mask<bool>? printMask = null)
+            ChargenAndSkintones.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"HeadData =>");
+                sb.AppendLine($"ChargenAndSkintones =>");
             }
             else
             {
-                sb.AppendLine($"{name} (HeadData) =>");
+                sb.AppendLine($"{name} (ChargenAndSkintones) =>");
             }
             using (sb.Brace())
             {
@@ -1406,14 +1440,13 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IHeadDataGetter item,
+            IChargenAndSkintonesGetter item,
             StructuredStringBuilder sb,
-            HeadData.Mask<bool>? printMask = null)
+            ChargenAndSkintones.Mask<bool>? printMask = null)
         {
-            if ((printMask?.NeckFatAdjustmentsScale?.Overall ?? true)
-                && item.NeckFatAdjustmentsScale is {} NeckFatAdjustmentsScaleItem)
+            if (printMask?.NNAM ?? true)
             {
-                NeckFatAdjustmentsScaleItem?.Print(sb, "NeckFatAdjustmentsScale");
+                sb.AppendLine($"NNAM => {SpanExt.ToHexString(item.NNAM)}");
             }
             if (printMask?.RacePresets?.Overall ?? true)
             {
@@ -1443,12 +1476,12 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.FaceMorphs?.Overall ?? true)
+            if (printMask?.FaceMorphPhenotypes?.Overall ?? true)
             {
-                sb.AppendLine("FaceMorphs =>");
+                sb.AppendLine("FaceMorphPhenotypes =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.FaceMorphs)
+                    foreach (var subItem in item.FaceMorphPhenotypes)
                     {
                         using (sb.Brace())
                         {
@@ -1457,12 +1490,12 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.FDSIs?.Overall ?? true)
+            if (printMask?.FaceDials?.Overall ?? true)
             {
-                sb.AppendLine("FDSIs =>");
+                sb.AppendLine("FaceDials =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.FDSIs)
+                    foreach (var subItem in item.FaceDials)
                     {
                         using (sb.Brace())
                         {
@@ -1471,91 +1504,97 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.BSTT ?? true)
-                && item.BSTT is {} BSTTItem)
+            if ((printMask?.BodySkinTones ?? true)
+                && item.BodySkinTones is {} BodySkinTonesItem)
             {
-                sb.AppendItem(BSTTItem, "BSTT");
+                sb.AppendItem(BodySkinTonesItem, "BodySkinTones");
             }
-            if ((printMask?.HSTT ?? true)
-                && item.HSTT is {} HSTTItem)
+            if ((printMask?.HandSkinTones ?? true)
+                && item.HandSkinTones is {} HandSkinTonesItem)
             {
-                sb.AppendItem(HSTTItem, "HSTT");
+                sb.AppendItem(HandSkinTonesItem, "HandSkinTones");
             }
-            if ((printMask?.FSTT ?? true)
-                && item.FSTT is {} FSTTItem)
+            if ((printMask?.FCTP ?? true)
+                && item.FCTP is {} FCTPItem)
             {
-                sb.AppendItem(FSTTItem, "FSTT");
+                sb.AppendItem(FCTPItem, "FCTP");
+            }
+            if ((printMask?.FaceSkinTones ?? true)
+                && item.FaceSkinTones is {} FaceSkinTonesItem)
+            {
+                sb.AppendItem(FaceSkinTonesItem, "FaceSkinTones");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IHeadDataGetter? lhs,
-            IHeadDataGetter? rhs,
+            IChargenAndSkintonesGetter? lhs,
+            IChargenAndSkintonesGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.NeckFatAdjustmentsScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.NNAM) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.NeckFatAdjustmentsScale, rhs.NeckFatAdjustmentsScale, out var lhsNeckFatAdjustmentsScale, out var rhsNeckFatAdjustmentsScale, out var isNeckFatAdjustmentsScaleEqual))
-                {
-                    if (!((NeckFatAdjustmentsScaleCommon)((INeckFatAdjustmentsScaleGetter)lhsNeckFatAdjustmentsScale).CommonInstance()!).Equals(lhsNeckFatAdjustmentsScale, rhsNeckFatAdjustmentsScale, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.NeckFatAdjustmentsScale))) return false;
-                }
-                else if (!isNeckFatAdjustmentsScaleEqual) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.NNAM.Span, rhs.NNAM.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.RacePresets) ?? true))
             {
                 if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.MorphGroups) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.MorphGroups) ?? true))
             {
-                if (!lhs.MorphGroups.SequenceEqual(rhs.MorphGroups, (l, r) => ((MorphGroupCommon)((IMorphGroupGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.MorphGroups)))) return false;
+                if (!lhs.MorphGroups.SequenceEqual(rhs.MorphGroups, (l, r) => ((MorphGroupCommon)((IMorphGroupGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ChargenAndSkintones_FieldIndex.MorphGroups)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.FaceMorphs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes) ?? true))
             {
-                if (!lhs.FaceMorphs.SequenceEqual(rhs.FaceMorphs, (l, r) => ((FaceMorphCommon)((IFaceMorphGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.FaceMorphs)))) return false;
+                if (!lhs.FaceMorphPhenotypes.SequenceEqual(rhs.FaceMorphPhenotypes, (l, r) => ((FaceMorphPhenotypeCommon)((IFaceMorphPhenotypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.FDSIs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FaceDials) ?? true))
             {
-                if (!lhs.FDSIs.SequenceEqual(rhs.FDSIs, (l, r) => ((FDSIRecordCommon)((IFDSIRecordGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadData_FieldIndex.FDSIs)))) return false;
+                if (!lhs.FaceDials.SequenceEqual(rhs.FaceDials, (l, r) => ((FaceDialCommon)((IFaceDialGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ChargenAndSkintones_FieldIndex.FaceDials)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.BSTT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.BodySkinTones) ?? true))
             {
-                if (!string.Equals(lhs.BSTT, rhs.BSTT)) return false;
+                if (!string.Equals(lhs.BodySkinTones, rhs.BodySkinTones)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.HSTT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.HandSkinTones) ?? true))
             {
-                if (!string.Equals(lhs.HSTT, rhs.HSTT)) return false;
+                if (!string.Equals(lhs.HandSkinTones, rhs.HandSkinTones)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadData_FieldIndex.FSTT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FCTP) ?? true))
             {
-                if (!string.Equals(lhs.FSTT, rhs.FSTT)) return false;
+                if (!string.Equals(lhs.FCTP, rhs.FCTP)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FaceSkinTones) ?? true))
+            {
+                if (!string.Equals(lhs.FaceSkinTones, rhs.FaceSkinTones)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IHeadDataGetter item)
+        public virtual int GetHashCode(IChargenAndSkintonesGetter item)
         {
             var hash = new HashCode();
-            if (item.NeckFatAdjustmentsScale is {} NeckFatAdjustmentsScaleitem)
-            {
-                hash.Add(NeckFatAdjustmentsScaleitem);
-            }
+            hash.Add(item.NNAM);
             hash.Add(item.RacePresets);
             hash.Add(item.MorphGroups);
-            hash.Add(item.FaceMorphs);
-            hash.Add(item.FDSIs);
-            if (item.BSTT is {} BSTTitem)
+            hash.Add(item.FaceMorphPhenotypes);
+            hash.Add(item.FaceDials);
+            if (item.BodySkinTones is {} BodySkinTonesitem)
             {
-                hash.Add(BSTTitem);
+                hash.Add(BodySkinTonesitem);
             }
-            if (item.HSTT is {} HSTTitem)
+            if (item.HandSkinTones is {} HandSkinTonesitem)
             {
-                hash.Add(HSTTitem);
+                hash.Add(HandSkinTonesitem);
             }
-            if (item.FSTT is {} FSTTitem)
+            if (item.FCTP is {} FCTPitem)
             {
-                hash.Add(FSTTitem);
+                hash.Add(FCTPitem);
+            }
+            if (item.FaceSkinTones is {} FaceSkinTonesitem)
+            {
+                hash.Add(FaceSkinTonesitem);
             }
             return hash.ToHashCode();
         }
@@ -1565,11 +1604,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return HeadData.GetNew();
+            return ChargenAndSkintones.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHeadDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IChargenAndSkintonesGetter obj)
         {
             foreach (var item in obj.RacePresets)
             {
@@ -1581,47 +1620,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class HeadDataSetterTranslationCommon
+    internal partial class ChargenAndSkintonesSetterTranslationCommon
     {
-        public static readonly HeadDataSetterTranslationCommon Instance = new HeadDataSetterTranslationCommon();
+        public static readonly ChargenAndSkintonesSetterTranslationCommon Instance = new ChargenAndSkintonesSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IHeadData item,
-            IHeadDataGetter rhs,
+            IChargenAndSkintones item,
+            IChargenAndSkintonesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.NeckFatAdjustmentsScale) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.NNAM) ?? true))
             {
-                errorMask?.PushIndex((int)HeadData_FieldIndex.NeckFatAdjustmentsScale);
-                try
-                {
-                    if(rhs.NeckFatAdjustmentsScale is {} rhsNeckFatAdjustmentsScale)
-                    {
-                        item.NeckFatAdjustmentsScale = rhsNeckFatAdjustmentsScale.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)HeadData_FieldIndex.NeckFatAdjustmentsScale));
-                    }
-                    else
-                    {
-                        item.NeckFatAdjustmentsScale = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.NNAM = rhs.NNAM.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.RacePresets) ?? true))
             {
-                errorMask?.PushIndex((int)HeadData_FieldIndex.RacePresets);
+                errorMask?.PushIndex((int)ChargenAndSkintones_FieldIndex.RacePresets);
                 try
                 {
                     item.RacePresets.SetTo(
@@ -1638,9 +1655,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.MorphGroups) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.MorphGroups) ?? true))
             {
-                errorMask?.PushIndex((int)HeadData_FieldIndex.MorphGroups);
+                errorMask?.PushIndex((int)ChargenAndSkintones_FieldIndex.MorphGroups);
                 try
                 {
                     item.MorphGroups.SetTo(
@@ -1662,13 +1679,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.FaceMorphs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes) ?? true))
             {
-                errorMask?.PushIndex((int)HeadData_FieldIndex.FaceMorphs);
+                errorMask?.PushIndex((int)ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes);
                 try
                 {
-                    item.FaceMorphs.SetTo(
-                        rhs.FaceMorphs
+                    item.FaceMorphPhenotypes.SetTo(
+                        rhs.FaceMorphPhenotypes
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1686,13 +1703,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.FDSIs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FaceDials) ?? true))
             {
-                errorMask?.PushIndex((int)HeadData_FieldIndex.FDSIs);
+                errorMask?.PushIndex((int)ChargenAndSkintones_FieldIndex.FaceDials);
                 try
                 {
-                    item.FDSIs.SetTo(
-                        rhs.FDSIs
+                    item.FaceDials.SetTo(
+                        rhs.FaceDials
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1710,28 +1727,32 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.BSTT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.BodySkinTones) ?? true))
             {
-                item.BSTT = rhs.BSTT;
+                item.BodySkinTones = rhs.BodySkinTones;
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.HSTT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.HandSkinTones) ?? true))
             {
-                item.HSTT = rhs.HSTT;
+                item.HandSkinTones = rhs.HandSkinTones;
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.FSTT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FCTP) ?? true))
             {
-                item.FSTT = rhs.FSTT;
+                item.FCTP = rhs.FCTP;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ChargenAndSkintones_FieldIndex.FaceSkinTones) ?? true))
+            {
+                item.FaceSkinTones = rhs.FaceSkinTones;
             }
         }
         
         #endregion
         
-        public HeadData DeepCopy(
-            IHeadDataGetter item,
-            HeadData.TranslationMask? copyMask = null)
+        public ChargenAndSkintones DeepCopy(
+            IChargenAndSkintonesGetter item,
+            ChargenAndSkintones.TranslationMask? copyMask = null)
         {
-            HeadData ret = (HeadData)((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).GetNew();
-            ((HeadDataSetterTranslationCommon)((IHeadDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ChargenAndSkintones ret = (ChargenAndSkintones)((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).GetNew();
+            ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1740,30 +1761,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public HeadData DeepCopy(
-            IHeadDataGetter item,
-            out HeadData.ErrorMask errorMask,
-            HeadData.TranslationMask? copyMask = null)
+        public ChargenAndSkintones DeepCopy(
+            IChargenAndSkintonesGetter item,
+            out ChargenAndSkintones.ErrorMask errorMask,
+            ChargenAndSkintones.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            HeadData ret = (HeadData)((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).GetNew();
-            ((HeadDataSetterTranslationCommon)((IHeadDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ChargenAndSkintones ret = (ChargenAndSkintones)((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).GetNew();
+            ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = HeadData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ChargenAndSkintones.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public HeadData DeepCopy(
-            IHeadDataGetter item,
+        public ChargenAndSkintones DeepCopy(
+            IChargenAndSkintonesGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            HeadData ret = (HeadData)((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).GetNew();
-            ((HeadDataSetterTranslationCommon)((IHeadDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ChargenAndSkintones ret = (ChargenAndSkintones)((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)item).CommonInstance()!).GetNew();
+            ((ChargenAndSkintonesSetterTranslationCommon)((IChargenAndSkintonesGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1779,27 +1800,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class HeadData
+    public partial class ChargenAndSkintones
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => HeadData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => HeadData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ChargenAndSkintones_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ChargenAndSkintones_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => HeadDataCommon.Instance;
+        protected object CommonInstance() => ChargenAndSkintonesCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return HeadDataSetterCommon.Instance;
+            return ChargenAndSkintonesSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => HeadDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ChargenAndSkintonesSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IHeadDataGetter.CommonInstance() => this.CommonInstance();
+        object IChargenAndSkintonesGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IHeadDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IChargenAndSkintonesGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IHeadDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IChargenAndSkintonesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1810,26 +1831,19 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class HeadDataBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ChargenAndSkintonesBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly HeadDataBinaryWriteTranslation Instance = new();
+        public static readonly ChargenAndSkintonesBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IHeadDataGetter item,
+            IChargenAndSkintonesGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(writer, RecordTypes.NAM0)) { }
-            if (item.NeckFatAdjustmentsScale is {} NeckFatAdjustmentsScaleItem)
-            {
-                using (HeaderExport.Subrecord(writer, RecordTypes.NNAM))
-                {
-                    ((NeckFatAdjustmentsScaleBinaryWriteTranslation)((IBinaryItem)NeckFatAdjustmentsScaleItem).BinaryWriteTranslator).Write(
-                        item: NeckFatAdjustmentsScaleItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.NNAM,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RacePresets,
@@ -1851,48 +1865,53 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFaceMorphGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFaceMorphPhenotypeGetter>.Instance.Write(
                 writer: writer,
-                items: item.FaceMorphs,
-                transl: (MutagenWriter subWriter, IFaceMorphGetter subItem, TypedWriteParams conv) =>
+                items: item.FaceMorphPhenotypes,
+                transl: (MutagenWriter subWriter, IFaceMorphPhenotypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((FaceMorphBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((FaceMorphPhenotypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFDSIRecordGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFaceDialGetter>.Instance.Write(
                 writer: writer,
-                items: item.FDSIs,
-                transl: (MutagenWriter subWriter, IFDSIRecordGetter subItem, TypedWriteParams conv) =>
+                items: item.FaceDials,
+                transl: (MutagenWriter subWriter, IFaceDialGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((FDSIRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((FaceDialBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BSTT,
+                item: item.BodySkinTones,
                 header: translationParams.ConvertToCustom(RecordTypes.BSTT),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HSTT,
+                item: item.HandSkinTones,
                 header: translationParams.ConvertToCustom(RecordTypes.HSTT),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FSTT,
+                item: item.FCTP,
+                header: translationParams.ConvertToCustom(RecordTypes.FCTP),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FaceSkinTones,
                 header: translationParams.ConvertToCustom(RecordTypes.FSTT),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
-            IHeadDataGetter item,
+            IChargenAndSkintonesGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1907,19 +1926,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IHeadDataGetter)item,
+                item: (IChargenAndSkintonesGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class HeadDataBinaryCreateTranslation
+    internal partial class ChargenAndSkintonesBinaryCreateTranslation
     {
-        public static readonly HeadDataBinaryCreateTranslation Instance = new HeadDataBinaryCreateTranslation();
+        public static readonly ChargenAndSkintonesBinaryCreateTranslation Instance = new ChargenAndSkintonesBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IHeadData item,
+            IChargenAndSkintones item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1930,93 +1949,87 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.NAM0:
-                {
-                    frame.ReadSubrecord();
-                    return default(int?);
-                }
                 case RecordTypeInts.NNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.NeckFatAdjustmentsScale, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.NeckFatAdjustmentsScale = Mutagen.Bethesda.Starfield.NeckFatAdjustmentsScale.CreateFromBinary(frame: frame);
-                    return (int)HeadData_FieldIndex.NeckFatAdjustmentsScale;
+                    if (lastParsed.ShortCircuit((int)ChargenAndSkintones_FieldIndex.NNAM, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ChargenAndSkintones_FieldIndex.NNAM;
                 }
                 case RecordTypeInts.RPRM:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.RacePresets, translationParams)) return ParseResult.Stop;
                     item.RacePresets.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.RPRM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return (int)HeadData_FieldIndex.RacePresets;
+                    return (int)ChargenAndSkintones_FieldIndex.RacePresets;
                 }
                 case RecordTypeInts.MPGN:
                 case RecordTypeInts.MPGM:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.MorphGroups, translationParams)) return ParseResult.Stop;
                     item.MorphGroups.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MorphGroup>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: MorphGroup_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: MorphGroup.TryCreateFromBinary));
-                    return (int)HeadData_FieldIndex.MorphGroups;
+                    return (int)ChargenAndSkintones_FieldIndex.MorphGroups;
                 }
                 case RecordTypeInts.FMRI:
                 case RecordTypeInts.FMRU:
                 case RecordTypeInts.FMRN:
                 case RecordTypeInts.FMRS:
-                case RecordTypeInts.FMSR:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceMorphs, translationParams)) return ParseResult.Stop;
-                    item.FaceMorphs.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FaceMorph>.Instance.Parse(
+                    item.FaceMorphPhenotypes.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FaceMorphPhenotype>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: FaceMorph_Registration.TriggerSpecs,
+                            triggeringRecord: FaceMorphPhenotype_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: FaceMorph.TryCreateFromBinary));
-                    return (int)HeadData_FieldIndex.FaceMorphs;
+                            transl: FaceMorphPhenotype.TryCreateFromBinary));
+                    return (int)ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes;
                 }
                 case RecordTypeInts.FDSI:
-                case RecordTypeInts.FDSL:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FDSIs, translationParams)) return ParseResult.Stop;
-                    item.FDSIs.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FDSIRecord>.Instance.Parse(
+                    item.FaceDials.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FaceDial>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: FDSIRecord_Registration.TriggerSpecs,
+                            triggeringRecord: FaceDial_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: FDSIRecord.TryCreateFromBinary));
-                    return (int)HeadData_FieldIndex.FDSIs;
+                            transl: FaceDial.TryCreateFromBinary));
+                    return (int)ChargenAndSkintones_FieldIndex.FaceDials;
                 }
                 case RecordTypeInts.BSTT:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.BSTT, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BSTT = StringBinaryTranslation.Instance.Parse(
+                    item.BodySkinTones = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)HeadData_FieldIndex.BSTT;
+                    return (int)ChargenAndSkintones_FieldIndex.BodySkinTones;
                 }
                 case RecordTypeInts.HSTT:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HSTT, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HSTT = StringBinaryTranslation.Instance.Parse(
+                    item.HandSkinTones = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)HeadData_FieldIndex.HSTT;
+                    return (int)ChargenAndSkintones_FieldIndex.HandSkinTones;
+                }
+                case RecordTypeInts.FCTP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FCTP = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)ChargenAndSkintones_FieldIndex.FCTP;
                 }
                 case RecordTypeInts.FSTT:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FSTT, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FSTT = StringBinaryTranslation.Instance.Parse(
+                    item.FaceSkinTones = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)HeadData_FieldIndex.FSTT;
+                    return (int)ChargenAndSkintones_FieldIndex.FaceSkinTones;
                 }
                 default:
                     return ParseResult.Stop;
@@ -2029,14 +2042,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class HeadDataBinaryTranslationMixIn
+    public static class ChargenAndSkintonesBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IHeadDataGetter item,
+            this IChargenAndSkintonesGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((HeadDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ChargenAndSkintonesBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -2049,60 +2062,67 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class HeadDataBinaryOverlay :
+    internal partial class ChargenAndSkintonesBinaryOverlay :
         PluginBinaryOverlay,
-        IHeadDataGetter
+        IChargenAndSkintonesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => HeadData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => HeadData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ChargenAndSkintones_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ChargenAndSkintones_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => HeadDataCommon.Instance;
+        protected object CommonInstance() => ChargenAndSkintonesCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => HeadDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ChargenAndSkintonesSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IHeadDataGetter.CommonInstance() => this.CommonInstance();
+        object IChargenAndSkintonesGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IHeadDataGetter.CommonSetterInstance() => null;
+        object? IChargenAndSkintonesGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IHeadDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IChargenAndSkintonesGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => HeadDataCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ChargenAndSkintonesCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ChargenAndSkintonesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((HeadDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ChargenAndSkintonesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public INeckFatAdjustmentsScaleGetter? NeckFatAdjustmentsScale { get; private set; }
+        #region NNAM
+        private int? _NNAMLocation;
+        public ReadOnlyMemorySlice<Byte> NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
         public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = Array.Empty<IFormLinkGetter<INpcGetter>>();
         public IReadOnlyList<IMorphGroupGetter> MorphGroups { get; private set; } = Array.Empty<IMorphGroupGetter>();
-        public IReadOnlyList<IFaceMorphGetter> FaceMorphs { get; private set; } = Array.Empty<IFaceMorphGetter>();
-        public IReadOnlyList<IFDSIRecordGetter> FDSIs { get; private set; } = Array.Empty<IFDSIRecordGetter>();
-        #region BSTT
-        private int? _BSTTLocation;
-        public String? BSTT => _BSTTLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BSTTLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public IReadOnlyList<IFaceMorphPhenotypeGetter> FaceMorphPhenotypes { get; private set; } = Array.Empty<IFaceMorphPhenotypeGetter>();
+        public IReadOnlyList<IFaceDialGetter> FaceDials { get; private set; } = Array.Empty<IFaceDialGetter>();
+        #region BodySkinTones
+        private int? _BodySkinTonesLocation;
+        public String? BodySkinTones => _BodySkinTonesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodySkinTonesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region HSTT
-        private int? _HSTTLocation;
-        public String? HSTT => _HSTTLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HSTTLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region HandSkinTones
+        private int? _HandSkinTonesLocation;
+        public String? HandSkinTones => _HandSkinTonesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HandSkinTonesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region FSTT
-        private int? _FSTTLocation;
-        public String? FSTT => _FSTTLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FSTTLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region FCTP
+        private int? _FCTPLocation;
+        public String? FCTP => _FCTPLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FCTPLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region FaceSkinTones
+        private int? _FaceSkinTonesLocation;
+        public String? FaceSkinTones => _FaceSkinTonesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FaceSkinTonesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2110,7 +2130,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected HeadDataBinaryOverlay(
+        protected ChargenAndSkintonesBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2120,7 +2140,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IHeadDataGetter HeadDataFactory(
+        public static IChargenAndSkintonesGetter ChargenAndSkintonesFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -2132,7 +2152,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new HeadDataBinaryOverlay(
+            var ret = new ChargenAndSkintonesBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -2144,12 +2164,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IHeadDataGetter HeadDataFactory(
+        public static IChargenAndSkintonesGetter ChargenAndSkintonesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return HeadDataFactory(
+            return ChargenAndSkintonesFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -2167,24 +2187,14 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.NAM0:
-                {
-                    stream.ReadSubrecord();
-                    return default(int?);
-                }
                 case RecordTypeInts.NNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.NeckFatAdjustmentsScale, translationParams)) return ParseResult.Stop;
-                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.NeckFatAdjustmentsScale = NeckFatAdjustmentsScaleBinaryOverlay.NeckFatAdjustmentsScaleFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)HeadData_FieldIndex.NeckFatAdjustmentsScale;
+                    if (lastParsed.ShortCircuit((int)ChargenAndSkintones_FieldIndex.NNAM, translationParams)) return ParseResult.Stop;
+                    _NNAMLocation = (stream.Position - offset);
+                    return (int)ChargenAndSkintones_FieldIndex.NNAM;
                 }
                 case RecordTypeInts.RPRM:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.RacePresets, translationParams)) return ParseResult.Stop;
                     this.RacePresets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
@@ -2195,61 +2205,58 @@ namespace Mutagen.Bethesda.Starfield
                             trigger: type,
                             skipHeader: true,
                             translationParams: translationParams));
-                    return (int)HeadData_FieldIndex.RacePresets;
+                    return (int)ChargenAndSkintones_FieldIndex.RacePresets;
                 }
                 case RecordTypeInts.MPGN:
                 case RecordTypeInts.MPGM:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.MorphGroups, translationParams)) return ParseResult.Stop;
                     this.MorphGroups = this.ParseRepeatedTypelessSubrecord<IMorphGroupGetter>(
                         stream: stream,
                         translationParams: translationParams,
                         trigger: MorphGroup_Registration.TriggerSpecs,
                         factory: MorphGroupBinaryOverlay.MorphGroupFactory);
-                    return (int)HeadData_FieldIndex.MorphGroups;
+                    return (int)ChargenAndSkintones_FieldIndex.MorphGroups;
                 }
                 case RecordTypeInts.FMRI:
                 case RecordTypeInts.FMRU:
                 case RecordTypeInts.FMRN:
                 case RecordTypeInts.FMRS:
-                case RecordTypeInts.FMSR:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FaceMorphs, translationParams)) return ParseResult.Stop;
-                    this.FaceMorphs = this.ParseRepeatedTypelessSubrecord<IFaceMorphGetter>(
+                    this.FaceMorphPhenotypes = this.ParseRepeatedTypelessSubrecord<IFaceMorphPhenotypeGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: FaceMorph_Registration.TriggerSpecs,
-                        factory: FaceMorphBinaryOverlay.FaceMorphFactory);
-                    return (int)HeadData_FieldIndex.FaceMorphs;
+                        trigger: FaceMorphPhenotype_Registration.TriggerSpecs,
+                        factory: FaceMorphPhenotypeBinaryOverlay.FaceMorphPhenotypeFactory);
+                    return (int)ChargenAndSkintones_FieldIndex.FaceMorphPhenotypes;
                 }
                 case RecordTypeInts.FDSI:
-                case RecordTypeInts.FDSL:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FDSIs, translationParams)) return ParseResult.Stop;
-                    this.FDSIs = this.ParseRepeatedTypelessSubrecord<IFDSIRecordGetter>(
+                    this.FaceDials = this.ParseRepeatedTypelessSubrecord<IFaceDialGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: FDSIRecord_Registration.TriggerSpecs,
-                        factory: FDSIRecordBinaryOverlay.FDSIRecordFactory);
-                    return (int)HeadData_FieldIndex.FDSIs;
+                        trigger: FaceDial_Registration.TriggerSpecs,
+                        factory: FaceDialBinaryOverlay.FaceDialFactory);
+                    return (int)ChargenAndSkintones_FieldIndex.FaceDials;
                 }
                 case RecordTypeInts.BSTT:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.BSTT, translationParams)) return ParseResult.Stop;
-                    _BSTTLocation = (stream.Position - offset);
-                    return (int)HeadData_FieldIndex.BSTT;
+                    _BodySkinTonesLocation = (stream.Position - offset);
+                    return (int)ChargenAndSkintones_FieldIndex.BodySkinTones;
                 }
                 case RecordTypeInts.HSTT:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.HSTT, translationParams)) return ParseResult.Stop;
-                    _HSTTLocation = (stream.Position - offset);
-                    return (int)HeadData_FieldIndex.HSTT;
+                    _HandSkinTonesLocation = (stream.Position - offset);
+                    return (int)ChargenAndSkintones_FieldIndex.HandSkinTones;
+                }
+                case RecordTypeInts.FCTP:
+                {
+                    _FCTPLocation = (stream.Position - offset);
+                    return (int)ChargenAndSkintones_FieldIndex.FCTP;
                 }
                 case RecordTypeInts.FSTT:
                 {
-                    if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.FSTT, translationParams)) return ParseResult.Stop;
-                    _FSTTLocation = (stream.Position - offset);
-                    return (int)HeadData_FieldIndex.FSTT;
+                    _FaceSkinTonesLocation = (stream.Position - offset);
+                    return (int)ChargenAndSkintones_FieldIndex.FaceSkinTones;
                 }
                 default:
                     return ParseResult.Stop;
@@ -2261,7 +2268,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            HeadDataMixIn.Print(
+            ChargenAndSkintonesMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -2272,16 +2279,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IHeadDataGetter rhs) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IChargenAndSkintonesGetter rhs) return false;
+            return ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IHeadDataGetter? obj)
+        public bool Equals(IChargenAndSkintonesGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ChargenAndSkintonesCommon)((IChargenAndSkintonesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

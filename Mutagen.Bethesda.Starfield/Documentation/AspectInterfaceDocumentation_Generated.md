@@ -9,6 +9,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - Perk
+- Quest
 - TerminalMenu
 - Weapon
 ### IKeywordCommon
@@ -19,6 +20,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MagicEffect
 - MiscItem
 - ObjectTemplate
+- Quest
+- QuestReferenceAlias
 - Race
 - Resource
 - SoundMarker
@@ -46,7 +49,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BipedObjectData
 - Class
 - DamageType
-- FaceMorphItem
+- FaceMorphPhenotype
+- FaceMorphPhenotypeItem
 - Faction
 - FormList
 - FullNameComponent
@@ -60,6 +64,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Perk
 - Planet
 - ProgressionEvaluatorArgument
+- Quest
+- QuestLocationAlias
+- QuestReferenceAlias
 - Race
 - Resource
 - ScriptBoolListProperty
@@ -137,7 +144,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### DestructionStage
 - IModeled
-### FaceMorphItem
+### FaceMorphPhenotype
+- INamed
+### FaceMorphPhenotypeItem
 - INamed
 ### Faction
 - INamed
@@ -194,6 +203,15 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### ProjectedDecal
 - IObjectBounded
+### Quest
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- INamed
+### QuestLocationAlias
+- INamed
+### QuestReferenceAlias
+- IKeyworded
+- INamed
 ### Race
 - IKeyworded
 - INamed

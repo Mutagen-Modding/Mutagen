@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -37,30 +38,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class MovementDirectionData :
-        IEquatable<IMovementDirectionDataGetter>,
-        ILoquiObjectSetter<MovementDirectionData>,
-        IMovementDirectionData
+    public partial class LinkedAlias :
+        IEquatable<ILinkedAliasGetter>,
+        ILinkedAlias,
+        ILoquiObjectSetter<LinkedAlias>
     {
         #region Ctor
-        public MovementDirectionData()
+        public LinkedAlias()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Unused1
-        public Int32 Unused1 { get; set; } = default;
+        #region Keyword
+        private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> Keyword
+        {
+            get => _Keyword;
+            set => _Keyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeywordGetter> ILinkedAliasGetter.Keyword => this.Keyword;
         #endregion
-        #region Walk
-        public Single Walk { get; set; } = default;
-        #endregion
-        #region Run
-        public Single Run { get; set; } = default;
-        #endregion
-        #region Unused2
-        public Int32 Unused2 { get; set; } = default;
+        #region AliasID
+        public Int32 AliasID { get; set; } = default;
         #endregion
 
         #region To String
@@ -69,7 +71,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MovementDirectionDataMixIn.Print(
+            LinkedAliasMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -80,16 +82,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMovementDirectionDataGetter rhs) return false;
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILinkedAliasGetter rhs) return false;
+            return ((LinkedAliasCommon)((ILinkedAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IMovementDirectionDataGetter? obj)
+        public bool Equals(ILinkedAliasGetter? obj)
         {
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LinkedAliasCommon)((ILinkedAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LinkedAliasCommon)((ILinkedAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -101,22 +103,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Unused1 = initialValue;
-                this.Walk = initialValue;
-                this.Run = initialValue;
-                this.Unused2 = initialValue;
+                this.Keyword = initialValue;
+                this.AliasID = initialValue;
             }
 
             public Mask(
-                TItem Unused1,
-                TItem Walk,
-                TItem Run,
-                TItem Unused2)
+                TItem Keyword,
+                TItem AliasID)
             {
-                this.Unused1 = Unused1;
-                this.Walk = Walk;
-                this.Run = Run;
-                this.Unused2 = Unused2;
+                this.Keyword = Keyword;
+                this.AliasID = AliasID;
             }
 
             #pragma warning disable CS8618
@@ -128,10 +124,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Unused1;
-            public TItem Walk;
-            public TItem Run;
-            public TItem Unused2;
+            public TItem Keyword;
+            public TItem AliasID;
             #endregion
 
             #region Equals
@@ -144,19 +138,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
-                if (!object.Equals(this.Walk, rhs.Walk)) return false;
-                if (!object.Equals(this.Run, rhs.Run)) return false;
-                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
+                if (!object.Equals(this.AliasID, rhs.AliasID)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unused1);
-                hash.Add(this.Walk);
-                hash.Add(this.Run);
-                hash.Add(this.Unused2);
+                hash.Add(this.Keyword);
+                hash.Add(this.AliasID);
                 return hash.ToHashCode();
             }
 
@@ -165,10 +155,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unused1)) return false;
-                if (!eval(this.Walk)) return false;
-                if (!eval(this.Run)) return false;
-                if (!eval(this.Unused2)) return false;
+                if (!eval(this.Keyword)) return false;
+                if (!eval(this.AliasID)) return false;
                 return true;
             }
             #endregion
@@ -176,10 +164,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unused1)) return true;
-                if (eval(this.Walk)) return true;
-                if (eval(this.Run)) return true;
-                if (eval(this.Unused2)) return true;
+                if (eval(this.Keyword)) return true;
+                if (eval(this.AliasID)) return true;
                 return false;
             }
             #endregion
@@ -187,50 +173,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MovementDirectionData.Mask<R>();
+                var ret = new LinkedAlias.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unused1 = eval(this.Unused1);
-                obj.Walk = eval(this.Walk);
-                obj.Run = eval(this.Run);
-                obj.Unused2 = eval(this.Unused2);
+                obj.Keyword = eval(this.Keyword);
+                obj.AliasID = eval(this.AliasID);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(MovementDirectionData.Mask<bool>? printMask = null)
+            public string Print(LinkedAlias.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, MovementDirectionData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LinkedAlias.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(MovementDirectionData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(LinkedAlias.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unused1 ?? true)
+                    if (printMask?.Keyword ?? true)
                     {
-                        sb.AppendItem(Unused1, "Unused1");
+                        sb.AppendItem(Keyword, "Keyword");
                     }
-                    if (printMask?.Walk ?? true)
+                    if (printMask?.AliasID ?? true)
                     {
-                        sb.AppendItem(Walk, "Walk");
-                    }
-                    if (printMask?.Run ?? true)
-                    {
-                        sb.AppendItem(Run, "Run");
-                    }
-                    if (printMask?.Unused2 ?? true)
-                    {
-                        sb.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(AliasID, "AliasID");
                     }
                 }
             }
@@ -256,26 +232,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Unused1;
-            public Exception? Walk;
-            public Exception? Run;
-            public Exception? Unused2;
+            public Exception? Keyword;
+            public Exception? AliasID;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                MovementDirectionData_FieldIndex enu = (MovementDirectionData_FieldIndex)index;
+                LinkedAlias_FieldIndex enu = (LinkedAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case MovementDirectionData_FieldIndex.Unused1:
-                        return Unused1;
-                    case MovementDirectionData_FieldIndex.Walk:
-                        return Walk;
-                    case MovementDirectionData_FieldIndex.Run:
-                        return Run;
-                    case MovementDirectionData_FieldIndex.Unused2:
-                        return Unused2;
+                    case LinkedAlias_FieldIndex.Keyword:
+                        return Keyword;
+                    case LinkedAlias_FieldIndex.AliasID:
+                        return AliasID;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -283,20 +253,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                MovementDirectionData_FieldIndex enu = (MovementDirectionData_FieldIndex)index;
+                LinkedAlias_FieldIndex enu = (LinkedAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case MovementDirectionData_FieldIndex.Unused1:
-                        this.Unused1 = ex;
+                    case LinkedAlias_FieldIndex.Keyword:
+                        this.Keyword = ex;
                         break;
-                    case MovementDirectionData_FieldIndex.Walk:
-                        this.Walk = ex;
-                        break;
-                    case MovementDirectionData_FieldIndex.Run:
-                        this.Run = ex;
-                        break;
-                    case MovementDirectionData_FieldIndex.Unused2:
-                        this.Unused2 = ex;
+                    case LinkedAlias_FieldIndex.AliasID:
+                        this.AliasID = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -305,20 +269,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                MovementDirectionData_FieldIndex enu = (MovementDirectionData_FieldIndex)index;
+                LinkedAlias_FieldIndex enu = (LinkedAlias_FieldIndex)index;
                 switch (enu)
                 {
-                    case MovementDirectionData_FieldIndex.Unused1:
-                        this.Unused1 = (Exception?)obj;
+                    case LinkedAlias_FieldIndex.Keyword:
+                        this.Keyword = (Exception?)obj;
                         break;
-                    case MovementDirectionData_FieldIndex.Walk:
-                        this.Walk = (Exception?)obj;
-                        break;
-                    case MovementDirectionData_FieldIndex.Run:
-                        this.Run = (Exception?)obj;
-                        break;
-                    case MovementDirectionData_FieldIndex.Unused2:
-                        this.Unused2 = (Exception?)obj;
+                    case LinkedAlias_FieldIndex.AliasID:
+                        this.AliasID = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -328,10 +286,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unused1 != null) return true;
-                if (Walk != null) return true;
-                if (Run != null) return true;
-                if (Unused2 != null) return true;
+                if (Keyword != null) return true;
+                if (AliasID != null) return true;
                 return false;
             }
             #endregion
@@ -358,16 +314,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Unused1, "Unused1");
+                    sb.AppendItem(Keyword, "Keyword");
                 }
                 {
-                    sb.AppendItem(Walk, "Walk");
-                }
-                {
-                    sb.AppendItem(Run, "Run");
-                }
-                {
-                    sb.AppendItem(Unused2, "Unused2");
+                    sb.AppendItem(AliasID, "AliasID");
                 }
             }
             #endregion
@@ -377,10 +327,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
-                ret.Walk = this.Walk.Combine(rhs.Walk);
-                ret.Run = this.Run.Combine(rhs.Run);
-                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.Keyword = this.Keyword.Combine(rhs.Keyword);
+                ret.AliasID = this.AliasID.Combine(rhs.AliasID);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -404,10 +352,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Unused1;
-            public bool Walk;
-            public bool Run;
-            public bool Unused2;
+            public bool Keyword;
+            public bool AliasID;
             #endregion
 
             #region Ctors
@@ -417,10 +363,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Unused1 = defaultOn;
-                this.Walk = defaultOn;
-                this.Run = defaultOn;
-                this.Unused2 = defaultOn;
+                this.Keyword = defaultOn;
+                this.AliasID = defaultOn;
             }
 
             #endregion
@@ -436,10 +380,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unused1, null));
-                ret.Add((Walk, null));
-                ret.Add((Run, null));
-                ret.Add((Unused2, null));
+                ret.Add((Keyword, null));
+                ret.Add((AliasID, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -450,27 +392,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LinkedAliasCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LinkedAliasSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => MovementDirectionDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LinkedAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MovementDirectionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LinkedAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static MovementDirectionData CreateFromBinary(
+        public static LinkedAlias CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new MovementDirectionData();
-            ((MovementDirectionDataSetterCommon)((IMovementDirectionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LinkedAlias();
+            ((LinkedAliasSetterCommon)((ILinkedAliasGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -481,7 +428,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out MovementDirectionData item,
+            out LinkedAlias item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -496,32 +443,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((MovementDirectionDataSetterCommon)((IMovementDirectionDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LinkedAliasSetterCommon)((ILinkedAliasGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static MovementDirectionData GetNew()
+        internal static LinkedAlias GetNew()
         {
-            return new MovementDirectionData();
+            return new LinkedAlias();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMovementDirectionData :
-        ILoquiObjectSetter<IMovementDirectionData>,
-        IMovementDirectionDataGetter
+    public partial interface ILinkedAlias :
+        IFormLinkContainer,
+        ILinkedAliasGetter,
+        ILoquiObjectSetter<ILinkedAlias>
     {
-        new Int32 Unused1 { get; set; }
-        new Single Walk { get; set; }
-        new Single Run { get; set; }
-        new Int32 Unused2 { get; set; }
+        new IFormLink<IKeywordGetter> Keyword { get; set; }
+        new Int32 AliasID { get; set; }
     }
 
-    public partial interface IMovementDirectionDataGetter :
+    public partial interface ILinkedAliasGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IMovementDirectionDataGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<ILinkedAliasGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -529,53 +476,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => MovementDirectionData_Registration.Instance;
-        Int32 Unused1 { get; }
-        Single Walk { get; }
-        Single Run { get; }
-        Int32 Unused2 { get; }
+        static ILoquiRegistration StaticRegistration => LinkedAlias_Registration.Instance;
+        IFormLinkGetter<IKeywordGetter> Keyword { get; }
+        Int32 AliasID { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MovementDirectionDataMixIn
+    public static partial class LinkedAliasMixIn
     {
-        public static void Clear(this IMovementDirectionData item)
+        public static void Clear(this ILinkedAlias item)
         {
-            ((MovementDirectionDataSetterCommon)((IMovementDirectionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LinkedAliasSetterCommon)((ILinkedAliasGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MovementDirectionData.Mask<bool> GetEqualsMask(
-            this IMovementDirectionDataGetter item,
-            IMovementDirectionDataGetter rhs,
+        public static LinkedAlias.Mask<bool> GetEqualsMask(
+            this ILinkedAliasGetter item,
+            ILinkedAliasGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IMovementDirectionDataGetter item,
+            this ILinkedAliasGetter item,
             string? name = null,
-            MovementDirectionData.Mask<bool>? printMask = null)
+            LinkedAlias.Mask<bool>? printMask = null)
         {
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).Print(
+            return ((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IMovementDirectionDataGetter item,
+            this ILinkedAliasGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            MovementDirectionData.Mask<bool>? printMask = null)
+            LinkedAlias.Mask<bool>? printMask = null)
         {
-            ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).Print(
+            ((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -583,21 +528,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IMovementDirectionDataGetter item,
-            IMovementDirectionDataGetter rhs,
-            MovementDirectionData.TranslationMask? equalsMask = null)
+            this ILinkedAliasGetter item,
+            ILinkedAliasGetter rhs,
+            LinkedAlias.TranslationMask? equalsMask = null)
         {
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).Equals(
+            return ((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IMovementDirectionData lhs,
-            IMovementDirectionDataGetter rhs)
+            this ILinkedAlias lhs,
+            ILinkedAliasGetter rhs)
         {
-            ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -606,11 +551,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IMovementDirectionData lhs,
-            IMovementDirectionDataGetter rhs,
-            MovementDirectionData.TranslationMask? copyMask = null)
+            this ILinkedAlias lhs,
+            ILinkedAliasGetter rhs,
+            LinkedAlias.TranslationMask? copyMask = null)
         {
-            ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -619,28 +564,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IMovementDirectionData lhs,
-            IMovementDirectionDataGetter rhs,
-            out MovementDirectionData.ErrorMask errorMask,
-            MovementDirectionData.TranslationMask? copyMask = null)
+            this ILinkedAlias lhs,
+            ILinkedAliasGetter rhs,
+            out LinkedAlias.ErrorMask errorMask,
+            LinkedAlias.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = MovementDirectionData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LinkedAlias.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMovementDirectionData lhs,
-            IMovementDirectionDataGetter rhs,
+            this ILinkedAlias lhs,
+            ILinkedAliasGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -648,32 +593,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static MovementDirectionData DeepCopy(
-            this IMovementDirectionDataGetter item,
-            MovementDirectionData.TranslationMask? copyMask = null)
+        public static LinkedAlias DeepCopy(
+            this ILinkedAliasGetter item,
+            LinkedAlias.TranslationMask? copyMask = null)
         {
-            return ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MovementDirectionData DeepCopy(
-            this IMovementDirectionDataGetter item,
-            out MovementDirectionData.ErrorMask errorMask,
-            MovementDirectionData.TranslationMask? copyMask = null)
+        public static LinkedAlias DeepCopy(
+            this ILinkedAliasGetter item,
+            out LinkedAlias.ErrorMask errorMask,
+            LinkedAlias.TranslationMask? copyMask = null)
         {
-            return ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MovementDirectionData DeepCopy(
-            this IMovementDirectionDataGetter item,
+        public static LinkedAlias DeepCopy(
+            this ILinkedAliasGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -681,11 +626,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMovementDirectionData item,
+            this ILinkedAlias item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((MovementDirectionDataSetterCommon)((IMovementDirectionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LinkedAliasSetterCommon)((ILinkedAliasGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -701,43 +646,41 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum MovementDirectionData_FieldIndex
+    internal enum LinkedAlias_FieldIndex
     {
-        Unused1 = 0,
-        Walk = 1,
-        Run = 2,
-        Unused2 = 3,
+        Keyword = 0,
+        AliasID = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class MovementDirectionData_Registration : ILoquiRegistration
+    internal partial class LinkedAlias_Registration : ILoquiRegistration
     {
-        public static readonly MovementDirectionData_Registration Instance = new MovementDirectionData_Registration();
+        public static readonly LinkedAlias_Registration Instance = new LinkedAlias_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(MovementDirectionData.Mask<>);
+        public static readonly Type MaskType = typeof(LinkedAlias.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MovementDirectionData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LinkedAlias.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MovementDirectionData);
+        public static readonly Type ClassType = typeof(LinkedAlias);
 
-        public static readonly Type GetterType = typeof(IMovementDirectionDataGetter);
+        public static readonly Type GetterType = typeof(ILinkedAliasGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMovementDirectionData);
+        public static readonly Type SetterType = typeof(ILinkedAlias);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.MovementDirectionData";
+        public const string FullName = "Mutagen.Bethesda.Starfield.LinkedAlias";
 
-        public const string Name = "MovementDirectionData";
+        public const string Name = "LinkedAlias";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -745,7 +688,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(MovementDirectionDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LinkedAliasBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -776,31 +719,30 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class MovementDirectionDataSetterCommon
+    internal partial class LinkedAliasSetterCommon
     {
-        public static readonly MovementDirectionDataSetterCommon Instance = new MovementDirectionDataSetterCommon();
+        public static readonly LinkedAliasSetterCommon Instance = new LinkedAliasSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMovementDirectionData item)
+        public void Clear(ILinkedAlias item)
         {
             ClearPartial();
-            item.Unused1 = default;
-            item.Walk = default;
-            item.Run = default;
-            item.Unused2 = default;
+            item.Keyword.Clear();
+            item.AliasID = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IMovementDirectionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILinkedAlias obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Keyword.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMovementDirectionData item,
+            ILinkedAlias item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -808,23 +750,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MovementDirectionDataBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: LinkedAliasBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class MovementDirectionDataCommon
+    internal partial class LinkedAliasCommon
     {
-        public static readonly MovementDirectionDataCommon Instance = new MovementDirectionDataCommon();
+        public static readonly LinkedAliasCommon Instance = new LinkedAliasCommon();
 
-        public MovementDirectionData.Mask<bool> GetEqualsMask(
-            IMovementDirectionDataGetter item,
-            IMovementDirectionDataGetter rhs,
+        public LinkedAlias.Mask<bool> GetEqualsMask(
+            ILinkedAliasGetter item,
+            ILinkedAliasGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MovementDirectionData.Mask<bool>(false);
-            ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LinkedAlias.Mask<bool>(false);
+            ((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -833,21 +775,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IMovementDirectionDataGetter item,
-            IMovementDirectionDataGetter rhs,
-            MovementDirectionData.Mask<bool> ret,
+            ILinkedAliasGetter item,
+            ILinkedAliasGetter rhs,
+            LinkedAlias.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unused1 = item.Unused1 == rhs.Unused1;
-            ret.Walk = item.Walk.EqualsWithin(rhs.Walk);
-            ret.Run = item.Run.EqualsWithin(rhs.Run);
-            ret.Unused2 = item.Unused2 == rhs.Unused2;
+            ret.Keyword = item.Keyword.Equals(rhs.Keyword);
+            ret.AliasID = item.AliasID == rhs.AliasID;
         }
         
         public string Print(
-            IMovementDirectionDataGetter item,
+            ILinkedAliasGetter item,
             string? name = null,
-            MovementDirectionData.Mask<bool>? printMask = null)
+            LinkedAlias.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -859,18 +799,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IMovementDirectionDataGetter item,
+            ILinkedAliasGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            MovementDirectionData.Mask<bool>? printMask = null)
+            LinkedAlias.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"MovementDirectionData =>");
+                sb.AppendLine($"LinkedAlias =>");
             }
             else
             {
-                sb.AppendLine($"{name} (MovementDirectionData) =>");
+                sb.AppendLine($"{name} (LinkedAlias) =>");
             }
             using (sb.Brace())
             {
@@ -882,61 +822,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IMovementDirectionDataGetter item,
+            ILinkedAliasGetter item,
             StructuredStringBuilder sb,
-            MovementDirectionData.Mask<bool>? printMask = null)
+            LinkedAlias.Mask<bool>? printMask = null)
         {
-            if (printMask?.Unused1 ?? true)
+            if (printMask?.Keyword ?? true)
             {
-                sb.AppendItem(item.Unused1, "Unused1");
+                sb.AppendItem(item.Keyword.FormKey, "Keyword");
             }
-            if (printMask?.Walk ?? true)
+            if (printMask?.AliasID ?? true)
             {
-                sb.AppendItem(item.Walk, "Walk");
-            }
-            if (printMask?.Run ?? true)
-            {
-                sb.AppendItem(item.Run, "Run");
-            }
-            if (printMask?.Unused2 ?? true)
-            {
-                sb.AppendItem(item.Unused2, "Unused2");
+                sb.AppendItem(item.AliasID, "AliasID");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMovementDirectionDataGetter? lhs,
-            IMovementDirectionDataGetter? rhs,
+            ILinkedAliasGetter? lhs,
+            ILinkedAliasGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedAlias_FieldIndex.Keyword) ?? true))
             {
-                if (lhs.Unused1 != rhs.Unused1) return false;
+                if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Walk) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedAlias_FieldIndex.AliasID) ?? true))
             {
-                if (!lhs.Walk.EqualsWithin(rhs.Walk)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Run) ?? true))
-            {
-                if (!lhs.Run.EqualsWithin(rhs.Run)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused2) ?? true))
-            {
-                if (lhs.Unused2 != rhs.Unused2) return false;
+                if (lhs.AliasID != rhs.AliasID) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IMovementDirectionDataGetter item)
+        public virtual int GetHashCode(ILinkedAliasGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unused1);
-            hash.Add(item.Walk);
-            hash.Add(item.Run);
-            hash.Add(item.Unused2);
+            hash.Add(item.Keyword);
+            hash.Add(item.AliasID);
             return hash.ToHashCode();
         }
         
@@ -945,56 +867,49 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return MovementDirectionData.GetNew();
+            return LinkedAlias.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMovementDirectionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILinkedAliasGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.Keyword);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class MovementDirectionDataSetterTranslationCommon
+    internal partial class LinkedAliasSetterTranslationCommon
     {
-        public static readonly MovementDirectionDataSetterTranslationCommon Instance = new MovementDirectionDataSetterTranslationCommon();
+        public static readonly LinkedAliasSetterTranslationCommon Instance = new LinkedAliasSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IMovementDirectionData item,
-            IMovementDirectionDataGetter rhs,
+            ILinkedAlias item,
+            ILinkedAliasGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LinkedAlias_FieldIndex.Keyword) ?? true))
             {
-                item.Unused1 = rhs.Unused1;
+                item.Keyword.SetTo(rhs.Keyword.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Walk) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LinkedAlias_FieldIndex.AliasID) ?? true))
             {
-                item.Walk = rhs.Walk;
-            }
-            if ((copyMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Run) ?? true))
-            {
-                item.Run = rhs.Run;
-            }
-            if ((copyMask?.GetShouldTranslate((int)MovementDirectionData_FieldIndex.Unused2) ?? true))
-            {
-                item.Unused2 = rhs.Unused2;
+                item.AliasID = rhs.AliasID;
             }
         }
         
         #endregion
         
-        public MovementDirectionData DeepCopy(
-            IMovementDirectionDataGetter item,
-            MovementDirectionData.TranslationMask? copyMask = null)
+        public LinkedAlias DeepCopy(
+            ILinkedAliasGetter item,
+            LinkedAlias.TranslationMask? copyMask = null)
         {
-            MovementDirectionData ret = (MovementDirectionData)((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).GetNew();
-            ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LinkedAlias ret = (LinkedAlias)((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).GetNew();
+            ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1003,30 +918,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public MovementDirectionData DeepCopy(
-            IMovementDirectionDataGetter item,
-            out MovementDirectionData.ErrorMask errorMask,
-            MovementDirectionData.TranslationMask? copyMask = null)
+        public LinkedAlias DeepCopy(
+            ILinkedAliasGetter item,
+            out LinkedAlias.ErrorMask errorMask,
+            LinkedAlias.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MovementDirectionData ret = (MovementDirectionData)((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).GetNew();
-            ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LinkedAlias ret = (LinkedAlias)((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).GetNew();
+            ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = MovementDirectionData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LinkedAlias.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public MovementDirectionData DeepCopy(
-            IMovementDirectionDataGetter item,
+        public LinkedAlias DeepCopy(
+            ILinkedAliasGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MovementDirectionData ret = (MovementDirectionData)((MovementDirectionDataCommon)((IMovementDirectionDataGetter)item).CommonInstance()!).GetNew();
-            ((MovementDirectionDataSetterTranslationCommon)((IMovementDirectionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LinkedAlias ret = (LinkedAlias)((LinkedAliasCommon)((ILinkedAliasGetter)item).CommonInstance()!).GetNew();
+            ((LinkedAliasSetterTranslationCommon)((ILinkedAliasGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1042,27 +957,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class MovementDirectionData
+    public partial class LinkedAlias
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MovementDirectionData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => MovementDirectionData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LinkedAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedAlias_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => MovementDirectionDataCommon.Instance;
+        protected object CommonInstance() => LinkedAliasCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return MovementDirectionDataSetterCommon.Instance;
+            return LinkedAliasSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => MovementDirectionDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LinkedAliasSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IMovementDirectionDataGetter.CommonInstance() => this.CommonInstance();
+        object ILinkedAliasGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IMovementDirectionDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILinkedAliasGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IMovementDirectionDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILinkedAliasGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1073,27 +988,23 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class MovementDirectionDataBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class LinkedAliasBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MovementDirectionDataBinaryWriteTranslation Instance = new();
+        public static readonly LinkedAliasBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IMovementDirectionDataGetter item,
+            ILinkedAliasGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Unused1);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Walk);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Run);
-            writer.Write(item.Unused2);
+                item: item.Keyword);
+            writer.Write(item.AliasID);
         }
 
         public void Write(
             MutagenWriter writer,
-            IMovementDirectionDataGetter item,
+            ILinkedAliasGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1107,25 +1018,23 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IMovementDirectionDataGetter)item,
+                item: (ILinkedAliasGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class MovementDirectionDataBinaryCreateTranslation
+    internal partial class LinkedAliasBinaryCreateTranslation
     {
-        public static readonly MovementDirectionDataBinaryCreateTranslation Instance = new MovementDirectionDataBinaryCreateTranslation();
+        public static readonly LinkedAliasBinaryCreateTranslation Instance = new LinkedAliasBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IMovementDirectionData item,
+            ILinkedAlias item,
             MutagenFrame frame)
         {
-            item.Unused1 = frame.ReadInt32();
-            item.Walk = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Run = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unused2 = frame.ReadInt32();
+            item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.AliasID = frame.ReadInt32();
         }
 
     }
@@ -1134,14 +1043,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class MovementDirectionDataBinaryTranslationMixIn
+    public static class LinkedAliasBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IMovementDirectionDataGetter item,
+            this ILinkedAliasGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MovementDirectionDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((LinkedAliasBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1154,54 +1063,53 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class MovementDirectionDataBinaryOverlay :
+    internal partial class LinkedAliasBinaryOverlay :
         PluginBinaryOverlay,
-        IMovementDirectionDataGetter
+        ILinkedAliasGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MovementDirectionData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => MovementDirectionData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LinkedAlias_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LinkedAlias_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => MovementDirectionDataCommon.Instance;
+        protected object CommonInstance() => LinkedAliasCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => MovementDirectionDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LinkedAliasSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IMovementDirectionDataGetter.CommonInstance() => this.CommonInstance();
+        object ILinkedAliasGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IMovementDirectionDataGetter.CommonSetterInstance() => null;
+        object? ILinkedAliasGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IMovementDirectionDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILinkedAliasGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LinkedAliasCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => MovementDirectionDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LinkedAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MovementDirectionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LinkedAliasBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Int32 Unused1 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public Single Walk => _structData.Slice(0x4, 0x4).Float();
-        public Single Run => _structData.Slice(0x8, 0x4).Float();
-        public Int32 Unused2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public IFormLinkGetter<IKeywordGetter> Keyword => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public Int32 AliasID => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected MovementDirectionDataBinaryOverlay(
+        protected LinkedAliasBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1211,7 +1119,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IMovementDirectionDataGetter MovementDirectionDataFactory(
+        public static ILinkedAliasGetter LinkedAliasFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1220,13 +1128,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x10,
+                length: 0x8,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new MovementDirectionDataBinaryOverlay(
+            var ret = new LinkedAliasBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x10;
+            stream.Position += 0x8;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1234,12 +1142,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IMovementDirectionDataGetter MovementDirectionDataFactory(
+        public static ILinkedAliasGetter LinkedAliasFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return MovementDirectionDataFactory(
+            return LinkedAliasFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1251,7 +1159,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MovementDirectionDataMixIn.Print(
+            LinkedAliasMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1262,16 +1170,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMovementDirectionDataGetter rhs) return false;
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILinkedAliasGetter rhs) return false;
+            return ((LinkedAliasCommon)((ILinkedAliasGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IMovementDirectionDataGetter? obj)
+        public bool Equals(ILinkedAliasGetter? obj)
         {
-            return ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LinkedAliasCommon)((ILinkedAliasGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((MovementDirectionDataCommon)((IMovementDirectionDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LinkedAliasCommon)((ILinkedAliasGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

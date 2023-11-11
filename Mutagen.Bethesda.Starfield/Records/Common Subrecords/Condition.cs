@@ -2597,4 +2597,23 @@ abstract partial class ConditionBinaryOverlay
             getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),
             locs: recordLocs);
     }
+
+    public static IReadOnlyList<IConditionGetter> ConstructBinayOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
+    {
+        var span = stream.RemainingMemory;
+        var pos = stream.Position;
+        var recordLocs = ParseRecordLocations(
+            stream: stream,
+            finalPos: long.MaxValue,
+            constants: package.MetaData.Constants.SubConstants,
+            trigger: RecordTypes.CTDA,
+            includeTriggers: IncludeTriggers,
+            skipHeader: false);
+        span = span.Slice(0, stream.Position - pos);
+        return BinaryOverlayList.FactoryByArray<IConditionGetter>(
+            mem: span,
+            package: package,
+            getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),
+            locs: recordLocs);
+    }
 }

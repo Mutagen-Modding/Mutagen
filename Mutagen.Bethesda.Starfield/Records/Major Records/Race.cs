@@ -11,6 +11,62 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class Race
 {
+    [Flags]
+    public enum Flag : ulong
+    {
+        Playable = 0x0000_0001,
+        FaceGenHead = 0x0000_0002,
+        Child = 0x0000_0004,
+        TiltFrontBack = 0x0000_0008,
+        TiltLeftRight = 0x0000_0010,
+        NoShadow = 0x0000_0020,
+        Swims = 0x0000_0040,
+        Flies = 0x0000_0080,
+        Walks = 0x0000_0100,
+        Immobile = 0x0000_0200,
+        NotPunishable = 0x0000_0400,
+        NoCombatInWater = 0x0000_0800,
+        NoRotatingToHeadTrack = 0x0000_1000,
+        DontShowBloodSpray = 0x0000_2000,
+        DontShowBloodDecal = 0x0000_4000,
+        UsesHeadTrackAnims = 0x0000_8000,
+        SpellsAlignWithMagicNode = 0x0001_0000,
+        UseWorldRaycastsForFootIK = 0x0002_0000,
+        AllowRagdollCollision = 0x0004_0000,
+        RegenHpInCombat = 0x0008_0000,
+        CantOpenDoors = 0x0010_0000,
+        AllowPcDialog = 0x0020_0000,
+        NoKnockdowns = 0x0040_0000,
+        AllowPickpocket = 0x0080_0000,
+        AlwaysUseProxyController = 0x0100_0000,
+        DontShowWeaponBlood = 0x0200_0000,
+        OverlayHeadPartList = 0x0400_0000,
+        OverrideHeadPartList = 0x0800_0000,
+        CanPickupItems = 0x1000_0000,
+        AllowMultipleMembraneShaders = 0x2000_0000,
+        CanDualWield = 0x4000_0000,
+        AvoidsRoads = 0x8000_0000,
+        UseAdvancedAvoidance = 0x0000_0001_0000_0000,
+        NonHostile = 0x0000_0002_0000_0000,
+        Floats = 0x0000_0004_0000_0000,
+        HeadAxisBit0 = 0x0000_0020_0000_0000,
+        HeadAxisBit1 = 0x0000_0040_0000_0000,
+        CanMeleeWhenKnockedDown = 0x0000_0080_0000_0000,
+        UseIdleChatterDuringCombat = 0x0000_0100_0000_0000,
+        Ungendered = 0x0000_0200_0000_0000,
+        CanMoveWhenKnockedDown = 0x0000_0400_0000_0000,
+        UseLargeActorPathing = 0x0000_0800_0000_0000,
+        UseSubsegmentedDamage = 0x0000_1000_0000_0000,
+        FlightDeferKill = 0x0000_2000_0000_0000,
+        FlightAllowProceduralCrashLand = 0x0000_8000_0000_0000,
+        DisableWeaponCulling = 0x0001_0000_0000_0000,
+        UseOptimalSpeeds = 0x0002_0000_0000_0000,
+        HasFacialRig = 0x0004_0000_0000_0000,
+        CanUseCrippledLimbs = 0x0008_0000_0000_0000,
+        UseQuadrupedController = 0x0010_0000_0000_0000,
+        LowPriorityPushable = 0x0020_0000_0000_0000,
+        CannotUsePlayableItems = 0x0040_0000_0000_0000
+    }
 }
 
 partial class RaceBinaryCreateTranslation
@@ -42,14 +98,6 @@ partial class RaceBinaryCreateTranslation
         {
             return ParseSkeletalModel(item, frame.SpawnAll());
         }
-        else if (lastParsed.ParsedIndex < (int)Race_FieldIndex.BehaviorGraph)
-        {
-            return ParseBehaviorGraph(item, frame.SpawnAll());
-        }
-        else if (lastParsed.ParsedIndex < (int)Race_FieldIndex.HeadData)
-        {
-            return ParseHeadData(item, frame.SpawnAll());
-        }
 
         return null;
     }
@@ -64,31 +112,6 @@ partial class RaceBinaryCreateTranslation
             femaleMarker: RecordTypes.FNAM,
             transl: SkeletalModel.TryCreateFromBinary);
         return (int)Race_FieldIndex.SkeletalModel;
-    }
-
-    private static ParseResult ParseHeadData(
-        IRaceInternal item,
-        MutagenFrame frame)
-    {
-        item.HeadData = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<HeadData>(
-            frame: frame,
-            maleMarker: RecordTypes.MNAM,
-            femaleMarker: RecordTypes.FNAM,
-            femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-            transl: HeadData.TryCreateFromBinary);
-        return (int)Race_FieldIndex.HeadData;
-    }
-
-    private static ParseResult ParseBehaviorGraph(
-        IRaceInternal item,
-        MutagenFrame frame)
-    {
-        item.BehaviorGraph = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
-            frame: frame,
-            maleMarker: RecordTypes.MNAM,
-            femaleMarker: RecordTypes.FNAM,
-            transl: Model.TryCreateFromBinary);
-        return (int)Race_FieldIndex.BehaviorGraph;
     }
 
     public static partial void FillBinaryBipedObjectsCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
@@ -143,9 +166,6 @@ partial class RaceBinaryCreateTranslation
 partial class RaceBinaryOverlay
 {
     public IGenderedItemGetter<ISkeletalModelGetter?>? SkeletalModel { get; private set; }
-    public IGenderedItemGetter<IHeadDataGetter?>? HeadData { get; private set; }
-
-    public IGenderedItemGetter<IModelGetter?> BehaviorGraph { get; private set; } = new GenderedItem<IModelGetter?>(null, null);
 
     public IReadOnlyDictionary<BipedObject, IBipedObjectDataGetter> BipedObjects { get; private set; } =
         DictionaryExt.Empty<BipedObject, IBipedObjectDataGetter>();
@@ -178,37 +198,13 @@ partial class RaceBinaryOverlay
         int offset,
         PreviousParse lastParsed)
     {
-        if (lastParsed.ParsedIndex < (int)Race_FieldIndex.SkeletalModel)
-        {
-            SkeletalModel = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<ISkeletalModelGetter>(
-                package: _package,
-                male: RecordTypes.MNAM,
-                female: RecordTypes.FNAM,
-                stream: stream,
-                creator: SkeletalModelBinaryOverlay.SkeletalModelFactory);
-            return (int)Race_FieldIndex.SkeletalModel;
-        }
-        else if (lastParsed.ParsedIndex < (int)Race_FieldIndex.BehaviorGraph)
-        {
-            BehaviorGraph = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IModelGetter>(
-                package: _package,
-                male: RecordTypes.MNAM,
-                female: RecordTypes.FNAM,
-                stream: stream,
-                creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r));
-            return (int)Race_FieldIndex.BehaviorGraph;
-        }
-        else
-        {
-            HeadData = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadDataGetter>(
-                package: _package,
-                male: RecordTypes.MNAM,
-                female: RecordTypes.FNAM,
-                stream: stream,
-                femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-                creator: HeadDataBinaryOverlay.HeadDataFactory);
-            return (int)Race_FieldIndex.HeadData;
-        }
+        SkeletalModel = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<ISkeletalModelGetter>(
+            package: _package,
+            male: RecordTypes.MNAM,
+            female: RecordTypes.FNAM,
+            stream: stream,
+            creator: SkeletalModelBinaryOverlay.SkeletalModelFactory);
+        return (int)Race_FieldIndex.SkeletalModel;
     }
 
     public partial ParseResult NAM3CustomParse(
@@ -222,28 +218,6 @@ partial class RaceBinaryOverlay
 
 partial class RaceBinaryWriteTranslation
 {
-
-    public static partial void WriteBinaryBehaviorGraphCustom(
-        MutagenWriter writer,
-        IRaceGetter item)
-    {
-        GenderedItemBinaryTranslation.Write(
-            writer: writer,
-            item: item.BehaviorGraph,
-            maleMarker: RecordTypes.MNAM,
-            femaleMarker: RecordTypes.FNAM,
-            markerWrap: false,
-            transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams conv) =>
-            {
-                if (subItem is {} Item)
-                {
-                    ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                }
-            });
-    }
     public static partial void WriteBinaryBipedObjectsCustom(MutagenWriter writer, IRaceGetter item)
     {
         var bipedObjs = item.BipedObjects;
@@ -299,28 +273,6 @@ partial class RaceBinaryWriteTranslation
         using (HeaderExport.Subrecord(writer, RecordTypes.NAM3))
         {
         }
-    }
-
-    public static partial void WriteBinaryHeadDataCustom(
-        MutagenWriter writer,
-        IRaceGetter item)
-    {
-        GenderedItemBinaryTranslation.Write(
-            writer: writer,
-            item: item.HeadData,
-            maleMarker: RecordTypes.MNAM,
-            femaleMarker: RecordTypes.FNAM,
-            markerWrap: false,
-            transl: static (MutagenWriter subWriter, IHeadDataGetter? subItem, TypedWriteParams conv) =>
-            {
-                if (subItem is {} Item)
-                {
-                    ((HeadDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                }
-            });
     }
 
     public static partial void WriteBinarySkeletalModelCustom(
