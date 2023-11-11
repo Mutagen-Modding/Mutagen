@@ -51,8 +51,8 @@
         <Fields>
           <UInt16 name="ArmorRating" />
           <UInt16 name="BaseAddonIndex" />
-          <UInt16 name="StaggerRating" />
-          <UInt16 name="Unknown" />
+          <UInt8 name="StaggerRating" />
+          <ByteArray name="Unused" byteLength="3" nullable="false" />
         </Fields>
       </Data>
       <RefList name="Resistances" refName="ArmorResistance" recordType="DAMA" />
