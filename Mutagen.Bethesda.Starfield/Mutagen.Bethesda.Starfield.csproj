@@ -5304,9 +5304,6 @@
     <Compile Include="Records\Major Records\MovementRotationData_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ChargenAndSkintones_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\FaceDial_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>

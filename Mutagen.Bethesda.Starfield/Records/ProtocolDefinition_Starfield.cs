@@ -81,7 +81,6 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Cell_Registration.Instance,
             CellNavmeshParent_Registration.Instance,
             Challenge_Registration.Instance,
-            ChargenAndSkintones_Registration.Instance,
             CheckContrabandStatusConditionData_Registration.Instance,
             Class_Registration.Instance,
             Climate_Registration.Instance,

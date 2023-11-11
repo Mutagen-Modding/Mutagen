@@ -85,17 +85,6 @@
       <FormLink name="BaseMovementDefault" refName="MovementType" recordType="WKMV" />
       <FormLink name="BaseMovementSwimDefault" refName="MovementType" recordType="SWMV" />
       <FormLink name="BaseMovementFlyDefault" refName="MovementType" recordType="FLMV" />
-      <Gendered name="ChargenAndSkintones" maleMarker="MNAM" femaleMarker="FNAM" >
-        <FemaleTypeOverrides>
-          <Mapping From="RPRM" To="RPRF" />
-          <Mapping From="FTSM" To="FTSF" />
-          <Mapping From="AHCM" To="AHCF" />
-          <Mapping From="DFTM" To="DFTF" />
-        </FemaleTypeOverrides>
-        <Fields>
-          <RefDirect refName="ChargenAndSkintones" />
-        </Fields>
-      </Gendered>
       <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
       <FormLink name="SubgraphTemplateRace" refName="Race" recordType="SRAC" />
       <RefList name="Subgraphs" refName="Subgraph" />
@@ -158,21 +147,6 @@
     <Fields>
       <String name="Name" binary="NoGeneration" />
       <FormLink name="Conditions" refName="ActorValueInformation" binary="NoGeneration" />
-    </Fields>
-  </Object>
-  <Object name="ChargenAndSkintones" objType="Subrecord" markerType="NAM0" >
-    <Fields>
-      <ByteArray name="NNAM" byteLength="12" unknown="true" recordType="NNAM" nullable="False" />
-      <List name="RacePresets">
-        <FormLink refName="Npc" recordType="RPRM" />
-      </List>
-      <RefList name="MorphGroups" refName="MorphGroup" />
-      <RefList name="FaceMorphPhenotypes" refName="FaceMorphPhenotype" />
-      <RefList name="FaceDials" refName="FaceDial" />
-      <String name="BodySkinTones" recordType="BSTT" />
-      <String name="HandSkinTones" recordType="HSTT" />
-      <String name="FCTP" recordType="FCTP" unknown="true" />
-      <String name="FaceSkinTones" recordType="FSTT" />
     </Fields>
   </Object>
   <Object name="FaceDial" objType="Subrecord">

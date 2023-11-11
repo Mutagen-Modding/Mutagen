@@ -343,10 +343,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMovementTypeGetter> IRaceGetter.BaseMovementFlyDefault => this.BaseMovementFlyDefault;
         #endregion
-        #region ChargenAndSkintones
-        public IGenderedItem<ChargenAndSkintones?>? ChargenAndSkintones { get; set; }
-        IGenderedItemGetter<IChargenAndSkintonesGetter?>? IRaceGetter.ChargenAndSkintones => this.ChargenAndSkintones;
-        #endregion
         #region ArmorRace
         private readonly IFormLinkNullable<IRaceGetter> _ArmorRace = new FormLinkNullable<IRaceGetter>();
         public IFormLinkNullable<IRaceGetter> ArmorRace
@@ -476,7 +472,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.BaseMovementDefault = initialValue;
                 this.BaseMovementSwimDefault = initialValue;
                 this.BaseMovementFlyDefault = initialValue;
-                this.ChargenAndSkintones = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ChargenAndSkintones.Mask<TItem>?>?>?>(initialValue, default);
                 this.ArmorRace = initialValue;
                 this.SubgraphTemplateRace = initialValue;
                 this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
@@ -523,7 +518,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem BaseMovementDefault,
                 TItem BaseMovementSwimDefault,
                 TItem BaseMovementFlyDefault,
-                TItem ChargenAndSkintones,
                 TItem ArmorRace,
                 TItem SubgraphTemplateRace,
                 TItem Subgraphs,
@@ -569,7 +563,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.BaseMovementDefault = BaseMovementDefault;
                 this.BaseMovementSwimDefault = BaseMovementSwimDefault;
                 this.BaseMovementFlyDefault = BaseMovementFlyDefault;
-                this.ChargenAndSkintones = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ChargenAndSkintones.Mask<TItem>?>?>?>(ChargenAndSkintones, default);
                 this.ArmorRace = ArmorRace;
                 this.SubgraphTemplateRace = SubgraphTemplateRace;
                 this.Subgraphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>(Subgraphs, Enumerable.Empty<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>());
@@ -617,7 +610,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem BaseMovementDefault;
             public TItem BaseMovementSwimDefault;
             public TItem BaseMovementFlyDefault;
-            public MaskItem<TItem, GenderedItem<MaskItem<TItem, ChargenAndSkintones.Mask<TItem>?>?>?>? ChargenAndSkintones;
             public TItem ArmorRace;
             public TItem SubgraphTemplateRace;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Subgraph.Mask<TItem>?>>?>? Subgraphs;
@@ -667,7 +659,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.BaseMovementDefault, rhs.BaseMovementDefault)) return false;
                 if (!object.Equals(this.BaseMovementSwimDefault, rhs.BaseMovementSwimDefault)) return false;
                 if (!object.Equals(this.BaseMovementFlyDefault, rhs.BaseMovementFlyDefault)) return false;
-                if (!object.Equals(this.ChargenAndSkintones, rhs.ChargenAndSkintones)) return false;
                 if (!object.Equals(this.ArmorRace, rhs.ArmorRace)) return false;
                 if (!object.Equals(this.SubgraphTemplateRace, rhs.SubgraphTemplateRace)) return false;
                 if (!object.Equals(this.Subgraphs, rhs.Subgraphs)) return false;
@@ -709,7 +700,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.BaseMovementDefault);
                 hash.Add(this.BaseMovementSwimDefault);
                 hash.Add(this.BaseMovementFlyDefault);
-                hash.Add(this.ChargenAndSkintones);
                 hash.Add(this.ArmorRace);
                 hash.Add(this.SubgraphTemplateRace);
                 hash.Add(this.Subgraphs);
@@ -856,9 +846,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.BaseMovementDefault)) return false;
                 if (!eval(this.BaseMovementSwimDefault)) return false;
                 if (!eval(this.BaseMovementFlyDefault)) return false;
-                if (!GenderedItem.AllMask(
-                    this.ChargenAndSkintones,
-                    eval: eval)) return false;
                 if (!eval(this.ArmorRace)) return false;
                 if (!eval(this.SubgraphTemplateRace)) return false;
                 if (this.Subgraphs != null)
@@ -1027,9 +1014,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.BaseMovementDefault)) return true;
                 if (eval(this.BaseMovementSwimDefault)) return true;
                 if (eval(this.BaseMovementFlyDefault)) return true;
-                if (GenderedItem.AnyMask(
-                    this.ChargenAndSkintones,
-                    eval: eval)) return true;
                 if (eval(this.ArmorRace)) return true;
                 if (eval(this.SubgraphTemplateRace)) return true;
                 if (this.Subgraphs != null)
@@ -1220,10 +1204,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.BaseMovementDefault = eval(this.BaseMovementDefault);
                 obj.BaseMovementSwimDefault = eval(this.BaseMovementSwimDefault);
                 obj.BaseMovementFlyDefault = eval(this.BaseMovementFlyDefault);
-                obj.ChargenAndSkintones = GenderedItem.TranslateHelper(
-                    this.ChargenAndSkintones,
-                    eval,
-                    (m, e) => m?.Translate(e));
                 obj.ArmorRace = eval(this.ArmorRace);
                 obj.SubgraphTemplateRace = eval(this.SubgraphTemplateRace);
                 if (Subgraphs != null)
@@ -1535,11 +1515,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(BaseMovementFlyDefault, "BaseMovementFlyDefault");
                     }
-                    if (ChargenAndSkintones != null
-                        && (printMask?.ChargenAndSkintones?.Overall ?? true))
-                    {
-                        sb.AppendLine($"ChargenAndSkintones => {ChargenAndSkintones}");
-                    }
                     if (printMask?.ArmorRace ?? true)
                     {
                         sb.AppendItem(ArmorRace, "ArmorRace");
@@ -1645,7 +1620,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? BaseMovementDefault;
             public Exception? BaseMovementSwimDefault;
             public Exception? BaseMovementFlyDefault;
-            public MaskItem<Exception?, GenderedItem<Exception?>?>? ChargenAndSkintones;
             public Exception? ArmorRace;
             public Exception? SubgraphTemplateRace;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>? Subgraphs;
@@ -1717,8 +1691,6 @@ namespace Mutagen.Bethesda.Starfield
                         return BaseMovementSwimDefault;
                     case Race_FieldIndex.BaseMovementFlyDefault:
                         return BaseMovementFlyDefault;
-                    case Race_FieldIndex.ChargenAndSkintones:
-                        return ChargenAndSkintones;
                     case Race_FieldIndex.ArmorRace:
                         return ArmorRace;
                     case Race_FieldIndex.SubgraphTemplateRace:
@@ -1827,9 +1799,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Race_FieldIndex.BaseMovementFlyDefault:
                         this.BaseMovementFlyDefault = ex;
-                        break;
-                    case Race_FieldIndex.ChargenAndSkintones:
-                        this.ChargenAndSkintones = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case Race_FieldIndex.ArmorRace:
                         this.ArmorRace = ex;
@@ -1950,9 +1919,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Race_FieldIndex.BaseMovementFlyDefault:
                         this.BaseMovementFlyDefault = (Exception?)obj;
                         break;
-                    case Race_FieldIndex.ChargenAndSkintones:
-                        this.ChargenAndSkintones = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
-                        break;
                     case Race_FieldIndex.ArmorRace:
                         this.ArmorRace = (Exception?)obj;
                         break;
@@ -2016,7 +1982,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (BaseMovementDefault != null) return true;
                 if (BaseMovementSwimDefault != null) return true;
                 if (BaseMovementFlyDefault != null) return true;
-                if (ChargenAndSkintones != null) return true;
                 if (ArmorRace != null) return true;
                 if (SubgraphTemplateRace != null) return true;
                 if (Subgraphs != null) return true;
@@ -2274,10 +2239,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(BaseMovementFlyDefault, "BaseMovementFlyDefault");
                 }
-                if (ChargenAndSkintones != null)
-                {
-                    sb.AppendLine($"ChargenAndSkintones => {ChargenAndSkintones}");
-                }
                 {
                     sb.AppendItem(ArmorRace, "ArmorRace");
                 }
@@ -2371,7 +2332,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.BaseMovementDefault = this.BaseMovementDefault.Combine(rhs.BaseMovementDefault);
                 ret.BaseMovementSwimDefault = this.BaseMovementSwimDefault.Combine(rhs.BaseMovementSwimDefault);
                 ret.BaseMovementFlyDefault = this.BaseMovementFlyDefault.Combine(rhs.BaseMovementFlyDefault);
-                ret.ChargenAndSkintones = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.ChargenAndSkintones?.Overall, rhs.ChargenAndSkintones?.Overall), GenderedItem.Combine(this.ChargenAndSkintones?.Specific, rhs.ChargenAndSkintones?.Specific));
                 ret.ArmorRace = this.ArmorRace.Combine(rhs.ArmorRace);
                 ret.SubgraphTemplateRace = this.SubgraphTemplateRace.Combine(rhs.SubgraphTemplateRace);
                 ret.Subgraphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Subgraph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Subgraphs?.Overall, rhs.Subgraphs?.Overall), Noggog.ExceptionExt.Combine(this.Subgraphs?.Specific, rhs.Subgraphs?.Specific));
@@ -2430,7 +2390,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool BaseMovementDefault;
             public bool BaseMovementSwimDefault;
             public bool BaseMovementFlyDefault;
-            public GenderedItem<ChargenAndSkintones.TranslationMask>? ChargenAndSkintones;
             public bool ArmorRace;
             public bool SubgraphTemplateRace;
             public Subgraph.TranslationMask? Subgraphs;
@@ -2505,7 +2464,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((BaseMovementDefault, null));
                 ret.Add((BaseMovementSwimDefault, null));
                 ret.Add((BaseMovementFlyDefault, null));
-                ret.Add((ChargenAndSkintones != null || DefaultOn, null));
                 ret.Add((ArmorRace, null));
                 ret.Add((SubgraphTemplateRace, null));
                 ret.Add((Subgraphs == null ? DefaultOn : !Subgraphs.GetCrystal().CopyNothing, Subgraphs?.GetCrystal()));
@@ -2706,7 +2664,6 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IMovementTypeGetter> BaseMovementDefault { get; set; }
         new IFormLinkNullable<IMovementTypeGetter> BaseMovementSwimDefault { get; set; }
         new IFormLinkNullable<IMovementTypeGetter> BaseMovementFlyDefault { get; set; }
-        new IGenderedItem<ChargenAndSkintones?>? ChargenAndSkintones { get; set; }
         new IFormLinkNullable<IRaceGetter> ArmorRace { get; set; }
         new IFormLinkNullable<IRaceGetter> SubgraphTemplateRace { get; set; }
         new ExtendedList<Subgraph> Subgraphs { get; }
@@ -2727,7 +2684,6 @@ namespace Mutagen.Bethesda.Starfield
         new IGenderedItem<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; set; }
         new IGenderedItem<BodyData?> BodyData { get; set; }
         new IDictionary<BipedObject, BipedObjectData> BipedObjects { get; }
-        new IGenderedItem<ChargenAndSkintones?>? ChargenAndSkintones { get; set; }
         new IGenderedItem<HeadPartsAndBoneModifiers?>? HeadPartsAndBoneModifiers { get; set; }
     }
 
@@ -2784,7 +2740,6 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementSwimDefault { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault { get; }
-        IGenderedItemGetter<IChargenAndSkintonesGetter?>? ChargenAndSkintones { get; }
         IFormLinkNullableGetter<IRaceGetter> ArmorRace { get; }
         IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace { get; }
         IReadOnlyList<ISubgraphGetter> Subgraphs { get; }
@@ -2997,16 +2952,15 @@ namespace Mutagen.Bethesda.Starfield
         BaseMovementDefault = 31,
         BaseMovementSwimDefault = 32,
         BaseMovementFlyDefault = 33,
-        ChargenAndSkintones = 34,
-        ArmorRace = 35,
-        SubgraphTemplateRace = 36,
-        Subgraphs = 37,
-        IdleChatterTimeMin = 38,
-        IdleChatterTimeMax = 39,
-        DialogueQuest = 40,
-        HeadPartsAndBoneModifiers = 41,
-        MannequinSkinSwaps = 42,
-        PluralName = 43,
+        ArmorRace = 34,
+        SubgraphTemplateRace = 35,
+        Subgraphs = 36,
+        IdleChatterTimeMin = 37,
+        IdleChatterTimeMax = 38,
+        DialogueQuest = 39,
+        HeadPartsAndBoneModifiers = 40,
+        MannequinSkinSwaps = 41,
+        PluralName = 42,
     }
     #endregion
 
@@ -3017,9 +2971,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 37;
+        public const ushort AdditionalFieldCount = 36;
 
-        public const ushort FieldCount = 44;
+        public const ushort FieldCount = 43;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -3099,10 +3053,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.WKMV,
                 RecordTypes.SWMV,
                 RecordTypes.FLMV,
-                RecordTypes.RPRF,
-                RecordTypes.FTSF,
-                RecordTypes.AHCF,
-                RecordTypes.DFTF,
                 RecordTypes.RNAM,
                 RecordTypes.SRAC,
                 RecordTypes.SAKD,
@@ -3119,19 +3069,6 @@ namespace Mutagen.Bethesda.Starfield
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
-        public static RecordTypeConverter ChargenAndSkintonesFemaleConverter = new RecordTypeConverter(
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.RPRM,
-                RecordTypes.RPRF),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.FTSM,
-                RecordTypes.FTSF),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.AHCM,
-                RecordTypes.AHCF),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.DFTM,
-                RecordTypes.DFTF));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -3200,7 +3137,6 @@ namespace Mutagen.Bethesda.Starfield
             item.BaseMovementDefault.Clear();
             item.BaseMovementSwimDefault.Clear();
             item.BaseMovementFlyDefault.Clear();
-            item.ChargenAndSkintones = null;
             item.ArmorRace.Clear();
             item.SubgraphTemplateRace.Clear();
             item.Subgraphs.Clear();
@@ -3247,7 +3183,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.BaseMovementDefault.Relink(mapping);
             obj.BaseMovementSwimDefault.Relink(mapping);
             obj.BaseMovementFlyDefault.Relink(mapping);
-            obj.ChargenAndSkintones?.RemapLinks(mapping);
             obj.ArmorRace.Relink(mapping);
             obj.SubgraphTemplateRace.Relink(mapping);
             obj.Subgraphs.RemapLinks(mapping);
@@ -3422,11 +3357,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.BaseMovementDefault = item.BaseMovementDefault.Equals(rhs.BaseMovementDefault);
             ret.BaseMovementSwimDefault = item.BaseMovementSwimDefault.Equals(rhs.BaseMovementSwimDefault);
             ret.BaseMovementFlyDefault = item.BaseMovementFlyDefault.Equals(rhs.BaseMovementFlyDefault);
-            ret.ChargenAndSkintones = GenderedItem.EqualityMaskHelper(
-                lhs: item.ChargenAndSkintones,
-                rhs: rhs.ChargenAndSkintones,
-                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
-                include: include);
             ret.ArmorRace = item.ArmorRace.Equals(rhs.ArmorRace);
             ret.SubgraphTemplateRace = item.SubgraphTemplateRace.Equals(rhs.SubgraphTemplateRace);
             ret.Subgraphs = item.Subgraphs.CollectionEqualsHelper(
@@ -3693,11 +3623,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.BaseMovementFlyDefault.FormKeyNullable, "BaseMovementFlyDefault");
             }
-            if ((printMask?.ChargenAndSkintones?.Overall ?? true)
-                && item.ChargenAndSkintones is {} ChargenAndSkintonesItem)
-            {
-                ChargenAndSkintonesItem?.Print(sb, "ChargenAndSkintones");
-            }
             if (printMask?.ArmorRace ?? true)
             {
                 sb.AppendItem(item.ArmorRace.FormKeyNullable, "ArmorRace");
@@ -3924,10 +3849,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.BaseMovementFlyDefault.Equals(rhs.BaseMovementFlyDefault)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ChargenAndSkintones) ?? true))
-            {
-                if (!Equals(lhs.ChargenAndSkintones, rhs.ChargenAndSkintones)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
                 if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
@@ -4037,10 +3958,6 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.BaseMovementDefault);
             hash.Add(item.BaseMovementSwimDefault);
             hash.Add(item.BaseMovementFlyDefault);
-            if (item.ChargenAndSkintones is {} ChargenAndSkintonesitem)
-            {
-                hash.Add(HashCode.Combine(ChargenAndSkintonesitem.Male, ChargenAndSkintonesitem.Female));
-            }
             hash.Add(item.ArmorRace);
             hash.Add(item.SubgraphTemplateRace);
             hash.Add(item.Subgraphs);
@@ -4185,13 +4102,6 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.BaseMovementFlyDefault, out var BaseMovementFlyDefaultInfo))
             {
                 yield return BaseMovementFlyDefaultInfo;
-            }
-            if (obj.ChargenAndSkintones is {} ChargenAndSkintonesItem)
-            {
-                foreach (var item in ChargenAndSkintonesItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
             }
             if (FormLinkInformation.TryFactory(obj.ArmorRace, out var ArmorRaceInfo))
             {
@@ -4627,20 +4537,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementFlyDefault) ?? true))
             {
                 item.BaseMovementFlyDefault.SetTo(rhs.BaseMovementFlyDefault.FormKeyNullable);
-            }
-            if (rhs.ChargenAndSkintones is not {} rhsChargenAndSkintonesitem)
-            {
-                item.ChargenAndSkintones = null;
-            }
-            else
-            {
-                item.ChargenAndSkintones = new GenderedItem<ChargenAndSkintones?>(
-                    male: rhsChargenAndSkintonesitem.Male?.DeepCopy(
-                        errorMask: errorMask,
-                        default(TranslationCrystal)),
-                    female: rhsChargenAndSkintonesitem.Female?.DeepCopy(
-                        errorMask: errorMask,
-                        default(TranslationCrystal)));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
@@ -5087,23 +4983,6 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.BaseMovementFlyDefault,
                 header: translationParams.ConvertToCustom(RecordTypes.FLMV));
-            GenderedItemBinaryTranslation.Write(
-                writer: writer,
-                item: item.ChargenAndSkintones,
-                maleMarker: RecordTypes.MNAM,
-                femaleMarker: RecordTypes.FNAM,
-                markerWrap: false,
-                femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter,
-                transl: (MutagenWriter subWriter, IChargenAndSkintonesGetter? subItem, TypedWriteParams conv) =>
-                {
-                    if (subItem is {} Item)
-                    {
-                        ((ChargenAndSkintonesBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            translationParams: conv);
-                    }
-                });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ArmorRace,
@@ -5398,16 +5277,6 @@ namespace Mutagen.Bethesda.Starfield
                             item: item,
                             lastParsed: lastParsed);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.BaseMovementFlyDefault)
-                    {
-                        item.ChargenAndSkintones = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<ChargenAndSkintones>(
-                            frame: frame,
-                            maleMarker: RecordTypes.MNAM,
-                            femaleMarker: RecordTypes.FNAM,
-                            femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter,
-                            transl: ChargenAndSkintones.TryCreateFromBinary);
-                        return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, nextRecordType);
-                    }
                     else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.DialogueQuest)
                     {
                         item.HeadPartsAndBoneModifiers = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<HeadPartsAndBoneModifiers>(
@@ -5427,14 +5296,6 @@ namespace Mutagen.Bethesda.Starfield
                                     item: item,
                                     lastParsed: lastParsed);
                             case 1:
-                                item.ChargenAndSkintones = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<ChargenAndSkintones>(
-                                    frame: frame,
-                                    maleMarker: RecordTypes.MNAM,
-                                    femaleMarker: RecordTypes.FNAM,
-                                    femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter,
-                                    transl: ChargenAndSkintones.TryCreateFromBinary);
-                                return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, nextRecordType);
-                            case 2:
                                 item.HeadPartsAndBoneModifiers = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<HeadPartsAndBoneModifiers>(
                                     frame: frame,
                                     maleMarker: RecordTypes.MNAM,
@@ -5456,16 +5317,6 @@ namespace Mutagen.Bethesda.Starfield
                             item: item,
                             lastParsed: lastParsed);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.BaseMovementFlyDefault)
-                    {
-                        item.ChargenAndSkintones = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<ChargenAndSkintones>(
-                            frame: frame,
-                            maleMarker: RecordTypes.MNAM,
-                            femaleMarker: RecordTypes.FNAM,
-                            femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter,
-                            transl: ChargenAndSkintones.TryCreateFromBinary);
-                        return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, nextRecordType);
-                    }
                     else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.DialogueQuest)
                     {
                         item.HeadPartsAndBoneModifiers = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<HeadPartsAndBoneModifiers>(
@@ -5485,14 +5336,6 @@ namespace Mutagen.Bethesda.Starfield
                                     item: item,
                                     lastParsed: lastParsed);
                             case 1:
-                                item.ChargenAndSkintones = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<ChargenAndSkintones>(
-                                    frame: frame,
-                                    maleMarker: RecordTypes.MNAM,
-                                    femaleMarker: RecordTypes.FNAM,
-                                    femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter,
-                                    transl: ChargenAndSkintones.TryCreateFromBinary);
-                                return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, nextRecordType);
-                            case 2:
                                 item.HeadPartsAndBoneModifiers = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<HeadPartsAndBoneModifiers>(
                                     frame: frame,
                                     maleMarker: RecordTypes.MNAM,
@@ -5913,10 +5756,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _BaseMovementFlyDefaultLocation;
         public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault => _BaseMovementFlyDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementFlyDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
-        #region ChargenAndSkintones
-        private IGenderedItemGetter<IChargenAndSkintonesGetter?>? _ChargenAndSkintonesOverlay;
-        public IGenderedItemGetter<IChargenAndSkintonesGetter?>? ChargenAndSkintones => _ChargenAndSkintonesOverlay;
-        #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
@@ -6090,17 +5929,6 @@ namespace Mutagen.Bethesda.Starfield
                             offset,
                             lastParsed: lastParsed);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.BaseMovementFlyDefault)
-                    {
-                        _ChargenAndSkintonesOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IChargenAndSkintonesGetter>(
-                            package: _package,
-                            male: RecordTypes.MNAM,
-                            female: RecordTypes.FNAM,
-                            stream: stream,
-                            creator: static (s, p, r) => ChargenAndSkintonesBinaryOverlay.ChargenAndSkintonesFactory(s, p, r),
-                            femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter);
-                        return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, type);
-                    }
                     else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.DialogueQuest)
                     {
                         _HeadPartsAndBoneModifiersOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadPartsAndBoneModifiersGetter>(
@@ -6122,15 +5950,6 @@ namespace Mutagen.Bethesda.Starfield
                                     offset,
                                     lastParsed: lastParsed);
                             case 1:
-                                _ChargenAndSkintonesOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IChargenAndSkintonesGetter>(
-                                    package: _package,
-                                    male: RecordTypes.MNAM,
-                                    female: RecordTypes.FNAM,
-                                    stream: stream,
-                                    creator: static (s, p, r) => ChargenAndSkintonesBinaryOverlay.ChargenAndSkintonesFactory(s, p, r),
-                                    femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter);
-                                return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, type);
-                            case 2:
                                 _HeadPartsAndBoneModifiersOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadPartsAndBoneModifiersGetter>(
                                     package: _package,
                                     male: RecordTypes.MNAM,
@@ -6154,17 +5973,6 @@ namespace Mutagen.Bethesda.Starfield
                             offset,
                             lastParsed: lastParsed);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.BaseMovementFlyDefault)
-                    {
-                        _ChargenAndSkintonesOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IChargenAndSkintonesGetter>(
-                            package: _package,
-                            male: RecordTypes.MNAM,
-                            female: RecordTypes.FNAM,
-                            stream: stream,
-                            creator: static (s, p, r) => ChargenAndSkintonesBinaryOverlay.ChargenAndSkintonesFactory(s, p, r),
-                            femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter);
-                        return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, type);
-                    }
                     else if (lastParsed.ParsedIndex.Value <= (int)Race_FieldIndex.DialogueQuest)
                     {
                         _HeadPartsAndBoneModifiersOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadPartsAndBoneModifiersGetter>(
@@ -6186,15 +5994,6 @@ namespace Mutagen.Bethesda.Starfield
                                     offset,
                                     lastParsed: lastParsed);
                             case 1:
-                                _ChargenAndSkintonesOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IChargenAndSkintonesGetter>(
-                                    package: _package,
-                                    male: RecordTypes.MNAM,
-                                    female: RecordTypes.FNAM,
-                                    stream: stream,
-                                    creator: static (s, p, r) => ChargenAndSkintonesBinaryOverlay.ChargenAndSkintonesFactory(s, p, r),
-                                    femaleRecordConverter: Race_Registration.ChargenAndSkintonesFemaleConverter);
-                                return new ParseResult((int)Race_FieldIndex.ChargenAndSkintones, type);
-                            case 2:
                                 _HeadPartsAndBoneModifiersOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IHeadPartsAndBoneModifiersGetter>(
                                     package: _package,
                                     male: RecordTypes.MNAM,

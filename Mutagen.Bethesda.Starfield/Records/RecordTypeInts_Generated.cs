@@ -12,7 +12,6 @@ public partial class RecordTypeInts
     public const int ADDN = 0x4E444441;
     public const int AEAR = 0x52414541;
     public const int AFFE = 0x45464641;
-    public const int AHCF = 0x46434841;
     public const int AHCM = 0x4D434841;
     public const int ALCA = 0x41434C41;
     public const int ALCC = 0x43434C41;
@@ -98,7 +97,6 @@ public partial class RecordTypeInts
     public const int BOOK = 0x4B4F4F42;
     public const int BPTD = 0x44545042;
     public const int BSIZ = 0x5A495342;
-    public const int BSTT = 0x54545342;
     public const int BTXT = 0x54585442;
     public const int CAMS = 0x534D4143;
     public const int CELL = 0x4C4C4543;
@@ -142,7 +140,6 @@ public partial class RecordTypeInts
     public const int DEST = 0x54534544;
     public const int DEVT = 0x54564544;
     public const int DFOB = 0x424F4644;
-    public const int DFTF = 0x46544644;
     public const int DFTM = 0x4D544644;
     public const int DIAL = 0x4C414944;
     public const int DLBR = 0x52424C44;
@@ -184,7 +181,6 @@ public partial class RecordTypeInts
     public const int ETYP = 0x50595445;
     public const int EXPL = 0x4C505845;
     public const int FACT = 0x54434146;
-    public const int FCTP = 0x50544346;
     public const int FDSI = 0x49534446;
     public const int FDSL = 0x4C534446;
     public const int FFKW = 0x574B4646;
@@ -206,8 +202,6 @@ public partial class RecordTypeInts
     public const int FORC = 0x43524F46;
     public const int FSTP = 0x50545346;
     public const int FSTS = 0x53545346;
-    public const int FSTT = 0x54545346;
-    public const int FTSF = 0x46535446;
     public const int FTSM = 0x4D535446;
     public const int FTYP = 0x50595446;
     public const int FULL = 0x4C4C5546;
@@ -229,7 +223,6 @@ public partial class RecordTypeInts
     public const int HEDR = 0x52444548;
     public const int HERD = 0x44524548;
     public const int HNAM = 0x4D414E48;
-    public const int HSTT = 0x54545348;
     public const int IDLE = 0x454C4449;
     public const int IDLM = 0x4D4C4449;
     public const int IMAD = 0x44414D49;
@@ -402,8 +395,6 @@ public partial class RecordTypeInts
     public const int REVB = 0x42564552;
     public const int RFGP = 0x50474652;
     public const int RNAM = 0x4D414E52;
-    public const int RPRF = 0x46525052;
-    public const int RPRM = 0x4D525052;
     public const int RQPK = 0x4B505152;
     public const int RSCS = 0x53435352;
     public const int RSGD = 0x44475352;
