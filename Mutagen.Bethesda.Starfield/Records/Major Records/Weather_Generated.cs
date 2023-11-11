@@ -4104,9 +4104,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.HNAM,
                 RecordTypes.DALC,
                 RecordTypes.MODL,
+                RecordTypes.MODT,
                 RecordTypes.MOLM,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
+                RecordTypes.MODC,
                 RecordTypes.GNAM,
                 RecordTypes.UNAM,
                 RecordTypes.VNAM,
@@ -7344,9 +7346,11 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 {
                     item.Aurora = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
                         frame: frame,
@@ -8078,9 +8082,11 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 {
                     this.Aurora = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

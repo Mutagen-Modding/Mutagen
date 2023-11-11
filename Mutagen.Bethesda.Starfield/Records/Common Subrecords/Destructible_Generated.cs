@@ -951,9 +951,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DSTF,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
+                RecordTypes.MODT,
                 RecordTypes.MOLM,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
+                RecordTypes.MODC,
                 RecordTypes.DMDS);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });

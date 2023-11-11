@@ -1335,9 +1335,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
                 RecordTypes.MODL,
+                RecordTypes.MODT,
                 RecordTypes.MOLM,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
+                RecordTypes.MODC,
                 RecordTypes.DATA,
                 RecordTypes.ANAM,
                 RecordTypes.ENAM,
@@ -2451,9 +2453,11 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)LegendaryItem_FieldIndex.ODTY;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 {
                     item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
                         frame: frame,
@@ -2672,9 +2676,11 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)LegendaryItem_FieldIndex.ODTY;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

@@ -287,6 +287,7 @@ public partial class RecordTypeInts
     public const int MNAM = 0x4D414E4D;
     public const int MO4S = 0x53344F4D;
     public const int MOD4 = 0x34444F4D;
+    public const int MODC = 0x43444F4D;
     public const int MODL = 0x4C444F4D;
     public const int MODT = 0x54444F4D;
     public const int MOLM = 0x4D4C4F4D;

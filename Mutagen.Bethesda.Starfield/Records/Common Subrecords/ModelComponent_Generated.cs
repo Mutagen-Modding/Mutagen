@@ -643,9 +643,11 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
                 RecordTypes.MODL,
+                RecordTypes.MODT,
                 RecordTypes.MOLM,
                 RecordTypes.FLLD,
-                RecordTypes.XFLG);
+                RecordTypes.XFLG,
+                RecordTypes.MODC);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ModelComponentBinaryWriteTranslation);
@@ -1165,9 +1167,11 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 {
                     item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
                         frame: frame,
@@ -1297,9 +1301,11 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

@@ -289,6 +289,7 @@ public partial class RecordTypes
     public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType MO4S = new(0x53344F4D);
     public static readonly RecordType MOD4 = new(0x34444F4D);
+    public static readonly RecordType MODC = new(0x43444F4D);
     public static readonly RecordType MODL = new(0x4C444F4D);
     public static readonly RecordType MODT = new(0x54444F4D);
     public static readonly RecordType MOLM = new(0x4D4C4F4D);

@@ -7305,9 +7305,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.MODT,
                 RecordTypes.MOLM,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
+                RecordTypes.MODC,
                 RecordTypes.EITM,
                 RecordTypes.EAMT,
                 RecordTypes.ETYP,
@@ -11819,8 +11821,10 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
@@ -13309,8 +13313,10 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
                 case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
