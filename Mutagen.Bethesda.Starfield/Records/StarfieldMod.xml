@@ -28,8 +28,8 @@
       <Group name="Spells" refName="Spell" />
       <Group name="Activators" refName="Activator" />
       <Group name="CurveTables" refName="CurveTable" />
-      <Group name="Weapons" refName="Weapon" />
       <Group name="Curve3Ds" refName="Curve3D" />
+      <Group name="Weapons" refName="Weapon" />
       <Group name="Perks" refName="Perk" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="StaticCollections" refName="StaticCollection" />
