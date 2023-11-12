@@ -860,6 +860,7 @@
         <xs:attribute name="maleMarker" type="xs:string" />
         <xs:attribute name="femaleMarker" type="xs:string" />
         <xs:attribute name="markerPerGender" type="xs:boolean" />
+        <xs:attribute name="shortCircuit" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

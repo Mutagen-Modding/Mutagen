@@ -101,6 +101,11 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
             }
 
+            if (!gender.ShortCircuit)
+            {
+                args.Add("shortCircuit: false");
+            }
+
             bool needsRecordConv = gender.SubTypeGeneration.NeedsRecordConverter();
             if (subTransl.AllowDirectParse(objGen, gender.SubTypeGeneration, false))
             {
@@ -472,6 +477,12 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         {
                             args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
                         }
+
+                        if (!gendered.ShortCircuit)
+                        {
+                            args.Add("shortCircuit: false");
+                        }
+                        
                         if (notNull)
                         {
                             args.Add($"fallback: {gendered.SubTypeGeneration.GetDefault(getter: false)}");

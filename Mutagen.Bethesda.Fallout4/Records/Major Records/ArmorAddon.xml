@@ -22,7 +22,7 @@
           <Float name="WeaponAdjust" />
         </Fields>
       </Data>
-      <Gendered name="WorldModel">
+      <Gendered name="WorldModel" shortCircuit="false">
         <MaleTypeOverrides>
           <Mapping From="MODL" To="MOD2" />
           <Mapping From="MODC" To="MO2C" />
@@ -41,7 +41,7 @@
           <RefDirect refName="Model" />
         </Fields>
       </Gendered>
-      <Gendered name="FirstPersonModel">
+      <Gendered name="FirstPersonModel" shortCircuit="false">
         <MaleTypeOverrides>
           <Mapping From="MODL" To="MOD4" />
           <Mapping From="MODC" To="MO4C" />

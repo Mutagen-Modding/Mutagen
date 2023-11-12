@@ -43,20 +43,21 @@ internal sealed class GenderedItemBinaryTranslation
         MutagenFrame frame,
         BinaryMasterParseDelegate<TItem> transl,
         RecordTypeConverter femaleRecordConverter,
-        RecordTypeConverter? maleRecordConverter = null)
+        RecordTypeConverter? maleRecordConverter = null,
+        bool shortCircuit = true)
         where TItem : class
     {
         if (!transl(frame, out var male, new TypedParseParams(
                 lengthOverride: null,
                 recordTypeConverter: maleRecordConverter,
-                doNotShortCircuit: true)))
+                doNotShortCircuit: !shortCircuit)))
         {
             male = null;
         }
         if (!transl(frame, out var female, new TypedParseParams(
                 lengthOverride: null,
                 recordTypeConverter: femaleRecordConverter,
-                doNotShortCircuit: true)))
+                doNotShortCircuit: !shortCircuit)))
         {
             female = null;
         }

@@ -2737,6 +2737,7 @@ namespace Mutagen.Bethesda.Fallout4
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
+                        shortCircuit: false,
                         transl: Model.TryCreateFromBinary);
                     return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
@@ -2753,6 +2754,7 @@ namespace Mutagen.Bethesda.Fallout4
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
+                        shortCircuit: false,
                         transl: Model.TryCreateFromBinary);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
@@ -3050,7 +3052,8 @@ namespace Mutagen.Bethesda.Fallout4
                         stream: stream,
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
-                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter);
+                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
+                        shortCircuit: false);
                     return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -3067,7 +3070,8 @@ namespace Mutagen.Bethesda.Fallout4
                         stream: stream,
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
-                        maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter);
+                        maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
+                        shortCircuit: false);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
