@@ -10,6 +10,7 @@
       <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
       <ByteArray name="XFLG" recordType="XFLG" unknown="true" />
       <Float name="ColorRemappingIndex" recordType="MODC" />
+      <Enum name="Flags" enumName="Model.Flag" byteLength="1" recordType="MODF" />
     </Fields>
   </Object>
   <Object name="FirstPersonModel" objType="Subrecord">

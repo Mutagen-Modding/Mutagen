@@ -40,14 +40,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class MRPHRecord :
+    public partial class MorphableObject :
         StarfieldMajorRecord,
-        IEquatable<IMRPHRecordGetter>,
-        ILoquiObjectSetter<MRPHRecord>,
-        IMRPHRecordInternal
+        IEquatable<IMorphableObjectGetter>,
+        ILoquiObjectSetter<MorphableObject>,
+        IMorphableObjectInternal
     {
         #region Ctor
-        protected MRPHRecord()
+        protected MorphableObject()
         {
             CustomCtor();
         }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MRPHRecordMixIn.Print(
+            MorphableObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MRPHRecord.Mask<R>();
+                var ret = new MorphableObject.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -163,16 +163,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(MRPHRecord.Mask<bool>? printMask = null)
+            public string Print(MorphableObject.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, MRPHRecord.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MorphableObject.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(MRPHRecord.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(MorphableObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                MRPHRecord_FieldIndex enu = (MRPHRecord_FieldIndex)index;
+                MorphableObject_FieldIndex enu = (MorphableObject_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                MRPHRecord_FieldIndex enu = (MRPHRecord_FieldIndex)index;
+                MorphableObject_FieldIndex enu = (MorphableObject_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                MRPHRecord_FieldIndex enu = (MRPHRecord_FieldIndex)index;
+                MorphableObject_FieldIndex enu = (MorphableObject_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -295,8 +295,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = MRPHRecord_Registration.TriggeringRecordType;
-        public MRPHRecord(
+        public static readonly RecordType GrupRecordType = MorphableObject_Registration.TriggeringRecordType;
+        public MorphableObject(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private MRPHRecord(
+        private MorphableObject(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal MRPHRecord(
+        internal MorphableObject(
             FormKey formKey,
             ushort formVersion)
         {
@@ -323,14 +323,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public MRPHRecord(IStarfieldMod mod)
+        public MorphableObject(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public MRPHRecord(IStarfieldMod mod, string editorID)
+        public MorphableObject(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -340,10 +340,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<MRPHRecord>.ToString(this);
+            return MajorRecordPrinter<MorphableObject>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IMRPHRecord);
+        protected override Type LinkType => typeof(IMorphableObject);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -352,16 +352,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IMRPHRecordGetter rhs) return false;
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMorphableObjectGetter rhs) return false;
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IMRPHRecordGetter? obj)
+        public bool Equals(IMorphableObjectGetter? obj)
         {
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((MRPHRecordCommon)((IMRPHRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MorphableObjectCommon)((IMorphableObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -369,23 +369,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MRPHRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MorphableObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MRPHRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MorphableObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static MRPHRecord CreateFromBinary(
+        public new static MorphableObject CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new MRPHRecord();
-            ((MRPHRecordSetterCommon)((IMRPHRecordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MorphableObject();
+            ((MorphableObjectSetterCommon)((IMorphableObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out MRPHRecord item,
+            out MorphableObject item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -411,82 +411,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((MRPHRecordSetterCommon)((IMRPHRecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MorphableObjectSetterCommon)((IMorphableObjectGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new MRPHRecord GetNew()
+        internal static new MorphableObject GetNew()
         {
-            return new MRPHRecord();
+            return new MorphableObject();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMRPHRecord :
-        ILoquiObjectSetter<IMRPHRecordInternal>,
-        IMRPHRecordGetter,
+    public partial interface IMorphableObject :
+        ILoquiObjectSetter<IMorphableObjectInternal>,
+        IMorphableObjectGetter,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface IMRPHRecordInternal :
+    public partial interface IMorphableObjectInternal :
         IStarfieldMajorRecordInternal,
-        IMRPHRecord,
-        IMRPHRecordGetter
+        IMorphableObject,
+        IMorphableObjectGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.MRPH)]
-    public partial interface IMRPHRecordGetter :
+    public partial interface IMorphableObjectGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IMRPHRecordGetter>,
-        IMapsToGetter<IMRPHRecordGetter>
+        ILoquiObject<IMorphableObjectGetter>,
+        IMapsToGetter<IMorphableObjectGetter>
     {
-        static new ILoquiRegistration StaticRegistration => MRPHRecord_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => MorphableObject_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MRPHRecordMixIn
+    public static partial class MorphableObjectMixIn
     {
-        public static void Clear(this IMRPHRecordInternal item)
+        public static void Clear(this IMorphableObjectInternal item)
         {
-            ((MRPHRecordSetterCommon)((IMRPHRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MorphableObjectSetterCommon)((IMorphableObjectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MRPHRecord.Mask<bool> GetEqualsMask(
-            this IMRPHRecordGetter item,
-            IMRPHRecordGetter rhs,
+        public static MorphableObject.Mask<bool> GetEqualsMask(
+            this IMorphableObjectGetter item,
+            IMorphableObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IMRPHRecordGetter item,
+            this IMorphableObjectGetter item,
             string? name = null,
-            MRPHRecord.Mask<bool>? printMask = null)
+            MorphableObject.Mask<bool>? printMask = null)
         {
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).Print(
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IMRPHRecordGetter item,
+            this IMorphableObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            MRPHRecord.Mask<bool>? printMask = null)
+            MorphableObject.Mask<bool>? printMask = null)
         {
-            ((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).Print(
+            ((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -494,39 +494,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IMRPHRecordGetter item,
-            IMRPHRecordGetter rhs,
-            MRPHRecord.TranslationMask? equalsMask = null)
+            this IMorphableObjectGetter item,
+            IMorphableObjectGetter rhs,
+            MorphableObject.TranslationMask? equalsMask = null)
         {
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).Equals(
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IMRPHRecordInternal lhs,
-            IMRPHRecordGetter rhs,
-            out MRPHRecord.ErrorMask errorMask,
-            MRPHRecord.TranslationMask? copyMask = null)
+            this IMorphableObjectInternal lhs,
+            IMorphableObjectGetter rhs,
+            out MorphableObject.ErrorMask errorMask,
+            MorphableObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = MRPHRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MorphableObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMRPHRecordInternal lhs,
-            IMRPHRecordGetter rhs,
+            this IMorphableObjectInternal lhs,
+            IMorphableObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -534,55 +534,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static MRPHRecord DeepCopy(
-            this IMRPHRecordGetter item,
-            MRPHRecord.TranslationMask? copyMask = null)
+        public static MorphableObject DeepCopy(
+            this IMorphableObjectGetter item,
+            MorphableObject.TranslationMask? copyMask = null)
         {
-            return ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MRPHRecord DeepCopy(
-            this IMRPHRecordGetter item,
-            out MRPHRecord.ErrorMask errorMask,
-            MRPHRecord.TranslationMask? copyMask = null)
+        public static MorphableObject DeepCopy(
+            this IMorphableObjectGetter item,
+            out MorphableObject.ErrorMask errorMask,
+            MorphableObject.TranslationMask? copyMask = null)
         {
-            return ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MRPHRecord DeepCopy(
-            this IMRPHRecordGetter item,
+        public static MorphableObject DeepCopy(
+            this IMorphableObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static MRPHRecord Duplicate(
-            this IMRPHRecordGetter item,
+        public static MorphableObject Duplicate(
+            this IMorphableObjectGetter item,
             FormKey formKey,
-            MRPHRecord.TranslationMask? copyMask = null)
+            MorphableObject.TranslationMask? copyMask = null)
         {
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).Duplicate(
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static MRPHRecord Duplicate(
-            this IMRPHRecordGetter item,
+        public static MorphableObject Duplicate(
+            this IMorphableObjectGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).Duplicate(
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -592,11 +592,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMRPHRecordInternal item,
+            this IMorphableObjectInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((MRPHRecordSetterCommon)((IMRPHRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MorphableObjectSetterCommon)((IMorphableObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum MRPHRecord_FieldIndex
+    internal enum MorphableObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -625,9 +625,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class MRPHRecord_Registration : ILoquiRegistration
+    internal partial class MorphableObject_Registration : ILoquiRegistration
     {
-        public static readonly MRPHRecord_Registration Instance = new MRPHRecord_Registration();
+        public static readonly MorphableObject_Registration Instance = new MorphableObject_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -635,23 +635,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(MRPHRecord.Mask<>);
+        public static readonly Type MaskType = typeof(MorphableObject.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MRPHRecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MorphableObject.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MRPHRecord);
+        public static readonly Type ClassType = typeof(MorphableObject);
 
-        public static readonly Type GetterType = typeof(IMRPHRecordGetter);
+        public static readonly Type GetterType = typeof(IMorphableObjectGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMRPHRecord);
+        public static readonly Type SetterType = typeof(IMorphableObject);
 
-        public static readonly Type? InternalSetterType = typeof(IMRPHRecordInternal);
+        public static readonly Type? InternalSetterType = typeof(IMorphableObjectInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.MRPHRecord";
+        public const string FullName = "Mutagen.Bethesda.Starfield.MorphableObject";
 
-        public const string Name = "MRPHRecord";
+        public const string Name = "MorphableObject";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.MRPH);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(MRPHRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MorphableObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -697,13 +697,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class MRPHRecordSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class MorphableObjectSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly MRPHRecordSetterCommon Instance = new MRPHRecordSetterCommon();
+        public new static readonly MorphableObjectSetterCommon Instance = new MorphableObjectSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMRPHRecordInternal item)
+        public void Clear(IMorphableObjectInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -711,16 +711,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IMRPHRecordInternal)item);
+            Clear(item: (IMorphableObjectInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IMRPHRecordInternal)item);
+            Clear(item: (IMorphableObjectInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IMRPHRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMorphableObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -729,16 +729,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMRPHRecordInternal item,
+            IMorphableObjectInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IMRPHRecordInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IMorphableObjectInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: MRPHRecordBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: MRPHRecordBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: MorphableObjectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MorphableObjectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (MRPHRecord)item,
+                item: (MorphableObject)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (MRPHRecord)item,
+                item: (MorphableObject)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -766,17 +766,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class MRPHRecordCommon : StarfieldMajorRecordCommon
+    internal partial class MorphableObjectCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly MRPHRecordCommon Instance = new MRPHRecordCommon();
+        public new static readonly MorphableObjectCommon Instance = new MorphableObjectCommon();
 
-        public MRPHRecord.Mask<bool> GetEqualsMask(
-            IMRPHRecordGetter item,
-            IMRPHRecordGetter rhs,
+        public MorphableObject.Mask<bool> GetEqualsMask(
+            IMorphableObjectGetter item,
+            IMorphableObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MRPHRecord.Mask<bool>(false);
-            ((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MorphableObject.Mask<bool>(false);
+            ((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -785,18 +785,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IMRPHRecordGetter item,
-            IMRPHRecordGetter rhs,
-            MRPHRecord.Mask<bool> ret,
+            IMorphableObjectGetter item,
+            IMorphableObjectGetter rhs,
+            MorphableObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IMRPHRecordGetter item,
+            IMorphableObjectGetter item,
             string? name = null,
-            MRPHRecord.Mask<bool>? printMask = null)
+            MorphableObject.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -808,18 +808,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IMRPHRecordGetter item,
+            IMorphableObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            MRPHRecord.Mask<bool>? printMask = null)
+            MorphableObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"MRPHRecord =>");
+                sb.AppendLine($"MorphableObject =>");
             }
             else
             {
-                sb.AppendLine($"{name} (MRPHRecord) =>");
+                sb.AppendLine($"{name} (MorphableObject) =>");
             }
             using (sb.Brace())
             {
@@ -831,9 +831,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IMRPHRecordGetter item,
+            IMorphableObjectGetter item,
             StructuredStringBuilder sb,
-            MRPHRecord.Mask<bool>? printMask = null)
+            MorphableObject.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -841,41 +841,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static MRPHRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static MorphableObject_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new MRPHRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new MorphableObject_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (MRPHRecord_FieldIndex)((int)index);
+                    return (MorphableObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -883,8 +883,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMRPHRecordGetter? lhs,
-            IMRPHRecordGetter? rhs,
+            IMorphableObjectGetter? lhs,
+            IMorphableObjectGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -898,8 +898,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IMRPHRecordGetter?)lhs,
-                rhs: rhs as IMRPHRecordGetter,
+                lhs: (IMorphableObjectGetter?)lhs,
+                rhs: rhs as IMorphableObjectGetter,
                 equalsMask: equalsMask);
         }
         
@@ -909,12 +909,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IMRPHRecordGetter?)lhs,
-                rhs: rhs as IMRPHRecordGetter,
+                lhs: (IMorphableObjectGetter?)lhs,
+                rhs: rhs as IMorphableObjectGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IMRPHRecordGetter item)
+        public virtual int GetHashCode(IMorphableObjectGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -923,12 +923,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IMRPHRecordGetter)item);
+            return GetHashCode(item: (IMorphableObjectGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IMRPHRecordGetter)item);
+            return GetHashCode(item: (IMorphableObjectGetter)item);
         }
         
         #endregion
@@ -936,11 +936,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return MRPHRecord.GetNew();
+            return MorphableObject.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMRPHRecordGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMorphableObjectGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -950,12 +950,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public MRPHRecord Duplicate(
-            IMRPHRecordGetter item,
+        public MorphableObject Duplicate(
+            IMorphableObjectGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new MRPHRecord(formKey, item.FormVersion);
+            var newRec = new MorphableObject(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -966,7 +966,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMRPHRecordGetter)item,
+                item: (IMorphableObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMRPHRecordGetter)item,
+                item: (IMorphableObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -987,14 +987,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class MRPHRecordSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class MorphableObjectSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly MRPHRecordSetterTranslationCommon Instance = new MRPHRecordSetterTranslationCommon();
+        public new static readonly MorphableObjectSetterTranslationCommon Instance = new MorphableObjectSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IMRPHRecordInternal item,
-            IMRPHRecordGetter rhs,
+            IMorphableObjectInternal item,
+            IMorphableObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1008,8 +1008,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IMRPHRecord item,
-            IMRPHRecordGetter rhs,
+            IMorphableObject item,
+            IMorphableObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1030,8 +1030,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMRPHRecordInternal)item,
-                rhs: (IMRPHRecordGetter)rhs,
+                item: (IMorphableObjectInternal)item,
+                rhs: (IMorphableObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1045,8 +1045,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMRPHRecord)item,
-                rhs: (IMRPHRecordGetter)rhs,
+                item: (IMorphableObject)item,
+                rhs: (IMorphableObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1060,8 +1060,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMRPHRecordInternal)item,
-                rhs: (IMRPHRecordGetter)rhs,
+                item: (IMorphableObjectInternal)item,
+                rhs: (IMorphableObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1075,8 +1075,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IMRPHRecord)item,
-                rhs: (IMRPHRecordGetter)rhs,
+                item: (IMorphableObject)item,
+                rhs: (IMorphableObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1084,12 +1084,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public MRPHRecord DeepCopy(
-            IMRPHRecordGetter item,
-            MRPHRecord.TranslationMask? copyMask = null)
+        public MorphableObject DeepCopy(
+            IMorphableObjectGetter item,
+            MorphableObject.TranslationMask? copyMask = null)
         {
-            MRPHRecord ret = (MRPHRecord)((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).GetNew();
-            ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MorphableObject ret = (MorphableObject)((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).GetNew();
+            ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1098,30 +1098,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public MRPHRecord DeepCopy(
-            IMRPHRecordGetter item,
-            out MRPHRecord.ErrorMask errorMask,
-            MRPHRecord.TranslationMask? copyMask = null)
+        public MorphableObject DeepCopy(
+            IMorphableObjectGetter item,
+            out MorphableObject.ErrorMask errorMask,
+            MorphableObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MRPHRecord ret = (MRPHRecord)((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).GetNew();
-            ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MorphableObject ret = (MorphableObject)((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).GetNew();
+            ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = MRPHRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MorphableObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public MRPHRecord DeepCopy(
-            IMRPHRecordGetter item,
+        public MorphableObject DeepCopy(
+            IMorphableObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MRPHRecord ret = (MRPHRecord)((MRPHRecordCommon)((IMRPHRecordGetter)item).CommonInstance()!).GetNew();
-            ((MRPHRecordSetterTranslationCommon)((IMRPHRecordGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MorphableObject ret = (MorphableObject)((MorphableObjectCommon)((IMorphableObjectGetter)item).CommonInstance()!).GetNew();
+            ((MorphableObjectSetterTranslationCommon)((IMorphableObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1137,21 +1137,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class MRPHRecord
+    public partial class MorphableObject
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MRPHRecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => MRPHRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MorphableObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MorphableObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MRPHRecordCommon.Instance;
+        protected override object CommonInstance() => MorphableObjectCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return MRPHRecordSetterCommon.Instance;
+            return MorphableObjectSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MRPHRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MorphableObjectSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1162,15 +1162,15 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class MRPHRecordBinaryWriteTranslation :
+    public partial class MorphableObjectBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly MRPHRecordBinaryWriteTranslation Instance = new();
+        public new static readonly MorphableObjectBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IMRPHRecordGetter item,
+            IMorphableObjectGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IMRPHRecordGetter)item,
+                item: (IMorphableObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IMRPHRecordGetter)item,
+                item: (IMorphableObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1225,16 +1225,16 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IMRPHRecordGetter)item,
+                item: (IMorphableObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class MRPHRecordBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class MorphableObjectBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly MRPHRecordBinaryCreateTranslation Instance = new MRPHRecordBinaryCreateTranslation();
+        public new static readonly MorphableObjectBinaryCreateTranslation Instance = new MorphableObjectBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.MRPH;
     }
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class MRPHRecordBinaryTranslationMixIn
+    public static class MorphableObjectBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1252,35 +1252,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class MRPHRecordBinaryOverlay :
+    internal partial class MorphableObjectBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IMRPHRecordGetter
+        IMorphableObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MRPHRecord_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => MRPHRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MorphableObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MorphableObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MRPHRecordCommon.Instance;
+        protected override object CommonInstance() => MorphableObjectCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MRPHRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MorphableObjectSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MRPHRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MorphableObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MRPHRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MorphableObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IMRPHRecord);
+        protected override Type LinkType => typeof(IMorphableObject);
 
 
         partial void CustomFactoryEnd(
@@ -1289,7 +1289,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected MRPHRecordBinaryOverlay(
+        protected MorphableObjectBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IMRPHRecordGetter MRPHRecordFactory(
+        public static IMorphableObjectGetter MorphableObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new MRPHRecordBinaryOverlay(
+            var ret = new MorphableObjectBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1329,12 +1329,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IMRPHRecordGetter MRPHRecordFactory(
+        public static IMorphableObjectGetter MorphableObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return MRPHRecordFactory(
+            return MorphableObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MRPHRecordMixIn.Print(
+            MorphableObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<MRPHRecord>.ToString(this);
+            return MajorRecordPrinter<MorphableObject>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1366,16 +1366,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IMRPHRecordGetter rhs) return false;
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMorphableObjectGetter rhs) return false;
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IMRPHRecordGetter? obj)
+        public bool Equals(IMorphableObjectGetter? obj)
         {
-            return ((MRPHRecordCommon)((IMRPHRecordGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MorphableObjectCommon)((IMorphableObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((MRPHRecordCommon)((IMRPHRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MorphableObjectCommon)((IMorphableObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

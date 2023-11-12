@@ -111,6 +111,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
         #endregion
+        #region Flags
+        public Model.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Model.Flag? IModelGetter.Flags => this.Flags;
+        #endregion
 
         #region To String
 
@@ -156,6 +161,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FLLD = initialValue;
                 this.XFLG = initialValue;
                 this.ColorRemappingIndex = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -164,7 +170,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MaterialSwaps,
                 TItem FLLD,
                 TItem XFLG,
-                TItem ColorRemappingIndex)
+                TItem ColorRemappingIndex,
+                TItem Flags)
             {
                 this.File = File;
                 this.TextureFileHashes = TextureFileHashes;
@@ -172,6 +179,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FLLD = FLLD;
                 this.XFLG = XFLG;
                 this.ColorRemappingIndex = ColorRemappingIndex;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -189,6 +197,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem FLLD;
             public TItem XFLG;
             public TItem ColorRemappingIndex;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -207,6 +216,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
                 if (!object.Equals(this.XFLG, rhs.XFLG)) return false;
                 if (!object.Equals(this.ColorRemappingIndex, rhs.ColorRemappingIndex)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -218,6 +228,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.FLLD);
                 hash.Add(this.XFLG);
                 hash.Add(this.ColorRemappingIndex);
+                hash.Add(this.Flags);
                 return hash.ToHashCode();
             }
 
@@ -242,6 +253,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.FLLD)) return false;
                 if (!eval(this.XFLG)) return false;
                 if (!eval(this.ColorRemappingIndex)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -265,6 +277,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.FLLD)) return true;
                 if (eval(this.XFLG)) return true;
                 if (eval(this.ColorRemappingIndex)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -298,6 +311,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FLLD = eval(this.FLLD);
                 obj.XFLG = eval(this.XFLG);
                 obj.ColorRemappingIndex = eval(this.ColorRemappingIndex);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -357,6 +371,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                     }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
                 }
             }
             #endregion
@@ -387,6 +405,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? FLLD;
             public Exception? XFLG;
             public Exception? ColorRemappingIndex;
+            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -407,6 +426,8 @@ namespace Mutagen.Bethesda.Starfield
                         return XFLG;
                     case Model_FieldIndex.ColorRemappingIndex:
                         return ColorRemappingIndex;
+                    case Model_FieldIndex.Flags:
+                        return Flags;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -434,6 +455,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Model_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = ex;
+                        break;
+                    case Model_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -463,6 +487,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Model_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = (Exception?)obj;
                         break;
+                    case Model_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -477,6 +504,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (FLLD != null) return true;
                 if (XFLG != null) return true;
                 if (ColorRemappingIndex != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -537,6 +565,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                 }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -551,6 +582,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.FLLD = this.FLLD.Combine(rhs.FLLD);
                 ret.XFLG = this.XFLG.Combine(rhs.XFLG);
                 ret.ColorRemappingIndex = this.ColorRemappingIndex.Combine(rhs.ColorRemappingIndex);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -580,6 +612,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool FLLD;
             public bool XFLG;
             public bool ColorRemappingIndex;
+            public bool Flags;
             #endregion
 
             #region Ctors
@@ -595,6 +628,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FLLD = defaultOn;
                 this.XFLG = defaultOn;
                 this.ColorRemappingIndex = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -616,6 +650,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((FLLD, null));
                 ret.Add((XFLG, null));
                 ret.Add((ColorRemappingIndex, null));
+                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -705,6 +740,7 @@ namespace Mutagen.Bethesda.Starfield
         new MemorySlice<Byte>? FLLD { get; set; }
         new MemorySlice<Byte>? XFLG { get; set; }
         new Single? ColorRemappingIndex { get; set; }
+        new Model.Flag? Flags { get; set; }
     }
 
     public partial interface IModelGetter :
@@ -727,6 +763,7 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? FLLD { get; }
         ReadOnlyMemorySlice<Byte>? XFLG { get; }
         Single? ColorRemappingIndex { get; }
+        Model.Flag? Flags { get; }
 
     }
 
@@ -902,6 +939,7 @@ namespace Mutagen.Bethesda.Starfield
         FLLD = 3,
         XFLG = 4,
         ColorRemappingIndex = 5,
+        Flags = 6,
     }
     #endregion
 
@@ -912,9 +950,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Model.Mask<>);
 
@@ -949,7 +987,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MOLM,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
-                RecordTypes.MODC);
+                RecordTypes.MODC,
+                RecordTypes.MODF);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ModelBinaryWriteTranslation);
@@ -998,6 +1037,7 @@ namespace Mutagen.Bethesda.Starfield
             item.FLLD = default;
             item.XFLG = default;
             item.ColorRemappingIndex = default;
+            item.Flags = default;
         }
         
         #region Mutagen
@@ -1078,6 +1118,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
             ret.XFLG = MemorySliceExt.SequenceEqual(item.XFLG, rhs.XFLG);
             ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
+            ret.Flags = item.Flags == rhs.Flags;
         }
         
         public string Print(
@@ -1162,6 +1203,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
             }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
         }
         
         #region Equals and Hash
@@ -1195,6 +1241,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1221,6 +1271,10 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
                 hash.Add(ColorRemappingIndexitem);
+            }
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
             }
             return hash.ToHashCode();
         }
@@ -1337,6 +1391,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.ColorRemappingIndex) ?? true))
             {
                 item.ColorRemappingIndex = rhs.ColorRemappingIndex;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
             }
         }
         
@@ -1467,6 +1525,11 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ColorRemappingIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.MODC));
+            EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.MODF));
         }
 
         public void Write(
@@ -1555,6 +1618,15 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Model_FieldIndex.ColorRemappingIndex;
+                }
+                case RecordTypeInts.MODF:
+                {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Model_FieldIndex.Flags;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1646,6 +1718,10 @@ namespace Mutagen.Bethesda.Starfield
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;
         public Single? ColorRemappingIndex => _ColorRemappingIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorRemappingIndexLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Model.Flag? Flags => _FlagsLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1752,6 +1828,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (lastParsed.ShortCircuit((int)Model_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     _ColorRemappingIndexLocation = (stream.Position - offset);
                     return (int)Model_FieldIndex.ColorRemappingIndex;
+                }
+                case RecordTypeInts.MODF:
+                {
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Model_FieldIndex.Flags;
                 }
                 default:
                     return ParseResult.Stop;

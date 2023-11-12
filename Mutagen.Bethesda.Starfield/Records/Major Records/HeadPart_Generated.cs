@@ -180,14 +180,14 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces;
         #endregion
         #region MNAM
-        private readonly IFormLinkNullable<IMRPHRecordGetter> _MNAM = new FormLinkNullable<IMRPHRecordGetter>();
-        public IFormLinkNullable<IMRPHRecordGetter> MNAM
+        private readonly IFormLinkNullable<IMorphableObjectGetter> _MNAM = new FormLinkNullable<IMorphableObjectGetter>();
+        public IFormLinkNullable<IMorphableObjectGetter> MNAM
         {
             get => _MNAM;
             set => _MNAM.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMRPHRecordGetter> IHeadPartGetter.MNAM => this.MNAM;
+        IFormLinkNullableGetter<IMorphableObjectGetter> IHeadPartGetter.MNAM => this.MNAM;
         #endregion
 
         #region To String
@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Starfield
         new String? NAM3 { get; set; }
         new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new IFormLinkNullable<IFormListGetter> ValidRaces { get; set; }
-        new IFormLinkNullable<IMRPHRecordGetter> MNAM { get; set; }
+        new IFormLinkNullable<IMorphableObjectGetter> MNAM { get; set; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Starfield
         String? NAM3 { get; }
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkNullableGetter<IFormListGetter> ValidRaces { get; }
-        IFormLinkNullableGetter<IMRPHRecordGetter> MNAM { get; }
+        IFormLinkNullableGetter<IMorphableObjectGetter> MNAM { get; }
 
         #region Mutagen
         HeadPart.MajorFlag MajorFlags { get; }
@@ -1373,6 +1373,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
+                RecordTypes.MODF,
                 RecordTypes.DATA,
                 RecordTypes.PNAM,
                 RecordTypes.HNAM,
@@ -2436,6 +2437,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
                 {
                     item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
                         frame: frame,
@@ -2603,7 +2605,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MNAM
         private int? _MNAMLocation;
-        public IFormLinkNullableGetter<IMRPHRecordGetter> MNAM => _MNAMLocation.HasValue ? new FormLinkNullable<IMRPHRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMRPHRecordGetter>.Null;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> MNAM => _MNAMLocation.HasValue ? new FormLinkNullable<IMorphableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMorphableObjectGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2694,6 +2696,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
                 {
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

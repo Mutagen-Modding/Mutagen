@@ -14,7 +14,7 @@
       <String name="NAM3" recordType="NAM3" unknown="true" />
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
       <FormLink name="ValidRaces" recordType="RNAM" refName="FormList" />
-      <FormLink name="MNAM" recordType="MNAM" refName="MRPHRecord" />
+      <FormLink name="MNAM" recordType="MNAM" refName="MorphableObject" />
     </Fields>
   </Object>
 </Loqui>

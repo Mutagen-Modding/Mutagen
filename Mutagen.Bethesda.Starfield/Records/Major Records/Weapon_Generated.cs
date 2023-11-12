@@ -7310,6 +7310,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
+                RecordTypes.MODF,
                 RecordTypes.EITM,
                 RecordTypes.EAMT,
                 RecordTypes.ETYP,
@@ -11825,6 +11826,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
                 case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
@@ -13317,6 +13319,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
                 case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue

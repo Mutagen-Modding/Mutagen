@@ -7,12 +7,16 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -54,6 +59,315 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IArmorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IArmorGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
+        {
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #endregion
+        #region ODTY
+        public Single? ODTY { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IArmorGetter.ODTY => this.ODTY;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? IArmorGetter.Transforms => this.Transforms;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IArmorGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IArmorGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region ObjectEffect
+        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
+        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
+        {
+            get => _ObjectEffect;
+            set => _ObjectEffect.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
+        #endregion
+        #region WorldModel
+        public IGenderedItem<Model?>? WorldModel { get; set; }
+        IGenderedItemGetter<IModelGetter?>? IArmorGetter.WorldModel => this.WorldModel;
+        #endregion
+        #region FirstPersonFlags
+        public FirstPersonFlag? FirstPersonFlags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        FirstPersonFlag? IArmorGetter.FirstPersonFlags => this.FirstPersonFlags;
+        #endregion
+        #region PickupSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _PickupSound;
+        public SoundReference? PickupSound
+        {
+            get => _PickupSound;
+            set => _PickupSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IArmorGetter.PickupSound => this.PickupSound;
+        #endregion
+        #region DropdownSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _DropdownSound;
+        public SoundReference? DropdownSound
+        {
+            get => _DropdownSound;
+            set => _DropdownSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IArmorGetter.DropdownSound => this.DropdownSound;
+        #endregion
+        #region AlternateBlockMaterial
+        private readonly IFormLinkNullable<IMaterialTypeGetter> _AlternateBlockMaterial = new FormLinkNullable<IMaterialTypeGetter>();
+        public IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial
+        {
+            get => _AlternateBlockMaterial;
+            set => _AlternateBlockMaterial.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialTypeGetter> IArmorGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
+        #endregion
+        #region Race
+        private readonly IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> Race
+        {
+            get => _Race;
+            set => _Race.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> IArmorGetter.Race => this.Race;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IArmorGetter.Keywords => _Keywords;
+        #endregion
+
+        #region Aspects
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IArmorGetter.Description => this.Description;
+        #endregion
+        #region InstanceNaming
+        private readonly IFormLinkNullable<IInstanceNamingRulesGetter> _InstanceNaming = new FormLinkNullable<IInstanceNamingRulesGetter>();
+        public IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming
+        {
+            get => _InstanceNaming;
+            set => _InstanceNaming.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> IArmorGetter.InstanceNaming => this.InstanceNaming;
+        #endregion
+        #region Armatures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ArmorAddonModel> _Armatures = new ExtendedList<ArmorAddonModel>();
+        public ExtendedList<ArmorAddonModel> Armatures
+        {
+            get => this._Armatures;
+            init => this._Armatures = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IArmorAddonModelGetter> IArmorGetter.Armatures => _Armatures;
+        #endregion
+
+        #endregion
+        #region Value
+        public Int32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
+        #endregion
+        #region Health
+        public UInt32 Health { get; set; } = default;
+        #endregion
+        #region ArmorRating
+        public UInt16 ArmorRating { get; set; } = default;
+        #endregion
+        #region BaseAddonIndex
+        public UInt16 BaseAddonIndex { get; set; } = default;
+        #endregion
+        #region StaggerRating
+        public Byte StaggerRating { get; set; } = default;
+        #endregion
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
+        {
+            get => _Unused;
+            set => this._Unused = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IArmorGetter.Unused => this.Unused;
+        #endregion
+        #region Resistances
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ArmorResistance>? _Resistances;
+        public ExtendedList<ArmorResistance>? Resistances
+        {
+            get => this._Resistances;
+            set => this._Resistances = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IArmorResistanceGetter>? IArmorGetter.Resistances => _Resistances;
+        #endregion
+
+        #endregion
+        #region AttachParentSlots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _AttachParentSlots;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots
+        {
+            get => this._AttachParentSlots;
+            set => this._AttachParentSlots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IArmorGetter.AttachParentSlots => _AttachParentSlots;
+        #endregion
+
+        #endregion
+        #region ObjectTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectTemplate<Armor.Property>>? _ObjectTemplates;
+        public ExtendedList<ObjectTemplate<Armor.Property>>? ObjectTemplates
+        {
+            get => this._ObjectTemplates;
+            set => this._ObjectTemplates = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectTemplateGetter<Armor.Property>>? IArmorGetter.ObjectTemplates => _ObjectTemplates;
+        #endregion
+
+        #endregion
+        #region Voice
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ArmorCategoryValue? _Voice;
+        public ArmorCategoryValue? Voice
+        {
+            get => _Voice;
+            set => _Voice = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IArmorCategoryValueGetter? IArmorGetter.Voice => this.Voice;
+        #endregion
+        #region Footstep
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ArmorCategoryValue? _Footstep;
+        public ArmorCategoryValue? Footstep
+        {
+            get => _Footstep;
+            set => _Footstep = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IArmorCategoryValueGetter? IArmorGetter.Footstep => this.Footstep;
+        #endregion
 
         #region To String
 
@@ -79,6 +393,35 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ODTY = initialValue;
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.ObjectEffect = initialValue;
+                this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
+                this.FirstPersonFlags = initialValue;
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.AlternateBlockMaterial = initialValue;
+                this.Race = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Description = initialValue;
+                this.InstanceNaming = initialValue;
+                this.Armatures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>());
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.Health = initialValue;
+                this.ArmorRating = initialValue;
+                this.BaseAddonIndex = initialValue;
+                this.StaggerRating = initialValue;
+                this.Unused = initialValue;
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.Voice = new MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>(initialValue, new ArmorCategoryValue.Mask<TItem>(initialValue));
+                this.Footstep = new MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>(initialValue, new ArmorCategoryValue.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -88,7 +431,36 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem ODTY,
+                TItem Transforms,
+                TItem Components,
+                TItem Name,
+                TItem ObjectEffect,
+                TItem WorldModel,
+                TItem FirstPersonFlags,
+                TItem PickupSound,
+                TItem DropdownSound,
+                TItem AlternateBlockMaterial,
+                TItem Race,
+                TItem Keywords,
+                TItem Description,
+                TItem InstanceNaming,
+                TItem Armatures,
+                TItem Value,
+                TItem Weight,
+                TItem Health,
+                TItem ArmorRating,
+                TItem BaseAddonIndex,
+                TItem StaggerRating,
+                TItem Unused,
+                TItem Resistances,
+                TItem AttachParentSlots,
+                TItem ObjectTemplates,
+                TItem Voice,
+                TItem Footstep)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -98,6 +470,35 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ODTY = ODTY;
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.ObjectEffect = ObjectEffect;
+                this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(WorldModel, default);
+                this.FirstPersonFlags = FirstPersonFlags;
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
+                this.AlternateBlockMaterial = AlternateBlockMaterial;
+                this.Race = Race;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Description = Description;
+                this.InstanceNaming = InstanceNaming;
+                this.Armatures = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>?>(Armatures, Enumerable.Empty<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>());
+                this.Value = Value;
+                this.Weight = Weight;
+                this.Health = Health;
+                this.ArmorRating = ArmorRating;
+                this.BaseAddonIndex = BaseAddonIndex;
+                this.StaggerRating = StaggerRating;
+                this.Unused = Unused;
+                this.Resistances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>(Resistances, Enumerable.Empty<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>());
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
+                this.Voice = new MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>(Voice, new ArmorCategoryValue.Mask<TItem>(Voice));
+                this.Footstep = new MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>(Footstep, new ArmorCategoryValue.Mask<TItem>(Footstep));
             }
 
             #pragma warning disable CS8618
@@ -106,6 +507,38 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ODTY;
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public TItem ObjectEffect;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? WorldModel;
+            public TItem FirstPersonFlags;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
+            public TItem AlternateBlockMaterial;
+            public TItem Race;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem Description;
+            public TItem InstanceNaming;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorAddonModel.Mask<TItem>?>>?>? Armatures;
+            public TItem Value;
+            public TItem Weight;
+            public TItem Health;
+            public TItem ArmorRating;
+            public TItem BaseAddonIndex;
+            public TItem StaggerRating;
+            public TItem Unused;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ArmorResistance.Mask<TItem>?>>?>? Resistances;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
+            public MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>? Voice { get; set; }
+            public MaskItem<TItem, ArmorCategoryValue.Mask<TItem>?>? Footstep { get; set; }
             #endregion
 
             #region Equals
@@ -119,11 +552,69 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.ObjectEffect, rhs.ObjectEffect)) return false;
+                if (!object.Equals(this.WorldModel, rhs.WorldModel)) return false;
+                if (!object.Equals(this.FirstPersonFlags, rhs.FirstPersonFlags)) return false;
+                if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
+                if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
+                if (!object.Equals(this.AlternateBlockMaterial, rhs.AlternateBlockMaterial)) return false;
+                if (!object.Equals(this.Race, rhs.Race)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.InstanceNaming, rhs.InstanceNaming)) return false;
+                if (!object.Equals(this.Armatures, rhs.Armatures)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Health, rhs.Health)) return false;
+                if (!object.Equals(this.ArmorRating, rhs.ArmorRating)) return false;
+                if (!object.Equals(this.BaseAddonIndex, rhs.BaseAddonIndex)) return false;
+                if (!object.Equals(this.StaggerRating, rhs.StaggerRating)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.Resistances, rhs.Resistances)) return false;
+                if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
+                if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
+                if (!object.Equals(this.Voice, rhs.Voice)) return false;
+                if (!object.Equals(this.Footstep, rhs.Footstep)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ODTY);
+                hash.Add(this.Transforms);
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.ObjectEffect);
+                hash.Add(this.WorldModel);
+                hash.Add(this.FirstPersonFlags);
+                hash.Add(this.PickupSound);
+                hash.Add(this.DropdownSound);
+                hash.Add(this.AlternateBlockMaterial);
+                hash.Add(this.Race);
+                hash.Add(this.Keywords);
+                hash.Add(this.Description);
+                hash.Add(this.InstanceNaming);
+                hash.Add(this.Armatures);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
+                hash.Add(this.Health);
+                hash.Add(this.ArmorRating);
+                hash.Add(this.BaseAddonIndex);
+                hash.Add(this.StaggerRating);
+                hash.Add(this.Unused);
+                hash.Add(this.Resistances);
+                hash.Add(this.AttachParentSlots);
+                hash.Add(this.ObjectTemplates);
+                hash.Add(this.Voice);
+                hash.Add(this.Footstep);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -134,6 +625,129 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ODTY)) return false;
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.ObjectEffect)) return false;
+                if (!GenderedItem.AllMask(
+                    this.WorldModel,
+                    eval: eval)) return false;
+                if (!eval(this.FirstPersonFlags)) return false;
+                if (PickupSound != null)
+                {
+                    if (!eval(this.PickupSound.Overall)) return false;
+                    if (this.PickupSound.Specific != null && !this.PickupSound.Specific.All(eval)) return false;
+                }
+                if (DropdownSound != null)
+                {
+                    if (!eval(this.DropdownSound.Overall)) return false;
+                    if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
+                }
+                if (!eval(this.AlternateBlockMaterial)) return false;
+                if (!eval(this.Race)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Description)) return false;
+                if (!eval(this.InstanceNaming)) return false;
+                if (this.Armatures != null)
+                {
+                    if (!eval(this.Armatures.Overall)) return false;
+                    if (this.Armatures.Specific != null)
+                    {
+                        foreach (var item in this.Armatures.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.Health)) return false;
+                if (!eval(this.ArmorRating)) return false;
+                if (!eval(this.BaseAddonIndex)) return false;
+                if (!eval(this.StaggerRating)) return false;
+                if (!eval(this.Unused)) return false;
+                if (this.Resistances != null)
+                {
+                    if (!eval(this.Resistances.Overall)) return false;
+                    if (this.Resistances.Specific != null)
+                    {
+                        foreach (var item in this.Resistances.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (!eval(this.AttachParentSlots.Overall)) return false;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (!eval(this.ObjectTemplates.Overall)) return false;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Voice != null)
+                {
+                    if (!eval(this.Voice.Overall)) return false;
+                    if (this.Voice.Specific != null && !this.Voice.Specific.All(eval)) return false;
+                }
+                if (Footstep != null)
+                {
+                    if (!eval(this.Footstep.Overall)) return false;
+                    if (this.Footstep.Specific != null && !this.Footstep.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -142,6 +756,129 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ODTY)) return true;
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.ObjectEffect)) return true;
+                if (GenderedItem.AnyMask(
+                    this.WorldModel,
+                    eval: eval)) return true;
+                if (eval(this.FirstPersonFlags)) return true;
+                if (PickupSound != null)
+                {
+                    if (eval(this.PickupSound.Overall)) return true;
+                    if (this.PickupSound.Specific != null && this.PickupSound.Specific.Any(eval)) return true;
+                }
+                if (DropdownSound != null)
+                {
+                    if (eval(this.DropdownSound.Overall)) return true;
+                    if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
+                }
+                if (eval(this.AlternateBlockMaterial)) return true;
+                if (eval(this.Race)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Description)) return true;
+                if (eval(this.InstanceNaming)) return true;
+                if (this.Armatures != null)
+                {
+                    if (eval(this.Armatures.Overall)) return true;
+                    if (this.Armatures.Specific != null)
+                    {
+                        foreach (var item in this.Armatures.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
+                if (eval(this.Health)) return true;
+                if (eval(this.ArmorRating)) return true;
+                if (eval(this.BaseAddonIndex)) return true;
+                if (eval(this.StaggerRating)) return true;
+                if (eval(this.Unused)) return true;
+                if (this.Resistances != null)
+                {
+                    if (eval(this.Resistances.Overall)) return true;
+                    if (this.Resistances.Specific != null)
+                    {
+                        foreach (var item in this.Resistances.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.AttachParentSlots != null)
+                {
+                    if (eval(this.AttachParentSlots.Overall)) return true;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ObjectTemplates != null)
+                {
+                    if (eval(this.ObjectTemplates.Overall)) return true;
+                    if (this.ObjectTemplates.Specific != null)
+                    {
+                        foreach (var item in this.ObjectTemplates.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Voice != null)
+                {
+                    if (eval(this.Voice.Overall)) return true;
+                    if (this.Voice.Specific != null && this.Voice.Specific.Any(eval)) return true;
+                }
+                if (Footstep != null)
+                {
+                    if (eval(this.Footstep.Overall)) return true;
+                    if (this.Footstep.Specific != null && this.Footstep.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -157,6 +894,120 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ODTY = eval(this.ODTY);
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.ObjectEffect = eval(this.ObjectEffect);
+                obj.WorldModel = GenderedItem.TranslateHelper(
+                    this.WorldModel,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                obj.FirstPersonFlags = eval(this.FirstPersonFlags);
+                obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
+                obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
+                obj.AlternateBlockMaterial = eval(this.AlternateBlockMaterial);
+                obj.Race = eval(this.Race);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Description = eval(this.Description);
+                obj.InstanceNaming = eval(this.InstanceNaming);
+                if (Armatures != null)
+                {
+                    obj.Armatures = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>>?>(eval(this.Armatures.Overall), Enumerable.Empty<MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>>());
+                    if (Armatures.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>>();
+                        obj.Armatures.Specific = l;
+                        foreach (var item in Armatures.Specific)
+                        {
+                            MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ArmorAddonModel.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.Health = eval(this.Health);
+                obj.ArmorRating = eval(this.ArmorRating);
+                obj.BaseAddonIndex = eval(this.BaseAddonIndex);
+                obj.StaggerRating = eval(this.StaggerRating);
+                obj.Unused = eval(this.Unused);
+                if (Resistances != null)
+                {
+                    obj.Resistances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>?>(eval(this.Resistances.Overall), Enumerable.Empty<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>());
+                    if (Resistances.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ArmorResistance.Mask<R>?>>();
+                        obj.Resistances.Specific = l;
+                        foreach (var item in Resistances.Specific)
+                        {
+                            MaskItemIndexed<R, ArmorResistance.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ArmorResistance.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (AttachParentSlots != null)
+                {
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AttachParentSlots.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AttachParentSlots.Specific = l;
+                        foreach (var item in AttachParentSlots.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ObjectTemplates != null)
+                {
+                    obj.ObjectTemplates = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>?>(eval(this.ObjectTemplates.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>());
+                    if (ObjectTemplates.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectTemplate.Mask<R>?>>();
+                        obj.ObjectTemplates.Specific = l;
+                        foreach (var item in ObjectTemplates.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectTemplate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectTemplate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Voice = this.Voice == null ? null : new MaskItem<R, ArmorCategoryValue.Mask<R>?>(eval(this.Voice.Overall), this.Voice.Specific?.Translate(eval));
+                obj.Footstep = this.Footstep == null ? null : new MaskItem<R, ArmorCategoryValue.Mask<R>?>(eval(this.Footstep.Overall), this.Footstep.Specific?.Translate(eval));
             }
             #endregion
 
@@ -175,6 +1026,217 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Armor.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.Print(sb);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.Print(sb);
+                    }
+                    if (printMask?.ODTY ?? true)
+                    {
+                        sb.AppendItem(ODTY, "ODTY");
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.ObjectEffect ?? true)
+                    {
+                        sb.AppendItem(ObjectEffect, "ObjectEffect");
+                    }
+                    if (WorldModel != null
+                        && (printMask?.WorldModel?.Overall ?? true))
+                    {
+                        sb.AppendLine($"WorldModel => {WorldModel}");
+                    }
+                    if (printMask?.FirstPersonFlags ?? true)
+                    {
+                        sb.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                    }
+                    if (printMask?.PickupSound?.Overall ?? true)
+                    {
+                        PickupSound?.Print(sb);
+                    }
+                    if (printMask?.DropdownSound?.Overall ?? true)
+                    {
+                        DropdownSound?.Print(sb);
+                    }
+                    if (printMask?.AlternateBlockMaterial ?? true)
+                    {
+                        sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                    }
+                    if (printMask?.Race ?? true)
+                    {
+                        sb.AppendItem(Race, "Race");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords is {} KeywordsItem)
+                    {
+                        sb.AppendLine("Keywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.InstanceNaming ?? true)
+                    {
+                        sb.AppendItem(InstanceNaming, "InstanceNaming");
+                    }
+                    if ((printMask?.Armatures?.Overall ?? true)
+                        && Armatures is {} ArmaturesItem)
+                    {
+                        sb.AppendLine("Armatures =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ArmaturesItem.Overall);
+                            if (ArmaturesItem.Specific != null)
+                            {
+                                foreach (var subItem in ArmaturesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        sb.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        sb.AppendItem(Weight, "Weight");
+                    }
+                    if (printMask?.Health ?? true)
+                    {
+                        sb.AppendItem(Health, "Health");
+                    }
+                    if (printMask?.ArmorRating ?? true)
+                    {
+                        sb.AppendItem(ArmorRating, "ArmorRating");
+                    }
+                    if (printMask?.BaseAddonIndex ?? true)
+                    {
+                        sb.AppendItem(BaseAddonIndex, "BaseAddonIndex");
+                    }
+                    if (printMask?.StaggerRating ?? true)
+                    {
+                        sb.AppendItem(StaggerRating, "StaggerRating");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
+                    }
+                    if ((printMask?.Resistances?.Overall ?? true)
+                        && Resistances is {} ResistancesItem)
+                    {
+                        sb.AppendLine("Resistances =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ResistancesItem.Overall);
+                            if (ResistancesItem.Specific != null)
+                            {
+                                foreach (var subItem in ResistancesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.AttachParentSlots?.Overall ?? true)
+                        && AttachParentSlots is {} AttachParentSlotsItem)
+                    {
+                        sb.AppendLine("AttachParentSlots =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AttachParentSlotsItem.Overall);
+                            if (AttachParentSlotsItem.Specific != null)
+                            {
+                                foreach (var subItem in AttachParentSlotsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ObjectTemplates?.Overall ?? true)
+                        && ObjectTemplates is {} ObjectTemplatesItem)
+                    {
+                        sb.AppendLine("ObjectTemplates =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ObjectTemplatesItem.Overall);
+                            if (ObjectTemplatesItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectTemplatesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Voice?.Overall ?? true)
+                    {
+                        Voice?.Print(sb);
+                    }
+                    if (printMask?.Footstep?.Overall ?? true)
+                    {
+                        Footstep?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -185,12 +1247,102 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ODTY;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public Exception? ObjectEffect;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? WorldModel;
+            public Exception? FirstPersonFlags;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
+            public Exception? AlternateBlockMaterial;
+            public Exception? Race;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? Description;
+            public Exception? InstanceNaming;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>? Armatures;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? Health;
+            public Exception? ArmorRating;
+            public Exception? BaseAddonIndex;
+            public Exception? StaggerRating;
+            public Exception? Unused;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>? Resistances;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
+            public MaskItem<Exception?, ArmorCategoryValue.ErrorMask?>? Voice;
+            public MaskItem<Exception?, ArmorCategoryValue.ErrorMask?>? Footstep;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Armor_FieldIndex enu = (Armor_FieldIndex)index;
                 switch (enu)
                 {
+                    case Armor_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Armor_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Armor_FieldIndex.ODTY:
+                        return ODTY;
+                    case Armor_FieldIndex.Transforms:
+                        return Transforms;
+                    case Armor_FieldIndex.Components:
+                        return Components;
+                    case Armor_FieldIndex.Name:
+                        return Name;
+                    case Armor_FieldIndex.ObjectEffect:
+                        return ObjectEffect;
+                    case Armor_FieldIndex.WorldModel:
+                        return WorldModel;
+                    case Armor_FieldIndex.FirstPersonFlags:
+                        return FirstPersonFlags;
+                    case Armor_FieldIndex.PickupSound:
+                        return PickupSound;
+                    case Armor_FieldIndex.DropdownSound:
+                        return DropdownSound;
+                    case Armor_FieldIndex.AlternateBlockMaterial:
+                        return AlternateBlockMaterial;
+                    case Armor_FieldIndex.Race:
+                        return Race;
+                    case Armor_FieldIndex.Keywords:
+                        return Keywords;
+                    case Armor_FieldIndex.Description:
+                        return Description;
+                    case Armor_FieldIndex.InstanceNaming:
+                        return InstanceNaming;
+                    case Armor_FieldIndex.Armatures:
+                        return Armatures;
+                    case Armor_FieldIndex.Value:
+                        return Value;
+                    case Armor_FieldIndex.Weight:
+                        return Weight;
+                    case Armor_FieldIndex.Health:
+                        return Health;
+                    case Armor_FieldIndex.ArmorRating:
+                        return ArmorRating;
+                    case Armor_FieldIndex.BaseAddonIndex:
+                        return BaseAddonIndex;
+                    case Armor_FieldIndex.StaggerRating:
+                        return StaggerRating;
+                    case Armor_FieldIndex.Unused:
+                        return Unused;
+                    case Armor_FieldIndex.Resistances:
+                        return Resistances;
+                    case Armor_FieldIndex.AttachParentSlots:
+                        return AttachParentSlots;
+                    case Armor_FieldIndex.ObjectTemplates:
+                        return ObjectTemplates;
+                    case Armor_FieldIndex.Voice:
+                        return Voice;
+                    case Armor_FieldIndex.Footstep:
+                        return Footstep;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -201,6 +1353,93 @@ namespace Mutagen.Bethesda.Starfield
                 Armor_FieldIndex enu = (Armor_FieldIndex)index;
                 switch (enu)
                 {
+                    case Armor_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.ODTY:
+                        this.ODTY = ex;
+                        break;
+                    case Armor_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Armor_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = ex;
+                        break;
+                    case Armor_FieldIndex.WorldModel:
+                        this.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.FirstPersonFlags:
+                        this.FirstPersonFlags = ex;
+                        break;
+                    case Armor_FieldIndex.PickupSound:
+                        this.PickupSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.DropdownSound:
+                        this.DropdownSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.AlternateBlockMaterial:
+                        this.AlternateBlockMaterial = ex;
+                        break;
+                    case Armor_FieldIndex.Race:
+                        this.Race = ex;
+                        break;
+                    case Armor_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Armor_FieldIndex.InstanceNaming:
+                        this.InstanceNaming = ex;
+                        break;
+                    case Armor_FieldIndex.Armatures:
+                        this.Armatures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Armor_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Armor_FieldIndex.Health:
+                        this.Health = ex;
+                        break;
+                    case Armor_FieldIndex.ArmorRating:
+                        this.ArmorRating = ex;
+                        break;
+                    case Armor_FieldIndex.BaseAddonIndex:
+                        this.BaseAddonIndex = ex;
+                        break;
+                    case Armor_FieldIndex.StaggerRating:
+                        this.StaggerRating = ex;
+                        break;
+                    case Armor_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case Armor_FieldIndex.Resistances:
+                        this.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.Voice:
+                        this.Voice = new MaskItem<Exception?, ArmorCategoryValue.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.Footstep:
+                        this.Footstep = new MaskItem<Exception?, ArmorCategoryValue.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -212,6 +1451,93 @@ namespace Mutagen.Bethesda.Starfield
                 Armor_FieldIndex enu = (Armor_FieldIndex)index;
                 switch (enu)
                 {
+                    case Armor_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.ODTY:
+                        this.ODTY = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case Armor_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.ObjectEffect:
+                        this.ObjectEffect = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.WorldModel:
+                        this.WorldModel = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Armor_FieldIndex.FirstPersonFlags:
+                        this.FirstPersonFlags = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.PickupSound:
+                        this.PickupSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.DropdownSound:
+                        this.DropdownSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.AlternateBlockMaterial:
+                        this.AlternateBlockMaterial = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Race:
+                        this.Race = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Armor_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.InstanceNaming:
+                        this.InstanceNaming = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Armatures:
+                        this.Armatures = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>)obj;
+                        break;
+                    case Armor_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Health:
+                        this.Health = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.ArmorRating:
+                        this.ArmorRating = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.BaseAddonIndex:
+                        this.BaseAddonIndex = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.StaggerRating:
+                        this.StaggerRating = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Resistances:
+                        this.Resistances = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>)obj;
+                        break;
+                    case Armor_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Armor_FieldIndex.ObjectTemplates:
+                        this.ObjectTemplates = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>)obj;
+                        break;
+                    case Armor_FieldIndex.Voice:
+                        this.Voice = (MaskItem<Exception?, ArmorCategoryValue.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.Footstep:
+                        this.Footstep = (MaskItem<Exception?, ArmorCategoryValue.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -221,6 +1547,35 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ODTY != null) return true;
+                if (Transforms != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (ObjectEffect != null) return true;
+                if (WorldModel != null) return true;
+                if (FirstPersonFlags != null) return true;
+                if (PickupSound != null) return true;
+                if (DropdownSound != null) return true;
+                if (AlternateBlockMaterial != null) return true;
+                if (Race != null) return true;
+                if (Keywords != null) return true;
+                if (Description != null) return true;
+                if (InstanceNaming != null) return true;
+                if (Armatures != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (Health != null) return true;
+                if (ArmorRating != null) return true;
+                if (BaseAddonIndex != null) return true;
+                if (StaggerRating != null) return true;
+                if (Unused != null) return true;
+                if (Resistances != null) return true;
+                if (AttachParentSlots != null) return true;
+                if (ObjectTemplates != null) return true;
+                if (Voice != null) return true;
+                if (Footstep != null) return true;
                 return false;
             }
             #endregion
@@ -247,6 +1602,174 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                VirtualMachineAdapter?.Print(sb);
+                ObjectBounds?.Print(sb);
+                {
+                    sb.AppendItem(ODTY, "ODTY");
+                }
+                Transforms?.Print(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(ObjectEffect, "ObjectEffect");
+                }
+                if (WorldModel != null)
+                {
+                    sb.AppendLine($"WorldModel => {WorldModel}");
+                }
+                {
+                    sb.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                }
+                PickupSound?.Print(sb);
+                DropdownSound?.Print(sb);
+                {
+                    sb.AppendItem(AlternateBlockMaterial, "AlternateBlockMaterial");
+                }
+                {
+                    sb.AppendItem(Race, "Race");
+                }
+                if (Keywords is {} KeywordsItem)
+                {
+                    sb.AppendLine("Keywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                {
+                    sb.AppendItem(InstanceNaming, "InstanceNaming");
+                }
+                if (Armatures is {} ArmaturesItem)
+                {
+                    sb.AppendLine("Armatures =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ArmaturesItem.Overall);
+                        if (ArmaturesItem.Specific != null)
+                        {
+                            foreach (var subItem in ArmaturesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Value, "Value");
+                }
+                {
+                    sb.AppendItem(Weight, "Weight");
+                }
+                {
+                    sb.AppendItem(Health, "Health");
+                }
+                {
+                    sb.AppendItem(ArmorRating, "ArmorRating");
+                }
+                {
+                    sb.AppendItem(BaseAddonIndex, "BaseAddonIndex");
+                }
+                {
+                    sb.AppendItem(StaggerRating, "StaggerRating");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
+                }
+                if (Resistances is {} ResistancesItem)
+                {
+                    sb.AppendLine("Resistances =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ResistancesItem.Overall);
+                        if (ResistancesItem.Specific != null)
+                        {
+                            foreach (var subItem in ResistancesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (AttachParentSlots is {} AttachParentSlotsItem)
+                {
+                    sb.AppendLine("AttachParentSlots =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AttachParentSlotsItem.Overall);
+                        if (AttachParentSlotsItem.Specific != null)
+                        {
+                            foreach (var subItem in AttachParentSlotsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ObjectTemplates is {} ObjectTemplatesItem)
+                {
+                    sb.AppendLine("ObjectTemplates =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ObjectTemplatesItem.Overall);
+                        if (ObjectTemplatesItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectTemplatesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                Voice?.Print(sb);
+                Footstep?.Print(sb);
             }
             #endregion
 
@@ -255,6 +1778,35 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.FirstPersonFlags = this.FirstPersonFlags.Combine(rhs.FirstPersonFlags);
+                ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
+                ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
+                ret.AlternateBlockMaterial = this.AlternateBlockMaterial.Combine(rhs.AlternateBlockMaterial);
+                ret.Race = this.Race.Combine(rhs.Race);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.InstanceNaming = this.InstanceNaming.Combine(rhs.InstanceNaming);
+                ret.Armatures = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorAddonModel.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Armatures?.Overall, rhs.Armatures?.Overall), Noggog.ExceptionExt.Combine(this.Armatures?.Specific, rhs.Armatures?.Specific));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.Health = this.Health.Combine(rhs.Health);
+                ret.ArmorRating = this.ArmorRating.Combine(rhs.ArmorRating);
+                ret.BaseAddonIndex = this.BaseAddonIndex.Combine(rhs.BaseAddonIndex);
+                ret.StaggerRating = this.StaggerRating.Combine(rhs.StaggerRating);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.Resistances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ArmorResistance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resistances?.Overall, rhs.Resistances?.Overall), Noggog.ExceptionExt.Combine(this.Resistances?.Specific, rhs.Resistances?.Specific));
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
+                ret.Voice = this.Voice.Combine(rhs.Voice, (l, r) => l.Combine(r));
+                ret.Footstep = this.Footstep.Combine(rhs.Footstep, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -276,15 +1828,98 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
+            public ObjectBounds.TranslationMask? ObjectBounds;
+            public bool ODTY;
+            public Transforms.TranslationMask? Transforms;
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public bool ObjectEffect;
+            public GenderedItem<Model.TranslationMask>? WorldModel;
+            public bool FirstPersonFlags;
+            public SoundReference.TranslationMask? PickupSound;
+            public SoundReference.TranslationMask? DropdownSound;
+            public bool AlternateBlockMaterial;
+            public bool Race;
+            public bool Keywords;
+            public bool Description;
+            public bool InstanceNaming;
+            public ArmorAddonModel.TranslationMask? Armatures;
+            public bool Value;
+            public bool Weight;
+            public bool Health;
+            public bool ArmorRating;
+            public bool BaseAddonIndex;
+            public bool StaggerRating;
+            public bool Unused;
+            public ArmorResistance.TranslationMask? Resistances;
+            public bool AttachParentSlots;
+            public ObjectTemplate.TranslationMask? ObjectTemplates;
+            public ArmorCategoryValue.TranslationMask? Voice;
+            public ArmorCategoryValue.TranslationMask? Footstep;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.ODTY = defaultOn;
+                this.Name = defaultOn;
+                this.ObjectEffect = defaultOn;
+                this.FirstPersonFlags = defaultOn;
+                this.AlternateBlockMaterial = defaultOn;
+                this.Race = defaultOn;
+                this.Keywords = defaultOn;
+                this.Description = defaultOn;
+                this.InstanceNaming = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.Health = defaultOn;
+                this.ArmorRating = defaultOn;
+                this.BaseAddonIndex = defaultOn;
+                this.StaggerRating = defaultOn;
+                this.Unused = defaultOn;
+                this.AttachParentSlots = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
+                ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
+                ret.Add((ODTY, null));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((ObjectEffect, null));
+                ret.Add((WorldModel != null || DefaultOn, null));
+                ret.Add((FirstPersonFlags, null));
+                ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
+                ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
+                ret.Add((AlternateBlockMaterial, null));
+                ret.Add((Race, null));
+                ret.Add((Keywords, null));
+                ret.Add((Description, null));
+                ret.Add((InstanceNaming, null));
+                ret.Add((Armatures == null ? DefaultOn : !Armatures.GetCrystal().CopyNothing, Armatures?.GetCrystal()));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((Health, null));
+                ret.Add((ArmorRating, null));
+                ret.Add((BaseAddonIndex, null));
+                ret.Add((StaggerRating, null));
+                ret.Add((Unused, null));
+                ret.Add((Resistances == null ? DefaultOn : !Resistances.GetCrystal().CopyNothing, Resistances?.GetCrystal()));
+                ret.Add((AttachParentSlots, null));
+                ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
+                ret.Add((Voice != null ? Voice.OnOverall : DefaultOn, Voice?.GetCrystal()));
+                ret.Add((Footstep != null ? Footstep.OnOverall : DefaultOn, Footstep?.GetCrystal()));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -296,6 +1931,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorSetterCommon.Instance.RemapLinks(this, mapping);
         public Armor(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -345,6 +1982,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IArmor);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ArmorCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ArmorSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ArmorSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ArmorSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -425,12 +2071,66 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IArmor :
         IArmorGetter,
+        IAssetLinkContainer,
         IConstructible,
+        IFormLinkContainer,
         IItem,
+        IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IArmorInternal>,
+        INamed,
+        INamedRequired,
+        IObjectBounded,
         IOutfitTarget,
-        IStarfieldMajorRecordInternal
+        IScripted,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
+        new ObjectBounds ObjectBounds { get; set; }
+        new Single? ODTY { get; set; }
+        new Transforms? Transforms { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new IGenderedItem<Model?>? WorldModel { get; set; }
+        new FirstPersonFlag? FirstPersonFlags { get; set; }
+        new SoundReference? PickupSound { get; set; }
+        new SoundReference? DropdownSound { get; set; }
+        new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; set; }
+        new IFormLinkNullable<IRaceGetter> Race { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new TranslatedString? Description { get; set; }
+        new IFormLinkNullable<IInstanceNamingRulesGetter> InstanceNaming { get; set; }
+        new ExtendedList<ArmorAddonModel> Armatures { get; }
+        new Int32 Value { get; set; }
+        new Single Weight { get; set; }
+        new UInt32 Health { get; set; }
+        new UInt16 ArmorRating { get; set; }
+        new UInt16 BaseAddonIndex { get; set; }
+        new Byte StaggerRating { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
+        new ExtendedList<ArmorResistance>? Resistances { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
+        new ExtendedList<ObjectTemplate<Armor.Property>>? ObjectTemplates { get; set; }
+        new ArmorCategoryValue? Voice { get; set; }
+        new ArmorCategoryValue? Footstep { get; set; }
+        #region Mutagen
+        new Armor.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IArmorInternal :
@@ -438,19 +2138,83 @@ namespace Mutagen.Bethesda.Starfield
         IArmor,
         IArmorGetter
     {
+        new IGenderedItem<Model?>? WorldModel { get; set; }
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.ARMO)]
     public partial interface IArmorGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleGetter,
+        IFormLinkContainerGetter,
+        IHaveVirtualMachineAdapterGetter,
         IItemGetter,
+        IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IArmorGetter>,
         IMapsToGetter<IArmorGetter>,
-        IOutfitTargetGetter
+        INamedGetter,
+        INamedRequiredGetter,
+        IObjectBoundedGetter,
+        IOutfitTargetGetter,
+        IScriptedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Armor_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapterGetter, IScriptedGetter
+        /// </summary>
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter
+        /// </summary>
+        IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        Single? ODTY { get; }
+        ITransformsGetter? Transforms { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
+        IGenderedItemGetter<IModelGetter?>? WorldModel { get; }
+        FirstPersonFlag? FirstPersonFlags { get; }
+        ISoundReferenceGetter? PickupSound { get; }
+        ISoundReferenceGetter? DropdownSound { get; }
+        IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial { get; }
+        IFormLinkNullableGetter<IRaceGetter> Race { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
+        ITranslatedStringGetter? Description { get; }
+        IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming { get; }
+        IReadOnlyList<IArmorAddonModelGetter> Armatures { get; }
+        Int32 Value { get; }
+        Single Weight { get; }
+        UInt32 Health { get; }
+        UInt16 ArmorRating { get; }
+        UInt16 BaseAddonIndex { get; }
+        Byte StaggerRating { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
+        IReadOnlyList<IArmorResistanceGetter>? Resistances { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
+        IReadOnlyList<IObjectTemplateGetter<Armor.Property>>? ObjectTemplates { get; }
+        IArmorCategoryValueGetter? Voice { get; }
+        IArmorCategoryValueGetter? Footstep { get; }
+
+        #region Mutagen
+        Armor.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -627,6 +2391,35 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        VirtualMachineAdapter = 7,
+        ObjectBounds = 8,
+        ODTY = 9,
+        Transforms = 10,
+        Components = 11,
+        Name = 12,
+        ObjectEffect = 13,
+        WorldModel = 14,
+        FirstPersonFlags = 15,
+        PickupSound = 16,
+        DropdownSound = 17,
+        AlternateBlockMaterial = 18,
+        Race = 19,
+        Keywords = 20,
+        Description = 21,
+        InstanceNaming = 22,
+        Armatures = 23,
+        Value = 24,
+        Weight = 25,
+        Health = 26,
+        ArmorRating = 27,
+        BaseAddonIndex = 28,
+        StaggerRating = 29,
+        Unused = 30,
+        Resistances = 31,
+        AttachParentSlots = 32,
+        ObjectTemplates = 33,
+        Voice = 34,
+        Footstep = 35,
     }
     #endregion
 
@@ -637,9 +2430,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(Armor.Mask<>);
 
@@ -669,10 +2462,86 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.ARMO);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.ARMO);
+            var all = RecordCollection.Factory(
+                RecordTypes.ARMO,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.ODTY,
+                RecordTypes.PTT2,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.EITM,
+                RecordTypes.MOD2,
+                RecordTypes.MOD4,
+                RecordTypes.MO2T,
+                RecordTypes.MO4T,
+                RecordTypes.MLM2,
+                RecordTypes.MLM4,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MO2C,
+                RecordTypes.MO4C,
+                RecordTypes.MO2F,
+                RecordTypes.MO4F,
+                RecordTypes.BO64,
+                RecordTypes.PUSH,
+                RecordTypes.PDSH,
+                RecordTypes.BAMT,
+                RecordTypes.RNAM,
+                RecordTypes.KWDA,
+                RecordTypes.KSIZ,
+                RecordTypes.DESC,
+                RecordTypes.INRD,
+                RecordTypes.INDX,
+                RecordTypes.MODL,
+                RecordTypes.DATA,
+                RecordTypes.FNAM,
+                RecordTypes.DAMA,
+                RecordTypes.APPR,
+                RecordTypes.OBTE,
+                RecordTypes.OBTF,
+                RecordTypes.OBTS,
+                RecordTypes.STOP,
+                RecordTypes.AVSG,
+                RecordTypes.AFSG);
+            return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
+        public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODL,
+                RecordTypes.MOD4),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODT,
+                RecordTypes.MO4T),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MOLM,
+                RecordTypes.MLM4),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.MO4C),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODF,
+                RecordTypes.MO4F));
+        public static RecordTypeConverter WorldModelMaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODL,
+                RecordTypes.MOD2),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODT,
+                RecordTypes.MO2T),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MOLM,
+                RecordTypes.MLM2),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODC,
+                RecordTypes.MO2C),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODF,
+                RecordTypes.MO2F));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -712,6 +2581,35 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IArmorInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds.Clear();
+            item.ODTY = default;
+            item.Transforms = null;
+            item.Components.Clear();
+            item.Name = default;
+            item.ObjectEffect.Clear();
+            item.WorldModel = null;
+            item.FirstPersonFlags = default;
+            item.PickupSound = null;
+            item.DropdownSound = null;
+            item.AlternateBlockMaterial.Clear();
+            item.Race.Clear();
+            item.Keywords = null;
+            item.Description = default;
+            item.InstanceNaming.Clear();
+            item.Armatures.Clear();
+            item.Value = default;
+            item.Weight = default;
+            item.Health = default;
+            item.ArmorRating = default;
+            item.BaseAddonIndex = default;
+            item.StaggerRating = default;
+            item.Unused = new byte[3];
+            item.Resistances = null;
+            item.AttachParentSlots = null;
+            item.ObjectTemplates = null;
+            item.Voice = null;
+            item.Footstep = null;
             base.Clear(item);
         }
         
@@ -729,6 +2627,53 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IArmor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.ObjectEffect.Relink(mapping);
+            obj.WorldModel?.RemapLinks(mapping);
+            obj.PickupSound?.RemapLinks(mapping);
+            obj.DropdownSound?.RemapLinks(mapping);
+            obj.AlternateBlockMaterial.Relink(mapping);
+            obj.Race.Relink(mapping);
+            obj.Keywords?.RemapLinks(mapping);
+            obj.InstanceNaming.Relink(mapping);
+            obj.Armatures.RemapLinks(mapping);
+            obj.Resistances?.RemapLinks(mapping);
+            obj.AttachParentSlots?.RemapLinks(mapping);
+            obj.ObjectTemplates?.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IArmor obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.WorldModel is {} WorldModelItem)
+            {
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IArmor obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.WorldModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -796,6 +2741,81 @@ namespace Mutagen.Bethesda.Starfield
             Armor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.ObjectEffect = item.ObjectEffect.Equals(rhs.ObjectEffect);
+            ret.WorldModel = GenderedItem.EqualityMaskHelper(
+                lhs: item.WorldModel,
+                rhs: rhs.WorldModel,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
+            ret.PickupSound = EqualsMaskHelper.EqualsHelper(
+                item.PickupSound,
+                rhs.PickupSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DropdownSound = EqualsMaskHelper.EqualsHelper(
+                item.DropdownSound,
+                rhs.DropdownSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.AlternateBlockMaterial = item.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial);
+            ret.Race = item.Race.Equals(rhs.Race);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.InstanceNaming = item.InstanceNaming.Equals(rhs.InstanceNaming);
+            ret.Armatures = item.Armatures.CollectionEqualsHelper(
+                rhs.Armatures,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.Health = item.Health == rhs.Health;
+            ret.ArmorRating = item.ArmorRating == rhs.ArmorRating;
+            ret.BaseAddonIndex = item.BaseAddonIndex == rhs.BaseAddonIndex;
+            ret.StaggerRating = item.StaggerRating == rhs.StaggerRating;
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.Resistances = item.Resistances.CollectionEqualsHelper(
+                rhs.Resistances,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.AttachParentSlots = item.AttachParentSlots.CollectionEqualsHelper(
+                rhs.AttachParentSlots,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ObjectTemplates = item.ObjectTemplates.CollectionEqualsHelper(
+                rhs.ObjectTemplates,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Voice = EqualsMaskHelper.EqualsHelper(
+                item.Voice,
+                rhs.Voice,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Footstep = EqualsMaskHelper.EqualsHelper(
+                item.Footstep,
+                rhs.Footstep,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -845,6 +2865,197 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                VirtualMachineAdapterItem?.Print(sb, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
+            }
+            if ((printMask?.ODTY ?? true)
+                && item.ODTY is {} ODTYItem)
+            {
+                sb.AppendItem(ODTYItem, "ODTY");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.ObjectEffect ?? true)
+            {
+                sb.AppendItem(item.ObjectEffect.FormKeyNullable, "ObjectEffect");
+            }
+            if ((printMask?.WorldModel?.Overall ?? true)
+                && item.WorldModel is {} WorldModelItem)
+            {
+                WorldModelItem?.Print(sb, "WorldModel");
+            }
+            if ((printMask?.FirstPersonFlags ?? true)
+                && item.FirstPersonFlags is {} FirstPersonFlagsItem)
+            {
+                sb.AppendItem(FirstPersonFlagsItem, "FirstPersonFlags");
+            }
+            if ((printMask?.PickupSound?.Overall ?? true)
+                && item.PickupSound is {} PickupSoundItem)
+            {
+                PickupSoundItem?.Print(sb, "PickupSound");
+            }
+            if ((printMask?.DropdownSound?.Overall ?? true)
+                && item.DropdownSound is {} DropdownSoundItem)
+            {
+                DropdownSoundItem?.Print(sb, "DropdownSound");
+            }
+            if (printMask?.AlternateBlockMaterial ?? true)
+            {
+                sb.AppendItem(item.AlternateBlockMaterial.FormKeyNullable, "AlternateBlockMaterial");
+            }
+            if (printMask?.Race ?? true)
+            {
+                sb.AppendItem(item.Race.FormKeyNullable, "Race");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords is {} KeywordsItem)
+            {
+                sb.AppendLine("Keywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.InstanceNaming ?? true)
+            {
+                sb.AppendItem(item.InstanceNaming.FormKeyNullable, "InstanceNaming");
+            }
+            if (printMask?.Armatures?.Overall ?? true)
+            {
+                sb.AppendLine("Armatures =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Armatures)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.Value ?? true)
+            {
+                sb.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                sb.AppendItem(item.Weight, "Weight");
+            }
+            if (printMask?.Health ?? true)
+            {
+                sb.AppendItem(item.Health, "Health");
+            }
+            if (printMask?.ArmorRating ?? true)
+            {
+                sb.AppendItem(item.ArmorRating, "ArmorRating");
+            }
+            if (printMask?.BaseAddonIndex ?? true)
+            {
+                sb.AppendItem(item.BaseAddonIndex, "BaseAddonIndex");
+            }
+            if (printMask?.StaggerRating ?? true)
+            {
+                sb.AppendItem(item.StaggerRating, "StaggerRating");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+            }
+            if ((printMask?.Resistances?.Overall ?? true)
+                && item.Resistances is {} ResistancesItem)
+            {
+                sb.AppendLine("Resistances =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ResistancesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.AttachParentSlots?.Overall ?? true)
+                && item.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                sb.AppendLine("AttachParentSlots =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in AttachParentSlotsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ObjectTemplates?.Overall ?? true)
+                && item.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                sb.AppendLine("ObjectTemplates =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ObjectTemplatesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Voice?.Overall ?? true)
+                && item.Voice is {} VoiceItem)
+            {
+                VoiceItem?.Print(sb, "Voice");
+            }
+            if ((printMask?.Footstep?.Overall ?? true)
+                && item.Footstep is {} FootstepItem)
+            {
+                FootstepItem?.Print(sb, "Footstep");
+            }
         }
         
         public static Armor_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -895,6 +3106,150 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ODTY) ?? true))
+            {
+                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
+            {
+                if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.WorldModel) ?? true))
+            {
+                if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.FirstPersonFlags) ?? true))
+            {
+                if (lhs.FirstPersonFlags != rhs.FirstPersonFlags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.PickupSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PickupSound, rhs.PickupSound, out var lhsPickupSound, out var rhsPickupSound, out var isPickupSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPickupSound).CommonInstance()!).Equals(lhsPickupSound, rhsPickupSound, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.PickupSound))) return false;
+                }
+                else if (!isPickupSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.DropdownSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DropdownSound, rhs.DropdownSound, out var lhsDropdownSound, out var rhsDropdownSound, out var isDropdownSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDropdownSound).CommonInstance()!).Equals(lhsDropdownSound, rhsDropdownSound, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.DropdownSound))) return false;
+                }
+                else if (!isDropdownSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
+            {
+                if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
+            {
+                if (!lhs.Race.Equals(rhs.Race)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.InstanceNaming) ?? true))
+            {
+                if (!lhs.InstanceNaming.Equals(rhs.InstanceNaming)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Armatures) ?? true))
+            {
+                if (!lhs.Armatures.SequenceEqual(rhs.Armatures, (l, r) => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Armatures)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Health) ?? true))
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
+            {
+                if (lhs.ArmorRating != rhs.ArmorRating) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BaseAddonIndex) ?? true))
+            {
+                if (lhs.BaseAddonIndex != rhs.BaseAddonIndex) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.StaggerRating) ?? true))
+            {
+                if (lhs.StaggerRating != rhs.StaggerRating) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
+            {
+                if (!lhs.Resistances.SequenceEqualNullable(rhs.Resistances, (l, r) => ((ArmorResistanceCommon)((IArmorResistanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Resistances)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.AttachParentSlots) ?? true))
+            {
+                if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectTemplates) ?? true))
+            {
+                if (!lhs.ObjectTemplates.SequenceEqualNullable(rhs.ObjectTemplates, (l, r) => ((ObjectTemplateCommon<Armor.Property>)((IObjectTemplateGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.ObjectTemplates)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Voice) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Voice, rhs.Voice, out var lhsVoice, out var rhsVoice, out var isVoiceEqual))
+                {
+                    if (!((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)lhsVoice).CommonInstance()!).Equals(lhsVoice, rhsVoice, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Voice))) return false;
+                }
+                else if (!isVoiceEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Footstep) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Footstep, rhs.Footstep, out var lhsFootstep, out var rhsFootstep, out var isFootstepEqual))
+                {
+                    if (!((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)lhsFootstep).CommonInstance()!).Equals(lhsFootstep, rhsFootstep, equalsMask?.GetSubCrystal((int)Armor_FieldIndex.Footstep))) return false;
+                }
+                else if (!isFootstepEqual) return false;
+            }
             return true;
         }
         
@@ -923,6 +3278,68 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IArmorGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapteritem)
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.ODTY is {} ODTYitem)
+            {
+                hash.Add(ODTYitem);
+            }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.ObjectEffect);
+            if (item.WorldModel is {} WorldModelitem)
+            {
+                hash.Add(HashCode.Combine(WorldModelitem.Male, WorldModelitem.Female));
+            }
+            if (item.FirstPersonFlags is {} FirstPersonFlagsitem)
+            {
+                hash.Add(FirstPersonFlagsitem);
+            }
+            if (item.PickupSound is {} PickupSounditem)
+            {
+                hash.Add(PickupSounditem);
+            }
+            if (item.DropdownSound is {} DropdownSounditem)
+            {
+                hash.Add(DropdownSounditem);
+            }
+            hash.Add(item.AlternateBlockMaterial);
+            hash.Add(item.Race);
+            hash.Add(item.Keywords);
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
+            hash.Add(item.InstanceNaming);
+            hash.Add(item.Armatures);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
+            hash.Add(item.Health);
+            hash.Add(item.ArmorRating);
+            hash.Add(item.BaseAddonIndex);
+            hash.Add(item.StaggerRating);
+            hash.Add(item.Unused);
+            hash.Add(item.Resistances);
+            hash.Add(item.AttachParentSlots);
+            hash.Add(item.ObjectTemplates);
+            if (item.Voice is {} Voiceitem)
+            {
+                hash.Add(Voiceitem);
+            }
+            if (item.Footstep is {} Footstepitem)
+            {
+                hash.Add(Footstepitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -951,6 +3368,118 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.ObjectEffect, out var ObjectEffectInfo))
+            {
+                yield return ObjectEffectInfo;
+            }
+            if (obj.WorldModel is {} WorldModelItem)
+            {
+                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.PickupSound is {} PickupSoundItems)
+            {
+                foreach (var item in PickupSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DropdownSound is {} DropdownSoundItems)
+            {
+                foreach (var item in DropdownSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.AlternateBlockMaterial, out var AlternateBlockMaterialInfo))
+            {
+                yield return AlternateBlockMaterialInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
+            {
+                yield return RaceInfo;
+            }
+            if (obj.Keywords is {} KeywordsItem)
+            {
+                foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.InstanceNaming, out var InstanceNamingInfo))
+            {
+                yield return InstanceNamingInfo;
+            }
+            foreach (var item in obj.Armatures.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Resistances is {} ResistancesItem)
+            {
+                foreach (var item in ResistancesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.AttachParentSlots is {} AttachParentSlotsItem)
+            {
+                foreach (var item in AttachParentSlotsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ObjectTemplates is {} ObjectTemplatesItem)
+            {
+                foreach (var item in ObjectTemplatesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IArmorGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.WorldModel is {} WorldModelItem)
+                {
+                    foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1026,6 +3555,424 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter is {} rhsVirtualMachineAdapter)
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Armor_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ODTY) ?? true))
+            {
+                item.ODTY = rhs.ODTY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
+            {
+                item.ObjectEffect.SetTo(rhs.ObjectEffect.FormKeyNullable);
+            }
+            if (rhs.WorldModel is not {} rhsWorldModelitem)
+            {
+                item.WorldModel = null;
+            }
+            else
+            {
+                item.WorldModel = new GenderedItem<Model?>(
+                    male: rhsWorldModelitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsWorldModelitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.FirstPersonFlags) ?? true))
+            {
+                item.FirstPersonFlags = rhs.FirstPersonFlags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.PickupSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.PickupSound);
+                try
+                {
+                    if(rhs.PickupSound is {} rhsPickupSound)
+                    {
+                        item.PickupSound = rhsPickupSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.PickupSound));
+                    }
+                    else
+                    {
+                        item.PickupSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DropdownSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.DropdownSound);
+                try
+                {
+                    if(rhs.DropdownSound is {} rhsDropdownSound)
+                    {
+                        item.DropdownSound = rhsDropdownSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.DropdownSound));
+                    }
+                    else
+                    {
+                        item.DropdownSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
+            {
+                item.AlternateBlockMaterial.SetTo(rhs.AlternateBlockMaterial.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
+            {
+                item.Race.SetTo(rhs.Race.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.InstanceNaming) ?? true))
+            {
+                item.InstanceNaming.SetTo(rhs.InstanceNaming.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Armatures) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.Armatures);
+                try
+                {
+                    item.Armatures.SetTo(
+                        rhs.Armatures
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Health) ?? true))
+            {
+                item.Health = rhs.Health;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
+            {
+                item.ArmorRating = rhs.ArmorRating;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.BaseAddonIndex) ?? true))
+            {
+                item.BaseAddonIndex = rhs.BaseAddonIndex;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.StaggerRating) ?? true))
+            {
+                item.StaggerRating = rhs.StaggerRating;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Resistances) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.Resistances);
+                try
+                {
+                    if ((rhs.Resistances != null))
+                    {
+                        item.Resistances = 
+                            rhs.Resistances
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ArmorResistance>();
+                    }
+                    else
+                    {
+                        item.Resistances = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.AttachParentSlots) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.AttachParentSlots);
+                try
+                {
+                    if ((rhs.AttachParentSlots != null))
+                    {
+                        item.AttachParentSlots = 
+                            rhs.AttachParentSlots
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.AttachParentSlots = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ObjectTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.ObjectTemplates);
+                try
+                {
+                    if ((rhs.ObjectTemplates != null))
+                    {
+                        item.ObjectTemplates = 
+                            rhs.ObjectTemplates
+                            .Select(r =>
+                            {
+                                return r.DeepCopy<Armor.Property>(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ObjectTemplate<Armor.Property>>();
+                    }
+                    else
+                    {
+                        item.ObjectTemplates = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Voice) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.Voice);
+                try
+                {
+                    if(rhs.Voice is {} rhsVoice)
+                    {
+                        item.Voice = rhsVoice.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.Voice));
+                    }
+                    else
+                    {
+                        item.Voice = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Footstep) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.Footstep);
+                try
+                {
+                    if(rhs.Footstep is {} rhsFootstep)
+                    {
+                        item.Footstep = rhsFootstep.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.Footstep));
+                    }
+                    else
+                    {
+                        item.Footstep = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1174,6 +4121,216 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ArmorBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IArmorGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.VirtualMachineAdapter is {} VirtualMachineAdapterItem)
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    translationParams: translationParams.With(RecordTypes.XXXX));
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.ODTY,
+                header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ObjectEffect,
+                header: translationParams.ConvertToCustom(RecordTypes.EITM));
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.WorldModel,
+                femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
+                maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
+            EnumBinaryTranslation<FirstPersonFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.FirstPersonFlags,
+                length: 8,
+                header: translationParams.ConvertToCustom(RecordTypes.BO64));
+            if (item.PickupSound is {} PickupSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PickupSoundItem).BinaryWriteTranslator).Write(
+                        item: PickupSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.DropdownSound is {} DropdownSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PDSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DropdownSoundItem).BinaryWriteTranslator).Write(
+                        item: DropdownSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AlternateBlockMaterial,
+                header: translationParams.ConvertToCustom(RecordTypes.BAMT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Race,
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.InstanceNaming,
+                header: translationParams.ConvertToCustom(RecordTypes.INRD));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IArmorAddonModelGetter>.Instance.Write(
+                writer: writer,
+                items: item.Armatures,
+                transl: (MutagenWriter subWriter, IArmorAddonModelGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ArmorAddonModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                writer.Write(item.Value);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Weight);
+                writer.Write(item.Health);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.FNAM)))
+            {
+                writer.Write(item.ArmorRating);
+                writer.Write(item.BaseAddonIndex);
+                writer.Write(item.StaggerRating);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IArmorResistanceGetter>.Instance.Write(
+                writer: writer,
+                items: item.Resistances,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DAMA),
+                transl: (MutagenWriter subWriter, IArmorResistanceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ArmorResistanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AttachParentSlots,
+                recordType: translationParams.ConvertToCustom(RecordTypes.APPR),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectTemplateGetter<Armor.Property>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.ObjectTemplates,
+                counterType: RecordTypes.OBTE,
+                counterLength: 4,
+                endMarker: RecordTypes.STOP,
+                alwaysWriteEndMarker: true,
+                transl: (MutagenWriter subWriter, IObjectTemplateGetter<Armor.Property> subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ObjectTemplateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<Armor.Property>(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.Voice is {} VoiceItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.AVSG))
+                {
+                    ((ArmorCategoryValueBinaryWriteTranslation)((IBinaryItem)VoiceItem).BinaryWriteTranslator).Write(
+                        item: VoiceItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.Footstep is {} FootstepItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.AFSG))
+                {
+                    ((ArmorCategoryValueBinaryWriteTranslation)((IBinaryItem)FootstepItem).BinaryWriteTranslator).Write(
+                        item: FootstepItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IArmorGetter item,
@@ -1190,10 +4347,12 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1243,6 +4402,244 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.ARMO;
+        public static ParseResult FillBinaryRecordTypes(
+            IArmorInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Starfield.VirtualMachineAdapter.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.With(lastParsed.LengthOverride).DoNotShortCircuit());
+                    return (int)Armor_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Starfield.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)Armor_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Armor_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)Armor_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Armor_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Armor_FieldIndex.Name;
+                }
+                case RecordTypeInts.EITM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Armor_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.MOD2:
+                case RecordTypeInts.MOD4:
+                case RecordTypeInts.MO2T:
+                case RecordTypeInts.MO4T:
+                case RecordTypeInts.MLM2:
+                case RecordTypeInts.MLM4:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MO2C:
+                case RecordTypeInts.MO4C:
+                case RecordTypeInts.MO2F:
+                case RecordTypeInts.MO4F:
+                {
+                    item.WorldModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
+                        frame: frame,
+                        femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
+                        maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
+                        transl: Model.TryCreateFromBinary);
+                    return (int)Armor_FieldIndex.WorldModel;
+                }
+                case RecordTypeInts.BO64:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FirstPersonFlags = EnumBinaryTranslation<FirstPersonFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Armor_FieldIndex.FirstPersonFlags;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Armor_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Armor_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.BAMT:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Armor_FieldIndex.AlternateBlockMaterial;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Armor_FieldIndex.Race;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: translationParams.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Armor_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Armor_FieldIndex.Description;
+                }
+                case RecordTypeInts.INRD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Armor_FieldIndex.InstanceNaming;
+                }
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.MODL:
+                {
+                    item.Armatures.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ArmorAddonModel>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: ArmorAddonModel_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ArmorAddonModel.TryCreateFromBinary));
+                    return (int)Armor_FieldIndex.Armatures;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Value = dataFrame.ReadInt32();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Health = dataFrame.ReadUInt32();
+                    return (int)Armor_FieldIndex.Health;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 2) return null;
+                    item.ArmorRating = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.BaseAddonIndex = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.StaggerRating = dataFrame.ReadUInt8();
+                    item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    return (int)Armor_FieldIndex.Unused;
+                }
+                case RecordTypeInts.DAMA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Resistances = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ArmorResistance>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ArmorResistance.TryCreateFromBinary)
+                        .CastExtendedList<ArmorResistance>();
+                    return (int)Armor_FieldIndex.Resistances;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttachParentSlots = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)Armor_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    item.ObjectTemplates = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ObjectTemplate<Armor.Property>>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.OBTE,
+                            triggeringRecord: ObjectTemplate_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ObjectTemplate<Armor.Property>.TryCreateFromBinary)
+                        .CastExtendedList<ObjectTemplate<Armor.Property>>();
+                    return (int)Armor_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.AVSG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.Voice = Mutagen.Bethesda.Starfield.ArmorCategoryValue.CreateFromBinary(frame: frame);
+                    return (int)Armor_FieldIndex.Voice;
+                }
+                case RecordTypeInts.AFSG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.Footstep = Mutagen.Bethesda.Starfield.ArmorCategoryValue.CreateFromBinary(frame: frame);
+                    return (int)Armor_FieldIndex.Footstep;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1275,6 +4672,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ArmorCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1288,7 +4687,117 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IArmor);
 
+        public Armor.MajorFlag MajorFlags => (Armor.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private int? _VirtualMachineAdapterLengthOverride;
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(_recordData.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package, TypedParseParams.FromLengthOverride(_VirtualMachineAdapterLengthOverride)) : default;
+        IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ODTY
+        private int? _ODTYLocation;
+        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region ObjectEffect
+        private int? _ObjectEffectLocation;
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ObjectEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEffectRecordGetter>.Null;
+        #endregion
+        #region WorldModel
+        private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;
+        public IGenderedItemGetter<IModelGetter?>? WorldModel => _WorldModelOverlay;
+        #endregion
+        #region FirstPersonFlags
+        private int? _FirstPersonFlagsLocation;
+        public FirstPersonFlag? FirstPersonFlags => _FirstPersonFlagsLocation.HasValue ? (FirstPersonFlag)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FirstPersonFlagsLocation!.Value, _package.MetaData.Constants)) : default(FirstPersonFlag?);
+        #endregion
+        public ISoundReferenceGetter? PickupSound { get; private set; }
+        public ISoundReferenceGetter? DropdownSound { get; private set; }
+        #region AlternateBlockMaterial
+        private int? _AlternateBlockMaterialLocation;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlternateBlockMaterialLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        #endregion
+        #region Race
+        private int? _RaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        #region Keywords
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        #region InstanceNaming
+        private int? _InstanceNamingLocation;
+        public IFormLinkNullableGetter<IInstanceNamingRulesGetter> InstanceNaming => _InstanceNamingLocation.HasValue ? new FormLinkNullable<IInstanceNamingRulesGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InstanceNamingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IInstanceNamingRulesGetter>.Null;
+        #endregion
+        public IReadOnlyList<IArmorAddonModelGetter> Armatures { get; private set; } = Array.Empty<IArmorAddonModelGetter>();
+        private RangeInt32? _DATALocation;
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value.Min;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public Int32 Value => _Value_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? _recordData.Slice(_WeightLocation, 4).Float() : default;
+        #endregion
+        #region Health
+        private int _HealthLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Health_IsSet => _DATALocation.HasValue;
+        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_HealthLocation, 4)) : default;
+        #endregion
+        private RangeInt32? _FNAMLocation;
+        #region ArmorRating
+        private int _ArmorRatingLocation => _FNAMLocation!.Value.Min;
+        private bool _ArmorRating_IsSet => _FNAMLocation.HasValue;
+        public UInt16 ArmorRating => _ArmorRating_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ArmorRatingLocation, 2)) : default;
+        #endregion
+        #region BaseAddonIndex
+        private int _BaseAddonIndexLocation => _FNAMLocation!.Value.Min + 0x2;
+        private bool _BaseAddonIndex_IsSet => _FNAMLocation.HasValue;
+        public UInt16 BaseAddonIndex => _BaseAddonIndex_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_BaseAddonIndexLocation, 2)) : default;
+        #endregion
+        #region StaggerRating
+        private int _StaggerRatingLocation => _FNAMLocation!.Value.Min + 0x4;
+        private bool _StaggerRating_IsSet => _FNAMLocation.HasValue;
+        public Byte StaggerRating => _StaggerRating_IsSet ? _recordData.Span[_StaggerRatingLocation] : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _FNAMLocation!.Value.Min + 0x5;
+        private bool _Unused_IsSet => _FNAMLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #endregion
+        public IReadOnlyList<IArmorResistanceGetter>? Resistances { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
+        public IReadOnlyList<IObjectTemplateGetter<Armor.Property>>? ObjectTemplates { get; private set; }
+        public IArmorCategoryValueGetter? Voice { get; private set; }
+        public IArmorCategoryValueGetter? Footstep { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1346,6 +4855,230 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.VMAD:
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    _VirtualMachineAdapterLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Armor_FieldIndex.VirtualMachineAdapter;
+                }
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Armor_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.ODTY:
+                {
+                    _ODTYLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.ODTY;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Armor_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Armor_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.Name;
+                }
+                case RecordTypeInts.EITM:
+                {
+                    _ObjectEffectLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.ObjectEffect;
+                }
+                case RecordTypeInts.MOD2:
+                case RecordTypeInts.MOD4:
+                case RecordTypeInts.MO2T:
+                case RecordTypeInts.MO4T:
+                case RecordTypeInts.MLM2:
+                case RecordTypeInts.MLM4:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MO2C:
+                case RecordTypeInts.MO4C:
+                case RecordTypeInts.MO2F:
+                case RecordTypeInts.MO4F:
+                {
+                    _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
+                        package: _package,
+                        stream: stream,
+                        creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
+                        maleRecordConverter: Armor_Registration.WorldModelMaleConverter);
+                    return (int)Armor_FieldIndex.WorldModel;
+                }
+                case RecordTypeInts.BO64:
+                {
+                    _FirstPersonFlagsLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.FirstPersonFlags;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.PickupSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Armor_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.DropdownSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Armor_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.BAMT:
+                {
+                    _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.AlternateBlockMaterial;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _RaceLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.Race;
+                }
+                case RecordTypeInts.KSIZ:
+                case RecordTypeInts.KWDA:
+                {
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        trigger: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)Armor_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.Description;
+                }
+                case RecordTypeInts.INRD:
+                {
+                    _InstanceNamingLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.InstanceNaming;
+                }
+                case RecordTypeInts.INDX:
+                case RecordTypeInts.MODL:
+                {
+                    this.Armatures = this.ParseRepeatedTypelessSubrecord<IArmorAddonModelGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: ArmorAddonModel_Registration.TriggerSpecs,
+                        factory: ArmorAddonModelBinaryOverlay.ArmorAddonModelFactory);
+                    return (int)Armor_FieldIndex.Armatures;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Armor_FieldIndex.Health;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _FNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Armor_FieldIndex.Unused;
+                }
+                case RecordTypeInts.DAMA:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IArmorResistanceGetter>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => ArmorResistanceBinaryOverlay.ArmorResistanceFactory(s, p));
+                    stream.Position += subLen;
+                    return (int)Armor_FieldIndex.Resistances;
+                }
+                case RecordTypeInts.APPR:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)Armor_FieldIndex.AttachParentSlots;
+                }
+                case RecordTypeInts.OBTE:
+                {
+                    this.ObjectTemplates = BinaryOverlayList.FactoryByCountPerItem<IObjectTemplateGetter<Armor.Property>>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: ObjectTemplate_Registration.TriggerSpecs,
+                        countType: RecordTypes.OBTE,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ObjectTemplateBinaryOverlay<Armor.Property>.ObjectTemplateFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Armor_FieldIndex.ObjectTemplates;
+                }
+                case RecordTypeInts.AVSG:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.Voice = ArmorCategoryValueBinaryOverlay.ArmorCategoryValueFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Armor_FieldIndex.Voice;
+                }
+                case RecordTypeInts.AFSG:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.Footstep = ArmorCategoryValueBinaryOverlay.ArmorCategoryValueFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Armor_FieldIndex.Footstep;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

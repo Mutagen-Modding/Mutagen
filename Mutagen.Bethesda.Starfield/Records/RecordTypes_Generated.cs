@@ -14,6 +14,7 @@ public partial class RecordTypes
     public static readonly RecordType ADDN = new(0x4E444441);
     public static readonly RecordType AEAR = new(0x52414541);
     public static readonly RecordType AFFE = new(0x45464641);
+    public static readonly RecordType AFSG = new(0x47534641);
     public static readonly RecordType AHCM = new(0x4D434841);
     public static readonly RecordType ALCA = new(0x41434C41);
     public static readonly RecordType ALCC = new(0x43434C41);
@@ -83,6 +84,7 @@ public partial class RecordTypes
     public static readonly RecordType ATTX = new(0x58545441);
     public static readonly RecordType AVIF = new(0x46495641);
     public static readonly RecordType AVMD = new(0x444D5641);
+    public static readonly RecordType AVSG = new(0x47535641);
     public static readonly RecordType BAMT = new(0x544D4142);
     public static readonly RecordType BDED = new(0x44454442);
     public static readonly RecordType BDST = new(0x54534442);
@@ -286,10 +288,20 @@ public partial class RecordTypes
     public static readonly RecordType MESG = new(0x4753454D);
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MISC = new(0x4353494D);
+    public static readonly RecordType MLM2 = new(0x324D4C4D);
+    public static readonly RecordType MLM4 = new(0x344D4C4D);
     public static readonly RecordType MNAM = new(0x4D414E4D);
+    public static readonly RecordType MO2C = new(0x43324F4D);
+    public static readonly RecordType MO2F = new(0x46324F4D);
+    public static readonly RecordType MO2T = new(0x54324F4D);
+    public static readonly RecordType MO4C = new(0x43344F4D);
+    public static readonly RecordType MO4F = new(0x46344F4D);
     public static readonly RecordType MO4S = new(0x53344F4D);
+    public static readonly RecordType MO4T = new(0x54344F4D);
+    public static readonly RecordType MOD2 = new(0x32444F4D);
     public static readonly RecordType MOD4 = new(0x34444F4D);
     public static readonly RecordType MODC = new(0x43444F4D);
+    public static readonly RecordType MODF = new(0x46444F4D);
     public static readonly RecordType MODL = new(0x4C444F4D);
     public static readonly RecordType MODT = new(0x54444F4D);
     public static readonly RecordType MOLM = new(0x4D4C4F4D);

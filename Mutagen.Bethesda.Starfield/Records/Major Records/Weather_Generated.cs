@@ -4109,6 +4109,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
+                RecordTypes.MODF,
                 RecordTypes.GNAM,
                 RecordTypes.UNAM,
                 RecordTypes.VNAM,
@@ -7351,6 +7352,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
                 {
                     item.Aurora = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
                         frame: frame,
@@ -8087,6 +8089,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
                 {
                     this.Aurora = ModelBinaryOverlay.ModelFactory(
                         stream: stream,

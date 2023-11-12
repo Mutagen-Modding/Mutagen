@@ -12,6 +12,7 @@ public partial class RecordTypeInts
     public const int ADDN = 0x4E444441;
     public const int AEAR = 0x52414541;
     public const int AFFE = 0x45464641;
+    public const int AFSG = 0x47534641;
     public const int AHCM = 0x4D434841;
     public const int ALCA = 0x41434C41;
     public const int ALCC = 0x43434C41;
@@ -81,6 +82,7 @@ public partial class RecordTypeInts
     public const int ATTX = 0x58545441;
     public const int AVIF = 0x46495641;
     public const int AVMD = 0x444D5641;
+    public const int AVSG = 0x47535641;
     public const int BAMT = 0x544D4142;
     public const int BDED = 0x44454442;
     public const int BDST = 0x54534442;
@@ -284,10 +286,20 @@ public partial class RecordTypeInts
     public const int MESG = 0x4753454D;
     public const int MGEF = 0x4645474D;
     public const int MISC = 0x4353494D;
+    public const int MLM2 = 0x324D4C4D;
+    public const int MLM4 = 0x344D4C4D;
     public const int MNAM = 0x4D414E4D;
+    public const int MO2C = 0x43324F4D;
+    public const int MO2F = 0x46324F4D;
+    public const int MO2T = 0x54324F4D;
+    public const int MO4C = 0x43344F4D;
+    public const int MO4F = 0x46344F4D;
     public const int MO4S = 0x53344F4D;
+    public const int MO4T = 0x54344F4D;
+    public const int MOD2 = 0x32444F4D;
     public const int MOD4 = 0x34444F4D;
     public const int MODC = 0x43444F4D;
+    public const int MODF = 0x46444F4D;
     public const int MODL = 0x4C444F4D;
     public const int MODT = 0x54444F4D;
     public const int MOLM = 0x4D4C4F4D;

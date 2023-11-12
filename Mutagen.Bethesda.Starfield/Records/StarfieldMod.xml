@@ -29,6 +29,7 @@
       <Group name="Activators" refName="Activator" />
       <Group name="CurveTables" refName="CurveTable" />
       <Group name="Curve3Ds" refName="Curve3D" />
+      <Group name="Armors" refName="Armor" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Perks" refName="Perk" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />

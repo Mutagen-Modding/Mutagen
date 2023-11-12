@@ -7,11 +7,8 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
-using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
-using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -42,41 +38,38 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BodyData :
-        IBodyData,
-        IEquatable<IBodyDataGetter>,
-        ILoquiObjectSetter<BodyData>
+    public partial class ArmorMorph :
+        IArmorMorph,
+        IEquatable<IArmorMorphGetter>,
+        ILoquiObjectSetter<ArmorMorph>
     {
         #region Ctor
-        public BodyData()
+        public ArmorMorph()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Index
-        public BodyData.PartIndex? Index { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        BodyData.PartIndex? IBodyDataGetter.Index => this.Index;
-        #endregion
-        #region Model
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model? _Model;
-        /// <summary>
-        /// Aspects: IModeled
-        /// </summary>
-        public Model? Model
+        #region WorldMorph
+        private readonly IFormLinkNullable<IMorphableObjectGetter> _WorldMorph = new FormLinkNullable<IMorphableObjectGetter>();
+        public IFormLinkNullable<IMorphableObjectGetter> WorldMorph
         {
-            get => _Model;
-            set => _Model = value;
+            get => _WorldMorph;
+            set => _WorldMorph.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IBodyDataGetter.Model => this.Model;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IModeledGetter.Model => this.Model;
+        IFormLinkNullableGetter<IMorphableObjectGetter> IArmorMorphGetter.WorldMorph => this.WorldMorph;
         #endregion
+        #region FirstPersonMorph
+        private readonly IFormLinkNullable<IMorphableObjectGetter> _FirstPersonMorph = new FormLinkNullable<IMorphableObjectGetter>();
+        public IFormLinkNullable<IMorphableObjectGetter> FirstPersonMorph
+        {
+            get => _FirstPersonMorph;
+            set => _FirstPersonMorph.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMorphableObjectGetter> IArmorMorphGetter.FirstPersonMorph => this.FirstPersonMorph;
         #endregion
 
         #region To String
@@ -85,7 +78,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyDataMixIn.Print(
+            ArmorMorphMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -96,16 +89,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBodyDataGetter rhs) return false;
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorMorphGetter rhs) return false;
+            return ((ArmorMorphCommon)((IArmorMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBodyDataGetter? obj)
+        public bool Equals(IArmorMorphGetter? obj)
         {
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorMorphCommon)((IArmorMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorMorphCommon)((IArmorMorphGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -117,16 +110,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Index = initialValue;
-                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.WorldMorph = initialValue;
+                this.FirstPersonMorph = initialValue;
             }
 
             public Mask(
-                TItem Index,
-                TItem Model)
+                TItem WorldMorph,
+                TItem FirstPersonMorph)
             {
-                this.Index = Index;
-                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.WorldMorph = WorldMorph;
+                this.FirstPersonMorph = FirstPersonMorph;
             }
 
             #pragma warning disable CS8618
@@ -138,8 +131,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Index;
-            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem WorldMorph;
+            public TItem FirstPersonMorph;
             #endregion
 
             #region Equals
@@ -152,15 +145,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Index, rhs.Index)) return false;
-                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.WorldMorph, rhs.WorldMorph)) return false;
+                if (!object.Equals(this.FirstPersonMorph, rhs.FirstPersonMorph)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Index);
-                hash.Add(this.Model);
+                hash.Add(this.WorldMorph);
+                hash.Add(this.FirstPersonMorph);
                 return hash.ToHashCode();
             }
 
@@ -169,12 +162,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Index)) return false;
-                if (Model != null)
-                {
-                    if (!eval(this.Model.Overall)) return false;
-                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
-                }
+                if (!eval(this.WorldMorph)) return false;
+                if (!eval(this.FirstPersonMorph)) return false;
                 return true;
             }
             #endregion
@@ -182,12 +171,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Index)) return true;
-                if (Model != null)
-                {
-                    if (eval(this.Model.Overall)) return true;
-                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
-                }
+                if (eval(this.WorldMorph)) return true;
+                if (eval(this.FirstPersonMorph)) return true;
                 return false;
             }
             #endregion
@@ -195,40 +180,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BodyData.Mask<R>();
+                var ret = new ArmorMorph.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Index = eval(this.Index);
-                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.WorldMorph = eval(this.WorldMorph);
+                obj.FirstPersonMorph = eval(this.FirstPersonMorph);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BodyData.Mask<bool>? printMask = null)
+            public string Print(ArmorMorph.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BodyData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ArmorMorph.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BodyData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ArmorMorph.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Index ?? true)
+                    if (printMask?.WorldMorph ?? true)
                     {
-                        sb.AppendItem(Index, "Index");
+                        sb.AppendItem(WorldMorph, "WorldMorph");
                     }
-                    if (printMask?.Model?.Overall ?? true)
+                    if (printMask?.FirstPersonMorph ?? true)
                     {
-                        Model?.Print(sb);
+                        sb.AppendItem(FirstPersonMorph, "FirstPersonMorph");
                     }
                 }
             }
@@ -254,20 +239,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Index;
-            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? WorldMorph;
+            public Exception? FirstPersonMorph;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
+                ArmorMorph_FieldIndex enu = (ArmorMorph_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyData_FieldIndex.Index:
-                        return Index;
-                    case BodyData_FieldIndex.Model:
-                        return Model;
+                    case ArmorMorph_FieldIndex.WorldMorph:
+                        return WorldMorph;
+                    case ArmorMorph_FieldIndex.FirstPersonMorph:
+                        return FirstPersonMorph;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -275,14 +260,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
+                ArmorMorph_FieldIndex enu = (ArmorMorph_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyData_FieldIndex.Index:
-                        this.Index = ex;
+                    case ArmorMorph_FieldIndex.WorldMorph:
+                        this.WorldMorph = ex;
                         break;
-                    case BodyData_FieldIndex.Model:
-                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                    case ArmorMorph_FieldIndex.FirstPersonMorph:
+                        this.FirstPersonMorph = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -291,14 +276,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
+                ArmorMorph_FieldIndex enu = (ArmorMorph_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyData_FieldIndex.Index:
-                        this.Index = (Exception?)obj;
+                    case ArmorMorph_FieldIndex.WorldMorph:
+                        this.WorldMorph = (Exception?)obj;
                         break;
-                    case BodyData_FieldIndex.Model:
-                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                    case ArmorMorph_FieldIndex.FirstPersonMorph:
+                        this.FirstPersonMorph = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -308,8 +293,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Index != null) return true;
-                if (Model != null) return true;
+                if (WorldMorph != null) return true;
+                if (FirstPersonMorph != null) return true;
                 return false;
             }
             #endregion
@@ -336,9 +321,11 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Index, "Index");
+                    sb.AppendItem(WorldMorph, "WorldMorph");
                 }
-                Model?.Print(sb);
+                {
+                    sb.AppendItem(FirstPersonMorph, "FirstPersonMorph");
+                }
             }
             #endregion
 
@@ -347,8 +334,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Index = this.Index.Combine(rhs.Index);
-                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.WorldMorph = this.WorldMorph.Combine(rhs.WorldMorph);
+                ret.FirstPersonMorph = this.FirstPersonMorph.Combine(rhs.FirstPersonMorph);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -372,8 +359,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Index;
-            public Model.TranslationMask? Model;
+            public bool WorldMorph;
+            public bool FirstPersonMorph;
             #endregion
 
             #region Ctors
@@ -383,7 +370,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Index = defaultOn;
+                this.WorldMorph = defaultOn;
+                this.FirstPersonMorph = defaultOn;
             }
 
             #endregion
@@ -399,8 +387,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Index, null));
-                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((WorldMorph, null));
+                ret.Add((FirstPersonMorph, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -412,35 +400,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyDataCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BodyDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
-        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => BodyDataSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
-        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BodyDataSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorMorphCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorMorphSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorMorphBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BodyDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static BodyData CreateFromBinary(
+        public static ArmorMorph CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BodyData();
-            ((BodyDataSetterCommon)((IBodyDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ArmorMorph();
+            ((ArmorMorphSetterCommon)((IArmorMorphGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -451,7 +435,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BodyData item,
+            out ArmorMorph item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -466,39 +450,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BodyDataSetterCommon)((IBodyDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ArmorMorphSetterCommon)((IArmorMorphGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BodyData GetNew()
+        internal static ArmorMorph GetNew()
         {
-            return new BodyData();
+            return new ArmorMorph();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBodyData :
-        IAssetLinkContainer,
-        IBodyDataGetter,
+    public partial interface IArmorMorph :
+        IArmorMorphGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IBodyData>,
-        IModeled
+        ILoquiObjectSetter<IArmorMorph>
     {
-        new BodyData.PartIndex? Index { get; set; }
-        /// <summary>
-        /// Aspects: IModeled
-        /// </summary>
-        new Model? Model { get; set; }
+        new IFormLinkNullable<IMorphableObjectGetter> WorldMorph { get; set; }
+        new IFormLinkNullable<IMorphableObjectGetter> FirstPersonMorph { get; set; }
     }
 
-    public partial interface IBodyDataGetter :
+    public partial interface IArmorMorphGetter :
         ILoquiObject,
-        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IBodyDataGetter>,
-        IModeledGetter
+        ILoquiObject<IArmorMorphGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -506,56 +483,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => BodyData_Registration.Instance;
-        BodyData.PartIndex? Index { get; }
-        #region Model
-        /// <summary>
-        /// Aspects: IModeledGetter
-        /// </summary>
-        IModelGetter? Model { get; }
-        #endregion
+        static ILoquiRegistration StaticRegistration => ArmorMorph_Registration.Instance;
+        IFormLinkNullableGetter<IMorphableObjectGetter> WorldMorph { get; }
+        IFormLinkNullableGetter<IMorphableObjectGetter> FirstPersonMorph { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BodyDataMixIn
+    public static partial class ArmorMorphMixIn
     {
-        public static void Clear(this IBodyData item)
+        public static void Clear(this IArmorMorph item)
         {
-            ((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ArmorMorphSetterCommon)((IArmorMorphGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BodyData.Mask<bool> GetEqualsMask(
-            this IBodyDataGetter item,
-            IBodyDataGetter rhs,
+        public static ArmorMorph.Mask<bool> GetEqualsMask(
+            this IArmorMorphGetter item,
+            IArmorMorphGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBodyDataGetter item,
+            this IArmorMorphGetter item,
             string? name = null,
-            BodyData.Mask<bool>? printMask = null)
+            ArmorMorph.Mask<bool>? printMask = null)
         {
-            return ((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).Print(
+            return ((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBodyDataGetter item,
+            this IArmorMorphGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BodyData.Mask<bool>? printMask = null)
+            ArmorMorph.Mask<bool>? printMask = null)
         {
-            ((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).Print(
+            ((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -563,21 +535,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBodyDataGetter item,
-            IBodyDataGetter rhs,
-            BodyData.TranslationMask? equalsMask = null)
+            this IArmorMorphGetter item,
+            IArmorMorphGetter rhs,
+            ArmorMorph.TranslationMask? equalsMask = null)
         {
-            return ((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).Equals(
+            return ((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBodyData lhs,
-            IBodyDataGetter rhs)
+            this IArmorMorph lhs,
+            IArmorMorphGetter rhs)
         {
-            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -586,11 +558,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBodyData lhs,
-            IBodyDataGetter rhs,
-            BodyData.TranslationMask? copyMask = null)
+            this IArmorMorph lhs,
+            IArmorMorphGetter rhs,
+            ArmorMorph.TranslationMask? copyMask = null)
         {
-            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -599,28 +571,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBodyData lhs,
-            IBodyDataGetter rhs,
-            out BodyData.ErrorMask errorMask,
-            BodyData.TranslationMask? copyMask = null)
+            this IArmorMorph lhs,
+            IArmorMorphGetter rhs,
+            out ArmorMorph.ErrorMask errorMask,
+            ArmorMorph.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BodyData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorMorph.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBodyData lhs,
-            IBodyDataGetter rhs,
+            this IArmorMorph lhs,
+            IArmorMorphGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -628,32 +600,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BodyData DeepCopy(
-            this IBodyDataGetter item,
-            BodyData.TranslationMask? copyMask = null)
+        public static ArmorMorph DeepCopy(
+            this IArmorMorphGetter item,
+            ArmorMorph.TranslationMask? copyMask = null)
         {
-            return ((BodyDataSetterTranslationCommon)((IBodyDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BodyData DeepCopy(
-            this IBodyDataGetter item,
-            out BodyData.ErrorMask errorMask,
-            BodyData.TranslationMask? copyMask = null)
+        public static ArmorMorph DeepCopy(
+            this IArmorMorphGetter item,
+            out ArmorMorph.ErrorMask errorMask,
+            ArmorMorph.TranslationMask? copyMask = null)
         {
-            return ((BodyDataSetterTranslationCommon)((IBodyDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BodyData DeepCopy(
-            this IBodyDataGetter item,
+        public static ArmorMorph DeepCopy(
+            this IArmorMorphGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BodyDataSetterTranslationCommon)((IBodyDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -661,11 +633,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBodyData item,
+            this IArmorMorph item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BodyDataSetterCommon)((IBodyDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ArmorMorphSetterCommon)((IArmorMorphGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -681,17 +653,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BodyData_FieldIndex
+    internal enum ArmorMorph_FieldIndex
     {
-        Index = 0,
-        Model = 1,
+        WorldMorph = 0,
+        FirstPersonMorph = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class BodyData_Registration : ILoquiRegistration
+    internal partial class ArmorMorph_Registration : ILoquiRegistration
     {
-        public static readonly BodyData_Registration Instance = new BodyData_Registration();
+        public static readonly ArmorMorph_Registration Instance = new ArmorMorph_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -699,23 +671,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BodyData.Mask<>);
+        public static readonly Type MaskType = typeof(ArmorMorph.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BodyData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ArmorMorph.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BodyData);
+        public static readonly Type ClassType = typeof(ArmorMorph);
 
-        public static readonly Type GetterType = typeof(IBodyDataGetter);
+        public static readonly Type GetterType = typeof(IArmorMorphGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBodyData);
+        public static readonly Type SetterType = typeof(IArmorMorph);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BodyData";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ArmorMorph";
 
-        public const string Name = "BodyData";
+        public const string Name = "ArmorMorph";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -727,17 +699,11 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.INDX,
-                RecordTypes.MODL,
-                RecordTypes.MODT,
-                RecordTypes.MOLM,
-                RecordTypes.FLLD,
-                RecordTypes.XFLG,
-                RecordTypes.MODC,
-                RecordTypes.MODF);
+                RecordTypes.NAM4,
+                RecordTypes.NAM5);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(BodyDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ArmorMorphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -768,51 +734,31 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BodyDataSetterCommon
+    internal partial class ArmorMorphSetterCommon
     {
-        public static readonly BodyDataSetterCommon Instance = new BodyDataSetterCommon();
+        public static readonly ArmorMorphSetterCommon Instance = new ArmorMorphSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBodyData item)
+        public void Clear(IArmorMorph item)
         {
             ClearPartial();
-            item.Index = default;
-            item.Model = null;
+            item.WorldMorph.Clear();
+            item.FirstPersonMorph.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IBodyData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IArmorMorph obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Model?.RemapLinks(mapping);
-        }
-        
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBodyData obj)
-        {
-            if (obj.Model is {} ModelItems)
-            {
-                foreach (var item in ModelItems.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            yield break;
-        }
-        
-        public void RemapAssetLinks(
-            IBodyData obj,
-            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
-            AssetLinkQuery queryCategories)
-        {
-            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.WorldMorph.Relink(mapping);
+            obj.FirstPersonMorph.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBodyData item,
+            IArmorMorph item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -820,23 +766,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: BodyDataBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: ArmorMorphBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class BodyDataCommon
+    internal partial class ArmorMorphCommon
     {
-        public static readonly BodyDataCommon Instance = new BodyDataCommon();
+        public static readonly ArmorMorphCommon Instance = new ArmorMorphCommon();
 
-        public BodyData.Mask<bool> GetEqualsMask(
-            IBodyDataGetter item,
-            IBodyDataGetter rhs,
+        public ArmorMorph.Mask<bool> GetEqualsMask(
+            IArmorMorphGetter item,
+            IArmorMorphGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BodyData.Mask<bool>(false);
-            ((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ArmorMorph.Mask<bool>(false);
+            ((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -845,23 +791,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBodyDataGetter item,
-            IBodyDataGetter rhs,
-            BodyData.Mask<bool> ret,
+            IArmorMorphGetter item,
+            IArmorMorphGetter rhs,
+            ArmorMorph.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Index = item.Index == rhs.Index;
-            ret.Model = EqualsMaskHelper.EqualsHelper(
-                item.Model,
-                rhs.Model,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.WorldMorph = item.WorldMorph.Equals(rhs.WorldMorph);
+            ret.FirstPersonMorph = item.FirstPersonMorph.Equals(rhs.FirstPersonMorph);
         }
         
         public string Print(
-            IBodyDataGetter item,
+            IArmorMorphGetter item,
             string? name = null,
-            BodyData.Mask<bool>? printMask = null)
+            ArmorMorph.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -873,18 +815,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBodyDataGetter item,
+            IArmorMorphGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BodyData.Mask<bool>? printMask = null)
+            ArmorMorph.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BodyData =>");
+                sb.AppendLine($"ArmorMorph =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BodyData) =>");
+                sb.AppendLine($"{name} (ArmorMorph) =>");
             }
             using (sb.Brace())
             {
@@ -896,55 +838,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBodyDataGetter item,
+            IArmorMorphGetter item,
             StructuredStringBuilder sb,
-            BodyData.Mask<bool>? printMask = null)
+            ArmorMorph.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Index ?? true)
-                && item.Index is {} IndexItem)
+            if (printMask?.WorldMorph ?? true)
             {
-                sb.AppendItem(IndexItem, "Index");
+                sb.AppendItem(item.WorldMorph.FormKeyNullable, "WorldMorph");
             }
-            if ((printMask?.Model?.Overall ?? true)
-                && item.Model is {} ModelItem)
+            if (printMask?.FirstPersonMorph ?? true)
             {
-                ModelItem?.Print(sb, "Model");
+                sb.AppendItem(item.FirstPersonMorph.FormKeyNullable, "FirstPersonMorph");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBodyDataGetter? lhs,
-            IBodyDataGetter? rhs,
+            IArmorMorphGetter? lhs,
+            IArmorMorphGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BodyData_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorMorph_FieldIndex.WorldMorph) ?? true))
             {
-                if (lhs.Index != rhs.Index) return false;
+                if (!lhs.WorldMorph.Equals(rhs.WorldMorph)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorMorph_FieldIndex.FirstPersonMorph) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
-                {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyData_FieldIndex.Model))) return false;
-                }
-                else if (!isModelEqual) return false;
+                if (!lhs.FirstPersonMorph.Equals(rhs.FirstPersonMorph)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IBodyDataGetter item)
+        public virtual int GetHashCode(IArmorMorphGetter item)
         {
             var hash = new HashCode();
-            if (item.Index is {} Indexitem)
-            {
-                hash.Add(Indexitem);
-            }
-            if (item.Model is {} Modelitem)
-            {
-                hash.Add(Modelitem);
-            }
+            hash.Add(item.WorldMorph);
+            hash.Add(item.FirstPersonMorph);
             return hash.ToHashCode();
         }
         
@@ -953,33 +883,19 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return BodyData.GetNew();
+            return ArmorMorph.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorMorphGetter obj)
         {
-            if (obj.Model is {} ModelItems)
+            if (FormLinkInformation.TryFactory(obj.WorldMorph, out var WorldMorphInfo))
             {
-                foreach (var item in ModelItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
+                yield return WorldMorphInfo;
             }
-            yield break;
-        }
-        
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
-        {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (FormLinkInformation.TryFactory(obj.FirstPersonMorph, out var FirstPersonMorphInfo))
             {
-                if (obj.Model is {} ModelItems)
-                {
-                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
+                yield return FirstPersonMorphInfo;
             }
             yield break;
         }
@@ -987,58 +903,36 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BodyDataSetterTranslationCommon
+    internal partial class ArmorMorphSetterTranslationCommon
     {
-        public static readonly BodyDataSetterTranslationCommon Instance = new BodyDataSetterTranslationCommon();
+        public static readonly ArmorMorphSetterTranslationCommon Instance = new ArmorMorphSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBodyData item,
-            IBodyDataGetter rhs,
+            IArmorMorph item,
+            IArmorMorphGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.Index) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorMorph_FieldIndex.WorldMorph) ?? true))
             {
-                item.Index = rhs.Index;
+                item.WorldMorph.SetTo(rhs.WorldMorph.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorMorph_FieldIndex.FirstPersonMorph) ?? true))
             {
-                errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
-                try
-                {
-                    if(rhs.Model is {} rhsModel)
-                    {
-                        item.Model = rhsModel.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
-                    }
-                    else
-                    {
-                        item.Model = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.FirstPersonMorph.SetTo(rhs.FirstPersonMorph.FormKeyNullable);
             }
         }
         
         #endregion
         
-        public BodyData DeepCopy(
-            IBodyDataGetter item,
-            BodyData.TranslationMask? copyMask = null)
+        public ArmorMorph DeepCopy(
+            IArmorMorphGetter item,
+            ArmorMorph.TranslationMask? copyMask = null)
         {
-            BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).GetNew();
-            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorMorph ret = (ArmorMorph)((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).GetNew();
+            ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1047,30 +941,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BodyData DeepCopy(
-            IBodyDataGetter item,
-            out BodyData.ErrorMask errorMask,
-            BodyData.TranslationMask? copyMask = null)
+        public ArmorMorph DeepCopy(
+            IArmorMorphGetter item,
+            out ArmorMorph.ErrorMask errorMask,
+            ArmorMorph.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).GetNew();
-            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorMorph ret = (ArmorMorph)((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).GetNew();
+            ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BodyData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorMorph.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BodyData DeepCopy(
-            IBodyDataGetter item,
+        public ArmorMorph DeepCopy(
+            IArmorMorphGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BodyData ret = (BodyData)((BodyDataCommon)((IBodyDataGetter)item).CommonInstance()!).GetNew();
-            ((BodyDataSetterTranslationCommon)((IBodyDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorMorph ret = (ArmorMorph)((ArmorMorphCommon)((IArmorMorphGetter)item).CommonInstance()!).GetNew();
+            ((ArmorMorphSetterTranslationCommon)((IArmorMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1086,27 +980,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BodyData
+    public partial class ArmorMorph
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BodyData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorMorph_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BodyDataCommon.Instance;
+        protected object CommonInstance() => ArmorMorphCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BodyDataSetterCommon.Instance;
+            return ArmorMorphSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BodyDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorMorphSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBodyDataGetter.CommonInstance() => this.CommonInstance();
+        object IArmorMorphGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBodyDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IArmorMorphGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorMorphGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1117,32 +1011,28 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BodyDataBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ArmorMorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BodyDataBinaryWriteTranslation Instance = new();
+        public static readonly ArmorMorphBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IBodyDataGetter item,
+            IArmorMorphGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            EnumBinaryTranslation<BodyData.PartIndex, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer,
-                item.Index,
-                length: 4,
-                header: translationParams.ConvertToCustom(RecordTypes.INDX));
-            if (item.Model is {} ModelItem)
-            {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
-                    item: ModelItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WorldMorph,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM4));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FirstPersonMorph,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM5));
         }
 
         public void Write(
             MutagenWriter writer,
-            IBodyDataGetter item,
+            IArmorMorphGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1157,19 +1047,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBodyDataGetter)item,
+                item: (IArmorMorphGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BodyDataBinaryCreateTranslation
+    internal partial class ArmorMorphBinaryCreateTranslation
     {
-        public static readonly BodyDataBinaryCreateTranslation Instance = new BodyDataBinaryCreateTranslation();
+        public static readonly ArmorMorphBinaryCreateTranslation Instance = new ArmorMorphBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IBodyData item,
+            IArmorMorph item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1180,28 +1070,19 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.INDX:
+                case RecordTypeInts.NAM4:
                 {
-                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Index, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorMorph_FieldIndex.WorldMorph, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = EnumBinaryTranslation<BodyData.PartIndex, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)BodyData_FieldIndex.Index;
+                    item.WorldMorph.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ArmorMorph_FieldIndex.WorldMorph;
                 }
-                case RecordTypeInts.MODL:
-                case RecordTypeInts.MODT:
-                case RecordTypeInts.MOLM:
-                case RecordTypeInts.FLLD:
-                case RecordTypeInts.XFLG:
-                case RecordTypeInts.MODC:
-                case RecordTypeInts.MODF:
+                case RecordTypeInts.NAM5:
                 {
-                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
-                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)BodyData_FieldIndex.Model;
+                    if (lastParsed.ShortCircuit((int)ArmorMorph_FieldIndex.FirstPersonMorph, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FirstPersonMorph.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ArmorMorph_FieldIndex.FirstPersonMorph;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1214,14 +1095,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BodyDataBinaryTranslationMixIn
+    public static class ArmorMorphBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBodyDataGetter item,
+            this IArmorMorphGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BodyDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ArmorMorphBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1234,57 +1115,59 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BodyDataBinaryOverlay :
+    internal partial class ArmorMorphBinaryOverlay :
         PluginBinaryOverlay,
-        IBodyDataGetter
+        IArmorMorphGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BodyData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorMorph_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BodyDataCommon.Instance;
+        protected object CommonInstance() => ArmorMorphCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BodyDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorMorphSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBodyDataGetter.CommonInstance() => this.CommonInstance();
+        object IArmorMorphGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBodyDataGetter.CommonSetterInstance() => null;
+        object? IArmorMorphGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBodyDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorMorphGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BodyDataCommon.Instance.EnumerateFormLinks(this);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorMorphCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorMorphBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BodyDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region Index
-        private int? _IndexLocation;
-        public BodyData.PartIndex? Index => _IndexLocation.HasValue ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation!.Value, _package.MetaData.Constants)) : default(BodyData.PartIndex?);
+        #region WorldMorph
+        private int? _WorldMorphLocation;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> WorldMorph => _WorldMorphLocation.HasValue ? new FormLinkNullable<IMorphableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldMorphLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMorphableObjectGetter>.Null;
         #endregion
-        public IModelGetter? Model { get; private set; }
+        #region FirstPersonMorph
+        private int? _FirstPersonMorphLocation;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> FirstPersonMorph => _FirstPersonMorphLocation.HasValue ? new FormLinkNullable<IMorphableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FirstPersonMorphLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMorphableObjectGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected BodyDataBinaryOverlay(
+        protected ArmorMorphBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1294,7 +1177,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBodyDataGetter BodyDataFactory(
+        public static IArmorMorphGetter ArmorMorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1306,7 +1189,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new BodyDataBinaryOverlay(
+            var ret = new ArmorMorphBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1318,12 +1201,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBodyDataGetter BodyDataFactory(
+        public static IArmorMorphGetter ArmorMorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BodyDataFactory(
+            return ArmorMorphFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1341,26 +1224,17 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.INDX:
+                case RecordTypeInts.NAM4:
                 {
-                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
-                    return (int)BodyData_FieldIndex.Index;
+                    if (lastParsed.ShortCircuit((int)ArmorMorph_FieldIndex.WorldMorph, translationParams)) return ParseResult.Stop;
+                    _WorldMorphLocation = (stream.Position - offset);
+                    return (int)ArmorMorph_FieldIndex.WorldMorph;
                 }
-                case RecordTypeInts.MODL:
-                case RecordTypeInts.MODT:
-                case RecordTypeInts.MOLM:
-                case RecordTypeInts.FLLD:
-                case RecordTypeInts.XFLG:
-                case RecordTypeInts.MODC:
-                case RecordTypeInts.MODF:
+                case RecordTypeInts.NAM5:
                 {
-                    if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
-                    this.Model = ModelBinaryOverlay.ModelFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)BodyData_FieldIndex.Model;
+                    if (lastParsed.ShortCircuit((int)ArmorMorph_FieldIndex.FirstPersonMorph, translationParams)) return ParseResult.Stop;
+                    _FirstPersonMorphLocation = (stream.Position - offset);
+                    return (int)ArmorMorph_FieldIndex.FirstPersonMorph;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1372,7 +1246,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BodyDataMixIn.Print(
+            ArmorMorphMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1383,16 +1257,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBodyDataGetter rhs) return false;
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorMorphGetter rhs) return false;
+            return ((ArmorMorphCommon)((IArmorMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBodyDataGetter? obj)
+        public bool Equals(IArmorMorphGetter? obj)
         {
-            return ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorMorphCommon)((IArmorMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BodyDataCommon)((IBodyDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorMorphCommon)((IArmorMorphGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

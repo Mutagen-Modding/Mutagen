@@ -1953,6 +1953,9 @@
     <Compile Include="Records\Common Subrecords\FactionOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Model.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\NavmeshGeometry.cs">
       <DependentUpon>NavmeshGeometry.xml</DependentUpon>
     </Compile>
@@ -2028,6 +2031,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AQuestAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Armor.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -4850,9 +4856,6 @@
     <Compile Include="Records\Major Records\MovementType_Generated.cs">
       <DependentUpon>MovementType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MRPHRecord_Generated.cs">
-      <DependentUpon>MRPHRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MusicTrack_Generated.cs">
       <DependentUpon>MusicTrack.xml</DependentUpon>
     </Compile>
@@ -5330,6 +5333,21 @@
     </Compile>
     <Compile Include="Records\Major Records\FaceMorphPhenotypeItem_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorMorph_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorAddonModel_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorResistance_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MorphableObject_Generated.cs">
+      <DependentUpon>MorphableObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorCategoryValue_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
