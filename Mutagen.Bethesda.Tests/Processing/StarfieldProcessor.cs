@@ -134,6 +134,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "PERK", "FULL" },
                     new RecordType[] { "ARMO", "FULL" },
                     new RecordType[] { "CONT", "FULL" },
+                    new RecordType[] { "ALCH", "FULL", "DNAM" },
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
                     new RecordType[] { "MISC", "FULL", "NNAM" },
                     new RecordType[] { "IRES", "FULL", "NNAM" },
@@ -145,6 +146,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "COBJ", "DESC" },
                     new RecordType[] { "PERK", "DESC" },
                     new RecordType[] { "BOOK", "DESC" },
+                    new RecordType[] { "ALCH", "DESC" },
                 };
             case StringsSource.IL:
                 return new AStringsAlignment[]

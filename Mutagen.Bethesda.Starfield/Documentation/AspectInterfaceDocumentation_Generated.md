@@ -22,6 +22,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - Book
 - Container
+- Ingestible
 - KeywordFormComponent
 - MagicEffect
 - MiscItem
@@ -42,6 +43,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Container
 - DestructionStage
 - HeadPart
+- Ingestible
 - LegendaryItem
 - LeveledItem
 - MiscItem
@@ -66,6 +68,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - FormList
 - FullNameComponent
 - HeadPart
+- Ingestible
 - Keyword
 - MagicEffect
 - MiscItem
@@ -108,6 +111,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - BendableSpline
 - Book
 - Container
+- Ingestible
 - LegendaryItem
 - LeveledItem
 - MiscItem
@@ -133,6 +137,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### IWeightValue
 - Book
+- Ingestible
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -197,6 +202,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### HeadPart
 - IModeled
 - INamed
+### Ingestible
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IWeightValue
 ### Keyword
 - IKeywordCommon
 - INamed

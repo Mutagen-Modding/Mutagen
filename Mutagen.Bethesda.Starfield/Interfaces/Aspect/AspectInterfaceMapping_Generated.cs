@@ -45,6 +45,7 @@ namespace Mutagen.Bethesda.Starfield
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
+                Ingestible_Registration.Instance,
                 KeywordFormComponent_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -68,6 +69,7 @@ namespace Mutagen.Bethesda.Starfield
                 Container_Registration.Instance,
                 DestructionStage_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Ingestible_Registration.Instance,
                 LegendaryItem_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -93,6 +95,7 @@ namespace Mutagen.Bethesda.Starfield
                 FormList_Registration.Instance,
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Ingestible_Registration.Instance,
                 Keyword_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -130,6 +133,7 @@ namespace Mutagen.Bethesda.Starfield
                 FormList_Registration.Instance,
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Ingestible_Registration.Instance,
                 Keyword_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -181,6 +185,7 @@ namespace Mutagen.Bethesda.Starfield
                 FormList_Registration.Instance,
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Ingestible_Registration.Instance,
                 Keyword_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -211,6 +216,7 @@ namespace Mutagen.Bethesda.Starfield
                 FormList_Registration.Instance,
                 FullNameComponent_Registration.Instance,
                 HeadPart_Registration.Instance,
+                Ingestible_Registration.Instance,
                 Keyword_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -234,6 +240,7 @@ namespace Mutagen.Bethesda.Starfield
                 AudioOcclusionPrimitive_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
+                Ingestible_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MiscItem_Registration.Instance,
                 ObjectEffect_Registration.Instance,
@@ -273,6 +280,7 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Book_Registration.Instance,
+                Ingestible_Registration.Instance,
             });
             dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)] with { Setter = false };
             InterfaceToObjectTypes = dict;

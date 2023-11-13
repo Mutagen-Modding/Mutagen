@@ -32,6 +32,7 @@
       <Group name="Armors" refName="Armor" />
       <Group name="Books" refName="Book" />
       <Group name="Containers" refName="Container" />
+      <Group name="Doors" refName="Door" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Perks" refName="Perk" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
@@ -43,6 +44,7 @@
       <Group name="TerminalMenus" refName="TerminalMenu" />
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Debris" refName="Debris" />
+      <Group name="Ingestibles" refName="Ingestible" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />

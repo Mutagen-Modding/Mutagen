@@ -103,6 +103,7 @@ public partial class RecordTypes
     public static readonly RecordType BSIZ = new(0x5A495342);
     public static readonly RecordType BTXT = new(0x54585442);
     public static readonly RecordType CAMS = new(0x534D4143);
+    public static readonly RecordType CDIX = new(0x58494443);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CHAL = new(0x4C414843);
     public static readonly RecordType CHGL = new(0x4C474843);

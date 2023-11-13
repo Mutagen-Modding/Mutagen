@@ -101,6 +101,7 @@ public partial class RecordTypeInts
     public const int BSIZ = 0x5A495342;
     public const int BTXT = 0x54585442;
     public const int CAMS = 0x534D4143;
+    public const int CDIX = 0x58494443;
     public const int CELL = 0x4C4C4543;
     public const int CHAL = 0x4C414843;
     public const int CHGL = 0x4C474843;
