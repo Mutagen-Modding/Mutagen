@@ -2041,6 +2041,9 @@
     <Compile Include="Records\Major Records\BodyData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Book.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -5348,6 +5351,21 @@
     </Compile>
     <Compile Include="Records\Major Records\ArmorCategoryValue_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BookTeachTarget_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BookActorValue_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BookPerk_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BookSpell_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BookTeachesNothing_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

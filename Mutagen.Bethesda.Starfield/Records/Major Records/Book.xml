@@ -2,9 +2,65 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Book" recordType="BOOK" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
+      <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
+      <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="FeaturedItemMessage" refName="Message" recordType="FIMD" />
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Data recordType="DNAM">
+        <Fields>
+          <Enum name="Flags" enumName="Book.Flag" byteLength="1" binary="Custom" />
+          <RefDirect name="Teaches" objType="Subrecord" nullable="True" refName="BookTeachTarget" binary="Custom" byteLength="4" />
+          <UInt32 name="TextOffsetX" />
+          <UInt32 name="TextOffsetY" />
+          <UInt32 name="DNAMUnknown" />
+        </Fields>
+      </Data>
+      <String name="CNAM" recordType="CNAM" translated="Normal" />
+      <String name="ENAM" recordType="ENAM" translated="Normal" unknown="true" />
+      <String name="FNAM" recordType="FNAM" translated="Normal" unknown="true" />
+      <FormLink name="InventoryArt" refName="Static" recordType="INAM" />
+      <FormLink name="Scene" refName="Scene" recordType="GNAM" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+  </Object>
+  <Object name="BookTeachTarget" abstract="true" objType="Subrecord" />
+  <Object name="BookActorValue" objType="Subrecord" baseClass="BookTeachTarget">
+    <Fields>
+      <FormLink name="ActorValue" refName="ActorValueInformation" />
+    </Fields>
+  </Object>
+  <Object name="BookPerk" objType="Subrecord" baseClass="BookTeachTarget">
+    <Fields>
+      <FormLink name="Perk" refName="Perk" />
+    </Fields>
+  </Object>
+  <Object name="BookSpell" objType="Subrecord" baseClass="BookTeachTarget">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="BookTeachesNothing" objType="Subrecord" baseClass="BookTeachTarget">
+    <Fields>
+      <UInt32 name="RawContent" />
+    </Fields>
   </Object>
 </Loqui>

@@ -188,6 +188,7 @@ public partial class RecordTypes
     public static readonly RecordType FDSI = new(0x49534446);
     public static readonly RecordType FDSL = new(0x4C534446);
     public static readonly RecordType FFKW = new(0x574B4646);
+    public static readonly RecordType FIMD = new(0x444D4946);
     public static readonly RecordType FLAG = new(0x47414C46);
     public static readonly RecordType FLCS = new(0x53434C46);
     public static readonly RecordType FLLD = new(0x444C4C46);

@@ -6,6 +6,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IHaveVirtualMachineAdapter
 - Activator
 - Armor
+- Book
 - LeveledItem
 - MagicEffect
 - MiscItem
@@ -18,6 +19,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IKeyworded
 - Activator
 - Armor
+- Book
 - KeywordFormComponent
 - MagicEffect
 - MiscItem
@@ -34,6 +36,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - AnimatedObject
 - BodyData
+- Book
 - DestructionStage
 - HeadPart
 - LegendaryItem
@@ -50,6 +53,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ActorValueModulation
 - Armor
 - BipedObjectData
+- Book
 - Class
 - DamageType
 - FaceMorphPhenotype
@@ -98,6 +102,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Armor
 - AudioOcclusionPrimitive
 - BendableSpline
+- Book
 - LegendaryItem
 - LeveledItem
 - MiscItem
@@ -115,10 +120,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IScripted
 - Activator
 - Armor
+- Book
 - LeveledItem
 - MagicEffect
 - MiscItem
 - Weapon
+### IWeightValue
+- Book
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -149,6 +157,14 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### BodyData
 - IModeled
+### Book
+- IHaveVirtualMachineAdapter
+- IKeyworded
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
+- IWeightValue
 ### Class
 - INamed
 ### DamageType

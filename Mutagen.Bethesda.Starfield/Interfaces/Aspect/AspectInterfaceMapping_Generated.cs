@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Armor_Registration.Instance,
+                Book_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -41,6 +42,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Armor_Registration.Instance,
+                Book_Registration.Instance,
                 KeywordFormComponent_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
@@ -60,6 +62,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 AnimatedObject_Registration.Instance,
                 BodyData_Registration.Instance,
+                Book_Registration.Instance,
                 DestructionStage_Registration.Instance,
                 HeadPart_Registration.Instance,
                 LegendaryItem_Registration.Instance,
@@ -77,6 +80,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 Armor_Registration.Instance,
+                Book_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphPhenotype_Registration.Instance,
@@ -112,6 +116,7 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueModulation_Registration.Instance,
                 Armor_Registration.Instance,
                 BipedObjectData_Registration.Instance,
+                Book_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphPhenotype_Registration.Instance,
@@ -161,6 +166,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 Armor_Registration.Instance,
+                Book_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphPhenotype_Registration.Instance,
@@ -189,6 +195,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 Activity_Registration.Instance,
                 Armor_Registration.Instance,
+                Book_Registration.Instance,
                 Class_Registration.Instance,
                 DamageType_Registration.Instance,
                 FaceMorphPhenotype_Registration.Instance,
@@ -218,6 +225,7 @@ namespace Mutagen.Bethesda.Starfield
                 Activator_Registration.Instance,
                 Armor_Registration.Instance,
                 AudioOcclusionPrimitive_Registration.Instance,
+                Book_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MiscItem_Registration.Instance,
                 ObjectEffect_Registration.Instance,
@@ -246,12 +254,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 Activator_Registration.Instance,
                 Armor_Registration.Instance,
+                Book_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
                 Weapon_Registration.Instance,
             });
             dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
+            dict[typeof(IWeightValue)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+            {
+                Book_Registration.Instance,
+            });
+            dict[typeof(IWeightValueGetter)] = dict[typeof(IWeightValue)] with { Setter = false };
             InterfaceToObjectTypes = dict;
         }
     }

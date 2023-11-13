@@ -186,6 +186,7 @@ public partial class RecordTypeInts
     public const int FDSI = 0x49534446;
     public const int FDSL = 0x4C534446;
     public const int FFKW = 0x574B4646;
+    public const int FIMD = 0x444D4946;
     public const int FLAG = 0x47414C46;
     public const int FLCS = 0x53434C46;
     public const int FLLD = 0x444C4C46;

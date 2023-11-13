@@ -88,6 +88,7 @@ namespace Mutagen.Bethesda.Starfield
             _CurveTables_Object = new StarfieldGroup<CurveTable>(this);
             _Curve3Ds_Object = new StarfieldGroup<Curve3D>(this);
             _Armors_Object = new StarfieldGroup<Armor>(this);
+            _Books_Object = new StarfieldGroup<Book>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
             _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
@@ -312,6 +313,13 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<Armor> Armors => _Armors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IArmorGetter> IStarfieldModGetter.Armors => _Armors_Object;
+        #endregion
+        #region Books
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Book> _Books_Object;
+        public StarfieldGroup<Book> Books => _Books_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IBookGetter> IStarfieldModGetter.Books => _Books_Object;
         #endregion
         #region Weapons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -548,6 +556,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CurveTables = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Curve3Ds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Armors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Books = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -603,6 +612,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem CurveTables,
                 TItem Curve3Ds,
                 TItem Armors,
+                TItem Books,
                 TItem Weapons,
                 TItem Perks,
                 TItem ConstructibleObjects,
@@ -656,6 +666,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.CurveTables = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(CurveTables, new StarfieldGroup.Mask<TItem>(CurveTables));
                 this.Curve3Ds = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Curve3Ds, new StarfieldGroup.Mask<TItem>(Curve3Ds));
                 this.Armors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Armors, new StarfieldGroup.Mask<TItem>(Armors));
+                this.Books = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Books, new StarfieldGroup.Mask<TItem>(Books));
                 this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weapons, new StarfieldGroup.Mask<TItem>(Weapons));
                 this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Perks, new StarfieldGroup.Mask<TItem>(Perks));
                 this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
@@ -719,6 +730,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? CurveTables { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Curve3Ds { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Armors { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Books { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weapons { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Perks { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
@@ -783,6 +795,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.CurveTables, rhs.CurveTables)) return false;
                 if (!object.Equals(this.Curve3Ds, rhs.Curve3Ds)) return false;
                 if (!object.Equals(this.Armors, rhs.Armors)) return false;
+                if (!object.Equals(this.Books, rhs.Books)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
                 if (!object.Equals(this.Perks, rhs.Perks)) return false;
                 if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
@@ -840,6 +853,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.CurveTables);
                 hash.Add(this.Curve3Ds);
                 hash.Add(this.Armors);
+                hash.Add(this.Books);
                 hash.Add(this.Weapons);
                 hash.Add(this.Perks);
                 hash.Add(this.ConstructibleObjects);
@@ -1011,6 +1025,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Armors.Overall)) return false;
                     if (this.Armors.Specific != null && !this.Armors.Specific.All(eval)) return false;
+                }
+                if (Books != null)
+                {
+                    if (!eval(this.Books.Overall)) return false;
+                    if (this.Books.Specific != null && !this.Books.Specific.All(eval)) return false;
                 }
                 if (Weapons != null)
                 {
@@ -1279,6 +1298,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Armors.Overall)) return true;
                     if (this.Armors.Specific != null && this.Armors.Specific.Any(eval)) return true;
                 }
+                if (Books != null)
+                {
+                    if (eval(this.Books.Overall)) return true;
+                    if (this.Books.Specific != null && this.Books.Specific.Any(eval)) return true;
+                }
                 if (Weapons != null)
                 {
                     if (eval(this.Weapons.Overall)) return true;
@@ -1441,6 +1465,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CurveTables = this.CurveTables == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.CurveTables.Overall), this.CurveTables.Specific?.Translate(eval));
                 obj.Curve3Ds = this.Curve3Ds == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Curve3Ds.Overall), this.Curve3Ds.Specific?.Translate(eval));
                 obj.Armors = this.Armors == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
+                obj.Books = this.Books == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
                 obj.Perks = this.Perks == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
                 obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
@@ -1595,6 +1620,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Armors?.Print(sb);
                     }
+                    if (printMask?.Books?.Overall ?? true)
+                    {
+                        Books?.Print(sb);
+                    }
                     if (printMask?.Weapons?.Overall ?? true)
                     {
                         Weapons?.Print(sb);
@@ -1743,6 +1772,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<CurveTable.ErrorMask>?>? CurveTables;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Curve3D.ErrorMask>?>? Curve3Ds;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Armor.ErrorMask>?>? Armors;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Book.ErrorMask>?>? Books;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>? Perks;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
@@ -1831,6 +1861,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Curve3Ds;
                     case StarfieldMod_FieldIndex.Armors:
                         return Armors;
+                    case StarfieldMod_FieldIndex.Books:
+                        return Books;
                     case StarfieldMod_FieldIndex.Weapons:
                         return Weapons;
                     case StarfieldMod_FieldIndex.Perks:
@@ -1972,6 +2004,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Armors:
                         this.Armors = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Armor.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Books:
+                        this.Books = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Book.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Weapons:
                         this.Weapons = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>(ex, null);
@@ -2139,6 +2174,9 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Armors:
                         this.Armors = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Armor.ErrorMask>?>?)obj;
                         break;
+                    case StarfieldMod_FieldIndex.Books:
+                        this.Books = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Book.ErrorMask>?>?)obj;
+                        break;
                     case StarfieldMod_FieldIndex.Weapons:
                         this.Weapons = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>?)obj;
                         break;
@@ -2247,6 +2285,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (CurveTables != null) return true;
                 if (Curve3Ds != null) return true;
                 if (Armors != null) return true;
+                if (Books != null) return true;
                 if (Weapons != null) return true;
                 if (Perks != null) return true;
                 if (ConstructibleObjects != null) return true;
@@ -2324,6 +2363,7 @@ namespace Mutagen.Bethesda.Starfield
                 CurveTables?.Print(sb);
                 Curve3Ds?.Print(sb);
                 Armors?.Print(sb);
+                Books?.Print(sb);
                 Weapons?.Print(sb);
                 Perks?.Print(sb);
                 ConstructibleObjects?.Print(sb);
@@ -2384,6 +2424,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.CurveTables = this.CurveTables.Combine(rhs.CurveTables, (l, r) => l.Combine(r));
                 ret.Curve3Ds = this.Curve3Ds.Combine(rhs.Curve3Ds, (l, r) => l.Combine(r));
                 ret.Armors = this.Armors.Combine(rhs.Armors, (l, r) => l.Combine(r));
+                ret.Books = this.Books.Combine(rhs.Books, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
                 ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
                 ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
@@ -2459,6 +2500,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<CurveTable.TranslationMask>? CurveTables;
             public StarfieldGroup.TranslationMask<Curve3D.TranslationMask>? Curve3Ds;
             public StarfieldGroup.TranslationMask<Armor.TranslationMask>? Armors;
+            public StarfieldGroup.TranslationMask<Book.TranslationMask>? Books;
             public StarfieldGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
             public StarfieldGroup.TranslationMask<Perk.TranslationMask>? Perks;
             public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
@@ -2535,6 +2577,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((CurveTables != null ? CurveTables.OnOverall : DefaultOn, CurveTables?.GetCrystal()));
                 ret.Add((Curve3Ds != null ? Curve3Ds.OnOverall : DefaultOn, Curve3Ds?.GetCrystal()));
                 ret.Add((Armors != null ? Armors.OnOverall : DefaultOn, Armors?.GetCrystal()));
+                ret.Add((Books != null ? Books.OnOverall : DefaultOn, Books?.GetCrystal()));
                 ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
                 ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
                 ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
@@ -2633,6 +2676,7 @@ namespace Mutagen.Bethesda.Starfield
             _CurveTables_Object = new StarfieldGroup<CurveTable>(this);
             _Curve3Ds_Object = new StarfieldGroup<Curve3D>(this);
             _Armors_Object = new StarfieldGroup<Armor>(this);
+            _Books_Object = new StarfieldGroup<Book>(this);
             _Weapons_Object = new StarfieldGroup<Weapon>(this);
             _Perks_Object = new StarfieldGroup<Perk>(this);
             _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
@@ -2771,6 +2815,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Armors.RecordCache.Set(rhsMod.Armors.RecordCache.Items);
             }
+            if (mask?.Books ?? true)
+            {
+                this.Books.RecordCache.Set(rhsMod.Books.RecordCache.Items);
+            }
             if (mask?.Weapons ?? true)
             {
                 this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
@@ -2904,6 +2952,7 @@ namespace Mutagen.Bethesda.Starfield
             count += CurveTables.RecordCache.Count > 0 ? 1 : default(uint);
             count += Curve3Ds.RecordCache.Count > 0 ? 1 : default(uint);
             count += Armors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Books.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
             count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
@@ -3229,6 +3278,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<CurveTable> CurveTables { get; }
         new StarfieldGroup<Curve3D> Curve3Ds { get; }
         new StarfieldGroup<Armor> Armors { get; }
+        new StarfieldGroup<Book> Books { get; }
         new StarfieldGroup<Weapon> Weapons { get; }
         new StarfieldGroup<Perk> Perks { get; }
         new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
@@ -3300,6 +3350,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ICurveTableGetter> CurveTables { get; }
         IStarfieldGroupGetter<ICurve3DGetter> Curve3Ds { get; }
         IStarfieldGroupGetter<IArmorGetter> Armors { get; }
+        IStarfieldGroupGetter<IBookGetter> Books { get; }
         IStarfieldGroupGetter<IWeaponGetter> Weapons { get; }
         IStarfieldGroupGetter<IPerkGetter> Perks { get; }
         IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
@@ -3933,30 +3984,31 @@ namespace Mutagen.Bethesda.Starfield
         CurveTables = 25,
         Curve3Ds = 26,
         Armors = 27,
-        Weapons = 28,
-        Perks = 29,
-        ConstructibleObjects = 30,
-        StaticCollections = 31,
-        BendableSplines = 32,
-        LeveledItems = 33,
-        Weathers = 34,
-        FormLists = 35,
-        TerminalMenus = 36,
-        AnimatedObjects = 37,
-        Debris = 38,
-        DefaultObjects = 39,
-        Outfits = 40,
-        AimModels = 41,
-        AttractionRules = 42,
-        BiomeSwaps = 43,
-        Planets = 44,
-        SurfacePatternStyles = 45,
-        LegendaryItems = 46,
-        ActorValueModulations = 47,
-        MiscItems = 48,
-        Resources = 49,
-        ConditionRecords = 50,
-        Quests = 51,
+        Books = 28,
+        Weapons = 29,
+        Perks = 30,
+        ConstructibleObjects = 31,
+        StaticCollections = 32,
+        BendableSplines = 33,
+        LeveledItems = 34,
+        Weathers = 35,
+        FormLists = 36,
+        TerminalMenus = 37,
+        AnimatedObjects = 38,
+        Debris = 39,
+        DefaultObjects = 40,
+        Outfits = 41,
+        AimModels = 42,
+        AttractionRules = 43,
+        BiomeSwaps = 44,
+        Planets = 45,
+        SurfacePatternStyles = 46,
+        LegendaryItems = 47,
+        ActorValueModulations = 48,
+        MiscItems = 49,
+        Resources = 50,
+        ConditionRecords = 51,
+        Quests = 52,
     }
     #endregion
 
@@ -3967,9 +4019,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 52;
+        public const ushort AdditionalFieldCount = 53;
 
-        public const ushort FieldCount = 52;
+        public const ushort FieldCount = 53;
 
         public static readonly Type MaskType = typeof(StarfieldMod.Mask<>);
 
@@ -4063,6 +4115,7 @@ namespace Mutagen.Bethesda.Starfield
             item.CurveTables.Clear();
             item.Curve3Ds.Clear();
             item.Armors.Clear();
+            item.Books.Clear();
             item.Weapons.Clear();
             item.Perks.Clear();
             item.ConstructibleObjects.Clear();
@@ -4112,6 +4165,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Spells.RemapLinks(mapping);
             obj.Activators.RemapLinks(mapping);
             obj.Armors.RemapLinks(mapping);
+            obj.Books.RemapLinks(mapping);
             obj.Weapons.RemapLinks(mapping);
             obj.Perks.RemapLinks(mapping);
             obj.ConstructibleObjects.RemapLinks(mapping);
@@ -4192,6 +4246,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.CurveTables.Remove(keys);
             obj.Curve3Ds.Remove(keys);
             obj.Armors.Remove(keys);
+            obj.Books.Remove(keys);
             obj.Weapons.Remove(keys);
             obj.Perks.Remove(keys);
             obj.ConstructibleObjects.Remove(keys);
@@ -4471,6 +4526,14 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    obj.Books.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
@@ -4672,6 +4735,7 @@ namespace Mutagen.Bethesda.Starfield
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFormListGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
@@ -4680,6 +4744,7 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStaticTarget":
                 case "IStaticTargetGetter":
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
@@ -4687,6 +4752,7 @@ namespace Mutagen.Bethesda.Starfield
                 case "IItemGetter":
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILegendaryItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
@@ -4835,6 +4901,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Books is IAssetLinkContainer BookslinkCont)
+            {
+                foreach (var item in BookslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Weapons is IAssetLinkContainer WeaponslinkCont)
             {
                 foreach (var item in WeaponslinkCont.EnumerateListedAssetLinks())
@@ -4961,6 +5034,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ProjectedDecals.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Activators.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Armors.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Books.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Weapons.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -5049,6 +5123,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.CurveTables = MaskItemExt.Factory(item.CurveTables.GetEqualsMask(rhs.CurveTables, include), include);
             ret.Curve3Ds = MaskItemExt.Factory(item.Curve3Ds.GetEqualsMask(rhs.Curve3Ds, include), include);
             ret.Armors = MaskItemExt.Factory(item.Armors.GetEqualsMask(rhs.Armors, include), include);
+            ret.Books = MaskItemExt.Factory(item.Books.GetEqualsMask(rhs.Books, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
             ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
             ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
@@ -5228,6 +5303,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Armors?.Overall ?? true)
             {
                 item.Armors?.Print(sb, "Armors");
+            }
+            if (printMask?.Books?.Overall ?? true)
+            {
+                item.Books?.Print(sb, "Books");
             }
             if (printMask?.Weapons?.Overall ?? true)
             {
@@ -5558,6 +5637,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isArmorsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Books) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Books, rhs.Books, out var lhsBooks, out var rhsBooks, out var isBooksEqual))
+                {
+                    if (!object.Equals(lhsBooks, rhsBooks)) return false;
+                }
+                else if (!isBooksEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weapons) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
@@ -5784,6 +5871,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.CurveTables);
             hash.Add(item.Curve3Ds);
             hash.Add(item.Armors);
+            hash.Add(item.Books);
             hash.Add(item.Weapons);
             hash.Add(item.Perks);
             hash.Add(item.ConstructibleObjects);
@@ -5961,6 +6049,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IArmor":
                 case "IArmorInternal":
                     return obj.Armors;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    return obj.Books;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
@@ -6107,7 +6200,7 @@ namespace Mutagen.Bethesda.Starfield
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[51];
+            Stream[] outputStreams = new Stream[52];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
@@ -6136,30 +6229,31 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.CurveTables, 24, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Curve3Ds, 25, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Armors, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 33, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 34, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 35, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 36, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 37, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 38, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 39, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 40, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 41, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 42, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 43, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 44, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 45, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 46, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MiscItems, 47, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Resources, 48, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 49, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Quests, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Books, 27, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 28, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 29, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BendableSplines, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 34, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 35, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 36, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 38, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 39, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 42, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 43, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 44, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 45, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 46, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 47, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, 48, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Resources, 49, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Quests, 51, outputStreams, bundle, parallelParam));
             Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6287,6 +6381,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Armors.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Books.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -6485,6 +6583,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Armors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Books.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6858,6 +6960,15 @@ namespace Mutagen.Bethesda.Starfield
                 case "IArmor":
                 case "IArmorInternal":
                     foreach (var item in obj.Armors.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    foreach (var item in obj.Books.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -7342,6 +7453,15 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Armors,
                 groupGetter: (m) => m.Armors))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Book, IBookGetter>(
+                srcGroup: obj.Books,
+                type: typeof(IBookGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Books,
+                groupGetter: (m) => m.Books))
             {
                 yield return item;
             }
@@ -7970,6 +8090,20 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Book, IBookGetter>(
+                        srcGroup: obj.Books,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Books,
+                        groupGetter: (m) => m.Books))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
@@ -8403,6 +8537,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.Armors is IAssetLinkContainerGetter ArmorslinkCont)
                 {
                     foreach (var item in ArmorslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Books is IAssetLinkContainerGetter BookslinkCont)
+                {
+                    foreach (var item in BookslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -9079,6 +9220,26 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Books) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Books);
+                try
+                {
+                    item.Books.DeepCopyIn(
+                        rhs: rhs.Books,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Books));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weapons) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Weapons);
@@ -9676,6 +9837,7 @@ namespace Mutagen.Bethesda.Starfield
         public bool CurveTables;
         public bool Curve3Ds;
         public bool Armors;
+        public bool Books;
         public bool Weapons;
         public bool Perks;
         public bool ConstructibleObjects;
@@ -9732,6 +9894,7 @@ namespace Mutagen.Bethesda.Starfield
             CurveTables = defaultValue;
             Curve3Ds = defaultValue;
             Armors = defaultValue;
+            Books = defaultValue;
             Weapons = defaultValue;
             Perks = defaultValue;
             ConstructibleObjects = defaultValue;
@@ -10108,6 +10271,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
                         item: ArmorsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Books ?? true)
+            {
+                var BooksItem = item.Books;
+                if (BooksItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
+                        item: BooksItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -10814,6 +10988,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Armors;
                 }
+                case RecordTypeInts.BOOK:
+                {
+                    if (importMask?.Books ?? true)
+                    {
+                        item.Books.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Books;
+                }
                 case RecordTypeInts.WEAP:
                 {
                     if (importMask?.Weapons ?? true)
@@ -11456,6 +11644,11 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? StarfieldGroupBinaryOverlay<IArmorGetter>.StarfieldGroupFactory(_stream, _ArmorsLocations, _package) : default;
         public IStarfieldGroupGetter<IArmorGetter> Armors => _Armors ?? new StarfieldGroup<Armor>(this);
         #endregion
+        #region Books
+        private List<RangeInt64>? _BooksLocations;
+        private IStarfieldGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? StarfieldGroupBinaryOverlay<IBookGetter>.StarfieldGroupFactory(_stream, _BooksLocations, _package) : default;
+        public IStarfieldGroupGetter<IBookGetter> Books => _Books ?? new StarfieldGroup<Book>(this);
+        #endregion
         #region Weapons
         private List<RangeInt64>? _WeaponsLocations;
         private IStarfieldGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? StarfieldGroupBinaryOverlay<IWeaponGetter>.StarfieldGroupFactory(_stream, _WeaponsLocations, _package) : default;
@@ -11831,6 +12024,12 @@ namespace Mutagen.Bethesda.Starfield
                     _ArmorsLocations ??= new();
                     _ArmorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Armors;
+                }
+                case RecordTypeInts.BOOK:
+                {
+                    _BooksLocations ??= new();
+                    _BooksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.WEAP:
                 {
