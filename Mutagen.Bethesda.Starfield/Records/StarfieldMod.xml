@@ -31,6 +31,7 @@
       <Group name="Curve3Ds" refName="Curve3D" />
       <Group name="Armors" refName="Armor" />
       <Group name="Books" refName="Book" />
+      <Group name="Containers" refName="Container" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Perks" refName="Perk" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />

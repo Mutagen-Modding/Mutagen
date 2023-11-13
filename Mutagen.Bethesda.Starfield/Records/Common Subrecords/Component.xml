@@ -133,4 +133,20 @@
       <FormLink name="AnimationSound" refName="AnimationSoundTagSet" recordType="STCP" />
     </Fields>
   </Object>
+  <Object name="DisplayCaseComponent" objType="Subrecord" baseClass="AComponent">
+    <Fields>
+      <RefList name="Items" recordType="DCSD" refName="DisplayCaseComponentItem" />
+      <List name="DCED" recordType="DCED" >
+        <UInt32 />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="DisplayCaseComponentItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="DisplayFilter" refName="FormList" />
+      <UInt32 name="Unknown1" />
+      <UInt32 name="Index" />
+      <UInt32 name="Unknown2" />
+    </Fields>
+  </Object>
 </Loqui>

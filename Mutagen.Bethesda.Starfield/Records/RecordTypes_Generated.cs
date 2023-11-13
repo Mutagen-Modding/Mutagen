@@ -137,6 +137,8 @@ public partial class RecordTypes
     public static readonly RecordType DAMA = new(0x414D4144);
     public static readonly RecordType DAMC = new(0x434D4144);
     public static readonly RecordType DATA = new(0x41544144);
+    public static readonly RecordType DCED = new(0x44454344);
+    public static readonly RecordType DCSD = new(0x44534344);
     public static readonly RecordType DEBR = new(0x52424544);
     public static readonly RecordType DELE = new(0x454C4544);
     public static readonly RecordType DENS = new(0x534E4544);

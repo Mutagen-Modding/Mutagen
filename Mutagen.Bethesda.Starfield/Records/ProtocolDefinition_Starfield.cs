@@ -132,6 +132,8 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             DialogBranch_Registration.Instance,
             DialogResponses_Registration.Instance,
             DialogTopic_Registration.Instance,
+            DisplayCaseComponent_Registration.Instance,
+            DisplayCaseComponentItem_Registration.Instance,
             DoesNotExistConditionData_Registration.Instance,
             Door_Registration.Instance,
             DoorTriangle_Registration.Instance,

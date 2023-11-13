@@ -2050,6 +2050,9 @@
     <Compile Include="Records\Major Records\ConstructibleObject.cs">
       <DependentUpon>ConstructibleObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Container.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\CreateReferenceToObject.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
@@ -5349,9 +5352,6 @@
     <Compile Include="Records\Major Records\MorphableObject_Generated.cs">
       <DependentUpon>MorphableObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorCategoryValue_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BookTeachTarget_Generated.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
@@ -5366,6 +5366,15 @@
     </Compile>
     <Compile Include="Records\Major Records\BookTeachesNothing_Generated.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorCategoryValue_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DisplayCaseComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DisplayCaseComponentItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -135,6 +135,8 @@ public partial class RecordTypeInts
     public const int DAMA = 0x414D4144;
     public const int DAMC = 0x434D4144;
     public const int DATA = 0x41544144;
+    public const int DCED = 0x44454344;
+    public const int DCSD = 0x44534344;
     public const int DEBR = 0x52424544;
     public const int DELE = 0x454C4544;
     public const int DENS = 0x534E4544;

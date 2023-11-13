@@ -31,6 +31,7 @@ public partial class AComponent
         ParticleSystem_Component,
         BGSLodOwner_Component,
         BGSSoundTag_Component,
+        BGSDisplayCase,
     }
 
     public static bool TryCreateFromBinary(
@@ -91,6 +92,8 @@ public partial class AComponent
                 return LodOwnerComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSSoundTag_Component:
                 return SoundTagComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSDisplayCase:
+                return DisplayCaseComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -153,6 +156,7 @@ partial class AComponentBinaryWriteTranslation
             IParticleSystemComponentGetter _ => AComponent.ComponentType.ParticleSystem_Component,
             ILodOwnerComponentGetter _ => AComponent.ComponentType.BGSLodOwner_Component,
             ISoundTagComponentGetter _ => AComponent.ComponentType.BGSSoundTag_Component,
+            IDisplayCaseComponentGetter _ => AComponent.ComponentType.BGSDisplayCase,
             _ => throw new NotImplementedException()
         };
 
@@ -211,6 +215,8 @@ partial class AComponentBinaryOverlay
                 return LodOwnerComponentBinaryOverlay.LodOwnerComponentFactory(stream, package);
             case AComponent.ComponentType.BGSSoundTag_Component:
                 return SoundTagComponentBinaryOverlay.SoundTagComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSDisplayCase:
+                return DisplayCaseComponentBinaryOverlay.DisplayCaseComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }
