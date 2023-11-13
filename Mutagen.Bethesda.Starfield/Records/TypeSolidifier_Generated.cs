@@ -372,9 +372,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AObjectModification</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter> AObjectModification(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter> AObjectModification(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAObjectModificationGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -384,9 +384,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on AObjectModification</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter> AObjectModification(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter> AObjectModification(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IAObjectModificationGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IAObjectModification, IAObjectModificationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

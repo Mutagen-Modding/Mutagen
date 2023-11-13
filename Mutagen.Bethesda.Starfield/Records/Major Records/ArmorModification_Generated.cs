@@ -42,14 +42,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class UnknownObjectModification :
+    public partial class ArmorModification :
         AObjectModification,
-        IEquatable<IUnknownObjectModificationGetter>,
-        ILoquiObjectSetter<UnknownObjectModification>,
-        IUnknownObjectModificationInternal
+        IArmorModificationInternal,
+        IEquatable<IArmorModificationGetter>,
+        ILoquiObjectSetter<ArmorModification>
     {
         #region Ctor
-        protected UnknownObjectModification()
+        protected ArmorModification()
         {
             CustomCtor();
         }
@@ -58,22 +58,17 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> _Properties = new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>>();
-        public ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties
+        private ExtendedList<AObjectModProperty<Armor.Property>> _Properties = new ExtendedList<AObjectModProperty<Armor.Property>>();
+        public ExtendedList<AObjectModProperty<Armor.Property>> Properties
         {
             get => this._Properties;
             init => this._Properties = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> IUnknownObjectModificationGetter.Properties => _Properties;
+        IReadOnlyList<IAObjectModPropertyGetter<Armor.Property>> IArmorModificationGetter.Properties => _Properties;
         #endregion
 
-        #endregion
-        #region ObjectModificationTargetName
-        public String? ObjectModificationTargetName { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IUnknownObjectModificationGetter.ObjectModificationTargetName => this.ObjectModificationTargetName;
         #endregion
 
         #region To String
@@ -82,7 +77,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            UnknownObjectModificationMixIn.Print(
+            ArmorModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -101,7 +96,6 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>());
-                this.ObjectModificationTargetName = initialValue;
             }
 
             public Mask(
@@ -127,8 +121,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem LooseMod,
                 TItem Priority,
                 TItem Filter,
-                TItem Properties,
-                TItem ObjectModificationTargetName)
+                TItem Properties)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -154,7 +147,6 @@ namespace Mutagen.Bethesda.Starfield
                 Filter: Filter)
             {
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>());
-                this.ObjectModificationTargetName = ObjectModificationTargetName;
             }
 
             #pragma warning disable CS8618
@@ -167,7 +159,6 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>? Properties;
-            public TItem ObjectModificationTargetName;
             #endregion
 
             #region Equals
@@ -182,14 +173,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
-                if (!object.Equals(this.ObjectModificationTargetName, rhs.ObjectModificationTargetName)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Properties);
-                hash.Add(this.ObjectModificationTargetName);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -212,7 +201,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.ObjectModificationTargetName)) return false;
                 return true;
             }
             #endregion
@@ -233,7 +221,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.ObjectModificationTargetName)) return true;
                 return false;
             }
             #endregion
@@ -241,7 +228,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new UnknownObjectModification.Mask<R>();
+                var ret = new ArmorModification.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -264,23 +251,22 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.ObjectModificationTargetName = eval(this.ObjectModificationTargetName);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(UnknownObjectModification.Mask<bool>? printMask = null)
+            public string Print(ArmorModification.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, UnknownObjectModification.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ArmorModification.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(UnknownObjectModification.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ArmorModification.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if ((printMask?.Properties?.Overall ?? true)
@@ -302,10 +288,6 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.ObjectModificationTargetName ?? true)
-                    {
-                        sb.AppendItem(ObjectModificationTargetName, "ObjectModificationTargetName");
-                    }
                 }
             }
             #endregion
@@ -318,19 +300,16 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>? Properties;
-            public Exception? ObjectModificationTargetName;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                UnknownObjectModification_FieldIndex enu = (UnknownObjectModification_FieldIndex)index;
+                ArmorModification_FieldIndex enu = (ArmorModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case UnknownObjectModification_FieldIndex.Properties:
+                    case ArmorModification_FieldIndex.Properties:
                         return Properties;
-                    case UnknownObjectModification_FieldIndex.ObjectModificationTargetName:
-                        return ObjectModificationTargetName;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -338,14 +317,11 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                UnknownObjectModification_FieldIndex enu = (UnknownObjectModification_FieldIndex)index;
+                ArmorModification_FieldIndex enu = (ArmorModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case UnknownObjectModification_FieldIndex.Properties:
+                    case ArmorModification_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(ex, null);
-                        break;
-                    case UnknownObjectModification_FieldIndex.ObjectModificationTargetName:
-                        this.ObjectModificationTargetName = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -355,14 +331,11 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                UnknownObjectModification_FieldIndex enu = (UnknownObjectModification_FieldIndex)index;
+                ArmorModification_FieldIndex enu = (ArmorModification_FieldIndex)index;
                 switch (enu)
                 {
-                    case UnknownObjectModification_FieldIndex.Properties:
+                    case ArmorModification_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>)obj;
-                        break;
-                    case UnknownObjectModification_FieldIndex.ObjectModificationTargetName:
-                        this.ObjectModificationTargetName = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -374,7 +347,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Properties != null) return true;
-                if (ObjectModificationTargetName != null) return true;
                 return false;
             }
             #endregion
@@ -419,9 +391,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                {
-                    sb.AppendItem(ObjectModificationTargetName, "ObjectModificationTargetName");
-                }
             }
             #endregion
 
@@ -431,7 +400,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AObjectModProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
-                ret.ObjectModificationTargetName = this.ObjectModificationTargetName.Combine(rhs.ObjectModificationTargetName);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -455,7 +423,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public AObjectModProperty.TranslationMask? Properties;
-            public bool ObjectModificationTargetName;
             #endregion
 
             #region Ctors
@@ -464,7 +431,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ObjectModificationTargetName = defaultOn;
             }
 
             #endregion
@@ -473,7 +439,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
-                ret.Add((ObjectModificationTargetName, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -485,10 +450,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = UnknownObjectModification_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => UnknownObjectModificationCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => UnknownObjectModificationSetterCommon.Instance.RemapLinks(this, mapping);
-        public UnknownObjectModification(
+        public static readonly RecordType GrupRecordType = ArmorModification_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModificationCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorModificationSetterCommon.Instance.RemapLinks(this, mapping);
+        public ArmorModification(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -497,7 +462,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private UnknownObjectModification(
+        private ArmorModification(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -506,7 +471,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal UnknownObjectModification(
+        internal ArmorModification(
             FormKey formKey,
             ushort formVersion)
         {
@@ -515,14 +480,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public UnknownObjectModification(IStarfieldMod mod)
+        public ArmorModification(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public UnknownObjectModification(IStarfieldMod mod, string editorID)
+        public ArmorModification(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -532,10 +497,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<UnknownObjectModification>.ToString(this);
+            return MajorRecordPrinter<ArmorModification>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IUnknownObjectModification);
+        protected override Type LinkType => typeof(IArmorModification);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -544,16 +509,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IUnknownObjectModificationGetter rhs) return false;
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorModificationGetter rhs) return false;
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IUnknownObjectModificationGetter? obj)
+        public bool Equals(IArmorModificationGetter? obj)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -561,23 +526,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => UnknownObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ArmorModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((UnknownObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static UnknownObjectModification CreateFromBinary(
+        public new static ArmorModification CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new UnknownObjectModification();
-            ((UnknownObjectModificationSetterCommon)((IUnknownObjectModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ArmorModification();
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -588,7 +553,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out UnknownObjectModification item,
+            out ArmorModification item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -603,98 +568,96 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((UnknownObjectModificationSetterCommon)((IUnknownObjectModificationGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new UnknownObjectModification GetNew()
+        internal static new ArmorModification GetNew()
         {
-            return new UnknownObjectModification();
+            return new ArmorModification();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IUnknownObjectModification :
+    public partial interface IArmorModification :
         IAObjectModificationInternal,
+        IArmorModificationGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IUnknownObjectModificationInternal>,
+        ILoquiObjectSetter<IArmorModificationInternal>,
         IModeled,
         INamed,
         INamedRequired,
         ITranslatedNamed,
-        ITranslatedNamedRequired,
-        IUnknownObjectModificationGetter
+        ITranslatedNamedRequired
     {
-        new ExtendedList<AObjectModProperty<AObjectModification.NoneProperty>> Properties { get; }
-        new String? ObjectModificationTargetName { get; set; }
+        new ExtendedList<AObjectModProperty<Armor.Property>> Properties { get; }
     }
 
-    public partial interface IUnknownObjectModificationInternal :
+    public partial interface IArmorModificationInternal :
         IAObjectModificationInternal,
-        IUnknownObjectModification,
-        IUnknownObjectModificationGetter
+        IArmorModification,
+        IArmorModificationGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.OMOD)]
-    public partial interface IUnknownObjectModificationGetter :
+    public partial interface IArmorModificationGetter :
         IAObjectModificationGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IUnknownObjectModificationGetter>,
-        IMapsToGetter<IUnknownObjectModificationGetter>,
+        ILoquiObject<IArmorModificationGetter>,
+        IMapsToGetter<IArmorModificationGetter>,
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
-        static new ILoquiRegistration StaticRegistration => UnknownObjectModification_Registration.Instance;
-        IReadOnlyList<IAObjectModPropertyGetter<AObjectModification.NoneProperty>> Properties { get; }
-        String? ObjectModificationTargetName { get; }
+        static new ILoquiRegistration StaticRegistration => ArmorModification_Registration.Instance;
+        IReadOnlyList<IAObjectModPropertyGetter<Armor.Property>> Properties { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class UnknownObjectModificationMixIn
+    public static partial class ArmorModificationMixIn
     {
-        public static void Clear(this IUnknownObjectModificationInternal item)
+        public static void Clear(this IArmorModificationInternal item)
         {
-            ((UnknownObjectModificationSetterCommon)((IUnknownObjectModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static UnknownObjectModification.Mask<bool> GetEqualsMask(
-            this IUnknownObjectModificationGetter item,
-            IUnknownObjectModificationGetter rhs,
+        public static ArmorModification.Mask<bool> GetEqualsMask(
+            this IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IUnknownObjectModificationGetter item,
+            this IArmorModificationGetter item,
             string? name = null,
-            UnknownObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Print(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IUnknownObjectModificationGetter item,
+            this IArmorModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            UnknownObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
-            ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Print(
+            ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -702,39 +665,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IUnknownObjectModificationGetter item,
-            IUnknownObjectModificationGetter rhs,
-            UnknownObjectModification.TranslationMask? equalsMask = null)
+            this IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
+            ArmorModification.TranslationMask? equalsMask = null)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Equals(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IUnknownObjectModificationInternal lhs,
-            IUnknownObjectModificationGetter rhs,
-            out UnknownObjectModification.ErrorMask errorMask,
-            UnknownObjectModification.TranslationMask? copyMask = null)
+            this IArmorModificationInternal lhs,
+            IArmorModificationGetter rhs,
+            out ArmorModification.ErrorMask errorMask,
+            ArmorModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = UnknownObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModification.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IUnknownObjectModificationInternal lhs,
-            IUnknownObjectModificationGetter rhs,
+            this IArmorModificationInternal lhs,
+            IArmorModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -742,55 +705,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static UnknownObjectModification DeepCopy(
-            this IUnknownObjectModificationGetter item,
-            UnknownObjectModification.TranslationMask? copyMask = null)
+        public static ArmorModification DeepCopy(
+            this IArmorModificationGetter item,
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            return ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static UnknownObjectModification DeepCopy(
-            this IUnknownObjectModificationGetter item,
-            out UnknownObjectModification.ErrorMask errorMask,
-            UnknownObjectModification.TranslationMask? copyMask = null)
+        public static ArmorModification DeepCopy(
+            this IArmorModificationGetter item,
+            out ArmorModification.ErrorMask errorMask,
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            return ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static UnknownObjectModification DeepCopy(
-            this IUnknownObjectModificationGetter item,
+        public static ArmorModification DeepCopy(
+            this IArmorModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static UnknownObjectModification Duplicate(
-            this IUnknownObjectModificationGetter item,
+        public static ArmorModification Duplicate(
+            this IArmorModificationGetter item,
             FormKey formKey,
-            UnknownObjectModification.TranslationMask? copyMask = null)
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Duplicate(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static UnknownObjectModification Duplicate(
-            this IUnknownObjectModificationGetter item,
+        public static ArmorModification Duplicate(
+            this IArmorModificationGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).Duplicate(
+            return ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -800,11 +763,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IUnknownObjectModificationInternal item,
+            this IArmorModificationInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((UnknownObjectModificationSetterCommon)((IUnknownObjectModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ArmorModificationSetterCommon)((IArmorModificationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -820,7 +783,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum UnknownObjectModification_FieldIndex
+    internal enum ArmorModification_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -845,38 +808,37 @@ namespace Mutagen.Bethesda.Starfield
         Priority = 20,
         Filter = 21,
         Properties = 22,
-        ObjectModificationTargetName = 23,
     }
     #endregion
 
     #region Registration
-    internal partial class UnknownObjectModification_Registration : ILoquiRegistration
+    internal partial class ArmorModification_Registration : ILoquiRegistration
     {
-        public static readonly UnknownObjectModification_Registration Instance = new UnknownObjectModification_Registration();
+        public static readonly ArmorModification_Registration Instance = new ArmorModification_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 23;
 
-        public static readonly Type MaskType = typeof(UnknownObjectModification.Mask<>);
+        public static readonly Type MaskType = typeof(ArmorModification.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(UnknownObjectModification.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ArmorModification.ErrorMask);
 
-        public static readonly Type ClassType = typeof(UnknownObjectModification);
+        public static readonly Type ClassType = typeof(ArmorModification);
 
-        public static readonly Type GetterType = typeof(IUnknownObjectModificationGetter);
+        public static readonly Type GetterType = typeof(IArmorModificationGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IUnknownObjectModification);
+        public static readonly Type SetterType = typeof(IArmorModification);
 
-        public static readonly Type? InternalSetterType = typeof(IUnknownObjectModificationInternal);
+        public static readonly Type? InternalSetterType = typeof(IArmorModificationInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.UnknownObjectModification";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ArmorModification";
 
-        public const string Name = "UnknownObjectModification";
+        public const string Name = "ArmorModification";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -891,7 +853,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.OMOD);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(UnknownObjectModificationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ArmorModificationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -922,37 +884,36 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class UnknownObjectModificationSetterCommon : AObjectModificationSetterCommon
+    internal partial class ArmorModificationSetterCommon : AObjectModificationSetterCommon
     {
-        public new static readonly UnknownObjectModificationSetterCommon Instance = new UnknownObjectModificationSetterCommon();
+        public new static readonly ArmorModificationSetterCommon Instance = new ArmorModificationSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IUnknownObjectModificationInternal item)
+        public void Clear(IArmorModificationInternal item)
         {
             ClearPartial();
             item.Properties.Clear();
-            item.ObjectModificationTargetName = default;
             base.Clear(item);
         }
         
         public override void Clear(IAObjectModificationInternal item)
         {
-            Clear(item: (IUnknownObjectModificationInternal)item);
+            Clear(item: (IArmorModificationInternal)item);
         }
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IUnknownObjectModificationInternal)item);
+            Clear(item: (IArmorModificationInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IUnknownObjectModificationInternal)item);
+            Clear(item: (IArmorModificationInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IUnknownObjectModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IArmorModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
             obj.Properties.RemapLinks(mapping);
@@ -962,16 +923,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IUnknownObjectModificationInternal item,
+            IArmorModificationInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IUnknownObjectModificationInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IArmorModificationInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: UnknownObjectModificationBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: UnknownObjectModificationBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ArmorModificationBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ArmorModificationBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -980,7 +941,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (UnknownObjectModification)item,
+                item: (ArmorModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -991,7 +952,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (UnknownObjectModification)item,
+                item: (ArmorModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1002,7 +963,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (UnknownObjectModification)item,
+                item: (ArmorModification)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -1010,17 +971,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class UnknownObjectModificationCommon : AObjectModificationCommon
+    internal partial class ArmorModificationCommon : AObjectModificationCommon
     {
-        public new static readonly UnknownObjectModificationCommon Instance = new UnknownObjectModificationCommon();
+        public new static readonly ArmorModificationCommon Instance = new ArmorModificationCommon();
 
-        public UnknownObjectModification.Mask<bool> GetEqualsMask(
-            IUnknownObjectModificationGetter item,
-            IUnknownObjectModificationGetter rhs,
+        public ArmorModification.Mask<bool> GetEqualsMask(
+            IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new UnknownObjectModification.Mask<bool>(false);
-            ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ArmorModification.Mask<bool>(false);
+            ((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1029,23 +990,22 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IUnknownObjectModificationGetter item,
-            IUnknownObjectModificationGetter rhs,
-            UnknownObjectModification.Mask<bool> ret,
+            IArmorModificationGetter item,
+            IArmorModificationGetter rhs,
+            ArmorModification.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ObjectModificationTargetName = string.Equals(item.ObjectModificationTargetName, rhs.ObjectModificationTargetName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IUnknownObjectModificationGetter item,
+            IArmorModificationGetter item,
             string? name = null,
-            UnknownObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1057,18 +1017,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IUnknownObjectModificationGetter item,
+            IArmorModificationGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            UnknownObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"UnknownObjectModification =>");
+                sb.AppendLine($"ArmorModification =>");
             }
             else
             {
-                sb.AppendLine($"{name} (UnknownObjectModification) =>");
+                sb.AppendLine($"{name} (ArmorModification) =>");
             }
             using (sb.Brace())
             {
@@ -1080,9 +1040,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IUnknownObjectModificationGetter item,
+            IArmorModificationGetter item,
             StructuredStringBuilder sb,
-            UnknownObjectModification.Mask<bool>? printMask = null)
+            ArmorModification.Mask<bool>? printMask = null)
         {
             AObjectModificationCommon.ToStringFields(
                 item: item,
@@ -1102,101 +1062,96 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.ObjectModificationTargetName ?? true)
-                && item.ObjectModificationTargetName is {} ObjectModificationTargetNameItem)
-            {
-                sb.AppendItem(ObjectModificationTargetNameItem, "ObjectModificationTargetName");
-            }
         }
         
-        public static UnknownObjectModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
+        public static ArmorModification_FieldIndex ConvertFieldIndex(AObjectModification_FieldIndex index)
         {
             switch (index)
             {
                 case AObjectModification_FieldIndex.MajorRecordFlagsRaw:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormKey:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.VersionControl:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.EditorID:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FormVersion:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Version2:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.StarfieldMajorRecordFlags:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Components:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Name:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Description:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Model:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown2:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.AttachPoint:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.AttachParentSlots:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Unknown3:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Includes:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.TargetOmodKeywords:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.FilterKeywords:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.LooseMod:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Priority:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.Filter:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new UnknownObjectModification_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static new ArmorModification_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new UnknownObjectModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ArmorModification_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (UnknownObjectModification_FieldIndex)((int)index);
+                    return (ArmorModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -1204,19 +1159,15 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IUnknownObjectModificationGetter? lhs,
-            IUnknownObjectModificationGetter? rhs,
+            IArmorModificationGetter? lhs,
+            IArmorModificationGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAObjectModificationGetter)lhs, (IAObjectModificationGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.Properties) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorModification_FieldIndex.Properties) ?? true))
             {
-                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<AObjectModification.NoneProperty>)((IAObjectModPropertyGetter<AObjectModification.NoneProperty>)l).CommonInstance(typeof(AObjectModification.NoneProperty))!).Equals(l, r, equalsMask?.GetSubCrystal((int)UnknownObjectModification_FieldIndex.Properties)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.ObjectModificationTargetName) ?? true))
-            {
-                if (!string.Equals(lhs.ObjectModificationTargetName, rhs.ObjectModificationTargetName)) return false;
+                if (!lhs.Properties.SequenceEqual(rhs.Properties, (l, r) => ((AObjectModPropertyCommon<Armor.Property>)((IAObjectModPropertyGetter<Armor.Property>)l).CommonInstance(typeof(Armor.Property))!).Equals(l, r, equalsMask?.GetSubCrystal((int)ArmorModification_FieldIndex.Properties)))) return false;
             }
             return true;
         }
@@ -1227,8 +1178,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IUnknownObjectModificationGetter?)lhs,
-                rhs: rhs as IUnknownObjectModificationGetter,
+                lhs: (IArmorModificationGetter?)lhs,
+                rhs: rhs as IArmorModificationGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1238,8 +1189,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IUnknownObjectModificationGetter?)lhs,
-                rhs: rhs as IUnknownObjectModificationGetter,
+                lhs: (IArmorModificationGetter?)lhs,
+                rhs: rhs as IArmorModificationGetter,
                 equalsMask: equalsMask);
         }
         
@@ -1249,36 +1200,32 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IUnknownObjectModificationGetter?)lhs,
-                rhs: rhs as IUnknownObjectModificationGetter,
+                lhs: (IArmorModificationGetter?)lhs,
+                rhs: rhs as IArmorModificationGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IUnknownObjectModificationGetter item)
+        public virtual int GetHashCode(IArmorModificationGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Properties);
-            if (item.ObjectModificationTargetName is {} ObjectModificationTargetNameitem)
-            {
-                hash.Add(ObjectModificationTargetNameitem);
-            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IAObjectModificationGetter item)
         {
-            return GetHashCode(item: (IUnknownObjectModificationGetter)item);
+            return GetHashCode(item: (IArmorModificationGetter)item);
         }
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IUnknownObjectModificationGetter)item);
+            return GetHashCode(item: (IArmorModificationGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IUnknownObjectModificationGetter)item);
+            return GetHashCode(item: (IArmorModificationGetter)item);
         }
         
         #endregion
@@ -1286,17 +1233,17 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return UnknownObjectModification.GetNew();
+            return ArmorModification.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IUnknownObjectModificationGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorModificationGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<AObjectModification.NoneProperty>, IFormLinkContainerGetter>()
+            foreach (var item in obj.Properties.WhereCastable<IAObjectModPropertyGetter<Armor.Property>, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1305,12 +1252,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public UnknownObjectModification Duplicate(
-            IUnknownObjectModificationGetter item,
+        public ArmorModification Duplicate(
+            IArmorModificationGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new UnknownObjectModification(formKey, item.FormVersion);
+            var newRec = new ArmorModification(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1321,7 +1268,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IUnknownObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1332,7 +1279,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IUnknownObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1343,7 +1290,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IUnknownObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1353,14 +1300,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class UnknownObjectModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
+    internal partial class ArmorModificationSetterTranslationCommon : AObjectModificationSetterTranslationCommon
     {
-        public new static readonly UnknownObjectModificationSetterTranslationCommon Instance = new UnknownObjectModificationSetterTranslationCommon();
+        public new static readonly ArmorModificationSetterTranslationCommon Instance = new ArmorModificationSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IUnknownObjectModificationInternal item,
-            IUnknownObjectModificationGetter rhs,
+            IArmorModificationInternal item,
+            IArmorModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1374,8 +1321,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IUnknownObjectModification item,
-            IUnknownObjectModificationGetter rhs,
+            IArmorModification item,
+            IArmorModificationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1386,16 +1333,16 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.Properties) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorModification_FieldIndex.Properties) ?? true))
             {
-                errorMask?.PushIndex((int)UnknownObjectModification_FieldIndex.Properties);
+                errorMask?.PushIndex((int)ArmorModification_FieldIndex.Properties);
                 try
                 {
                     item.Properties.SetTo(
                         rhs.Properties
                         .Select(r =>
                         {
-                            return r.DeepCopy<AObjectModification.NoneProperty>(
+                            return r.DeepCopy<Armor.Property>(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
@@ -1410,10 +1357,6 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)UnknownObjectModification_FieldIndex.ObjectModificationTargetName) ?? true))
-            {
-                item.ObjectModificationTargetName = rhs.ObjectModificationTargetName;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1424,8 +1367,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IUnknownObjectModificationInternal)item,
-                rhs: (IUnknownObjectModificationGetter)rhs,
+                item: (IArmorModificationInternal)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1439,8 +1382,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IUnknownObjectModification)item,
-                rhs: (IUnknownObjectModificationGetter)rhs,
+                item: (IArmorModification)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1454,8 +1397,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IUnknownObjectModificationInternal)item,
-                rhs: (IUnknownObjectModificationGetter)rhs,
+                item: (IArmorModificationInternal)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1469,8 +1412,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IUnknownObjectModification)item,
-                rhs: (IUnknownObjectModificationGetter)rhs,
+                item: (IArmorModification)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1484,8 +1427,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IUnknownObjectModificationInternal)item,
-                rhs: (IUnknownObjectModificationGetter)rhs,
+                item: (IArmorModificationInternal)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1499,8 +1442,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IUnknownObjectModification)item,
-                rhs: (IUnknownObjectModificationGetter)rhs,
+                item: (IArmorModification)item,
+                rhs: (IArmorModificationGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1508,12 +1451,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public UnknownObjectModification DeepCopy(
-            IUnknownObjectModificationGetter item,
-            UnknownObjectModification.TranslationMask? copyMask = null)
+        public ArmorModification DeepCopy(
+            IArmorModificationGetter item,
+            ArmorModification.TranslationMask? copyMask = null)
         {
-            UnknownObjectModification ret = (UnknownObjectModification)((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorModification ret = (ArmorModification)((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetNew();
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1522,30 +1465,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public UnknownObjectModification DeepCopy(
-            IUnknownObjectModificationGetter item,
-            out UnknownObjectModification.ErrorMask errorMask,
-            UnknownObjectModification.TranslationMask? copyMask = null)
+        public ArmorModification DeepCopy(
+            IArmorModificationGetter item,
+            out ArmorModification.ErrorMask errorMask,
+            ArmorModification.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            UnknownObjectModification ret = (UnknownObjectModification)((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorModification ret = (ArmorModification)((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetNew();
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = UnknownObjectModification.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModification.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public UnknownObjectModification DeepCopy(
-            IUnknownObjectModificationGetter item,
+        public ArmorModification DeepCopy(
+            IArmorModificationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            UnknownObjectModification ret = (UnknownObjectModification)((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)item).CommonInstance()!).GetNew();
-            ((UnknownObjectModificationSetterTranslationCommon)((IUnknownObjectModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorModification ret = (ArmorModification)((ArmorModificationCommon)((IArmorModificationGetter)item).CommonInstance()!).GetNew();
+            ((ArmorModificationSetterTranslationCommon)((IArmorModificationGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1561,21 +1504,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class UnknownObjectModification
+    public partial class ArmorModification
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => UnknownObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => UnknownObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => UnknownObjectModificationCommon.Instance;
+        protected override object CommonInstance() => ArmorModificationCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return UnknownObjectModificationSetterCommon.Instance;
+            return ArmorModificationSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => UnknownObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ArmorModificationSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1586,14 +1529,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class UnknownObjectModificationBinaryWriteTranslation :
+    public partial class ArmorModificationBinaryWriteTranslation :
         AObjectModificationBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly UnknownObjectModificationBinaryWriteTranslation Instance = new();
+        public new static readonly ArmorModificationBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IUnknownObjectModificationGetter item,
+            IArmorModificationGetter item,
             MutagenWriter writer)
         {
             AObjectModificationBinaryWriteTranslation.WriteEmbedded(
@@ -1603,7 +1546,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IUnknownObjectModificationGetter item,
+            IArmorModificationGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Record(
@@ -1636,7 +1579,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IUnknownObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1647,7 +1590,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IUnknownObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1658,7 +1601,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IUnknownObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1669,20 +1612,20 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IUnknownObjectModificationGetter)item,
+                item: (IArmorModificationGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class UnknownObjectModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
+    internal partial class ArmorModificationBinaryCreateTranslation : AObjectModificationBinaryCreateTranslation
     {
-        public new static readonly UnknownObjectModificationBinaryCreateTranslation Instance = new UnknownObjectModificationBinaryCreateTranslation();
+        public new static readonly ArmorModificationBinaryCreateTranslation Instance = new ArmorModificationBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OMOD;
         public static void FillBinaryStructs(
-            IUnknownObjectModificationInternal item,
+            IArmorModificationInternal item,
             MutagenFrame frame)
         {
             AObjectModificationBinaryCreateTranslation.FillBinaryStructs(
@@ -1696,7 +1639,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class UnknownObjectModificationBinaryTranslationMixIn
+    public static class ArmorModificationBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1705,36 +1648,36 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class UnknownObjectModificationBinaryOverlay :
+    internal partial class ArmorModificationBinaryOverlay :
         AObjectModificationBinaryOverlay,
-        IUnknownObjectModificationGetter
+        IArmorModificationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => UnknownObjectModification_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => UnknownObjectModification_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorModification_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ArmorModification_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => UnknownObjectModificationCommon.Instance;
+        protected override object CommonInstance() => ArmorModificationCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => UnknownObjectModificationSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ArmorModificationSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => UnknownObjectModificationCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorModificationCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => UnknownObjectModificationBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ArmorModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((UnknownObjectModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorModificationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IUnknownObjectModification);
+        protected override Type LinkType => typeof(IArmorModification);
 
 
         partial void CustomFactoryEnd(
@@ -1743,7 +1686,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected UnknownObjectModificationBinaryOverlay(
+        protected ArmorModificationBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1753,7 +1696,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IUnknownObjectModificationGetter UnknownObjectModificationFactory(
+        public static IArmorModificationGetter ArmorModificationFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1765,7 +1708,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new UnknownObjectModificationBinaryOverlay(
+            var ret = new ArmorModificationBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1783,12 +1726,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IUnknownObjectModificationGetter UnknownObjectModificationFactory(
+        public static IArmorModificationGetter ArmorModificationFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return UnknownObjectModificationFactory(
+            return ArmorModificationFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1800,7 +1743,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            UnknownObjectModificationMixIn.Print(
+            ArmorModificationMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1810,7 +1753,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<UnknownObjectModification>.ToString(this);
+            return MajorRecordPrinter<ArmorModification>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1820,16 +1763,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IUnknownObjectModificationGetter rhs) return false;
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorModificationGetter rhs) return false;
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IUnknownObjectModificationGetter? obj)
+        public bool Equals(IArmorModificationGetter? obj)
         {
-            return ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((UnknownObjectModificationCommon)((IUnknownObjectModificationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorModificationCommon)((IArmorModificationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

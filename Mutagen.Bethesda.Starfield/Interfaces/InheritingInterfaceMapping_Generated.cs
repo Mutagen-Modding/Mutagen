@@ -19,6 +19,21 @@ internal class StarfieldInheritingInterfaceMapping : IInterfaceMapping
     public StarfieldInheritingInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IArmorModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IArmorModificationGetter)] = dict[typeof(IArmorModification)] with { Setter = false };
+        dict[typeof(IContainerModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IContainerModificationGetter)] = dict[typeof(IContainerModification)] with { Setter = false };
+        dict[typeof(IFloraModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(IFloraModificationGetter)] = dict[typeof(IFloraModification)] with { Setter = false };
         dict[typeof(IGameSettingBool)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             GameSetting_Registration.Instance,
@@ -44,6 +59,11 @@ internal class StarfieldInheritingInterfaceMapping : IInterfaceMapping
             GameSetting_Registration.Instance,
         });
         dict[typeof(IGameSettingUIntGetter)] = dict[typeof(IGameSettingUInt)] with { Setter = false };
+        dict[typeof(INpcModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            AObjectModification_Registration.Instance,
+        });
+        dict[typeof(INpcModificationGetter)] = dict[typeof(INpcModification)] with { Setter = false };
         dict[typeof(IObjectModification)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             AObjectModification_Registration.Instance,

@@ -45,6 +45,7 @@
       <Group name="AnimatedObjects" refName="AnimatedObject" />
       <Group name="Debris" refName="Debris" />
       <Group name="Ingestibles" refName="Ingestible" />
+      <Group name="ObjectModifications" refName="AObjectModification" />
       <Group name="DefaultObjects" refName="DefaultObject" />
       <Group name="Outfits" refName="Outfit" />
       <Group name="AimModels" refName="AimModel" />

@@ -7,8 +7,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -24,6 +27,7 @@ using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -42,7 +46,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [WeaponModification, ObjectModification, UnknownObjectModification]
+    /// Implemented by: [WeaponModification, ArmorModification, FloraModification, NpcModification, ContainerModification, ObjectModification, UnknownObjectModification]
     /// </summary>
     public abstract partial class AObjectModification :
         StarfieldMajorRecord,
@@ -58,6 +62,174 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IAObjectModificationGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IAObjectModificationGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IAObjectModificationGetter.Description => this.Description;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IAObjectModificationGetter.Model => this.Model;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
+        #endregion
+        #region Unknown
+        public UInt16 Unknown { get; set; } = default;
+        #endregion
+        #region Unknown2
+        public UInt16 Unknown2 { get; set; } = default;
+        #endregion
+        #region AttachPoint
+        private readonly IFormLink<IKeywordGetter> _AttachPoint = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> AttachPoint
+        {
+            get => _AttachPoint;
+            set => _AttachPoint.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeywordGetter> IAObjectModificationGetter.AttachPoint => this.AttachPoint;
+        #endregion
+        #region AttachParentSlots
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>> _AttachParentSlots = new ExtendedList<IFormLinkGetter<IKeywordGetter>>();
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>> AttachParentSlots
+        {
+            get => this._AttachParentSlots;
+            init => this._AttachParentSlots = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>> IAObjectModificationGetter.AttachParentSlots => _AttachParentSlots;
+        #endregion
+
+        #endregion
+        #region Unknown3
+        public UInt32 Unknown3 { get; set; } = default;
+        #endregion
+        #region Includes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ObjectModInclude> _Includes = new ExtendedList<ObjectModInclude>();
+        public ExtendedList<ObjectModInclude> Includes
+        {
+            get => this._Includes;
+            init => this._Includes = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IObjectModIncludeGetter> IAObjectModificationGetter.Includes => _Includes;
+        #endregion
+
+        #endregion
+        #region TargetOmodKeywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _TargetOmodKeywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? TargetOmodKeywords
+        {
+            get => this._TargetOmodKeywords;
+            set => this._TargetOmodKeywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IAObjectModificationGetter.TargetOmodKeywords => _TargetOmodKeywords;
+        #endregion
+
+        #endregion
+        #region FilterKeywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _FilterKeywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords
+        {
+            get => this._FilterKeywords;
+            set => this._FilterKeywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IAObjectModificationGetter.FilterKeywords => _FilterKeywords;
+        #endregion
+
+        #endregion
+        #region LooseMod
+        private readonly IFormLinkNullable<IMiscItemGetter> _LooseMod = new FormLinkNullable<IMiscItemGetter>();
+        public IFormLinkNullable<IMiscItemGetter> LooseMod
+        {
+            get => _LooseMod;
+            set => _LooseMod.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMiscItemGetter> IAObjectModificationGetter.LooseMod => this.LooseMod;
+        #endregion
+        #region Priority
+        public Byte? Priority { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? IAObjectModificationGetter.Priority => this.Priority;
+        #endregion
+        #region Filter
+        public String? Filter { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAObjectModificationGetter.Filter => this.Filter;
+        #endregion
 
         #region To String
 
@@ -83,6 +255,21 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Description = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Unknown = initialValue;
+                this.Unknown2 = initialValue;
+                this.AttachPoint = initialValue;
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Unknown3 = initialValue;
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>());
+                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LooseMod = initialValue;
+                this.Priority = initialValue;
+                this.Filter = initialValue;
             }
 
             public Mask(
@@ -92,7 +279,22 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem Name,
+                TItem Description,
+                TItem Model,
+                TItem Unknown,
+                TItem Unknown2,
+                TItem AttachPoint,
+                TItem AttachParentSlots,
+                TItem Unknown3,
+                TItem Includes,
+                TItem TargetOmodKeywords,
+                TItem FilterKeywords,
+                TItem LooseMod,
+                TItem Priority,
+                TItem Filter)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -102,6 +304,21 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Description = Description;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Unknown = Unknown;
+                this.Unknown2 = Unknown2;
+                this.AttachPoint = AttachPoint;
+                this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Unknown3 = Unknown3;
+                this.Includes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>(Includes, Enumerable.Empty<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>());
+                this.TargetOmodKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(TargetOmodKeywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FilterKeywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FilterKeywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LooseMod = LooseMod;
+                this.Priority = Priority;
+                this.Filter = Filter;
             }
 
             #pragma warning disable CS8618
@@ -110,6 +327,24 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
+            public TItem Description;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem Unknown;
+            public TItem Unknown2;
+            public TItem AttachPoint;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
+            public TItem Unknown3;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectModInclude.Mask<TItem>?>>?>? Includes;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? TargetOmodKeywords;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? FilterKeywords;
+            public TItem LooseMod;
+            public TItem Priority;
+            public TItem Filter;
             #endregion
 
             #region Equals
@@ -123,11 +358,41 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.AttachPoint, rhs.AttachPoint)) return false;
+                if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.Includes, rhs.Includes)) return false;
+                if (!object.Equals(this.TargetOmodKeywords, rhs.TargetOmodKeywords)) return false;
+                if (!object.Equals(this.FilterKeywords, rhs.FilterKeywords)) return false;
+                if (!object.Equals(this.LooseMod, rhs.LooseMod)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
+                if (!object.Equals(this.Filter, rhs.Filter)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
+                hash.Add(this.Name);
+                hash.Add(this.Description);
+                hash.Add(this.Model);
+                hash.Add(this.Unknown);
+                hash.Add(this.Unknown2);
+                hash.Add(this.AttachPoint);
+                hash.Add(this.AttachParentSlots);
+                hash.Add(this.Unknown3);
+                hash.Add(this.Includes);
+                hash.Add(this.TargetOmodKeywords);
+                hash.Add(this.FilterKeywords);
+                hash.Add(this.LooseMod);
+                hash.Add(this.Priority);
+                hash.Add(this.Filter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -138,6 +403,77 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Description)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.AttachPoint)) return false;
+                if (this.AttachParentSlots != null)
+                {
+                    if (!eval(this.AttachParentSlots.Overall)) return false;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Unknown3)) return false;
+                if (this.Includes != null)
+                {
+                    if (!eval(this.Includes.Overall)) return false;
+                    if (this.Includes.Specific != null)
+                    {
+                        foreach (var item in this.Includes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.TargetOmodKeywords != null)
+                {
+                    if (!eval(this.TargetOmodKeywords.Overall)) return false;
+                    if (this.TargetOmodKeywords.Specific != null)
+                    {
+                        foreach (var item in this.TargetOmodKeywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.FilterKeywords != null)
+                {
+                    if (!eval(this.FilterKeywords.Overall)) return false;
+                    if (this.FilterKeywords.Specific != null)
+                    {
+                        foreach (var item in this.FilterKeywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.LooseMod)) return false;
+                if (!eval(this.Priority)) return false;
+                if (!eval(this.Filter)) return false;
                 return true;
             }
             #endregion
@@ -146,6 +482,77 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (eval(this.Description)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.AttachPoint)) return true;
+                if (this.AttachParentSlots != null)
+                {
+                    if (eval(this.AttachParentSlots.Overall)) return true;
+                    if (this.AttachParentSlots.Specific != null)
+                    {
+                        foreach (var item in this.AttachParentSlots.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Unknown3)) return true;
+                if (this.Includes != null)
+                {
+                    if (eval(this.Includes.Overall)) return true;
+                    if (this.Includes.Specific != null)
+                    {
+                        foreach (var item in this.Includes.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.TargetOmodKeywords != null)
+                {
+                    if (eval(this.TargetOmodKeywords.Overall)) return true;
+                    if (this.TargetOmodKeywords.Specific != null)
+                    {
+                        foreach (var item in this.TargetOmodKeywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.FilterKeywords != null)
+                {
+                    if (eval(this.FilterKeywords.Overall)) return true;
+                    if (this.FilterKeywords.Specific != null)
+                    {
+                        foreach (var item in this.FilterKeywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.LooseMod)) return true;
+                if (eval(this.Priority)) return true;
+                if (eval(this.Filter)) return true;
                 return false;
             }
             #endregion
@@ -161,6 +568,88 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                obj.Description = eval(this.Description);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Unknown = eval(this.Unknown);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.AttachPoint = eval(this.AttachPoint);
+                if (AttachParentSlots != null)
+                {
+                    obj.AttachParentSlots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AttachParentSlots.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AttachParentSlots.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AttachParentSlots.Specific = l;
+                        foreach (var item in AttachParentSlots.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Unknown3 = eval(this.Unknown3);
+                if (Includes != null)
+                {
+                    obj.Includes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>?>(eval(this.Includes.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>());
+                    if (Includes.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ObjectModInclude.Mask<R>?>>();
+                        obj.Includes.Specific = l;
+                        foreach (var item in Includes.Specific)
+                        {
+                            MaskItemIndexed<R, ObjectModInclude.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ObjectModInclude.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (TargetOmodKeywords != null)
+                {
+                    obj.TargetOmodKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.TargetOmodKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (TargetOmodKeywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.TargetOmodKeywords.Specific = l;
+                        foreach (var item in TargetOmodKeywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (FilterKeywords != null)
+                {
+                    obj.FilterKeywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FilterKeywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (FilterKeywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.FilterKeywords.Specific = l;
+                        foreach (var item in FilterKeywords.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.LooseMod = eval(this.LooseMod);
+                obj.Priority = eval(this.Priority);
+                obj.Filter = eval(this.Filter);
             }
             #endregion
 
@@ -179,6 +668,147 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AObjectModification.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        sb.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.Print(sb);
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        sb.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.AttachPoint ?? true)
+                    {
+                        sb.AppendItem(AttachPoint, "AttachPoint");
+                    }
+                    if ((printMask?.AttachParentSlots?.Overall ?? true)
+                        && AttachParentSlots is {} AttachParentSlotsItem)
+                    {
+                        sb.AppendLine("AttachParentSlots =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AttachParentSlotsItem.Overall);
+                            if (AttachParentSlotsItem.Specific != null)
+                            {
+                                foreach (var subItem in AttachParentSlotsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        sb.AppendItem(Unknown3, "Unknown3");
+                    }
+                    if ((printMask?.Includes?.Overall ?? true)
+                        && Includes is {} IncludesItem)
+                    {
+                        sb.AppendLine("Includes =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(IncludesItem.Overall);
+                            if (IncludesItem.Specific != null)
+                            {
+                                foreach (var subItem in IncludesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.TargetOmodKeywords?.Overall ?? true)
+                        && TargetOmodKeywords is {} TargetOmodKeywordsItem)
+                    {
+                        sb.AppendLine("TargetOmodKeywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TargetOmodKeywordsItem.Overall);
+                            if (TargetOmodKeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in TargetOmodKeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.FilterKeywords?.Overall ?? true)
+                        && FilterKeywords is {} FilterKeywordsItem)
+                    {
+                        sb.AppendLine("FilterKeywords =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(FilterKeywordsItem.Overall);
+                            if (FilterKeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in FilterKeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.LooseMod ?? true)
+                    {
+                        sb.AppendItem(LooseMod, "LooseMod");
+                    }
+                    if (printMask?.Priority ?? true)
+                    {
+                        sb.AppendItem(Priority, "Priority");
+                    }
+                    if (printMask?.Filter ?? true)
+                    {
+                        sb.AppendItem(Filter, "Filter");
+                    }
                 }
             }
             #endregion
@@ -189,12 +819,60 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
+            public Exception? Description;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? Unknown;
+            public Exception? Unknown2;
+            public Exception? AttachPoint;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
+            public Exception? Unknown3;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>? Includes;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? TargetOmodKeywords;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? FilterKeywords;
+            public Exception? LooseMod;
+            public Exception? Priority;
+            public Exception? Filter;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AObjectModification_FieldIndex enu = (AObjectModification_FieldIndex)index;
                 switch (enu)
                 {
+                    case AObjectModification_FieldIndex.Components:
+                        return Components;
+                    case AObjectModification_FieldIndex.Name:
+                        return Name;
+                    case AObjectModification_FieldIndex.Description:
+                        return Description;
+                    case AObjectModification_FieldIndex.Model:
+                        return Model;
+                    case AObjectModification_FieldIndex.Unknown:
+                        return Unknown;
+                    case AObjectModification_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case AObjectModification_FieldIndex.AttachPoint:
+                        return AttachPoint;
+                    case AObjectModification_FieldIndex.AttachParentSlots:
+                        return AttachParentSlots;
+                    case AObjectModification_FieldIndex.Unknown3:
+                        return Unknown3;
+                    case AObjectModification_FieldIndex.Includes:
+                        return Includes;
+                    case AObjectModification_FieldIndex.TargetOmodKeywords:
+                        return TargetOmodKeywords;
+                    case AObjectModification_FieldIndex.FilterKeywords:
+                        return FilterKeywords;
+                    case AObjectModification_FieldIndex.LooseMod:
+                        return LooseMod;
+                    case AObjectModification_FieldIndex.Priority:
+                        return Priority;
+                    case AObjectModification_FieldIndex.Filter:
+                        return Filter;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -205,6 +883,51 @@ namespace Mutagen.Bethesda.Starfield
                 AObjectModification_FieldIndex enu = (AObjectModification_FieldIndex)index;
                 switch (enu)
                 {
+                    case AObjectModification_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case AObjectModification_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case AObjectModification_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case AObjectModification_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case AObjectModification_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case AObjectModification_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case AObjectModification_FieldIndex.AttachPoint:
+                        this.AttachPoint = ex;
+                        break;
+                    case AObjectModification_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case AObjectModification_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    case AObjectModification_FieldIndex.Includes:
+                        this.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>(ex, null);
+                        break;
+                    case AObjectModification_FieldIndex.TargetOmodKeywords:
+                        this.TargetOmodKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case AObjectModification_FieldIndex.FilterKeywords:
+                        this.FilterKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case AObjectModification_FieldIndex.LooseMod:
+                        this.LooseMod = ex;
+                        break;
+                    case AObjectModification_FieldIndex.Priority:
+                        this.Priority = ex;
+                        break;
+                    case AObjectModification_FieldIndex.Filter:
+                        this.Filter = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -216,6 +939,51 @@ namespace Mutagen.Bethesda.Starfield
                 AObjectModification_FieldIndex enu = (AObjectModification_FieldIndex)index;
                 switch (enu)
                 {
+                    case AObjectModification_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.AttachPoint:
+                        this.AttachPoint = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.AttachParentSlots:
+                        this.AttachParentSlots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Includes:
+                        this.Includes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>)obj;
+                        break;
+                    case AObjectModification_FieldIndex.TargetOmodKeywords:
+                        this.TargetOmodKeywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case AObjectModification_FieldIndex.FilterKeywords:
+                        this.FilterKeywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case AObjectModification_FieldIndex.LooseMod:
+                        this.LooseMod = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Priority:
+                        this.Priority = (Exception?)obj;
+                        break;
+                    case AObjectModification_FieldIndex.Filter:
+                        this.Filter = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -225,6 +993,21 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
+                if (Name != null) return true;
+                if (Description != null) return true;
+                if (Model != null) return true;
+                if (Unknown != null) return true;
+                if (Unknown2 != null) return true;
+                if (AttachPoint != null) return true;
+                if (AttachParentSlots != null) return true;
+                if (Unknown3 != null) return true;
+                if (Includes != null) return true;
+                if (TargetOmodKeywords != null) return true;
+                if (FilterKeywords != null) return true;
+                if (LooseMod != null) return true;
+                if (Priority != null) return true;
+                if (Filter != null) return true;
                 return false;
             }
             #endregion
@@ -251,6 +1034,130 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(Description, "Description");
+                }
+                Model?.Print(sb);
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Unknown2, "Unknown2");
+                }
+                {
+                    sb.AppendItem(AttachPoint, "AttachPoint");
+                }
+                if (AttachParentSlots is {} AttachParentSlotsItem)
+                {
+                    sb.AppendLine("AttachParentSlots =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AttachParentSlotsItem.Overall);
+                        if (AttachParentSlotsItem.Specific != null)
+                        {
+                            foreach (var subItem in AttachParentSlotsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(Unknown3, "Unknown3");
+                }
+                if (Includes is {} IncludesItem)
+                {
+                    sb.AppendLine("Includes =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(IncludesItem.Overall);
+                        if (IncludesItem.Specific != null)
+                        {
+                            foreach (var subItem in IncludesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (TargetOmodKeywords is {} TargetOmodKeywordsItem)
+                {
+                    sb.AppendLine("TargetOmodKeywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TargetOmodKeywordsItem.Overall);
+                        if (TargetOmodKeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in TargetOmodKeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (FilterKeywords is {} FilterKeywordsItem)
+                {
+                    sb.AppendLine("FilterKeywords =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(FilterKeywordsItem.Overall);
+                        if (FilterKeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in FilterKeywordsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(LooseMod, "LooseMod");
+                }
+                {
+                    sb.AppendItem(Priority, "Priority");
+                }
+                {
+                    sb.AppendItem(Filter, "Filter");
+                }
             }
             #endregion
 
@@ -259,6 +1166,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.AttachPoint = this.AttachPoint.Combine(rhs.AttachPoint);
+                ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.Includes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectModInclude.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Includes?.Overall, rhs.Includes?.Overall), Noggog.ExceptionExt.Combine(this.Includes?.Specific, rhs.Includes?.Specific));
+                ret.TargetOmodKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.TargetOmodKeywords?.Overall, rhs.TargetOmodKeywords?.Overall), Noggog.ExceptionExt.Combine(this.TargetOmodKeywords?.Specific, rhs.TargetOmodKeywords?.Specific));
+                ret.FilterKeywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FilterKeywords?.Overall, rhs.FilterKeywords?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywords?.Specific, rhs.FilterKeywords?.Specific));
+                ret.LooseMod = this.LooseMod.Combine(rhs.LooseMod);
+                ret.Priority = this.Priority.Combine(rhs.Priority);
+                ret.Filter = this.Filter.Combine(rhs.Filter);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -280,15 +1202,65 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public AComponent.TranslationMask? Components;
+            public bool Name;
+            public bool Description;
+            public Model.TranslationMask? Model;
+            public bool Unknown;
+            public bool Unknown2;
+            public bool AttachPoint;
+            public bool AttachParentSlots;
+            public bool Unknown3;
+            public ObjectModInclude.TranslationMask? Includes;
+            public bool TargetOmodKeywords;
+            public bool FilterKeywords;
+            public bool LooseMod;
+            public bool Priority;
+            public bool Filter;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Description = defaultOn;
+                this.Unknown = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.AttachPoint = defaultOn;
+                this.AttachParentSlots = defaultOn;
+                this.Unknown3 = defaultOn;
+                this.TargetOmodKeywords = defaultOn;
+                this.FilterKeywords = defaultOn;
+                this.LooseMod = defaultOn;
+                this.Priority = defaultOn;
+                this.Filter = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Description, null));
+                ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Unknown, null));
+                ret.Add((Unknown2, null));
+                ret.Add((AttachPoint, null));
+                ret.Add((AttachParentSlots, null));
+                ret.Add((Unknown3, null));
+                ret.Add((Includes == null ? DefaultOn : !Includes.GetCrystal().CopyNothing, Includes?.GetCrystal()));
+                ret.Add((TargetOmodKeywords, null));
+                ret.Add((FilterKeywords, null));
+                ret.Add((LooseMod, null));
+                ret.Add((Priority, null));
+                ret.Add((Filter, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -349,6 +1321,15 @@ namespace Mutagen.Bethesda.Starfield
             return MajorRecordPrinter<AObjectModification>.ToString(this);
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AObjectModificationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AObjectModificationSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AObjectModificationSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AObjectModificationSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -402,15 +1383,46 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [WeaponModification, ObjectModification, UnknownObjectModification]
+    /// Implemented by: [WeaponModification, ArmorModification, FloraModification, NpcModification, ContainerModification, ObjectModification, UnknownObjectModification]
     /// </summary>
     public partial interface IAObjectModification :
         IAObjectModificationGetter,
+        IAssetLinkContainer,
         IConstructibleObjectTarget,
         IFormLinkContainer,
         ILoquiObjectSetter<IAObjectModificationInternal>,
-        IStarfieldMajorRecordInternal
+        IModeled,
+        INamed,
+        INamedRequired,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
+        new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new TranslatedString? Description { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
+        new Model? Model { get; set; }
+        new UInt16 Unknown { get; set; }
+        new UInt16 Unknown2 { get; set; }
+        new IFormLink<IKeywordGetter> AttachPoint { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>> AttachParentSlots { get; }
+        new UInt32 Unknown3 { get; set; }
+        new ExtendedList<ObjectModInclude> Includes { get; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? TargetOmodKeywords { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; set; }
+        new IFormLinkNullable<IMiscItemGetter> LooseMod { get; set; }
+        new Byte? Priority { get; set; }
+        new String? Filter { get; set; }
+        #region Mutagen
+        new AObjectModification.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IAObjectModificationInternal :
@@ -421,16 +1433,51 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [WeaponModification, ObjectModification, UnknownObjectModification]
+    /// Implemented by: [WeaponModification, ArmorModification, FloraModification, NpcModification, ContainerModification, ObjectModification, UnknownObjectModification]
     /// </summary>
     public partial interface IAObjectModificationGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
-        ILoquiObject<IAObjectModificationGetter>
+        ILoquiObject<IAObjectModificationGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => AObjectModification_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        ITranslatedStringGetter? Description { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
+        IModelGetter? Model { get; }
+        #endregion
+        UInt16 Unknown { get; }
+        UInt16 Unknown2 { get; }
+        IFormLinkGetter<IKeywordGetter> AttachPoint { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>> AttachParentSlots { get; }
+        UInt32 Unknown3 { get; }
+        IReadOnlyList<IObjectModIncludeGetter> Includes { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? TargetOmodKeywords { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; }
+        IFormLinkNullableGetter<IMiscItemGetter> LooseMod { get; }
+        Byte? Priority { get; }
+        String? Filter { get; }
+
+        #region Mutagen
+        AObjectModification.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -607,6 +1654,21 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        Components = 7,
+        Name = 8,
+        Description = 9,
+        Model = 10,
+        Unknown = 11,
+        Unknown2 = 12,
+        AttachPoint = 13,
+        AttachParentSlots = 14,
+        Unknown3 = 15,
+        Includes = 16,
+        TargetOmodKeywords = 17,
+        FilterKeywords = 18,
+        LooseMod = 19,
+        Priority = 20,
+        Filter = 21,
     }
     #endregion
 
@@ -617,9 +1679,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(AObjectModification.Mask<>);
 
@@ -652,7 +1714,207 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.OMOD);
             var all = RecordCollection.Factory(
                 RecordTypes.OMOD,
-                RecordTypes.NONE);
+                RecordTypes.NONE,
+                RecordTypes.AA00,
+                RecordTypes.AA01,
+                RecordTypes.AA02,
+                RecordTypes.AA03,
+                RecordTypes.AA04,
+                RecordTypes.AA05,
+                RecordTypes.AA06,
+                RecordTypes.AA07,
+                RecordTypes.AA08,
+                RecordTypes.AA09,
+                RecordTypes.AA10,
+                RecordTypes.AA11,
+                RecordTypes.AA12,
+                RecordTypes.AA13,
+                RecordTypes.AA14,
+                RecordTypes.AA15,
+                RecordTypes.AA16,
+                RecordTypes.AA17,
+                RecordTypes.AA18,
+                RecordTypes.AA19,
+                RecordTypes.AA20,
+                RecordTypes.AA21,
+                RecordTypes.AA22,
+                RecordTypes.AACT,
+                RecordTypes.ABBI,
+                RecordTypes.ABBM,
+                RecordTypes.ABOD,
+                RecordTypes.ACOL,
+                RecordTypes.ACPT,
+                RecordTypes.ADMG,
+                RecordTypes.AENC,
+                RecordTypes.AHLT,
+                RecordTypes.AIND,
+                RecordTypes.AKEY,
+                RecordTypes.ALIS,
+                RecordTypes.AMLS,
+                RecordTypes.AMMO,
+                RecordTypes.ARAT,
+                RecordTypes.ATMC,
+                RecordTypes.AUSE,
+                RecordTypes.AVAL,
+                RecordTypes.AWGT,
+                RecordTypes.CKEY,
+                RecordTypes.DRES,
+                RecordTypes.DSKL,
+                RecordTypes.FBDS,
+                RecordTypes.FBOL,
+                RecordTypes.FBUR,
+                RecordTypes.FHDT,
+                RecordTypes.FHST,
+                RecordTypes.FKEY,
+                RecordTypes.FLMS,
+                RecordTypes.FORF,
+                RecordTypes.FREP,
+                RecordTypes.FTYP,
+                RecordTypes.GTYP,
+                RecordTypes.GVAL,
+                RecordTypes.GWEI,
+                RecordTypes.NACV,
+                RecordTypes.NAID,
+                RecordTypes.NARO,
+                RecordTypes.NCOL,
+                RecordTypes.NCST,
+                RecordTypes.NENC,
+                RecordTypes.NFAC,
+                RecordTypes.NGFA,
+                RecordTypes.NINV,
+                RecordTypes.NKEY,
+                RecordTypes.NMMX,
+                RecordTypes.NMSL,
+                RecordTypes.NNAM,
+                RecordTypes.NPAC,
+                RecordTypes.NPRK,
+                RecordTypes.NRCE,
+                RecordTypes.NRCO,
+                RecordTypes.NREA,
+                RecordTypes.NSKN,
+                RecordTypes.NSPL,
+                RecordTypes.NVTP,
+                RecordTypes.NXPO,
+                RecordTypes.PAVI,
+                RecordTypes.PBAV,
+                RecordTypes.PFCT,
+                RecordTypes.PRCD,
+                RecordTypes.PUSE,
+                RecordTypes.SCRI,
+                RecordTypes.SDMG,
+                RecordTypes.SENC,
+                RecordTypes.SINV,
+                RecordTypes.SKEY,
+                RecordTypes.SMLS,
+                RecordTypes.SPAV,
+                RecordTypes.VAAC,
+                RecordTypes.VADC,
+                RecordTypes.VAIN,
+                RecordTypes.VAIX,
+                RecordTypes.VAVN,
+                RecordTypes.VAVX,
+                RecordTypes.VDAC,
+                RecordTypes.VDDC,
+                RecordTypes.VDIN,
+                RecordTypes.VDIX,
+                RecordTypes.VDVM,
+                RecordTypes.VDVN,
+                RecordTypes.VUSE,
+                RecordTypes.WABS,
+                RecordTypes.WACB,
+                RecordTypes.WACV,
+                RecordTypes.WADL,
+                RecordTypes.WAIM,
+                RecordTypes.WAOC,
+                RecordTypes.WAOS,
+                RecordTypes.WATS,
+                RecordTypes.WBMT,
+                RecordTypes.WBOL,
+                RecordTypes.WBSH,
+                RecordTypes.WCAT,
+                RecordTypes.WCCB,
+                RecordTypes.WCDM,
+                RecordTypes.WCHR,
+                RecordTypes.WCIM,
+                RecordTypes.WCO1,
+                RecordTypes.WCO2,
+                RecordTypes.WCO3,
+                RecordTypes.WCO4,
+                RecordTypes.WCO5,
+                RecordTypes.WCO6,
+                RecordTypes.WCOL,
+                RecordTypes.WCRT,
+                RecordTypes.WDMG,
+                RecordTypes.WDSH,
+                RecordTypes.WDTV,
+                RecordTypes.WEDT,
+                RecordTypes.WEMT,
+                RecordTypes.WENC,
+                RecordTypes.WEQS,
+                RecordTypes.WFPS,
+                RecordTypes.WFSC,
+                RecordTypes.WHBV,
+                RecordTypes.WHIP,
+                RecordTypes.WIMP,
+                RecordTypes.WKEY,
+                RecordTypes.WMCR,
+                RecordTypes.WMNR,
+                RecordTypes.WMPS,
+                RecordTypes.WMXR,
+                RecordTypes.WNDP,
+                RecordTypes.WNHO,
+                RecordTypes.WNPL,
+                RecordTypes.WNPR,
+                RecordTypes.WOOR,
+                RecordTypes.WOPR,
+                RecordTypes.WOSC,
+                RecordTypes.WPLY,
+                RecordTypes.WRC1,
+                RecordTypes.WRC2,
+                RecordTypes.WRC3,
+                RecordTypes.WRC4,
+                RecordTypes.WRC5,
+                RecordTypes.WRC6,
+                RecordTypes.WRC8,
+                RecordTypes.WREA,
+                RecordTypes.WRET,
+                RecordTypes.WRNK,
+                RecordTypes.WRSG,
+                RecordTypes.WRSP,
+                RecordTypes.WSCP,
+                RecordTypes.WSDM,
+                RecordTypes.WSLM,
+                RecordTypes.WSLV,
+                RecordTypes.WSPD,
+                RecordTypes.WSPS,
+                RecordTypes.WSTG,
+                RecordTypes.WSTS,
+                RecordTypes.WSWL,
+                RecordTypes.WTMC,
+                RecordTypes.ZDTA,
+                RecordTypes.ZFOV,
+                RecordTypes.ZIMG,
+                RecordTypes.ZOFX,
+                RecordTypes.ZOFY,
+                RecordTypes.ZOFZ,
+                RecordTypes.ZOVL,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.MODL,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
+                RecordTypes.FLLD,
+                RecordTypes.XFLG,
+                RecordTypes.MODC,
+                RecordTypes.MODF,
+                RecordTypes.DATA,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.LNAM,
+                RecordTypes.NAM1,
+                RecordTypes.FLTR);
             return new RecordTriggerSpecs(allRecordTypes: all, triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AObjectModificationBinaryWriteTranslation);
@@ -695,6 +1957,21 @@ namespace Mutagen.Bethesda.Starfield
         public virtual void Clear(IAObjectModificationInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
+            item.Name = default;
+            item.Description = default;
+            item.Model = null;
+            item.Unknown = default;
+            item.Unknown2 = default;
+            item.AttachPoint.Clear();
+            item.AttachParentSlots.Clear();
+            item.Unknown3 = default;
+            item.Includes.Clear();
+            item.TargetOmodKeywords = null;
+            item.FilterKeywords = null;
+            item.LooseMod.Clear();
+            item.Priority = default;
+            item.Filter = default;
             base.Clear(item);
         }
         
@@ -712,6 +1989,46 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IAObjectModification obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.Model?.RemapLinks(mapping);
+            obj.AttachPoint.Relink(mapping);
+            obj.AttachParentSlots.RemapLinks(mapping);
+            obj.Includes.RemapLinks(mapping);
+            obj.TargetOmodKeywords?.RemapLinks(mapping);
+            obj.FilterKeywords?.RemapLinks(mapping);
+            obj.LooseMod.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAObjectModification obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IAObjectModification obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -779,6 +2096,40 @@ namespace Mutagen.Bethesda.Starfield
             AObjectModification.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.AttachPoint = item.AttachPoint.Equals(rhs.AttachPoint);
+            ret.AttachParentSlots = item.AttachParentSlots.CollectionEqualsHelper(
+                rhs.AttachParentSlots,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.Includes = item.Includes.CollectionEqualsHelper(
+                rhs.Includes,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.TargetOmodKeywords = item.TargetOmodKeywords.CollectionEqualsHelper(
+                rhs.TargetOmodKeywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.FilterKeywords = item.FilterKeywords.CollectionEqualsHelper(
+                rhs.FilterKeywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.LooseMod = item.LooseMod.Equals(rhs.LooseMod);
+            ret.Priority = item.Priority == rhs.Priority;
+            ret.Filter = string.Equals(item.Filter, rhs.Filter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -828,6 +2179,123 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
+            {
+                sb.AppendItem(DescriptionItem, "Description");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model is {} ModelItem)
+            {
+                ModelItem?.Print(sb, "Model");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                sb.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.AttachPoint ?? true)
+            {
+                sb.AppendItem(item.AttachPoint.FormKey, "AttachPoint");
+            }
+            if (printMask?.AttachParentSlots?.Overall ?? true)
+            {
+                sb.AppendLine("AttachParentSlots =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.AttachParentSlots)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.Unknown3 ?? true)
+            {
+                sb.AppendItem(item.Unknown3, "Unknown3");
+            }
+            if (printMask?.Includes?.Overall ?? true)
+            {
+                sb.AppendLine("Includes =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Includes)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.TargetOmodKeywords?.Overall ?? true)
+                && item.TargetOmodKeywords is {} TargetOmodKeywordsItem)
+            {
+                sb.AppendLine("TargetOmodKeywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in TargetOmodKeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.FilterKeywords?.Overall ?? true)
+                && item.FilterKeywords is {} FilterKeywordsItem)
+            {
+                sb.AppendLine("FilterKeywords =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in FilterKeywordsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.LooseMod ?? true)
+            {
+                sb.AppendItem(item.LooseMod.FormKeyNullable, "LooseMod");
+            }
+            if ((printMask?.Priority ?? true)
+                && item.Priority is {} PriorityItem)
+            {
+                sb.AppendItem(PriorityItem, "Priority");
+            }
+            if ((printMask?.Filter ?? true)
+                && item.Filter is {} FilterItem)
+            {
+                sb.AppendItem(FilterItem, "Filter");
+            }
         }
         
         public static AObjectModification_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -878,6 +2346,70 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AObjectModification_FieldIndex.Components)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Model) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)AObjectModification_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachPoint) ?? true))
+            {
+                if (!lhs.AttachPoint.Equals(rhs.AttachPoint)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachParentSlots) ?? true))
+            {
+                if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown3) ?? true))
+            {
+                if (lhs.Unknown3 != rhs.Unknown3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Includes) ?? true))
+            {
+                if (!lhs.Includes.SequenceEqual(rhs.Includes, (l, r) => ((ObjectModIncludeCommon)((IObjectModIncludeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AObjectModification_FieldIndex.Includes)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.TargetOmodKeywords) ?? true))
+            {
+                if (!lhs.TargetOmodKeywords.SequenceEqualNullable(rhs.TargetOmodKeywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.FilterKeywords) ?? true))
+            {
+                if (!lhs.FilterKeywords.SequenceEqualNullable(rhs.FilterKeywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.LooseMod) ?? true))
+            {
+                if (!lhs.LooseMod.Equals(rhs.LooseMod)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Priority) ?? true))
+            {
+                if (lhs.Priority != rhs.Priority) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Filter) ?? true))
+            {
+                if (!string.Equals(lhs.Filter, rhs.Filter)) return false;
+            }
             return true;
         }
         
@@ -906,6 +2438,36 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAObjectModificationGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Description is {} Descriptionitem)
+            {
+                hash.Add(Descriptionitem);
+            }
+            if (item.Model is {} Modelitem)
+            {
+                hash.Add(Modelitem);
+            }
+            hash.Add(item.Unknown);
+            hash.Add(item.Unknown2);
+            hash.Add(item.AttachPoint);
+            hash.Add(item.AttachParentSlots);
+            hash.Add(item.Unknown3);
+            hash.Add(item.Includes);
+            hash.Add(item.TargetOmodKeywords);
+            hash.Add(item.FilterKeywords);
+            hash.Add(item.LooseMod);
+            if (item.Priority is {} Priorityitem)
+            {
+                hash.Add(Priorityitem);
+            }
+            if (item.Filter is {} Filteritem)
+            {
+                hash.Add(Filteritem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -934,6 +2496,69 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield return FormLinkInformation.Factory(obj.AttachPoint);
+            foreach (var item in obj.AttachParentSlots)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Includes.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            if (obj.TargetOmodKeywords is {} TargetOmodKeywordsItem)
+            {
+                foreach (var item in TargetOmodKeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.FilterKeywords is {} FilterKeywordsItem)
+            {
+                foreach (var item in FilterKeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.LooseMod, out var LooseModInfo))
+            {
+                yield return LooseModInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAObjectModificationGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                {
+                    yield return item;
+                }
+                if (obj.Model is {} ModelItems)
+                {
+                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
             }
             yield break;
         }
@@ -1007,6 +2632,189 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)AObjectModification_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)AObjectModification_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model is {} rhsModel)
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AObjectModification_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachPoint) ?? true))
+            {
+                item.AttachPoint.SetTo(rhs.AttachPoint.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.AttachParentSlots) ?? true))
+            {
+                errorMask?.PushIndex((int)AObjectModification_FieldIndex.AttachParentSlots);
+                try
+                {
+                    item.AttachParentSlots.SetTo(
+                        rhs.AttachParentSlots
+                        .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Includes) ?? true))
+            {
+                errorMask?.PushIndex((int)AObjectModification_FieldIndex.Includes);
+                try
+                {
+                    item.Includes.SetTo(
+                        rhs.Includes
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.TargetOmodKeywords) ?? true))
+            {
+                errorMask?.PushIndex((int)AObjectModification_FieldIndex.TargetOmodKeywords);
+                try
+                {
+                    if ((rhs.TargetOmodKeywords != null))
+                    {
+                        item.TargetOmodKeywords = 
+                            rhs.TargetOmodKeywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.TargetOmodKeywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.FilterKeywords) ?? true))
+            {
+                errorMask?.PushIndex((int)AObjectModification_FieldIndex.FilterKeywords);
+                try
+                {
+                    if ((rhs.FilterKeywords != null))
+                    {
+                        item.FilterKeywords = 
+                            rhs.FilterKeywords
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    }
+                    else
+                    {
+                        item.FilterKeywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.LooseMod) ?? true))
+            {
+                item.LooseMod.SetTo(rhs.LooseMod.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Priority) ?? true))
+            {
+                item.Priority = rhs.Priority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AObjectModification_FieldIndex.Filter) ?? true))
+            {
+                item.Filter = rhs.Filter;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1155,6 +2963,105 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly AObjectModificationBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IAObjectModificationGetter item,
+            MutagenWriter writer)
+        {
+            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IAObjectModificationGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: translationParams.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            if (item.Model is {} ModelItem)
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            AObjectModificationBinaryWriteTranslation.WriteBinaryDataParse(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.TargetOmodKeywords,
+                recordType: translationParams.ConvertToCustom(RecordTypes.MNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                writer: writer,
+                items: item.FilterKeywords,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LooseMod,
+                header: translationParams.ConvertToCustom(RecordTypes.LNAM));
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Priority,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Filter,
+                header: translationParams.ConvertToCustom(RecordTypes.FLTR),
+                binaryType: StringBinaryType.NullTerminate);
+        }
+
+        public static partial void WriteBinaryDataParseCustom(
+            MutagenWriter writer,
+            IAObjectModificationGetter item);
+
+        public static void WriteBinaryDataParse(
+            MutagenWriter writer,
+            IAObjectModificationGetter item)
+        {
+            WriteBinaryDataParseCustom(
+                writer: writer,
+                item: item);
+        }
+
         public virtual void Write(
             MutagenWriter writer,
             IAObjectModificationGetter item,
@@ -1166,15 +3073,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 try
                 {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    WriteEmbedded(
                         item: item,
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        writer.MetaData.FormVersion = item.FormVersion;
+                        WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);
+                        writer.MetaData.FormVersion = null;
                     }
                 }
                 catch (Exception ex)
@@ -1224,6 +3133,132 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly AObjectModificationBinaryCreateTranslation Instance = new AObjectModificationBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
+        public static void FillBinaryStructs(
+            IAObjectModificationInternal item,
+            MutagenFrame frame)
+        {
+            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IAObjectModificationInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)AObjectModification_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)AObjectModification_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)AObjectModification_FieldIndex.Description;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)AObjectModification_FieldIndex.Model;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    return AObjectModificationBinaryCreateTranslation.FillBinaryDataParseCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TargetOmodKeywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)AObjectModification_FieldIndex.TargetOmodKeywords;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FilterKeywords = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
+                    return (int)AObjectModification_FieldIndex.FilterKeywords;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LooseMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AObjectModification_FieldIndex.LooseMod;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Priority = frame.ReadUInt8();
+                    return (int)AObjectModification_FieldIndex.Priority;
+                }
+                case RecordTypeInts.FLTR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Filter = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)AObjectModification_FieldIndex.Filter;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
+        public static partial ParseResult FillBinaryDataParseCustom(
+            MutagenFrame frame,
+            IAObjectModificationInternal item,
+            PreviousParse lastParsed);
+
     }
 
 }
@@ -1257,6 +3292,7 @@ namespace Mutagen.Bethesda.Starfield
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AObjectModificationCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AObjectModificationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AObjectModificationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1268,7 +3304,46 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 translationParams: translationParams);
         }
+        public AObjectModification.MajorFlag MajorFlags => (AObjectModification.MajorFlag)this.MajorRecordFlagsRaw;
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region DataParse
+        public partial ParseResult DataParseCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? TargetOmodKeywords { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? FilterKeywords { get; private set; }
+        #region LooseMod
+        private int? _LooseModLocation;
+        public IFormLinkNullableGetter<IMiscItemGetter> LooseMod => _LooseModLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LooseModLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
+        #endregion
+        #region Priority
+        private int? _PriorityLocation;
+        public Byte? Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PriorityLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #endregion
+        #region Filter
+        private int? _FilterLocation;
+        public String? Filter => _FilterLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1286,6 +3361,108 @@ namespace Mutagen.Bethesda.Starfield
         }
 
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)AObjectModification_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)AObjectModification_FieldIndex.Name;
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)AObjectModification_FieldIndex.Description;
+                }
+                case RecordTypeInts.MODL:
+                case RecordTypeInts.MODT:
+                case RecordTypeInts.MOLM:
+                case RecordTypeInts.FLLD:
+                case RecordTypeInts.XFLG:
+                case RecordTypeInts.MODC:
+                case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)AObjectModification_FieldIndex.Model;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    return DataParseCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.TargetOmodKeywords = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)AObjectModification_FieldIndex.TargetOmodKeywords;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    var subLen = finalPos - stream.Position;
+                    this.FilterKeywords = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return (int)AObjectModification_FieldIndex.FilterKeywords;
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _LooseModLocation = (stream.Position - offset);
+                    return (int)AObjectModification_FieldIndex.LooseMod;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _PriorityLocation = (stream.Position - offset);
+                    return (int)AObjectModification_FieldIndex.Priority;
+                }
+                case RecordTypeInts.FLTR:
+                {
+                    _FilterLocation = (stream.Position - offset);
+                    return (int)AObjectModification_FieldIndex.Filter;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

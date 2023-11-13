@@ -2065,6 +2065,9 @@
     <Compile Include="Records\Major Records\FindMatchingRefNearAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Flora.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -2106,6 +2109,9 @@
     </Compile>
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Npc.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ObjectModification.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
@@ -5378,6 +5384,21 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\DisplayCaseComponentItem_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectModInclude_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FloraModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ContainerModification_Generated.cs">
+      <DependentUpon>ObjectModification.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

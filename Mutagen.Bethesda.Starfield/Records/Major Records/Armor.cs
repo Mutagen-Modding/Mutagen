@@ -1,4 +1,6 @@
-﻿namespace Mutagen.Bethesda.Starfield;
+﻿using Mutagen.Bethesda.Starfield.Internals;
+
+namespace Mutagen.Bethesda.Starfield;
 
 public partial class Armor
 {
@@ -9,21 +11,24 @@ public partial class Armor
         Shield = 0x0000_0040
     }
 
+    public const string ObjectModificationName = "TESObjectARMOR_InstanceData";
+
     public enum Property
     {
-        Enchantments,
-        BashImpactDataSet,
-        BlockMaterial,
-        Keywords,
-        Weight,
-        Value,
-        Rating,
-        AddonIndex,
-        BodyPart,
-        DamageTypeValue,
-        ActorValues,
-        Health,
-        ColorRemappingIndex,
-        MaterialSwaps
+        ActorValue = RecordTypeInts.AACT,
+        DamageResistance = RecordTypeInts.ADMG,
+        Enchantment = RecordTypeInts.AENC,
+        Keyword = RecordTypeInts.AKEY,
+        LayeredMaterialSwap = RecordTypeInts.AMLS,
+        Rating = RecordTypeInts.ARAT,
+        Value = RecordTypeInts.AVAL,
+        Weight = RecordTypeInts.AWGT,
+        BashImpactDataSet = RecordTypeInts.ABBI,
+        BlockMaterial = RecordTypeInts.ABBM,
+        BodyPart = RecordTypeInts.ABOD,
+        ColorRemappingIndex = RecordTypeInts.ACOL,
+        Health = RecordTypeInts.AHLT,
+        AddonIndex = RecordTypeInts.AIND,
+        ModCount = RecordTypeInts.ATMC,
     }
 }

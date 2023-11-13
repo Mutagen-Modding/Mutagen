@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -105,6 +106,21 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem Components,
+                TItem Name,
+                TItem Description,
+                TItem Model,
+                TItem Unknown,
+                TItem Unknown2,
+                TItem AttachPoint,
+                TItem AttachParentSlots,
+                TItem Unknown3,
+                TItem Includes,
+                TItem TargetOmodKeywords,
+                TItem FilterKeywords,
+                TItem LooseMod,
+                TItem Priority,
+                TItem Filter,
                 TItem Properties)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -113,7 +129,22 @@ namespace Mutagen.Bethesda.Starfield
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2,
-                StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
+                StarfieldMajorRecordFlags: StarfieldMajorRecordFlags,
+                Components: Components,
+                Name: Name,
+                Description: Description,
+                Model: Model,
+                Unknown: Unknown,
+                Unknown2: Unknown2,
+                AttachPoint: AttachPoint,
+                AttachParentSlots: AttachParentSlots,
+                Unknown3: Unknown3,
+                Includes: Includes,
+                TargetOmodKeywords: TargetOmodKeywords,
+                FilterKeywords: FilterKeywords,
+                LooseMod: LooseMod,
+                Priority: Priority,
+                Filter: Filter)
             {
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, AObjectModProperty.Mask<TItem>?>>());
             }
@@ -553,6 +584,11 @@ namespace Mutagen.Bethesda.Starfield
         IAObjectModificationInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IWeaponModificationInternal>,
+        IModeled,
+        INamed,
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
         IWeaponModificationGetter
     {
         new ExtendedList<AObjectModProperty<Weapon.Property>> Properties { get; }
@@ -571,7 +607,12 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWeaponModificationGetter>,
-        IMapsToGetter<IWeaponModificationGetter>
+        IMapsToGetter<IWeaponModificationGetter>,
+        IModeledGetter,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => WeaponModification_Registration.Instance;
         IReadOnlyList<IAObjectModPropertyGetter<Weapon.Property>> Properties { get; }
@@ -751,7 +792,22 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Properties = 7,
+        Components = 7,
+        Name = 8,
+        Description = 9,
+        Model = 10,
+        Unknown = 11,
+        Unknown2 = 12,
+        AttachPoint = 13,
+        AttachParentSlots = 14,
+        Unknown3 = 15,
+        Includes = 16,
+        TargetOmodKeywords = 17,
+        FilterKeywords = 18,
+        LooseMod = 19,
+        Priority = 20,
+        Filter = 21,
+        Properties = 22,
     }
     #endregion
 
@@ -764,7 +820,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(WeaponModification.Mask<>);
 
@@ -1025,6 +1081,36 @@ namespace Mutagen.Bethesda.Starfield
                 case AObjectModification_FieldIndex.Version2:
                     return (WeaponModification_FieldIndex)((int)index);
                 case AObjectModification_FieldIndex.StarfieldMajorRecordFlags:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Components:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Name:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Description:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Model:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Unknown:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Unknown2:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.AttachPoint:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.AttachParentSlots:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Unknown3:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Includes:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.TargetOmodKeywords:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.FilterKeywords:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.LooseMod:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Priority:
+                    return (WeaponModification_FieldIndex)((int)index);
+                case AObjectModification_FieldIndex.Filter:
                     return (WeaponModification_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1453,7 +1539,7 @@ namespace Mutagen.Bethesda.Starfield
             IWeaponModificationGetter item,
             MutagenWriter writer)
         {
-            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
+            AObjectModificationBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
         }
@@ -1474,7 +1560,7 @@ namespace Mutagen.Bethesda.Starfield
                         writer: writer);
                     if (!item.IsDeleted)
                     {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                        AObjectModificationBinaryWriteTranslation.WriteRecordTypes(
                             item: item,
                             writer: writer,
                             translationParams: translationParams);

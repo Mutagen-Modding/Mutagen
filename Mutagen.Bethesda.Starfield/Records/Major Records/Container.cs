@@ -1,4 +1,6 @@
-﻿namespace Mutagen.Bethesda.Starfield;
+﻿using Mutagen.Bethesda.Starfield.Internals;
+
+namespace Mutagen.Bethesda.Starfield;
 
 public partial class Container
 {
@@ -19,5 +21,10 @@ public partial class Container
         AllowSoundsWhenAnimation = 0x01,
         Respawns = 0x02,
         ShowOwner = 0x04
+    }
+
+    public enum Property
+    {
+        Keyword = RecordTypeInts.CKEY,
     }
 }
