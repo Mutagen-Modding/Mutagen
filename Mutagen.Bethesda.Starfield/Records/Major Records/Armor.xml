@@ -11,7 +11,7 @@
       <FormLink name="ObjectEffect" recordType="EITM">
         <Interface>IEffectRecord</Interface>
       </FormLink>
-      <Gendered name="WorldModel">
+      <Gendered name="WorldModel" parseNonConvertedItems="true">
         <MaleTypeOverrides>
           <Mapping From="MODL" To="MOD2" />
           <Mapping From="MODT" To="MO2T" />

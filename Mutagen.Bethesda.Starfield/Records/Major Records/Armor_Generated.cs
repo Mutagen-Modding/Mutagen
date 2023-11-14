@@ -4929,7 +4929,8 @@ namespace Mutagen.Bethesda.Starfield
                         stream: stream,
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
-                        maleRecordConverter: Armor_Registration.WorldModelMaleConverter);
+                        maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
+                        parseNonConvertedItems: true);
                     return (int)Armor_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.BO64:

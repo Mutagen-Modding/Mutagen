@@ -11,7 +11,7 @@
               <UInt8 />
             </Fields>
           </Gendered>
-          <Gendered name="WeightSliderEnabled" binary="Custom" byteLength="2" generateClassMembers="false">
+          <Gendered name="WeightSliderEnabled" binary="Custom" byteLength="2" >
             <Fields>
               <Bool />
             </Fields>
@@ -22,7 +22,7 @@
           <Float name="WeaponAdjust" />
         </Fields>
       </Data>
-      <Gendered name="WorldModel" shortCircuit="false">
+      <Gendered name="WorldModel" shortCircuit="false" >
         <MaleTypeOverrides>
           <Mapping From="MODL" To="MOD2" />
           <Mapping From="MODC" To="MO2C" />
@@ -41,7 +41,7 @@
           <RefDirect refName="Model" />
         </Fields>
       </Gendered>
-      <Gendered name="FirstPersonModel" shortCircuit="false">
+      <Gendered name="FirstPersonModel" shortCircuit="false" parseNonConvertedItems="false">
         <MaleTypeOverrides>
           <Mapping From="MODL" To="MOD4" />
           <Mapping From="MODC" To="MO4C" />

@@ -36,6 +36,7 @@ public class GenderedType : WrapperType
     public RecordType? FemaleMarker;
     public bool MarkerPerGender;
     public bool ShortCircuit;
+    public bool ParseNonConvertedItems;
     
     public override void GenerateClear(StructuredStringBuilder sb, Accessor accessorPrefix)
     {
@@ -271,6 +272,7 @@ public class GenderedType : WrapperType
         }
 
         ShortCircuit = node.GetAttribute<bool>("shortCircuit", true);
+        ParseNonConvertedItems = node.GetAttribute<bool>("parseNonConvertedItems", false);
 
         FemaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("FemaleTypeOverrides", LoquiGenerator.Namespace)));
         MaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("MaleTypeOverrides", LoquiGenerator.Namespace)));

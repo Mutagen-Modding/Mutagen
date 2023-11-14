@@ -482,6 +482,11 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         {
                             args.Add("shortCircuit: false");
                         }
+
+                        if (gendered.ParseNonConvertedItems)
+                        {
+                            args.Add("parseNonConvertedItems: true");
+                        }
                         
                         if (notNull)
                         {

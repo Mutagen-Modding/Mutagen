@@ -54,7 +54,8 @@ internal static class GenderedItemBinaryOverlay
         Func<OverlayStream, BinaryOverlayFactoryPackage, TypedParseParams, T> creator,
         RecordTypeConverter femaleRecordConverter,
         RecordTypeConverter maleRecordConverter,
-        bool shortCircuit = true)
+        bool shortCircuit = true,
+        bool parseNonConvertedItems = false)
         where T : class
     {
         var initialPos = stream.Position;
@@ -78,18 +79,18 @@ internal static class GenderedItemBinaryOverlay
                     recordTypeConverter: femaleRecordConverter,
                     doNotShortCircuit: !shortCircuit));
             }
-            else if (i == 0)
+            else if (parseNonConvertedItems && i == 0)
             {
                 maleObj = creator(stream, package, new TypedParseParams(
                     lengthOverride: null,
                     recordTypeConverter: maleRecordConverter,
                     doNotShortCircuit: !shortCircuit));
             }
-            else if (i == 1)
+            else if (parseNonConvertedItems && i == 1)
             {
                 femaleObj = creator(stream, package, new TypedParseParams(
                     lengthOverride: null,
-                    recordTypeConverter: maleRecordConverter,
+                    recordTypeConverter: femaleRecordConverter,
                     doNotShortCircuit: !shortCircuit));
             }
         }
