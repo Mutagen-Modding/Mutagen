@@ -2233,28 +2233,9 @@
     <Compile Include="Records\Major Records\WeatherAmbientColorSet.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\StarfieldGroup.cs">
-      <DependentUpon>StarfieldGroup.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\StarfieldGroupWrapper.cs">
-      <DependentUpon>StarfieldGroup.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\StarfieldMajorRecord.cs">
-      <DependentUpon>StarfieldMajorRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\StarfieldMod.cs">
-      <DependentUpon>StarfieldMod.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\StarfieldModHeader.cs">
-      <DependentUpon>StarfieldModHeader.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\RecordTypes_Generated.cs" />
-    <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
-    <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
     <Compile Include="Records\ProtocolDefinition_Starfield.cs" />
-    <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
     <Compile Include="Records\TransientType_Generated.cs">
@@ -4151,10 +4132,7 @@
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
-    <Compile Include="Records\ProtocolDefinition_Starfield.cs" />
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
-    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
-    <Compile Include="ImplicitsMixIn_Generated.cs" />
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
