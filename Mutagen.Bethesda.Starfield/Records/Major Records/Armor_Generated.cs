@@ -2072,6 +2072,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IArmor :
         IArmorGetter,
         IAssetLinkContainer,
+        IBindableEquipment,
         IConstructible,
         IFormLinkContainer,
         IItem,
@@ -2146,6 +2147,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IBindableEquipmentGetter,
         IConstructibleGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

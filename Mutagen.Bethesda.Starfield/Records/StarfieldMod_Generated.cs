@@ -5050,6 +5050,11 @@ namespace Mutagen.Bethesda.Starfield
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IBindableEquipment":
+                case "IBindableEquipmentGetter":
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IResourceTarget":
                 case "IResourceTargetGetter":
                     Remove(obj, keys, typeof(IConstructibleObjectGetter), throwIfUnknown: throwIfUnknown);

@@ -135,6 +135,7 @@ public class StarfieldProcessor : Processor
                     new RecordType[] { "ARMO", "FULL" },
                     new RecordType[] { "CONT", "FULL" },
                     new RecordType[] { "OMOD", "FULL" },
+                    new RecordType[] { "MGEF", "FULL", "DNAM" },
                     new RecordType[] { "ALCH", "FULL", "DNAM" },
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
                     new RecordType[] { "MISC", "FULL", "NNAM" },

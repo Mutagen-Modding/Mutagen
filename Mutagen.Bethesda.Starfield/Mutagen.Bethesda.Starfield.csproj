@@ -2023,6 +2023,9 @@
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\APerkEffect.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
@@ -2107,6 +2110,39 @@
     <Compile Include="Records\Major Records\LockData.cs">
       <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MagicEffect.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectBoundArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectCloakArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectDamageTypeModArchetype.cs" />
+    <Compile Include="Records\Major Records\MagicEffectEnhanceWeaponArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectGuideArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectImmunityModArchetype.cs" />
+    <Compile Include="Records\Major Records\MagicEffectLightArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectPeakValueModArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSound.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSpawnHazardArchetype.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSummonCreatureArchetype.cs" />
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
@@ -5400,5 +5436,42 @@
     <Compile Include="Records\Major Records\ContainerModification_Generated.cs">
       <DependentUpon>ObjectModification.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AMagicEffectArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectLightArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectBoundArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSummonCreatureArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectGuideArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectPeakValueModArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectCloakArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectImmunityModArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectEnhanceWeaponArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSpawnHazardArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectDamageTypeModArchetype_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IBindableEquipment_Generated.cs" />
   </ItemGroup>
 </Project>

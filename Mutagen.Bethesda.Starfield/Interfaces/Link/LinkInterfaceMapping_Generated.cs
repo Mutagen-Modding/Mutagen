@@ -88,6 +88,12 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
             LeveledItem_Registration.Instance,
         });
         dict[typeof(IOutfitTargetGetter)] = dict[typeof(IOutfitTarget)] with { Setter = false };
+        dict[typeof(IBindableEquipment)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            Armor_Registration.Instance,
+            Weapon_Registration.Instance,
+        });
+        dict[typeof(IBindableEquipmentGetter)] = dict[typeof(IBindableEquipment)] with { Setter = false };
         dict[typeof(IResourceTarget)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             ConstructibleObject_Registration.Instance,

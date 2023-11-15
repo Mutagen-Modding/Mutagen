@@ -7,6 +7,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ## Interfaces to Concrete Classes
 ### IAliasVoiceType
 - Faction
+### IBindableEquipment
+- Armor
+- Weapon
 ### IConstructible
 - ActionRecord
 - Activator
@@ -112,6 +115,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### AObjectModification
 - IConstructibleObjectTarget
 ### Armor
+- IBindableEquipment
 - IConstructible
 - IItem
 - IOutfitTarget
@@ -198,6 +202,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### VoiceType
 - IVoiceTypeOrList
 ### Weapon
+- IBindableEquipment
 - IConstructible
 - IItem
 - IStaticTarget
