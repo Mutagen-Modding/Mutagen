@@ -91,18 +91,19 @@ namespace Mutagen.Bethesda.Starfield
             _Books_Object = new StarfieldGroup<Book>(this);
             _Containers_Object = new StarfieldGroup<Container>(this);
             _Doors_Object = new StarfieldGroup<Door>(this);
-            _Weapons_Object = new StarfieldGroup<Weapon>(this);
-            _Perks_Object = new StarfieldGroup<Perk>(this);
-            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
+            _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
+            _Weapons_Object = new StarfieldGroup<Weapon>(this);
+            _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
+            _Perks_Object = new StarfieldGroup<Perk>(this);
+            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
-            _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
@@ -113,7 +114,6 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
-            _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
@@ -339,26 +339,12 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IDoorGetter> IStarfieldModGetter.Doors => _Doors_Object;
         #endregion
-        #region Weapons
+        #region MiscItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<Weapon> _Weapons_Object;
-        public StarfieldGroup<Weapon> Weapons => _Weapons_Object;
+        private StarfieldGroup<MiscItem> _MiscItems_Object;
+        public StarfieldGroup<MiscItem> MiscItems => _MiscItems_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IWeaponGetter> IStarfieldModGetter.Weapons => _Weapons_Object;
-        #endregion
-        #region Perks
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<Perk> _Perks_Object;
-        public StarfieldGroup<Perk> Perks => _Perks_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IPerkGetter> IStarfieldModGetter.Perks => _Perks_Object;
-        #endregion
-        #region ConstructibleObjects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<ConstructibleObject> _ConstructibleObjects_Object;
-        public StarfieldGroup<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IConstructibleObjectGetter> IStarfieldModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
+        IStarfieldGroupGetter<IMiscItemGetter> IStarfieldModGetter.MiscItems => _MiscItems_Object;
         #endregion
         #region StaticCollections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -366,6 +352,20 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<StaticCollection> StaticCollections => _StaticCollections_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IStaticCollectionGetter> IStarfieldModGetter.StaticCollections => _StaticCollections_Object;
+        #endregion
+        #region Weapons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Weapon> _Weapons_Object;
+        public StarfieldGroup<Weapon> Weapons => _Weapons_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IWeaponGetter> IStarfieldModGetter.Weapons => _Weapons_Object;
+        #endregion
+        #region Ingestibles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Ingestible> _Ingestibles_Object;
+        public StarfieldGroup<Ingestible> Ingestibles => _Ingestibles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IIngestibleGetter> IStarfieldModGetter.Ingestibles => _Ingestibles_Object;
         #endregion
         #region BendableSplines
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -387,6 +387,20 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<Weather> Weathers => _Weathers_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IWeatherGetter> IStarfieldModGetter.Weathers => _Weathers_Object;
+        #endregion
+        #region Perks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<Perk> _Perks_Object;
+        public StarfieldGroup<Perk> Perks => _Perks_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IPerkGetter> IStarfieldModGetter.Perks => _Perks_Object;
+        #endregion
+        #region ConstructibleObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private StarfieldGroup<ConstructibleObject> _ConstructibleObjects_Object;
+        public StarfieldGroup<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IStarfieldGroupGetter<IConstructibleObjectGetter> IStarfieldModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
         #endregion
         #region FormLists
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -415,13 +429,6 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<Debris> Debris => _Debris_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IDebrisGetter> IStarfieldModGetter.Debris => _Debris_Object;
-        #endregion
-        #region Ingestibles
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<Ingestible> _Ingestibles_Object;
-        public StarfieldGroup<Ingestible> Ingestibles => _Ingestibles_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IIngestibleGetter> IStarfieldModGetter.Ingestibles => _Ingestibles_Object;
         #endregion
         #region ObjectModifications
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -492,13 +499,6 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldGroup<ActorValueModulation> ActorValueModulations => _ActorValueModulations_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IActorValueModulationGetter> IStarfieldModGetter.ActorValueModulations => _ActorValueModulations_Object;
-        #endregion
-        #region MiscItems
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<MiscItem> _MiscItems_Object;
-        public StarfieldGroup<MiscItem> MiscItems => _MiscItems_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IMiscItemGetter> IStarfieldModGetter.MiscItems => _MiscItems_Object;
         #endregion
         #region Resources
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -591,18 +591,19 @@ namespace Mutagen.Bethesda.Starfield
                 this.Books = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Containers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Doors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -613,7 +614,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -651,18 +651,19 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Books,
                 TItem Containers,
                 TItem Doors,
-                TItem Weapons,
-                TItem Perks,
-                TItem ConstructibleObjects,
+                TItem MiscItems,
                 TItem StaticCollections,
+                TItem Weapons,
+                TItem Ingestibles,
                 TItem BendableSplines,
                 TItem LeveledItems,
                 TItem Weathers,
+                TItem Perks,
+                TItem ConstructibleObjects,
                 TItem FormLists,
                 TItem TerminalMenus,
                 TItem AnimatedObjects,
                 TItem Debris,
-                TItem Ingestibles,
                 TItem ObjectModifications,
                 TItem DefaultObjects,
                 TItem Outfits,
@@ -673,7 +674,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SurfacePatternStyles,
                 TItem LegendaryItems,
                 TItem ActorValueModulations,
-                TItem MiscItems,
                 TItem Resources,
                 TItem ConditionRecords,
                 TItem Quests)
@@ -709,18 +709,19 @@ namespace Mutagen.Bethesda.Starfield
                 this.Books = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Books, new StarfieldGroup.Mask<TItem>(Books));
                 this.Containers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Containers, new StarfieldGroup.Mask<TItem>(Containers));
                 this.Doors = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Doors, new StarfieldGroup.Mask<TItem>(Doors));
-                this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weapons, new StarfieldGroup.Mask<TItem>(Weapons));
-                this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Perks, new StarfieldGroup.Mask<TItem>(Perks));
-                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
+                this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MiscItems, new StarfieldGroup.Mask<TItem>(MiscItems));
                 this.StaticCollections = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(StaticCollections, new StarfieldGroup.Mask<TItem>(StaticCollections));
+                this.Weapons = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weapons, new StarfieldGroup.Mask<TItem>(Weapons));
+                this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Ingestibles, new StarfieldGroup.Mask<TItem>(Ingestibles));
                 this.BendableSplines = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(BendableSplines, new StarfieldGroup.Mask<TItem>(BendableSplines));
                 this.LeveledItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LeveledItems, new StarfieldGroup.Mask<TItem>(LeveledItems));
                 this.Weathers = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Weathers, new StarfieldGroup.Mask<TItem>(Weathers));
+                this.Perks = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Perks, new StarfieldGroup.Mask<TItem>(Perks));
+                this.ConstructibleObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConstructibleObjects, new StarfieldGroup.Mask<TItem>(ConstructibleObjects));
                 this.FormLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FormLists, new StarfieldGroup.Mask<TItem>(FormLists));
                 this.TerminalMenus = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(TerminalMenus, new StarfieldGroup.Mask<TItem>(TerminalMenus));
                 this.AnimatedObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(AnimatedObjects, new StarfieldGroup.Mask<TItem>(AnimatedObjects));
                 this.Debris = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Debris, new StarfieldGroup.Mask<TItem>(Debris));
-                this.Ingestibles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Ingestibles, new StarfieldGroup.Mask<TItem>(Ingestibles));
                 this.ObjectModifications = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ObjectModifications, new StarfieldGroup.Mask<TItem>(ObjectModifications));
                 this.DefaultObjects = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(DefaultObjects, new StarfieldGroup.Mask<TItem>(DefaultObjects));
                 this.Outfits = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Outfits, new StarfieldGroup.Mask<TItem>(Outfits));
@@ -731,7 +732,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SurfacePatternStyles = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(SurfacePatternStyles, new StarfieldGroup.Mask<TItem>(SurfacePatternStyles));
                 this.LegendaryItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LegendaryItems, new StarfieldGroup.Mask<TItem>(LegendaryItems));
                 this.ActorValueModulations = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ActorValueModulations, new StarfieldGroup.Mask<TItem>(ActorValueModulations));
-                this.MiscItems = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(MiscItems, new StarfieldGroup.Mask<TItem>(MiscItems));
                 this.Resources = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Resources, new StarfieldGroup.Mask<TItem>(Resources));
                 this.ConditionRecords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(ConditionRecords, new StarfieldGroup.Mask<TItem>(ConditionRecords));
                 this.Quests = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Quests, new StarfieldGroup.Mask<TItem>(Quests));
@@ -777,18 +777,19 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Books { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Containers { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Doors { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weapons { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Perks { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MiscItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? StaticCollections { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weapons { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Ingestibles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? BendableSplines { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LeveledItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Weathers { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Perks { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConstructibleObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? TerminalMenus { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? AnimatedObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Debris { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Ingestibles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ObjectModifications { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? DefaultObjects { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Outfits { get; set; }
@@ -799,7 +800,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? SurfacePatternStyles { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LegendaryItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ActorValueModulations { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? MiscItems { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Resources { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? ConditionRecords { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Quests { get; set; }
@@ -846,18 +846,19 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Books, rhs.Books)) return false;
                 if (!object.Equals(this.Containers, rhs.Containers)) return false;
                 if (!object.Equals(this.Doors, rhs.Doors)) return false;
-                if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
-                if (!object.Equals(this.Perks, rhs.Perks)) return false;
-                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
+                if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 if (!object.Equals(this.StaticCollections, rhs.StaticCollections)) return false;
+                if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
+                if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
                 if (!object.Equals(this.BendableSplines, rhs.BendableSplines)) return false;
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
                 if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
+                if (!object.Equals(this.Perks, rhs.Perks)) return false;
+                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.TerminalMenus, rhs.TerminalMenus)) return false;
                 if (!object.Equals(this.AnimatedObjects, rhs.AnimatedObjects)) return false;
                 if (!object.Equals(this.Debris, rhs.Debris)) return false;
-                if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
                 if (!object.Equals(this.ObjectModifications, rhs.ObjectModifications)) return false;
                 if (!object.Equals(this.DefaultObjects, rhs.DefaultObjects)) return false;
                 if (!object.Equals(this.Outfits, rhs.Outfits)) return false;
@@ -868,7 +869,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SurfacePatternStyles, rhs.SurfacePatternStyles)) return false;
                 if (!object.Equals(this.LegendaryItems, rhs.LegendaryItems)) return false;
                 if (!object.Equals(this.ActorValueModulations, rhs.ActorValueModulations)) return false;
-                if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
                 if (!object.Equals(this.ConditionRecords, rhs.ConditionRecords)) return false;
                 if (!object.Equals(this.Quests, rhs.Quests)) return false;
@@ -908,18 +908,19 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Books);
                 hash.Add(this.Containers);
                 hash.Add(this.Doors);
-                hash.Add(this.Weapons);
-                hash.Add(this.Perks);
-                hash.Add(this.ConstructibleObjects);
+                hash.Add(this.MiscItems);
                 hash.Add(this.StaticCollections);
+                hash.Add(this.Weapons);
+                hash.Add(this.Ingestibles);
                 hash.Add(this.BendableSplines);
                 hash.Add(this.LeveledItems);
                 hash.Add(this.Weathers);
+                hash.Add(this.Perks);
+                hash.Add(this.ConstructibleObjects);
                 hash.Add(this.FormLists);
                 hash.Add(this.TerminalMenus);
                 hash.Add(this.AnimatedObjects);
                 hash.Add(this.Debris);
-                hash.Add(this.Ingestibles);
                 hash.Add(this.ObjectModifications);
                 hash.Add(this.DefaultObjects);
                 hash.Add(this.Outfits);
@@ -930,7 +931,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SurfacePatternStyles);
                 hash.Add(this.LegendaryItems);
                 hash.Add(this.ActorValueModulations);
-                hash.Add(this.MiscItems);
                 hash.Add(this.Resources);
                 hash.Add(this.ConditionRecords);
                 hash.Add(this.Quests);
@@ -1097,25 +1097,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Doors.Overall)) return false;
                     if (this.Doors.Specific != null && !this.Doors.Specific.All(eval)) return false;
                 }
-                if (Weapons != null)
+                if (MiscItems != null)
                 {
-                    if (!eval(this.Weapons.Overall)) return false;
-                    if (this.Weapons.Specific != null && !this.Weapons.Specific.All(eval)) return false;
-                }
-                if (Perks != null)
-                {
-                    if (!eval(this.Perks.Overall)) return false;
-                    if (this.Perks.Specific != null && !this.Perks.Specific.All(eval)) return false;
-                }
-                if (ConstructibleObjects != null)
-                {
-                    if (!eval(this.ConstructibleObjects.Overall)) return false;
-                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
+                    if (!eval(this.MiscItems.Overall)) return false;
+                    if (this.MiscItems.Specific != null && !this.MiscItems.Specific.All(eval)) return false;
                 }
                 if (StaticCollections != null)
                 {
                     if (!eval(this.StaticCollections.Overall)) return false;
                     if (this.StaticCollections.Specific != null && !this.StaticCollections.Specific.All(eval)) return false;
+                }
+                if (Weapons != null)
+                {
+                    if (!eval(this.Weapons.Overall)) return false;
+                    if (this.Weapons.Specific != null && !this.Weapons.Specific.All(eval)) return false;
+                }
+                if (Ingestibles != null)
+                {
+                    if (!eval(this.Ingestibles.Overall)) return false;
+                    if (this.Ingestibles.Specific != null && !this.Ingestibles.Specific.All(eval)) return false;
                 }
                 if (BendableSplines != null)
                 {
@@ -1131,6 +1131,16 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Weathers.Overall)) return false;
                     if (this.Weathers.Specific != null && !this.Weathers.Specific.All(eval)) return false;
+                }
+                if (Perks != null)
+                {
+                    if (!eval(this.Perks.Overall)) return false;
+                    if (this.Perks.Specific != null && !this.Perks.Specific.All(eval)) return false;
+                }
+                if (ConstructibleObjects != null)
+                {
+                    if (!eval(this.ConstructibleObjects.Overall)) return false;
+                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
                 }
                 if (FormLists != null)
                 {
@@ -1151,11 +1161,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Debris.Overall)) return false;
                     if (this.Debris.Specific != null && !this.Debris.Specific.All(eval)) return false;
-                }
-                if (Ingestibles != null)
-                {
-                    if (!eval(this.Ingestibles.Overall)) return false;
-                    if (this.Ingestibles.Specific != null && !this.Ingestibles.Specific.All(eval)) return false;
                 }
                 if (ObjectModifications != null)
                 {
@@ -1206,11 +1211,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ActorValueModulations.Overall)) return false;
                     if (this.ActorValueModulations.Specific != null && !this.ActorValueModulations.Specific.All(eval)) return false;
-                }
-                if (MiscItems != null)
-                {
-                    if (!eval(this.MiscItems.Overall)) return false;
-                    if (this.MiscItems.Specific != null && !this.MiscItems.Specific.All(eval)) return false;
                 }
                 if (Resources != null)
                 {
@@ -1389,25 +1389,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Doors.Overall)) return true;
                     if (this.Doors.Specific != null && this.Doors.Specific.Any(eval)) return true;
                 }
-                if (Weapons != null)
+                if (MiscItems != null)
                 {
-                    if (eval(this.Weapons.Overall)) return true;
-                    if (this.Weapons.Specific != null && this.Weapons.Specific.Any(eval)) return true;
-                }
-                if (Perks != null)
-                {
-                    if (eval(this.Perks.Overall)) return true;
-                    if (this.Perks.Specific != null && this.Perks.Specific.Any(eval)) return true;
-                }
-                if (ConstructibleObjects != null)
-                {
-                    if (eval(this.ConstructibleObjects.Overall)) return true;
-                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
+                    if (eval(this.MiscItems.Overall)) return true;
+                    if (this.MiscItems.Specific != null && this.MiscItems.Specific.Any(eval)) return true;
                 }
                 if (StaticCollections != null)
                 {
                     if (eval(this.StaticCollections.Overall)) return true;
                     if (this.StaticCollections.Specific != null && this.StaticCollections.Specific.Any(eval)) return true;
+                }
+                if (Weapons != null)
+                {
+                    if (eval(this.Weapons.Overall)) return true;
+                    if (this.Weapons.Specific != null && this.Weapons.Specific.Any(eval)) return true;
+                }
+                if (Ingestibles != null)
+                {
+                    if (eval(this.Ingestibles.Overall)) return true;
+                    if (this.Ingestibles.Specific != null && this.Ingestibles.Specific.Any(eval)) return true;
                 }
                 if (BendableSplines != null)
                 {
@@ -1423,6 +1423,16 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.Weathers.Overall)) return true;
                     if (this.Weathers.Specific != null && this.Weathers.Specific.Any(eval)) return true;
+                }
+                if (Perks != null)
+                {
+                    if (eval(this.Perks.Overall)) return true;
+                    if (this.Perks.Specific != null && this.Perks.Specific.Any(eval)) return true;
+                }
+                if (ConstructibleObjects != null)
+                {
+                    if (eval(this.ConstructibleObjects.Overall)) return true;
+                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
                 }
                 if (FormLists != null)
                 {
@@ -1443,11 +1453,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.Debris.Overall)) return true;
                     if (this.Debris.Specific != null && this.Debris.Specific.Any(eval)) return true;
-                }
-                if (Ingestibles != null)
-                {
-                    if (eval(this.Ingestibles.Overall)) return true;
-                    if (this.Ingestibles.Specific != null && this.Ingestibles.Specific.Any(eval)) return true;
                 }
                 if (ObjectModifications != null)
                 {
@@ -1498,11 +1503,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.ActorValueModulations.Overall)) return true;
                     if (this.ActorValueModulations.Specific != null && this.ActorValueModulations.Specific.Any(eval)) return true;
-                }
-                if (MiscItems != null)
-                {
-                    if (eval(this.MiscItems.Overall)) return true;
-                    if (this.MiscItems.Specific != null && this.MiscItems.Specific.Any(eval)) return true;
                 }
                 if (Resources != null)
                 {
@@ -1564,18 +1564,19 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Books = this.Books == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
                 obj.Containers = this.Containers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
                 obj.Doors = this.Doors == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
-                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
-                obj.Perks = this.Perks == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
-                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
+                obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
                 obj.StaticCollections = this.StaticCollections == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.StaticCollections.Overall), this.StaticCollections.Specific?.Translate(eval));
+                obj.Weapons = this.Weapons == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
+                obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
                 obj.BendableSplines = this.BendableSplines == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.BendableSplines.Overall), this.BendableSplines.Specific?.Translate(eval));
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
                 obj.Weathers = this.Weathers == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
+                obj.Perks = this.Perks == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Perks.Overall), this.Perks.Specific?.Translate(eval));
+                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.TerminalMenus = this.TerminalMenus == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.TerminalMenus.Overall), this.TerminalMenus.Specific?.Translate(eval));
                 obj.AnimatedObjects = this.AnimatedObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.AnimatedObjects.Overall), this.AnimatedObjects.Specific?.Translate(eval));
                 obj.Debris = this.Debris == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Debris.Overall), this.Debris.Specific?.Translate(eval));
-                obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
                 obj.ObjectModifications = this.ObjectModifications == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ObjectModifications.Overall), this.ObjectModifications.Specific?.Translate(eval));
                 obj.DefaultObjects = this.DefaultObjects == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.DefaultObjects.Overall), this.DefaultObjects.Specific?.Translate(eval));
                 obj.Outfits = this.Outfits == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Outfits.Overall), this.Outfits.Specific?.Translate(eval));
@@ -1586,7 +1587,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfacePatternStyles = this.SurfacePatternStyles == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.SurfacePatternStyles.Overall), this.SurfacePatternStyles.Specific?.Translate(eval));
                 obj.LegendaryItems = this.LegendaryItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LegendaryItems.Overall), this.LegendaryItems.Specific?.Translate(eval));
                 obj.ActorValueModulations = this.ActorValueModulations == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ActorValueModulations.Overall), this.ActorValueModulations.Specific?.Translate(eval));
-                obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
                 obj.Resources = this.Resources == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Resources.Overall), this.Resources.Specific?.Translate(eval));
                 obj.ConditionRecords = this.ConditionRecords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.ConditionRecords.Overall), this.ConditionRecords.Specific?.Translate(eval));
                 obj.Quests = this.Quests == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Quests.Overall), this.Quests.Specific?.Translate(eval));
@@ -1732,21 +1732,21 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Doors?.Print(sb);
                     }
-                    if (printMask?.Weapons?.Overall ?? true)
+                    if (printMask?.MiscItems?.Overall ?? true)
                     {
-                        Weapons?.Print(sb);
-                    }
-                    if (printMask?.Perks?.Overall ?? true)
-                    {
-                        Perks?.Print(sb);
-                    }
-                    if (printMask?.ConstructibleObjects?.Overall ?? true)
-                    {
-                        ConstructibleObjects?.Print(sb);
+                        MiscItems?.Print(sb);
                     }
                     if (printMask?.StaticCollections?.Overall ?? true)
                     {
                         StaticCollections?.Print(sb);
+                    }
+                    if (printMask?.Weapons?.Overall ?? true)
+                    {
+                        Weapons?.Print(sb);
+                    }
+                    if (printMask?.Ingestibles?.Overall ?? true)
+                    {
+                        Ingestibles?.Print(sb);
                     }
                     if (printMask?.BendableSplines?.Overall ?? true)
                     {
@@ -1759,6 +1759,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Weathers?.Overall ?? true)
                     {
                         Weathers?.Print(sb);
+                    }
+                    if (printMask?.Perks?.Overall ?? true)
+                    {
+                        Perks?.Print(sb);
+                    }
+                    if (printMask?.ConstructibleObjects?.Overall ?? true)
+                    {
+                        ConstructibleObjects?.Print(sb);
                     }
                     if (printMask?.FormLists?.Overall ?? true)
                     {
@@ -1775,10 +1783,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Debris?.Overall ?? true)
                     {
                         Debris?.Print(sb);
-                    }
-                    if (printMask?.Ingestibles?.Overall ?? true)
-                    {
-                        Ingestibles?.Print(sb);
                     }
                     if (printMask?.ObjectModifications?.Overall ?? true)
                     {
@@ -1819,10 +1823,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ActorValueModulations?.Overall ?? true)
                     {
                         ActorValueModulations?.Print(sb);
-                    }
-                    if (printMask?.MiscItems?.Overall ?? true)
-                    {
-                        MiscItems?.Print(sb);
                     }
                     if (printMask?.Resources?.Overall ?? true)
                     {
@@ -1891,18 +1891,19 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Book.ErrorMask>?>? Books;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Container.ErrorMask>?>? Containers;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Door.ErrorMask>?>? Doors;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>? Perks;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>? StaticCollections;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>? Weapons;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>? BendableSplines;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>? Weathers;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>? Perks;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<TerminalMenu.ErrorMask>?>? TerminalMenus;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AnimatedObject.ErrorMask>?>? AnimatedObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>? Debris;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>? ObjectModifications;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<DefaultObject.ErrorMask>?>? DefaultObjects;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Outfit.ErrorMask>?>? Outfits;
@@ -1913,7 +1914,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SurfacePatternStyle.ErrorMask>?>? SurfacePatternStyles;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LegendaryItem.ErrorMask>?>? LegendaryItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>? Resources;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ConditionRecord.ErrorMask>?>? ConditionRecords;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Quest.ErrorMask>?>? Quests;
@@ -1987,20 +1987,24 @@ namespace Mutagen.Bethesda.Starfield
                         return Containers;
                     case StarfieldMod_FieldIndex.Doors:
                         return Doors;
-                    case StarfieldMod_FieldIndex.Weapons:
-                        return Weapons;
-                    case StarfieldMod_FieldIndex.Perks:
-                        return Perks;
-                    case StarfieldMod_FieldIndex.ConstructibleObjects:
-                        return ConstructibleObjects;
+                    case StarfieldMod_FieldIndex.MiscItems:
+                        return MiscItems;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         return StaticCollections;
+                    case StarfieldMod_FieldIndex.Weapons:
+                        return Weapons;
+                    case StarfieldMod_FieldIndex.Ingestibles:
+                        return Ingestibles;
                     case StarfieldMod_FieldIndex.BendableSplines:
                         return BendableSplines;
                     case StarfieldMod_FieldIndex.LeveledItems:
                         return LeveledItems;
                     case StarfieldMod_FieldIndex.Weathers:
                         return Weathers;
+                    case StarfieldMod_FieldIndex.Perks:
+                        return Perks;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        return ConstructibleObjects;
                     case StarfieldMod_FieldIndex.FormLists:
                         return FormLists;
                     case StarfieldMod_FieldIndex.TerminalMenus:
@@ -2009,8 +2013,6 @@ namespace Mutagen.Bethesda.Starfield
                         return AnimatedObjects;
                     case StarfieldMod_FieldIndex.Debris:
                         return Debris;
-                    case StarfieldMod_FieldIndex.Ingestibles:
-                        return Ingestibles;
                     case StarfieldMod_FieldIndex.ObjectModifications:
                         return ObjectModifications;
                     case StarfieldMod_FieldIndex.DefaultObjects:
@@ -2031,8 +2033,6 @@ namespace Mutagen.Bethesda.Starfield
                         return LegendaryItems;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         return ActorValueModulations;
-                    case StarfieldMod_FieldIndex.MiscItems:
-                        return MiscItems;
                     case StarfieldMod_FieldIndex.Resources:
                         return Resources;
                     case StarfieldMod_FieldIndex.ConditionRecords:
@@ -2142,17 +2142,17 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Doors:
                         this.Doors = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Door.ErrorMask>?>(ex, null);
                         break;
-                    case StarfieldMod_FieldIndex.Weapons:
-                        this.Weapons = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.Perks:
-                        this.Perks = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.ConstructibleObjects:
-                        this.ConstructibleObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
+                    case StarfieldMod_FieldIndex.MiscItems:
+                        this.MiscItems = new MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = new MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Weapons:
+                        this.Weapons = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Ingestibles:
+                        this.Ingestibles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.BendableSplines:
                         this.BendableSplines = new MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>(ex, null);
@@ -2162,6 +2162,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.Perks:
+                        this.Perks = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>(ex, null);
+                        break;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.FormLists:
                         this.FormLists = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>(ex, null);
@@ -2174,9 +2180,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Debris:
                         this.Debris = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.Ingestibles:
-                        this.Ingestibles = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.ObjectModifications:
                         this.ObjectModifications = new MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>(ex, null);
@@ -2207,9 +2210,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = new MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>(ex, null);
-                        break;
-                    case StarfieldMod_FieldIndex.MiscItems:
-                        this.MiscItems = new MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.Resources:
                         this.Resources = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>(ex, null);
@@ -2323,17 +2323,17 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Doors:
                         this.Doors = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Door.ErrorMask>?>?)obj;
                         break;
-                    case StarfieldMod_FieldIndex.Weapons:
-                        this.Weapons = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.Perks:
-                        this.Perks = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.ConstructibleObjects:
-                        this.ConstructibleObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
+                    case StarfieldMod_FieldIndex.MiscItems:
+                        this.MiscItems = (MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.StaticCollections:
                         this.StaticCollections = (MaskItem<Exception?, StarfieldGroup.ErrorMask<StaticCollection.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.Weapons:
+                        this.Weapons = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weapon.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.Ingestibles:
+                        this.Ingestibles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.BendableSplines:
                         this.BendableSplines = (MaskItem<Exception?, StarfieldGroup.ErrorMask<BendableSpline.ErrorMask>?>?)obj;
@@ -2343,6 +2343,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Weathers:
                         this.Weathers = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Weather.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.Perks:
+                        this.Perks = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Perk.ErrorMask>?>?)obj;
+                        break;
+                    case StarfieldMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.FormLists:
                         this.FormLists = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FormList.ErrorMask>?>?)obj;
@@ -2355,9 +2361,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.Debris:
                         this.Debris = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Debris.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.Ingestibles:
-                        this.Ingestibles = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Ingestible.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.ObjectModifications:
                         this.ObjectModifications = (MaskItem<Exception?, StarfieldGroup.ErrorMask<AObjectModification.ErrorMask>?>?)obj;
@@ -2388,9 +2391,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case StarfieldMod_FieldIndex.ActorValueModulations:
                         this.ActorValueModulations = (MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>?)obj;
-                        break;
-                    case StarfieldMod_FieldIndex.MiscItems:
-                        this.MiscItems = (MaskItem<Exception?, StarfieldGroup.ErrorMask<MiscItem.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.Resources:
                         this.Resources = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Resource.ErrorMask>?>?)obj;
@@ -2440,18 +2440,19 @@ namespace Mutagen.Bethesda.Starfield
                 if (Books != null) return true;
                 if (Containers != null) return true;
                 if (Doors != null) return true;
-                if (Weapons != null) return true;
-                if (Perks != null) return true;
-                if (ConstructibleObjects != null) return true;
+                if (MiscItems != null) return true;
                 if (StaticCollections != null) return true;
+                if (Weapons != null) return true;
+                if (Ingestibles != null) return true;
                 if (BendableSplines != null) return true;
                 if (LeveledItems != null) return true;
                 if (Weathers != null) return true;
+                if (Perks != null) return true;
+                if (ConstructibleObjects != null) return true;
                 if (FormLists != null) return true;
                 if (TerminalMenus != null) return true;
                 if (AnimatedObjects != null) return true;
                 if (Debris != null) return true;
-                if (Ingestibles != null) return true;
                 if (ObjectModifications != null) return true;
                 if (DefaultObjects != null) return true;
                 if (Outfits != null) return true;
@@ -2462,7 +2463,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (SurfacePatternStyles != null) return true;
                 if (LegendaryItems != null) return true;
                 if (ActorValueModulations != null) return true;
-                if (MiscItems != null) return true;
                 if (Resources != null) return true;
                 if (ConditionRecords != null) return true;
                 if (Quests != null) return true;
@@ -2522,18 +2522,19 @@ namespace Mutagen.Bethesda.Starfield
                 Books?.Print(sb);
                 Containers?.Print(sb);
                 Doors?.Print(sb);
-                Weapons?.Print(sb);
-                Perks?.Print(sb);
-                ConstructibleObjects?.Print(sb);
+                MiscItems?.Print(sb);
                 StaticCollections?.Print(sb);
+                Weapons?.Print(sb);
+                Ingestibles?.Print(sb);
                 BendableSplines?.Print(sb);
                 LeveledItems?.Print(sb);
                 Weathers?.Print(sb);
+                Perks?.Print(sb);
+                ConstructibleObjects?.Print(sb);
                 FormLists?.Print(sb);
                 TerminalMenus?.Print(sb);
                 AnimatedObjects?.Print(sb);
                 Debris?.Print(sb);
-                Ingestibles?.Print(sb);
                 ObjectModifications?.Print(sb);
                 DefaultObjects?.Print(sb);
                 Outfits?.Print(sb);
@@ -2544,7 +2545,6 @@ namespace Mutagen.Bethesda.Starfield
                 SurfacePatternStyles?.Print(sb);
                 LegendaryItems?.Print(sb);
                 ActorValueModulations?.Print(sb);
-                MiscItems?.Print(sb);
                 Resources?.Print(sb);
                 ConditionRecords?.Print(sb);
                 Quests?.Print(sb);
@@ -2587,18 +2587,19 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Books = this.Books.Combine(rhs.Books, (l, r) => l.Combine(r));
                 ret.Containers = this.Containers.Combine(rhs.Containers, (l, r) => l.Combine(r));
                 ret.Doors = this.Doors.Combine(rhs.Doors, (l, r) => l.Combine(r));
-                ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
-                ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
-                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
+                ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 ret.StaticCollections = this.StaticCollections.Combine(rhs.StaticCollections, (l, r) => l.Combine(r));
+                ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
+                ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
                 ret.BendableSplines = this.BendableSplines.Combine(rhs.BendableSplines, (l, r) => l.Combine(r));
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
                 ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
+                ret.Perks = this.Perks.Combine(rhs.Perks, (l, r) => l.Combine(r));
+                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.TerminalMenus = this.TerminalMenus.Combine(rhs.TerminalMenus, (l, r) => l.Combine(r));
                 ret.AnimatedObjects = this.AnimatedObjects.Combine(rhs.AnimatedObjects, (l, r) => l.Combine(r));
                 ret.Debris = this.Debris.Combine(rhs.Debris, (l, r) => l.Combine(r));
-                ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
                 ret.ObjectModifications = this.ObjectModifications.Combine(rhs.ObjectModifications, (l, r) => l.Combine(r));
                 ret.DefaultObjects = this.DefaultObjects.Combine(rhs.DefaultObjects, (l, r) => l.Combine(r));
                 ret.Outfits = this.Outfits.Combine(rhs.Outfits, (l, r) => l.Combine(r));
@@ -2609,7 +2610,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SurfacePatternStyles = this.SurfacePatternStyles.Combine(rhs.SurfacePatternStyles, (l, r) => l.Combine(r));
                 ret.LegendaryItems = this.LegendaryItems.Combine(rhs.LegendaryItems, (l, r) => l.Combine(r));
                 ret.ActorValueModulations = this.ActorValueModulations.Combine(rhs.ActorValueModulations, (l, r) => l.Combine(r));
-                ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 ret.Resources = this.Resources.Combine(rhs.Resources, (l, r) => l.Combine(r));
                 ret.ConditionRecords = this.ConditionRecords.Combine(rhs.ConditionRecords, (l, r) => l.Combine(r));
                 ret.Quests = this.Quests.Combine(rhs.Quests, (l, r) => l.Combine(r));
@@ -2667,18 +2667,19 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<Book.TranslationMask>? Books;
             public StarfieldGroup.TranslationMask<Container.TranslationMask>? Containers;
             public StarfieldGroup.TranslationMask<Door.TranslationMask>? Doors;
-            public StarfieldGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
-            public StarfieldGroup.TranslationMask<Perk.TranslationMask>? Perks;
-            public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
+            public StarfieldGroup.TranslationMask<MiscItem.TranslationMask>? MiscItems;
             public StarfieldGroup.TranslationMask<StaticCollection.TranslationMask>? StaticCollections;
+            public StarfieldGroup.TranslationMask<Weapon.TranslationMask>? Weapons;
+            public StarfieldGroup.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
             public StarfieldGroup.TranslationMask<BendableSpline.TranslationMask>? BendableSplines;
             public StarfieldGroup.TranslationMask<LeveledItem.TranslationMask>? LeveledItems;
             public StarfieldGroup.TranslationMask<Weather.TranslationMask>? Weathers;
+            public StarfieldGroup.TranslationMask<Perk.TranslationMask>? Perks;
+            public StarfieldGroup.TranslationMask<ConstructibleObject.TranslationMask>? ConstructibleObjects;
             public StarfieldGroup.TranslationMask<FormList.TranslationMask>? FormLists;
             public StarfieldGroup.TranslationMask<TerminalMenu.TranslationMask>? TerminalMenus;
             public StarfieldGroup.TranslationMask<AnimatedObject.TranslationMask>? AnimatedObjects;
             public StarfieldGroup.TranslationMask<Debris.TranslationMask>? Debris;
-            public StarfieldGroup.TranslationMask<Ingestible.TranslationMask>? Ingestibles;
             public StarfieldGroup.TranslationMask<AObjectModification.TranslationMask>? ObjectModifications;
             public StarfieldGroup.TranslationMask<DefaultObject.TranslationMask>? DefaultObjects;
             public StarfieldGroup.TranslationMask<Outfit.TranslationMask>? Outfits;
@@ -2689,7 +2690,6 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<SurfacePatternStyle.TranslationMask>? SurfacePatternStyles;
             public StarfieldGroup.TranslationMask<LegendaryItem.TranslationMask>? LegendaryItems;
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
-            public StarfieldGroup.TranslationMask<MiscItem.TranslationMask>? MiscItems;
             public StarfieldGroup.TranslationMask<Resource.TranslationMask>? Resources;
             public StarfieldGroup.TranslationMask<ConditionRecord.TranslationMask>? ConditionRecords;
             public StarfieldGroup.TranslationMask<Quest.TranslationMask>? Quests;
@@ -2748,18 +2748,19 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Books != null ? Books.OnOverall : DefaultOn, Books?.GetCrystal()));
                 ret.Add((Containers != null ? Containers.OnOverall : DefaultOn, Containers?.GetCrystal()));
                 ret.Add((Doors != null ? Doors.OnOverall : DefaultOn, Doors?.GetCrystal()));
-                ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
-                ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
-                ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
+                ret.Add((MiscItems != null ? MiscItems.OnOverall : DefaultOn, MiscItems?.GetCrystal()));
                 ret.Add((StaticCollections != null ? StaticCollections.OnOverall : DefaultOn, StaticCollections?.GetCrystal()));
+                ret.Add((Weapons != null ? Weapons.OnOverall : DefaultOn, Weapons?.GetCrystal()));
+                ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
                 ret.Add((BendableSplines != null ? BendableSplines.OnOverall : DefaultOn, BendableSplines?.GetCrystal()));
                 ret.Add((LeveledItems != null ? LeveledItems.OnOverall : DefaultOn, LeveledItems?.GetCrystal()));
                 ret.Add((Weathers != null ? Weathers.OnOverall : DefaultOn, Weathers?.GetCrystal()));
+                ret.Add((Perks != null ? Perks.OnOverall : DefaultOn, Perks?.GetCrystal()));
+                ret.Add((ConstructibleObjects != null ? ConstructibleObjects.OnOverall : DefaultOn, ConstructibleObjects?.GetCrystal()));
                 ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
                 ret.Add((TerminalMenus != null ? TerminalMenus.OnOverall : DefaultOn, TerminalMenus?.GetCrystal()));
                 ret.Add((AnimatedObjects != null ? AnimatedObjects.OnOverall : DefaultOn, AnimatedObjects?.GetCrystal()));
                 ret.Add((Debris != null ? Debris.OnOverall : DefaultOn, Debris?.GetCrystal()));
-                ret.Add((Ingestibles != null ? Ingestibles.OnOverall : DefaultOn, Ingestibles?.GetCrystal()));
                 ret.Add((ObjectModifications != null ? ObjectModifications.OnOverall : DefaultOn, ObjectModifications?.GetCrystal()));
                 ret.Add((DefaultObjects != null ? DefaultObjects.OnOverall : DefaultOn, DefaultObjects?.GetCrystal()));
                 ret.Add((Outfits != null ? Outfits.OnOverall : DefaultOn, Outfits?.GetCrystal()));
@@ -2770,7 +2771,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SurfacePatternStyles != null ? SurfacePatternStyles.OnOverall : DefaultOn, SurfacePatternStyles?.GetCrystal()));
                 ret.Add((LegendaryItems != null ? LegendaryItems.OnOverall : DefaultOn, LegendaryItems?.GetCrystal()));
                 ret.Add((ActorValueModulations != null ? ActorValueModulations.OnOverall : DefaultOn, ActorValueModulations?.GetCrystal()));
-                ret.Add((MiscItems != null ? MiscItems.OnOverall : DefaultOn, MiscItems?.GetCrystal()));
                 ret.Add((Resources != null ? Resources.OnOverall : DefaultOn, Resources?.GetCrystal()));
                 ret.Add((ConditionRecords != null ? ConditionRecords.OnOverall : DefaultOn, ConditionRecords?.GetCrystal()));
                 ret.Add((Quests != null ? Quests.OnOverall : DefaultOn, Quests?.GetCrystal()));
@@ -2851,18 +2851,19 @@ namespace Mutagen.Bethesda.Starfield
             _Books_Object = new StarfieldGroup<Book>(this);
             _Containers_Object = new StarfieldGroup<Container>(this);
             _Doors_Object = new StarfieldGroup<Door>(this);
-            _Weapons_Object = new StarfieldGroup<Weapon>(this);
-            _Perks_Object = new StarfieldGroup<Perk>(this);
-            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
+            _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _StaticCollections_Object = new StarfieldGroup<StaticCollection>(this);
+            _Weapons_Object = new StarfieldGroup<Weapon>(this);
+            _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _BendableSplines_Object = new StarfieldGroup<BendableSpline>(this);
             _LeveledItems_Object = new StarfieldGroup<LeveledItem>(this);
             _Weathers_Object = new StarfieldGroup<Weather>(this);
+            _Perks_Object = new StarfieldGroup<Perk>(this);
+            _ConstructibleObjects_Object = new StarfieldGroup<ConstructibleObject>(this);
             _FormLists_Object = new StarfieldGroup<FormList>(this);
             _TerminalMenus_Object = new StarfieldGroup<TerminalMenu>(this);
             _AnimatedObjects_Object = new StarfieldGroup<AnimatedObject>(this);
             _Debris_Object = new StarfieldGroup<Debris>(this);
-            _Ingestibles_Object = new StarfieldGroup<Ingestible>(this);
             _ObjectModifications_Object = new StarfieldGroup<AObjectModification>(this);
             _DefaultObjects_Object = new StarfieldGroup<DefaultObject>(this);
             _Outfits_Object = new StarfieldGroup<Outfit>(this);
@@ -2873,7 +2874,6 @@ namespace Mutagen.Bethesda.Starfield
             _SurfacePatternStyles_Object = new StarfieldGroup<SurfacePatternStyle>(this);
             _LegendaryItems_Object = new StarfieldGroup<LegendaryItem>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
-            _MiscItems_Object = new StarfieldGroup<MiscItem>(this);
             _Resources_Object = new StarfieldGroup<Resource>(this);
             _ConditionRecords_Object = new StarfieldGroup<ConditionRecord>(this);
             _Quests_Object = new StarfieldGroup<Quest>(this);
@@ -3003,21 +3003,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Doors.RecordCache.Set(rhsMod.Doors.RecordCache.Items);
             }
-            if (mask?.Weapons ?? true)
+            if (mask?.MiscItems ?? true)
             {
-                this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
-            }
-            if (mask?.Perks ?? true)
-            {
-                this.Perks.RecordCache.Set(rhsMod.Perks.RecordCache.Items);
-            }
-            if (mask?.ConstructibleObjects ?? true)
-            {
-                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
+                this.MiscItems.RecordCache.Set(rhsMod.MiscItems.RecordCache.Items);
             }
             if (mask?.StaticCollections ?? true)
             {
                 this.StaticCollections.RecordCache.Set(rhsMod.StaticCollections.RecordCache.Items);
+            }
+            if (mask?.Weapons ?? true)
+            {
+                this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
+            }
+            if (mask?.Ingestibles ?? true)
+            {
+                this.Ingestibles.RecordCache.Set(rhsMod.Ingestibles.RecordCache.Items);
             }
             if (mask?.BendableSplines ?? true)
             {
@@ -3030,6 +3030,14 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.Weathers ?? true)
             {
                 this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
+            }
+            if (mask?.Perks ?? true)
+            {
+                this.Perks.RecordCache.Set(rhsMod.Perks.RecordCache.Items);
+            }
+            if (mask?.ConstructibleObjects ?? true)
+            {
+                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
             }
             if (mask?.FormLists ?? true)
             {
@@ -3046,10 +3054,6 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.Debris ?? true)
             {
                 this.Debris.RecordCache.Set(rhsMod.Debris.RecordCache.Items);
-            }
-            if (mask?.Ingestibles ?? true)
-            {
-                this.Ingestibles.RecordCache.Set(rhsMod.Ingestibles.RecordCache.Items);
             }
             if (mask?.ObjectModifications ?? true)
             {
@@ -3090,10 +3094,6 @@ namespace Mutagen.Bethesda.Starfield
             if (mask?.ActorValueModulations ?? true)
             {
                 this.ActorValueModulations.RecordCache.Set(rhsMod.ActorValueModulations.RecordCache.Items);
-            }
-            if (mask?.MiscItems ?? true)
-            {
-                this.MiscItems.RecordCache.Set(rhsMod.MiscItems.RecordCache.Items);
             }
             if (mask?.Resources ?? true)
             {
@@ -3147,18 +3147,19 @@ namespace Mutagen.Bethesda.Starfield
             count += Books.RecordCache.Count > 0 ? 1 : default(uint);
             count += Containers.RecordCache.Count > 0 ? 1 : default(uint);
             count += Doors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += StaticCollections.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
             count += BendableSplines.RecordCache.Count > 0 ? 1 : default(uint);
             count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += TerminalMenus.RecordCache.Count > 0 ? 1 : default(uint);
             count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
             count += ObjectModifications.RecordCache.Count > 0 ? 1 : default(uint);
             count += DefaultObjects.RecordCache.Count > 0 ? 1 : default(uint);
             count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
@@ -3169,7 +3170,6 @@ namespace Mutagen.Bethesda.Starfield
             count += SurfacePatternStyles.RecordCache.Count > 0 ? 1 : default(uint);
             count += LegendaryItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += ActorValueModulations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
             count += Resources.RecordCache.Count > 0 ? 1 : default(uint);
             count += ConditionRecords.RecordCache.Count > 0 ? 1 : default(uint);
             count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
@@ -3477,18 +3477,19 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<Book> Books { get; }
         new StarfieldGroup<Container> Containers { get; }
         new StarfieldGroup<Door> Doors { get; }
-        new StarfieldGroup<Weapon> Weapons { get; }
-        new StarfieldGroup<Perk> Perks { get; }
-        new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
+        new StarfieldGroup<MiscItem> MiscItems { get; }
         new StarfieldGroup<StaticCollection> StaticCollections { get; }
+        new StarfieldGroup<Weapon> Weapons { get; }
+        new StarfieldGroup<Ingestible> Ingestibles { get; }
         new StarfieldGroup<BendableSpline> BendableSplines { get; }
         new StarfieldGroup<LeveledItem> LeveledItems { get; }
         new StarfieldGroup<Weather> Weathers { get; }
+        new StarfieldGroup<Perk> Perks { get; }
+        new StarfieldGroup<ConstructibleObject> ConstructibleObjects { get; }
         new StarfieldGroup<FormList> FormLists { get; }
         new StarfieldGroup<TerminalMenu> TerminalMenus { get; }
         new StarfieldGroup<AnimatedObject> AnimatedObjects { get; }
         new StarfieldGroup<Debris> Debris { get; }
-        new StarfieldGroup<Ingestible> Ingestibles { get; }
         new StarfieldGroup<AObjectModification> ObjectModifications { get; }
         new StarfieldGroup<DefaultObject> DefaultObjects { get; }
         new StarfieldGroup<Outfit> Outfits { get; }
@@ -3499,7 +3500,6 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<SurfacePatternStyle> SurfacePatternStyles { get; }
         new StarfieldGroup<LegendaryItem> LegendaryItems { get; }
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
-        new StarfieldGroup<MiscItem> MiscItems { get; }
         new StarfieldGroup<Resource> Resources { get; }
         new StarfieldGroup<ConditionRecord> ConditionRecords { get; }
         new StarfieldGroup<Quest> Quests { get; }
@@ -3553,18 +3553,19 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IBookGetter> Books { get; }
         IStarfieldGroupGetter<IContainerGetter> Containers { get; }
         IStarfieldGroupGetter<IDoorGetter> Doors { get; }
-        IStarfieldGroupGetter<IWeaponGetter> Weapons { get; }
-        IStarfieldGroupGetter<IPerkGetter> Perks { get; }
-        IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
+        IStarfieldGroupGetter<IMiscItemGetter> MiscItems { get; }
         IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections { get; }
+        IStarfieldGroupGetter<IWeaponGetter> Weapons { get; }
+        IStarfieldGroupGetter<IIngestibleGetter> Ingestibles { get; }
         IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines { get; }
         IStarfieldGroupGetter<ILeveledItemGetter> LeveledItems { get; }
         IStarfieldGroupGetter<IWeatherGetter> Weathers { get; }
+        IStarfieldGroupGetter<IPerkGetter> Perks { get; }
+        IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
         IStarfieldGroupGetter<IFormListGetter> FormLists { get; }
         IStarfieldGroupGetter<ITerminalMenuGetter> TerminalMenus { get; }
         IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IStarfieldGroupGetter<IDebrisGetter> Debris { get; }
-        IStarfieldGroupGetter<IIngestibleGetter> Ingestibles { get; }
         IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications { get; }
         IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects { get; }
         IStarfieldGroupGetter<IOutfitGetter> Outfits { get; }
@@ -3575,7 +3576,6 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles { get; }
         IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems { get; }
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
-        IStarfieldGroupGetter<IMiscItemGetter> MiscItems { get; }
         IStarfieldGroupGetter<IResourceGetter> Resources { get; }
         IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords { get; }
         IStarfieldGroupGetter<IQuestGetter> Quests { get; }
@@ -4191,29 +4191,29 @@ namespace Mutagen.Bethesda.Starfield
         Books = 28,
         Containers = 29,
         Doors = 30,
-        Weapons = 31,
-        Perks = 32,
-        ConstructibleObjects = 33,
-        StaticCollections = 34,
+        MiscItems = 31,
+        StaticCollections = 32,
+        Weapons = 33,
+        Ingestibles = 34,
         BendableSplines = 35,
         LeveledItems = 36,
         Weathers = 37,
-        FormLists = 38,
-        TerminalMenus = 39,
-        AnimatedObjects = 40,
-        Debris = 41,
-        Ingestibles = 42,
-        ObjectModifications = 43,
-        DefaultObjects = 44,
-        Outfits = 45,
-        AimModels = 46,
-        AttractionRules = 47,
-        BiomeSwaps = 48,
-        Planets = 49,
-        SurfacePatternStyles = 50,
-        LegendaryItems = 51,
-        ActorValueModulations = 52,
-        MiscItems = 53,
+        Perks = 38,
+        ConstructibleObjects = 39,
+        FormLists = 40,
+        TerminalMenus = 41,
+        AnimatedObjects = 42,
+        Debris = 43,
+        ObjectModifications = 44,
+        DefaultObjects = 45,
+        Outfits = 46,
+        AimModels = 47,
+        AttractionRules = 48,
+        BiomeSwaps = 49,
+        Planets = 50,
+        SurfacePatternStyles = 51,
+        LegendaryItems = 52,
+        ActorValueModulations = 53,
         Resources = 54,
         ConditionRecords = 55,
         Quests = 56,
@@ -4326,18 +4326,19 @@ namespace Mutagen.Bethesda.Starfield
             item.Books.Clear();
             item.Containers.Clear();
             item.Doors.Clear();
-            item.Weapons.Clear();
-            item.Perks.Clear();
-            item.ConstructibleObjects.Clear();
+            item.MiscItems.Clear();
             item.StaticCollections.Clear();
+            item.Weapons.Clear();
+            item.Ingestibles.Clear();
             item.BendableSplines.Clear();
             item.LeveledItems.Clear();
             item.Weathers.Clear();
+            item.Perks.Clear();
+            item.ConstructibleObjects.Clear();
             item.FormLists.Clear();
             item.TerminalMenus.Clear();
             item.AnimatedObjects.Clear();
             item.Debris.Clear();
-            item.Ingestibles.Clear();
             item.ObjectModifications.Clear();
             item.DefaultObjects.Clear();
             item.Outfits.Clear();
@@ -4348,7 +4349,6 @@ namespace Mutagen.Bethesda.Starfield
             item.SurfacePatternStyles.Clear();
             item.LegendaryItems.Clear();
             item.ActorValueModulations.Clear();
-            item.MiscItems.Clear();
             item.Resources.Clear();
             item.ConditionRecords.Clear();
             item.Quests.Clear();
@@ -4379,24 +4379,24 @@ namespace Mutagen.Bethesda.Starfield
             obj.Armors.RemapLinks(mapping);
             obj.Books.RemapLinks(mapping);
             obj.Containers.RemapLinks(mapping);
-            obj.Weapons.RemapLinks(mapping);
-            obj.Perks.RemapLinks(mapping);
-            obj.ConstructibleObjects.RemapLinks(mapping);
+            obj.MiscItems.RemapLinks(mapping);
             obj.StaticCollections.RemapLinks(mapping);
+            obj.Weapons.RemapLinks(mapping);
+            obj.Ingestibles.RemapLinks(mapping);
             obj.BendableSplines.RemapLinks(mapping);
             obj.LeveledItems.RemapLinks(mapping);
             obj.Weathers.RemapLinks(mapping);
+            obj.Perks.RemapLinks(mapping);
+            obj.ConstructibleObjects.RemapLinks(mapping);
             obj.FormLists.RemapLinks(mapping);
             obj.TerminalMenus.RemapLinks(mapping);
             obj.AnimatedObjects.RemapLinks(mapping);
-            obj.Ingestibles.RemapLinks(mapping);
             obj.ObjectModifications.RemapLinks(mapping);
             obj.DefaultObjects.RemapLinks(mapping);
             obj.Outfits.RemapLinks(mapping);
             obj.Planets.RemapLinks(mapping);
             obj.LegendaryItems.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
-            obj.MiscItems.RemapLinks(mapping);
             obj.Resources.RemapLinks(mapping);
             obj.ConditionRecords.RemapLinks(mapping);
             obj.Quests.RemapLinks(mapping);
@@ -4464,18 +4464,19 @@ namespace Mutagen.Bethesda.Starfield
             obj.Books.Remove(keys);
             obj.Containers.Remove(keys);
             obj.Doors.Remove(keys);
-            obj.Weapons.Remove(keys);
-            obj.Perks.Remove(keys);
-            obj.ConstructibleObjects.Remove(keys);
+            obj.MiscItems.Remove(keys);
             obj.StaticCollections.Remove(keys);
+            obj.Weapons.Remove(keys);
+            obj.Ingestibles.Remove(keys);
             obj.BendableSplines.Remove(keys);
             obj.LeveledItems.Remove(keys);
             obj.Weathers.Remove(keys);
+            obj.Perks.Remove(keys);
+            obj.ConstructibleObjects.Remove(keys);
             obj.FormLists.Remove(keys);
             obj.TerminalMenus.Remove(keys);
             obj.AnimatedObjects.Remove(keys);
             obj.Debris.Remove(keys);
-            obj.Ingestibles.Remove(keys);
             obj.ObjectModifications.Remove(keys);
             obj.DefaultObjects.Remove(keys);
             obj.Outfits.Remove(keys);
@@ -4486,7 +4487,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.SurfacePatternStyles.Remove(keys);
             obj.LegendaryItems.Remove(keys);
             obj.ActorValueModulations.Remove(keys);
-            obj.MiscItems.Remove(keys);
             obj.Resources.Remove(keys);
             obj.ConditionRecords.Remove(keys);
             obj.Quests.Remove(keys);
@@ -4769,27 +4769,11 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
-                case "Weapon":
-                case "IWeaponGetter":
-                case "IWeapon":
-                case "IWeaponInternal":
-                    obj.Weapons.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Perk":
-                case "IPerkGetter":
-                case "IPerk":
-                case "IPerkInternal":
-                    obj.Perks.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    obj.ConstructibleObjects.Remove(
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    obj.MiscItems.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -4798,6 +4782,22 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStaticCollection":
                 case "IStaticCollectionInternal":
                     obj.StaticCollections.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    obj.Weapons.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    obj.Ingestibles.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -4822,6 +4822,22 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     obj.Weathers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    obj.Perks.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    obj.ConstructibleObjects.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -4854,14 +4870,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IDebris":
                 case "IDebrisInternal":
                     obj.Debris.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Ingestible":
-                case "IIngestibleGetter":
-                case "IIngestible":
-                case "IIngestibleInternal":
-                    obj.Ingestibles.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -4970,14 +4978,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     obj.ActorValueModulations.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "MiscItem":
-                case "IMiscItemGetter":
-                case "IMiscItem":
-                case "IMiscItemInternal":
-                    obj.MiscItems.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -5210,22 +5210,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (obj.Weapons is IAssetLinkContainer WeaponslinkCont)
+            if (obj.MiscItems is IAssetLinkContainer MiscItemslinkCont)
             {
-                foreach (var item in WeaponslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            {
-                foreach (var item in obj.Perks.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.ConstructibleObjects is IAssetLinkContainer ConstructibleObjectslinkCont)
-            {
-                foreach (var item in ConstructibleObjectslinkCont.EnumerateListedAssetLinks())
+                foreach (var item in MiscItemslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -5233,6 +5220,20 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.StaticCollections is IAssetLinkContainer StaticCollectionslinkCont)
             {
                 foreach (var item in StaticCollectionslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Weapons is IAssetLinkContainer WeaponslinkCont)
+            {
+                foreach (var item in WeaponslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Ingestibles is IAssetLinkContainer IngestibleslinkCont)
+            {
+                foreach (var item in IngestibleslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -5257,6 +5258,19 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.Perks.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ConstructibleObjects is IAssetLinkContainer ConstructibleObjectslinkCont)
+            {
+                foreach (var item in ConstructibleObjectslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.FormLists is IAssetLinkContainer FormListslinkCont)
             {
                 foreach (var item in FormListslinkCont.EnumerateListedAssetLinks())
@@ -5273,13 +5287,6 @@ namespace Mutagen.Bethesda.Starfield
             }
             {
                 foreach (var item in obj.Debris.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Ingestibles is IAssetLinkContainer IngestibleslinkCont)
-            {
-                foreach (var item in IngestibleslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -5307,13 +5314,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.ActorValueModulations is IAssetLinkContainer ActorValueModulationslinkCont)
             {
                 foreach (var item in ActorValueModulationslinkCont.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.MiscItems is IAssetLinkContainer MiscItemslinkCont)
-            {
-                foreach (var item in MiscItemslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -5352,22 +5352,22 @@ namespace Mutagen.Bethesda.Starfield
             obj.Armors.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Books.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Containers.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.Weapons.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MiscItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.StaticCollections.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Weapons.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Ingestibles.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.BendableSplines.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LeveledItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Weathers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ConstructibleObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.FormLists.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.Ingestibles.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ObjectModifications.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Planets.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueModulations.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.MiscItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
@@ -5445,18 +5445,19 @@ namespace Mutagen.Bethesda.Starfield
             ret.Books = MaskItemExt.Factory(item.Books.GetEqualsMask(rhs.Books, include), include);
             ret.Containers = MaskItemExt.Factory(item.Containers.GetEqualsMask(rhs.Containers, include), include);
             ret.Doors = MaskItemExt.Factory(item.Doors.GetEqualsMask(rhs.Doors, include), include);
-            ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
-            ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
-            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
+            ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
             ret.StaticCollections = MaskItemExt.Factory(item.StaticCollections.GetEqualsMask(rhs.StaticCollections, include), include);
+            ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
+            ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
             ret.BendableSplines = MaskItemExt.Factory(item.BendableSplines.GetEqualsMask(rhs.BendableSplines, include), include);
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
             ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
+            ret.Perks = MaskItemExt.Factory(item.Perks.GetEqualsMask(rhs.Perks, include), include);
+            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.TerminalMenus = MaskItemExt.Factory(item.TerminalMenus.GetEqualsMask(rhs.TerminalMenus, include), include);
             ret.AnimatedObjects = MaskItemExt.Factory(item.AnimatedObjects.GetEqualsMask(rhs.AnimatedObjects, include), include);
             ret.Debris = MaskItemExt.Factory(item.Debris.GetEqualsMask(rhs.Debris, include), include);
-            ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
             ret.ObjectModifications = MaskItemExt.Factory(item.ObjectModifications.GetEqualsMask(rhs.ObjectModifications, include), include);
             ret.DefaultObjects = MaskItemExt.Factory(item.DefaultObjects.GetEqualsMask(rhs.DefaultObjects, include), include);
             ret.Outfits = MaskItemExt.Factory(item.Outfits.GetEqualsMask(rhs.Outfits, include), include);
@@ -5467,7 +5468,6 @@ namespace Mutagen.Bethesda.Starfield
             ret.SurfacePatternStyles = MaskItemExt.Factory(item.SurfacePatternStyles.GetEqualsMask(rhs.SurfacePatternStyles, include), include);
             ret.LegendaryItems = MaskItemExt.Factory(item.LegendaryItems.GetEqualsMask(rhs.LegendaryItems, include), include);
             ret.ActorValueModulations = MaskItemExt.Factory(item.ActorValueModulations.GetEqualsMask(rhs.ActorValueModulations, include), include);
-            ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
             ret.Resources = MaskItemExt.Factory(item.Resources.GetEqualsMask(rhs.Resources, include), include);
             ret.ConditionRecords = MaskItemExt.Factory(item.ConditionRecords.GetEqualsMask(rhs.ConditionRecords, include), include);
             ret.Quests = MaskItemExt.Factory(item.Quests.GetEqualsMask(rhs.Quests, include), include);
@@ -5639,21 +5639,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Doors?.Print(sb, "Doors");
             }
-            if (printMask?.Weapons?.Overall ?? true)
+            if (printMask?.MiscItems?.Overall ?? true)
             {
-                item.Weapons?.Print(sb, "Weapons");
-            }
-            if (printMask?.Perks?.Overall ?? true)
-            {
-                item.Perks?.Print(sb, "Perks");
-            }
-            if (printMask?.ConstructibleObjects?.Overall ?? true)
-            {
-                item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
+                item.MiscItems?.Print(sb, "MiscItems");
             }
             if (printMask?.StaticCollections?.Overall ?? true)
             {
                 item.StaticCollections?.Print(sb, "StaticCollections");
+            }
+            if (printMask?.Weapons?.Overall ?? true)
+            {
+                item.Weapons?.Print(sb, "Weapons");
+            }
+            if (printMask?.Ingestibles?.Overall ?? true)
+            {
+                item.Ingestibles?.Print(sb, "Ingestibles");
             }
             if (printMask?.BendableSplines?.Overall ?? true)
             {
@@ -5666,6 +5666,14 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Weathers?.Overall ?? true)
             {
                 item.Weathers?.Print(sb, "Weathers");
+            }
+            if (printMask?.Perks?.Overall ?? true)
+            {
+                item.Perks?.Print(sb, "Perks");
+            }
+            if (printMask?.ConstructibleObjects?.Overall ?? true)
+            {
+                item.ConstructibleObjects?.Print(sb, "ConstructibleObjects");
             }
             if (printMask?.FormLists?.Overall ?? true)
             {
@@ -5682,10 +5690,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Debris?.Overall ?? true)
             {
                 item.Debris?.Print(sb, "Debris");
-            }
-            if (printMask?.Ingestibles?.Overall ?? true)
-            {
-                item.Ingestibles?.Print(sb, "Ingestibles");
             }
             if (printMask?.ObjectModifications?.Overall ?? true)
             {
@@ -5726,10 +5730,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.ActorValueModulations?.Overall ?? true)
             {
                 item.ActorValueModulations?.Print(sb, "ActorValueModulations");
-            }
-            if (printMask?.MiscItems?.Overall ?? true)
-            {
-                item.MiscItems?.Print(sb, "MiscItems");
             }
             if (printMask?.Resources?.Overall ?? true)
             {
@@ -6000,29 +6000,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isDoorsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weapons) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MiscItems) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.MiscItems, rhs.MiscItems, out var lhsMiscItems, out var rhsMiscItems, out var isMiscItemsEqual))
                 {
-                    if (!object.Equals(lhsWeapons, rhsWeapons)) return false;
+                    if (!object.Equals(lhsMiscItems, rhsMiscItems)) return false;
                 }
-                else if (!isWeaponsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Perks) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Perks, rhs.Perks, out var lhsPerks, out var rhsPerks, out var isPerksEqual))
-                {
-                    if (!object.Equals(lhsPerks, rhsPerks)) return false;
-                }
-                else if (!isPerksEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
-                {
-                    if (!object.Equals(lhsConstructibleObjects, rhsConstructibleObjects)) return false;
-                }
-                else if (!isConstructibleObjectsEqual) return false;
+                else if (!isMiscItemsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.StaticCollections) ?? true))
             {
@@ -6031,6 +6015,22 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsStaticCollections, rhsStaticCollections)) return false;
                 }
                 else if (!isStaticCollectionsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weapons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
+                {
+                    if (!object.Equals(lhsWeapons, rhsWeapons)) return false;
+                }
+                else if (!isWeaponsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Ingestibles) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Ingestibles, rhs.Ingestibles, out var lhsIngestibles, out var rhsIngestibles, out var isIngestiblesEqual))
+                {
+                    if (!object.Equals(lhsIngestibles, rhsIngestibles)) return false;
+                }
+                else if (!isIngestiblesEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.BendableSplines) ?? true))
             {
@@ -6055,6 +6055,22 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsWeathers, rhsWeathers)) return false;
                 }
                 else if (!isWeathersEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Perks) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Perks, rhs.Perks, out var lhsPerks, out var rhsPerks, out var isPerksEqual))
+                {
+                    if (!object.Equals(lhsPerks, rhsPerks)) return false;
+                }
+                else if (!isPerksEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ConstructibleObjects, rhs.ConstructibleObjects, out var lhsConstructibleObjects, out var rhsConstructibleObjects, out var isConstructibleObjectsEqual))
+                {
+                    if (!object.Equals(lhsConstructibleObjects, rhsConstructibleObjects)) return false;
+                }
+                else if (!isConstructibleObjectsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FormLists) ?? true))
             {
@@ -6087,14 +6103,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (!object.Equals(lhsDebris, rhsDebris)) return false;
                 }
                 else if (!isDebrisEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Ingestibles) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Ingestibles, rhs.Ingestibles, out var lhsIngestibles, out var rhsIngestibles, out var isIngestiblesEqual))
-                {
-                    if (!object.Equals(lhsIngestibles, rhsIngestibles)) return false;
-                }
-                else if (!isIngestiblesEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ObjectModifications) ?? true))
             {
@@ -6176,14 +6184,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isActorValueModulationsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MiscItems) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.MiscItems, rhs.MiscItems, out var lhsMiscItems, out var rhsMiscItems, out var isMiscItemsEqual))
-                {
-                    if (!object.Equals(lhsMiscItems, rhsMiscItems)) return false;
-                }
-                else if (!isMiscItemsEqual) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Resources) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Resources, rhs.Resources, out var lhsResources, out var rhsResources, out var isResourcesEqual))
@@ -6245,18 +6245,19 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Books);
             hash.Add(item.Containers);
             hash.Add(item.Doors);
-            hash.Add(item.Weapons);
-            hash.Add(item.Perks);
-            hash.Add(item.ConstructibleObjects);
+            hash.Add(item.MiscItems);
             hash.Add(item.StaticCollections);
+            hash.Add(item.Weapons);
+            hash.Add(item.Ingestibles);
             hash.Add(item.BendableSplines);
             hash.Add(item.LeveledItems);
             hash.Add(item.Weathers);
+            hash.Add(item.Perks);
+            hash.Add(item.ConstructibleObjects);
             hash.Add(item.FormLists);
             hash.Add(item.TerminalMenus);
             hash.Add(item.AnimatedObjects);
             hash.Add(item.Debris);
-            hash.Add(item.Ingestibles);
             hash.Add(item.ObjectModifications);
             hash.Add(item.DefaultObjects);
             hash.Add(item.Outfits);
@@ -6267,7 +6268,6 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SurfacePatternStyles);
             hash.Add(item.LegendaryItems);
             hash.Add(item.ActorValueModulations);
-            hash.Add(item.MiscItems);
             hash.Add(item.Resources);
             hash.Add(item.ConditionRecords);
             hash.Add(item.Quests);
@@ -6439,26 +6439,26 @@ namespace Mutagen.Bethesda.Starfield
                 case "IDoor":
                 case "IDoorInternal":
                     return obj.Doors;
-                case "Weapon":
-                case "IWeaponGetter":
-                case "IWeapon":
-                case "IWeaponInternal":
-                    return obj.Weapons;
-                case "Perk":
-                case "IPerkGetter":
-                case "IPerk":
-                case "IPerkInternal":
-                    return obj.Perks;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    return obj.ConstructibleObjects;
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    return obj.MiscItems;
                 case "StaticCollection":
                 case "IStaticCollectionGetter":
                 case "IStaticCollection":
                 case "IStaticCollectionInternal":
                     return obj.StaticCollections;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    return obj.Weapons;
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    return obj.Ingestibles;
                 case "BendableSpline":
                 case "IBendableSplineGetter":
                 case "IBendableSpline":
@@ -6474,6 +6474,16 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     return obj.Weathers;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    return obj.Perks;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    return obj.ConstructibleObjects;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
@@ -6494,11 +6504,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IDebris":
                 case "IDebrisInternal":
                     return obj.Debris;
-                case "Ingestible":
-                case "IIngestibleGetter":
-                case "IIngestible":
-                case "IIngestibleInternal":
-                    return obj.Ingestibles;
                 case "AObjectModification":
                 case "IAObjectModificationGetter":
                 case "IAObjectModification":
@@ -6549,11 +6554,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     return obj.ActorValueModulations;
-                case "MiscItem":
-                case "IMiscItemGetter":
-                case "IMiscItem":
-                case "IMiscItemInternal":
-                    return obj.MiscItems;
                 case "Resource":
                 case "IResourceGetter":
                 case "IResource":
@@ -6627,29 +6627,29 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.Books, 27, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Containers, 28, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Doors, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 33, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, 30, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.StaticCollections, 31, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 32, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, 33, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.BendableSplines, 34, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.LeveledItems, 35, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Weathers, 36, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 37, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 38, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 39, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 40, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ingestibles, 41, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 42, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 43, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 44, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AimModels, 45, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 46, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 47, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Planets, 48, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 49, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 50, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 51, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MiscItems, 52, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 37, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 38, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 39, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.TerminalMenus, 40, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 41, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 42, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ObjectModifications, 43, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjects, 44, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 45, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AimModels, 46, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.AttractionRules, 47, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.BiomeSwaps, 48, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.Planets, 49, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.SurfacePatternStyles, 50, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.LegendaryItems, 51, outputStreams, bundle, parallelParam));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueModulations, 52, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Resources, 53, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.ConditionRecords, 54, outputStreams, bundle, parallelParam));
             toDo.Add(() => WriteGroupParallel(item.Quests, 55, outputStreams, bundle, parallelParam));
@@ -6791,19 +6791,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.Weapons.EnumerateFormLinks())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Perks.EnumerateFormLinks())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.ConstructibleObjects.EnumerateFormLinks())
+            foreach (var item in obj.MiscItems.EnumerateFormLinks())
             {
                 yield return item;
             }
             foreach (var item in obj.StaticCollections.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weapons.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingestibles.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -6816,6 +6816,14 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Weathers.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -6836,10 +6844,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
-            }
-            foreach (var item in obj.Ingestibles.EnumerateFormLinks())
-            {
-                yield return item;
             }
             foreach (var item in obj.ObjectModifications.EnumerateFormLinks())
             {
@@ -6867,10 +6871,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
-            }
-            foreach (var item in obj.MiscItems.EnumerateFormLinks())
-            {
-                yield return item;
             }
             foreach (var item in obj.Resources.EnumerateFormLinks())
             {
@@ -7009,19 +7009,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.Weapons.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Perks.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
+            foreach (var item in obj.MiscItems.EnumerateMajorRecords())
             {
                 yield return item;
             }
             foreach (var item in obj.StaticCollections.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weapons.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingestibles.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7034,6 +7034,14 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Weathers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7050,10 +7058,6 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.Debris.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Ingestibles.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7094,10 +7098,6 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.ActorValueModulations.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.MiscItems.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7418,29 +7418,11 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "Weapon":
-                case "IWeaponGetter":
-                case "IWeapon":
-                case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Perk":
-                case "IPerkGetter":
-                case "IPerk":
-                case "IPerkInternal":
-                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -7450,6 +7432,24 @@ namespace Mutagen.Bethesda.Starfield
                 case "IStaticCollection":
                 case "IStaticCollectionInternal":
                     foreach (var item in obj.StaticCollections.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -7477,6 +7477,24 @@ namespace Mutagen.Bethesda.Starfield
                 case "IWeather":
                 case "IWeatherInternal":
                     foreach (var item in obj.Weathers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    foreach (var item in obj.Perks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -7513,15 +7531,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IDebris":
                 case "IDebrisInternal":
                     foreach (var item in obj.Debris.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Ingestible":
-                case "IIngestibleGetter":
-                case "IIngestible":
-                case "IIngestibleInternal":
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -7612,15 +7621,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IActorValueModulation":
                 case "IActorValueModulationInternal":
                     foreach (var item in obj.ActorValueModulations.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MiscItem":
-                case "IMiscItemGetter":
-                case "IMiscItem":
-                case "IMiscItemInternal":
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -7946,30 +7946,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weapon, IWeaponGetter>(
-                srcGroup: obj.Weapons,
-                type: typeof(IWeaponGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MiscItem, IMiscItemGetter>(
+                srcGroup: obj.MiscItems,
+                type: typeof(IMiscItemGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.Weapons,
-                groupGetter: (m) => m.Weapons))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Perk, IPerkGetter>(
-                srcGroup: obj.Perks,
-                type: typeof(IPerkGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Perks,
-                groupGetter: (m) => m.Perks))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                srcGroup: obj.ConstructibleObjects,
-                type: typeof(IConstructibleObjectGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.ConstructibleObjects,
-                groupGetter: (m) => m.ConstructibleObjects))
+                group: (m) => m.MiscItems,
+                groupGetter: (m) => m.MiscItems))
             {
                 yield return item;
             }
@@ -7979,6 +7961,24 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.StaticCollections,
                 groupGetter: (m) => m.StaticCollections))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weapon, IWeaponGetter>(
+                srcGroup: obj.Weapons,
+                type: typeof(IWeaponGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Weapons,
+                groupGetter: (m) => m.Weapons))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Ingestible, IIngestibleGetter>(
+                srcGroup: obj.Ingestibles,
+                type: typeof(IIngestibleGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Ingestibles,
+                groupGetter: (m) => m.Ingestibles))
             {
                 yield return item;
             }
@@ -8006,6 +8006,24 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Weathers,
                 groupGetter: (m) => m.Weathers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Perk, IPerkGetter>(
+                srcGroup: obj.Perks,
+                type: typeof(IPerkGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Perks,
+                groupGetter: (m) => m.Perks))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                srcGroup: obj.ConstructibleObjects,
+                type: typeof(IConstructibleObjectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ConstructibleObjects,
+                groupGetter: (m) => m.ConstructibleObjects))
             {
                 yield return item;
             }
@@ -8042,15 +8060,6 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.Debris,
                 groupGetter: (m) => m.Debris))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Ingestible, IIngestibleGetter>(
-                srcGroup: obj.Ingestibles,
-                type: typeof(IIngestibleGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Ingestibles,
-                groupGetter: (m) => m.Ingestibles))
             {
                 yield return item;
             }
@@ -8141,15 +8150,6 @@ namespace Mutagen.Bethesda.Starfield
                 modKey: obj.ModKey,
                 group: (m) => m.ActorValueModulations,
                 groupGetter: (m) => m.ActorValueModulations))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MiscItem, IMiscItemGetter>(
-                srcGroup: obj.MiscItems,
-                type: typeof(IMiscItemGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.MiscItems,
-                groupGetter: (m) => m.MiscItems))
             {
                 yield return item;
             }
@@ -8631,44 +8631,16 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "Weapon":
-                case "IWeaponGetter":
-                case "IWeapon":
-                case "IWeaponInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weapon, IWeaponGetter>(
-                        srcGroup: obj.Weapons,
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MiscItem, IMiscItemGetter>(
+                        srcGroup: obj.MiscItems,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.Weapons,
-                        groupGetter: (m) => m.Weapons))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Perk":
-                case "IPerkGetter":
-                case "IPerk":
-                case "IPerkInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Perk, IPerkGetter>(
-                        srcGroup: obj.Perks,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Perks,
-                        groupGetter: (m) => m.Perks))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "ConstructibleObject":
-                case "IConstructibleObjectGetter":
-                case "IConstructibleObject":
-                case "IConstructibleObjectInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
-                        srcGroup: obj.ConstructibleObjects,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.ConstructibleObjects,
-                        groupGetter: (m) => m.ConstructibleObjects))
+                        group: (m) => m.MiscItems,
+                        groupGetter: (m) => m.MiscItems))
                     {
                         yield return item;
                     }
@@ -8683,6 +8655,34 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.StaticCollections,
                         groupGetter: (m) => m.StaticCollections))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weapon":
+                case "IWeaponGetter":
+                case "IWeapon":
+                case "IWeaponInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Weapon, IWeaponGetter>(
+                        srcGroup: obj.Weapons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Weapons,
+                        groupGetter: (m) => m.Weapons))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Ingestible, IIngestibleGetter>(
+                        srcGroup: obj.Ingestibles,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Ingestibles,
+                        groupGetter: (m) => m.Ingestibles))
                     {
                         yield return item;
                     }
@@ -8725,6 +8725,34 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Weathers,
                         groupGetter: (m) => m.Weathers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Perk":
+                case "IPerkGetter":
+                case "IPerk":
+                case "IPerkInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Perk, IPerkGetter>(
+                        srcGroup: obj.Perks,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Perks,
+                        groupGetter: (m) => m.Perks))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, ConstructibleObject, IConstructibleObjectGetter>(
+                        srcGroup: obj.ConstructibleObjects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ConstructibleObjects,
+                        groupGetter: (m) => m.ConstructibleObjects))
                     {
                         yield return item;
                     }
@@ -8781,20 +8809,6 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.Debris,
                         groupGetter: (m) => m.Debris))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Ingestible":
-                case "IIngestibleGetter":
-                case "IIngestible":
-                case "IIngestibleInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, Ingestible, IIngestibleGetter>(
-                        srcGroup: obj.Ingestibles,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Ingestibles,
-                        groupGetter: (m) => m.Ingestibles))
                     {
                         yield return item;
                     }
@@ -8935,20 +8949,6 @@ namespace Mutagen.Bethesda.Starfield
                         modKey: obj.ModKey,
                         group: (m) => m.ActorValueModulations,
                         groupGetter: (m) => m.ActorValueModulations))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "MiscItem":
-                case "IMiscItemGetter":
-                case "IMiscItem":
-                case "IMiscItemInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, MiscItem, IMiscItemGetter>(
-                        srcGroup: obj.MiscItems,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.MiscItems,
-                        groupGetter: (m) => m.MiscItems))
                     {
                         yield return item;
                     }
@@ -9110,20 +9110,9 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                 }
-                if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
+                if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
                 {
-                    foreach (var item in WeaponslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
-                {
-                    foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -9131,6 +9120,20 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.StaticCollections is IAssetLinkContainerGetter StaticCollectionslinkCont)
                 {
                     foreach (var item in StaticCollectionslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Weapons is IAssetLinkContainerGetter WeaponslinkCont)
+                {
+                    foreach (var item in WeaponslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
+                if (obj.Ingestibles is IAssetLinkContainerGetter IngestibleslinkCont)
+                {
+                    foreach (var item in IngestibleslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -9153,6 +9156,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+                foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+                if (obj.ConstructibleObjects is IAssetLinkContainerGetter ConstructibleObjectslinkCont)
+                {
+                    foreach (var item in ConstructibleObjectslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                    {
+                        yield return item;
+                    }
+                }
                 if (obj.FormLists is IAssetLinkContainerGetter FormListslinkCont)
                 {
                     foreach (var item in FormListslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
@@ -9170,13 +9184,6 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
-                }
-                if (obj.Ingestibles is IAssetLinkContainerGetter IngestibleslinkCont)
-                {
-                    foreach (var item in IngestibleslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
                 }
                 if (obj.ObjectModifications is IAssetLinkContainerGetter ObjectModificationslinkCont)
                 {
@@ -9199,13 +9206,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (obj.ActorValueModulations is IAssetLinkContainerGetter ActorValueModulationslinkCont)
                 {
                     foreach (var item in ActorValueModulationslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.MiscItems is IAssetLinkContainerGetter MiscItemslinkCont)
-                {
-                    foreach (var item in MiscItemslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                     {
                         yield return item;
                     }
@@ -9856,55 +9856,15 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weapons) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MiscItems) ?? true))
             {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Weapons);
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.MiscItems);
                 try
                 {
-                    item.Weapons.DeepCopyIn(
-                        rhs: rhs.Weapons,
+                    item.MiscItems.DeepCopyIn(
+                        rhs: rhs.MiscItems,
                         errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Weapons));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Perks) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Perks);
-                try
-                {
-                    item.Perks.DeepCopyIn(
-                        rhs: rhs.Perks,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Perks));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ConstructibleObjects);
-                try
-                {
-                    item.ConstructibleObjects.DeepCopyIn(
-                        rhs: rhs.ConstructibleObjects,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ConstructibleObjects));
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.MiscItems));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -9925,6 +9885,46 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.StaticCollections,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.StaticCollections));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Weapons) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Weapons);
+                try
+                {
+                    item.Weapons.DeepCopyIn(
+                        rhs: rhs.Weapons,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Weapons));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Ingestibles) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Ingestibles);
+                try
+                {
+                    item.Ingestibles.DeepCopyIn(
+                        rhs: rhs.Ingestibles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Ingestibles));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -9985,6 +9985,46 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.Weathers,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Weathers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Perks) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Perks);
+                try
+                {
+                    item.Perks.DeepCopyIn(
+                        rhs: rhs.Perks,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Perks));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.ConstructibleObjects);
+                try
+                {
+                    item.ConstructibleObjects.DeepCopyIn(
+                        rhs: rhs.ConstructibleObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.ConstructibleObjects));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -10065,26 +10105,6 @@ namespace Mutagen.Bethesda.Starfield
                         rhs: rhs.Debris,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Debris));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Ingestibles) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Ingestibles);
-                try
-                {
-                    item.Ingestibles.DeepCopyIn(
-                        rhs: rhs.Ingestibles,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.Ingestibles));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -10296,26 +10316,6 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.MiscItems) ?? true))
-            {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.MiscItems);
-                try
-                {
-                    item.MiscItems.DeepCopyIn(
-                        rhs: rhs.MiscItems,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.MiscItems));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
             if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.Resources) ?? true))
             {
                 errorMask?.PushIndex((int)StarfieldMod_FieldIndex.Resources);
@@ -10496,18 +10496,19 @@ namespace Mutagen.Bethesda.Starfield
         public bool Books;
         public bool Containers;
         public bool Doors;
-        public bool Weapons;
-        public bool Perks;
-        public bool ConstructibleObjects;
+        public bool MiscItems;
         public bool StaticCollections;
+        public bool Weapons;
+        public bool Ingestibles;
         public bool BendableSplines;
         public bool LeveledItems;
         public bool Weathers;
+        public bool Perks;
+        public bool ConstructibleObjects;
         public bool FormLists;
         public bool TerminalMenus;
         public bool AnimatedObjects;
         public bool Debris;
-        public bool Ingestibles;
         public bool ObjectModifications;
         public bool DefaultObjects;
         public bool Outfits;
@@ -10518,7 +10519,6 @@ namespace Mutagen.Bethesda.Starfield
         public bool SurfacePatternStyles;
         public bool LegendaryItems;
         public bool ActorValueModulations;
-        public bool MiscItems;
         public bool Resources;
         public bool ConditionRecords;
         public bool Quests;
@@ -10557,18 +10557,19 @@ namespace Mutagen.Bethesda.Starfield
             Books = defaultValue;
             Containers = defaultValue;
             Doors = defaultValue;
-            Weapons = defaultValue;
-            Perks = defaultValue;
-            ConstructibleObjects = defaultValue;
+            MiscItems = defaultValue;
             StaticCollections = defaultValue;
+            Weapons = defaultValue;
+            Ingestibles = defaultValue;
             BendableSplines = defaultValue;
             LeveledItems = defaultValue;
             Weathers = defaultValue;
+            Perks = defaultValue;
+            ConstructibleObjects = defaultValue;
             FormLists = defaultValue;
             TerminalMenus = defaultValue;
             AnimatedObjects = defaultValue;
             Debris = defaultValue;
-            Ingestibles = defaultValue;
             ObjectModifications = defaultValue;
             DefaultObjects = defaultValue;
             Outfits = defaultValue;
@@ -10579,7 +10580,6 @@ namespace Mutagen.Bethesda.Starfield
             SurfacePatternStyles = defaultValue;
             LegendaryItems = defaultValue;
             ActorValueModulations = defaultValue;
-            MiscItems = defaultValue;
             Resources = defaultValue;
             ConditionRecords = defaultValue;
             Quests = defaultValue;
@@ -10972,35 +10972,13 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
-            if (importMask?.Weapons ?? true)
+            if (importMask?.MiscItems ?? true)
             {
-                var WeaponsItem = item.Weapons;
-                if (WeaponsItem.RecordCache.Count > 0)
+                var MiscItemsItem = item.MiscItems;
+                if (MiscItemsItem.RecordCache.Count > 0)
                 {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
-                        item: WeaponsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.Perks ?? true)
-            {
-                var PerksItem = item.Perks;
-                if (PerksItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PerksItem).BinaryWriteTranslator).Write<IPerkGetter>(
-                        item: PerksItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.ConstructibleObjects ?? true)
-            {
-                var ConstructibleObjectsItem = item.ConstructibleObjects;
-                if (ConstructibleObjectsItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
-                        item: ConstructibleObjectsItem,
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)MiscItemsItem).BinaryWriteTranslator).Write<IMiscItemGetter>(
+                        item: MiscItemsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -11012,6 +10990,28 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)StaticCollectionsItem).BinaryWriteTranslator).Write<IStaticCollectionGetter>(
                         item: StaticCollectionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Weapons ?? true)
+            {
+                var WeaponsItem = item.Weapons;
+                if (WeaponsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeaponsItem).BinaryWriteTranslator).Write<IWeaponGetter>(
+                        item: WeaponsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Ingestibles ?? true)
+            {
+                var IngestiblesItem = item.Ingestibles;
+                if (IngestiblesItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)IngestiblesItem).BinaryWriteTranslator).Write<IIngestibleGetter>(
+                        item: IngestiblesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -11045,6 +11045,28 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
                         item: WeathersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Perks ?? true)
+            {
+                var PerksItem = item.Perks;
+                if (PerksItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)PerksItem).BinaryWriteTranslator).Write<IPerkGetter>(
+                        item: PerksItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ConstructibleObjects ?? true)
+            {
+                var ConstructibleObjectsItem = item.ConstructibleObjects;
+                if (ConstructibleObjectsItem.RecordCache.Count > 0)
+                {
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
+                        item: ConstructibleObjectsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -11089,17 +11111,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)DebrisItem).BinaryWriteTranslator).Write<IDebrisGetter>(
                         item: DebrisItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.Ingestibles ?? true)
-            {
-                var IngestiblesItem = item.Ingestibles;
-                if (IngestiblesItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)IngestiblesItem).BinaryWriteTranslator).Write<IIngestibleGetter>(
-                        item: IngestiblesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -11210,17 +11221,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)ActorValueModulationsItem).BinaryWriteTranslator).Write<IActorValueModulationGetter>(
                         item: ActorValueModulationsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.MiscItems ?? true)
-            {
-                var MiscItemsItem = item.MiscItems;
-                if (MiscItemsItem.RecordCache.Count > 0)
-                {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)MiscItemsItem).BinaryWriteTranslator).Write<IMiscItemGetter>(
-                        item: MiscItemsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -11738,11 +11738,11 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     return (int)StarfieldMod_FieldIndex.Doors;
                 }
-                case RecordTypeInts.WEAP:
+                case RecordTypeInts.MISC:
                 {
-                    if (importMask?.Weapons ?? true)
+                    if (importMask?.MiscItems ?? true)
                     {
-                        item.Weapons.CopyInFromBinary(
+                        item.MiscItems.CopyInFromBinary(
                             frame: frame,
                             translationParams: null);
                     }
@@ -11750,35 +11750,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         frame.Position += contentLength;
                     }
-                    return (int)StarfieldMod_FieldIndex.Weapons;
-                }
-                case RecordTypeInts.PERK:
-                {
-                    if (importMask?.Perks ?? true)
-                    {
-                        item.Perks.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.Perks;
-                }
-                case RecordTypeInts.COBJ:
-                {
-                    if (importMask?.ConstructibleObjects ?? true)
-                    {
-                        item.ConstructibleObjects.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
+                    return (int)StarfieldMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.SCOL:
                 {
@@ -11793,6 +11765,34 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.StaticCollections;
+                }
+                case RecordTypeInts.WEAP:
+                {
+                    if (importMask?.Weapons ?? true)
+                    {
+                        item.Weapons.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Weapons;
+                }
+                case RecordTypeInts.ALCH:
+                {
+                    if (importMask?.Ingestibles ?? true)
+                    {
+                        item.Ingestibles.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.BNDS:
                 {
@@ -11835,6 +11835,34 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.Weathers;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    if (importMask?.Perks ?? true)
+                    {
+                        item.Perks.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.Perks;
+                }
+                case RecordTypeInts.COBJ:
+                {
+                    if (importMask?.ConstructibleObjects ?? true)
+                    {
+                        item.ConstructibleObjects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.FLST:
                 {
@@ -11891,20 +11919,6 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.Debris;
-                }
-                case RecordTypeInts.ALCH:
-                {
-                    if (importMask?.Ingestibles ?? true)
-                    {
-                        item.Ingestibles.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.OMOD:
                 {
@@ -12045,20 +12059,6 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += contentLength;
                     }
                     return (int)StarfieldMod_FieldIndex.ActorValueModulations;
-                }
-                case RecordTypeInts.MISC:
-                {
-                    if (importMask?.MiscItems ?? true)
-                    {
-                        item.MiscItems.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)StarfieldMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.IRES:
                 {
@@ -12423,25 +12423,25 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? StarfieldGroupBinaryOverlay<IDoorGetter>.StarfieldGroupFactory(_stream, _DoorsLocations, _package) : default;
         public IStarfieldGroupGetter<IDoorGetter> Doors => _Doors ?? new StarfieldGroup<Door>(this);
         #endregion
-        #region Weapons
-        private List<RangeInt64>? _WeaponsLocations;
-        private IStarfieldGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? StarfieldGroupBinaryOverlay<IWeaponGetter>.StarfieldGroupFactory(_stream, _WeaponsLocations, _package) : default;
-        public IStarfieldGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new StarfieldGroup<Weapon>(this);
-        #endregion
-        #region Perks
-        private List<RangeInt64>? _PerksLocations;
-        private IStarfieldGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? StarfieldGroupBinaryOverlay<IPerkGetter>.StarfieldGroupFactory(_stream, _PerksLocations, _package) : default;
-        public IStarfieldGroupGetter<IPerkGetter> Perks => _Perks ?? new StarfieldGroup<Perk>(this);
-        #endregion
-        #region ConstructibleObjects
-        private List<RangeInt64>? _ConstructibleObjectsLocations;
-        private IStarfieldGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? StarfieldGroupBinaryOverlay<IConstructibleObjectGetter>.StarfieldGroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
-        public IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new StarfieldGroup<ConstructibleObject>(this);
+        #region MiscItems
+        private List<RangeInt64>? _MiscItemsLocations;
+        private IStarfieldGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? StarfieldGroupBinaryOverlay<IMiscItemGetter>.StarfieldGroupFactory(_stream, _MiscItemsLocations, _package) : default;
+        public IStarfieldGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new StarfieldGroup<MiscItem>(this);
         #endregion
         #region StaticCollections
         private List<RangeInt64>? _StaticCollectionsLocations;
         private IStarfieldGroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? StarfieldGroupBinaryOverlay<IStaticCollectionGetter>.StarfieldGroupFactory(_stream, _StaticCollectionsLocations, _package) : default;
         public IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections => _StaticCollections ?? new StarfieldGroup<StaticCollection>(this);
+        #endregion
+        #region Weapons
+        private List<RangeInt64>? _WeaponsLocations;
+        private IStarfieldGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? StarfieldGroupBinaryOverlay<IWeaponGetter>.StarfieldGroupFactory(_stream, _WeaponsLocations, _package) : default;
+        public IStarfieldGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new StarfieldGroup<Weapon>(this);
+        #endregion
+        #region Ingestibles
+        private List<RangeInt64>? _IngestiblesLocations;
+        private IStarfieldGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? StarfieldGroupBinaryOverlay<IIngestibleGetter>.StarfieldGroupFactory(_stream, _IngestiblesLocations, _package) : default;
+        public IStarfieldGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new StarfieldGroup<Ingestible>(this);
         #endregion
         #region BendableSplines
         private List<RangeInt64>? _BendableSplinesLocations;
@@ -12457,6 +12457,16 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _WeathersLocations;
         private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package) : default;
         public IStarfieldGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new StarfieldGroup<Weather>(this);
+        #endregion
+        #region Perks
+        private List<RangeInt64>? _PerksLocations;
+        private IStarfieldGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? StarfieldGroupBinaryOverlay<IPerkGetter>.StarfieldGroupFactory(_stream, _PerksLocations, _package) : default;
+        public IStarfieldGroupGetter<IPerkGetter> Perks => _Perks ?? new StarfieldGroup<Perk>(this);
+        #endregion
+        #region ConstructibleObjects
+        private List<RangeInt64>? _ConstructibleObjectsLocations;
+        private IStarfieldGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? StarfieldGroupBinaryOverlay<IConstructibleObjectGetter>.StarfieldGroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
+        public IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new StarfieldGroup<ConstructibleObject>(this);
         #endregion
         #region FormLists
         private List<RangeInt64>? _FormListsLocations;
@@ -12477,11 +12487,6 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _DebrisLocations;
         private IStarfieldGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? StarfieldGroupBinaryOverlay<IDebrisGetter>.StarfieldGroupFactory(_stream, _DebrisLocations, _package) : default;
         public IStarfieldGroupGetter<IDebrisGetter> Debris => _Debris ?? new StarfieldGroup<Debris>(this);
-        #endregion
-        #region Ingestibles
-        private List<RangeInt64>? _IngestiblesLocations;
-        private IStarfieldGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? StarfieldGroupBinaryOverlay<IIngestibleGetter>.StarfieldGroupFactory(_stream, _IngestiblesLocations, _package) : default;
-        public IStarfieldGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new StarfieldGroup<Ingestible>(this);
         #endregion
         #region ObjectModifications
         private List<RangeInt64>? _ObjectModificationsLocations;
@@ -12532,11 +12537,6 @@ namespace Mutagen.Bethesda.Starfield
         private List<RangeInt64>? _ActorValueModulationsLocations;
         private IStarfieldGroupGetter<IActorValueModulationGetter>? _ActorValueModulations => _ActorValueModulationsLocations != null ? StarfieldGroupBinaryOverlay<IActorValueModulationGetter>.StarfieldGroupFactory(_stream, _ActorValueModulationsLocations, _package) : default;
         public IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations => _ActorValueModulations ?? new StarfieldGroup<ActorValueModulation>(this);
-        #endregion
-        #region MiscItems
-        private List<RangeInt64>? _MiscItemsLocations;
-        private IStarfieldGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? StarfieldGroupBinaryOverlay<IMiscItemGetter>.StarfieldGroupFactory(_stream, _MiscItemsLocations, _package) : default;
-        public IStarfieldGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new StarfieldGroup<MiscItem>(this);
         #endregion
         #region Resources
         private List<RangeInt64>? _ResourcesLocations;
@@ -12827,29 +12827,29 @@ namespace Mutagen.Bethesda.Starfield
                     _DoorsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Doors;
                 }
-                case RecordTypeInts.WEAP:
+                case RecordTypeInts.MISC:
                 {
-                    _WeaponsLocations ??= new();
-                    _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.Weapons;
-                }
-                case RecordTypeInts.PERK:
-                {
-                    _PerksLocations ??= new();
-                    _PerksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.Perks;
-                }
-                case RecordTypeInts.COBJ:
-                {
-                    _ConstructibleObjectsLocations ??= new();
-                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
+                    _MiscItemsLocations ??= new();
+                    _MiscItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.SCOL:
                 {
                     _StaticCollectionsLocations ??= new();
                     _StaticCollectionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.StaticCollections;
+                }
+                case RecordTypeInts.WEAP:
+                {
+                    _WeaponsLocations ??= new();
+                    _WeaponsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Weapons;
+                }
+                case RecordTypeInts.ALCH:
+                {
+                    _IngestiblesLocations ??= new();
+                    _IngestiblesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.BNDS:
                 {
@@ -12868,6 +12868,18 @@ namespace Mutagen.Bethesda.Starfield
                     _WeathersLocations ??= new();
                     _WeathersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Weathers;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    _PerksLocations ??= new();
+                    _PerksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.Perks;
+                }
+                case RecordTypeInts.COBJ:
+                {
+                    _ConstructibleObjectsLocations ??= new();
+                    _ConstructibleObjectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.FLST:
                 {
@@ -12892,12 +12904,6 @@ namespace Mutagen.Bethesda.Starfield
                     _DebrisLocations ??= new();
                     _DebrisLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Debris;
-                }
-                case RecordTypeInts.ALCH:
-                {
-                    _IngestiblesLocations ??= new();
-                    _IngestiblesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.OMOD:
                 {
@@ -12958,12 +12964,6 @@ namespace Mutagen.Bethesda.Starfield
                     _ActorValueModulationsLocations ??= new();
                     _ActorValueModulationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.ActorValueModulations;
-                }
-                case RecordTypeInts.MISC:
-                {
-                    _MiscItemsLocations ??= new();
-                    _MiscItemsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.IRES:
                 {
