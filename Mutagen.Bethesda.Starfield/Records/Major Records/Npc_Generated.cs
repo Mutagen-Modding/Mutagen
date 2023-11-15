@@ -485,6 +485,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
         INpcGetter,
+        IOwner,
         IStarfieldMajorRecordInternal
     {
         new IFormLink<IRaceGetter> Race { get; set; }
@@ -504,7 +505,8 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleGetter,
         IFormLinkContainerGetter,
         ILoquiObject<INpcGetter>,
-        IMapsToGetter<INpcGetter>
+        IMapsToGetter<INpcGetter>,
+        IOwnerGetter
     {
         static new ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
         IFormLinkGetter<IRaceGetter> Race { get; }

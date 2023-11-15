@@ -103,6 +103,8 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IOwner)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Faction_Registration.Instance,
+            Npc_Registration.Instance,
+            PlacedNpc_Registration.Instance,
         });
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
         dict[typeof(IObjectId)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -131,6 +133,8 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,
+            PlacedNpc_Registration.Instance,
+            PlacedObject_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };
         dict[typeof(ILocationRecord)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
@@ -145,14 +149,22 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
+            PlacedNpc_Registration.Instance,
             PlacedObject_Registration.Instance,
         });
         dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
         dict[typeof(IPlacedSimple)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
+            PlacedNpc_Registration.Instance,
             PlacedObject_Registration.Instance,
         });
         dict[typeof(IPlacedSimpleGetter)] = dict[typeof(IPlacedSimple)] with { Setter = false };
+        dict[typeof(ILinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
+        {
+            PlacedNpc_Registration.Instance,
+            PlacedObject_Registration.Instance,
+        });
+        dict[typeof(ILinkedReferenceGetter)] = dict[typeof(ILinkedReference)] with { Setter = false };
         dict[typeof(IPlacedThing)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             PlacedObject_Registration.Instance,

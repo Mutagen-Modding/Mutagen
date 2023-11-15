@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [PlacedObject]
+    /// Implemented by: [PlacedNpc, PlacedObject]
     /// </summary>
     public partial interface IPlacedSimple :
         IPlacedSimpleGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [PlacedObject]
+    /// Implemented by: [PlacedNpc, PlacedObject]
     /// </summary>
     public partial interface IPlacedSimpleGetter : IStarfieldMajorRecordGetter
     {

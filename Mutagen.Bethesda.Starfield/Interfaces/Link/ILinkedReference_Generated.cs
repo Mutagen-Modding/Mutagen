@@ -8,18 +8,18 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [Faction, Npc, PlacedNpc]
+    /// Implemented by: [PlacedNpc, PlacedObject]
     /// </summary>
-    public partial interface IOwner :
-        IOwnerGetter,
+    public partial interface ILinkedReference :
+        ILinkedReferenceGetter,
         IStarfieldMajorRecordInternal
     {
     }
 
     /// <summary>
-    /// Implemented by: [Faction, Npc, PlacedNpc]
+    /// Implemented by: [PlacedNpc, PlacedObject]
     /// </summary>
-    public partial interface IOwnerGetter : IStarfieldMajorRecordGetter
+    public partial interface ILinkedReferenceGetter : IStarfieldMajorRecordGetter
     {
     }
 }

@@ -18,4 +18,20 @@
       </Dict>
     </Fields>
   </Object>
+  <Object name="StarfieldListGroup" objType="Group" recordType="GRUP">
+    <Generic name="T" isLoqui="true" getterVariance="Out" isClass="true">
+      <Where>CellBlock</Where>
+    </Generic>
+    <Fields>
+      <CustomLogic byteLength="4" name="ContainedRecordType" />
+      <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <List name="Records" nullable="False" binaryOverlay="NoGeneration" thread="true">
+        <Ref>
+          <Generic>T</Generic>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
 </Loqui>

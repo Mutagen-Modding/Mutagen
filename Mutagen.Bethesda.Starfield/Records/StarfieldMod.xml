@@ -40,6 +40,11 @@
       <Group name="BendableSplines" refName="BendableSpline" />
       <Group name="LeveledItems" refName="LeveledItem" />
       <Group name="Weathers" refName="Weather" />
+      <Ref name="Cells" singleton="true">
+        <Direct refName="StarfieldListGroup">
+          <GenericSpecification Definition="Starfield.CellBlock" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
       <Group name="Perks" refName="Perk" />
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="FormLists" refName="FormList" />

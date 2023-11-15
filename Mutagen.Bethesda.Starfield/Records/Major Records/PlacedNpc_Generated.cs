@@ -424,8 +424,13 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPlacedNpc :
+        IKeywordLinkedReference,
+        ILinkedReference,
         ILoquiObjectSetter<IPlacedNpcInternal>,
+        IOwner,
+        IPlaced,
         IPlacedNpcGetter,
+        IPlacedSimple,
         IStarfieldMajorRecordInternal
     {
     }
@@ -441,8 +446,13 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedNpcGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IKeywordLinkedReferenceGetter,
+        ILinkedReferenceGetter,
         ILoquiObject<IPlacedNpcGetter>,
-        IMapsToGetter<IPlacedNpcGetter>
+        IMapsToGetter<IPlacedNpcGetter>,
+        IOwnerGetter,
+        IPlacedGetter,
+        IPlacedSimpleGetter
     {
         static new ILoquiRegistration StaticRegistration => PlacedNpc_Registration.Instance;
 

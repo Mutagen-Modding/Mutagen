@@ -156,6 +156,7 @@
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TargetType.cs" />
     <Compile Include="Enums\TimeOfDay.cs" />
+    <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\Aspect\IHaveVirtualMachineAdapter.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -2011,6 +2012,9 @@
     <Compile Include="Records\Common Subrecords\ScriptProperty.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\TraversalRefrence.cs">
+      <DependentUpon>TraversalRefrence.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\VirtualMachineAdapterIndexed.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
@@ -2046,6 +2050,15 @@
     </Compile>
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Cell.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellGrid.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellSubBlock.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
@@ -2238,6 +2251,9 @@
     <Compile Include="Records\ProtocolDefinition_Starfield.cs" />
     <Compile Include="GameEnvironmentMixIn_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Records\StarfieldListGroup.cs">
+      <DependentUpon>StarfieldGroup.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\TransientType_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
     </Compile>
@@ -5457,5 +5473,36 @@
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IBindableEquipment_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\LinkedReferences_Generated.cs">
+      <DependentUpon>LinkedReferences.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Ownership_Generated.cs">
+      <DependentUpon>Ownership.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\TraversalRefrence_Generated.cs">
+      <DependentUpon>TraversalRefrence.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellSubBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellGrid_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellLighting_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellWaterVelocity_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellShipBlueprintSnapLink_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ILinkedReference_Generated.cs" />
+    <Compile Include="Records\StarfieldListGroup_Generated.cs">
+      <DependentUpon>StarfieldGroup.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

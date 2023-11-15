@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TraversalRefrence" objType="Subrecord" >
+    <Fields>
+      <Int32 name="Unknown1" />
+      <P3Float name="From" />
+      <P3Float name="To" />
+      <P3Float name="UnknownVector" />
+      <Enum name="Flags" enumName="TraversalRefrence.Flag" byteLength="4" />
+      <!-- ... -->
+    </Fields>
+  </Object>
+</Loqui>

@@ -69,6 +69,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ArmorModification
 - BipedObjectData
 - Book
+- Cell
 - Class
 - Container
 - ContainerModification
@@ -198,6 +199,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 - IWeightValue
+### Cell
+- INamed
 ### Class
 - INamed
 ### Container

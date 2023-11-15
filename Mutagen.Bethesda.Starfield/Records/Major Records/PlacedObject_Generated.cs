@@ -424,6 +424,8 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IPlacedObject :
+        IKeywordLinkedReference,
+        ILinkedReference,
         ILoquiObjectSetter<IPlacedObjectInternal>,
         IPlaced,
         IPlacedObjectGetter,
@@ -444,6 +446,8 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedObjectGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
+        IKeywordLinkedReferenceGetter,
+        ILinkedReferenceGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
