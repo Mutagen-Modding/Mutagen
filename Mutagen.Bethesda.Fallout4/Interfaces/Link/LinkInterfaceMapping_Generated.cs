@@ -348,6 +348,8 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Keyword_Registration.Instance,
+            PlacedNpc_Registration.Instance,
+            PlacedObject_Registration.Instance,
             APlacedTrap_Registration.Instance,
         });
         dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)] with { Setter = false };

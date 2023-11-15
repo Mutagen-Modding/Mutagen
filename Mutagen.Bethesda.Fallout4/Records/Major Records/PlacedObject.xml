@@ -106,6 +106,7 @@
     <LinkInterface>IPlacedThing</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>IPreCutMapEntryReference</LinkInterface>
   </Object>
   <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">

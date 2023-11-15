@@ -1971,6 +1971,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IPlacedNpc :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IKeywordLinkedReference,
         ILinkedReference,
         ILoquiObjectSetter<IPlacedNpcInternal>,
         IPlaced,
@@ -2035,6 +2036,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
+        IKeywordLinkedReferenceGetter,
         ILinkedReferenceGetter,
         ILoquiObject<IPlacedNpcGetter>,
         IMapsToGetter<IPlacedNpcGetter>,
