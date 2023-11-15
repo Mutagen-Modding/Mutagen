@@ -9803,6 +9803,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IBindableEquipment":
                 case "IBindableEquipmentGetter":
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IFurnitureAssociation":
                 case "IFurnitureAssociationGetter":

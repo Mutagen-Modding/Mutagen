@@ -287,6 +287,7 @@ internal class Fallout4LinkInterfaceMapping : IInterfaceMapping
         dict[typeof(IBindableEquipment)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
         {
             Armor_Registration.Instance,
+            Weapon_Registration.Instance,
         });
         dict[typeof(IBindableEquipmentGetter)] = dict[typeof(IBindableEquipment)] with { Setter = false };
         dict[typeof(IFurnitureAssociation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]

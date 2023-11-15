@@ -11,7 +11,7 @@
               <UInt8 />
             </Fields>
           </Gendered>
-          <Gendered name="WeightSliderEnabled" binary="Custom" byteLength="2" >
+          <Gendered name="WeightSliderEnabled" binary="Custom" byteLength="2" generateClassMembers="false">
             <Fields>
               <Bool />
             </Fields>
