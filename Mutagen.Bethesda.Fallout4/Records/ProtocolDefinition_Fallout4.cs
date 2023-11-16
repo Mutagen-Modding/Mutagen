@@ -419,6 +419,7 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             Race_Registration.Instance,
             RaceWeight_Registration.Instance,
             RadioReceiver_Registration.Instance,
+            RagdollData_Registration.Instance,
             Rank_Registration.Instance,
             RankPlacement_Registration.Instance,
             ReferenceAliasLocation_Registration.Instance,
