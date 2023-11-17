@@ -45,6 +45,24 @@ public partial class Cell
 
 partial class CellBinaryCreateTranslation
 {
+    public static partial void FillBinaryTraversalsCustom(
+        MutagenFrame frame,
+        ICellInternal item,
+        PreviousParse lastParsed)
+    {
+        var sub = frame.ReadSubrecordHeader();
+        int len;
+        if (lastParsed.LengthOverride.HasValue)
+        {
+            len = lastParsed.LengthOverride.Value;
+        }
+        else
+        {
+            len = sub.ContentLength;
+        }
+        item.Traversals = TraversalReferenceBinaryCreateTranslation.Parse(frame.SpawnWithLength(len));
+    }
+    
     public static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
     {
         CustomBinaryEnd(frame, obj);
@@ -129,30 +147,30 @@ partial class CellBinaryCreateTranslation
                         case RecordTypeInts.REFR:
                             placed = PlacedObject.CreateFromBinary(r);
                             return true;
-                        // case RecordTypeInts.PARW:
-                        //     placed = PlacedArrow.CreateFromBinary(r);
-                        //     return true;
-                        // case RecordTypeInts.PBAR:
-                        //     placed = PlacedBarrier.CreateFromBinary(r);
-                        //     return true;
-                        // case RecordTypeInts.PBEA:
-                        //     placed = PlacedBeam.CreateFromBinary(r);
-                        //     return true;
-                        // case RecordTypeInts.PCON:
-                        //     placed = PlacedCone.CreateFromBinary(r);
-                        //     return true;
-                        // case RecordTypeInts.PFLA:
-                        //     placed = PlacedFlame.CreateFromBinary(r);
-                        //     return true;
-                        // case RecordTypeInts.PHZD:
-                        //     placed = PlacedHazard.CreateFromBinary(r);
-                        //     return true;
-                        // case RecordTypeInts.PMIS:
-                        //     placed = PlacedMissile.CreateFromBinary(r);
-                        //     return true;
-                        // case RecordTypeInts.PGRE:
-                        //     placed = PlacedTrap.CreateFromBinary(r);
-                        //     return true;
+                        case RecordTypeInts.PARW:
+                            placed = PlacedArrow.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.PBAR:
+                            placed = PlacedBarrier.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.PBEA:
+                            placed = PlacedBeam.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.PCON:
+                            placed = PlacedCone.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.PFLA:
+                            placed = PlacedFlame.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.PHZD:
+                            placed = PlacedHazard.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.PMIS:
+                            placed = PlacedMissile.CreateFromBinary(r);
+                            return true;
+                        case RecordTypeInts.PGRE:
+                            placed = PlacedTrap.CreateFromBinary(r);
+                            return true;
                         default:
                             throw new NotImplementedException();
                     }
@@ -181,30 +199,30 @@ partial class CellBinaryCreateTranslation
                     case RecordTypeInts.REFR:
                         placed = PlacedObject.CreateFromBinary(r);
                         return true;
-                    // case RecordTypeInts.PARW:
-                    //     placed = PlacedArrow.CreateFromBinary(r);
-                    //     return true;
-                    // case RecordTypeInts.PBAR:
-                    //     placed = PlacedBarrier.CreateFromBinary(r);
-                    //     return true;
-                    // case RecordTypeInts.PBEA:
-                    //     placed = PlacedBeam.CreateFromBinary(r);
-                    //     return true;
-                    // case RecordTypeInts.PCON:
-                    //     placed = PlacedCone.CreateFromBinary(r);
-                    //     return true;
-                    // case RecordTypeInts.PFLA:
-                    //     placed = PlacedFlame.CreateFromBinary(r);
-                    //     return true;
-                    // case RecordTypeInts.PHZD:
-                    //     placed = PlacedHazard.CreateFromBinary(r);
-                    //     return true;
-                    // case RecordTypeInts.PMIS:
-                    //     placed = PlacedMissile.CreateFromBinary(r);
-                    //     return true;
-                    // case RecordTypeInts.PGRE:
-                    //     placed = PlacedTrap.CreateFromBinary(r);
-                    //     return true;
+                    case RecordTypeInts.PARW:
+                        placed = PlacedArrow.CreateFromBinary(r);
+                        return true;
+                    case RecordTypeInts.PBAR:
+                        placed = PlacedBarrier.CreateFromBinary(r);
+                        return true;
+                    case RecordTypeInts.PBEA:
+                        placed = PlacedBeam.CreateFromBinary(r);
+                        return true;
+                    case RecordTypeInts.PCON:
+                        placed = PlacedCone.CreateFromBinary(r);
+                        return true;
+                    case RecordTypeInts.PFLA:
+                        placed = PlacedFlame.CreateFromBinary(r);
+                        return true;
+                    case RecordTypeInts.PHZD:
+                        placed = PlacedHazard.CreateFromBinary(r);
+                        return true;
+                    case RecordTypeInts.PMIS:
+                        placed = PlacedMissile.CreateFromBinary(r);
+                        return true;
+                    case RecordTypeInts.PGRE:
+                        placed = PlacedTrap.CreateFromBinary(r);
+                        return true;
                     default:
                         if (ParseTemporaryOutliers(frame, obj))
                         {
@@ -223,39 +241,43 @@ partial class CellBinaryCreateTranslation
         var nextHeader = majorMeta.RecordType;
         if (nextHeader.Equals(RecordTypes.NAVM))
         {
-            // obj.NavigationMeshes.Add(
-            //     NavigationMesh.CreateFromBinary(
-            //         frame.SpawnWithLength(majorMeta.TotalLength),
-            //         translationParams: null));
+            obj.NavigationMeshes.Add(
+                NavigationMesh.CreateFromBinary(
+                    frame.SpawnWithLength(majorMeta.TotalLength),
+                    translationParams: null));
             return true;
         }
-        // else if (nextHeader.Equals(RecordTypes.LAND))
-        // {
-            // if (obj.Landscape != null)
-            // {
-            //     throw new ArgumentException("Had more than one landscape");
-            // }
-            // obj.Landscape = Landscape.CreateFromBinary(
-            //     frame.SpawnWithLength(majorMeta.TotalLength),
-            //     translationParams: null);
-            // return true;
-        // }
         return false;
     }
 }
 
 partial class CellBinaryWriteTranslation
 {
+    public static partial void WriteBinaryTraversalsCustom(
+        MutagenWriter writer,
+        ICellGetter item)
+    {
+        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITraversalReferenceGetter>.Instance.Write(
+            writer: writer,
+            items: item.Traversals,
+            transl: (MutagenWriter subWriter, ITraversalReferenceGetter subItem, TypedWriteParams conv) =>
+            {
+                var Item = subItem;
+                ((TraversalReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    item: Item,
+                    writer: subWriter,
+                    translationParams: conv);
+            });
+    }
+    
     public static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
     {
         try
         {
-            // var navMeshes = obj.NavigationMeshes;
-            // var landscape = obj.Landscape;
+            var navMeshes = obj.NavigationMeshes;
             if ((obj.Persistent?.Count ?? 0) == 0
                 && (obj.Temporary?.Count ?? 0) == 0
-                // && navMeshes.Count == 0
-                // && landscape == null
+                && navMeshes.Count == 0
                 ) return;
             using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
             {
@@ -282,9 +304,7 @@ partial class CellBinaryWriteTranslation
                     }
                 }
                 if (obj.Temporary?.Count > 0
-                    // || navMeshes.Count > 0
-                    // || landscape != null
-                    )
+                    || navMeshes.Count > 0)
                 {
                     using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {
@@ -294,11 +314,10 @@ partial class CellBinaryWriteTranslation
                         writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
                         writer.Write(obj.TemporaryTimestamp);
                         writer.Write(obj.TemporaryUnknownGroupData);
-                        // landscape?.WriteToBinary(writer);
-                        // foreach (var navMesh in navMeshes)
-                        // {
-                        //     navMesh.WriteToBinary(writer);
-                        // }
+                        foreach (var navMesh in navMeshes)
+                        {
+                            navMesh.WriteToBinary(writer);
+                        }
                         ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                             writer: writer,
                             items: obj.Temporary,
@@ -324,22 +343,21 @@ partial class CellBinaryOverlay
     static readonly RecordTriggerSpecs TypicalPlacedTypes = new(
         RecordCollection.Factory(
             RecordTypes.ACHR,
-            RecordTypes.REFR
-            // ,
-            // RecordTypes.PARW,
-            // RecordTypes.PBAR,
-            // RecordTypes.PBEA,
-            // RecordTypes.PCON,
-            // RecordTypes.PFLA,
-            // RecordTypes.PHZD,
-            // RecordTypes.PMIS,
-            // RecordTypes.PGRE
-            ));
+            RecordTypes.REFR,
+            RecordTypes.PARW,
+            RecordTypes.PBAR,
+            RecordTypes.PBEA,
+            RecordTypes.PCON,
+            RecordTypes.PFLA,
+            RecordTypes.PHZD,
+            RecordTypes.PMIS,
+            RecordTypes.PGRE));
 
     internal bool InsideWorldspace;
 
     private ReadOnlyMemorySlice<byte>? _grupData;
 
+    public IReadOnlyList<ITraversalReferenceGetter>? Traversals => throw new NotImplementedException();
     public IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; private set; } = Array.Empty<INavigationMeshGetter>();
 
     public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
@@ -465,22 +483,22 @@ partial class CellBinaryOverlay
                         return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, package), package);
                     case RecordTypeInts.REFR:
                         return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PARW:
-                    //     return PlacedArrowBinaryOverlay.PlacedArrowFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PBAR:
-                    //     return PlacedBarrierBinaryOverlay.PlacedBarrierFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PBEA:
-                    //     return PlacedBeamBinaryOverlay.PlacedBeamFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PCON:
-                    //     return PlacedConeBinaryOverlay.PlacedConeFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PFLA:
-                    //     return PlacedFlameBinaryOverlay.PlacedFlameFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PHZD:
-                    //     return PlacedHazardBinaryOverlay.PlacedHazardFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PMIS:
-                    //     return PlacedMissileBinaryOverlay.PlacedMissileFactory(new OverlayStream(span, package), package);
-                    // case RecordTypeInts.PGRE:
-                    //     return PlacedTrapBinaryOverlay.PlacedTrapFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PARW:
+                        return PlacedArrowBinaryOverlay.PlacedArrowFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PBAR:
+                        return PlacedBarrierBinaryOverlay.PlacedBarrierFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PBEA:
+                        return PlacedBeamBinaryOverlay.PlacedBeamFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PCON:
+                        return PlacedConeBinaryOverlay.PlacedConeFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PFLA:
+                        return PlacedFlameBinaryOverlay.PlacedFlameFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PHZD:
+                        return PlacedHazardBinaryOverlay.PlacedHazardFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PMIS:
+                        return PlacedMissileBinaryOverlay.PlacedMissileFactory(new OverlayStream(span, package), package);
+                    case RecordTypeInts.PGRE:
+                        return PlacedTrapBinaryOverlay.PlacedTrapFactory(new OverlayStream(span, package), package);
                     default:
                         throw new NotImplementedException();
                 }

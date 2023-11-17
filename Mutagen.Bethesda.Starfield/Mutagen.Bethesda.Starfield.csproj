@@ -1945,6 +1945,9 @@
     <Compile Include="Records\Common Subrecords\Destructible.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\EnableParent.cs">
+      <DependentUpon>EnableParent.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ExtraData.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
@@ -2012,8 +2015,8 @@
     <Compile Include="Records\Common Subrecords\ScriptProperty.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\TraversalRefrence.cs">
-      <DependentUpon>TraversalRefrence.xml</DependentUpon>
+    <Compile Include="Records\Common Subrecords\TraversalReference.cs">
+      <DependentUpon>TraversalReference.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\VirtualMachineAdapterIndexed.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
@@ -2035,6 +2038,9 @@
     </Compile>
     <Compile Include="Records\Major Records\APerkEntryPointEffect.cs">
       <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APlacedTrap.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AQuestAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
@@ -2165,6 +2171,9 @@
     <Compile Include="Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NavigationMesh.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
@@ -2191,6 +2200,30 @@
     </Compile>
     <Compile Include="Records\Major Records\PerkScriptFragments.cs">
       <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedArrow.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedBarrier.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedBeam.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedCone.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedFlame.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedHazard.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedMissile.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedTrap.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Planet.cs">
       <DependentUpon>Planet.xml</DependentUpon>
@@ -5479,9 +5512,6 @@
     <Compile Include="Records\Common Subrecords\Ownership_Generated.cs">
       <DependentUpon>Ownership.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\TraversalRefrence_Generated.cs">
-      <DependentUpon>TraversalRefrence.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\CellBlock_Generated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
@@ -5503,6 +5533,46 @@
     <Compile Include="Interfaces\Link\ILinkedReference_Generated.cs" />
     <Compile Include="Records\StarfieldListGroup_Generated.cs">
       <DependentUpon>StarfieldGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EnableParent_Generated.cs">
+      <DependentUpon>EnableParent.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\RagdollData_Generated.cs">
+      <DependentUpon>RagdollData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APlacedTrap_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedArrow_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedBeam_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedFlame_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedCone_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedBarrier_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedTrap_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedHazard_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedMissile_Generated.cs">
+      <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IEmittance_Generated.cs" />
+    <Compile Include="Records\Major Records\PreCutMapEntry_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\TraversalReference_Generated.cs">
+      <DependentUpon>TraversalReference.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -8,18 +8,18 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [PlacedObject, APlacedTrap]
+    /// Implemented by: [Light, Region]
     /// </summary>
-    public partial interface IPlacedThing :
-        IPlacedThingGetter,
+    public partial interface IEmittance :
+        IEmittanceGetter,
         IStarfieldMajorRecordInternal
     {
     }
 
     /// <summary>
-    /// Implemented by: [PlacedObject, APlacedTrap]
+    /// Implemented by: [Light, Region]
     /// </summary>
-    public partial interface IPlacedThingGetter : IStarfieldMajorRecordGetter
+    public partial interface IEmittanceGetter : IStarfieldMajorRecordGetter
     {
     }
 }

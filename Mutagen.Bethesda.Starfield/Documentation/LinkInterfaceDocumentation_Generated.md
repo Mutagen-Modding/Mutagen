@@ -33,6 +33,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - AObjectModification
 ### IEffectRecord
 - Spell
+### IEmittance
+- Light
+- Region
 ### IExplodeSpawn
 - TextureSet
 ### IIdleRelation
@@ -54,10 +57,12 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Static
 - Weapon
 ### IKeywordLinkedReference
+- APlacedTrap
 - Keyword
 - PlacedNpc
 - PlacedObject
 ### ILinkedReference
+- APlacedTrap
 - PlacedNpc
 - PlacedObject
 ### ILocationRecord
@@ -75,12 +80,14 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IPlaceableObject
 - TextureSet
 ### IPlaced
+- APlacedTrap
 - PlacedNpc
 - PlacedObject
 ### IPlacedSimple
 - PlacedNpc
 - PlacedObject
 ### IPlacedThing
+- APlacedTrap
 - PlacedObject
 ### IReferenceableObject
 - TextureSet
@@ -123,6 +130,11 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IStaticTarget
 ### AObjectModification
 - IConstructibleObjectTarget
+### APlacedTrap
+- IKeywordLinkedReference
+- ILinkedReference
+- IPlaced
+- IPlacedThing
 ### Armor
 - IBindableEquipment
 - IConstructible
@@ -171,6 +183,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 - IOutfitTarget
 - IResourceTarget
+### Light
+- IEmittance
 ### LocationReferenceType
 - ILocationRecord
 ### MiscItem
@@ -202,6 +216,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IItem
 ### Race
 - IRelatable
+### Region
+- IEmittance
 ### Spell
 - IEffectRecord
 - ISpellRecord

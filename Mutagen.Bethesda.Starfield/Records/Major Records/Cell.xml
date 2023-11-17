@@ -49,7 +49,8 @@
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
       <String name="EnvironmentMap" recordType="XEMP" />
-      <RefList name="Traversals" refName="TraversalRefrence" recordType="XTV2" />
+      <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" overflowRecordType="XXXX" binary="Custom" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="UnknownGroupData" binary="NoGeneration" />
       <Int32 name="PersistentTimestamp" binary="NoGeneration" />

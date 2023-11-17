@@ -23,13 +23,23 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IHaveVirtualMachineAdapterGetter)] = new InterfaceMappingResult(false, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                APlacedTrap_Registration.Instance,
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
+                NavigationMesh_Registration.Instance,
                 Perk_Registration.Instance,
+                PlacedArrow_Registration.Instance,
+                PlacedBarrier_Registration.Instance,
+                PlacedBeam_Registration.Instance,
+                PlacedCone_Registration.Instance,
+                PlacedFlame_Registration.Instance,
+                PlacedHazard_Registration.Instance,
+                PlacedMissile_Registration.Instance,
+                PlacedTrap_Registration.Instance,
                 Quest_Registration.Instance,
                 TerminalMenu_Registration.Instance,
                 Weapon_Registration.Instance,
@@ -305,6 +315,16 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IObjectBoundedOptionalGetter)] = dict[typeof(IObjectBoundedOptional)] with { Setter = false };
             dict[typeof(IPositionRotation)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
+                APlacedTrap_Registration.Instance,
+                PlacedArrow_Registration.Instance,
+                PlacedBarrier_Registration.Instance,
+                PlacedBeam_Registration.Instance,
+                PlacedCone_Registration.Instance,
+                PlacedFlame_Registration.Instance,
+                PlacedHazard_Registration.Instance,
+                PlacedMissile_Registration.Instance,
+                PlacedTrap_Registration.Instance,
+                RagdollData_Registration.Instance,
                 StaticPlacement_Registration.Instance,
                 Transform_Registration.Instance,
             });
@@ -312,12 +332,22 @@ namespace Mutagen.Bethesda.Starfield
             dict[typeof(IScripted)] = new InterfaceMappingResult(true, new ILoquiRegistration[]
             {
                 Activator_Registration.Instance,
+                APlacedTrap_Registration.Instance,
                 Armor_Registration.Instance,
                 Book_Registration.Instance,
                 Container_Registration.Instance,
                 LeveledItem_Registration.Instance,
                 MagicEffect_Registration.Instance,
                 MiscItem_Registration.Instance,
+                NavigationMesh_Registration.Instance,
+                PlacedArrow_Registration.Instance,
+                PlacedBarrier_Registration.Instance,
+                PlacedBeam_Registration.Instance,
+                PlacedCone_Registration.Instance,
+                PlacedFlame_Registration.Instance,
+                PlacedHazard_Registration.Instance,
+                PlacedMissile_Registration.Instance,
+                PlacedTrap_Registration.Instance,
                 Weapon_Registration.Instance,
             });
             dict[typeof(IScriptedGetter)] = dict[typeof(IScripted)] with { Setter = false };
